@@ -116,6 +116,14 @@ namespace detail {
     /// Returns the rendering color.
     boost::optional<RenderingColor> renderingColor() const;
 
+    boost::optional<std::string> standardsBuildingType() const;
+
+    std::vector<std::string> suggestedStandardsBuildingTypes() const;
+
+    boost::optional<std::string> standardsSpaceType() const;
+
+    std::vector<std::string> suggestedStandardsSpaceTypes() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -137,6 +145,12 @@ namespace detail {
 
     /// Resets the rendering color.
     void resetRenderingColor();
+
+    bool setStandardsBuildingType(const std::string& standardsBuildingType);
+    void resetStandardsBuildingType();
+
+    bool setStandardsSpaceType(const std::string& standardsSpaceType);
+    void resetStandardsSpaceType();
 
     //@}
     /** @name Other */
@@ -388,6 +402,9 @@ namespace detail {
 
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
+
+    static QMap<QString, QVariant> m_standardsMap;
+    void parseStandardsMap() const;
   };
 
 } // detail

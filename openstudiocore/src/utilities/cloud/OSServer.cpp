@@ -630,7 +630,7 @@ namespace openstudio{
 
           QByteArray data(QString("--" + bound + "\r\n").toLatin1());
           data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
-          data += "Content-Type: application/x-zip-compressed\r\n\r\n";
+          data += "Content-Type: application/zip\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
           data += QString("--" + bound + "--\r\n.").toLatin1();

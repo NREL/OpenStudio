@@ -34,6 +34,7 @@ namespace openstudio {
 OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -85,14 +86,14 @@ void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
 }
 
 void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         UnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+                           UnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
@@ -109,14 +110,14 @@ void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
 }
 
 void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         OptionalUnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+                           OptionalUnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
@@ -317,6 +318,7 @@ void OSUnsignedEdit2::setPrecision(const std::string& str) {
 OSUnsignedEdit::OSUnsignedEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }

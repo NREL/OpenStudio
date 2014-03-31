@@ -21,7 +21,7 @@
 #include <model/LayeredConstruction_Impl.hpp>
 #include <model/Model.hpp>
 
-#include <model/ConstructionBaseStandardsInformation.hpp>
+#include <model/StandardsInformationConstruction.hpp>
 #include <model/Material.hpp>
 #include <model/OpaqueMaterial.hpp>
 #include <model/OpaqueMaterial_Impl.hpp>
@@ -260,7 +260,7 @@ namespace detail {
         return opaqueLayers[0].setThermalConductance(value);
       }      
       // ... or if perturbable construction is called out
-      ConstructionBaseStandardsInformation stdsInfo = standardsInformation();
+      StandardsInformationConstruction stdsInfo = standardsInformation();
       OptionalMaterial oMaterial = stdsInfo.perturbableLayer();
       if (oMaterial && thermalConductance()) {
         OpaqueMaterial perturbableLayer = oMaterial->cast<OpaqueMaterial>();
@@ -536,11 +536,14 @@ namespace detail {
   }
 
   boost::optional<OpaqueMaterial> LayeredConstruction_Impl::insulation() const {
-    ConstructionBaseStandardsInformation stdsInfo = standardsInformation();
-    if (istringEqual(stdsInfo.perturbableLayerType(),"Insulation")) {
-      OptionalMaterial result = stdsInfo.perturbableLayer();
-      if (result) {
-        return result->optionalCast<OpaqueMaterial>();
+    StandardsInformationConstruction stdsInfo = standardsInformation();
+    boost::optional<std::string> perturbableLayerType = stdsInfo.perturbableLayerType();
+    if (perturbableLayerType){
+      if (istringEqual(*perturbableLayerType,"Insulation")) {
+        OptionalMaterial result = stdsInfo.perturbableLayer();
+        if (result) {
+          return result->optionalCast<OpaqueMaterial>();
+        }
       }
     }
     return boost::none;
@@ -549,7 +552,7 @@ namespace detail {
   bool LayeredConstruction_Impl::setInsulation(const OpaqueMaterial& insulationLayer) {
     UnsignedVector indices = getLayerIndices(insulationLayer);
     if (indices.size() == 1) {
-      ConstructionBaseStandardsInformation stdsInfo = standardsInformation();
+      StandardsInformationConstruction stdsInfo = standardsInformation();
       stdsInfo.setPerturbableLayer(indices[0]);
       stdsInfo.setPerturbableLayerType("Insulation");
       return true;
@@ -558,9 +561,35 @@ namespace detail {
   }
 
   void LayeredConstruction_Impl::resetInsulation() {
-    ConstructionBaseStandardsInformation stdsInfo = standardsInformation();
-    if (istringEqual(stdsInfo.perturbableLayerType(),"Insulation")) {
-      stdsInfo.resetPerturbableLayer();
+    StandardsInformationConstruction stdsInfo = standardsInformation();
+    boost::optional<std::string> perturbableLayerType = stdsInfo.perturbableLayerType();
+    if (perturbableLayerType){
+      if (istringEqual(*perturbableLayerType,"Insulation")) {
+        stdsInfo.resetPerturbableLayer();
+      }
+    }
+  }
+
+  void LayeredConstruction_Impl::ensureUniqueLayers()
+  {
+    // loop through extensible groups
+    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+      ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
+      // get object pointed to by extensible group
+      // unit test checks that both layered constructions have extensible groups of size 1
+      // implementation must change if that test starts failing
+      OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
+      if (!oMaterial) {
+        LOG(Warn,"Skipping layer " << group.groupIndex() << " in " << briefDescription()
+            << ", as there is no Material object referenced by the corresponding field.");
+        continue;
+      }
+      unsigned numSources = oMaterial->getModelObjectSources<LayeredConstruction>().size();
+      if (numSources > 1){
+        ModelObject newMaterial = oMaterial->clone();
+        bool test = group.setPointer(0, newMaterial.handle());
+        OS_ASSERT(test);
+      } 
     }
   }
 
@@ -703,6 +732,10 @@ bool LayeredConstruction::setInsulation(const OpaqueMaterial& insulationLayer) {
 
 void LayeredConstruction::resetInsulation() {
   getImpl<detail::LayeredConstruction_Impl>()->resetInsulation();
+}
+
+void LayeredConstruction::ensureUniqueLayers() {
+  getImpl<detail::LayeredConstruction_Impl>()->ensureUniqueLayers();
 }
 
 bool LayeredConstruction::layersAreValid(const std::vector<Material>& materials)

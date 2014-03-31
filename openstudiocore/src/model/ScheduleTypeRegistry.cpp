@@ -21,6 +21,7 @@
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeLimits_Impl.hpp>
 #include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 #include <model/Model.hpp>
 
 #include <utilities/units/Quantity.hpp>
@@ -199,6 +200,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"FanConstantVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanOnOff","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanVariableVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"FanZoneExhaust","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"FanZoneExhaust","Flow Fraction","flowFractionSchedule",true,"Dimensionless",0.0,1.0},
+    {"FanZoneExhaust","Minimum Zone Temperature Limit","minimumZoneTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
     {"HeatExchangerAirToAirSensibleAndLatent","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HotWaterEquipment","Hot Water Equipment","schedule",true,"",0.0,1.0},
@@ -405,6 +410,27 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
     if (isCompatible(scheduleType,candidate)) {
+      result.push_back(candidate);
+    }
+  }
+  return result;
+}
+
+std::vector<Schedule> getCompatibleSchedules(const Model& model,
+                                             const std::string& className,
+                                             const std::string& scheduleDisplayName)
+{
+  ScheduleVector result;
+  ScheduleVector candidates = model.getModelObjects<Schedule>();
+  ScheduleTypeLimitsVector okTypes = getCompatibleScheduleTypeLimits(model,className,scheduleDisplayName);
+  BOOST_FOREACH(const Schedule& candidate,candidates) {
+    if (OptionalScheduleTypeLimits candidateType = candidate.scheduleTypeLimits()) {
+      if (std::find(okTypes.begin(),okTypes.end(),*candidateType) != okTypes.end()) {
+        result.push_back(candidate);
+      }
+    }
+    else {
+      // by default, keep all non-typed schedules
       result.push_back(candidate);
     }
   }

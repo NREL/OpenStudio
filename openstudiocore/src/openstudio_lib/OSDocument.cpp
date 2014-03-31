@@ -469,7 +469,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // HVAC Systems
 
-  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(m_model) );
+  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_hvacSystemsTabController->mainContentWidget(),
                                 HVAC_SYSTEMS,
                                 "HVAC Systems",
@@ -477,6 +477,10 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_hvac_tab.png" );
   connect(m_hvacSystemsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForHVACSystemsSubTab(int)));
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        m_hvacSystemsTabController.get(), SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   //******************************************************************************************************
   //
@@ -580,6 +584,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(this,SIGNAL(toggleUnitsClicked(bool)),
                         m_resultsTabController.get(), SLOT(onUnitSystemChange(bool)));
+  OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(treeChanged(const openstudio::UUID &)),
     m_resultsTabController->mainContentWidget(), SIGNAL(treeChanged(const openstudio::UUID &)));
@@ -750,6 +755,12 @@ void OSDocument::runComplete()
     // copy all the simulation output to the save location
     // do not want to save the database or osm here
     saveModelTempDir(toPath(m_modelTempDir), toPath(m_savePath));
+
+    // search for E+ and Radiance results in the save directory
+    openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
+    if (boost::filesystem::exists(searchPath)) {
+      m_resultsTabController->searchForExistingResults(searchPath);
+    }
   }
 }
 
@@ -1209,9 +1220,7 @@ void OSDocument::openBclDlg()
     std::string filterType = "components";
     m_onlineBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = false;
-
-    isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
+    bool isConnected = connect(m_onlineBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeBclDlg()));
     OS_ASSERT(isConnected);
   }
@@ -1286,9 +1295,7 @@ void OSDocument::openMeasuresBclDlg()
     std::string filterType = "measures";
     m_onlineMeasuresBclDialog = new BuildingComponentDialog(filterType, true, m_mainWindow);
 
-    bool isConnected = false;
-
-    isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
+    bool isConnected = connect(m_onlineMeasuresBclDialog, SIGNAL(rejected()),
                           this, SLOT(on_closeMeasuresBclDlg()));
     OS_ASSERT(isConnected);
   }

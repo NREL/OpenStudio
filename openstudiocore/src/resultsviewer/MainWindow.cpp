@@ -276,6 +276,9 @@ namespace resultsviewer{
     case RVD_FILEALREADYOPENED:
       QMessageBox::information(this, tr("File Open"), tr("File already opened."));
       break;
+    case RVD_FILEDOESNOTEXIST:
+      QMessageBox::information(this, tr("File Open"), tr("File not found:\n" + filename.toUtf8()));
+      break;
     case RVD_UNSUPPORTEDVERSION:
       QMessageBox::information(this, tr("File Open"), tr("Unsupported EnergyPlus version. Continuing, unknown errors may occur."));
     case RVD_SUCCESS:
@@ -963,7 +966,7 @@ namespace resultsviewer{
     std::vector<int>::iterator rowIter;
     illuminanceMapItemCount = 0;
     timeseriesItemCount = 0;
-    for (rowIter = selectedRows.begin(); rowIter != selectedRows.end(); rowIter++)
+    for (rowIter = selectedRows.begin(); rowIter != selectedRows.end(); ++rowIter)
     {
       if (m_tableView->item(*rowIter, m_tableView->headerNames().indexOf("File"))->data(Qt::UserRole) == RVD_TIMESERIES) timeseriesItemCount++;
       if (m_tableView->item(*rowIter, m_tableView->headerNames().indexOf("File"))->data(Qt::UserRole) == RVD_ILLUMINANCEMAP) illuminanceMapItemCount++;
@@ -987,7 +990,7 @@ namespace resultsviewer{
     QList<QTreeWidgetItem *>::iterator treeIter;
     illuminanceMapItemCount = 0;
     timeseriesItemCount = 0;
-    for (treeIter = selectedTreeItems.begin(); treeIter != selectedTreeItems.end(); treeIter++)
+    for (treeIter = selectedTreeItems.begin(); treeIter != selectedTreeItems.end(); ++treeIter)
     {
       if ((*treeIter)->parent()->data(0,Qt::UserRole) == RVD_TIMESERIES) timeseriesItemCount++;
       if ((*treeIter)->parent()->data(0,Qt::UserRole) == RVD_ILLUMINANCEMAP) illuminanceMapItemCount++;
@@ -1384,6 +1387,11 @@ namespace resultsviewer{
     {
       foreach(QString file, fileList)
       {
+        if (!QFile::exists(file)) {
+          QMessageBox::information(this, tr("File Open"), tr("File not found:\n" + file.toUtf8()));
+          continue;
+        }
+
         if (t_makeTempCopies)
         {
           openstudio::path basename = openstudio::toPath(QFileInfo(file).baseName());

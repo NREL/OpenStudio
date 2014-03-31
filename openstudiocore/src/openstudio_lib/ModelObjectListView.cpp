@@ -103,7 +103,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
 
     for( std::vector<BCLComponent>::iterator it = bclresults.begin(); 
          it != bclresults.end();
-         it++ )
+         ++it )
     {
       result.push_back(bclComponentToItemId(*it));
     }

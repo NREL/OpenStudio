@@ -55,6 +55,7 @@ const int RVD_SUCCESS = 0;
 const int RVD_UNSUPPORTEDFILEFORMAT = 1;
 const int RVD_FILEALREADYOPENED = 2;
 const int RVD_UNSUPPORTEDVERSION = 3;
+const int RVD_FILEDOESNOTEXIST = 4;
 // data types 
 const int RVD_TIMESERIES = 3;
 const int RVD_ILLUMINANCEMAP = 4;

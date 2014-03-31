@@ -47,6 +47,12 @@ SET( ${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACReturnPlenum.hpp
+  AirLoopHVACReturnPlenum_Impl.hpp
+  AirLoopHVACReturnPlenum.cpp
+  AirLoopHVACSupplyPlenum.hpp
+  AirLoopHVACSupplyPlenum_Impl.hpp
+  AirLoopHVACSupplyPlenum.cpp
   AirLoopHVACZoneMixer.hpp
   AirLoopHVACZoneMixer_Impl.hpp
   AirLoopHVACZoneMixer.cpp
@@ -98,9 +104,6 @@ SET( ${target_name}_src
   Building.hpp
   Building_Impl.hpp
   Building.cpp
-  BuildingStandardsInformation.hpp
-  BuildingStandardsInformation_Impl.hpp
-  BuildingStandardsInformation.cpp
   BuildingStory.hpp
   BuildingStory_Impl.hpp
   BuildingStory.cpp
@@ -191,9 +194,6 @@ SET( ${target_name}_src
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
-  ConstructionBaseStandardsInformation.hpp
-  ConstructionBaseStandardsInformation_Impl.hpp
-  ConstructionBaseStandardsInformation.cpp
   ConstructionWithInternalSource.hpp
   ConstructionWithInternalSource_Impl.hpp
   ConstructionWithInternalSource.cpp
@@ -341,6 +341,9 @@ SET( ${target_name}_src
   FanVariableVolume.hpp
   FanVariableVolume_Impl.hpp
   FanVariableVolume.cpp
+  FanZoneExhaust.hpp
+  FanZoneExhaust_Impl.hpp
+  FanZoneExhaust.cpp  
   FenestrationMaterial.hpp
   FenestrationMaterial_Impl.hpp
   FenestrationMaterial.cpp
@@ -733,6 +736,9 @@ SET( ${target_name}_src
   StandardOpaqueMaterial.hpp
   StandardOpaqueMaterial_Impl.hpp
   StandardOpaqueMaterial.cpp
+  StandardsInformationConstruction.hpp
+  StandardsInformationConstruction_Impl.hpp
+  StandardsInformationConstruction.cpp  
   SteamEquipment.hpp
   SteamEquipment_Impl.hpp
   SteamEquipment.cpp
@@ -950,7 +956,6 @@ SET( ${target_name}_moc
   CurveSigmoid_Impl.hpp
   CurveTriquadratic_Impl.hpp
   DaylightingControl_Impl.hpp
-  DaylightingDeviceShelf_Impl.hpp
   DefaultConstructionSet_Impl.hpp
   DefaultScheduleSet_Impl.hpp
   DefaultSubSurfaceConstructions_Impl.hpp
@@ -1077,12 +1082,19 @@ SET( ${target_name}_moc
 
 qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
+SET( ${target_name}_qrc
+  Model.qrc
+)
+
+# generate rules for building source files from the resources
+qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+
 
 SET( ${target_name}_depends
   openstudio_utilities
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} )
+ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} ${${target_name}_qrcs} )
 TARGET_LINK_LIBRARIES(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
@@ -1160,6 +1172,7 @@ SET( ${target_name}_test_src
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
+  test/FanZoneExhaust_GTest.cpp  
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/GasEquipment_GTest.cpp
@@ -1197,6 +1210,7 @@ SET( ${target_name}_test_src
   test/PipeAdiabatic_GTest.cpp
   test/PlanarSurface_GTest.cpp
   test/PlantLoop_GTest.cpp
+  test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
   test/RadianceParameters_GTest.cpp

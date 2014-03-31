@@ -67,302 +67,13 @@ RefrigerationView::RefrigerationView()
   mainVLayout->addWidget(graphicsView);
 }
 
-RefrigerationSystemGridView::RefrigerationSystemGridView()
-{
-}
-
-RefrigerationSystemGridView::~RefrigerationSystemGridView()
-{
-  QList<QGraphicsItem *> itemList = childItems();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
-       it++ )
-  {
-    delete *it;
-  }
-}
-
-QRectF RefrigerationSystemGridView::boundingRect() const
-{
-  int x = columns() * (RefrigerationSystemMiniView::cellSize().width() + spacing()) - spacing() + RefrigerationSystemView::margin * 2.0;
-  int y = rows() * (RefrigerationSystemMiniView::cellSize().height() + spacing()) - spacing() + RefrigerationSystemView::margin * 2.0;
-
-  return QRectF(0,0,x,y);
-}
-
-void RefrigerationSystemGridView::setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate)
-{
-  m_delegate = delegate;
-
-  refreshAllItemViews();
-}
-
-void RefrigerationSystemGridView::setListController(QSharedPointer<OSListController> listController)
-{
-  if( m_listController )
-  {
-    m_listController->disconnect(this);
-  }
-
-  m_listController = listController;
-
-  connect(m_listController.data(),SIGNAL(itemInserted(int)),this,SLOT(insertItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemRemoved(int)),this,SLOT(removeItemView(int)));
-  connect(m_listController.data(),SIGNAL(itemChanged(int)),this,SLOT(refreshItemView(int)));
-  connect(m_listController.data(),SIGNAL(modelReset()),this,SLOT(refreshAllItemViews()));
-
-  refreshAllItemViews();
-}
-
-QSharedPointer<OSListController> RefrigerationSystemGridView::listController() const
-{
-  return m_listController;
-}
-
-void RefrigerationSystemGridView::refreshAllItemViews()
-{
-  prepareGeometryChange();
-
-  QList<QGraphicsItem *> itemList = childItems();
-  for( QList<QGraphicsItem *>::iterator it = itemList.begin(); 
-       it < itemList.end(); 
-       it++ )
-  {
-    delete *it;
-  }
-
-  if( m_listController )
-  {
-    for( int i = 0; i < m_listController->count(); i++ )
-    {
-      insertItemView(i);
-    }
-  }
-}
-
-QGraphicsObject * RefrigerationSystemGridView::createNewItemView(int i)
-{
-  if( m_listController && m_delegate )
-  {
-    QSharedPointer<OSListItem> itemData = m_listController->itemAt(i);
-
-    OS_ASSERT(itemData);
-
-    QGraphicsObject * graphicsItem = m_delegate->view(itemData);
-
-    OS_ASSERT(graphicsItem);
-
-    graphicsItem->setParentItem(this);
-
-    m_widgetItemPairs.insert( std::make_pair<QGraphicsObject *,QSharedPointer<OSListItem> >(graphicsItem,itemData) );
-
-    bool bingo = connect(graphicsItem,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
-
-    OS_ASSERT(bingo);
-
-    return graphicsItem;
-  }
-  else
-  {
-    return NULL;
-  }
-}
-
-void RefrigerationSystemGridView::setItemViewGridPos(QGraphicsObject * item,std::pair<int,int> gridPos)
-{
-  if( item )
-  {
-    int x = gridPos.second * (RefrigerationSystemMiniView::cellSize().width() + spacing()) + RefrigerationSystemView::margin;
-    int y = gridPos.first * (RefrigerationSystemMiniView::cellSize().height() + spacing()) + RefrigerationSystemView::margin ;
-
-    item->setPos(x,y);
-
-    m_gridPosItemViewPairs[gridPos] = item;
-
-    m_itemViewGridPosPairs[item] = gridPos;
-  }
-}
-
-void RefrigerationSystemGridView::insertItemView(int index)
-{
-  if( m_listController )
-  {
-    prepareGeometryChange();
-
-    // Move existing views forward one grid position
-    for( int i = (m_listController->count() - 2); i >= index; i-- )
-    {
-      std::pair<int,int> oldPos = gridPos(i);
-
-      QGraphicsObject * item = viewFromGridPos(oldPos);
-
-      std::pair<int,int> newPos = gridPos(i + 1);
-
-      setItemViewGridPos(item,newPos);
-    }
-
-    // Create new item and position it at index grid position
-    if( QGraphicsObject * item = createNewItemView(index) )
-    {
-      std::pair<int,int> pos = gridPos(index);
-
-      setItemViewGridPos(item,pos);
-    }
-
-    if( QGraphicsScene * _scene = scene() )
-    {
-      _scene->setSceneRect(boundingRect());
-    }
-
-    QApplication::processEvents();
-  }
-}
-
-void RefrigerationSystemGridView::removeItemView(int index)
-{
-  if( m_listController )
-  {
-    // Remove Item
-    if(QGraphicsObject * itemViewToRemove = viewFromGridPos(gridPos(index)))
-    {
-      prepareGeometryChange();
-
-      removePair(itemViewToRemove);
-
-      itemViewToRemove->deleteLater();
-
-      QApplication::processEvents();
-
-      // Move Everything after index back one grid position
-      for( int i = index + 1; i < m_listController->count() + 1; i++ )
-      {
-        std::pair<int,int> oldPos = gridPos(i);
-
-        QGraphicsObject * item = viewFromGridPos(oldPos);
-
-        OS_ASSERT(item);
-
-        std::pair<int,int> newPos = gridPos(i - 1);
-
-        setItemViewGridPos(item,newPos);
-      }
-    }
-
-    if( QGraphicsScene * _scene = scene() )
-    {
-      _scene->setSceneRect(boundingRect());
-    }
-  }
-}
-
-void RefrigerationSystemGridView::removePair(QObject * object)
-{
-  if( object )
-  {
-    std::map<QObject *,QSharedPointer<OSListItem> >::iterator it = m_widgetItemPairs.find(object);
-
-    if( it != m_widgetItemPairs.end() )
-    {
-      m_widgetItemPairs.erase(it);
-    }
-
-    std::map<QObject *, std::pair<int,int> >::iterator it2 = m_itemViewGridPosPairs.find(object);
-
-    std::pair<int,int> pos;
-
-    if( it2 != m_itemViewGridPosPairs.end() )
-    {
-      m_itemViewGridPosPairs.erase(it2);
-
-      pos = it2->second;
-
-      std::map<std::pair<int,int>,QObject *>::iterator it3 = m_gridPosItemViewPairs.find(pos);
-
-      if( it3 != m_gridPosItemViewPairs.end() )
-      {
-        m_gridPosItemViewPairs.erase(it3);
-      }
-    }
-  }
-}
-
-void RefrigerationSystemGridView::refreshItemView(int i)
-{
-}
-
-int RefrigerationSystemGridView::spacing() const
-{
-  return RefrigerationSystemView::margin;
-}
-
-int RefrigerationSystemGridView::rows() const
-{
-  int result = 0;
-
-  if( m_listController )
-  {
-    int count = m_listController->count();
-
-    int _columns = columns();
-
-    result = count / _columns;
-
-    if( (count % _columns) != 0 )
-    {
-      result++;
-    }
-  }
-
-  return result;
-}
-
-int RefrigerationSystemGridView::columns() const
-{
-  return 2;
-}
-
-std::pair<int,int> RefrigerationSystemGridView::gridPos(int index) 
-{
-  int row = 0;
-  int column = 0;
-
-  if( m_listController )
-  {
-    int _columns = columns();
-
-    row = index / _columns;
-
-    column = index % _columns;  
-  }
-
-  return std::pair<int,int>(row,column);
-}
-
-QGraphicsObject * RefrigerationSystemGridView::viewFromGridPos(std::pair<int,int> location)
-{
-  QGraphicsObject * result = NULL;
-
-  std::map<std::pair<int,int>,QObject *>::iterator it = m_gridPosItemViewPairs.find(location);
-
-  if( it != m_gridPosItemViewPairs.end() )
-  {
-    result = qobject_cast<QGraphicsObject *>(it->second);
-  }
-
-  return result;
-}
-
 RefrigerationSystemMiniView::RefrigerationSystemMiniView()
 {
   refrigerationSystemView = new RefrigerationSystemView();
   refrigerationSystemView->setParentItem(this);
+  refrigerationSystemView->setEnabled(false);
 
-  refrigerationSystemView->setTransform(QTransform((contentRect().width() - 20) / refrigerationSystemView->boundingRect().width(),
-                                        0,0,
-                                        (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height(),
-                                        0,0));
-
-  refrigerationSystemView->setPos(contentRect().x() + 10,contentRect().y() + 10);
+  adjustLayout();
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
@@ -371,6 +82,31 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
   zoomInButtonItem = new ZoomInButtonItem();
   zoomInButtonItem->setParentItem(this);
   zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),headerHeight() / 2.0 - zoomInButtonItem->boundingRect().height() / 2.0);
+
+  setAcceptDrops(false);
+}
+
+void RefrigerationSystemMiniView::adjustLayout()
+{
+  double dx = (contentRect().width() - 20) / refrigerationSystemView->boundingRect().width();
+  double dy = (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height();
+
+  if( dx < dy )
+  {
+    dy = dx;
+  }
+  else
+  {
+    dx = dy;
+  }
+
+  refrigerationSystemView->setTransform(QTransform(dx,
+                                        0,0,
+                                        dy,
+                                        0,0));
+
+  refrigerationSystemView->setPos(contentRect().x() + contentRect().width() / 2.0 - refrigerationSystemView->boundingRect().width() * dx / 2.0,
+                                  contentRect().y() + contentRect().height() / 2.0 - refrigerationSystemView->boundingRect().height() * dy / 2.0);
 }
 
 QRectF RefrigerationSystemMiniView::boundingRect() const
@@ -468,10 +204,10 @@ RefrigerationSystemView::RefrigerationSystemView()
   bool bingo = connect(refrigerationCasesView->expandButton,SIGNAL(mouseClicked(bool)),this,SLOT(setCasesExpanded(bool)));
   OS_ASSERT(bingo);
 
-  //// Secondary Item
+  // Secondary Item
 
-  //refrigerationSecondaryView = new RefrigerationSecondaryView();
-  //refrigerationSecondaryView->setParentItem(this);
+  refrigerationSecondaryView = new RefrigerationSecondaryView();
+  refrigerationSecondaryView->setParentItem(this);
 
   adjustLayout();
 }
@@ -552,10 +288,10 @@ void RefrigerationSystemView::adjustLayout()
   refrigerationCasesView->setPos(centerXPos() - refrigerationCasesView->boundingRect().width() / 2, 
                                  refrigerationSHXView->y() + refrigerationSHXView->boundingRect().height() + verticalSpacing);
 
-  //// Cascade or Secondary
+  // Cascade or Secondary
 
-  //refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2, 
-  //                               refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
+  refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2, 
+                                 refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
 
   if( QGraphicsScene * _scene = scene() )
   {
@@ -642,8 +378,8 @@ QRectF RefrigerationSystemView::boundingRect() const
              rightWidth +
              margin;
 
-  //return QRectF(0,0,x,refrigerationSecondaryView->y() + refrigerationSecondaryView->boundingRect().height() + verticalSpacing);
-  return QRectF(0,0,x,refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
+  return QRectF(0,0,x,refrigerationSecondaryView->y() + refrigerationSecondaryView->boundingRect().height() + verticalSpacing);
+  //return QRectF(0,0,x,refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
 }
 
 int RefrigerationSystemView::leftXPos() const
@@ -677,11 +413,10 @@ int RefrigerationSystemView::rightXPos() const
 RefrigerationCasesView::RefrigerationCasesView()
   : QGraphicsObject(),
     m_numberOfDisplayCases(0),
-    m_numberOfWalkinCases(0)
+    m_numberOfWalkinCases(0),
+    m_displayCasesPixmap(QPixmap(":/images/display_case.png").scaled(displayCasesRect().height(),displayCasesRect().height())),
+    m_walkinPixmap(QPixmap(":/images/walkin_case.png").scaled(displayCasesRect().height(),displayCasesRect().height()))
 {
-  m_displayCasesPixmap = QPixmap(":/images/display_case.png").scaled(displayCasesRect().height(),displayCasesRect().height());
-  m_walkinPixmap = QPixmap(":/images/walkin_case.png").scaled(displayCasesRect().height(),displayCasesRect().height());
-
   refrigerationCasesDropZoneView = new RefrigerationCasesDropZoneView();
 
   refrigerationCasesDropZoneView->setParentItem(this);
@@ -723,7 +458,7 @@ void RefrigerationCasesView::setExpanded(bool exapanded)
 
   for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
-       it++ )
+       ++it )
   {
     if( m_expanded )
     {
@@ -887,7 +622,7 @@ void RefrigerationCasesView::adjustLayout()
 
   for( std::vector<QGraphicsObject *>::iterator it = m_caseDetailViews.begin();
        it != m_caseDetailViews.end();
-       it++ )
+       ++it )
   {
     (*it)->setPos(casePos(i));
 
@@ -913,10 +648,9 @@ QPointF RefrigerationCasesView::casePos(int index) const
 }
 
 RefrigerationCaseDetailView::RefrigerationCaseDetailView()
+  : m_displayCasesPixmap(QPixmap(":/images/display_case.png").scaled(iconRect().width(),iconRect().height())),
+    m_walkinPixmap(QPixmap(":/images/walkin_case.png").scaled(iconRect().width(),iconRect().height()))
 {
-  m_displayCasesPixmap = QPixmap(":/images/display_case.png").scaled(iconRect().width(),iconRect().height());
-  m_walkinPixmap = QPixmap(":/images/walkin_case.png").scaled(iconRect().width(),iconRect().height());
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1015,7 +749,7 @@ void RefrigerationCaseDetailView::paint( QPainter *painter,
 
 RefrigerationCondenserView::RefrigerationCondenserView()
 {
-  m_pixmap = QPixmap(":/images/condensor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  setIcon(QPixmap(":/images/air_cooled.png"));
 
   removeButtonItem = new RemoveButtonItem();
 
@@ -1027,6 +761,12 @@ RefrigerationCondenserView::RefrigerationCondenserView()
   OS_ASSERT(bingo);
 
   setCondenserId(OSItemId());
+}
+
+void RefrigerationCondenserView::setIcon(const QPixmap & pixmap)
+{
+  m_pixmap = pixmap.scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  update();
 }
 
 void RefrigerationCondenserView::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -1121,9 +861,8 @@ QSizeF RefrigerationCondenserView::size()
 }
 
 RefrigerationCompressorDetailView::RefrigerationCompressorDetailView()
+  : m_pixmap(QPixmap(":/images/compressor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight))
 {
-  m_pixmap = QPixmap(":/images/compressor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1271,7 +1010,7 @@ void RefrigerationCompressorView::adjustLayout()
 
   for( std::vector<QGraphicsObject *>::iterator it = m_compressorDetailViews.begin();
        it != m_compressorDetailViews.end();
-       it++ )
+       ++it )
   {
     (*it)->setPos(x,y);
 
@@ -1335,10 +1074,9 @@ void RefrigerationCasesDropZoneView::paint( QPainter *painter,
 }
 
 RefrigerationSubCoolerView::RefrigerationSubCoolerView()
+  : m_pixmap(QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                                  RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin))
 {
-  m_pixmap = QPixmap(":/images/mechanical-sub-cooler.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
-                                                                  RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1487,10 +1225,9 @@ void RefrigerationSHXView::paint( QPainter *painter,
 }
 
 RefrigerationSHXView::RefrigerationSHXView()
+  : m_pixmap(QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
+                                                 RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin))
 {
-  m_pixmap = QPixmap(":/images/slhx.png").scaled(RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin,
-                                                 RefrigerationSystemView::componentHeight - RefrigerationSystemView::margin);
-
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -1564,6 +1301,146 @@ void RefrigerationSHXView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
   }
 }
 
+QRectF SecondaryDropZoneView::boundingRect() const
+{
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),RefrigerationSystemView::componentHeight);
+}
+
+void SecondaryDropZoneView::paint( QPainter *painter, 
+                                   const QStyleOptionGraphicsItem *option, 
+                                   QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
+
+  painter->drawRoundedRect(boundingRect(),5,5);
+
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Add Cascade or Secondary System");
+}
+
+SecondaryDetailView::SecondaryDetailView()
+  : QGraphicsObject()
+{
+  zoomInButtonItem = new ZoomInButtonItem();
+  zoomInButtonItem->setParentItem(this);
+  zoomInButtonItem->setPos(width() - RefrigerationSystemView::margin - zoomInButtonItem->boundingRect().width(),RefrigerationSystemView::margin);
+  bool bingo = connect(zoomInButtonItem,SIGNAL(mouseClicked()),this,SLOT(onZoomButtonClicked()));
+  OS_ASSERT(bingo);
+
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin); 
+  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
+  OS_ASSERT(bingo);
+}
+
+double SecondaryDetailView::width()
+{
+  return RefrigerationCasesView::summaryRect().width();
+}
+
+double SecondaryDetailView::height()
+{
+  return RefrigerationSystemView::componentHeight / 2.0;
+}
+
+QRectF SecondaryDetailView::nameRect()
+{
+  return QRectF(RefrigerationSystemView::margin,RefrigerationSystemView::margin,
+                removeButtonItem->x() - RefrigerationSystemView::margin * 2.0,height() - RefrigerationSystemView::margin * 2.0); 
+}
+
+void SecondaryDetailView::onRemoveButtonClicked()
+{
+  emit removeClicked(m_handle);
+}
+
+void SecondaryDetailView::onZoomButtonClicked()
+{
+  emit zoomInOnSystemClicked(m_handle);
+}
+
+void SecondaryDetailView::setName(const QString & name)
+{
+  m_name = name;
+  update();
+}
+
+void SecondaryDetailView::setHandle(const Handle & handle)
+{
+  m_handle = handle;
+  update();
+}
+
+QRectF SecondaryDetailView::boundingRect() const
+{
+  return QRectF(0,0,width(),height());
+}
+
+void SecondaryDetailView::paint( QPainter *painter, 
+                                   const QStyleOptionGraphicsItem *option, 
+                                   QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRect(boundingRect());
+  painter->drawText(nameRect(),Qt::AlignCenter,m_name);
+}
+
+RefrigerationSecondaryView::RefrigerationSecondaryView()
+  : QGraphicsObject()
+{
+  secondaryDropZoneView = new SecondaryDropZoneView();
+  secondaryDropZoneView->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::insertSecondaryDetailView(int index, QGraphicsObject * object)
+{
+  m_secondaryDetailViews.insert(m_secondaryDetailViews.begin() + index,object);
+  object->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::removeAllSecondaryDetailViews()
+{
+  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+       it != m_secondaryDetailViews.end(); )
+  {
+    delete * it;
+    it = m_secondaryDetailViews.erase(it);
+  }
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::adjustLayout()
+{
+  prepareGeometryChange();
+
+  int x = 0;
+  int y = 0;
+
+  secondaryDropZoneView->setPos(0,0);
+  y = y + secondaryDropZoneView->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+       it != m_secondaryDetailViews.end();
+       ++it )
+  {
+    (*it)->setPos(x,y);
+
+    y = y + (*it)->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
+  }
+
+  m_height = y; 
+}
+
 void RefrigerationSecondaryView::paint( QPainter *painter, 
                                         const QStyleOptionGraphicsItem *option, 
                                         QWidget *widget )
@@ -1571,35 +1448,11 @@ void RefrigerationSecondaryView::paint( QPainter *painter,
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(Qt::NoBrush);
   painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
-
-  painter->drawRect(boundingRect());
-
-  painter->drawText(boundingRect(),Qt::AlignCenter,"Secondary System");
 }
 
 QRectF RefrigerationSecondaryView::boundingRect() const
 {
-  return QRectF(0,0,150,RefrigerationSystemView::componentHeight);
-}
-
-RefrigerationSystemDropZoneView::RefrigerationSystemDropZoneView()
-  : QGraphicsObject(), 
-    m_mouseDown(false)
-{
-  setAcceptHoverEvents(true);
-  setAcceptDrops(true);
-}
-
-void RefrigerationSystemDropZoneView::dropEvent(QGraphicsSceneDragDropEvent *event)
-{
-  event->accept();
-
-  if(event->proposedAction() == Qt::CopyAction)
-  {
-    OSItemId id = OSItemId(event->mimeData());
-
-    emit componentDropped(id);
-  }
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),m_height);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const
@@ -1624,34 +1477,6 @@ void RefrigerationSystemDropZoneView::paint( QPainter *painter,
   painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Drop Refrigeration System");
 }
 
-void RefrigerationSystemDropZoneView::mousePressEvent(QGraphicsSceneMouseEvent * event)
-{
-  m_mouseDown = true;
-
-  this->update();
-
-  event->accept();
-}
-
-void RefrigerationSystemDropZoneView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
-{
-  if( m_mouseDown )
-  {
-    m_mouseDown = false;
-
-    this->update();
-
-    QApplication::processEvents();
-
-    if( shape().contains(event->pos()) )
-    {
-      event->accept();
-
-      emit mouseClicked();
-    }
-  }
-}
-
 RefrigerationSystemDetailView::RefrigerationSystemDetailView()
   : QGraphicsObject()
 {
@@ -1663,7 +1488,6 @@ RefrigerationSystemDetailView::RefrigerationSystemDetailView()
   zoomOutButton->setParentItem(this);
   zoomOutButton->setPos(800 - zoomOutButton->boundingRect().width() - 10,10);
 }
-
 
 QRectF RefrigerationSystemDetailView::boundingRect() const
 {
@@ -1680,9 +1504,9 @@ void RefrigerationSystemDetailView::paint( QPainter *painter,
 }
 
 CaseViewExpandButton::CaseViewExpandButton()
+   : m_openImage(QPixmap(":/images/contextual_arrow.png")),
+     m_closeImage(QPixmap(":/images/contextual_arrow_up.png"))
 {
-  m_closeImage = QPixmap(":/images/contextual_arrow_up.png");
-  m_openImage = QPixmap(":/images/contextual_arrow.png");
 }
 
 QSize CaseViewExpandButton::size()

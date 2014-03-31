@@ -86,6 +86,27 @@ boost::optional<openstudio::SqlFile> OSRunner::lastEnergyPlusSqlFile() const
   return m_lastEnergyPlusSqlFile;
 }
 
+boost::optional<openstudio::EpwFile> OSRunner::lastEpwFile() const
+{
+  if (m_lastEpwFile){
+    return m_lastEpwFile;
+  }
+
+  if (m_lastEpwFilePath){
+    try {
+      m_lastEpwFile = EpwFile(*m_lastEpwFilePath);
+    }catch(const std::exception&){
+    }
+  }
+
+  return m_lastEpwFile;
+}
+
+boost::optional<openstudio::path> OSRunner::lastEpwFilePath() const
+{
+  return m_lastEpwFilePath;
+}
+
 bool OSRunner::inSelection(const openstudio::model::ModelObject& modelObject) const {
   return true;
 }  
@@ -425,8 +446,6 @@ boost::optional<double> OSRunner::getOptionalDoubleArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -468,8 +487,6 @@ boost::optional<Quantity> OSRunner::getOptionalQuantityArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -511,8 +528,6 @@ boost::optional<int> OSRunner::getOptionalIntegerArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -554,8 +569,6 @@ boost::optional<std::string> OSRunner::getOptionalStringArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -597,8 +610,6 @@ boost::optional<openstudio::path> OSRunner::getOptionalPathArgumentValue(
     const std::string& argument_name,
     const std::map<std::string,OSArgument>& user_arguments)
 {
-  std::stringstream ss;
-
   OSArgumentMap::const_iterator it = user_arguments.find(argument_name);
   if (it != user_arguments.end()) {
     if (it->second.hasValue()) {
@@ -693,6 +704,18 @@ void OSRunner::resetLastEnergyPlusSqlFilePath()
 {
   m_lastEnergyPlusSqlFilePath.reset();
   m_lastEnergyPlusSqlFile.reset();
+}
+
+void OSRunner::setLastEpwFilePath(const openstudio::path& lastEpwFilePath)
+{
+  m_lastEpwFilePath = lastEpwFilePath;
+  m_lastEpwFile.reset();
+}
+
+void OSRunner::resetLastEpwFilePath()
+{
+  m_lastEpwFilePath.reset();
+  m_lastEpwFile.reset();
 }
 
 } // ruleset

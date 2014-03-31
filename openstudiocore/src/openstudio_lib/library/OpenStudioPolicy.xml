@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by Daniel Macumber (NREL) -->
 <ROOT>
+  <POLICY IddObjectType="OS_AirLoopHVAC_SupplyPlenum">
+    <rule IddField="Thermal Zone" Access="LOCKED"/>
+    <rule IddField="Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_ReturnPlenum">
+    <rule IddField="ThermalZone" Access="LOCKED"/>
+    <rule IddField="Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_SetpointManager_FollowOutdoorAirTemperature">
     <rule IddField="Setpoint Node or NodeList Name" Access="HIDDEN"/>
   </POLICY>
@@ -108,8 +119,8 @@
     <rule IddField="Ceiling Height" Access="HIDDEN"/>
     <rule IddField="Volume" Access="HIDDEN"/>
     <rule IddField="Zone Conditioning Equipment List Name" Access="HIDDEN"/>
-    <rule IddField="Zone Air Inlet Node or NodeList Name" Access="HIDDEN"/>
-    <rule IddField="Zone Air Exhaust Node or NodeList Name" Access="HIDDEN"/>
+    <rule IddField="Zone Air Inlet Port List" Access="HIDDEN"/>
+    <rule IddField="Zone Air Exhaust Port List" Access="HIDDEN"/>
     <rule IddField="Zone Air Node Name" Access="HIDDEN"/>
     <rule IddField="Zone Return Air Node Name" Access="HIDDEN"/>
     <rule IddField="Primary Daylighting Control Name" Access="HIDDEN"/>
@@ -183,6 +194,10 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="End-Use Subcategory" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Fan_ZoneExhaust">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Node">
     <rule IddField="Inlet Port" Access="HIDDEN"/>
@@ -488,6 +503,9 @@
   <POLICY IddObjectType="OS_Sizing_Plant">
     <rule IddField="Plant or Condenser Loop Name" Access="HIDDEN"/>
   </POLICY>  
+  <POLICY IddObjectType="OS_Sizing_Zone">
+    <rule IddField="Zone or ZoneList Name" Access="HIDDEN"/>
+  </POLICY>  
   <POLICY IddObjectType="OS_ZoneHVAC_UnitHeater">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
@@ -528,11 +546,68 @@
     <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
     <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_WalkIn">
+    <rule IddField="Walkin Zone Boundary" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_WaterHeater_Mixed">
     <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Use Side Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Source Side Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Source Side Outlet Node Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow">
+    <rule IddField="Terminal Unit Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Terminal Unit Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan placement" Access="HIDDEN"/>
+    <rule IddField="Supply Air Fan" Access="LOCKED"/>
+    <rule IddField="Outside Air Mixer" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil" Access="LOCKED"/>
+    <rule IddField="Heating Coil" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Heating_DX_VariableRefrigerantFlow">
+    <rule IddField="Coil Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Coil Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Heating Capacity Ratio Modifier Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Modifier Function of Flow Fraction Curve" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Coil_Cooling_DX_VariableRefrigerantFlow">
+    <rule IddField="Coil Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Coil Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Cooling Capacity Ratio Modifier Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Capacity Modifier Curve Function of Flow Fraction" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AirConditioner_VariableRefrigerantFlow">
+    <rule IddField="Condenser Type" Access="HIDDEN"/>
+    <rule IddField="Condenser Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Condenser Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Supply Water Storage Tank" Access="HIDDEN"/>
+    <rule IddField="Cooling Capacity Ratio Modifier Function of Low Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Capacity Ratio Boundary Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Capacity Ratio Modifier Function of High Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Energy Input Ratio Modifier Function of Low Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Energy Input Ratio Boundary Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Energy Input Ratio Modifier Function of High Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Combination Ratio Correction Factor Curve" Access="LOCKED"/>
+    <rule IddField="Cooling Part-Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Ratio Modifier Function of Low Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Ratio Boundary Curve" Access="LOCKED"/>
+    <rule IddField="Heating Capacity Ratio Modifier Function of High Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Energy Input Ratio Modifier Function of Low Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Energy Input Ratio Boundary Curve" Access="LOCKED"/>
+    <rule IddField="Heating Energy Input Ratio Modifier Function of High Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve" Access="LOCKED"/>
+    <rule IddField="Heating Combination Ratio Correction Factor Curve" Access="LOCKED"/>
+    <rule IddField="Heating Part-Load Fraction Correlation Curve" Access="LOCKED"/>
+    <rule IddField="Piping Correction Factor for Length in Cooling Mode Curve" Access="LOCKED"/>
+    <rule IddField="Piping Correction Factor for Length in Heating Mode Curve" Access="LOCKED"/>
+    <rule IddField="Defrost Energy Input Ratio Modifier Function of Temperature Curve" Access="LOCKED"/>
+    <rule IddField="Heat Recovery Cooling Capacity Modifier Curve" Access="LOCKED"/>
+    <rule IddField="Heat Recovery Cooling Energy Modifier Curve" Access="LOCKED"/>
+    <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
+    <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
   </POLICY>
 
 </ROOT>

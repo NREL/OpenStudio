@@ -200,6 +200,7 @@ SimSettingsView::SimSettingsView(bool isIP,
   model::YearDescription yearDescription = m_model.getUniqueModelObject<model::YearDescription>();
   isConnected = connect(yearDescription.getImpl<model::detail::YearDescription_Impl>().get(), SIGNAL(onChange()),
                         this, SLOT(updateYearDescription()));
+  OS_ASSERT(isConnected);
 
   createWidgets();
   attachAll();
@@ -857,11 +858,9 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
 {
   QVBoxLayout * vLayout = new QVBoxLayout();
 
-  bool isConnected = false;
-
   m_radianceGroup = new QButtonGroup(this);
 
-  isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
+  bool isConnected = connect(m_radianceGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(on_radianceGroupClicked(int)));
   OS_ASSERT(isConnected);
 
@@ -1370,18 +1369,20 @@ void SimSettingsView::attachShadowCalculation()
   m_calculationFrequency->bind(*m_shadowCalculation,"calculationFrequency");
   m_maximumFiguresInShadowOverlapCalculations->bind(*m_shadowCalculation,
                                                     "maximumFiguresInShadowOverlapCalculations");
-  m_polygonClippingAlgorithm->bind(
+  m_polygonClippingAlgorithm->bind<std::string>(
       *m_shadowCalculation,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       boost::bind(model::ShadowCalculation::validPolygonClippingAlgorithmValues),
-      OptionalStringGetter(boost::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
-      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
-  m_skyDiffuseModelingAlgorithm->bind(
+      boost::function<boost::optional<std::string> ()>(boost::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),_1),
+      NoFailAction(boost::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
+  m_skyDiffuseModelingAlgorithm->bind<std::string>(
       *m_shadowCalculation,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       boost::bind(model::ShadowCalculation::validSkyDiffuseModelingAlgorithmValues),
-      OptionalStringGetter(boost::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
-      boost::optional<StringSetter>(boost::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
+      boost::function<boost::optional<std::string> ()>(boost::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
+      boost::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),_1),
+      NoFailAction(boost::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
 }
 
 void SimSettingsView::attachSurfaceConvectionAlgorithmInside()

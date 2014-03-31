@@ -112,7 +112,7 @@ InteriorPartitionSurfaceInspectorView::InteriorPartitionSurfaceInspectorView(boo
   vLayout = new QVBoxLayout();
 
   //label = new QLabel();
-  //label->setText("Constructio: ");
+  //label->setText("Construction: ");
   //label->setStyleSheet("QLabel { font: bold; }");
   //vLayout->addWidget(label);
 

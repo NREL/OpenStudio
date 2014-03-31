@@ -260,13 +260,12 @@ void PlotViewProperties::updateCurves()
 {
   /// multiple curves based on units
   const QwtPlotItemList &listPlotItem = m_PlotView->plot()->itemList();
-  QwtPlotItem *plotItem;
   QwtPlotItemIterator itPlotItem;
   m_curveVec.clear();
   ui.cboCurves->clear();
   for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
   {
-    plotItem = *itPlotItem;
+    QwtPlotItem *plotItem = *itPlotItem;
     if ( plotItem->rtti() == QwtPlotItem::Rtti_PlotCurve)
     {
       ui.cboCurves->addItem(plotItem->title().text());

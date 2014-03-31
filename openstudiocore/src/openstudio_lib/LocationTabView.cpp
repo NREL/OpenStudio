@@ -34,6 +34,8 @@
 #include <model/SizingPeriod_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
+#include <model/ClimateZones.hpp>
+#include <model/ClimateZones_Impl.hpp>
 #include <model/WeatherFileDays.hpp>
 #include <model/WeatherFileConditionType.hpp>
 #include <model/YearDescription.hpp>
@@ -56,6 +58,7 @@
 #include <QPushButton>
 #include <QSizePolicy>
 #include <QMessageBox>
+#include <QComboBox>
 
 #define NAME "Name: "
 #define LATITUDE "Latitude: "
@@ -86,11 +89,102 @@ LocationView::LocationView(const model::Model & model,
   QVBoxLayout * vLayout = 0;
   QFont boldFont;
 
+  model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
+
   // ***** Main Layout *****
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(10,10,10,10);
   mainVLayout->setSpacing(10);
   setLayout(mainVLayout);
+
+  // ***** Climate Zones *****
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
+
+  label = new QLabel("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainVLayout->addWidget(label);
+
+  hLayout = new QHBoxLayout();
+  hLayout->setContentsMargins(0,5,0,5);
+  hLayout->setSpacing(5);
+
+  vLayout = new QVBoxLayout();
+  vLayout->setContentsMargins(10,0,10,0);
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel("ASHRAE Climate Zone");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_ashraeClimateZone = new QComboBox();
+  m_ashraeClimateZone->setFixedWidth(200);
+  vLayout->addWidget(m_ashraeClimateZone);
+
+  m_ashraeClimateZone->addItem("");
+  std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
+  BOOST_FOREACH(const std::string& climateZone, ashraeClimateZoneValues){
+    m_ashraeClimateZone->addItem(toQString(climateZone));
+  }
+
+  model::ClimateZone ashraeClimateZone = climateZones.getClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
+  if (ashraeClimateZone.empty()){
+    ashraeClimateZone = climateZones.appendClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear(), "");
+  }
+  ashraeClimateZone.setType(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDocumentName(), model::ClimateZones::ashraeDefaultYear());
+  
+  std::string ashraeClimateZoneValue = ashraeClimateZone.value();
+  int i = m_ashraeClimateZone->findText(toQString(ashraeClimateZoneValue));
+  OS_ASSERT(i != -1);
+  m_ashraeClimateZone->setCurrentIndex(i);
+
+  isConnected = connect(m_ashraeClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onASHRAEClimateZoneChanged(const QString&)));
+  OS_ASSERT(isConnected);
+
+  vLayout = new QVBoxLayout();
+  vLayout->setContentsMargins(10,0,10,0);
+  vLayout->setSpacing(5);
+  hLayout->addLayout(vLayout);
+
+  label = new QLabel("CEC Climate Zone");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_cecClimateZone = new QComboBox();
+  m_cecClimateZone->setFixedWidth(200);
+  vLayout->addWidget(m_cecClimateZone);
+
+  m_cecClimateZone->addItem("");
+  std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
+  BOOST_FOREACH(const std::string& climateZone, cecClimateZoneValues){
+    m_cecClimateZone->addItem(toQString(climateZone));
+  }
+
+  model::ClimateZone cecClimateZone = climateZones.getClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
+   if (cecClimateZone.empty()){
+    cecClimateZone = climateZones.appendClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear(), "");
+  }
+  cecClimateZone.setType(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDocumentName(), model::ClimateZones::cecDefaultYear());
+
+  std::string cecClimateZoneValue = cecClimateZone.value();
+  i = m_cecClimateZone->findText(toQString(cecClimateZoneValue));
+  OS_ASSERT(i != -1);
+  m_cecClimateZone->setCurrentIndex(i);
+
+  isConnected = connect(m_cecClimateZone, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(onCECClimateZoneChanged(const QString&)));
+  OS_ASSERT(isConnected);
+
+  hLayout->addStretch();
+  mainVLayout->addLayout(hLayout);
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainVLayout->addWidget(line);
 
   // ***** Weather File *****
   label = new QLabel("Weather File");
@@ -297,7 +391,7 @@ void LocationView::onWeatherFileBtnClicked()
         boost::optional<openstudio::path> temp = weatherFile->path();
         if (temp){
           openstudio::path previousEPWName = temp->filename();
-          std::string ex = toString(previousEPWName.extension());
+          //std::string ex = toString(previousEPWName.extension());
           if (!previousEPWName.empty() && previousEPWName.extension() == toPath(".epw")){
             previousEPWPath = toPath(m_modelTempDir) / toPath("resources/files") / previousEPWName;
           }
@@ -496,6 +590,21 @@ void LocationView::onDesignDayBtnClicked()
       }
     }
   }
+}
+
+void LocationView::onASHRAEClimateZoneChanged(const QString& climateZone)
+{
+  model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
+    
+  model::ClimateZone ashraeClimateZone = climateZones.getClimateZone(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
+  ashraeClimateZone.setValue(toString(climateZone));
+}
+
+void LocationView::onCECClimateZoneChanged(const QString& climateZone)
+{
+  model::ClimateZones climateZones = m_model.getUniqueModelObject<model::ClimateZones>();
+  model::ClimateZone cecClimateZone = climateZones.getClimateZone(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
+  cecClimateZone.setValue(toString(climateZone));
 }
 
 } // openstudio

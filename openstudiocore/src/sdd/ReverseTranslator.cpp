@@ -213,6 +213,19 @@ namespace sdd {
         LOG(Error, "Could not find site information in SDD");
       }
 
+      // Shading Model
+      QDomElement solDistributionElement = projectElement.firstChildElement("SolDistribution");
+      if(istringEqual("FullExterior",solDistributionElement.text().toStdString()))
+      {
+        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+        simulationControl.setSolarDistribution("FullExterior");
+      }
+      else if(istringEqual("MinimalShadowing",solDistributionElement.text().toStdString()))
+      {
+        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+        simulationControl.setSolarDistribution("MinimalShadowing");
+      }
+
       // HVACAutoSizing
       QDomElement hvacAutoSizingElement = projectElement.firstChildElement("HVACAutoSizing");
       if( hvacAutoSizingElement.text().toInt() == 0 )
@@ -513,9 +526,20 @@ namespace sdd {
         }
       }
 
-      // request 15 min timestep
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-      timestep.setNumberOfTimestepsPerHour(4);
+      bool ok;
+      // timestep
+      QDomElement numTimeStepsPerHrElement = projectElement.firstChildElement("NumTimeStepsPerHr");
+      int numTimeStepsPerHr = numTimeStepsPerHrElement.text().toInt(&ok);
+      if( ok )
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(numTimeStepsPerHr);
+      }
+      else
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(4);
+      }
 
       // request output meters for TDV calculations
       std::set<int> fuelTypes = FuelType::getValues();
@@ -761,7 +785,7 @@ namespace sdd {
 
         for( std::vector<model::AirLoopHVAC>::iterator it = airloops.begin();
              it != airloops.end();
-             it++ )
+             ++it )
         {
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
@@ -796,6 +820,19 @@ namespace sdd {
 
       QDomElement simVarsHVACPriElement = projectElement.firstChildElement("SimVarsHVACPri");
 
+      if( (simVarsHVACPriElement.text().toInt() == 1) ||
+          autosize() )
+      {
+        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Boiler Heating Rate",*result);
+        var.setReportingFrequency(interval);
+      }
+
       if( simVarsHVACPriElement.text().toInt() == 1 )
       {
         model::OutputVariable var("Pump Electric Power",*result);
@@ -813,9 +850,6 @@ namespace sdd {
         var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
         var.setReportingFrequency(interval);
 
-        var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
         var = model::OutputVariable("Chiller Condenser Heat Transfer Rate",*result);
         var.setReportingFrequency(interval);
 
@@ -826,9 +860,6 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Cooling Tower Fan Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Heating Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Boiler Gas Rate",*result);
@@ -844,9 +875,6 @@ namespace sdd {
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
         var.setReportingFrequency(interval);
 
         var = model::OutputVariable("Boiler Heating Rate",*result);

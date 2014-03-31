@@ -45,7 +45,7 @@ module OpenStudio
 
   class MenuManager
     
-    attr_accessor :about_cmd, :prefs_cmd, :scan_tools_cmd
+    attr_accessor :about_cmd, :prefs_cmd
     attr_accessor :online_help_cmd, :forum_cmd, :contact_cmd
     attr_accessor :new_cmd, :new_from_template_cmd, :open_cmd, :save_cmd, :save_as_cmd
     attr_accessor :import_openstudio_cmd, :import_constructions_cmd, :import_schedules_cmd, :import_space_types_cmd
@@ -693,16 +693,6 @@ module OpenStudio
       @prefs_cmd = UI::Command.new("Preferences") { Plugin.dialog_manager.show(PreferencesInterface) }
       @prefs_cmd.set_validation_proc { MF_ENABLED }
       
-      @scan_tools_cmd = UI::Command.new("Scan for Tools") { 
-        rm = OpenStudio::Runmanager::RunManager.new
-        co = rm.getConfigOptions
-        co.findTools(true, false, false, true)
-        rm.setConfigOptions(co)
-        rm.showConfigGui(OpenStudio::Application::instance.sketchUpWidget)
-        rm.getConfigOptions.saveQSettings
-      }
-      @scan_tools_cmd.set_validation_proc { MF_ENABLED }
-
       @update_cmd = UI::Command.new("Check For Update") { Plugin.update_manager = PluginUpdateManager.new("SketchUp Plug-in", true) }
       @update_cmd.set_validation_proc { 
         if Plugin.update_manager.nil?
@@ -768,10 +758,6 @@ module OpenStudio
       
       id = @plugin_menu.add_item(@prefs_cmd)
       @plugin_menu.set_validation_proc(id) { MF_ENABLED }
-      
-      # since run is turned of we don't need to scan for tools
-      # id = @plugin_menu.add_item(@scan_tools_cmd)
-      # @plugin_menu.set_validation_proc(id) { MF_ENABLED }
 
       # Add the Help menu
       @help_menu = @plugin_menu.add_submenu("Help")

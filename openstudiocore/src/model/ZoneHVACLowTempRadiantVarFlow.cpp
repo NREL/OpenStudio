@@ -449,6 +449,11 @@ namespace detail {
       return false;
     }
 
+    if( thermalZone.isPlenum() )
+    {
+      return false;
+    }
+
     removeFromThermalZone();
 
     thermalZone.setUseIdealAirLoads(false);
@@ -479,9 +484,7 @@ ZoneHVACLowTempRadiantVarFlow::ZoneHVACLowTempRadiantVarFlow(const Model& model,
 {
   OS_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantVarFlow_Impl>());
 
-  bool ok = true;
-  
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
   
   if (!ok) 
   {

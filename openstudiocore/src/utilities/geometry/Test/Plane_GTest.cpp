@@ -609,3 +609,110 @@ TEST_F(GeometryFixture, Plane_ProblemSurface1)
     EXPECT_TRUE(pointEqual(points[i], projected));
   }
 }
+
+
+TEST_F(GeometryFixture, Plane_ProblemSurface2)
+{
+  // http://code.google.com/p/cbecc/issues/detail?id=394
+
+  {
+    std::vector<Point3d> points;
+    points.push_back(Point3d(88.0317, 363.526, 4.77521));
+    points.push_back(Point3d(88.0317, 363.526, 2.7432));
+    points.push_back(Point3d(88.0317, 362.611, 2.7432));
+    points.push_back(Point3d(88.0317, 362.611, 4.77521));
+
+    std::vector<Point3d> points2 = points;
+    points2.pop_back();
+    EXPECT_EQ(3u, points2.size());
+
+    unsigned n = points.size();
+    EXPECT_EQ(4u, n);
+
+    boost::optional<Plane> plane;
+    try {
+      plane = Plane(points);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane);
+
+    boost::optional<Plane> plane2;
+    try {
+      plane2 = Plane(points2);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane2);
+
+    EXPECT_TRUE(plane->equal(*plane));
+    EXPECT_TRUE(plane->equal(*plane2));
+    EXPECT_TRUE(plane2->equal(*plane));
+  }
+
+  {
+    std::vector<Point3d> points;
+    points.push_back(Point3d(88.03172639999999700000, 363.52581600000002000000, 4.77521016000000030000));
+    points.push_back(Point3d(88.03172639999999700000, 363.52581600000002000000, 2.74320000000000030000));
+    points.push_back(Point3d(88.03172639999999700000, 362.61141600000002000000, 2.74320000000000030000));
+    points.push_back(Point3d(88.03172639999999700000, 362.61141600000002000000, 4.77521016000000030000));
+
+    std::vector<Point3d> points2 = points;
+    points2.pop_back();
+    EXPECT_EQ(3u, points2.size());
+
+    unsigned n = points.size();
+    EXPECT_EQ(4u, n);
+
+    boost::optional<Plane> plane;
+    try {
+      plane = Plane(points);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane);
+
+    boost::optional<Plane> plane2;
+    try {
+      plane2 = Plane(points2);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane2);
+
+    EXPECT_TRUE(plane->equal(*plane));
+    EXPECT_TRUE(plane->equal(*plane2));
+    EXPECT_TRUE(plane2->equal(*plane));
+  }
+
+  {
+    double footToMeter =  0.3048;
+
+    std::vector<Point3d> points;
+    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1193.02").toDouble(), footToMeter*QString("18").toDouble()));
+    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1193.02").toDouble(), footToMeter*QString("9").toDouble()));
+    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1188.52").toDouble(), footToMeter*QString("9").toDouble()));
+    points.push_back(Point3d(footToMeter*QString("288.818").toDouble(), footToMeter*QString("1188.52").toDouble(), footToMeter*QString("18").toDouble()));
+
+    std::vector<Point3d> points2 = points;
+    points2.pop_back();
+    EXPECT_EQ(3u, points2.size());
+
+    unsigned n = points.size();
+    EXPECT_EQ(4u, n);
+
+    boost::optional<Plane> plane;
+    try {
+      plane = Plane(points);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane);
+
+    boost::optional<Plane> plane2;
+    try {
+      plane2 = Plane(points2);
+    }catch (const std::exception&){
+    }
+    ASSERT_TRUE(plane2);
+
+    EXPECT_TRUE(plane->equal(*plane));
+    EXPECT_TRUE(plane->equal(*plane2));
+    EXPECT_TRUE(plane2->equal(*plane));
+  }
+}

@@ -64,6 +64,9 @@
 // Ignore rawImpl, should that even be in the public interface?
 %ignore openstudio::model::Model::rawImpl;
 
+// Ignore plenum space type
+%ignore openstudio::model::Model::plenumSpaceType;
+
 // templates for ModelObject
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);
 %ignore std::vector<openstudio::model::ModelObject>::resize(size_type);

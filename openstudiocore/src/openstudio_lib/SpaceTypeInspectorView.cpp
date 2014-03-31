@@ -60,6 +60,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QStackedWidget>
+#include <QComboBox>
 
 namespace openstudio {
 
@@ -548,7 +549,66 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_nameEdit = new OSLineEdit();
   vLayout->addWidget(m_nameEdit);
 
-  mainGridLayout->addLayout(vLayout,0,0,1,2, Qt::AlignTop|Qt::AlignLeft);
+  int row = 0;
+
+  mainGridLayout->addLayout(vLayout,row,0,1,2, Qt::AlignTop|Qt::AlignLeft);
+
+  ++row;
+
+  // standards info
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,2);
+
+  ++row;
+
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
+
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Building Type: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardsBuildingTypeComboBox = new QComboBox();
+  m_standardsBuildingTypeComboBox->setEditable(true);
+  m_standardsBuildingTypeComboBox->setDuplicatesEnabled(false);
+  m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsBuildingTypeComboBox);
+
+  mainGridLayout->addLayout(vLayout,row,0);
+
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("Standards Space Type: ");
+  label->setObjectName("StandardsInfo");
+  vLayout->addWidget(label);
+
+  m_standardsSpaceTypeComboBox = new QComboBox();
+  m_standardsSpaceTypeComboBox->setEditable(true);
+  m_standardsSpaceTypeComboBox->setDuplicatesEnabled(false);
+  m_standardsSpaceTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
+  vLayout->addWidget(m_standardsSpaceTypeComboBox);
+
+  mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,2);
+
+  ++row;
 
   // default construction and schedule sets
   vLayout = new QVBoxLayout();
@@ -565,7 +625,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_defaultConstructionSetDropZone->setItemsAcceptDrops(true);
   vLayout->addWidget(m_defaultConstructionSetDropZone);
 
-  mainGridLayout->addLayout(vLayout,1,0);
+  mainGridLayout->addLayout(vLayout,row,0);
 
   vLayout = new QVBoxLayout();
 
@@ -582,11 +642,15 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_defaultScheduleSetDropZone->setItemsAcceptDrops(true);
   vLayout->addWidget(m_defaultScheduleSetDropZone);
 
-  mainGridLayout->addLayout(vLayout,1,1);
+  mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
 
   // rendering color
   m_renderingColorWidget = new RenderingColorWidget();
-  mainGridLayout->addWidget(m_renderingColorWidget,2,0,1,2, Qt::AlignTop|Qt::AlignLeft);
+  mainGridLayout->addWidget(m_renderingColorWidget,row,0,1,2, Qt::AlignTop|Qt::AlignLeft);
+
+  ++row;
 
   // design oa
   vLayout = new QVBoxLayout();
@@ -605,14 +669,15 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = false;
-  isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                        SIGNAL(itemClicked(OSItem*)),
-                        this, 
-                        SIGNAL(dropZoneItemClicked(OSItem*)));
+  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
+                             SIGNAL(itemClicked(OSItem*)),
+                             this, 
+                             SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  mainGridLayout->addLayout(vLayout,3,0,1,2);
+  mainGridLayout->addLayout(vLayout,row,0,1,2);
+
+  ++row;
 
   // space infiltration design flow rate
   vLayout = new QVBoxLayout();
@@ -637,7 +702,9 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
                         SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  mainGridLayout->addLayout(vLayout,4,0,1,2);
+  mainGridLayout->addLayout(vLayout,row,0,1,2);
+
+  ++row;
 
   // space infiltration effective leakage area
   vLayout = new QVBoxLayout();
@@ -662,7 +729,9 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
                         SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
-  mainGridLayout->addLayout(vLayout,5,0,1,2);
+  mainGridLayout->addLayout(vLayout,row,0,1,2);
+
+  ++row;
 
   // spaces
   //vLayout = new QVBoxLayout();
@@ -676,11 +745,15 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   //m_spacesDropZone = new OSDropZone(m_spacesVectorController);
   //vLayout->addWidget(m_spacesDropZone);
 
-  //mainGridLayout->addLayout(vLayout,5,0,1,2);
+  //mainGridLayout->addLayout(vLayout,row,0,1,2);
+
+  //++row;
 
   // loads
   m_spaceLoadInstancesWidget = new SpaceLoadInstancesWidget();
-  mainGridLayout->addWidget(m_spaceLoadInstancesWidget,6,0,1,2);
+  mainGridLayout->addWidget(m_spaceLoadInstancesWidget,row,0,1,2);
+
+  ++row;
 
   mainGridLayout->setColumnStretch(2,100);
 
@@ -693,7 +766,7 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   //mainGridLayout->setRowMinimumHeight(3, 30);
   //mainGridLayout->setRowMinimumHeight(4, 30);
   //mainGridLayout->setRowMinimumHeight(5, 30);
-  mainGridLayout->setRowStretch(6, 1);
+  mainGridLayout->setRowStretch(row, 100);
 }
 
 void SpaceTypeInspectorView::onClearSelection()
@@ -713,8 +786,66 @@ void SpaceTypeInspectorView::onUpdate()
 {
 }
 
+void SpaceTypeInspectorView::editStandardsBuildingType(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsBuildingType = toString(text);
+    if (standardsBuildingType.empty()){
+      m_spaceType->resetStandardsBuildingType();
+    }else{
+      m_spaceType->setStandardsBuildingType(standardsBuildingType);
+    }
+
+    m_spaceType->resetStandardsSpaceType();
+    populateStandardsSpaceTypes();
+  }
+}
+
+void SpaceTypeInspectorView::standardsBuildingTypeChanged(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsBuildingType = toString(text);
+    if (standardsBuildingType.empty()){
+      m_spaceType->resetStandardsBuildingType();
+    }else{
+      m_spaceType->setStandardsBuildingType(standardsBuildingType);
+    }
+    populateStandardsBuildingTypes();
+
+    m_spaceType->resetStandardsSpaceType();
+    populateStandardsSpaceTypes();
+  }
+}
+
+void SpaceTypeInspectorView::editStandardsSpaceType(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsSpaceType = toString(text);
+    if (standardsSpaceType.empty()){
+      m_spaceType->resetStandardsSpaceType();
+    }else{
+      m_spaceType->setStandardsSpaceType(standardsSpaceType);
+    }
+  }
+}
+
+void SpaceTypeInspectorView::standardsSpaceTypeChanged(const QString & text)
+{
+  if (m_spaceType){
+    std::string standardsSpaceType = toString(text);
+    if (standardsSpaceType.empty()){
+      m_spaceType->resetStandardsSpaceType();
+    }else{
+      m_spaceType->setStandardsSpaceType(standardsSpaceType);
+    }
+    populateStandardsSpaceTypes();
+  }
+}
+
 void SpaceTypeInspectorView::attach(openstudio::model::SpaceType& spaceType)
 {
+  m_spaceType = spaceType;
+
   m_nameEdit->bind(spaceType, "name");
 
   m_defaultConstructionSetVectorController->attach(spaceType);
@@ -729,6 +860,10 @@ void SpaceTypeInspectorView::attach(openstudio::model::SpaceType& spaceType)
     spaceType.setRenderingColor(*renderingColor);
   } 
   m_renderingColorWidget->attach(*renderingColor);
+
+  populateStandardsBuildingTypes();
+
+  populateStandardsSpaceTypes();
 
   m_designSpecificationOutdoorAirVectorController->attach(spaceType);
   m_designSpecificationOutdoorAirVectorController->reportItems();
@@ -749,6 +884,8 @@ void SpaceTypeInspectorView::attach(openstudio::model::SpaceType& spaceType)
 
 void SpaceTypeInspectorView::detach()
 {
+  m_spaceType.reset();
+
   this->stackedWidget()->setCurrentIndex(0);
 
   m_nameEdit->unbind();
@@ -756,11 +893,73 @@ void SpaceTypeInspectorView::detach()
   m_defaultConstructionSetVectorController->detach();
   m_defaultScheduleSetVectorController->detach();
   m_renderingColorWidget->detach();
+
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+  m_standardsBuildingTypeComboBox->clear();
+
+  disconnect(m_standardsSpaceTypeComboBox, 0, this, 0);
+  m_standardsSpaceTypeComboBox->clear();
+
   m_designSpecificationOutdoorAirVectorController->detach();
   m_spaceInfiltrationDesignFlowRateVectorController->detach();
   m_spaceInfiltrationEffectiveLeakageAreaVectorController->detach();
   //m_spacesVectorController->detach();
   m_spaceLoadInstancesWidget->detach();
+}
+
+void SpaceTypeInspectorView::populateStandardsBuildingTypes()
+{
+  disconnect(m_standardsBuildingTypeComboBox, 0, this, 0);
+
+  m_standardsBuildingTypeComboBox->clear();
+  if (m_spaceType){
+    m_standardsBuildingTypeComboBox->addItem("");
+    std::vector<std::string> suggestedStandardsBuildingTypes = m_spaceType->suggestedStandardsBuildingTypes();
+    Q_FOREACH(const std::string& standardsBuildingType, suggestedStandardsBuildingTypes){
+      m_standardsBuildingTypeComboBox->addItem(toQString(standardsBuildingType));
+    }
+    boost::optional<std::string> standardsBuildingType = m_spaceType->standardsBuildingType();
+    if (standardsBuildingType){
+      OS_ASSERT(!suggestedStandardsBuildingTypes.empty());
+      m_standardsBuildingTypeComboBox->setCurrentIndex(1);
+    }else{
+      m_standardsBuildingTypeComboBox->setCurrentIndex(0);
+    }
+  }
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsBuildingTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsBuildingTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsBuildingType(const QString&)));
+  OS_ASSERT(isConnected);
+}
+
+void SpaceTypeInspectorView::populateStandardsSpaceTypes()
+{
+  disconnect(m_standardsSpaceTypeComboBox, 0, this, 0);
+
+  m_standardsSpaceTypeComboBox->clear();
+  if (m_spaceType){
+    m_standardsSpaceTypeComboBox->addItem("");
+    std::vector<std::string> suggestedStandardsSpaceTypes = m_spaceType->suggestedStandardsSpaceTypes();
+    Q_FOREACH(const std::string& standardsSpaceType, suggestedStandardsSpaceTypes){
+        m_standardsSpaceTypeComboBox->addItem(toQString(standardsSpaceType));
+    }
+    boost::optional<std::string> standardsSpaceType = m_spaceType->standardsSpaceType();
+    if (standardsSpaceType){
+      OS_ASSERT(!suggestedStandardsSpaceTypes.empty());
+      m_standardsSpaceTypeComboBox->setCurrentIndex(1);
+    }else{
+      m_standardsSpaceTypeComboBox->setCurrentIndex(0);
+    }
+  }
+  QCompleter* c = m_standardsSpaceTypeComboBox->completer();
+
+  bool isConnected = false;
+  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsSpaceTypeChanged(const QString&)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(editStandardsSpaceType(const QString&)));
+  OS_ASSERT(isConnected);
 }
 
 

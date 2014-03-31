@@ -92,6 +92,31 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
   OS_ASSERT(isConnected);
 }
 
+void MainRightColumnController::registerSystemItem(const Handle & systemHandle, SystemItem * systemItem)
+{
+  m_systemItemMap[systemHandle] = systemItem;
+}
+
+void MainRightColumnController::unregisterSystemItem(const Handle & systemHandle)
+{
+  std::map<Handle,SystemItem *>::iterator it = m_systemItemMap.find(systemHandle);
+  if( it != m_systemItemMap.end() )
+  {
+    m_systemItemMap.erase(it);
+  }
+}
+
+SystemItem * MainRightColumnController::systemItem(const Handle & systemHandle) const
+{
+  std::map<Handle,SystemItem *>::const_iterator it = m_systemItemMap.find(systemHandle);
+  if( it != m_systemItemMap.end() )
+  {
+    return it->second;
+  }
+
+  return NULL;
+}
+
 void MainRightColumnController::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
 {
   if( modelObject )
@@ -684,6 +709,7 @@ void MainRightColumnController::configureForFacilitySubTab(int subTabID)
   myLibraryList->setShowFilterLayout(true);
   
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
+  myLibraryList->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust,"Fan Zone Exhaust");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
   myLibraryList->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
@@ -758,6 +784,7 @@ void MainRightColumnController::configureForThermalZonesSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric,"Baseboard Convective Electric");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water,"Baseboard Convective Water");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_FourPipeFanCoil,"Four Pipe Fan Coil");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Fan_ZoneExhaust,"Fan Zone Exhaust");  
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump,"PTHP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump,"Water To Air HP");
   libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner,"PTAC");
@@ -794,8 +821,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
+  myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
+  myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled,"Refrigeration Condenser Water Cooled");  
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_Water,"Coil Heating Water");
- // myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit,"Coil Heating Water To Air HP");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
@@ -826,6 +854,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical,"Refrigeration Subcooler Mechanical");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction,"Refrigeration Subcooler Liquid Suction");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Compressor,"Refrigeration Compressor");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_Cascade,"Refrigeration Condenser Cascade");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled,"Refrigeration Condenser Water Cooled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled,"Refrigeration Condenser Evaporative Cooled");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled,"Refrigeration Condenser Air Cooled");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Case,"Refrigeration Case");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");
@@ -859,6 +890,8 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled,"AirTerminal Single Duct Uncontrolled");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem,"AirLoopHVAC Outdoor Air System");
   libraryWidget->addModelObjectType(IddObjectType::OS_AirTerminal_SingleDuct_VAV_NoReheat,"AirTerminal Single Duct VAV NoReheat");
+  libraryWidget->addModelObjectType(IddObjectType::OS_AirConditioner_VariableRefrigerantFlow,"VRF System");
+  libraryWidget->addModelObjectType(IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow,"VRF Terminal");
 
   setLibraryView(libraryWidget);
 

@@ -9,6 +9,8 @@
 #define UTILITIES_API
 #define RUNMANAGER_API
 
+%feature("director") RunManagerWatcher;  
+
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
@@ -36,6 +38,8 @@
   #include <runmanager/lib/WorkItem.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
+  #include <runmanager/lib/MergedJobResults.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
   
   #include <ruleset/OSArgument.hpp>
   #include <utilities/core/Path.hpp>
@@ -147,6 +151,7 @@
 %template(OptionalWorkItem) boost::optional<openstudio::runmanager::WorkItem>;
 %template(OptionalRunManager) boost::optional<openstudio::runmanager::RunManager>;
 %template(OptionalTools) boost::optional<openstudio::runmanager::Tools>;
+%template(OptionalFiles) boost::optional<openstudio::runmanager::Files>;
 
 %template(ErrorTypeStringPair) std::pair<openstudio::runmanager::ErrorType, std::string>;
 
@@ -162,7 +167,7 @@
 %template(ToolInfoPair) std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo>;
 %template(ToolInfoPairVector) std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >;
 %template(ErrorTypeStringPairVector) std::vector<std::pair<openstudio::runmanager::ErrorType, std::string> >;
-
+%template(MergedJobResultsVector) std::vector<openstudio::runmanager::MergedJobResults>;
 
 %include <runmanager/lib/SimulationEngine.hpp>
 %include <runmanager/lib/ErrorEstimation.hpp>
@@ -175,6 +180,7 @@
 %include <runmanager/lib/FileInfo.hpp>
 %include <runmanager/lib/AdvancedStatus.hpp>
 %include <runmanager/lib/JobState.hpp>
+%include <runmanager/lib/MergedJobResults.hpp>
 %include <runmanager/lib/Job.hpp>
 %include <runmanager/lib/JobFactory.hpp>
 %include <runmanager/lib/RunManager.hpp>
@@ -182,6 +188,7 @@
 %include <runmanager/lib/ConfigOptions.hpp>
 %include <runmanager/lib/TreeStatus.hpp>
 %include <runmanager/lib/JobStatusWidget.hpp>
+%include <runmanager/lib/RunManagerWatcher.hpp>
 
 #endif // RUNMANAGER_RUNMANAGER_I
 

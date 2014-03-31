@@ -102,7 +102,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
   std::vector<std::string> dayOfWeekValues = model::YearDescription::validDayofWeekforStartDayValues();
   for( std::vector<std::string>::iterator it = dayOfWeekValues.begin();
        it < dayOfWeekValues.end();
-       it++ )
+       ++it )
   {
     m_firstDayOfYearEdit->addItem(QString::fromStdString(*it));
   }
@@ -215,7 +215,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   for( std::vector<std::string>::iterator it = weeks.begin();
        it < weeks.end();
-       it++ )
+       ++it )
   {
     m_startWeekBox->addItem(QString::fromStdString(*it));
     m_endWeekBox->addItem(QString::fromStdString(*it));
@@ -223,7 +223,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   for( std::vector<std::string>::iterator it = days.begin();
        it < days.end();
-       it++ )
+       ++it )
   {
     m_startDayBox->addItem(QString::fromStdString(*it));
     m_endDayBox->addItem(QString::fromStdString(*it));
@@ -231,7 +231,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
   for( std::vector<std::string>::iterator it = months.begin();
        it < months.end();
-       it++ )
+       ++it )
   {
     m_startMonthBox->addItem(QString::fromStdString(*it));
     m_endMonthBox->addItem(QString::fromStdString(*it));
@@ -567,7 +567,7 @@ std::vector<std::string> YearSettingsWidget::daysOfWeek()
 
   for( std::map<int, std::string>::iterator it = nameMap.begin();
        it != nameMap.end();
-       it++ )
+       ++it )
   {
     result.push_back(it->second);
   }
@@ -583,7 +583,7 @@ std::vector<std::string> YearSettingsWidget::months()
 
   for( std::map<int, std::string>::iterator it = nameMap.begin();
        it != nameMap.end();
-       it++ )
+       ++it )
   {
     if (it->first == boost::date_time::NumMonths){
       // do nothing

@@ -87,35 +87,58 @@ std::vector<openstudio::IdfObject> PlantLoop_Impl::remove()
 
   ModelObjectVector modelObjects;
   ModelObjectVector::iterator it;
-  modelObjects = this->components();
 
+  modelObjects = supplyComponents();
   for(it = modelObjects.begin();
       it != modelObjects.end();
-      it++)
+      ++it)
   {
-    if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
+    if( boost::optional<WaterToWaterComponent> comp = it->optionalCast<WaterToWaterComponent>() )
     {
-      comp->disconnectWaterSide();
-    }
-    else if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
-    {
-      comp->disconnect();
+      comp->removeFromPlantLoop();
+      if( ! comp->secondaryPlantLoop() )
+      {
+        comp->remove();
+      }
     }
   }
+
+  modelObjects = demandComponents();
+  for(it = modelObjects.begin();
+      it != modelObjects.end();
+      ++it)
+  {
+    if( boost::optional<WaterToWaterComponent> comp = it->optionalCast<WaterToWaterComponent>() )
+    {
+      comp->removeFromSecondaryPlantLoop();
+      if( ! comp->plantLoop() )
+      {
+        comp->remove();
+      }
+    }
+    else if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
+    {
+      comp->removeFromPlantLoop();
+      if( ! comp->airLoopHVAC() )
+      {
+        comp->remove();
+      }
+    }
+  }
+
+  modelObjects = components();
 
   std::vector<openstudio::IdfObject> idfObjects =  ModelObject_Impl::remove();
 
   for(it = modelObjects.begin();
       it != modelObjects.end();
-      it++)
+      ++it)
   {
-    if( OptionalHVACComponent comp = it->optionalCast<HVACComponent>() )
+    if( boost::optional<HVACComponent> comp = it->optionalCast<HVACComponent>() )
     {
-      if( ! it->optionalCast<WaterToAirComponent>() )
-      {
-        it->cast<HVACComponent>().remove();
-      }
+      comp->disconnect();
     }
+    it->remove();
   }
 
   return idfObjects;
@@ -349,7 +372,7 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
 
   for( std::vector<ModelObject>::iterator it = allComponents.begin();
        it < allComponents.end();
-       it++ )
+       ++it )
   {
     if( ! it->optionalCast<Node>() )
     {
@@ -575,7 +598,7 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
 
   for( std::vector<SizingPlant>::iterator it = sizingObjects.begin();
        it < sizingObjects.end();
-       it++ )
+       ++it )
   {
     if( it->plantLoop().handle() == this->handle() )
     {

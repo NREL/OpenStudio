@@ -34,7 +34,7 @@
 namespace openstudio {
   
 
-ExportXMLDialog::ExportXMLDialog(const std::vector<std::string> alternatives, QWidget* parent)
+ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent)
   : OSDialog(false, parent)
 {
   this->setWindowTitle("Define Baselines");
@@ -120,31 +120,19 @@ ExportXMLDialog::~ExportXMLDialog()
 
 std::string ExportXMLDialog::getEDABaseline()
 {
-  std::string result = "No EDA Baseline";
-
-  result = m_edaBaselineComboBox->currentText().toStdString();
-
-  return result;
+  return m_edaBaselineComboBox->currentText().toStdString();
 
 }
 
 std::string ExportXMLDialog::getProposedBaseline()
 {
-  std::string result = "No Proposed Baseline";
-
-  result = m_proposedBaselineComboBox->currentText().toStdString();
-
-  return result;
+  return m_proposedBaselineComboBox->currentText().toStdString();
 
 }
 
 std::string ExportXMLDialog::getCertificationBaseline()
 {
-  std::string result = "No Certification Baseline";
-
-  result = m_certificationBaselineComboBox->currentText().toStdString();
-
-  return result;
+  return m_certificationBaselineComboBox->currentText().toStdString();
 
 }
 

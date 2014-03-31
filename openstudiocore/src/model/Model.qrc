@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+  <qresource>
+    <file>resources/standards/OpenStudio_Standards.json</file>
+  </qresource>
+</RCC>
+
+

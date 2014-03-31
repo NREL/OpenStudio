@@ -356,7 +356,7 @@ namespace detail {
 
       for( std::vector<ControllerWaterCoil>::iterator it = controllers.begin();
       it < controllers.end();
-      it++ )
+      ++it )
       {
         if( it->actuatorNode() == coilWaterInletNode )
         {
@@ -368,14 +368,24 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<openstudio::IdfObject> CoilCoolingWater_Impl::remove()
+  bool CoilCoolingWater_Impl::removeFromPlantLoop()
   {
     if( boost::optional<ControllerWaterCoil> controller = this->controllerWaterCoil() )
     {
       controller->remove();
     }
 
-    return WaterToAirComponent_Impl::remove();
+    return WaterToAirComponent_Impl::removeFromPlantLoop();
+  }
+
+  std::vector<openstudio::IdfObject> CoilCoolingWater_Impl::remove()
+  {
+    if( isRemovable() )
+    {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
   }
 
   ModelObject CoilCoolingWater_Impl::clone(Model model) const
@@ -430,7 +440,7 @@ namespace detail {
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->coolingCoil() )
       {

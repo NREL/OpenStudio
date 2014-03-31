@@ -10,7 +10,7 @@
 static int callback(void *r, int argc, char **argv, char **azColName) 
 {
 
-  Results * m_results = (Results*)r;
+  Results * m_results = static_cast<Results*>(r);
 
   //std::cout << "callback = " << argc << std::endl;
 
@@ -200,13 +200,13 @@ void SqliteObject::print(){
 
 void SqliteObject::summary(){
 
-  std::stringstream cmd1,cmd2,cmd3;
+  std::stringstream cmd1,cmd2;
   cmd1 << "select * from reportMeterData order by ReportMeterDataDictionaryIndex";
   execute(cmd1.str());
   print();
 
-  cmd3 << "select * from Time";
-  execute(cmd3.str());
+  cmd2 << "select * from Time";
+  execute(cmd2.str());
   print();
 
 }

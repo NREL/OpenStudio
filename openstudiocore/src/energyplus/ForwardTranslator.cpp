@@ -55,6 +55,8 @@
 #include <utilities/idd/Output_VariableDictionary_FieldEnums.hxx>
 #include <utilities/idd/Output_SQLite_FieldEnums.hxx>
 #include <utilities/idd/ProgramControl_FieldEnums.hxx>
+#include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/plot/ProgressBar.hpp>
@@ -83,6 +85,7 @@ ForwardTranslator::ForwardTranslator()
   // temp code 
   m_keepRunControlSpecialDays = false;
   m_ipTabularOutput = false;
+  m_excludeLCCObjects = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -145,19 +148,14 @@ void ForwardTranslator::setIPTabularOutput(bool isIP)
   m_ipTabularOutput = isIP;
 }
 
+void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects)
+{
+  m_excludeLCCObjects = excludeLCCObjects;
+}
+
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
-  m_idfObjects.clear();
-
-  m_map.clear();
-
-  m_anyNumberScheduleTypeLimits.reset();
-
-  m_constructionHandleToReversedConstructions.clear();
-
-  m_logSink.setThreadId(QThread::currentThread());
-
-  m_logSink.resetStringStream();
+  reset();
 
   // translate Version first
   model::Version version = model.getUniqueModelObject<model::Version>();
@@ -231,17 +229,19 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (fullModelTranslation){
 
     // translate life cycle cost parameters
-    boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
-    if (!lifeCycleCostParameters){
-      // only warn if costs are present
-      if (!model.getModelObjects<LifeCycleCost>().empty()){
-        LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+    if( ! m_excludeLCCObjects ){
+      boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
+      if (!lifeCycleCostParameters){
+        // only warn if costs are present
+        if (!model.getModelObjects<LifeCycleCost>().empty()){
+          LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
+        }
+        
+        // always add this object so E+ results section exists
+        lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
       }
-      
-      // always add this object so E+ results section exists
-      lifeCycleCostParameters = model.getUniqueModelObject<LifeCycleCostParameters>();
+      translateAndMapModelObject(*lifeCycleCostParameters);
     }
-    translateAndMapModelObject(*lifeCycleCostParameters);
 
     // ensure that building exists
     boost::optional<model::Building> building = model.building();
@@ -285,7 +285,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
     m_idfObjects.push_back(globalGeometryRules);
-  
+
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
     BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
@@ -409,6 +409,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::AirLoopHVAC airLoopHVAC = modelObject.cast<AirLoopHVAC>();
       retVal = translateAirLoopHVAC(airLoopHVAC);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum :
+    {
+      model::AirLoopHVACReturnPlenum airLoopHVACReturnPlenum = modelObject.cast<AirLoopHVACReturnPlenum>();
+      retVal = translateAirLoopHVACReturnPlenum(airLoopHVACReturnPlenum);
+      break;
+    }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_SupplyPlenum :
+    {
+      model::AirLoopHVACSupplyPlenum airLoopHVACSupplyPlenum = modelObject.cast<AirLoopHVACSupplyPlenum>();
+      retVal = translateAirLoopHVACSupplyPlenum(airLoopHVACSupplyPlenum);
       break;
     }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_Reheat :
@@ -945,6 +957,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanVariableVolume(fan);
       break;
     }
+    
+  case openstudio::IddObjectType::OS_Fan_ZoneExhaust :
+    {
+      model::FanZoneExhaust fan = modelObject.cast<FanZoneExhaust>();
+      retVal = translateFanZoneExhaust(fan);
+      break;
+    }
+    
   case openstudio::IddObjectType::OS_GroundHeatExchanger_Vertical :
     {
       model::GroundHeatExchangerVertical groundHeatExchangerVertical = modelObject.cast<GroundHeatExchangerVertical>();
@@ -1748,7 +1768,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_Facility);
   result.push_back(IddObjectType::OS_Building);
-  result.push_back(IddObjectType::OS_StandardsInformation_Building);
   result.push_back(IddObjectType::OS_BuildingStory);
   result.push_back(IddObjectType::OS_LightingSimulationZone);
 
@@ -1826,10 +1845,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
   result.push_back(IddObjectType::OS_Fan_ConstantVolume);
   result.push_back(IddObjectType::OS_Fan_OnOff);
+  result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);
-  result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
   result.push_back(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Water);
   result.push_back(IddObjectType::OS_ZoneHVAC_IdealLoadsAirSystem);
   result.push_back(IddObjectType::OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow);
@@ -1890,6 +1909,16 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
     BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
+
+      if (modelObject.optionalCast<ConstructionBase>()){
+        if (istringEqual("Interior Partition Surface Construction", workspaceObject.name().get())){
+          m_interiorPartitionSurfaceConstruction = modelObject.cast<ConstructionBase>();
+        }
+
+        if (istringEqual("Shading Surface Construction", workspaceObject.name().get())){
+          m_exteriorSurfaceConstruction = modelObject.cast<ConstructionBase>();
+        }
+      }
     }
   }
 }
@@ -1926,15 +1955,45 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
 
-      if (istringEqual("Always_On", workspaceObject.name().get())){
-        m_alwaysOnSchedule = result;
-      }
+      if ((iddObjectType == IddObjectType::OS_Schedule_Compact) ||
+          (iddObjectType == IddObjectType::OS_Schedule_Constant) ||
+          (iddObjectType == IddObjectType::OS_Schedule_Ruleset) ||
+          (iddObjectType == IddObjectType::OS_Schedule_FixedInterval) ||
+          (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)){
+        if (istringEqual("Always_On", workspaceObject.name().get())){
+          m_alwaysOnSchedule = result;
+        }
 
-      if (istringEqual("Always_Off", workspaceObject.name().get())){
-        m_alwaysOffSchedule = result;
+        if (istringEqual("Always_Off", workspaceObject.name().get())){
+          m_alwaysOffSchedule = result;
+        }
       }
     }
   }
+}
+
+void ForwardTranslator::reset()
+{
+  m_idfObjects.clear();
+
+  m_map.clear();
+
+  m_anyNumberScheduleTypeLimits.reset();
+
+  m_alwaysOnSchedule.reset();
+
+  m_alwaysOffSchedule.reset();
+
+  m_interiorPartitionSurfaceConstruction.reset();
+
+  m_exteriorSurfaceConstruction.reset();
+
+  m_constructionHandleToReversedConstructions.clear();
+
+  m_logSink.setThreadId(QThread::currentThread());
+
+  m_logSink.resetStringStream();
+
 }
 
 IdfObject ForwardTranslator::alwaysOnSchedule()
@@ -1965,6 +2024,50 @@ IdfObject ForwardTranslator::alwaysOffSchedule()
   m_idfObjects.push_back(*m_alwaysOffSchedule);
 
   return *m_alwaysOffSchedule;
+}
+
+model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(model::Model & model)
+{
+  if (m_interiorPartitionSurfaceConstruction){
+    return *m_interiorPartitionSurfaceConstruction;
+  }
+
+  StandardOpaqueMaterial material(model, "MediumSmooth", 0.0254, 0.16, 800, 1090);
+  material.setThermalAbsorptance(0.4);
+  material.setSolarAbsorptance(0.4);
+  material.setVisibleAbsorptance(0.3);
+
+  model::Construction construction(model);
+  construction.setName("Interior Partition Surface Construction");
+  construction.insertLayer(0, material);
+  m_interiorPartitionSurfaceConstruction = construction;
+
+  translateAndMapModelObject(material);
+  translateAndMapModelObject(construction);
+
+  return *m_interiorPartitionSurfaceConstruction;
+}
+
+model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Model & model)
+{
+  if (m_exteriorSurfaceConstruction){
+    return *m_exteriorSurfaceConstruction;
+  }
+
+  StandardOpaqueMaterial material(model, "MediumSmooth", 0.1524, 0.49, 512, 880);
+  material.setThermalAbsorptance(0.6);
+  material.setSolarAbsorptance(0.6);
+  material.setVisibleAbsorptance(0.5);
+
+  model::Construction construction(model);
+  construction.setName("Interior Partition Surface Construction");
+  construction.insertLayer(0, material);
+  m_exteriorSurfaceConstruction = construction;
+
+  translateAndMapModelObject(material);
+  translateAndMapModelObject(construction);
+
+  return *m_exteriorSurfaceConstruction;
 }
 
 model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction)
@@ -2088,8 +2191,14 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
         LOG(Warn, "Both surfaces '" << surface.name() << "', and '" << adjacentSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
+        // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (surface.name() < adjacentSurface->name()){
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+        }else{
+          surface.setConstruction(c2);
+          adjacentSurface->setConstruction(c1);
+        }
       }
 
       processedSurfaces.insert(surface.handle());
@@ -2229,8 +2338,14 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
         LOG(Warn, "Both sub surfaces '" << subSurface.name() << "', and '" << adjacentSubSurface->name() 
                << "' reference the same construction '" << c1.name() << "' but it is not symmetric, creating a reversed copy." );
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
+        // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
+        if (subSurface.name() < adjacentSubSurface->name()){
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+        }else{
+          subSurface.setConstruction(c2);
+          adjacentSubSurface->setConstruction(c1);
+        }
       }
 
       processedSubSurfaces.insert(subSurface.handle());
@@ -2317,6 +2432,27 @@ void ForwardTranslator::createStandardOutputRequests()
   IdfObject sqliteOutput(IddObjectType::Output_SQLite);
   sqliteOutput.setString(Output_SQLiteFields::OptionType,"SimpleAndTabular");
   m_idfObjects.push_back(sqliteOutput);
+
+  // ensure at least one life cycle cost exists to prevent crash in E+ 8
+  unsigned numCosts = 0;
+  BOOST_FOREACH(const IdfObject& object, m_idfObjects){
+    if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost){
+      numCosts += 1;
+    }else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts){
+      numCosts += 1;
+    }
+  }
+  if (numCosts == 0){
+    // add default cost
+    IdfObject idfObject(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+    idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+    idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+  }
+
 }
 
 IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType,
@@ -2373,7 +2509,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), glycolName)) {
@@ -2412,7 +2548,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
   for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
      it != m_idfObjects.end();
-     it++ )
+     ++it )
   {
     if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
       if(istringEqual(it->getString(FluidProperties_NameFields::FluidName,true).get(), fluidType)) {
@@ -2437,7 +2573,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
 
     for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
        it != fluidObjects.end();
-       it++ )
+       ++it )
     {
       if(it->iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
         idfObject = *it;

@@ -161,8 +161,8 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
   }
 
   // see if same selection
-  bool allMatch = true;
   if (m_selectedObjectHandles.size() == selectedObjectHandles.size()){
+    bool allMatch = true;
     for (unsigned i = 0; i < m_selectedObjectHandles.size(); ++i){
       if (m_selectedObjectHandles[i] != selectedObjectHandles[i]){
         allMatch = false;
@@ -194,7 +194,7 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
   for (int i = 0; i < m_tableWidget->rowCount(); ++i){
 
     QString handleString = m_tableWidget->item(i,0)->data(Qt::UserRole).toString();
-    std::string temp = toString(handleString);
+    //std::string temp = toString(handleString);
     Handle handle(handleString);
 
     std::vector<Handle>::iterator it = std::find(m_selectedObjectHandles.begin(),
@@ -1143,7 +1143,6 @@ void InspectorDialog::loadTableWidgetData()
   int i=0, j=0;
   //bool connected;
   //QCheckBox * checkBox;
-  QTableWidgetItem * tableItem = NULL;
 
   std::vector<WorkspaceObject> objects = m_model.getObjectsByType(m_iddObjectType);
 
@@ -1160,10 +1159,10 @@ void InspectorDialog::loadTableWidgetData()
     unsigned numSources = object.numSources();
     displayName += QString(" (") + QString::number(numSources) + QString(")");
 
-    tableItem = new QTableWidgetItem(displayName);
+    QTableWidgetItem * tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     QString handleString(object.handle().toString());
-    std::string temp = toString(handleString);
+    //std::string temp = toString(handleString);
     tableItem->setData(Qt::UserRole, handleString);
     m_tableWidget->setItem(i,j++,tableItem);
 
@@ -1195,7 +1194,7 @@ void InspectorDialog::getTableWidgetSelected(std::vector<openstudio::Handle>& se
     int column = m_tableWidget->column(selectedItems.at(i));
     if (column == 0){
       QString handleString = selectedItems.at(i)->data(Qt::UserRole).toString();
-      std::string temp = toString(handleString);
+      //std::string temp = toString(handleString);
       selectedHandles.push_back(Handle(handleString));
     }
   }

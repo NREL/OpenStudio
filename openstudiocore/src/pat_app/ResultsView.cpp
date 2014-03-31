@@ -1289,7 +1289,7 @@ boost::optional<double> DataPointResultsView::getValue(const std::string& attrib
       if(desiredQuantity){
         desiredResult = desiredQuantity->value();
         Unit unit = desiredQuantity->units();
-        std::string standardString = unit.standardString();
+        //std::string standardString = unit.standardString();
       }
     }
   }

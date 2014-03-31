@@ -196,8 +196,7 @@ namespace detail {
   }
 
   bool People_Impl::setMultiplier(double multiplier) {
-    bool result = false;
-    result = setDouble(OS_PeopleFields::Multiplier, multiplier);
+    bool result = setDouble(OS_PeopleFields::Multiplier, multiplier);
     return result;
   }
 

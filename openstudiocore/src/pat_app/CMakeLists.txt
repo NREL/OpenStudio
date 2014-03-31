@@ -126,6 +126,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/NetworkProxyDialog.cpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 )
 
 # moc files
@@ -187,6 +189,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 )
 
 ## resource files

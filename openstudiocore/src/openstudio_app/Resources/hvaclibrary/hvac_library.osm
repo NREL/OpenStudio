@@ -1,7 +1,7 @@
 
 OS:Version,
-  {17cd93d1-c4e9-47f6-b89a-1dd22016b52e}, !- Handle
-  1.2.0;                                  !- Version Identifier
+  {a203989d-1ddf-4019-9b3d-be45dd78a82c}, !- Handle
+  1.2.4;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -2579,7 +2579,7 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
 
 OS:Refrigeration:Condenser:AirCooled,
   {825bada4-344f-4a1b-8e72-ce40833c0e9e}, !- Handle
-  Air Cooled Refrigeration Condenser,   !- Name
+  Air Cooled Refrigeration Condenser,     !- Name
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Rated Effective Total Heat Rejection Rate Curve Name
   0,                                      !- Rated Subcooling Temperature Difference {deltaC}
   VariableSpeed,                          !- Condenser Fan Speed Control Type
@@ -2587,9 +2587,45 @@ OS:Refrigeration:Condenser:AirCooled,
   0.25,                                   !- Minimum Fan Air Flow Ratio {dimensionless}
   ,                                       !- Air Inlet Zone Name
   ,                                       !- End-Use Subcategory
-  ,                                       !- Condenser Refrigerant Operating Charge Inventory
-  ,                                       !- Condensate Receiver Refrigerant Inventory
-  ;                                       !- Condensate Piping Refrigerant Inventory
+  ,                                       !- Condenser Refrigerant Operating Charge Inventory {kg}
+  ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
+  ;                                       !- Condensate Piping Refrigerant Inventory {kg}
+
+OS:Refrigeration:Condenser:EvaporativeCooled,
+  {5fdbc0e0-d650-469d-8866-8c6d8f6b8b46}, !- Handle
+  Refrigeration Condenser Evaporative Cooled, !- Name
+  43100,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  VariableSpeed,                          !- Fan Speed Control Type
+  373,                                    !- Rated Fan Power {W}
+  0.2,                                    !- Minimum Fan Air Flow Ratio {dimensionless}
+  6.63,                                   !- Approach Temperature Constant Term {C}
+  0.468,                                  !- Approach Temperature Coefficient 2 {C}
+  17.93,                                  !- Approach Temperature Coefficient 3 {C}
+  -0.322,                                 !- Approach Temperature Coefficient 4 {dimensionless}
+  0.6,                                    !- Minimum Capacity Factor {dimensionless}
+  4.8,                                    !- Maximum Capacity Factor {dimensionless}
+  ,                                       !- Air Inlet Node Name
+  1.37,                                   !- Rated Air Flow Rate {m3/s}
+  66.7,                                   !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  250;                                    !- Rated Water Pump Power {W}
+
+OS:Refrigeration:Condenser:WaterCooled,
+  {257357d5-041a-479c-894c-68cc5cff9e82}, !- Handle
+  Refrigeration Condenser Water Cooled, !- Name
+  58000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  29.4,                                   !- Rated Condensing Temperature {C}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  10,                                     !- Rated Water Inlet Temperature {C}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ConstantFlow,                           !- Water-Cooled Loop Flow Type
+  ,                                       !- Water Outlet Temperature Schedule Name
+  0.0025,                                 !- Water Design Flow Rate {m3/s}
+  0.003,                                  !- Water Maximum Flow Rate {m3/s}
+  55,                                     !- Water Maximum Water Outlet Temperature {C}
+  10;                                     !- Water Minimum Water Inlet Temperature {C}
 
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
@@ -2598,16 +2634,74 @@ OS:Curve:Linear,
   22000,                                  !- Coefficient2 x
   5,                                      !- Minimum Value of x {BasedOnField A2}
   22.2,                                   !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Value of x
-  ,                                       !- Maximum Value of x
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
 OS:Refrigeration:Compressor,
+  {c3d8eabe-c94f-40b6-a06f-6c5a7881a20f}, !- Handle
+  Refrigeration Compressor - Rated Superheat,             !- Name
+  {e2a4b3e2-485a-42d3-beea-40b7f98e5e00}, !- Refrigeration Compressor Power Curve Name
+  {47f98e62-200b-4fb0-b986-1360e34dced1}, !- Refrigeration Compressor Capacity Curve Name
+  5.56,                                       !- Rated Superheat {deltaC}
+  ,                                   !- Rated Return Gas Temperature {C}
+  ,                                       !- Rated Liquid Temperature {C}
+  0,                                      !- Rated Subcooling {deltaC}
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Mode of Operation
+  ,                                       !- Transcritical Compressor Power Curve Name
+  ;                                       !- Transcritical Compressor Capacity Curve Name
+
+OS:Curve:Bicubic,
+  {e2a4b3e2-485a-42d3-beea-40b7f98e5e00}, !- Handle
+  Refrigeration Compressor Power Curve 1,   !- Name
+  4451.46,                                !- Coefficient1 Constant
+  -166.108,                               !- Coefficient2 x
+  -5.35664,                               !- Coefficient3 x**2
+  263.553,                                !- Coefficient4 y
+  -0.958849,                              !- Coefficient5 y**2
+  8.09252,                                !- Coefficient6 x*y
+  -0.0239354,                             !- Coefficient7 x**3
+  0.000633306,                            !- Coefficient8 y**3
+  0.0778798,                              !- Coefficient9 x**2*y
+  -0.0167386,                             !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Power;                                  !- Output Unit Type
+
+OS:Curve:Bicubic,
+  {47f98e62-200b-4fb0-b986-1360e34dced1}, !- Handle
+  Refrigeration Compressor Capacity Curve 1, !- Name
+  83249.9,                                !- Coefficient1 Constant
+  3147.96,                                !- Coefficient2 x
+  44.9276,                                !- Coefficient3 x**2
+  -1035.51,                               !- Coefficient4 y
+  3.74692,                                !- Coefficient5 y**2
+  -37.3907,                               !- Coefficient6 x*y
+  0.179897,                               !- Coefficient7 x**3
+  -0.0199971,                             !- Coefficient8 y**3
+  -0.481641,                              !- Coefficient9 x**2*y
+  0.0428673,                              !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Capacity;                               !- Output Unit Type
+
+OS:Refrigeration:Compressor,
   {56efd5d3-167b-4b77-b017-7704623596e1}, !- Handle
-  Refrigeration Compressor,             !- Name
+  Refrigeration Compressor - Rated Return Gas Temp,               !- Name
   {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Refrigeration Compressor Power Curve Name
   {fa8d1a11-1610-42d7-87bf-b9d29315c412}, !- Refrigeration Compressor Capacity Curve Name
   ,                                       !- Rated Superheat {deltaC}
@@ -2682,7 +2776,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:Case,
   {f2b4154e-97d8-492a-b1d1-1f2e7f9c1d34}, !- Handle
-  Refrigeration Case,                   !- Name
+  Refrigeration Case,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   ,                                       !- Zone Name
   24,                                     !- Rated Ambient Temperature {C}
@@ -2716,7 +2810,7 @@ OS:Refrigeration:Case,
   ,                                       !- Refrigerated Case Restocking Schedule Name
   ,                                       !- Case Credit Fraction Schedule Name
   -5.56,                                  !- Design Evaporator Temperature or Brine Inlet Temperature {C}
-  ;                                       !- Average Refrigerant Charge Inventory
+  ;                                       !- Average Refrigerant Charge Inventory {kg/m}
 
 OS:Curve:Cubic,
   {012a63c6-2590-4f3d-a487-c600bf72ad75}, !- Handle
@@ -2727,50 +2821,99 @@ OS:Curve:Cubic,
   1.23732e-06,                            !- Coefficient4 x**3
   -35,                                    !- Minimum Value of x {BasedOnField A2}
   20,                                     !- Maximum Value of x {BasedOnField A2}
-  ,                                       !- Minimum Value of x
-  ,                                       !- Maximum Value of x
-  ,                                       !- Minimum Curve Output
-  ,                                       !- Maximum Curve Output
+  ,                                       !- Minimum Curve Output {BasedOnField A3}
+  ,                                       !- Maximum Curve Output {BasedOnField A3}
   ,                                       !- Input Unit Type for X
   ;                                       !- Output Unit Type
 
 OS:ScheduleTypeLimits,
   {b753221d-2424-45d9-a74b-31494bf508ef}, !- Handle
-  Fractional,                             !- Name
+  Fractional 1,                           !- Name
   0,                                      !- Lower Limit Value {BasedOnField A4}
   1,                                      !- Upper Limit Value {BasedOnField A4}
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:System,
-  {c5203f94-88c4-413e-af5c-938dee4249e2}, !- Handle
+  {d94c076d-2f56-436e-84eb-8f8b77ff0dd1}, !- Handle
   Refrigeration System,                 !- Name
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Refrigerated CaseAndWalkInList Name
-  ,                                       !- Refrigeration TransferLoad List Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Refrigerated CaseAndWalkInList Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Refrigeration TransferLoad List Name
   ,                                       !- Refrigeration Condenser Name
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- CompressorList Name
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- CompressorList Name
   21,                                     !- Minimum Condensing Temperature {C}
   R404a,                                  !- Refrigeration System Working Fluid Type
   ConstantSuctionTemperature,             !- Suction Temperature Control Type
   ,                                       !- Mechanical Subcooler Name
   ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
-  ,                                       !- Sum UA Suction Piping
+  ,                                       !- Sum UA Suction Piping {W/K}
   ,                                       !- Suction Piping Zone Name
   ,                                       !- End-Use Subcategory
   ,                                       !- Intercooler Type
   ,                                       !- Shell-and-Coil Intercooler Effectiveness
-  ;                                       !- High-Stage CompressorList Name
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}; !- High-Stage CompressorList Name
 
 OS:ModelObjectList,
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Handle
-  Refrigeration System Case and Walkin List; !- Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Handle
+  Refrigeration System Case and Walkin List 1; !- Name
 
 OS:ModelObjectList,
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
-  Refrigeration System Compressor List; !- Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Handle
+  Refrigeration System Transfer Load List 1; !- Name
+
+OS:ModelObjectList,
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- Handle
+  Refrigeration System Compressor List 1; !- Name
+
+OS:ModelObjectList,
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}, !- Handle
+  Refrigeration System High Stage Compressor List 1; !- Name
+
+OS:Refrigeration:System,
+  {2443bf2b-46a6-49bd-a044-6d8a8c6a7a30}, !- Handle
+  Cascade System,                         !- Name
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Refrigerated CaseAndWalkInList Name
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Refrigeration TransferLoad List Name
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Refrigeration Condenser Name
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- CompressorList Name
+  21,                                     !- Minimum Condensing Temperature {C}
+  R404a,                                  !- Refrigeration System Working Fluid Type
+  ConstantSuctionTemperature,             !- Suction Temperature Control Type
+  ,                                       !- Mechanical Subcooler Name
+  ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
+  ,                                       !- Sum UA Suction Piping {W/K}
+  ,                                       !- Suction Piping Zone Name
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Intercooler Type
+  ,                                       !- Shell-and-Coil Intercooler Effectiveness
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}; !- High-Stage CompressorList Name
+
+OS:ModelObjectList,
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Handle
+  Refrigeration System 1 Case and Walkin List; !- Name
+
+OS:ModelObjectList,
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Handle
+  Refrigeration System 1 Transfer Load List; !- Name
+
+OS:ModelObjectList,
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- Handle
+  Refrigeration System 1 Compressor List; !- Name
+
+OS:ModelObjectList,
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}, !- Handle
+  Refrigeration System 1 High Stage Compressor List; !- Name
+
+OS:Refrigeration:Condenser:Cascade,
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Handle
+  Cascade Condenser,                      !- Name
+  -4,                                     !- Rated Condensing Temperature {C}
+  3,                                      !- Rated Approach Temperature Difference {deltaC}
+  20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  Fixed;                                  !- Condensing Temperature Control Type
 
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle
-  Refrigeration Subcooler Mechanical,   !- Name
+  Refrigeration Subcooler Mechanical,     !- Name
   ,                                       !- Capacity-Providing System
   10;                                     !- Outlet Control Temperature {C}
 
@@ -2783,13 +2926,13 @@ OS:Refrigeration:Subcooler:LiquidSuction,
 
 OS:Schedule:Ruleset,
   {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Handle
-  Always Off Schedule,                     !- Name
+  Always Off Schedule,                    !- Name
   {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
   {cf531912-42db-457b-983b-bd936ad4f545}; !- Default Day Schedule Name
 
 OS:Schedule:Day,
   {cf531912-42db-457b-983b-bd936ad4f545}, !- Handle
-  Always Off Schedule Day,                         !- Name
+  Always Off Schedule Day,                !- Name
   {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
   ,                                       !- Interpolate to Timestep
   24,                                     !- Hour 1
@@ -2798,7 +2941,7 @@ OS:Schedule:Day,
 
 OS:Refrigeration:WalkIn,
   {ee3d06e5-e4a3-4b2d-b500-c9622fffe03c}, !- Handle
-  Refrigeration Walk In,                !- Name
+  Refrigeration Walk In,                  !- Name
   ,                                       !- Availability Schedule Name
   4690,                                   !- Rated Coil Cooling Capacity {W}
   -2.22,                                  !- Operating Temperature {C}
@@ -2846,7 +2989,7 @@ OS:Refrigeration:WalkIn:ZoneBoundary,
 
 OS:CoolingTower:VariableSpeed,
   {2e6faa4b-6a62-40f1-b39f-d0100fe47857}, !- Handle
-  Cooling Tower Variable Speed,         !- Name
+  Cooling Tower Variable Speed,           !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsCrossFlow,                     !- Model Type
@@ -2885,11 +3028,11 @@ OS:Curve:Cubic,
   -0.0838,                                !- Coefficient3 x**2
   1.0419,                                 !- Coefficient4 x**3
   0.15,                                   !- Minimum Value of x {BasedOnField A2}
-  1;  
+  1;                                      !- Maximum Value of x {BasedOnField A2}
 
 OS:CoolingTower:VariableSpeed,
   {c297d8fd-cf34-420a-bd55-ea44c46983f3}, !- Handle
-  Cooling Tower Cool Tools,         !- Name
+  Cooling Tower Cool Tools,               !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   CoolToolsUserDefined,                   !- Model Type
@@ -2979,7 +3122,7 @@ OS:CoolingTowerPerformance:CoolTools,
 
 OS:CoolingTower:VariableSpeed,
   {3bef5e15-fbeb-44fb-9c20-dd99b0c36dab}, !- Handle
-  Cooling Tower York Calc,         !- Name
+  Cooling Tower York Calc,                !- Name
   ,                                       !- Water Inlet Node
   ,                                       !- Water Outlet Node
   YorkCalcUserDefined,                    !- Model Type
@@ -3059,4 +3202,485 @@ OS:CoolingTowerPerformance:YorkCalc,
   -0.0034285382352,                       !- Coefficient 25
   8.56589904e-06,                         !- Coefficient 26
   -1.516821552e-06;                       !- Coefficient 27
+
+OS:AirConditioner:VariableRefrigerantFlow,
+  {8e372bc7-d7e7-4b5a-8a86-1743336eeb58}, !- Handle
+  Air Conditioner Variable Refrigerant Flow, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  3.3,                                    !- Rated Cooling COP {W/W}
+  -5,                                     !- Minimum Outdoor Temperature in Cooling Mode {C}
+  43,                                     !- Maximum Outdoor Temperature in Cooling Mode {C}
+  {2926f90c-053a-445f-9b13-0d558ac66748}, !- Cooling Capacity Ratio Modifier Function of Low Temperature Curve
+  {0aa4713f-db13-4220-8a27-6aad3ac5244a}, !- Cooling Capacity Ratio Boundary Curve
+  {b1e0b7b3-3344-4e2b-88d3-999116ee2631}, !- Cooling Capacity Ratio Modifier Function of High Temperature Curve
+  {dba051d9-1723-4ee1-89ef-233688219289}, !- Cooling Energy Input Ratio Modifier Function of Low Temperature Curve
+  {22b89fad-955f-461b-a968-ed8f28e827af}, !- Cooling Energy Input Ratio Boundary Curve
+  {fb71bd1b-f0d1-456f-bebe-20fe55705faa}, !- Cooling Energy Input Ratio Modifier Function of High Temperature Curve
+  {a229172a-6b1a-464d-bf6a-4cdb6fab82b4}, !- Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
+  {0bdd7db2-69e4-41c4-8f8a-8ef53fe9f815}, !- Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
+  {f3fd889e-b137-49c8-9c37-226b61f66f33}, !- Cooling Combination Ratio Correction Factor Curve
+  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Cooling Part-Load Fraction Correlation Curve
+  autosize,                               !- Rated Total Heating Capacity {W}
+  1,                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+  3.5,                                    !- Rated Heating COP {W/W}
+  -20,                                    !- Minimum Outdoor Temperature in Heating Mode {C}
+  30,                                     !- Maximum Outdoor Temperature in Heating Mode {C}
+  {f3ee1617-95d7-4e86-8c41-c4054351f32d}, !- Heating Capacity Ratio Modifier Function of Low Temperature Curve
+  {443ca85b-e6db-48f4-88f7-fb7736da372d}, !- Heating Capacity Ratio Boundary Curve
+  {7114f15a-b91a-4b48-98c5-91fe3169d763}, !- Heating Capacity Ratio Modifier Function of High Temperature Curve
+  {a3076463-2be9-4802-90a7-081d24ce8d8d}, !- Heating Energy Input Ratio Modifier Function of Low Temperature Curve
+  {2f575dc9-b03e-4064-b231-6e43383e292a}, !- Heating Energy Input Ratio Boundary Curve
+  {bba9f395-e337-48f9-852d-b987452dc367}, !- Heating Energy Input Ratio Modifier Function of High Temperature Curve
+  WetBulbTemperature,                     !- Heating Performance Curve Outdoor Temperature Type
+  {aa3d41db-cd17-44ef-a3ce-bec6504e8910}, !- Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
+  {30fbccd3-f4f0-4bf8-94be-faf7bba3e968}, !- Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
+  {68c0f092-88a2-4ba9-b6b4-4d8f2b091efc}, !- Heating Combination Ratio Correction Factor Curve
+  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Heating Part-Load Fraction Correlation Curve
+  0.25,                                   !- Minimum Heat Pump Part-Load Ratio
+  ,                                       !- Zone Name for Master Thermostat Location
+  LoadPriority,                           !- Master Thermostat Priority Control Type
+  ,                                       !- Thermostat Priority Schedule
+  {bc20ad14-7b22-411b-a875-722e21bb3b59}, !- Zone Terminal Unit List
+  No,                                     !- Heat Pump Waste Heat Recovery
+  30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Cooling Mode {m}
+  10,                                     !- Vertical Height used for Piping Correction Factor {m}
+  {8a603e43-55d3-4244-9b79-d432a9bdcbb1}, !- Piping Correction Factor for Length in Cooling Mode Curve
+  -0.000386,                              !- Piping Correction Factor for Height in Cooling Mode Coefficient
+  30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Heating Mode {m}
+  ,                                       !- Piping Correction Factor for Length in Heating Mode Curve
+  0,                                      !- Piping Correction Factor for Height in Heating Mode Coefficient
+  15,                                     !- Crankcase Heater Power per Compressor {W}
+  3,                                      !- Number of Compressors
+  0.33,                                   !- Ratio of Compressor Size to Total Compressor Capacity
+  7,                                      !- Maximum Outdoor Dry-bulb Temperature for Crankcase Heater {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  ,                                       !- Defrost Energy Input Ratio Modifier Function of Temperature Curve
+  0.058333,                               !- Defrost Time Period Fraction
+  1e-07,                                  !- Resistive Defrost Heater Capacity {W}
+  7,                                      !- Maximum Outdoor Dry-bulb Temperature for Defrost Operation {C}
+  ,                                       !- Condenser Type
+  ,                                       !- Condenser Inlet Node
+  ,                                       !- Condenser Outlet Node
+  autosize,                               !- Water Condenser Volume Flow Rate {m3/s}
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Supply Water Storage Tank
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule
+  Electricity,                            !- Fuel Type
+  0,                                      !- Minimum Outdoor Temperature in Heat Recovery Mode {C}
+  20,                                     !- Maximum Outdoor Temperature in Heat Recovery Mode {C}
+  ,                                       !- Heat Recovery Cooling Capacity Modifier Curve
+  0.5,                                    !- Initial Heat Recovery Cooling Capacity Fraction
+  0.083,                                  !- Heat Recovery Cooling Capacity Time Constant {hr}
+  ,                                       !- Heat Recovery Cooling Energy Modifier Curve
+  1,                                      !- Initial Heat Recovery Cooling Energy Fraction
+  0,                                      !- Heat Recovery Cooling Energy Time Constant {hr}
+  ,                                       !- Heat Recovery Heating Capacity Modifier Curve
+  0.5,                                    !- Initial Heat Recovery Heating Capacity Fraction
+  0.083,                                  !- Heat Recovery Heating Capacity Time Constant {hr}
+  ,                                       !- Heat Recovery Heating Energy Modifier Curve
+  0.5,                                    !- Initial Heat Recovery Heating Energy Fraction
+  0;                                      !- Heat Recovery Heating Energy Time Constant {hr}
+
+OS:Curve:Biquadratic,
+  {2926f90c-053a-445f-9b13-0d558ac66748}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFT, !- Name
+  0.576882692,                            !- Coefficient1 Constant
+  0.017447952,                            !- Coefficient2 x
+  0.000583269,                            !- Coefficient3 x**2
+  -1.76324e-06,                           !- Coefficient4 y
+  -7.474e-09,                             !- Coefficient5 y**2
+  -1.30413e-07,                           !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  24,                                     !- Maximum Value of x {BasedOnField A2}
+  -5,                                     !- Minimum Value of y {BasedOnField A3}
+  23;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {0aa4713f-db13-4220-8a27-6aad3ac5244a}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTBoundary, !- Name
+  25.73,                                  !- Coefficient1 Constant
+  -0.03150043,                            !- Coefficient2 x
+  -0.01416595,                            !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  11,                                     !- Minimum Value of x {BasedOnField A2}
+  30;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {b1e0b7b3-3344-4e2b-88d3-999116ee2631}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTHi, !- Name
+  0.6867358,                              !- Coefficient1 Constant
+  0.0207631,                              !- Coefficient2 x
+  0.0005447,                              !- Coefficient3 x**2
+  -0.0016218,                             !- Coefficient4 y
+  -4.259e-07,                             !- Coefficient5 y**2
+  -0.0003392,                             !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  24,                                     !- Maximum Value of x {BasedOnField A2}
+  16,                                     !- Minimum Value of y {BasedOnField A3}
+  43;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {dba051d9-1723-4ee1-89ef-233688219289}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFT, !- Name
+  0.989010541,                            !- Coefficient1 Constant
+  -0.02347967,                            !- Coefficient2 x
+  0.000199711,                            !- Coefficient3 x**2
+  0.005968336,                            !- Coefficient4 y
+  -1.0289e-07,                            !- Coefficient5 y**2
+  -0.00015686,                            !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  24,                                     !- Maximum Value of x {BasedOnField A2}
+  -5,                                     !- Minimum Value of y {BasedOnField A3}
+  23;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {22b89fad-955f-461b-a968-ed8f28e827af}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTBoundary, !- Name
+  25.73473775,                            !- Coefficient1 Constant
+  -0.03150043,                            !- Coefficient2 x
+  -0.01416595,                            !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  24;                                     !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {fb71bd1b-f0d1-456f-bebe-20fe55705faa}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTHi, !- Name
+  -1.4395110176,                          !- Coefficient1 Constant
+  0.1619850459,                           !- Coefficient2 x
+  -0.0034911781,                          !- Coefficient3 x**2
+  0.0269442645,                           !- Coefficient4 y
+  0.0001346163,                           !- Coefficient5 y**2
+  -0.0006714941,                          !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  23.9,                                   !- Maximum Value of x {BasedOnField A2}
+  16.8,                                   !- Minimum Value of y {BasedOnField A3}
+  43.3;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {a229172a-6b1a-464d-bf6a-4cdb6fab82b4}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRLowPLR, !- Name
+  0.4541226192,                           !- Coefficient1 Constant
+  -0.1729687081,                          !- Coefficient2 x
+  1.0828661347,                           !- Coefficient3 x**2
+  -0.3618480897,                          !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {0bdd7db2-69e4-41c4-8f8a-8ef53fe9f815}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRHiPLR, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {f3fd889e-b137-49c8-9c37-226b61f66f33}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingCombRatio, !- Name
+  0.576593263,                            !- Coefficient1 Constant
+  0.6349408697,                           !- Coefficient2 x
+  -0.3076093963,                          !- Coefficient3 x**2
+  0.0960752636,                           !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCPLFFPLR, !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {f3ee1617-95d7-4e86-8c41-c4054351f32d}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFT, !- Name
+  1.012090154,                            !- Coefficient1 Constant
+  -0.0012467553,                          !- Coefficient2 x
+  -0.0001271847,                          !- Coefficient3 x**2
+  0.0267564328,                           !- Coefficient4 y
+  -4.986e-07,                             !- Coefficient5 y**2
+  -0.0002635239,                          !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x {BasedOnField A2}
+  27.2,                                   !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of y {BasedOnField A3}
+  3.33;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {443ca85b-e6db-48f4-88f7-fb7736da372d}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTBoundary, !- Name
+  58.577,                                 !- Coefficient1 Constant
+  -3.0255,                                !- Coefficient2 x
+  0.0193,                                 !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  23.9;                                   !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {7114f15a-b91a-4b48-98c5-91fe3169d763}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTHi, !- Name
+  2.5859872368,                           !- Coefficient1 Constant
+  -0.0953227101,                          !- Coefficient2 x
+  0.0009553288,                           !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x {BasedOnField A2}
+  27.2,                                   !- Maximum Value of x {BasedOnField A2}
+  -9.44,                                  !- Minimum Value of y {BasedOnField A3}
+  15;                                     !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Biquadratic,
+  {a3076463-2be9-4802-90a7-081d24ce8d8d}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFT, !- Name
+  0.7224292683,                           !- Coefficient1 Constant
+  0.0034566628,                           !- Coefficient2 x
+  0.0006507028,                           !- Coefficient3 x**2
+  -0.0026435362,                          !- Coefficient4 y
+  0.0012464766,                           !- Coefficient5 y**2
+  -0.0001009161,                          !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x {BasedOnField A2}
+  27.2,                                   !- Maximum Value of x {BasedOnField A2}
+  -20,                                    !- Minimum Value of y {BasedOnField A3}
+  3.33;                                   !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {2f575dc9-b03e-4064-b231-6e43383e292a}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTBoundary, !- Name
+  58.577,                                 !- Coefficient1 Constant
+  -3.0255,                                !- Coefficient2 x
+  0.0193,                                 !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  23.9;                                   !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {bba9f395-e337-48f9-852d-b987452dc367}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTHi, !- Name
+  1.3885703646,                           !- Coefficient1 Constant
+  -0.0229771462,                          !- Coefficient2 x
+  0.000537274,                            !- Coefficient3 x**2
+  -0.0273936962,                          !- Coefficient4 y
+  0.0004030426,                           !- Coefficient5 y**2
+  -5.9786e-05,                            !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x {BasedOnField A2}
+  27.2,                                   !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of y {BasedOnField A3}
+  1;                                      !- Maximum Value of y {BasedOnField A3}
+
+OS:Curve:Cubic,
+  {aa3d41db-cd17-44ef-a3ce-bec6504e8910}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRLowPLR, !- Name
+  0.3924742025,                           !- Coefficient1 Constant
+  0.076016374,                            !- Coefficient2 x
+  0.6983235783,                           !- Coefficient3 x**2
+  -0.1688407813,                          !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {30fbccd3-f4f0-4bf8-94be-faf7bba3e968}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRHiPLR, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {68c0f092-88a2-4ba9-b6b4-4d8f2b091efc}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingCombRatio, !- Name
+  0.7667196604,                           !- Coefficient1 Constant
+  0.2617302019,                           !- Coefficient2 x
+  -0.0159110245,                          !- Coefficient3 x**2
+  -0.0125388376,                          !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Biquadratic,
+  {8a603e43-55d3-4244-9b79-d432a9bdcbb1}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingLengthCorrectionFactor, !- Name
+  2.0388158625,                           !- Coefficient1 Constant
+  -0.0024260645,                          !- Coefficient2 x
+  3.5512e-06,                             !- Coefficient3 x**2
+  -1.6858129772,                          !- Coefficient4 y
+  0.668703358,                            !- Coefficient5 y**2
+  -4.5706e-05,                            !- Coefficient6 x*y
+  7.62,                                   !- Minimum Value of x {BasedOnField A2}
+  182.88,                                 !- Maximum Value of x {BasedOnField A2}
+  0.8,                                    !- Minimum Value of y {BasedOnField A3}
+  1.5;                                    !- Maximum Value of y {BasedOnField A3}
+
+OS:ModelObjectList,
+  {bc20ad14-7b22-411b-a875-722e21bb3b59}, !- Handle
+  Model Object List 1;                    !- Name
+
+OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+  {61b461bb-c165-4bd3-a212-fc1fb1023e9a}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow, !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Terminal Unit Availability schedule
+  ,                                       !- Terminal Unit Air Inlet Node
+  ,                                       !- Terminal Unit Air Outlet Node
+  autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling is Needed {m3/s}
+  autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Supply Air Fan Operating Mode Schedule
+  ,                                       !- Supply Air Fan placement
+  {de259b99-d14c-4c97-a714-fc200c52027a}, !- Supply Air Fan
+  ,                                       !- Outside Air Mixer
+  {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Cooling Coil
+  {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Heating Coil
+  30,                                     !- Zone Terminal Unit On Parasitic Electric Energy Use {W}
+  20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
+  1;                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+
+OS:Schedule:Constant,
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Handle
+  Always On Discrete,                     !- Name
+  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {c4b72eeb-4c4b-47c5-96c2-6f0d4a648825}, !- Handle
+  Schedule Type Limits 1,                 !- Name
+  0,                                      !- Lower Limit Value {BasedOnField A4}
+  1,                                      !- Upper Limit Value {BasedOnField A4}
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Coil:Cooling:DX:VariableRefrigerantFlow,
+  {8c84c0ac-6832-4444-a64f-9d88308c1b14}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  {96b4b685-7363-44cb-9fa5-9cb8ed3a9f1f}, !- Cooling Capacity Ratio Modifier Function of Temperature Curve
+  {ac2ce32e-576d-4ccf-ae23-19189d22b8c9}; !- Cooling Capacity Modifier Curve Function of Flow Fraction
+
+OS:Curve:Biquadratic,
+  {96b4b685-7363-44cb-9fa5-9cb8ed3a9f1f}, !- Handle
+  VRFTUCoolCapFT,                         !- Name
+  0.0585884077803259,                     !- Coefficient1 Constant
+  0.0587396532718384,                     !- Coefficient2 x
+  -0.000210274979759697,                  !- Coefficient3 x**2
+  0.0109370473889647,                     !- Coefficient4 y
+  -0.0001219549,                          !- Coefficient5 y**2
+  -0.0005246615,                          !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x {BasedOnField A2}
+  23.89,                                  !- Maximum Value of x {BasedOnField A2}
+  20,                                     !- Minimum Value of y {BasedOnField A3}
+  43.33,                                  !- Maximum Value of y {BasedOnField A3}
+  0.8083,                                 !- Minimum Curve Output {BasedOnField A4}
+  1.2583;                                 !- Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  {ac2ce32e-576d-4ccf-ae23-19189d22b8c9}, !- Handle
+  VRFACCoolCapFFF,                        !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow,
+  {8e3a36fc-1c04-4c13-804d-32e93dec19b3}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Heating Coil, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule
+  autosize,                               !- Rated Total Heating Capacity {W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Coil Air Inlet Node
+  ,                                       !- Coil Air Outlet Node
+  {c22d0666-7bf7-4195-817f-e47b46ab062d}, !- Heating Capacity Ratio Modifier Function of Temperature Curve
+  {53670871-a743-4208-9001-454f29718f9d}; !- Heating Capacity Modifier Function of Flow Fraction Curve
+
+OS:Curve:Biquadratic,
+  {c22d0666-7bf7-4195-817f-e47b46ab062d}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow 1 VRFTUHeatCAPFT, !- Name
+  0.375443994956127,                      !- Coefficient1 Constant
+  0.0668190645147821,                     !- Coefficient2 x
+  -0.00194171026482001,                   !- Coefficient3 x**2
+  0.0442618420640187,                     !- Coefficient4 y
+  -0.0004009578,                          !- Coefficient5 y**2
+  -0.0014819801,                          !- Coefficient6 x*y
+  21.11,                                  !- Minimum Value of x {BasedOnField A2}
+  27.22,                                  !- Maximum Value of x {BasedOnField A2}
+  -15,                                    !- Minimum Value of y {BasedOnField A3}
+  18.33,                                  !- Maximum Value of y {BasedOnField A3}
+  0.6074,                                 !- Minimum Curve Output {BasedOnField A4}
+  1;                                      !- Maximum Curve Output {BasedOnField A4}
+
+OS:Curve:Quadratic,
+  {53670871-a743-4208-9001-454f29718f9d}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow 1 VRFACCoolCapFFF, !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x {BasedOnField A2}
+  1.5;                                    !- Maximum Value of x {BasedOnField A2}
+
+OS:Fan:OnOff,
+  {de259b99-d14c-4c97-a714-fc200c52027a}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Fan, !- Name
+  {876ea808-dc61-4c18-b9cf-d3bb38e90150}, !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  autosize,                               !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {308a59b2-8b09-4b80-94b3-75fca4d7a32f}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {5413cb3a-0ccc-4c95-bb3e-bf406f891d4d}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {308a59b2-8b09-4b80-94b3-75fca4d7a32f}, !- Handle
+  Fan On Off Power Curve,                 !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Curve:Cubic,
+  {5413cb3a-0ccc-4c95-bb3e-bf406f891d4d}, !- Handle
+  Fan On Off Efficiency Curve,            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x {BasedOnField A2}
+  1;                                      !- Maximum Value of x {BasedOnField A2}
+
+OS:Fan:ZoneExhaust,
+  {2d1f9bb9-ce2d-4f23-8f07-8b93615770b1}, !- Handle
+  Fan Zone Exhaust,                     !- Name
+  ,                                       !- Availability Schedule Name
+  0.6,                                    !- Fan Efficiency
+  0,                                      !- Pressure Rise {Pa}
+  ,                                       !- Maximum Flow Rate {m3/s}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  General,                                !- End-Use Subcategory
+  ,                                       !- Flow Fraction Schedule Name
+  Decoupled,                              !- System Availability Manager Coupling Mode
+  ,
+  ;
 

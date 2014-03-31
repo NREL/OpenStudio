@@ -408,7 +408,13 @@ namespace detail {
   }
 
   bool Space_Impl::partofTotalFloorArea() const {
-    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    boost::optional<std::string> value = getString(OS_SpaceFields::PartofTotalFloorArea,false,true);
+    if (!value){
+      if (this->isPlenum()){
+        return false;
+      }
+      value = getString(OS_SpaceFields::PartofTotalFloorArea,true);
+    }
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
@@ -418,8 +424,7 @@ namespace detail {
   }
 
   void Space_Impl::setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
+    bool result = setDouble(OS_SpaceFields::DirectionofRelativeNorth, directionofRelativeNorth, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -429,8 +434,7 @@ namespace detail {
   }
 
   void Space_Impl::setXOrigin(double xOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::XOrigin, xOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -440,8 +444,7 @@ namespace detail {
   }
 
   void Space_Impl::setYOrigin(double yOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::YOrigin, yOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -451,8 +454,7 @@ namespace detail {
   }
 
   void Space_Impl::setZOrigin(double zOrigin, bool driverMethod) {
-    bool result = false;
-    result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
+    bool result = setDouble(OS_SpaceFields::ZOrigin, zOrigin, driverMethod);
     OS_ASSERT(result);
   }
 
@@ -480,9 +482,13 @@ namespace detail {
   {
     boost::optional<SpaceType> result = getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_SpaceFields::SpaceTypeName);
     if (!result){
-      boost::optional<Building> building = this->model().building();
-      if (building){
-        result = building->spaceType();
+      if (this->isPlenum()){
+        result = this->model().plenumSpaceType();
+      }else{
+        boost::optional<Building> building = this->model().building();
+        if (building){
+          result = building->spaceType();
+        }
       }
     }
     return result;
@@ -2804,6 +2810,15 @@ namespace detail {
     return result;
   }
 
+  bool Space_Impl::isPlenum() const
+  {
+    bool result = false;
+    boost::optional<ThermalZone> thermalZone = this->thermalZone();
+    if (thermalZone){
+      result = thermalZone->isPlenum();
+    }
+    return result;
+  }
   
   // helper function to get a boost polygon point from a Point3d
   boost::tuple<double, double> Space_Impl::point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const
@@ -3334,6 +3349,11 @@ std::vector<Point3d> Space::floorPrint() const
   return getImpl<detail::Space_Impl>()->floorPrint();
 }
 
+bool Space::isPlenum() const
+{
+  return getImpl<detail::Space_Impl>()->isPlenum();
+}
+
 /// @cond
 Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
   : PlanarSurfaceGroup(impl)
@@ -3363,6 +3383,101 @@ void unmatchSurfaces(std::vector<Space>& spaces)
     space.unmatchSurfaces();
   }
 }
+
+std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Space>& spaces, 
+                                                           double directionOfRelativeNorth,
+                                                           double skylightToProjectedFloorRatio, 
+                                                           double desiredWidth, double desiredHeight) 
+{
+  std::vector<std::vector<Point3d> > result;
+
+  if (skylightToProjectedFloorRatio <= 0.0){
+    return result;
+  }else if (skylightToProjectedFloorRatio >= 1.0){
+    return result;
+  }
+
+  if (desiredWidth <= 0){
+    return result;
+  }
+
+  if (desiredHeight <= 0){
+    return result;
+  }
+
+  if (spaces.empty()){
+    return result;
+  }
+
+  // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
+  Transformation buildingToGridTransformation = Transformation::rotation(Vector3d(0,0,1), -openstudio::degToRad(directionOfRelativeNorth));
+
+  // rotate positive amount around the z axis, EnergyPlus defines rotation clockwise
+  Transformation gridToBuildingTransformation = buildingToGridTransformation.inverse();
+
+  // find extents in grid coordinate system 
+  double xmin = std::numeric_limits<double>::max();
+  double xmax = std::numeric_limits<double>::min();
+  double ymin = std::numeric_limits<double>::max();
+  double ymax = std::numeric_limits<double>::min();
+  BOOST_FOREACH(const Space& space, spaces){
+    Transformation spaceToBuildingTransformation = space.buildingTransformation();
+    Transformation transformation = buildingToGridTransformation*spaceToBuildingTransformation;
+    BOOST_FOREACH(const Surface& surface, space.surfaces()){
+      if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+          istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+        std::vector<Point3d> vertices = transformation*surface.vertices();
+        BOOST_FOREACH(const Point3d& vertex, vertices){
+          xmin = std::min(xmin, vertex.x());
+          xmax = std::max(xmax, vertex.x());
+          ymin = std::min(ymin, vertex.y());
+          ymax = std::max(ymax, vertex.y());
+        }
+      }
+    }
+  }
+  if ((xmin > xmax) || (ymin > ymax)){
+    return result;
+  }
+
+  double floorPrintWidth = (xmax-xmin);
+  double floorPrintHeight = (ymax-ymin);
+  double floorPrintArea = floorPrintWidth * floorPrintHeight;
+  double desiredArea = desiredWidth * desiredHeight;
+  double numSkylights = skylightToProjectedFloorRatio*floorPrintArea/desiredArea;
+
+  double numSkylightsX = std::sqrt(skylightToProjectedFloorRatio)*floorPrintWidth/desiredWidth;
+  double numSkylightsY = std::sqrt(skylightToProjectedFloorRatio)*floorPrintHeight/desiredHeight;
+
+  // space is distance from end of one skylight to beginning of next
+  double xSpace = (floorPrintWidth - numSkylightsX*desiredWidth)/(std::ceil(numSkylightsX));
+  double ySpace = (floorPrintHeight - numSkylightsY*desiredHeight)/(std::ceil(numSkylightsY));
+
+  if ((xSpace <= 0.0) || (ySpace <= 0.0)){
+    return result;
+  }
+
+  for (double x = xmin + xSpace/2.0; x < xmax - xSpace/2.0; x += desiredWidth + xSpace){
+    for (double y = ymin + ySpace/2.0; y < ymax - ySpace/2.0; y += desiredHeight + ySpace){
+
+      double x2 = std::min(x+desiredWidth, xmax - xSpace/2.0);
+      double y2 = std::min(y+desiredHeight, ymax - ySpace/2.0);
+
+      // skylight in grid coordinates
+      std::vector<Point3d> skylight;
+      skylight.push_back(Point3d(x,y,0));
+      skylight.push_back(Point3d(x2,y,0));
+      skylight.push_back(Point3d(x2,y2,0));
+      skylight.push_back(Point3d(x,y2,0));
+
+      // put results into building coordinates
+      result.push_back(gridToBuildingTransformation*skylight);
+    }
+  }
+
+  return result;
+}
+
 
 } // model
 } // openstudio

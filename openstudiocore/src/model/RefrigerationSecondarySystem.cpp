@@ -333,6 +333,10 @@ namespace detail {
   }
 
   bool RefrigerationSecondarySystem_Impl::addCase( const RefrigerationCase& refrigerationCase) {
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system() )
+    {
+      currentSystem->removeCase(refrigerationCase);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
     return addTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
   }
@@ -348,6 +352,10 @@ namespace detail {
   }
 
   bool RefrigerationSecondarySystem_Impl::addWalkin( const RefrigerationWalkIn& refrigerationWalkin) {
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system() )
+    {
+      currentSystem->removeWalkin(refrigerationWalkin);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
     return addTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
   }
@@ -666,10 +674,9 @@ RefrigerationSecondarySystem::RefrigerationSecondarySystem(const Model& model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationSecondarySystem_Impl>());
 
-  bool ok = true;
   ModelObjectList caseAndWalkinList = ModelObjectList(model);
   caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
-  ok = getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
+  bool ok = getImpl<detail::RefrigerationSecondarySystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   OS_ASSERT(ok);
   ok = setCirculatingFluidName("PropyleneGlycol");
   OS_ASSERT(ok);

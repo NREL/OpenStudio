@@ -2056,7 +2056,7 @@ namespace openstudio{
         LOG(Error, "An error occurred when attempting to write to the process. For example, the process may not be running, or it may have closed its input channel.");
       }else if (error == QProcess::ReadError){
         LOG(Error, "An error occurred when attempting to read from the process. For example, the process may not be running.");
-      }else if (error == QProcess::ReadError){
+      }else if (error == QProcess::UnknownError){
         LOG(Error, "An unknown error occurred. This is the default return value of error().");
       }
 

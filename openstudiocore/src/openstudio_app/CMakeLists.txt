@@ -50,7 +50,7 @@ IF(APPLE)
   # set the name of the bundle icon
   SET(MACOSX_BUNDLE_ICON_FILE os.icns) 
   # set all icons
-  SET(ICON_SRC ../../icons/os.icns ../../icons/osm.icns ../../icons/osc.icns ../../icons/folder_icon.rsrc)
+  SET(ICON_SRC ../../icons/os.icns ../../icons/osm.icns ../../icons/osc.icns ../../icons/ossr.icns ../../icons/folder_icon.rsrc)
   SET_SOURCE_FILES_PROPERTIES(${ICON_SRC}
       PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   SET(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
@@ -182,7 +182,13 @@ IF (UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
   INSTALL(FILES ../../icons/osc_32.png DESTINATION ../share/icons/hicolor/32x32/mimetypes RENAME application-openstudio.osc.png)
   INSTALL(FILES ../../icons/osc_48.png DESTINATION ../share/icons/hicolor/48x48/mimetypes RENAME application-openstudio.osc.png)
   INSTALL(FILES ../../icons/osc_128.png DESTINATION ../share/icons/hicolor/128x128/mimetypes RENAME application-openstudio.osc.png)
-  INSTALL(FILES ../../icons/osc_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.osc.png)  
+  INSTALL(FILES ../../icons/osc_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.osc.png)
+
+  INSTALL(FILES ../../icons/ossr_16.png DESTINATION ../share/icons/hicolor/16x16/mimetypes RENAME application-openstudio.ossr.png)
+  INSTALL(FILES ../../icons/ossr_32.png DESTINATION ../share/icons/hicolor/32x32/mimetypes RENAME application-openstudio.ossr.png)
+  INSTALL(FILES ../../icons/ossr_48.png DESTINATION ../share/icons/hicolor/48x48/mimetypes RENAME application-openstudio.ossr.png)
+  INSTALL(FILES ../../icons/ossr_128.png DESTINATION ../share/icons/hicolor/128x128/mimetypes RENAME application-openstudio.ossr.png)
+  INSTALL(FILES ../../icons/ossr_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.ossr.png) 
 ENDIF()
 
 IF( WIN32 OR APPLE )

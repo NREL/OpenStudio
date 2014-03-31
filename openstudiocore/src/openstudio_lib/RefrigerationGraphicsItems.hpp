@@ -22,9 +22,11 @@
 
 #include <QGraphicsObject>
 #include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
+#include "../utilities/idf/Handle.hpp"
 
 class QGraphicsView;
 class QPushButton;
@@ -89,73 +91,6 @@ class CaseViewExpandButton : public AbstractButtonItem
   QPixmap m_closeImage;
 };
 
-// A grid layout of refrigeration systems
-class RefrigerationSystemGridView : public QGraphicsObject
-{
-  Q_OBJECT;
-
-  public:
-
-  RefrigerationSystemGridView();
-
-  virtual ~RefrigerationSystemGridView();
-
-  void setDelegate(QSharedPointer<OSGraphicsItemDelegate> delegate);
-
-  void setListController(QSharedPointer<OSListController> listController);
-
-  QSharedPointer<OSListController> listController() const;
-
-  QRectF boundingRect() const;
-
-  public slots:
-
-  void refreshAllItemViews();
-
-  protected:
-
-  void paint( QPainter *painter, 
-              const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 ) {}
-
-  private slots:
-
-  void insertItemView(int i);
-
-  void removeItemView(int i);
-
-  void removePair(QObject * object);
-
-  void refreshItemView(int i);
-
-  private:
-
-  int spacing() const;
-
-  int rows() const;
-
-  int columns() const;
-
-  std::pair<int,int> gridPos(int i); 
-
-  QGraphicsObject * createNewItemView(int i);
-
-  void setItemViewGridPos(QGraphicsObject * item,std::pair<int,int> gridPos);
-
-  QGraphicsObject * viewFromGridPos(std::pair<int,int> gridPos);
-
-  QSharedPointer<OSGraphicsItemDelegate> m_delegate;
-
-  QSharedPointer<OSListController> m_listController;
-
-  // Use this to keep the OSListItem classes around for the life of the widget
-  std::map<QObject *,QSharedPointer<OSListItem> > m_widgetItemPairs;
-
-  std::map<std::pair<int,int>,QObject *> m_gridPosItemViewPairs;
-
-  std::map<QObject *,std::pair<int,int> > m_itemViewGridPosPairs;
-};
-
 // A cell of the refrigeration system grid
 // This is an item that contains a RefrigerationSystemItem plus some overlays
 class RefrigerationSystemMiniView : public QGraphicsObject
@@ -175,6 +110,8 @@ class RefrigerationSystemMiniView : public QGraphicsObject
   ZoomInButtonItem * zoomInButtonItem;
 
   QRectF boundingRect() const;
+
+  void adjustLayout();
 
   static QSize cellSize();
 
@@ -236,39 +173,19 @@ class RefrigerationSystemDetailView : public QGraphicsObject
   // QString m_name;
 };
 
-class RefrigerationSystemDropZoneView : public QGraphicsObject
+class RefrigerationSystemDropZoneView : public OSDropZoneItem 
 {
   Q_OBJECT;
 
   public:
 
-  RefrigerationSystemDropZoneView();
-
-  virtual ~RefrigerationSystemDropZoneView() {}
-
   QRectF boundingRect() const;
-
-  signals:
-
-  void mouseClicked();
-
-  void componentDropped(const OSItemId & itemid);
 
   protected:
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
               QWidget *widget );
-
-  void mousePressEvent(QGraphicsSceneMouseEvent * event);
-
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
-  void dropEvent(QGraphicsSceneDragDropEvent *event);
-
-  private:
-
-  bool m_mouseDown;
 };
 
 class RefrigerationSystemView : public QGraphicsObject
@@ -358,6 +275,8 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
   void setCondenserId(const OSItemId & condenserId);
 
   void setCondenserName(const QString & name);
+
+  void setIcon(const QPixmap & pixmap);
 
   static QSizeF size();
 
@@ -751,7 +670,7 @@ class RefrigerationSHXView : public RefrigerationSystemDropZoneView
   QPixmap m_pixmap;
 };
 
-class RefrigerationSecondaryView : public QGraphicsObject
+class SecondaryDropZoneView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
@@ -763,7 +682,83 @@ class RefrigerationSecondaryView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+};
+
+class SecondaryDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  SecondaryDetailView();
+
+  virtual ~SecondaryDetailView() {}
+
+  ZoomInButtonItem * zoomInButtonItem;
+  RemoveButtonItem * removeButtonItem;
+
+  QRectF boundingRect() const;
+  QRectF nameRect();
+
+  void setName(const QString & name);
+  void setHandle(const Handle & handle);
+
+  static double width();
+  static double height();
+
+  signals:
+
+  void zoomInOnSystemClicked(const Handle & handle);
+  void removeClicked(const Handle & handle);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private slots:
+
+  void onZoomButtonClicked();
+  void onRemoveButtonClicked();
+
+  private:
+
+  QString m_name;
+  Handle m_handle;
+};
+
+class RefrigerationSecondaryView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSecondaryView();
+
+  virtual ~RefrigerationSecondaryView() {}
+
+  QRectF boundingRect() const;
+
+  SecondaryDropZoneView * secondaryDropZoneView;
+
+  void insertSecondaryDetailView(int index, QGraphicsObject * object);
+
+  void removeAllSecondaryDetailViews();
+
+  void adjustLayout();
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  private:
+
+  std::vector<QGraphicsObject *> m_secondaryDetailViews;
+  int m_height;
 };
 
 } // openstudio

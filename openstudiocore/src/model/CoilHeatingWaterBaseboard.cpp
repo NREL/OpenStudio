@@ -89,7 +89,7 @@ namespace detail {
     // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
     for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
     it < zoneHVACBaseboardConvectiveWaters.end();
-    it++ )
+    ++it )
     {
       if( boost::optional<HVACComponent> coil = it->heatingCoil() )
       {

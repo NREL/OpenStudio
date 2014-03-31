@@ -26,6 +26,8 @@
 
 #include <utilities/core/Assert.hpp>
 
+#include "../shared_gui_components/NetworkProxyDialog.hpp"
+
 #include <QAction>
 #include <QApplication>
 #include <QCloseEvent>
@@ -46,6 +48,7 @@
 #include <QUrl>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QMessageBox>
 
 namespace openstudio {
 
@@ -113,6 +116,7 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   connect(mainMenu, SIGNAL(showRunManagerPreferencesClicked()),this,SIGNAL(showRunManagerPreferencesClicked()));
   connect(mainMenu, SIGNAL(showRubyConsoleClicked()),this,SIGNAL(showRubyConsoleClicked()));
   connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)),this,SIGNAL(toggleUnitsClicked(bool)));
+  connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
 }
 
 QSize MainWindow::sizeHint() const
@@ -143,7 +147,8 @@ void MainWindow::dragEnterEvent(QDragEnterEvent * event)
 {
   if(event->mimeData()->hasUrls())
   {
-    QUrl url = event->mimeData()->urls().first();
+    event->ignore();
+    /*QUrl url = event->mimeData()->urls().first();
     if (url.scheme().compare("file", Qt::CaseInsensitive) == 0 && url.toString().toLower().endsWith(".osm")) 
     {
       //event->accept();
@@ -152,7 +157,7 @@ void MainWindow::dragEnterEvent(QDragEnterEvent * event)
     else
     {
       event->ignore();
-    }
+    }*/
   }
 }
 
@@ -247,6 +252,50 @@ void MainWindow::toggleUnits(bool displayIP)
 {
   m_displayIP = displayIP;
 }
+
+void MainWindow::configureProxyClicked()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  NetworkProxyDialog dialog(settings, this);
+  QDialog::DialogCode result = static_cast<QDialog::DialogCode>(dialog.exec());
+
+  if (result == QDialog::Accepted)
+  {
+    QNetworkProxy proxy = dialog.createProxy();
+    if (proxy.type() != QNetworkProxy::NoProxy)
+    {
+      if (dialog.testProxy(proxy))
+      {
+        QNetworkProxy::setApplicationProxy(proxy);
+        //setRubyProxyEnvironment(proxy);
+      } else {
+        QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
+      }
+    }
+  }
+}
+
+void MainWindow::loadProxySettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  QNetworkProxy proxy = NetworkProxyDialog::createProxy(settings);
+  if (proxy.type() != QNetworkProxy::NoProxy)
+  {
+    if (NetworkProxyDialog::testProxy(proxy, this))
+    {
+      QNetworkProxy::setApplicationProxy(proxy);
+      //setRubyProxyEnvironment(proxy);
+    } else {
+      QMessageBox::critical(this, "Proxy Configuration Error", "There is an error in your proxy configuration.");
+      configureProxyClicked();
+    }
+  }
+}
+
 
 } // openstudio
 

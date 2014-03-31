@@ -155,26 +155,22 @@ namespace detail {
   }
 
   void IlluminanceMap_Impl::setOriginXCoordinate(double originXCoordinate) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::OriginXCoordinate, originXCoordinate);
+    bool result = setDouble(OS_IlluminanceMapFields::OriginXCoordinate, originXCoordinate);
     OS_ASSERT(result);
   }
 
   void IlluminanceMap_Impl::setOriginYCoordinate(double originYCoordinate) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::OriginYCoordinate, originYCoordinate);
+    bool result = setDouble(OS_IlluminanceMapFields::OriginYCoordinate, originYCoordinate);
     OS_ASSERT(result);
   }
 
   void IlluminanceMap_Impl::setOriginZCoordinate(double originZCoordinate) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::OriginZCoordinate, originZCoordinate);
+    bool result = setDouble(OS_IlluminanceMapFields::OriginZCoordinate, originZCoordinate);
     OS_ASSERT(result);
   }
 
   bool IlluminanceMap_Impl::setPsiRotationAroundXAxis(double psiRotationAroundXAxis) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
+    bool result = setDouble(OS_IlluminanceMapFields::PsiRotationAroundXAxis, psiRotationAroundXAxis);
     return result;
   }
 
@@ -184,8 +180,7 @@ namespace detail {
   }
 
   bool IlluminanceMap_Impl::setThetaRotationAroundYAxis(double thetaRotationAroundYAxis) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
+    bool result = setDouble(OS_IlluminanceMapFields::ThetaRotationAroundYAxis, thetaRotationAroundYAxis);
     return result;
   }
 
@@ -195,8 +190,7 @@ namespace detail {
   }
 
   bool IlluminanceMap_Impl::setPhiRotationAroundZAxis(double phiRotationAroundZAxis) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
+    bool result = setDouble(OS_IlluminanceMapFields::PhiRotationAroundZAxis, phiRotationAroundZAxis);
     return result;
   }
 
@@ -206,8 +200,7 @@ namespace detail {
   }
 
   void IlluminanceMap_Impl::setXLength(double xLength) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::XLength, xLength);
+    bool result = setDouble(OS_IlluminanceMapFields::XLength, xLength);
     OS_ASSERT(result);
   }
 
@@ -217,8 +210,7 @@ namespace detail {
   }
 
   bool IlluminanceMap_Impl::setNumberofXGridPoints(int numberofXGridPoints) {
-    bool result = false;
-    result = setInt(OS_IlluminanceMapFields::NumberofXGridPoints, numberofXGridPoints);
+    bool result = setInt(OS_IlluminanceMapFields::NumberofXGridPoints, numberofXGridPoints);
     return result;
   }
 
@@ -228,8 +220,7 @@ namespace detail {
   }
 
   void IlluminanceMap_Impl::setYLength(double yLength) {
-    bool result = false;
-    result = setDouble(OS_IlluminanceMapFields::YLength, yLength);
+    bool result = setDouble(OS_IlluminanceMapFields::YLength, yLength);
     OS_ASSERT(result);
   }
 
@@ -239,8 +230,7 @@ namespace detail {
   }
 
   bool IlluminanceMap_Impl::setNumberofYGridPoints(int numberofYGridPoints) {
-    bool result = false;
-    result = setInt(OS_IlluminanceMapFields::NumberofYGridPoints, numberofYGridPoints);
+    bool result = setInt(OS_IlluminanceMapFields::NumberofYGridPoints, numberofYGridPoints);
     return result;
   }
 

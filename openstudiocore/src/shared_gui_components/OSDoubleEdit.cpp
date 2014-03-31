@@ -34,6 +34,7 @@ namespace openstudio {
 OSDoubleEdit2::OSDoubleEdit2( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }
@@ -74,6 +75,52 @@ void OSDoubleEdit2::bind(model::ModelObject& modelObject,
   m_modelObject = modelObject;
   m_getOptional = get;
   m_set = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
+void OSDoubleEdit2::bind(model::ModelObject& modelObject,
+                         DoubleGetter get,
+                         DoubleSetterVoidReturn set,
+                         boost::optional<NoFailAction> reset,
+                         boost::optional<NoFailAction> autosize,
+                         boost::optional<NoFailAction> autocalculate,
+                         boost::optional<BasicQuery> isDefaulted,
+                         boost::optional<BasicQuery> isAutosized,
+                         boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelObject = modelObject;
+  m_get = get;
+  m_setVoidReturn = set;
+  m_reset = reset;
+  m_autosize = autosize;
+  m_autocalculate = autocalculate;
+  m_isDefaulted = isDefaulted;
+  m_isAutosized = isAutosized;
+  m_isAutocalculated = isAutocalculated;
+
+  completeBind();
+}
+
+void OSDoubleEdit2::bind(model::ModelObject& modelObject,
+                         OptionalDoubleGetter get,
+                         DoubleSetterVoidReturn set,
+                         boost::optional<NoFailAction> reset,
+                         boost::optional<NoFailAction> autosize,
+                         boost::optional<NoFailAction> autocalculate,
+                         boost::optional<BasicQuery> isDefaulted,
+                         boost::optional<BasicQuery> isAutosized,
+                         boost::optional<BasicQuery> isAutocalculated)
+{
+  m_modelObject = modelObject;
+  m_getOptional = get;
+  m_setVoidReturn = set;
   m_reset = reset;
   m_autosize = autosize;
   m_autocalculate = autocalculate;
@@ -167,6 +214,7 @@ void OSDoubleEdit2::unbind() {
     m_get.reset();
     m_getOptional.reset();
     m_set.reset();
+    m_setVoidReturn.reset();
     m_reset.reset();
     m_autosize.reset();
     m_autocalculate.reset();
@@ -322,6 +370,7 @@ void OSDoubleEdit2::setPrecision(const std::string& str) {
 OSDoubleEdit::OSDoubleEdit( QWidget * parent )
   : m_isScientific(false)
 {
+  this->setFixedWidth(90);
   this->setAcceptDrops(false);
   setEnabled(false);
 }

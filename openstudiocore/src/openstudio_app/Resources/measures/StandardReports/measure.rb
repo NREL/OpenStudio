@@ -24,6 +24,9 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     if not runner.validateUserArguments(arguments(), user_arguments)
       return false
     end
+    
+    os_version = OpenStudio::VersionString.new(OpenStudio::openStudioVersion())
+    min_version_feature1 = OpenStudio::VersionString.new("1.2.3")
 
     # get the last model and sql file
 
@@ -42,14 +45,6 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     sqlFile = sqlFile.get
     model.setSqlFile(sqlFile)
 
-    # Conversion base : 1 GJ = 0.94708628903179 MMBtu
-    convertToBtu = 0.94708628903179 / 1000000000
-
-    # Conversion base : 1 GJ = 277.77777777778 kWh
-    convertToKwh = 277.77777777778 / 1000000000
-
-    conversionFactor = 1.0
-
     # put data into variables, these are available in the local scope binding
     #building_name = model.getBuilding.name.get
 
@@ -59,6 +54,7 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     fuel_type = ""
     units = ""
 
+    site_energy_use = 0.0
     OpenStudio::EndUseFuelType::getValues.each do |fuel_type|
       energy << "\t\""
       fuel_type = OpenStudio::EndUseFuelType.new(fuel_type).valueDescription
@@ -66,24 +62,38 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
       energy << " Consumption\":{\n\t\t\"units\":"
       if fuel_type == "Electricity"
         units = "\"kWh\""
-        conversionFactor = convertToKwh
+        unit_str = "kWh"
       else
         units = "\"Million Btu\""
-        conversionFactor = convertToBtu
+        unit_str = "MBtu"
       end
+      fuel_type_aggregation = 0.0
       energy << units
       energy << ",\n\t\t\"data\":{\n\t\t\t\""
       OpenStudio::EndUseCategoryType::getValues.each do |category_type|
-        energy << OpenStudio::EndUseCategoryType.new(category_type).valueDescription # append this to remove whitespace between words ".delete(' ')"
+        fuel_and_category_aggregation = 0.0
+        category_str = OpenStudio::EndUseCategoryType.new(category_type).valueDescription
+        energy << category_str # append this to remove whitespace between words ".delete(' ')"
         energy << "\":["
         OpenStudio::MonthOfYear::getValues.each do |month|
           if month >= 1 and month <= 12
-            if not sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),OpenStudio::EndUseCategoryType.new(category_type),OpenStudio::MonthOfYear.new(month)).empty?
-              temp = sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),OpenStudio::EndUseCategoryType.new(category_type),OpenStudio::MonthOfYear.new(month)).get
-              temp = temp * conversionFactor
-              temp = sprintf "%.3f", temp
+            if not sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),
+                                                    OpenStudio::EndUseCategoryType.new(category_type),
+                                                    OpenStudio::MonthOfYear.new(month)).empty?
+              valInJ = sqlFile.energyConsumptionByMonth(OpenStudio::EndUseFuelType.new(fuel_type),
+                                                        OpenStudio::EndUseCategoryType.new(category_type),
+                                                        OpenStudio::MonthOfYear.new(month)).get
+              fuel_and_category_aggregation += valInJ
+              valInUnits = OpenStudio::convert(valInJ,"J",unit_str).get()
+              temp = sprintf "%.3f", valInUnits
               energy << temp.to_s
               energy << ","
+              if os_version >= min_version_feature1
+                month_str = OpenStudio::MonthOfYear.new(month).valueDescription
+                prefix_str = OpenStudio::toUnderscoreCase("#{fuel_type}_#{category_str}_#{month_str}")
+                runner.registerValue("#{prefix_str}_si",valInJ,"J")
+                runner.registerValue("#{prefix_str}_ip",valInUnits,unit_str)
+              end
             else
               energy << "0,"
             end
@@ -91,12 +101,29 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
         end
         energy = energy[0..-2]
         energy << "],\n\t\t\t\""
+        if (os_version >= min_version_feature1) 
+          prefix_str = OpenStudio::toUnderscoreCase("#{fuel_type}_#{category_str}")
+          runner.registerValue("#{prefix_str}_si",fuel_and_category_aggregation,"J")
+          runner.registerValue("#{prefix_str}_ip",OpenStudio::convert(fuel_and_category_aggregation,"J",unit_str).get,unit_str)
+        end
+        fuel_type_aggregation += fuel_and_category_aggregation
       end
       energy = energy[0..-7]
       energy << "\n\t\t}\n\t},\n"
+      if (os_version >= min_version_feature1)
+        runner.registerValue(OpenStudio::toUnderscoreCase("#{fuel_type}_si"),fuel_type_aggregation,"J")
+        runner.registerValue(OpenStudio::toUnderscoreCase("#{fuel_type}_ip"),
+                             OpenStudio::convert(fuel_type_aggregation,"J",unit_str).get,
+                             unit_str)
+      end
+      site_energy_use += fuel_type_aggregation
     end
     energy = energy[0..-3]
     energy << "\n};\n"
+    if (os_version >= min_version_feature1)
+      runner.registerValue("site_energy_use_si",OpenStudio::convert(site_energy_use,"J","GJ").get,"GJ")
+      runner.registerValue("site_energy_use_ip",OpenStudio::convert(site_energy_use,"J","MBtu").get,"MBtu")
+    end
 
     # echo out our values
     #runner.registerInfo("This building is named #{building_name}.")
@@ -134,7 +161,7 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
     sqlFile.close()
 
     #reporting final condition
-    runner.registerFinalCondition("Goodbye.")
+    runner.registerFinalCondition("Standard Report generated successfully.")
 
     return true
 

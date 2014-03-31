@@ -813,6 +813,7 @@ namespace detail {
     if (success) {
       LOG(Debug,"Start waiting for the server to report that the analysis has started running.");
       test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(waitingForAnalysisToStart(bool)),Qt::QueuedConnection);
+      OS_ASSERT(test);
 
       success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
 

@@ -360,6 +360,10 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCase( const RefrigerationCase& refrigerationCase) {
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system() )
+    {
+      currentSystem->removeCase(refrigerationCase);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
     return addTemplate<RefrigerationCase>(refrigerationCase, modelObjectList);
   }
@@ -375,6 +379,10 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addWalkin( const RefrigerationWalkIn& refrigerationWalkin) {
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system() )
+    {
+      currentSystem->removeWalkin(refrigerationWalkin);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
     return addTemplate<RefrigerationWalkIn>(refrigerationWalkin, modelObjectList);
   }
@@ -648,10 +656,9 @@ RefrigerationSystem::RefrigerationSystem(const Model& model)
 {
   OS_ASSERT(getImpl<detail::RefrigerationSystem_Impl>());
 
-  bool ok = true;
   ModelObjectList caseAndWalkinList = ModelObjectList(model);
   caseAndWalkinList.setName(this->name().get() + " Case and Walkin List");
-  ok = getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
+  bool ok = getImpl<detail::RefrigerationSystem_Impl>()->setRefrigeratedCaseAndWalkInList(caseAndWalkinList);
   OS_ASSERT(ok);
   ModelObjectList transferLoadList = ModelObjectList(model);
   transferLoadList.setName(this->name().get() + " Transfer Load List");

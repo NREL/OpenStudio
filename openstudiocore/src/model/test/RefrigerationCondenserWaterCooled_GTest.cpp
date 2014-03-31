@@ -68,7 +68,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRej
 	EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
@@ -83,7 +83,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedCondensingTemperature
 	EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(-1.0));
 }
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedSubcoolingTemperatureDifference)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
@@ -229,7 +229,7 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMaximumWaterOutletTem
 }
 
 
-TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature )
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_WaterMinimumWaterInletTemperature)
 {    
 	Model m; 
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);

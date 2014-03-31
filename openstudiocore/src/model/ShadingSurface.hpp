@@ -28,6 +28,7 @@ namespace model {
 
 class ShadingSurfaceGroup;
 class Schedule;
+class DaylightingDeviceShelf;
 
 namespace detail {
 
@@ -92,6 +93,9 @@ class MODEL_API ShadingSurface : public PlanarSurface {
   void autocalculateNumberofVertices();
 
   //@}
+
+  boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
+
  protected:
   /// @cond
   typedef detail::ShadingSurface_Impl ImplType;

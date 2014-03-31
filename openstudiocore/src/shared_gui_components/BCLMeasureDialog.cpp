@@ -226,6 +226,14 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
     m_taxonomySecondLevelComboBox->addItem("Whole System");
     m_taxonomySecondLevelComboBox->setCurrentIndex(0);
     m_taxonomySecondLevelComboBox->setEnabled(true);
+  }else if (newName == "Refrigeration"){
+    m_taxonomySecondLevelComboBox->addItem("Refrigeration Controls");
+    m_taxonomySecondLevelComboBox->addItem("Cases and Walkins");
+    m_taxonomySecondLevelComboBox->addItem("Compressors");
+    m_taxonomySecondLevelComboBox->addItem("Condensers");
+    m_taxonomySecondLevelComboBox->addItem("Heat Reclaim");
+    m_taxonomySecondLevelComboBox->setCurrentIndex(0);
+    m_taxonomySecondLevelComboBox->setEnabled(true);    
   }else if (newName == "Service Water Heating"){
     m_taxonomySecondLevelComboBox->addItem("Water Use");
     m_taxonomySecondLevelComboBox->addItem("Water Heating");
@@ -255,10 +263,10 @@ void BCLMeasureDialog::firstLevelTaxonomyChanged(const QString& newName)
 
 void BCLMeasureDialog::init()
 {
-  int btnHeight = 34;
-
 #ifdef Q_OS_MAC
-  btnHeight = 44;
+  int btnHeight = 44;
+#else
+  int btnHeight = 34;
 #endif
 
   QPushButton* cancelButton = this->cancelButton();

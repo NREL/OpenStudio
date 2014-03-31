@@ -130,7 +130,7 @@ namespace resultsviewer{
     /* illuminance maps */
     std::vector<std::string> mapNames(sqlFile.illuminanceMapNames());
     std::vector<std::string>::iterator nameIter;
-    for (nameIter=mapNames.begin(); nameIter!=mapNames.end(); nameIter++)
+    for (nameIter=mapNames.begin(); nameIter!=mapNames.end(); ++nameIter)
     {
       // retrieve mapIndex for map name to retrieve environment period and zone name
       QString envPeriod = "";
