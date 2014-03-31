@@ -552,6 +552,7 @@ INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIR} )
 MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
 
 # include after other boost include directories for cases where boost version < 1.47
+# DLM: todo: remove?
 INCLUDE_DIRECTORIES( SYSTEM ${CMAKE_SOURCE_DIR}/../dependencies/boost_geometry )
 
 # require these run time checks
@@ -559,13 +560,10 @@ add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 
-# Boost-log
+# BoostLog
+# DLM: todo: remove?
 ADD_DEFINITIONS( -DBOOST_LOG_NO_LIB ) # disable autolinking
 ADD_DEFINITIONS( -DBOOST_LOG_SETUP_NO_LIB ) # disable autolinking
-
-find_package(BoostLog REQUIRED)
-INCLUDE_DIRECTORIES( SYSTEM ${BoostLog_INCLUDE_DIRS} )
-LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
 
 # QJSON 
 
