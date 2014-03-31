@@ -30,7 +30,7 @@
 #include <utilities/core/String.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <QtCore/QMetaType>
+#include <QMetaType>
 
 namespace openstudio {
 namespace model {

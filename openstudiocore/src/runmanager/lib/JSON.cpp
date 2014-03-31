@@ -9,8 +9,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <qjson/parser.h>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {

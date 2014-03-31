@@ -1080,14 +1080,14 @@ SET( ${target_name}_moc
   ZoneHVACPackagedTerminalAirConditioner_Impl.hpp
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 SET( ${target_name}_qrc
   Model.qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 
 SET( ${target_name}_depends

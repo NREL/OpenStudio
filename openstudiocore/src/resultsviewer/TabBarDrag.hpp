@@ -20,8 +20,10 @@
 #ifndef  RESULTSVIEWER_TABBARDRAG_H
 #define  RESULTSVIEWER_TABBARDRAG_H
 
-#include <QtGui/QTabBar>
+#include <QTabBar>
 #include <QDropEvent>
+#include <QMimeData>
+#include <QWidget>
 
 
 namespace resultsviewer{

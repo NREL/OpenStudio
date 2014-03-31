@@ -107,7 +107,6 @@ OPENSTUDIO_ENUM(DataErrorType,
     ((NullAndRequired)(required data is missing))
     ((NumberOfFields)(object has too few or too many fields))
     ((Duplicate)(unique data is duplicated)) );
-    
 
 } // openstudio
 

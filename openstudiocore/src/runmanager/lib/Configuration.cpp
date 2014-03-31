@@ -129,7 +129,7 @@ namespace runmanager {
     editor->setGeometry(option.rect);
   }
 
-  Configuration::Configuration(QWidget *parent, Qt::WFlags flags, const ConfigOptions &co)
+  Configuration::Configuration(QWidget *parent, Qt::WindowFlags flags, const ConfigOptions &co)
           : QDialog(parent, flags)
   {
     ui.setupUi(this);

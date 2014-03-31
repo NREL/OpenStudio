@@ -24,7 +24,7 @@
 #include <QTimer>
 #include <boost/optional.hpp>
 #include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_AddTool.hxx>
+#include <runmanager/lib/ui_AddTool.h>
 #include <runmanager/lib/Job.hpp>
 
 
@@ -39,7 +39,7 @@ namespace runmanager {
 
   public:
     //! Create a AddTool dialog for setting ConfigOptions
-    AddTool(QWidget *parent = 0, Qt::WFlags flags = 0);
+    AddTool(QWidget *parent = 0, Qt::WindowFlags flags = 0);
     virtual ~AddTool();
 
     //! Returns the tool created during execution of the dialog

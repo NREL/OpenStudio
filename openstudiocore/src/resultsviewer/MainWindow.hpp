@@ -33,18 +33,18 @@
 #include <utilities/plot/FloodPlot.hpp>
 #include <utilities/plot/LinePlot.hpp>
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QTabWidget>
-#include <QtGui/QLineEdit>
-#include <QtGui/QTreeWidgetItem>
-#include <QtCore/QList>
-#include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QDockWidget>
+#include <QMainWindow>
+#include <QTabWidget>
+#include <QLineEdit>
+#include <QTreeWidgetItem>
+#include <QList>
+#include <QSettings>
+#include <QMessageBox>
+#include <QAction>
+#include <QMenu>
+#include <QDockWidget>
 #include <string>
-#include <ui_MainWindow.hxx>
+#include <ui_MainWindow.h>
 
 // forward declarations to minimize header files
 class QToolBar;
@@ -64,7 +64,7 @@ class MainWindow : public QMainWindow
 static const int MaxRecentFiles = 10;
 
 public:
-  MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
+  MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
   virtual ~MainWindow();
 
 private:

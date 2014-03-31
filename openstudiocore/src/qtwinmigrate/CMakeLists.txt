@@ -1,5 +1,7 @@
 SET( target_name qtwinmigrate )
 
+SET (CMAKE_AUTOMOC ON)
+
 SET( ${target_name}_src 
   #QMfcApp
   qmfcapp.cpp
@@ -12,19 +14,14 @@ SET( ${target_name}_src
   qwinwidget.h
 )
 
-SET( ${target_name}_moc
-  qwinhost.h
-  qwinwidget.h
-)
-
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
-
 SET( ${target_name}_depends
   user32
   ${QT_LIBS}
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_moc_src} )
+INCLUDE_DIRECTORIES( ${Qt5Gui_PRIVATE_INCLUDE_DIRS} )
+
+ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} )
 TARGET_LINK_LIBRARIES(${target_name} ${${target_name}_depends})
 
 IF( NOT APPLE )

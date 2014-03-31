@@ -178,7 +178,7 @@ SET( ${target_name}_moc
   qwt_wheel.h
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 ADD_DEFINITIONS(-DQWT_DLL)
 ADD_LIBRARY( ${target_name} SHARED

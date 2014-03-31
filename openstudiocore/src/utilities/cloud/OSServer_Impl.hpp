@@ -30,6 +30,7 @@
 
 #include <string>
 
+class QJsonArray;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QMutex;
@@ -273,7 +274,7 @@ namespace detail{
     void logError(const std::string& error) const;
     void logNetworkError(int error) const;
     void logWarning(const std::string& warning) const;
-    std::vector<UUID> processListOfUUID(const QByteArray& bytes, bool& success) const;
+    std::vector<UUID> processListOfUUID(const QJsonArray& array, bool& success) const;
 
     void resetNetworkReply();
 

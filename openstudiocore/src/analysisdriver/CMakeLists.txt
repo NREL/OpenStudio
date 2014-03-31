@@ -59,7 +59,7 @@ SET( ${target_name}_swig_src
   AnalysisDriver.i
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
 
 SET( ${target_name}_depends
   openstudio_project

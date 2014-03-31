@@ -25,6 +25,7 @@
 #include "LocalLibraryController.hpp"
 #include <QLabel>
 #include <QLineEdit>
+#include <QMimeData>
 #include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>

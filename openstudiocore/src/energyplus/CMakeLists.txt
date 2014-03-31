@@ -362,7 +362,7 @@ SET( ${target_name}_qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
 
 SET( ${target_name}_depends
   openstudio_model

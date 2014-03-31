@@ -785,7 +785,7 @@ namespace runmanager {
   // Note: the following code was taken from the QDesktopServices implementation
   // and adapted to not call "startDetached" so that it is possible to monitor the outcome
   // of the attempted URL launch.
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
   bool openDocument(const QUrl &file)
   {
     if (!file.isValid())
@@ -802,7 +802,7 @@ namespace runmanager {
 
     return process.exitCode() == 0;
   }
-#elif defined(Q_WS_X11)
+#elif defined(Q_OS_X11)
   inline static bool launch(const QUrl &url, const QString &client)
   {
     QProcess process;

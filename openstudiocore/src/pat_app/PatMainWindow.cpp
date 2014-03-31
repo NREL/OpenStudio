@@ -38,6 +38,7 @@
 #include <QListWidget>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>

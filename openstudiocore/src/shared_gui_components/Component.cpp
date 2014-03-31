@@ -81,7 +81,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
         m_updateAvailable = true;
         if (m_msg){
           m_msg->setText("An update is available for this component");
-          m_msg->setShown(true);
+          m_msg->setVisible(true);
         }
       }
     // This component has not yet been downloaded
@@ -102,7 +102,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
         m_updateAvailable = false;
         if (m_msg){
           m_msg->setText("This measure requires a newer version of OpenStudio");
-          m_msg->setShown(true);
+          m_msg->setVisible(true);
         }
       }
     }else{
@@ -121,7 +121,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
           m_updateAvailable = true;
           if (m_msg){
             m_msg->setText("An update is available for this measure");
-            m_msg->setShown(true);
+            m_msg->setVisible(true);
           }
         }
       // This measure has not yet been downloaded
@@ -380,7 +380,7 @@ void Component::createCompleteLayout()
   tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tableWidget->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-  tableWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   tableWidget->horizontalHeader()->setStretchLastSection(true);
 
   mainLayout->addWidget(tableWidget);

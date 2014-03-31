@@ -20,7 +20,7 @@
 #ifndef  RESULTSVIEWER_TABDROPDOCK_H
 #define  RESULTSVIEWER_TABDROPDOCK_H
 
-#include <QtGui/QTabWidget>
+#include <QTabWidget>
 #include <QDropEvent>
 
 

@@ -59,7 +59,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 {
   //// OS SETTINGS
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

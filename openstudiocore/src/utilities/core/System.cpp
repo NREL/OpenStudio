@@ -40,8 +40,6 @@ namespace openstudio{
 
   #define _WIN32_WINNT 0x0500
 
-  #define NOMINMAX
-
   #include <windows.h>
 
   /// return the amount of time that the system has been idle

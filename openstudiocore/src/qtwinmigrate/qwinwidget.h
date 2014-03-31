@@ -1,12 +1,11 @@
 /****************************************************************************
 **
-** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
-** Contact: Nokia Corporation (qt-info@nokia.com)
+** This file is part of the Qt Solutions component.
 **
-** This file is part of a Qt Solutions component.
-**
+** $QT_BEGIN_LICENSE:BSD$
 ** You may use this file under the terms of the BSD license as follows:
 **
 ** "Redistribution and use in source and binary forms, with or without
@@ -18,10 +17,10 @@
 **     notice, this list of conditions and the following disclaimer in
 **     the documentation and/or other materials provided with the
 **     distribution.
-**   * Neither the name of Nokia Corporation and its Subsidiary(-ies) nor
-**     the names of its contributors may be used to endorse or promote
-**     products derived from this software without specific prior written
-**     permission.
+**   * Neither the name of Digia Plc and its Subsidiary(-ies) nor the names
+**     of its contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
 **
 ** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -35,6 +34,8 @@
 ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 **
+** $QT_END_LICENSE$
+**
 ****************************************************************************/
 
 
@@ -43,12 +44,12 @@
 #ifndef QWINWIDGET_H
 #define QWINWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include "qmfcapp.h"
 
 class CWnd;
-/*
-#if defined(Q_WS_WIN)
+
+/*#if defined(Q_OS_WIN)
 #  if !defined(QT_QTWINMIGRATE_EXPORT) && !defined(QT_QTWINMIGRATE_IMPORT)
 #    define QT_QTWINMIGRATE_EXPORT
 #  elif defined(QT_QTWINMIGRATE_IMPORT)
@@ -62,30 +63,25 @@ class CWnd;
 #  endif
 #else
 #  define QT_QTWINMIGRATE_EXPORT
-#endif
-*/
+#endif*/
 
-#if (_WIN32 || _MSC_VER) && !OPENSTUDIO_DIRECT_INCLUDE
-
-#ifdef qtwinmigrate_EXPORTS
-#define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
+#if (_WIN32 || _MSC_VER)
+#  ifdef qtwinmigrate_EXPORTS
+#    define QT_QTWINMIGRATE_EXPORT __declspec(dllexport)
+#  else
+#    define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
+#  endif
 #else
-#define QT_QTWINMIGRATE_EXPORT __declspec(dllimport)
-#endif
-
-#else
-
-#define QT_QTWINMIGRATE_EXPORT
-
+#  define QT_QTWINMIGRATE_EXPORT
 #endif
 
 class QT_QTWINMIGRATE_EXPORT QWinWidget : public QWidget
 {
     Q_OBJECT
 public:
-    QWinWidget( HWND hParentWnd, QObject *parent = 0, Qt::WFlags f = 0 );
+    QWinWidget( HWND hParentWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
 #ifdef QTWINMIGRATE_WITHMFC
-    QWinWidget( CWnd *parnetWnd, QObject *parent = 0, Qt::WFlags f = 0 );
+    QWinWidget( CWnd *parnetWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
 #endif
     ~QWinWidget();
 
@@ -101,8 +97,11 @@ protected:
 
     bool focusNextPrevChild(bool next);
     void focusInEvent(QFocusEvent *e);
-
+#if QT_VERSION >= 0x050000
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+#else
     bool winEvent(MSG *msg, long *result);
+#endif
 
 private:
     void init();

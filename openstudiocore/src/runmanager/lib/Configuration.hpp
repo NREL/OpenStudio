@@ -25,7 +25,7 @@
 #include <QItemDelegate>
 #include <boost/optional.hpp>
 #include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_Configuration.hxx>
+#include <runmanager/lib/ui_Configuration.h>
 #include <runmanager/lib/Job.hpp>
 #include <QStandardItemModel>
 
@@ -84,7 +84,7 @@ namespace runmanager {
   public:
     //! Create a Configuration dialog for setting ConfigOptions
     Configuration(QWidget *parent = 0, 
-                  Qt::WFlags flags = Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint), 
+                  Qt::WindowFlags flags = Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint), 
                   const ConfigOptions &co = ConfigOptions());
     virtual ~Configuration();
 

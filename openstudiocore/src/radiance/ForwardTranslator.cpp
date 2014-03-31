@@ -45,8 +45,8 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/geometry/Transformation.hpp>
 
-#include <QtGui/QPolygonF>
-#include <QtCore/QPointF>
+#include <QPolygonF>
+#include <QPointF>
 #include <QDir>
 #include <QDateTime>
 #include <QThread>

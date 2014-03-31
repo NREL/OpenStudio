@@ -21,7 +21,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 #include "modeltest.h"
 
@@ -396,27 +396,27 @@ void ModelTest::data()
     // General Purpose roles that should return a QString
     QVariant variant = model->data(model->index(0, 0), Qt::ToolTipRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
     variant = model->data(model->index(0, 0), Qt::StatusTipRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
     variant = model->data(model->index(0, 0), Qt::WhatsThisRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
 
     // General Purpose roles that should return a QSize
     variant = model->data(model->index(0, 0), Qt::SizeHintRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QSize>(variant));
+        OS_ASSERT(variant.canConvert<QSize>());
     }
 
     // General Purpose roles that should return a QFont
     QVariant fontVariant = model->data(model->index(0, 0), Qt::FontRole);
     if (fontVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QFont>(fontVariant));
+        OS_ASSERT(fontVariant.canConvert<QFont>());
     }
 
     // Check that the alignment is one we know about
@@ -439,12 +439,12 @@ void ModelTest::data()
     // General Purpose roles that should return a QColor
     QVariant colorVariant = model->data(model->index(0, 0), Qt::BackgroundColorRole);
     if (colorVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QColor>(colorVariant));
+        OS_ASSERT(colorVariant.canConvert<QColor>());
     }
 
     colorVariant = model->data(model->index(0, 0), Qt::TextColorRole);
     if (colorVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QColor>(colorVariant));
+        OS_ASSERT(colorVariant.canConvert<QColor>());
     }
 
     // Check that the "check state" is one we know about.

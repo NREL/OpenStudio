@@ -24,7 +24,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  RunManagerStatus::RunManagerStatus(QWidget *parent, Qt::WFlags flags, const RunManager &t_runmanager)
+  RunManagerStatus::RunManagerStatus(QWidget *parent, Qt::WindowFlags flags, const RunManager &t_runmanager)
     : QDialog(parent, flags)
   {
     ui.setupUi(this);

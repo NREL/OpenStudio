@@ -25,7 +25,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  AddTool::AddTool(QWidget *parent, Qt::WFlags flags)
+  AddTool::AddTool(QWidget *parent, Qt::WindowFlags flags)
           : QDialog(parent, flags)
   {
     ui.setupUi(this);

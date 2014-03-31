@@ -27,9 +27,9 @@
 #include <utilities/data/Vector.hpp>
 #include <utilities/data/Matrix.hpp>
 
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QAction>
+#include <QWidget>
+#include <QPushButton>
+#include <QAction>
 
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_text.h>
@@ -391,13 +391,13 @@ namespace openstudio{
       COMMON_PTR_TYPEDEFS(FloodPlot);
 
       /// default constructor
-      FloodPlot(QWidget* parent = 0, Qt::WFlags flags = 0);
+      FloodPlot(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
       /// matrix constructor
       FloodPlot(const Matrix& m);
 
       /// create
-      static FloodPlot::Ptr create(QWidget* parent = 0, Qt::WFlags flags = 0);
+      static FloodPlot::Ptr create(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
       static FloodPlot::Ptr create(const Matrix& m);
 

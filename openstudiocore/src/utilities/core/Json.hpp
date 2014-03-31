@@ -32,17 +32,7 @@
 #include <string>
 #include <vector>
 
-namespace QJson {
-  class Serializer;
-}
-
 namespace openstudio {
-namespace detail {
-
-  /** Helper function to standardize JSON serialization settings. */
-  void configureJsonSerializer(QJson::Serializer& serializer);
-
-}
 
 /** Helper function to construct meta-data object containing openstudio_version for JSON files. */
 UTILITIES_API QVariant jsonMetadata();

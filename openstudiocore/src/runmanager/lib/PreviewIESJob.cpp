@@ -97,7 +97,7 @@ namespace detail {
     addParameter("ra_image", "-b");
     addParameter("ra_image", "ov_y.hdr");
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     addParameter("ra_image", "out.bmp");
 #else
     addParameter("ra_image", "out.tiff");

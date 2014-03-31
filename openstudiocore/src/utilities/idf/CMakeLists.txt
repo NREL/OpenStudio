@@ -68,7 +68,7 @@ SET( idf_test_moc
   idf/Test/IdfTestQObjects.hpp
 )
 
-qt4_wrap_cpp( idf_test_moc_src ${idf_test_moc} )
+qt5_wrap_cpp( idf_test_moc_src ${idf_test_moc} )
 
 SET( idf_swig_src
   idf/Idf.i

@@ -99,6 +99,21 @@ ENDIF()
 
 
 IF(MSVC)
+  # Visual Studio information for the user
+  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "15.00.21022.08")
+    message(FATAL_ERROR "Visual Studio earlier than VS2008 is not supported")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "15.00.21022.08")
+    message(WARNING "Service Pack 1 for Visual Studio 2008 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "15.00.30729.01")
+    # vc90sp1
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "16.00.30319.01")
+    message(WARNING "Service Pack 1 for Visual Studio 2010 is strongly recommended")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "16.00.40219.01")
+    # vc100sp1
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER "16.00.40219.01")
+    message(WARNING "Visual Studio newer than VS2010 is not currently supported")
+  endif()
+
   # Build with Multiple Processes
   SET(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   MARK_AS_ADVANCED( BUILD_WITH_MULTIPLE_PROCESSES )
@@ -183,14 +198,41 @@ ENDIF()
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-FIND_PACKAGE (Qt4 4.8.0 COMPONENTS QtCore QtGui QtSql QtNetwork QtXml QtXmlPatterns QtWebKit)
-MARK_AS_ADVANCED(QT_QTMOTIF_INCLUDE_DIR)
-MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_DEBUG)
-MARK_AS_ADVANCED(QT_QTMOTIF_LIBRARY_RELEASE)
+FIND_PACKAGE (Qt5Widgets) #Qt5Core, Qt5Gui, Qt5Widgets
+FIND_PACKAGE (Qt5Sql) #Qt5Core, Qt5Sql
+FIND_PACKAGE (Qt5Network) #Qt5Core, Qt5Network
+FIND_PACKAGE (Qt5Xml) #Qt5Core, Qt5Xml
+FIND_PACKAGE (Qt5WebKit) #Qt5Core, Qt5Gui, Qt5Network, Qt5WebKit
+FIND_PACKAGE (Qt5WebKitWidgets) #Qt5Core, Qt5Gui, Qt5Multimedia, Qt5MultimediaWidgets, Qt5Network, Qt5OpenGL, Qt5Positioning, Qt5PrintSupport, Qt5Qml, Qt5Quick, Qt5Sensors, Qt5WebKit, Qt5WebKitWidgets, Qt5Widgets
+#FIND_PACKAGE (Qt5WinExtras) #Qt5Core, Qt5Gui, Qt5WinExtras
+FIND_PACKAGE (Qt5Concurrent) #Qt5Concurrent, Qt5Core
+MARK_AS_ADVANCED(Qt5Concurrent_DIR)
+MARK_AS_ADVANCED(Qt5Core_DIR)
+MARK_AS_ADVANCED(Qt5Gui_DIR)
+MARK_AS_ADVANCED(Qt5Gui_EGL_LIBRARY)
+MARK_AS_ADVANCED(Qt5Multimedia_DIR)
+MARK_AS_ADVANCED(Qt5MultimediaWidgets_DIR)
+MARK_AS_ADVANCED(Qt5Network_DIR)
+MARK_AS_ADVANCED(Qt5OpenGL_DIR)
+MARK_AS_ADVANCED(Qt5Positioning_DIR)
+MARK_AS_ADVANCED(Qt5PrintSupport_DIR)
+MARK_AS_ADVANCED(Qt5Qml_DIR)
+MARK_AS_ADVANCED(Qt5Quick_DIR)
+MARK_AS_ADVANCED(Qt5Sensors_DIR)
+MARK_AS_ADVANCED(Qt5Sql_DIR)
+MARK_AS_ADVANCED(Qt5WebKit_DIR)
+MARK_AS_ADVANCED(Qt5WebKitWidgets_DIR)
+MARK_AS_ADVANCED(Qt5Widgets_DIR)
+#MARK_AS_ADVANCED(Qt5WinExtras_DIR)
+MARK_AS_ADVANCED(Qt5Xml_DIR)
 
-  # Build Qt
-IF(QT_QMAKE_EXECUTABLE)
+# Build Qt
+IF(Qt5Widgets_DIR)
   OPTION( BUILD_QT "Build Qt" OFF)
+
+  IF(${Qt5Widgets_VERSION} VERSION_LESS "5.1.1")
+    MESSAGE(FATAL_ERROR "Minimum supported Qt is v5.1.1")
+  ENDIF()
 ELSE()
   OPTION( BUILD_QT "Build Qt" ON)
 ENDIF()
@@ -360,7 +402,7 @@ IF(BUILD_RUBY)
     SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
   ELSE()
     IF(CMAKE_CL_64)
-       find_program(NMAKE_EXE nmake)
+      find_program(NMAKE_EXE nmake)
        
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
@@ -580,72 +622,51 @@ IF(BUILD_QT)
     # it would appear that calling "make" in some way that CMake can detect that we are calling
     # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
     # the below code circumvents that by calling make through a call to "sh"
+    MESSAGE(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
-      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
+      URL_MD5 a78408c887c04c34ce615da690e0b4c8
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure  ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -arch x86 -arch x86_64 -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake demos -nomake docs -no-phonon -no-phonon-backend -no-qt3support -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile      
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && make -j1 install"
       )
   ELSEIF(UNIX)
+    MESSAGE(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
-      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
+      URL_MD5 a78408c887c04c34ce615da690e0b4c8
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -no-qt3support -openssl -nomake examples -nomake demos -nomake docs -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
       )
   ELSE()
-    find_program(NMAKE_EXE nmake)
-    
-    ExternalProject_Add( Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
-      URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install -L ${OPENSSL_ROOT_DIR}/lib -I ${OPENSSL_ROOT_DIR}/include -openssl
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE}
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE} install
-      )
+    MESSAGE(FATAL_ERROR "Qt5 cannot currently be built for Windows with the super build")
+    #find_program(NMAKE_EXE nmake)
+
+    #ExternalProject_Add( Qt
+    #  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
+    #  URL_MD5 a78408c887c04c34ce615da690e0b4c8
+    #  CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install -L ${OPENSSL_ROOT_DIR}/lib -I ${OPENSSL_ROOT_DIR}/include -openssl
+    #  BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE}
+    #  INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE} install
+    #  )
   ENDIF()
 
-  SET(QT_QMAKE_EXECUTABLE ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/qmake)
+  #Update this for Windows after BUILD_QT is updated for WINDOWS
+  IF(UNIX)
+    LIST(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake)
+  ENDIF()
 ENDIF()
-
-
-IF(BUILD_QT)
-  list(APPEND QJSON_DEPENDS Qt)
-ENDIF()
-
-ExternalProject_Add(QJSON
-  DEPENDS ${QJSON_DEPENDS}
-  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qjson-0.8.1.tar.gz
-  URL_MD5 4eef13da988edf8f91c260a3e1baeea9
-  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/CMakeLists.txt  ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/QJSONConfig.cmake.in ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/QJSON/qjson_export.h ${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON/src
-
-  CMAKE_CACHE_ARGS
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-  -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
-  -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-install
-)
 
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
 
 set(BoostLog_DIR "${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog-build")
-set(QJSON_DIR "${CMAKE_BINARY_DIR}/QJSON-prefix/src/QJSON-build")
 
 # Set up the dependencies for OpenStudioCore
 SET(OpenStudioCore_DEPENDS BoostLog)
 LIST(APPEND OpenStudioCore_DEPENDS GoogleTest)
-LIST(APPEND OpenStudioCore_DEPENDS QJSON)
 
 IF(BUILD_QT)
   LIST(APPEND OpenStudioCore_DEPENDS Qt)
@@ -705,14 +726,21 @@ ExternalProject_Add( OpenStudioCore
     -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
     -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
     -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
+    -DCMAKE_PREFIX_PATH:STRING=${CMAKE_PREFIX_PATH}
     -DCMAKE_VERSION_MAJOR:STRING=${CMAKE_VERSION_MAJOR}
     -DCMAKE_VERSION_MINOR:STRING=${CMAKE_VERSION_MINOR}
     -DCMAKE_VERSION_PATCH:STRING=${CMAKE_VERSION_PATCH}
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
-    -DSUBVERSION_REVISION:STRING=${SUBVERSION_REVISION}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
-    -DQT_QMAKE_EXECUTABLE:STRING=${QT_QMAKE_EXECUTABLE}
+    -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
+    -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
+    -DQt5Network_DIR:STRING=${Qt5Network_DIR}
+    -DQt5Xml_DIR:STRING=${Qt5Xml_DIR}
+    -DQt5WebKit_DIR:STRING=${Qt5WebKit_DIR}
+    -DQt5WebKitWidgets_DIR:STRING=${Qt5WebKitWidgets_DIR}
+    #-DQt5WinExtras_DIR:STRING=${Qt5WinExtras_DIR}
+    -DQt5Concurrent_DIR:STRING=${Qt5Concurrent_DIR}
     -DSWIG_EXECUTABLE:STRING=${SWIG_EXECUTABLE}
     -DRUBY_EXECUTABLE:STRING=${RUBY_EXECUTABLE}
     -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
@@ -722,7 +750,6 @@ ExternalProject_Add( OpenStudioCore
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
-    -DQJSON_DIR:STRING=${QJSON_DIR}
     -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
     -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}

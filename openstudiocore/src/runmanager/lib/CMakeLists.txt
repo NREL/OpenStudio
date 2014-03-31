@@ -223,10 +223,10 @@ SET( runmanager_test_moc
 )
 
 ## Qt moc generation
-qt4_wrap_cpp( runmanager_moc_src ${runmanager_moc} )
-qt4_wrap_cpp( runmanager_test_moc_src ${runmanager_test_moc} )
+qt5_wrap_cpp( runmanager_moc_src ${runmanager_moc} )
+qt5_wrap_cpp( runmanager_test_moc_src ${runmanager_test_moc} )
 
-qt4_wrap_ui( runmanager_UIS ${runmanager_UI} )
+qt5_wrap_ui( runmanager_UIS ${runmanager_UI} )
 
 # resource files
 SET( runmanager_qrc
@@ -234,7 +234,7 @@ SET( runmanager_qrc
 )
 
 # generate rules for building source files from the resources
-qt4_add_resources(runmanager_qrcs ${runmanager_qrc} )
+qt5_add_resources(runmanager_qrcs ${runmanager_qrc} )
 
 
 SOURCE_GROUP( runmanager FILES ${runmanager_src} ${runmanager_moc_src} )

@@ -20,7 +20,7 @@
 #ifndef  RESULTSVIEWER_BROWSERVIEW_H
 #define  RESULTSVIEWER_BROWSERVIEW_H
 
-#include <QtGui/QTextBrowser>
+#include <QTextBrowser>
 
 namespace resultsviewer{
 

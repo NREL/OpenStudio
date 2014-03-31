@@ -27,10 +27,10 @@
 #include <utilities/data/Vector.hpp>
 #include <utilities/data/Matrix.hpp>
  
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QAction>
-#include <QtGui/QColor>
+#include <QWidget>
+#include <QPushButton>
+#include <QAction>
+#include <QColor>
  
 #include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_legend.h>
@@ -301,10 +301,10 @@ public:
 
 
   /// constructor
-  LinePlot(QWidget* parent = 0, Qt::WFlags flags = 0);
+  LinePlot(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
   /// create
-  static LinePlot::Ptr create(QWidget* parent = 0, Qt::WFlags flags = 0);
+  static LinePlot::Ptr create(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
   /// virtual destructor
   virtual ~LinePlot() {}

@@ -49,7 +49,7 @@ namespace runmanager {
   }
 
 
-  MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags, bool newdb)
+  MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags, bool newdb)
     : QMainWindow(parent, flags), m_runmanager(openstudio::runmanager::RunManager::defaultDBLocation(), newdb, true),
       m_fss(openstudio::path(), false, "", QRegExp())
   {
@@ -597,7 +597,7 @@ namespace runmanager {
 
       if (ui.cbRegex->checkState() != Qt::Checked)
       {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
         QString cleanedpattern = pattern;
         cleanedpattern.replace("\\", "[\\\\]");
         QString appendedpattern = "*" + cleanedpattern + "*";

@@ -23,7 +23,7 @@
 #include <string>
 #include <QTimer>
 #include <runmanager/lib/RunManager.hpp>
-#include <ui_JobOutputCleanup.hxx>
+#include <ui_JobOutputCleanup.h>
 
 
 namespace openstudio {
@@ -38,7 +38,7 @@ namespace runmanager {
 
   public:
     /** Create a JobOutputCleanup dialog for choosing files to remove */
-    JobOutputCleanup(QWidget *parent = 0, Qt::WFlags flags = 0, 
+    JobOutputCleanup(QWidget *parent = 0, Qt::WindowFlags flags = 0, 
         const std::vector<std::string> &files = std::vector<std::string>());
 
     virtual ~JobOutputCleanup();

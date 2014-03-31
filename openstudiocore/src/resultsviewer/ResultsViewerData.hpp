@@ -25,7 +25,7 @@
 #include <utilities/plot/FloodPlot.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QTableWidget>
 #include <string>
 #include <QApplication>

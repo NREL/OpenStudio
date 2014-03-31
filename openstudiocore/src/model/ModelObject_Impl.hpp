@@ -27,9 +27,9 @@
 
 #include <utilities/core/Optional.hpp>
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QVariant>
+#include <QStringList>
 
 #include <boost/foreach.hpp>
 

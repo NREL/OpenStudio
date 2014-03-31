@@ -104,7 +104,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

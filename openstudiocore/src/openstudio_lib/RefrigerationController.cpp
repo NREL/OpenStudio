@@ -69,25 +69,25 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
   if( system )
   {
-    systemView->setId(OSItemId(system->handle(),QString(),false));
+    systemView->setId(OSItemId(system->handle().toString(),QString(),false));
 
     if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = system->liquidSuctionHeatExchangerSubcooler() )
     {
-      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
+      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
       systemView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = system->mechanicalSubcooler() )
     {
-      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle(),QString(),false));
+      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
       systemView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::ModelObject> condenser = system->refrigerationCondenser() )
     {
-      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
+      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle().toString(),QString(),false));
 
       systemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
 
@@ -134,7 +134,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setLabel(QString::number(compressorIndex));
 
@@ -163,7 +163,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -190,7 +190,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -993,4 +993,3 @@ QGraphicsObject * RefrigerationSystemItemDelegate::view(QSharedPointer<OSListIte
 }
 
 } // openstudio
-

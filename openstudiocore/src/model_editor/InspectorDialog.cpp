@@ -800,7 +800,7 @@ void InspectorDialog::createWidgets()
   m_tableWidget->verticalHeader()->hide();
   m_tableWidget->setHorizontalHeaderLabels(headerLabels);
   m_tableWidget->horizontalHeader()->setStretchLastSection(true);
-  m_tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+  m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
   m_tableWidget->setAcceptDrops(false);
   m_tableWidget->setDragEnabled(false);
 
@@ -1161,7 +1161,7 @@ void InspectorDialog::loadTableWidgetData()
 
     QTableWidgetItem * tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    QString handleString(object.handle());
+    QString handleString(object.handle().toString());
     //std::string temp = toString(handleString);
     tableItem->setData(Qt::UserRole, handleString);
     m_tableWidget->setItem(i,j++,tableItem);

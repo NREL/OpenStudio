@@ -22,6 +22,7 @@
 #include <resultsviewer/BrowserView.hpp>
 #include <resultsviewer/PlotView.hpp>
 #include <QApplication>
+#include <QDrag>
 
 
 namespace resultsviewer{

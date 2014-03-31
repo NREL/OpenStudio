@@ -30,7 +30,7 @@ namespace runmanager {
   ///
   /// Used to report detailed information about the status of an executing Job tree.
   /// It is particularly of use during execution of remote jobs, when the individual steps
-  /// of settting up a job take longer.
+  /// of setting up a job take longer.
   class RUNMANAGER_API AdvancedStatus
   {
     public:

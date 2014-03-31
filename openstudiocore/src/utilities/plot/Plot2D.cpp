@@ -25,7 +25,7 @@ using namespace boost;
 namespace openstudio{
 
 
-Plot2D::Plot2D(QWidget* parent, Qt::WFlags flags):QWidget(parent)
+Plot2D::Plot2D(QWidget* parent, Qt::WindowFlags flags):QWidget(parent)
 {
   setupUi(this);
   // accept drops

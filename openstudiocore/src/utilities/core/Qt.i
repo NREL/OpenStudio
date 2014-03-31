@@ -22,9 +22,8 @@ namespace Qt{
   enum ConnectionType { AutoConnection=0,
                         DirectConnection=1,
                         QueuedConnection=2,
-                        BlockingQueuedConnection=4,
-                        UniqueConnection=0x80,
-                        AutoCompatConnection=3};
+                        BlockingQueuedConnection=3,
+                        UniqueConnection=0x80};
 } // Qt
 
 
