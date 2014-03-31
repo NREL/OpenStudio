@@ -23,13 +23,13 @@
 #include <utilities/core/Logger.hpp>
 
 #include <boost/log/common.hpp>
-#include <boost/log/formatters.hpp>
-#include <boost/log/filters.hpp>
-#include <boost/log/filters/attr.hpp>
+//#include <boost/log/formatters.hpp>
+//#include <boost/log/filters.hpp>
+//#include <boost/log/filters/attr.hpp>
 #include <boost/log/support/regex.hpp>
-#include <boost/log/utility/init/to_file.hpp>
-#include <boost/log/utility/init/to_console.hpp>
-#include <boost/log/utility/init/common_attributes.hpp>
+//#include <boost/log/utility/init/to_file.hpp>
+//#include <boost/log/utility/init/to_console.hpp>
+//#include <boost/log/utility/init/common_attributes.hpp>
 
 #include <QReadWriteLock>
 #include <QWriteLocker>
@@ -37,8 +37,8 @@
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
-namespace fmt = boost::log::formatters;
-namespace flt = boost::log::filters;
+//namespace fmt = boost::log::formatters;
+//namespace flt = boost::log::filters;
 
 namespace openstudio{
 
@@ -166,7 +166,7 @@ namespace openstudio{
       QWriteLocker l(m_mutex);
 
       m_sink->locked_backend()->add_stream(os);
-
+/* DLM TODO
       // set formatting, seems like you have to call this after the stream is added
       // DLM@20110701: would like to format Severity as string but can't figure out how to do it
       // because you can't overload operator<< for an enum type
@@ -175,7 +175,7 @@ namespace openstudio{
         << "[" << fmt::attr< LogChannel >("Channel")
         << "] <" << fmt::attr< LogLevel >("Severity")
         << "> " << fmt::message());
-
+*/
       //m_sink->locked_backend()->set_formatter(fmt::stream
       //  << "[" << fmt::attr< LogChannel >("Channel")
       //  << "] <" << fmt::attr< LogLevel >("Severity")
@@ -209,7 +209,7 @@ namespace openstudio{
       if (m_channelRegex){
         filterChannelRegex = *m_channelRegex;
       }
-
+/* DLM TODO
       if (m_threadId){
         m_sink->set_filter(flt::attr< LogLevel >("Severity") >= filterLogLevel &&
                            flt::attr< QThread* >("QThread") == m_threadId &&
@@ -218,6 +218,7 @@ namespace openstudio{
         m_sink->set_filter(flt::attr< LogLevel >("Severity") >= filterLogLevel &&
                            flt::attr< LogChannel >("Channel").matches(filterChannelRegex));
       }
+*/
     }
 
   } // detail

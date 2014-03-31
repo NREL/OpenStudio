@@ -106,8 +106,8 @@ MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-# Enable support for boost > 1.42 ish by forcing boost_filesystem_version 2
-ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
+# Enable support for boost > 1.49 ish by forcing boost_filesystem_version 3
+ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=3)
 
 
 IF(MSVC)

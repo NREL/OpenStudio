@@ -250,8 +250,8 @@ IF (WIN32)
 #  ENDIF (MSVC)
 ENDIF (WIN32)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" "1.47" "1.47.0")
-FIND_PACKAGE( Boost 1.40.0 COMPONENTS filesystem regex program_options system thread date_time serialization)
+SET( Boost_ADDITIONAL_VERSIONS "1.54")
+FIND_PACKAGE( Boost 1.54.0 COMPONENTS filesystem regex program_options system thread date_time serialization)
 
 IF(Boost_THREAD_FOUND)
   OPTION( BUILD_BOOST "Build Boost" OFF)
@@ -463,6 +463,9 @@ IF(BUILD_SWIG)
     SET(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG/swig.exe )
   ENDIF()
 ENDIF() 
+
+#http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_54_0.tar.gz
+#MD5: efbfbff5a85a9330951f243d0a46e4b9
 
 IF(BUILD_BOOST)
   IF(APPLE)

@@ -25,6 +25,8 @@
 #include <utilities/core/LogMessage.hpp>
 #include <utilities/core/LogSink.hpp>
 
+#include <boost/optional.hpp>
+
 class QReadWriteLock;
 class QWriteLocker;
 class QThread;

@@ -24,19 +24,20 @@
 #include <boost/log/core/core.hpp>
 #include <boost/log/attributes/attribute.hpp>
 #include <boost/log/attributes/current_thread_id.hpp>
-#include <boost/log/attributes/basic_attribute_value.hpp>
+#include <boost/log/attributes/attribute_value.hpp>
 #include <boost/log/sources/channel_feature.hpp>
 #include <boost/log/sources/severity_feature.hpp>
 #include <boost/log/sources/severity_channel_logger.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
 #include <boost/log/sources/record_ostream.hpp>
-#include <boost/log/formatters.hpp>
-#include <boost/log/filters.hpp>
-#include <boost/log/filters/attr.hpp>
+//#include <boost/log/formatters.hpp>
+//#include <boost/log/filters.hpp>
+//#include <boost/log/filters/attr.hpp>
 #include <boost/log/support/regex.hpp>
-#include <boost/log/utility/init/to_file.hpp>
-#include <boost/log/utility/init/to_console.hpp>
-#include <boost/log/utility/init/common_attributes.hpp>
+#include <boost/log/utility/empty_deleter.hpp>
+//#include <boost/log/utility/init/to_file.hpp>
+//#include <boost/log/utility/init/to_console.hpp>
+//#include <boost/log/utility/init/common_attributes.hpp>
 
 #include <boost/foreach.hpp>
 
@@ -51,8 +52,8 @@
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
-namespace fmt = boost::log::formatters;
-namespace flt = boost::log::filters;
+//namespace fmt = boost::log::formatters;
+//namespace flt = boost::log::filters;
 
 
 namespace openstudio{
@@ -87,7 +88,7 @@ namespace openstudio{
   {
     BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;
   }
-
+/* DLM TODO
   // Custom class to extract QThread::currentThread
   class QThreadAttribute : public boost::log::attribute
   {
@@ -101,12 +102,13 @@ namespace openstudio{
         return boost::make_shared< result_value >(QThread::currentThread());
       }
   };
-
+*/
   LoggerSingleton::LoggerSingleton()
     : m_mutex(new QReadWriteLock())
   {
     // Make QThread attribute available to logging
-    boost::log::core::get()->add_global_attribute("QThread", boost::make_shared< QThreadAttribute >());
+// DLM TODO
+//    boost::log::core::get()->add_global_attribute("QThread", boost::make_shared< QThreadAttribute >());
 
     // We have to provide an empty deleter to avoid destroying the global stream
     boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::log::empty_deleter());
