@@ -1107,7 +1107,12 @@ IF (QT4_QMAKE_FOUND)
     # get include dirs
     QT4_GET_MOC_FLAGS(moc_flags)
     QT4_EXTRACT_OPTIONS(moc_files moc_options ${ARGN})
-
+    
+    # DLM temp hack, add -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED, not needed at Qt5
+    # https://bugreports.qt-project.org/browse/QTBUG-22829
+    LIST(APPEND moc_options "-DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED")
+    LIST(APPEND moc_options "-DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION")
+    
     FOREACH (it ${moc_files})
       GET_FILENAME_COMPONENT(it ${it} ABSOLUTE)
       QT4_MAKE_OUTPUT_FILE(${it} moc_ cxx outfile)
