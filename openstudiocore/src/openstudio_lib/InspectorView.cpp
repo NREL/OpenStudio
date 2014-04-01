@@ -25,63 +25,67 @@
 #include "ZoneChooserView.hpp"
 #include "LoopChooserView.hpp"
 #include "LibraryTabWidget.hpp"
-#include <model_editor/InspectorGadget.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterBaseboard_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
+#include "../model_editor/InspectorGadget.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/CoilCoolingCooledBeam.hpp"
+#include "../model/CoilCoolingCooledBeam_Impl.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilCoolingWater_Impl.hpp"
+#include "../model/CoilCoolingLowTempRadiantConstFlow.hpp"
+#include "../model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
+#include "../model/CoilCoolingLowTempRadiantVarFlow.hpp"
+#include "../model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/CoilHeatingWater_Impl.hpp"
+#include "../model/CoilHeatingWaterBaseboard.hpp"
+#include "../model/CoilHeatingWaterBaseboard_Impl.hpp"
+#include "../model/CoilHeatingLowTempRadiantConstFlow.hpp"
+#include "../model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
+#include "../model/CoilHeatingLowTempRadiantVarFlow.hpp"
+#include "../model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp"
+#include "../model/ControllerWaterCoil.hpp"
+#include "../model/ControllerWaterCoil_Impl.hpp"
+#include "../model/ConnectorSplitter.hpp"
+#include "../model/ConnectorSplitter_Impl.hpp"
+#include "../model/ConnectorMixer.hpp"
+#include "../model/ConnectorMixer_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater.hpp"
+#include "../model/ZoneHVACBaseboardConvectiveWater_Impl.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../model/ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "../model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
+#include "../model/ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACUnitHeater.hpp"
+#include "../model/ZoneHVACUnitHeater_Impl.hpp"
+#include "../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../model/AirLoopHVACReturnPlenum.hpp"
+#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/RefrigerationWalkIn.hpp"
+#include "../model/RefrigerationWalkIn_Impl.hpp"
+#include "../model/RefrigerationWalkInZoneBoundary.hpp"
+#include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
 #include <utilities/core/Assert.hpp>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -463,6 +467,39 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_vLayout->addWidget(m_currentView);
     }
+    else if( boost::optional<model::RefrigerationWalkIn> component = 
+               modelObject->optionalCast<model::RefrigerationWalkIn>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new RefrigerationWalkinInspectorView();
+      
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      OS_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+    }
+    else if( modelObject->optionalCast<model::ConnectorSplitter>() || 
+             modelObject->optionalCast<model::ConnectorMixer>()  )
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new GenericInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      OS_ASSERT(isConnected);
+
+      m_vLayout->addWidget(m_currentView);
+    }
     else
     {
       if( m_currentView )
@@ -703,6 +740,77 @@ PlenumChooserView::PlenumChooserView(QWidget * parent)
   newReturnPlenumButton->setStyleSheet("QToolButton { font-size: 12px; }");
   newReturnPlenumButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   returnVLayout->addWidget(newReturnPlenumButton);
+}
+
+RefrigerationWalkinInspectorView::RefrigerationWalkinInspectorView(QWidget * parent)
+  : BaseInspectorView(parent)
+{
+  m_walkinInspectorGadget = new InspectorGadget();
+  bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                       m_walkinInspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(bingo);
+  m_libraryTabWidget->addTab( m_walkinInspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_zoneBoundaryWidget = new QWidget();
+  m_libraryTabWidget->addTab( m_zoneBoundaryWidget,
+                              ":images/walkin_right_tab_on.png",
+                              ":images/walkin_right_tab_off.png" );
+}
+
+void RefrigerationWalkinInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP)
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+
+  m_displayIP = displayIP;
+
+  if( displayIP )
+  {
+    m_walkinInspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_walkinInspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+
+  m_walkinInspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  if( QLayout * t_layout = m_zoneBoundaryWidget->layout() )
+  {
+    delete t_layout;
+  }
+  QVBoxLayout * zoneBoundaryLayout = new QVBoxLayout();
+  zoneBoundaryLayout->setContentsMargins(0,0,0,0);
+  zoneBoundaryLayout->setSpacing(0);
+  m_zoneBoundaryWidget->setLayout(zoneBoundaryLayout);
+  boost::optional<model::RefrigerationWalkIn> walkin = modelObject.optionalCast<model::RefrigerationWalkIn>();
+  OS_ASSERT(walkin);
+  std::vector<model::RefrigerationWalkInZoneBoundary> zoneBoundaries = walkin->zoneBoundaries();
+  for( std::vector<model::RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
+       it != zoneBoundaries.end();
+       ++it )
+  {
+    InspectorGadget * inspector = new InspectorGadget();
+    bool bingo = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                    inspector, SIGNAL(toggleUnitsClicked(bool)));
+    OS_ASSERT(bingo);
+    if( displayIP )
+    {
+      inspector->setUnitSystem(InspectorGadget::IP);
+    }
+    else
+    {
+      inspector->setUnitSystem(InspectorGadget::SI);
+    }
+    inspector->layoutModelObj(*it, force, recursive, locked, hideChildren);
+    m_zoneBoundaryWidget->layout()->addWidget(inspector);
+  }
 }
 
 ThermalZoneInspectorView::ThermalZoneInspectorView(QWidget * parent)

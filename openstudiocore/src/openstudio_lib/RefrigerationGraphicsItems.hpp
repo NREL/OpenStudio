@@ -26,6 +26,7 @@
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/GraphicsItems.hpp"
+#include "../utilities/idf/Handle.hpp"
 
 class QGraphicsView;
 class QPushButton;
@@ -109,6 +110,8 @@ class RefrigerationSystemMiniView : public QGraphicsObject
   ZoomInButtonItem * zoomInButtonItem;
 
   QRectF boundingRect() const;
+
+  void adjustLayout();
 
   static QSize cellSize();
 
@@ -272,6 +275,8 @@ class RefrigerationCondenserView : public RefrigerationSystemDropZoneView
   void setCondenserId(const OSItemId & condenserId);
 
   void setCondenserName(const QString & name);
+
+  void setIcon(const QPixmap & pixmap);
 
   static QSizeF size();
 
@@ -665,7 +670,7 @@ class RefrigerationSHXView : public RefrigerationSystemDropZoneView
   QPixmap m_pixmap;
 };
 
-class RefrigerationSecondaryView : public QGraphicsObject
+class SecondaryDropZoneView : public RefrigerationSystemDropZoneView
 {
   Q_OBJECT;
 
@@ -677,7 +682,83 @@ class RefrigerationSecondaryView : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+};
+
+class SecondaryDetailView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  SecondaryDetailView();
+
+  virtual ~SecondaryDetailView() {}
+
+  ZoomInButtonItem * zoomInButtonItem;
+  RemoveButtonItem * removeButtonItem;
+
+  QRectF boundingRect() const;
+  QRectF nameRect();
+
+  void setName(const QString & name);
+  void setHandle(const Handle & handle);
+
+  static double width();
+  static double height();
+
+  signals:
+
+  void zoomInOnSystemClicked(const Handle & handle);
+  void removeClicked(const Handle & handle);
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
+              QWidget *widget );
+
+  private slots:
+
+  void onZoomButtonClicked();
+  void onRemoveButtonClicked();
+
+  private:
+
+  QString m_name;
+  Handle m_handle;
+};
+
+class RefrigerationSecondaryView : public QGraphicsObject
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationSecondaryView();
+
+  virtual ~RefrigerationSecondaryView() {}
+
+  QRectF boundingRect() const;
+
+  SecondaryDropZoneView * secondaryDropZoneView;
+
+  void insertSecondaryDetailView(int index, QGraphicsObject * object);
+
+  void removeAllSecondaryDetailViews();
+
+  void adjustLayout();
+
+  protected:
+
+  void paint( QPainter *painter, 
+              const QStyleOptionGraphicsItem *option, 
               QWidget *widget = 0 );
+
+  private:
+
+  std::vector<QGraphicsObject *> m_secondaryDetailViews;
+  int m_height;
 };
 
 } // openstudio

@@ -578,6 +578,11 @@ QLabel#H2 {
   font: bold;
 }
 
+QLabel#StandardsInfo {
+  font-size: 12px;
+  font: italic;
+}
+
 QListView {
     show-decoration-selected: 1; /* make the selection span the entire width of the view */
 }

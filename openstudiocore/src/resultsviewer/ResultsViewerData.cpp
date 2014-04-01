@@ -52,6 +52,7 @@ namespace resultsviewer{
 
   int ResultsViewerData::addFile(const QString& alias, const QString& filename)
   {
+    if (!QFileInfo(filename).exists()) return RVD_FILEDOESNOTEXIST;
     if (isFileOpen(filename)) return RVD_FILEALREADYOPENED;
     openstudio::path p = toPath(filename);
 

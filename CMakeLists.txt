@@ -4,7 +4,7 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 3)
-SET(CMAKE_VERSION_PATCH 0)
+SET(CMAKE_VERSION_PATCH 1)
 
 SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 FIND_PACKAGE(Git)
@@ -16,7 +16,7 @@ IF(GIT_FOUND)
                   OUTPUT_VARIABLE GIT_VERSION
                   ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
-  IF(${RESULT} EQUAL 0 AND NOT ${GIT_VERSION} EQUAL ${CMAKE_VERSION_BUILD})
+  IF(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
     SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
   ENDIF()
 ENDIF()
@@ -34,7 +34,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
-OPTION( BUILD_DOCUMENTATION "Build Documenation" OFF )
+OPTION( BUILD_DOCUMENTATION "Build Documentation" OFF )
 
 IF(BUILD_DOCUMENTATION)
   Find_Package( Doxygen REQUIRED )
@@ -490,6 +490,11 @@ IF(BUILD_BOOST)
   ELSE()
     # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't 
     # be trying to find it
+    
+    SET(B2_TOOLSET "")
+    IF(MSVC90)
+      SET(B2_TOOLSET "toolset=msvc-9.0")
+    ENDIF(MSVC90)
 
     IF(CMAKE_CL_64)
       ExternalProject_Add( Boost
@@ -497,7 +502,7 @@ IF(BUILD_BOOST)
         URL_MD5 b0d9b288627b6a57d41d425d4f467592
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 link=static address-model=64 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ELSE()
@@ -506,7 +511,7 @@ IF(BUILD_BOOST)
         URL_MD5 b0d9b288627b6a57d41d425d4f467592
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 link=static address-model=32 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ENDIF()
