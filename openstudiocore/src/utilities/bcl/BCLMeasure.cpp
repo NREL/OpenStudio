@@ -400,8 +400,8 @@ namespace openstudio{
     }
 
     try{
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(dir);
+      boost::filesystem::directory_iterator endit; // default construction yields past-the-end
+      boost::filesystem::directory_iterator it(dir);
       for( ; it != endit; ++it )
       {
         if ( is_directory(it->status()) )
@@ -601,8 +601,8 @@ namespace openstudio{
 
     // look for new files and add them
     try {
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(m_directory / toPath("tests/"));
+      boost::filesystem::directory_iterator endit; // default construction yields past-the-end
+      boost::filesystem::directory_iterator it(m_directory / toPath("tests/"));
       for( ; it != endit; ++it ){
         if ( is_regular_file(it->status()) ){
           if (!m_bclXML.hasFile(*it)){
@@ -617,8 +617,8 @@ namespace openstudio{
     }
 
     try {
-      directory_iterator endit; // default construction yields past-the-end
-      directory_iterator it(m_directory / toPath("resources/"));
+      boost::filesystem::directory_iterator endit; // default construction yields past-the-end
+      boost::filesystem::directory_iterator it(m_directory / toPath("resources/"));
       for( ; it != endit; ++it ){
         if ( is_regular_file(it->status()) ){
           if (!m_bclXML.hasFile(*it)){
