@@ -34,6 +34,7 @@
 #include "SLURMManager.hpp"
 #include "Workflow.hpp"
 #include "RunManagerStatus.hpp"
+#include <boost/weak_ptr.hpp>
 
 namespace openstudio {
 namespace runmanager {

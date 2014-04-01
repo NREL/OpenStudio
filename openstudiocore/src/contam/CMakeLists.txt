@@ -50,7 +50,6 @@ SET( ${target_name}_depends
   openstudio_model
   openstudio_osversion
   zkexpat
-  boost_log
 )
 
 ADD_LIBRARY( ${target_name} 

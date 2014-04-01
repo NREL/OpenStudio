@@ -35,6 +35,7 @@
 #include "JobState.hpp"
 #include <QReadWriteLock>
 #include <QDateTime>
+#include <boost/weak_ptr.hpp>
 
 Q_DECLARE_METATYPE(QProcess::ExitStatus);
 Q_DECLARE_METATYPE(QProcess::ProcessError);
