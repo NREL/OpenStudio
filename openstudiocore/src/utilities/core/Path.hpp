@@ -37,9 +37,6 @@ namespace openstudio {
 /** Typedef boost::filesystem::path to openstudio::path. */
 typedef boost::filesystem::path path;
 
-/** Typedef boost::filesystem::directory_iterator to openstudio::directory_iterator. */
-typedef boost::filesystem::directory_iterator directory_iterator;
-
 // allow wpath to be written to cout on Windows
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const path& p);
 

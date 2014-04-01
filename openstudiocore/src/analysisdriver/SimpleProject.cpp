@@ -1578,8 +1578,8 @@ namespace detail {
       return false;
     }
 
-    for (openstudio::directory_iterator it(newProjectDir),
-         itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(newProjectDir),
+         itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
@@ -1615,7 +1615,7 @@ namespace detail {
   std::vector<openstudio::path> SimpleProject_Impl::alternateModelPaths() const {
     std::vector<openstudio::path> result;
     if (boost::filesystem::exists(alternateModelsDir())) {
-      for (openstudio::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
+      for (boost::filesystem::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
         if (boost::filesystem::is_regular_file(it->path())) {
           FileReference temp(it->path());
           if (temp.fileType() == FileReferenceType::OSM) {
@@ -1925,7 +1925,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeOrphanedResultFiles() {
     // iterate through projectDir()
-    for(openstudio::directory_iterator it(projectDir()), endit; it != endit; ++it) {
+    for(boost::filesystem::directory_iterator it(projectDir()), endit; it != endit; ++it) {
       if (boost::filesystem::is_directory(it->status())) {
         boost::regex dpDir("dataPoint\\d+");
         boost::regex dakotaDir("[dD]akota");
@@ -2068,8 +2068,8 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
   }
 
   openstudio::path projectDatabasePath;
-  for (openstudio::directory_iterator it(projectDir),
-       itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+  for (boost::filesystem::directory_iterator it(projectDir),
+       itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
   {
     if (boost::filesystem::is_regular_file(it->status()))
     {
@@ -2149,8 +2149,8 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   if (!ignoreExistingFiles)
   {
-    for (openstudio::directory_iterator it(projectDir),
-        itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(projectDir),
+        itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
