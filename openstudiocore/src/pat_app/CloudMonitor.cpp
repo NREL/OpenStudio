@@ -753,7 +753,10 @@ void StartCloudWorker::startWorking()
  
     if(serverUrl){
 
-      for(int i = 0; i < 15; i++)
+      unsigned waitMS = 3000; // 3000
+      int increment = 15; // 15
+      int maxTries = increment;
+      for(int i = 0; i < maxTries; i++)
       {
         OSServer server(serverUrl.get());
 
@@ -765,10 +768,22 @@ void StartCloudWorker::startWorking()
         }
         else
         {
-          if (i < 14) {
-            System::msleep(3000);
-          } else {
-            serverErrors = server.errors();
+          if (i < maxTries - 1) 
+          {
+            System::msleep(waitMS);
+          } 
+          else 
+          {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(PatApp::instance()->mainWidget(), QString("Continue Waiting For Cloud?"), QString("Cloud has not yet started, continue waiting for cloud to launch?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+            if (reply == QMessageBox::Yes) 
+            {
+              maxTries += increment;
+            }
+            else
+            {
+              serverErrors = server.errors();
+            }
           }
         }
       } 
