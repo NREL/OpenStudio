@@ -360,9 +360,7 @@ void VersionTranslator::initializeMap(std::istream& is) {
     if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
       LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
           << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
-          << "Proceeding as if these versions are the same. Use with caution. (You "
-          << "should only be seeing this if you are a developer working with cloud "
-          << "resources.)");
+          << "Proceeding as if these versions are the same. Use with caution.");
       currentVersion = VersionString(openStudioVersion());
     }
     else {
