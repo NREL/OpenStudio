@@ -332,10 +332,10 @@ void RunTabController::onPlayButtonClicked()
       }
     }
 
-    // only need to check for E+ if running locally
+    // only need to check for E+ and Ruby if running locally
     if (!cloudAnalysisDriver){
       runmanager::ConfigOptions co(true);
-      co.findTools(true, true, true, true);
+      co.findTools(true, true, false, true);
       co.saveQSettings();
 
       if (co.getTools().getAllByName("energyplus").tools().size() == 0)
@@ -344,6 +344,17 @@ void RunTabController::onPlayButtonClicked()
         QMessageBox::information(runView,
             "Missing EnergyPlus",
             "EnergyPlus could not be located, simulation aborted.",
+            QMessageBox::Ok);
+
+        return;
+      }
+      
+      if (co.getTools().getAllByName("ruby").tools().size() == 0)
+      {
+        /// \todo check for specific version of ruby
+        QMessageBox::information(runView,
+            "Missing Ruby",
+            "Ruby could not be located, simulation aborted.",
             QMessageBox::Ok);
 
         return;

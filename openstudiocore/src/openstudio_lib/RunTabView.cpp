@@ -412,36 +412,11 @@ void RunView::playButtonClicked(bool t_checked)
 
   if(osdocument->modified())
   {
-    QMessageBox * messageBox = new QMessageBox(this);
-
-    messageBox->setText("The document must be saved before the simulation can run.");
-    messageBox->setInformativeText("Do you want to save your changes?");
-    messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-    messageBox->setDefaultButton(QMessageBox::Save);
-    messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
-    messageBox->setIcon(QMessageBox::Question);
-
-    int ret = messageBox->exec();
-
-    delete messageBox;
-
-    switch (ret)
-    {
-      case QMessageBox::Save:
-        osdocument->save();
-        // save was cancelled
-        if(osdocument->modified()) {
-          return;
-        }
-        break;
-
-      case QMessageBox::Cancel:
-        return;
-
-      default:
-        // should never be reached
-        break;
-    };
+    osdocument->save();
+    // save dialog was canceled
+    if(osdocument->modified()) {
+      return;
+    }
   }
 
   updateToolsWarnings();
@@ -458,16 +433,32 @@ void RunView::playButtonClicked(bool t_checked)
       openstudio::Application::instance().processEvents();
       runmanager::RunManager rm = runManager();
       pauseRunManager(rm);
-   } else {
+    } else {
       LOG(Debug, "Already canceling, not doing it again");
     }
   } else {
+    runmanager::ConfigOptions co(true);
+    co.findTools(true, true, false, true);
+    co.saveQSettings();
+
+    updateToolsWarnings();
+
     openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
-    if (openstudio::runmanager::ConfigOptions(true).getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
+    if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
     {
       QMessageBox::information(this, 
           "Missing EnergyPlus",
           openstudio::toQString("EnergyPlus " + epver.toString() + " could not be located, simulation aborted."),
+          QMessageBox::Ok);
+      m_playButton->setChecked(false);
+      return;
+    }
+    
+    if (co.getTools().getAllByName("ruby").tools().size() == 0)
+    {
+      QMessageBox::information(this,
+          "Missing Ruby",
+          "Ruby could not be located, simulation aborted.",
           QMessageBox::Ok);
       m_playButton->setChecked(false);
       return;
