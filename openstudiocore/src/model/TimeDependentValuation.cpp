@@ -91,7 +91,7 @@ namespace detail {
 
           // loading absolute path failed, try as relative path
           if (!m_file){
-            currentPath = toPath(currentPath->filename());
+            currentPath = currentPath->filename();
           }
         }
 
@@ -168,7 +168,7 @@ namespace detail {
     if (currentPath){
       openstudio::path newPath;
       if (basePath.empty()) { 
-        newPath = toPath(currentPath->filename());
+        newPath = currentPath->filename();
       } else {
         newPath = relativePath(*currentPath,basePath);
       }
@@ -186,7 +186,7 @@ namespace detail {
       openstudio::path workingPath(*currentPath);
       // if currentPath is complete but does not exist, go to extreme measures
       if (currentPath->is_complete()) {
-        workingPath = toPath(currentPath->filename());
+        workingPath = currentPath->filename();
       }
       openstudio::path newPath = boost::filesystem::complete(workingPath,searchDirectory);
       if (newPath.empty() || !boost::filesystem::exists(newPath)) { 

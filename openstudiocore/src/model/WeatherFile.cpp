@@ -271,7 +271,7 @@ namespace detail {
         }catch (...) {}
 
         // loading absolute path failed, try as relative path
-        currentPath = toPath(currentPath->filename());
+        currentPath = currentPath->filename();
       }
 
       // try relative path
@@ -294,7 +294,7 @@ namespace detail {
     if (currentPath){
       openstudio::path newPath;
       if (basePath.empty()) {
-        newPath = toPath(currentPath->filename());
+        newPath = currentPath->filename();
       } else {
         newPath = relativePath(*currentPath,basePath);
       }
@@ -324,7 +324,7 @@ namespace detail {
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }
       if (newPath.empty() || !boost::filesystem::exists(newPath)) {
-        workingPath = toPath(currentPath->filename());
+        workingPath = currentPath->filename();
         newPath = searchDirectory / workingPath;
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }

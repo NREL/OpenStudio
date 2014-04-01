@@ -98,7 +98,7 @@ namespace openstudio{
     QByteArray oldpath = qgetenv("PATH");
     if (!t_pathToSSLLibraries.empty())
     {
-      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
+      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.string()).toUtf8());
     }
 
 #ifdef QT_NO_OPENSSL

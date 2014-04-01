@@ -251,7 +251,7 @@ IF (WIN32)
 ENDIF (WIN32)
 
 SET( Boost_ADDITIONAL_VERSIONS "1.54")
-FIND_PACKAGE( Boost 1.54.0 COMPONENTS filesystem regex program_options system thread date_time serialization)
+FIND_PACKAGE( Boost 1.54.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
 
 IF(Boost_THREAD_FOUND)
   OPTION( BUILD_BOOST "Build Boost" OFF)

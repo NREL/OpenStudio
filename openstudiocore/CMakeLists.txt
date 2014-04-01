@@ -546,8 +546,8 @@ ENDIF (WIN32)
 
 MARK_AS_ADVANCED(Boost_DIR)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" )
-FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
+SET( Boost_ADDITIONAL_VERSIONS "1.54" )
+FIND_PACKAGE( Boost 1.54.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
 INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIR} )
 MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
 
@@ -559,6 +559,9 @@ INCLUDE_DIRECTORIES( SYSTEM ${CMAKE_SOURCE_DIR}/../dependencies/boost_geometry )
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
+
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 
 # BoostLog
 # DLM: todo: remove?
