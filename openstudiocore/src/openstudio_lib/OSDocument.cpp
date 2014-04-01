@@ -806,7 +806,7 @@ bool OSDocument::setFullWeatherFilePath()
       if (!weatherFilePath->is_complete()){
         if (!m_savePath.isEmpty()){
           openstudio::path osmPath = toPath(m_savePath);
-          openstudio::path searchDir = osmPath.parent_path() / toPath(osmPath.stem());
+          openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
           result = weatherFile->makeUrlAbsolute(searchDir);
         }
       }

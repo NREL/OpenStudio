@@ -1057,7 +1057,7 @@ namespace runmanager {
     {
       LOG(Warn, "Creating remote process with no remote tools set");
     } else if (!exists(t_tool.remoteArchive)) {
-      throw std::runtime_error("Unable to find remote tools while creating SLRUM process: " + toString(t_tool.remoteArchive.external_file_string()));
+      throw std::runtime_error("Unable to find remote tools while creating SLRUM process: " + toString(t_tool.remoteArchive.native()));
     }
 
     openstudio::UUID uuid = openstudio::UUID::createUuid();

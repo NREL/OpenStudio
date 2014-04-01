@@ -521,7 +521,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
   // mirroring code in ResultsView::searchForExistingResults
   std::vector<openstudio::path> reports;
   if (exists(directory) && !directory.empty()){
-    for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(directory); dir != end; ++dir ) {
+    for ( boost::filesystem::recursive_directory_iterator end, dir(directory); dir != end; ++dir ) {
       openstudio::path p = *dir;
       if (openstudio::toString(p.filename()) == "report.html") {
         reports.push_back(p);

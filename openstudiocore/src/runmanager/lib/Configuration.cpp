@@ -149,8 +149,8 @@ namespace runmanager {
 
     // Set defaults
     ui.numLocalProcessesBox->setValue(co.getMaxLocalJobs());
-    ui.idfLocationTxt->setText(openstudio::toQString(co.getDefaultIDFLocation().external_file_string()));
-    ui.epwLocationTxt->setText(openstudio::toQString(co.getDefaultEPWLocation().external_file_string()));
+    ui.idfLocationTxt->setText(openstudio::toQString(co.getDefaultIDFLocation().native()));
+    ui.epwLocationTxt->setText(openstudio::toQString(co.getDefaultEPWLocation().native()));
 
     ui.numSlurmProcessesBox->setValue(co.getMaxSLURMJobs());
     ui.slurmUserNameTxt->setText(openstudio::toQString(co.getSLURMUserName()));
@@ -164,7 +164,7 @@ namespace runmanager {
     openstudio::path outdir = co.getOutputLocation();
     if (!outdir.empty())
     {
-      ui.outputLocationTxt->setText(openstudio::toQString(outdir.external_file_string()));
+      ui.outputLocationTxt->setText(openstudio::toQString(outdir.native()));
       ui.outputLocationTxt->setEnabled(true);
       ui.btnOutputLocation->setEnabled(true);
       ui.cbOutputInPlace->setCheckState(Qt::Unchecked);
@@ -260,14 +260,14 @@ namespace runmanager {
 
     if (!tool.second.binaryDir.empty())
     {
-      row.push_back(new QStandardItem(toQString(tool.second.binaryDir.external_file_string())));
+      row.push_back(new QStandardItem(toQString(tool.second.binaryDir.native())));
     } else {
       row.push_back(new QStandardItem(""));
     }
 
     if (!tool.second.linuxBinaryArchive.empty())
     {
-      row.push_back(new QStandardItem(toQString(tool.second.linuxBinaryArchive.external_file_string())));
+      row.push_back(new QStandardItem(toQString(tool.second.linuxBinaryArchive.native())));
     } else {
       row.push_back(new QStandardItem(""));
     }
@@ -307,7 +307,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.idfLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.idfLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -317,7 +317,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.epwLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.epwLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -327,7 +327,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.outputLocationTxt->setText(toQString(toPath(str).external_file_string()));
+      ui.outputLocationTxt->setText(toQString(toPath(str).native()));
     }
   }
 

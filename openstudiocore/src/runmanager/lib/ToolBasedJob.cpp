@@ -448,7 +448,7 @@ namespace detail {
   void ToolBasedJob::addRequiredFile(const openstudio::path &t_from, const openstudio::path &t_local)
   { 
     QWriteLocker l(&m_mutex);
-    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.native_file_string())), t_local);
+    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.native())), t_local);
   }
 
   void ToolBasedJob::addRequiredFile(const QUrl &t_from, const openstudio::path &t_local)
@@ -460,7 +460,7 @@ namespace detail {
   void ToolBasedJob::addRequiredFile(const FileInfo &t_from, const openstudio::path &t_local)
   { 
     QWriteLocker l(&m_mutex);
-    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.fullPath.native_file_string())), t_local);
+    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.fullPath.native())), t_local);
 
     std::vector<std::pair<QUrl, openstudio::path> > filereqs = t_from.requiredFiles;
 //    m_inputfile_watcher.addPath(toQString(t_from.fullPath));
@@ -598,8 +598,8 @@ namespace detail {
               && boost::filesystem::is_directory(filespath))
           {
             // it's an OSM file, we want to also bring along its reqs
-            for(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> pitr(filespath);
-                pitr != boost::filesystem::basic_recursive_directory_iterator<openstudio::path>();
+            for(boost::filesystem::recursive_directory_iterator pitr(filespath);
+                pitr != boost::filesystem::recursive_directory_iterator();
                 ++pitr)
             {
               openstudio::path p = pitr->path();

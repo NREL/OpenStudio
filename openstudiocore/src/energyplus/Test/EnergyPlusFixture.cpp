@@ -58,7 +58,7 @@ void EnergyPlusFixture::SetUpTestCase() {
       if (boost::filesystem::is_regular_file(it->status())) {
         std::string ext = openstudio::toString(boost::filesystem::extension(*it));
         if (ext == ".osc") { boost::filesystem::remove(it->path()); }
-        if ((ext == ".xml") && (openstudio::toString(it->filename()) == "oscomponent")) { 
+        if ((ext == ".xml") && (openstudio::toString(it->path().filename()) == "oscomponent")) { 
           boost::filesystem::remove(it->path()); 
         }
       }

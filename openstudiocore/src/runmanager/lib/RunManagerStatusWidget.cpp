@@ -80,7 +80,7 @@ namespace runmanager {
     {
       openstudio::runmanager::Job j = m_runmanager->getJob(i);
       openstudio::path p = j.outdir();
-      QString url = toQString(p.native_file_string());
+      QString url = toQString(p.native());
       QUrl qurl1 = QUrl::fromLocalFile(url);
 
       LOG(Debug, "Opening dir: " << openstudio::toString(qurl1.toString()));

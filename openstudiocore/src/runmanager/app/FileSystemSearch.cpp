@@ -193,11 +193,11 @@ namespace runmanager {
       emit errorInRegex(m_regex.errorString());
     } else {
       emit errorInRegex("");
-      QString p = toQString(m_rootPath.external_file_string());
-
-      if (!p.endsWith(boost::filesystem::slash<openstudio::path>::value))
+      QString p = toQString(m_rootPath.native());
+      QString slash = toQString(boost::filesystem::path("/").make_preferred().native());
+      if (!p.endsWith(slash))
       {
-        p += boost::filesystem::slash<openstudio::path>::value;
+        p += slash;
       }
 
       m_header->setText(p);
@@ -221,27 +221,27 @@ namespace runmanager {
    
     if (m_recursive)
     {
-      typedef boost::filesystem::basic_recursive_directory_iterator<openstudio::path> diritr;
+      typedef boost::filesystem::recursive_directory_iterator diritr;
 
       try {
         diritr begin(root);
         diritr end;
         m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
-      } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+      } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());
         return;
       }
 
     } else {
-      typedef boost::filesystem::basic_directory_iterator<openstudio::path> diritr;
+      typedef boost::filesystem::directory_iterator diritr;
 
       try {
         diritr begin(root);
         diritr end;
         m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
-      } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+      } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());
         return;
       }

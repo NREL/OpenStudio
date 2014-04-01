@@ -463,7 +463,7 @@ namespace runmanager {
   {
     if (std::distance(t_path.begin(), t_path.end()) <= 5)
     {
-      return toString(t_path.file_string());
+      return t_path.string();
     } else {
       openstudio::path outpath;
 
@@ -480,7 +480,7 @@ namespace runmanager {
       ++itr;
       outpath /= *itr;
 
-      return toString(outpath.file_string());
+      return outpath.string();
     }
   }
 

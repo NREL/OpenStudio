@@ -121,7 +121,7 @@ namespace runmanager {
           {
             boost::filesystem::remove(wDB);
           }
-        } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
+        } catch (const boost::filesystem::filesystem_error &) {
           throw std::runtime_error("Unable to delete database file: " + toString(wDB));
         }
       }

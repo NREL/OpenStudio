@@ -412,7 +412,7 @@ namespace runmanager {
       } catch (const std::exception &) {
         // no description available
       }
-      ui.txtOutputDirectory->setText(toQString(m_job->outdir().external_file_string()));
+      ui.txtOutputDirectory->setText(toQString(m_job->outdir().native()));
     }
   }
 
@@ -851,7 +851,7 @@ namespace runmanager {
 
   void JobStatusWidget::openFile(const openstudio::path &p)
   {
-    QString url = toQString(p.native_file_string());
+    QString url = toQString(p.native());
     QUrl qurl1 = QUrl::fromLocalFile(url);
 
     LOG(Debug, "Opening file: " << openstudio::toString(qurl1.toString()));

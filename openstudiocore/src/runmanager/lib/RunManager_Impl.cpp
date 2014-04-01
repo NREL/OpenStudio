@@ -150,7 +150,7 @@ namespace detail {
         setText(toQString(m_job.treeStatus().valueDescription()));
         break;
       case 6:
-        setText(toQString(m_job.outdir().external_file_string()));
+        setText(toQString(m_job.outdir().native()));
         break;
       case 7:
         {

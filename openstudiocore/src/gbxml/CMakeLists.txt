@@ -30,7 +30,6 @@ SET( ${target_name}_depends
   openstudio_model
   openstudio_energyplus
   zkexpat
-  boost_log
 )
 
 ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} )
@@ -63,6 +62,6 @@ TARGET_LINK_LIBRARIES( gbXMLToIdf
 )
 
 INSTALL(TARGETS gbXMLToIdf
-    BUNDLE DESTINATION . 
-    RUNTIME DESTINATION bin 
-    )
+  BUNDLE DESTINATION . 
+  RUNTIME DESTINATION bin 
+)

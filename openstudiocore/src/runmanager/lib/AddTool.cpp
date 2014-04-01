@@ -53,7 +53,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.txtToolLocation->setText(toQString(toPath(str).external_file_string()));
+      ui.txtToolLocation->setText(toQString(toPath(str).native()));
     }
   }
 
@@ -63,7 +63,7 @@ namespace runmanager {
 
     if (!str.isEmpty() )
     {
-      ui.txtRemoteToolLocation->setText(toQString(toPath(str).external_file_string()));
+      ui.txtRemoteToolLocation->setText(toQString(toPath(str).native()));
     }
   }
 

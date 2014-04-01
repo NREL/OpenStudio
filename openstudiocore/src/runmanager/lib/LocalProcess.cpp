@@ -66,7 +66,7 @@ namespace detail {
     QFileInfo qfi(openstudio::toQString(t_tool.localBinPath));
     if (!qfi.isFile() || !qfi.isExecutable())
     {
-      throw std::runtime_error("Unable to find valid executable while creating local process: " + toString(t_tool.localBinPath.external_file_string()));
+      throw std::runtime_error("Unable to find valid executable while creating local process: " + toString(t_tool.localBinPath.native()));
     }
 
     for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = m_requiredFiles.begin();
@@ -99,7 +99,7 @@ namespace detail {
           m_copiedRequiredFiles.insert(itr->second);
         }
       } else if (exists(frompath) && is_directory(frompath)) {
-        typedef boost::filesystem::basic_directory_iterator<openstudio::path> diritr;
+        typedef boost::filesystem::directory_iterator diritr;
 
         diritr begin(frompath);
         diritr end;

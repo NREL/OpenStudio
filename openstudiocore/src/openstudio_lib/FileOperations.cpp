@@ -275,7 +275,7 @@ namespace openstudio {
       }
 
       // Copy all files from existing resources dir into temp dir when opening
-      openstudio::path sourceDir = osmPath.parent_path() / toPath(osmPath.stem());
+      openstudio::path sourceDir = osmPath.parent_path() / osmPath.stem();
       openstudio::path destDir = modelTempDir / toPath("resources");
       if (boost::filesystem::exists(sourceDir)){
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
@@ -327,7 +327,7 @@ namespace openstudio {
         if (epwPath->is_complete() || (!epwPath->empty() && toString(*epwPath->begin()) != "files"))
         {
           LOG_FREE(Debug, "updateModelTempDir", "existing weather file path is not relative to osmfolder: " << toString(modelTempDir));
-          openstudio::path newPath = modelTempDir / toPath("resources/files") / toPath(epwPath->filename());
+          openstudio::path newPath = modelTempDir / toPath("resources/files") / epwPath->filename();
           try {
             boost::filesystem::copy_file(*epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
             EpwFile epwFile(newPath);
@@ -369,7 +369,7 @@ namespace openstudio {
 
       // copy resources
       openstudio::path srcDir = modelTempDir / toPath("resources");
-      openstudio::path dstDir =  osmPath.parent_path() / toPath(osmPath.stem());
+      openstudio::path dstDir =  osmPath.parent_path() / osmPath.stem();
 
       openstudio::path srcproject = srcDir / toPath("project.osp");
       openstudio::path destproject = dstDir / toPath("project.osp");

@@ -582,8 +582,8 @@ namespace openstudio
 #endif
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
-          ruby_incpush(openstudio::toString(t_moduleSearchPath.external_file_string()).c_str());
-          ruby_incpush(openstudio::toString(t_rubyIncludePath.external_file_string()).c_str());
+          ruby_incpush(toString(t_moduleSearchPath.native()).c_str());
+          ruby_incpush(toString(t_rubyIncludePath.native()).c_str());
 
           if (!rubypath.empty())
           {

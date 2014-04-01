@@ -216,7 +216,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(t_runDir); 
+  for ( boost::filesystem::recursive_directory_iterator end, dir(t_runDir); 
         dir != end; 
         ++dir ) 
   {
