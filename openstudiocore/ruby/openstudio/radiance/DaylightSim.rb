@@ -339,8 +339,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   # "single phase" method
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
-    system("oconv #{t_outPath}/materials/materials.rad model.rad #{t_outPath}/skies/dc.sky > model_dc.oct")
-    system("oconv #{t_outPath}/skies/dc.sky > model_dc_skyonly.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
+    system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
     if t_options.verbose == 'v'
       puts "computing daylight coefficients..."
@@ -348,8 +348,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     end
 
     # do map
-    exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} \
+      -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" -m skyglow model_dc.oct")
 
     if t_options.verbose == 'v'
       puts "daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
@@ -373,18 +373,18 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-            -f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+            -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}_treg%03d.hdr\" -m skyglow model_dc.oct")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
+            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}treg%03d.hdr\" -m skyglow model_dc.oct")
           # create "contact sheet" of DC images for reference/troubleshooting
           if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
             hdrs = Dir.glob("#{binDir}/*.hdr")
             # there is a limit on the length of the command line on Windows systems -- just one of the OS's great many shortcomings.
             hdrs = hdrs[0..12]
-            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - #{binDir}/#{space_name}contact-sheet.bmp")
+            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - \"#{binDir}/#{space_name}contact-sheet.bmp\"")
           else
-            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - #{binDir}/#{space_name}contact-sheet.tif")
+            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - \"#{binDir}/#{space_name}contact-sheet.tif\"")
           end
         end
       end
@@ -400,7 +400,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     aziVectorY = ""
     puts "Using 3-phase method"
     #do three phase method (views not supported yet) RPG 2012.02.18
-    system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" \"#{t_outPath}/materials/materials_vmx.rad\" model.rad \"#{t_outPath}/skies/dc.sky\" > \"#{t_outPath}/octrees/model_dc.oct\"")
     #read DC materials file
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
     # get materials, compute vectors
@@ -424,22 +424,22 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
           puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
           binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
           # compute daylight matri(ces)
-          system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
+          system("#{t_catCommand} \"#{t_outPath}/materials/materials_vmx.rad\" \"#{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad\" > \"#{t_outPath}/window_temp.rad\"")
 
-          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
-            | rcontrib #{klemsDensity} #{tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
-            #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
+          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 \"#{t_outPath}/window_temp.rad\" \
+            | rcontrib #{klemsDensity} #{tregVars} -m skyglow -fa \"#{t_outPath}/octrees/model_dc.oct\" > \
+            \"#{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx\"")
           #end
       end
       #end
     # compute view matri(ces)
     puts "computing view matri(ces) for merged_space.map..."
     if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -I+ -fo #{klemsDensity} #{tregVars} \
-        -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
+      exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} -I+ -fo #{klemsDensity} #{tregVars} \
+        -o \"#{t_outPath}/output/dc/merged_space/maps/%s.vmx\" -m skyglow model_dc.oct")
     else #UNIX commands
-      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{klemsDensity} #{tregVars} \
-        -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
+      exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{klemsDensity} #{tregVars} \
+        -o \"#{t_outPath}/output/dc/merged_space/maps/%s.vmx\" #{binPairs} \"#{t_outPath}/octrees/model_dc.oct\"")
     end
   end
 end
@@ -633,7 +633,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
           mapAttrs = line.to_s.split(",")
 
           windowAzimuths << mapAttrs[0].split('_')[1].to_f
-          dcTimeStepCommands << "dctimestep #{mapAttrs[0]} #{t_outPath}/bsdf/_BSDF_FILENAME_ #{mapAttrs[3]} #{t_outPath}/timestep.vec"
+          dcTimeStepCommands << "dctimestep #{mapAttrs[0]} \"#{t_outPath}/bsdf/_BSDF_FILENAME_\" #{mapAttrs[3]} \"#{t_outPath}/timestep.vec\""
           bsdfs << [mapAttrs[1], mapAttrs[2]]
 
         end
@@ -708,7 +708,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
           if t_options.z == true
             Dir.chdir("#{t_outPath}/output/dc/merged_space/maps/")
-            dcVectors[i] = execTimeSteps("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} | #{perlPrefix}genskyvec#{perlExtension} -m #{options.skyvecDensity} -c 1 1 1 > #{t_outPath}/timestep.vec", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
+            dcVectors[i] = execTimeSteps("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} | #{perlPrefix}genskyvec#{perlExtension} -m #{options.skyvecDensity} -c 1 1 1 > \"#{t_outPath}/timestep.vec\"", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
 
           end
 
@@ -730,7 +730,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
               #  #{Dir.pwd}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
             end
 
-            values[i] = execSimulation("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  | dctimestep #{Dir.pwd}/output/dc/merged_space/maps/merged_space.dmx | rcalc -e #{vLambda} 2>&1", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+            values[i] = execSimulation("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  | dctimestep \"#{Dir.pwd}/output/dc/merged_space/maps/merged_space.dmx\" | rcalc -e #{vLambda} 2>&1", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
           end
 
@@ -738,7 +738,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
             # reformat time/irradiance vars for gensky input
             Dir.chdir("#{t_outPath}/output/dc/merged_space/maps/")
 
-            dcVectors[i] = execTimeSteps("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  -c 1 1 1 > #{t_outPath}/timestep.vec", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
+            dcVectors[i] = execTimeSteps("gensky #{tsHour}:#{tsMin} -a #{t_site_latitude} -o #{t_site_longitude} -m #{t_site_stdmeridian} -R #{illToIrradDirect} -B #{illToIrradDiffuse} | #{perlPrefix}genskyvec#{perlExtension} -m #{t_options.patches}  -c 1 1 1 > \"#{t_outPath}/timestep.vec\"", dcTimeStepCommands, windowAzimuths, solarAzimuth, bsdfs, i)
 
 
             Dir.chdir("#{t_outPath}/")

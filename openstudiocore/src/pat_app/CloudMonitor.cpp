@@ -869,12 +869,12 @@ void StopCloudWorker::startWorking()
 ReconnectCloudWorker::ReconnectCloudWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_status(CLOUD_STOPPED),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
     m_cloudServiceRunning(false),
-    m_projectIsOnCloud(false)
+    m_projectIsOnCloud(false),
+    m_status(CLOUD_STOPPED)
 {
 }
 
@@ -1001,11 +1001,11 @@ bool RecoverCloudWorker::authenticated() const
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_count(0),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
-    m_cloudServiceRunning(false)
+    m_cloudServiceRunning(false),
+    m_count(0)
 {
 }
 
@@ -1021,7 +1021,14 @@ void CloudMonitorWorker::monitorCloudRunning()
 
     if( ! m_cloudServiceRunning )
     {
-      m_cloudRunning = detail::checkCloudRunning();
+      // Fixing OS_ASSERT crash on exiting PAT with Cloud running, 
+      // but definitely not fixing it in the best way. TODO: Do it right.
+      try {
+        m_cloudRunning = detail::checkCloudRunning();
+      }
+      catch (...) {
+        m_cloudRunning = false;
+      }
       m_authenticated = detail::checkAuthenticated();
       m_internetAvailable = detail::checkInternetAvailable();
       m_count++;
