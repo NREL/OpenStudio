@@ -1394,7 +1394,7 @@ namespace detail {
     // cut down on this text as we parse
     std::string parsedText(text);
 
-    // get preceeding comments
+    // get preceding comments
     boost::smatch matches;
     while(boost::regex_match(parsedText, idfRegex::commentOnlyLine()) && boost::regex_search(parsedText, matches, idfRegex::commentOnlyLine())){
       std::string comment(matches[1].first, matches[1].second); 

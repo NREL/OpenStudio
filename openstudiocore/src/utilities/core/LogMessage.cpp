@@ -35,7 +35,7 @@ namespace openstudio{
 
     std::string text = logText;
 
-    // get preceeding comments
+    // get preceding comments
     boost::smatch matches;
     boost::regex messageRegex("\\[([^\\]]*)\\]\\s*<([\\-0-9]+)>([^\\[]*)(.*)");
     while(boost::regex_search(text, matches, messageRegex)){

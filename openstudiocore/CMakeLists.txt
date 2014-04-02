@@ -457,7 +457,7 @@ IF( BUILD_DOCUMENTATION )
   FOREACH( D ${doxygen_directories} )
     STRING( REPLACE "/" "_" DOC_NAME ${D} )
     IF( ${D} MATCHES "utilities/idd" )
-      # We want to build the idd documentation seperately because of the generated files
+      # We want to build the idd documentation separately because of the generated files
       SET( DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_FILES "" )

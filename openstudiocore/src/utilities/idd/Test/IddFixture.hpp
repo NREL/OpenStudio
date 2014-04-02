@@ -53,7 +53,7 @@ public:
 
   REGISTER_LOGGER("IddFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static openstudio::IddFile epIddFile;
   static openstudio::IddFile osIddFile;
   static openstudio::Time iddLoadTime;
