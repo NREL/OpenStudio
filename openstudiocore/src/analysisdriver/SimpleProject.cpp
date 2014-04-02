@@ -233,7 +233,7 @@ namespace detail {
       return result;
     }
     StringVector candidateDirs;
-    for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+    for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
       if (boost::filesystem::is_directory(dit->status())) {
         candidateDirs.push_back(toString(dit->path().stem()));
       }
@@ -289,7 +289,7 @@ namespace detail {
       if (!boost::filesystem::exists(dir) || !boost::filesystem::is_directory(dir)) {
         return result;
       }
-      for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+      for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
         if (boost::filesystem::is_directory(dit->status())) {
           OptionalBCLMeasure candidate = BCLMeasure::load(dit->path());
           if (candidate) {

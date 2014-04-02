@@ -99,8 +99,7 @@ std::vector<openstudio::path> ProjectVersioningFixture::projectDatabasePaths(
     basePath = toPath("ProjectVersioningFixtureData") / toPath(toString(uuid));
   }
 
-  for (boost::filesystem::directory_iterator it(basePath);
-       it != boost::filesystem::directory_iterator(); ++it)
+  for (boost::filesystem::directory_iterator it(basePath), itend; it != itend; ++it)
   {
     if (getFileExtension(it->path()) == "osp") {
       result.push_back(it->path());
