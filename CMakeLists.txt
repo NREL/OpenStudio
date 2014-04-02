@@ -731,17 +731,26 @@ ExternalProject_Add( OpenStudioCore
 )
 
 if (BUILD_QT AND MSVC)
-  # Install Qt DLL's to Release directory. This is brute force-ish, it copies all files in the bin folder
-  ExternalProject_Add_Step(OpenStudioCore InstallQtReleaseDLLs
-     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
-     DEPENDERS configure
-   )     
-   
-  # Install Qt DLL's to Debug directory. This is brute force-ish, it copies all files in the bin folder
-  ExternalProject_Add_Step(OpenStudioCore InstallQtDebugDLLs
-     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug
-     DEPENDERS configure
-   )     
+  file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
+  foreach(dll ${dlls})
+    get_filename_component(filename "${dll}" NAME_WE)
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}ReleaseDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}DebugDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}RelWithDebInfoDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}MinSizeRelDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel"
+       DEPENDERS configure
+     )
+  endforeach()
 endif()
 
 if (BUILD_RUBY AND MSVC)
