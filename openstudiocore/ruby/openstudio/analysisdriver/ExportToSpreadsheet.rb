@@ -39,7 +39,7 @@ require 'openstudio'
 require 'csv'
 
 if ARGV[0].nil?
-  puts "This script requires a path to a project directory as input."
+  raise "This script requires a path to a project directory as input."
 end
 
 # Open the SimpleProject
