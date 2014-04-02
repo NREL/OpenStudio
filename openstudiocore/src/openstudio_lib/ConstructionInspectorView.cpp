@@ -150,7 +150,7 @@ void ConstructionInspectorView::createLayout()
   ++row;
 
   m_constructionVC = new ConstructionObjectVectorController(this);
-  m_constructionDZ = new OSDropZone(m_constructionVC,false);
+  m_constructionDZ = new OSDropZone(m_constructionVC,"Drag From Library",QSize(0,0),false);
   m_constructionDZ->setMinItems(0);
   m_constructionDZ->setMaxItems(12);
   m_constructionDZ->setItemsAcceptDrops(true);
