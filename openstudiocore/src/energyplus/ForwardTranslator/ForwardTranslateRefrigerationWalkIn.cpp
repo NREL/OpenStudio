@@ -168,6 +168,12 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
       dripDownDefaultDay.push_back(std::make_pair(dripDownEndTime, 1)); // drip down on
     }
 
+    if( (defrostStartTimes.front().hours() != 0 && defrostStartTimes.front().minutes() != 0) || defrostStartTimes.back().hours() < 24) {
+      openstudio::Time defrostDayEnd(0, 24, 0);
+      defrostDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // defrost off
+      dripDownDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // drip down off
+    }
+
     //DefrostScheduleName
     std::string defrostName(modelObject.name().get() + " Defrost Schedule");
     boost::optional<IdfObject> defrostSchedule = this->createSimpleSchedule(defrostName, defrostDefaultDay);

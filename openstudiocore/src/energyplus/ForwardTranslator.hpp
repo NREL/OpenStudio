@@ -731,7 +731,8 @@ class ENERGYPLUS_API ForwardTranslator {
    *  order, so the times must be in chronological order otherwise E+ will output an error. Summer and
    *  winter design days are not required entries, only defaultDay and name are required. At the moment,
    *  there is no ScheduleTypeLimit so there is no validation and E+ outputs a warning. It is up to the 
-   *  developer to make sure all E+ rules and validation for Schedule:Compact are upheld.
+   *  developer to make sure all E+ rules and validation for Schedule:Compact are upheld. This converts
+   *  openstudio::Time of 00:00 to 24:00 and makes sure it is the last value.
    */
   boost::optional<IdfObject> createSimpleSchedule(const std::string & name,
                                                   const std::vector< std::pair<openstudio::Time, double> > & defaultDay,

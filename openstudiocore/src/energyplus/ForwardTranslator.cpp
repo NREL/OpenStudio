@@ -2527,6 +2527,8 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
   OS_ASSERT(!eg.empty());
 
   if(!summerDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
     values[0] = "For: SummerDesignDay";
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
@@ -2535,7 +2537,14 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
          it != summerDesignDay.end();
          ++it )
     {
-      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2544,9 +2553,23 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
       bool ok = eg.setDouble(0,it->second);
       OS_ASSERT(ok);
     }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Summer Design Day must have a value for all 24 hours");
+    }
   }
 
   if(!winterDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
     values[0] = "For: WinterDesignDay";
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
@@ -2555,7 +2578,14 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
          it != winterDesignDay.end();
          ++it )
     {
-      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2563,6 +2593,18 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
       OS_ASSERT(!eg.empty());
       bool ok = eg.setDouble(0,it->second);
       OS_ASSERT(ok);
+    }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Winter Design Day must have a value for all 24 hours");
     }
   }
 
@@ -2576,11 +2618,20 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
     OS_ASSERT(!eg.empty());
   }
 
+  bool hasEndTime = false;
+  double endTimeValue;
   for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = defaultDay.begin();
          it != defaultDay.end();
          ++it )
     {
-      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2588,6 +2639,18 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
       OS_ASSERT(!eg.empty());
       bool ok = eg.setDouble(0,it->second);
       OS_ASSERT(ok);
+    }
+  if(hasEndTime) {
+    values[0] = "Until: 24:00";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    values[0] = "";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    bool ok = eg.setDouble(0,endTimeValue);
+    OS_ASSERT(ok);
+  } else {
+      LOG(Error, "Default Day must have a value for all 24 hours");
     }
 
   m_idfObjects.push_back(idfObject);
