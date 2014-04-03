@@ -22,6 +22,7 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ParentObject.hpp>
+#include <model/RefrigerationSystem.hpp>
 
 namespace openstudio {
 
@@ -178,6 +179,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+<<<<<<< HEAD
   boost::optional<int> durationofDefrostCycle() const;
 
   boost::optional<int> dripDownTime() const;
@@ -197,6 +199,9 @@ class MODEL_API RefrigerationCase : public ParentObject {
   boost::optional<openstudio::Time> defrost7StartTime() const;
 
   boost::optional<openstudio::Time> defrost8StartTime() const;
+=======
+  boost::optional<RefrigerationSystem> system() const;
+>>>>>>> develop
 
   //@}
   /** @name Setters */
@@ -336,6 +341,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetAverageRefrigerantChargeInventory();
 
+<<<<<<< HEAD
   bool setDurationofDefrostCycle(int durationofDefrostCycle);
 
   void resetDurationofDefrostCycle();
@@ -375,6 +381,11 @@ class MODEL_API RefrigerationCase : public ParentObject {
   bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
   void resetDefrost8StartTime();
+=======
+  bool addToSystem(RefrigerationSystem & system);
+
+  void removeFromSystem();
+>>>>>>> develop
 
   //@}
   /** @name Other */

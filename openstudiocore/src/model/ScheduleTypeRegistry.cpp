@@ -21,6 +21,7 @@
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeLimits_Impl.hpp>
 #include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 #include <model/Model.hpp>
 
 #include <utilities/units/Quantity.hpp>
@@ -409,6 +410,27 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
     if (isCompatible(scheduleType,candidate)) {
+      result.push_back(candidate);
+    }
+  }
+  return result;
+}
+
+std::vector<Schedule> getCompatibleSchedules(const Model& model,
+                                             const std::string& className,
+                                             const std::string& scheduleDisplayName)
+{
+  ScheduleVector result;
+  ScheduleVector candidates = model.getModelObjects<Schedule>();
+  ScheduleTypeLimitsVector okTypes = getCompatibleScheduleTypeLimits(model,className,scheduleDisplayName);
+  BOOST_FOREACH(const Schedule& candidate,candidates) {
+    if (OptionalScheduleTypeLimits candidateType = candidate.scheduleTypeLimits()) {
+      if (std::find(okTypes.begin(),okTypes.end(),*candidateType) != okTypes.end()) {
+        result.push_back(candidate);
+      }
+    }
+    else {
+      // by default, keep all non-typed schedules
       result.push_back(candidate);
     }
   }

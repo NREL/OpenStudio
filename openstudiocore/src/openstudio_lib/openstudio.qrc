@@ -197,6 +197,8 @@
     <file>images/walkin_case.png</file>    
     <file>images/wahpDXCC.png</file>    
     <file>images/wahpDXHC.png</file>
+    <file>images/walkin_right_tab_off.png</file>
+    <file>images/walkin_right_tab_on.png</file>
     <file>images/water_connection.png</file>
     <file>images/water_heater.png</file>
     <file>images/water_main_alone.png</file>
@@ -218,6 +220,10 @@
     <file>openstudiolib.qss</file>
     <file>images/heat_coil-uht.png</file>
     <file>images/coil_ht_dx_singlespeed.png</file>
+    <file>images/air_cooled.png</file>
+    <file>images/condenser_cascade.png</file>
+    <file>images/evap_cooled.png</file>
+    <file>images/water_cooled.png</file>
 
     <file>images/mini_icons/mini_compressor.png</file>
     <file>images/mini_icons/mini_condensor.png</file>
@@ -349,6 +355,10 @@
     <file>images/mini_icons/window_material_gasmixture.png</file>
     <file>images/mini_icons/window_material_glazing.png</file>
     <file>images/mini_icons/heat_coil-uht.png</file>
+    <file>images/mini_icons/mini_air_cooled.png</file>
+    <file>images/mini_icons/mini_condenser_cascade.png</file>
+    <file>images/mini_icons/mini_evap_cooled.png</file>
+    <file>images/mini_icons/mini_water_cooled.png</file>
 
     <file>library/tid_api.xml</file>
 

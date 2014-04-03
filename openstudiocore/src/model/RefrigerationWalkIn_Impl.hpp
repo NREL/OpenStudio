@@ -22,6 +22,8 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject_Impl.hpp>
+#include <model/RefrigerationWalkInZoneBoundary.hpp>
+#include <model/ThermalZone.hpp>
 
 namespace openstudio {
 
@@ -133,6 +135,7 @@ namespace detail {
 
     bool isInsulatedFloorUValueDefaulted() const;
 
+<<<<<<< HEAD
     boost::optional<RefrigerationDefrostCycleParameters> optionalWalkinDefrostCycleParameters() const;
 
     RefrigerationDefrostCycleParameters walkinDefrostCycleParameters();
@@ -158,6 +161,29 @@ namespace detail {
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
     std::vector<openstudio::Time> defrostStartTimes() const;
+=======
+    boost::optional<RefrigerationSystem> system() const;
+
+    boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
+
+    boost::optional<double> zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const;
+
+    boost::optional<double> zoneBoundaryAreaofGlassReachInDoorsFacingZone() const;
+
+    boost::optional<double> zoneBoundaryHeightofGlassReachInDoorsFacingZone() const;
+
+    boost::optional<double> zoneBoundaryAreaofStockingDoorsFacingZone() const;
+
+    boost::optional<double> zoneBoundaryHeightofStockingDoorsFacingZone() const;
+
+    boost::optional<double> zoneBoundaryInsulatedSurfaceUValueFacingZone() const;
+
+    boost::optional<double> zoneBoundaryGlassReachInDoorUValueFacingZone() const;
+
+    boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
+
+    boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
+>>>>>>> develop
 
     //@}
     /** @name Setters */
@@ -229,6 +255,7 @@ namespace detail {
 
     void resetInsulatedFloorUValue();
 
+<<<<<<< HEAD
     bool setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters);
 
     bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
@@ -270,6 +297,35 @@ namespace detail {
     bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
     void resetDefrost8StartTime();
+=======
+    bool addToSystem(RefrigerationSystem & system);
+
+    void removeFromSystem();
+
+    bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
+
+    void resetZoneBoundaryThermalZone();
+
+    bool setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+
+    void setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+
+    void setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+
+    void setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone);
+
+    void setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone);
+
+    bool setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone);
+
+    bool setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone);
+
+    bool setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone);
+
+    bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
+
+    void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
+>>>>>>> develop
 
     //@}
     /** @name Other */
@@ -284,6 +340,10 @@ namespace detail {
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalDefrostSchedule() const;
+
+    RefrigerationWalkInZoneBoundary frontZoneBoundary();
+
+    boost::optional<RefrigerationWalkInZoneBoundary> zoneBoundary() const;
   };
 
 } // detail

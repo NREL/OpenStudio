@@ -486,3 +486,72 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
   ASSERT_EQ("in.epw", openstudio::toString(fi2.requiredFiles[0].second));
 
 }
+
+
+TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
+{
+  using namespace openstudio;
+  using namespace openstudio::runmanager;
+
+  Workflow wf;
+
+  RubyJobBuilder rjb;
+  rjb.setIncludeDir(getOpenStudioRubyIncludePath());
+  rjb.addScriptArgument("in.osm");
+  rjb.addScriptArgument(openstudio::toString(openstudio::toPath("/path/to/radiance")));
+  rjb.addInputFile(FileSelection::Last, FileSource::All, ".*\\.osm", "in.osm");
+  openstudio::path scriptsPath = openstudio::toPath("some/random/path") / openstudio::toPath("openstudio/radiance/");
+  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("ModelToRad.rb"), openstudio::toPath("ModelToRad.rb"), openstudio::path(), false));
+  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim.rb"), openstudio::toPath("DaylightSim.rb"), openstudio::path(), false));
+  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim-Simple.rb"), openstudio::toPath("DaylightSim-Simple.rb"), openstudio::path(), false));
+  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("MakeSchedules.rb"), openstudio::toPath("MakeSchedules.rb"), openstudio::path(), false));
+  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightMetrics.rb"), openstudio::toPath("DaylightMetrics.rb"), openstudio::path(), false));
+  ASSERT_EQ(rjb.requiredFiles().size(), 5u);
+  rjb.copyRequiredFiles("osm", "osm", "in.epw");
+  rjb.setScriptFile(scriptsPath / openstudio::toPath("DaylightCalculations.rb"));
+  rjb.addToWorkflow(wf);
+
+  WorkItem wi = wf.toWorkItems().at(0);
+  wi.jobkeyname = "testjobkeyname";
+
+  LOG_FREE(Debug, "RunManagerTestFixture", "workitem: " << wi.toJSON());
+
+  ASSERT_EQ(wi.files.files().at(0).fullPath, openstudio::toPath("some/random/path/openstudio/radiance/DaylightCalculations.rb"));
+  ASSERT_EQ(wi.files.files().at(0).requiredFiles.size(), 5u);
+  ASSERT_EQ(openstudio::toPath(wi.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), 
+      openstudio::toPath("some/random/path/openstudio/radiance/ModelToRad.rb"));
+
+  ASSERT_FALSE(boost::filesystem::exists(wi.files.files().at(0).fullPath));
+  ASSERT_FALSE(boost::filesystem::exists(openstudio::toPath(wi.files.files().at(0).requiredFiles.at(0).first.toLocalFile())));
+
+  Workflow wf2;
+  (RubyJobBuilder(wi, openstudio::toPath("we/dont/know/original/base/path"), openstudio::toPath("new/path/doesnt/matter"))).addToWorkflow(wf2);
+  WorkItem wi2 = wf2.toWorkItems().at(0);
+  LOG_FREE(Debug, "RunManagerTestFixture", "workitem 2: " << wi2.toJSON());
+
+
+
+  ASSERT_EQ(wi2.files.files().at(0).fullPath, getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/DaylightCalculations.rb"));
+  ASSERT_EQ(openstudio::toPath(wi2.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance/ModelToRad.rb"));
+
+  ASSERT_TRUE(boost::filesystem::exists(wi2.files.files().at(0).fullPath));
+  ASSERT_EQ(wi2.jobkeyname, "testjobkeyname");
+  std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = wi2.files.files().at(0).requiredFiles;
+
+  ASSERT_EQ(requiredFiles.size(), 5u);
+
+  for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
+      itr != requiredFiles.end();
+      ++itr)
+  {
+    openstudio::path localPath = openstudio::toPath(itr->first.toLocalFile());
+    ASSERT_TRUE(boost::filesystem::exists(localPath));
+    ASSERT_EQ(localPath.parent_path(), getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/radiance"));
+  }
+
+}
+
+
+
+
+

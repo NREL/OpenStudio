@@ -38,12 +38,13 @@
 %rename(ContamForwardTranslator) openstudio::contam::ForwardTranslator;
 // #endif
 
-// DLM: this is neccesary for now due to https://github.com/NREL/OpenStudio/issues/679
+// DLM: this is necessary for now due to https://github.com/NREL/OpenStudio/issues/679
 // eventually we should compile C# code into separate namespaces
-#ifdef SWIGCSHARP
+// ACS: targeting only C# causes OpenStudio::Contam::Path to be used in place of OpenStudio::Path in some cases with Ruby bindings on Linux
+// #ifdef SWIGCSHARP
 %rename(PrjDataPoint) openstudio::contam::DataPoint;
 %rename(PrjPath) openstudio::contam::Path;
-#endif
+// #endif
 
 %include <contam/PrjSubobjects.hpp>
 %include <contam/PrjPublic.hpp>

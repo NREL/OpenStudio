@@ -56,7 +56,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     merge_selected_only = runner.getBoolArgumentValue("merge_selected_only",user_arguments)
 
     # Open OSM file
-    if not OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).empty
+    if not OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).empty?
       @background_osm_model = OpenStudio::Model::Model::load(OpenStudio::Path.new(open_path)).get
     else
       @background_osm_model = OpenStudio::Model::Model.new # make new model if path given wasn't an existing model
@@ -89,8 +89,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
     #create def to make space
     def make_space(name,xOrigin,yOrigin,zOrigin,rotation)
-
-      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
       #flag to create new space
       need_space = true
@@ -148,8 +146,15 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       skylight_hash = Hash.new
       door_hash = Hash.new
 
+      # different method to get entities for group vs. component
+      if group.class.to_s == "Sketchup::Group"
+        entities = group.entities
+      else group.class.to_s == "Sketchup::ComponentInstance"
+        entities = group.definition.entities 
+      end
+
       #categorize surfaces
-      group.entities.each do |entity|
+      entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
 
           #array to help find identify sub-surfaces
@@ -215,6 +220,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
           # get vertices for OpenStudio base surface
           vertices = loop.vertices
+
+          # array of edges that have to be re-drawn after erase to address issue of door in base surface
+          erasedEdges = []
 
           # make an OpenStudio vector of of Point3d objects
           newVertices = []
@@ -287,8 +295,10 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               edges = loop.edges
               edges.each do |edge|
                 if edge.faces.include? v
+                  erasedEdges << [edge.vertices[0].position,edge.vertices[1].position]
                   edge.erase!
                   remake_base_surface = true
+                else
                 end
               end
 
@@ -324,14 +334,19 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
           end  #end of if remake_base_surface
 
+          # redraw earsed edges to preserve door in current SketchUp model
+          erasedEdges.each do |edgePoints|
+            pointA = edgePoints[0]
+            pointB = edgePoints[1]
+            line = entity.parent.entities.add_line pointA,pointB
+          end
+
       end #end of base_surfaces_array.each.do
 
     end #end of make_space_surfaces(space,group)
 
     #create def to make shading surface group
     def make_shading_surface_group(name,xOrigin,yOrigin,zOrigin,rotation,shadingSurfaceType,parent)
-
-      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
 
       #flag to create new group
       need_group = true
@@ -352,10 +367,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           shading_surface_group.setXOrigin(xOrigin.to_f)
           shading_surface_group.setYOrigin(yOrigin.to_f)
           shading_surface_group.setZOrigin(zOrigin.to_f)
+          shading_surface_group.setDirectionofRelativeNorth(rotation)
           @result = shading_surface_group
           @current_shading_surface_groups << shading_surface_group
-
-          # todo - in addition to rotation, no I need to see if these should be re-parented and classified?
 
         end #end of if space.name = name
 
@@ -375,6 +389,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         shading_surface_group.setXOrigin(xOrigin.to_f)
         shading_surface_group.setYOrigin(yOrigin.to_f)
         shading_surface_group.setZOrigin(zOrigin.to_f)
+        shading_surface_group.setDirectionofRelativeNorth(rotation)
         @result = shading_surface_group
       end
 
@@ -384,8 +399,15 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     # create def to make shading surface
     def make_shading_surfaces(shading_surface_group, group)
 
+      # different method to get entities for group vs. component
+      if group.class.to_s == "Sketchup::Group"
+        entities = group.entities
+      else group.class.to_s == "Sketchup::ComponentInstance"
+        entities = group.definition.entities
+      end
+
       #loop through surfaces to make OS surfaces
-      group.entities.each do |entity|
+      entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
           vertices = entity.vertices
 
@@ -409,8 +431,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     # create def to make interior partition group
     def make_interior_partition_group(name,xOrigin,yOrigin,zOrigin,rotation,parent)
 
-      # todo - SketchUp doesn't enforce unique names but OpenStudio will handle that.
-
       #flag to create new group
       need_group = true
 
@@ -430,10 +450,9 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           interior_partition_group.setXOrigin(xOrigin.to_f)
           interior_partition_group.setYOrigin(yOrigin.to_f)
           interior_partition_group.setZOrigin(zOrigin.to_f)
+          interior_partition_group.setDirectionofRelativeNorth(rotation)
           @result = interior_partition_group
           @current_interior_partition_groups << interior_partition_group
-
-          # todo - in addition to rotation, no I need to see if these should be re-parented?
 
         end #end of if space.name = name
 
@@ -450,6 +469,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         interior_partition_group.setXOrigin(xOrigin.to_f)
         interior_partition_group.setYOrigin(yOrigin.to_f)
         interior_partition_group.setZOrigin(zOrigin.to_f)
+        interior_partition_group.setDirectionofRelativeNorth(rotation)
         @result = interior_partition_group
       end
 
@@ -459,8 +479,15 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     # create def to make interior partition surface
     def make_interior_partition_surfaces(interior_partition_group, group)
 
+      # different method to get entities for group vs. component
+      if group.class.to_s == "Sketchup::Group"
+        entities = group.entities
+      else group.class.to_s == "Sketchup::ComponentInstance"
+        entities = group.definition.entities
+      end
+
       #loop through surfaces to make OS surfaces
-      group.entities.each do |entity|
+      entities.each do |entity|
         if entity.class.to_s == "Sketchup::Face"
           vertices = entity.vertices
 
@@ -486,8 +513,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
     @current_shading_surface_groups = []
     @current_interior_partition_groups = []
 
-    #todo - address scaling and not z axis rotation
-
     #making array of groups and components
     groups = []
     entities.each do |entity|
@@ -497,11 +522,83 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end
     end #end of entities.each.do
 
+    # make array of groups in model. Rename duplicate names on the fly
+    groupNames = []
+
     #loop through groups in SketchUp model
     groups.each do |group|
 
+      # if group name is blank create a new one
+      if group.name == "" then group.name = "Group" end
+
+      # make group name unique if it isn't
+      if groupNames.include? group.name
+        counter = 1
+        uniqueNameFound = false
+
+        # loop through this until unique name found
+        until uniqueNameFound
+
+          # create target name
+          if group.name.include? " - copy "
+            # this is to keep clean naming if you may a copy of a space that was copied in an earlier session
+            indexPosition = group.name.rindex(" - copy ")
+            targetName = "#{group.name[0..indexPosition]}- copy #{counter}"
+          else
+            targetName = "#{group.name} - copy #{counter}"
+          end
+
+          # test and assign name or change counter
+          if groupNames.include? targetName
+            counter += 1
+          else
+            group.name = targetName
+            uniqueNameFound = true
+          end
+        end
+      end
+
+      # push final name to array
+      groupNames << group.name
+
       # get transformation
       t = group.transformation
+
+      # address scaling and not z axis rotation
+      explodeNeededFlag = false
+      if not (t.xscale.to_s == "1.0" and t.yscale.to_s == "1.0" and t.zscale.to_s == "1.0" and t.zaxis.to_s == "(0.0, 0.0, 1.0)")  then explodeNeededFlag = true end
+
+      if explodeNeededFlag == true
+
+        # gather group inputs
+        oldGroup = group
+        parent = group.parent
+        name = group.name
+        layer = group.layer
+
+        # make new group and set transformation
+        group = parent.entities.add_group(oldGroup)
+        #set name and layer
+        # create group set group origin, rotation
+        point = Geom::Point3d.new t.origin.x,t.origin.y,t.origin.z
+        rotation = t.rotz
+        t = Geom::Transformation.new point
+        #group.move! t
+        # rotate
+        tr = Geom::Transformation.rotation point, [0, 0, 1], rotation
+        #group.transform! tr
+
+        # updated transformation and group passed into measure.
+        t = group.transformation
+
+        # set layer and name
+        group.name=name
+        group.layer=layer
+
+        # explode group contents
+        oldGroup.explode
+
+      end
 
       if group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup" or group.layer.name == "OpenStudio BackgroundModel SiteShadingGroup"
 
@@ -530,7 +627,15 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
         #Making array of nested groups
         nested_groups = []
-        group.entities.each do |group_entity|
+
+        # different method to get entities for group vs. component
+        if group.class.to_s == "Sketchup::Group"
+          entities = group.entities
+        else group.class.to_s == "Sketchup::ComponentInstance"
+        entities = group.definition.entities 
+        end
+
+        entities.each do |group_entity|
           if group_entity.class.to_s == "Sketchup::Group" or group_entity.class.to_s == "Sketchup::ComponentInstance"
             group_entity.make_unique #this is only needed if a group was copied.
             nested_groups << group_entity
@@ -546,7 +651,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           if nested_group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
 
             #make or update group
-            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,nested_t.rotz*-1,space)
+            space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,nested_t.rotz*-1,"Space",space)
             #add to array of shading groups
             #make surfaces
             shading_surfaces = make_shading_surfaces(space_shading_group,nested_group)
@@ -600,8 +705,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       end
 
     end #end of if not merge_selected_only
-
-    #todo - confirm behavior with components
 
     #todo - warn user about loose top level surfaces
 

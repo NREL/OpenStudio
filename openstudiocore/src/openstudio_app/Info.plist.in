@@ -42,6 +42,24 @@
 				<string>gov.nrel.openstudio.osc</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ossr</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>ossr</string>
+			<key>CFBundleTypeName</key>
+			<string>OpenStudio Standard Result</string>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>gov.nrel.openstudio.ossr</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
@@ -104,6 +122,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>osc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>OpenStudio Standard Result</string>
+			<key>UTTypeIdentifier</key>
+			<string>gov.nrel.openstudio.ossr</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ossr</string>
 				</array>
 			</dict>
 		</dict>

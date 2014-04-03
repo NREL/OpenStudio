@@ -25,6 +25,7 @@
 #include "EditController.hpp"
 #include "BaseApp.hpp"
 #include "LocalLibraryController.hpp"
+#include "WorkflowTools.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>
@@ -219,7 +220,7 @@ std::vector<analysis::MeasureGroup> VariableListController::variables() const
 
     if (m_measureType == MeasureType::ModelMeasure) {
       analysis::OptionalMeasureGroup modelSwapVariable = project->getAlternativeModelVariable();
-      OptionalInt stopIndex = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+      OptionalInt stopIndex = getModelMeasureInsertStep(problem);
       OS_ASSERT(stopIndex);
       for (int i = 0; i < *stopIndex; ++i) {
         if (workflow[i].isInputVariable()) {
@@ -409,7 +410,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
       analysis::Problem problem = project->analysis().problem();
       OptionalInt index;
       if (m_measureType == MeasureType::ModelMeasure) {
-        index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::ModelToIdf);
+        index = getModelMeasureInsertStep(problem);
       } else if (m_measureType == MeasureType::EnergyPlusMeasure) {
         index = problem.getWorkflowStepIndexByJobType(runmanager::JobType::EnergyPlusPreProcess);
       } else if (m_measureType == MeasureType::ReportingMeasure) {
@@ -698,7 +699,7 @@ void MeasureListController::addItemForDuplicateMeasure(const analysis::Measure& 
 
   bool ok = measureGroup.insert(index,duplicateMeasure);
   OS_ASSERT(ok);
-  OS_ASSERT(measureGroup.numMeasures(false) == n + 1);
+  OS_ASSERT(measureGroup.numMeasures(false) == static_cast<unsigned>(n + 1));
   // let everyone know about the new item
   analysis::RubyMeasureVector measuresInList = measures();
   analysis::RubyMeasureVector::const_iterator it = std::find_if(

@@ -2591,6 +2591,42 @@ OS:Refrigeration:Condenser:AirCooled,
   ,                                       !- Condensate Receiver Refrigerant Inventory {kg}
   ;                                       !- Condensate Piping Refrigerant Inventory {kg}
 
+OS:Refrigeration:Condenser:EvaporativeCooled,
+  {5fdbc0e0-d650-469d-8866-8c6d8f6b8b46}, !- Handle
+  Refrigeration Condenser Evaporative Cooled, !- Name
+  43100,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  VariableSpeed,                          !- Fan Speed Control Type
+  373,                                    !- Rated Fan Power {W}
+  0.2,                                    !- Minimum Fan Air Flow Ratio {dimensionless}
+  6.63,                                   !- Approach Temperature Constant Term {C}
+  0.468,                                  !- Approach Temperature Coefficient 2 {C}
+  17.93,                                  !- Approach Temperature Coefficient 3 {C}
+  -0.322,                                 !- Approach Temperature Coefficient 4 {dimensionless}
+  0.6,                                    !- Minimum Capacity Factor {dimensionless}
+  4.8,                                    !- Maximum Capacity Factor {dimensionless}
+  ,                                       !- Air Inlet Node Name
+  1.37,                                   !- Rated Air Flow Rate {m3/s}
+  66.7,                                   !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  250;                                    !- Rated Water Pump Power {W}
+
+OS:Refrigeration:Condenser:WaterCooled,
+  {257357d5-041a-479c-894c-68cc5cff9e82}, !- Handle
+  Refrigeration Condenser Water Cooled, !- Name
+  58000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  29.4,                                   !- Rated Condensing Temperature {C}
+  0,                                      !- Rated Subcooling Temperature Difference {deltaC}
+  10,                                     !- Rated Water Inlet Temperature {C}
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ConstantFlow,                           !- Water-Cooled Loop Flow Type
+  ,                                       !- Water Outlet Temperature Schedule Name
+  0.0025,                                 !- Water Design Flow Rate {m3/s}
+  0.003,                                  !- Water Maximum Flow Rate {m3/s}
+  55,                                     !- Water Maximum Water Outlet Temperature {C}
+  10;                                     !- Water Minimum Water Inlet Temperature {C}
+
 OS:Curve:Linear,
   {b5c258ae-3775-48b6-bd65-ad84a0484414}, !- Handle
   Refrigeration Condenser Air Cooled HR Curve, !- Name
@@ -2604,8 +2640,68 @@ OS:Curve:Linear,
   ;                                       !- Output Unit Type
 
 OS:Refrigeration:Compressor,
+  {c3d8eabe-c94f-40b6-a06f-6c5a7881a20f}, !- Handle
+  Refrigeration Compressor - Rated Superheat,             !- Name
+  {e2a4b3e2-485a-42d3-beea-40b7f98e5e00}, !- Refrigeration Compressor Power Curve Name
+  {47f98e62-200b-4fb0-b986-1360e34dced1}, !- Refrigeration Compressor Capacity Curve Name
+  5.56,                                       !- Rated Superheat {deltaC}
+  ,                                   !- Rated Return Gas Temperature {C}
+  ,                                       !- Rated Liquid Temperature {C}
+  0,                                      !- Rated Subcooling {deltaC}
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Mode of Operation
+  ,                                       !- Transcritical Compressor Power Curve Name
+  ;                                       !- Transcritical Compressor Capacity Curve Name
+
+OS:Curve:Bicubic,
+  {e2a4b3e2-485a-42d3-beea-40b7f98e5e00}, !- Handle
+  Refrigeration Compressor Power Curve 1,   !- Name
+  4451.46,                                !- Coefficient1 Constant
+  -166.108,                               !- Coefficient2 x
+  -5.35664,                               !- Coefficient3 x**2
+  263.553,                                !- Coefficient4 y
+  -0.958849,                              !- Coefficient5 y**2
+  8.09252,                                !- Coefficient6 x*y
+  -0.0239354,                             !- Coefficient7 x**3
+  0.000633306,                            !- Coefficient8 y**3
+  0.0778798,                              !- Coefficient9 x**2*y
+  -0.0167386,                             !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Power;                                  !- Output Unit Type
+
+OS:Curve:Bicubic,
+  {47f98e62-200b-4fb0-b986-1360e34dced1}, !- Handle
+  Refrigeration Compressor Capacity Curve 1, !- Name
+  83249.9,                                !- Coefficient1 Constant
+  3147.96,                                !- Coefficient2 x
+  44.9276,                                !- Coefficient3 x**2
+  -1035.51,                               !- Coefficient4 y
+  3.74692,                                !- Coefficient5 y**2
+  -37.3907,                               !- Coefficient6 x*y
+  0.179897,                               !- Coefficient7 x**3
+  -0.0199971,                             !- Coefficient8 y**3
+  -0.481641,                              !- Coefficient9 x**2*y
+  0.0428673,                              !- Coefficient10 x*y**2
+  -23.3,                                  !- Minimum Value of x {BasedOnField A2}
+  7.2,                                    !- Maximum Value of x {BasedOnField A2}
+  10,                                     !- Minimum Value of y {BasedOnField A3}
+  60,                                     !- Maximum Value of y {BasedOnField A3}
+  ,                                       !- Minimum Curve Output {BasedOnField A4}
+  ,                                       !- Maximum Curve Output {BasedOnField A4}
+  Temperature,                            !- Input Unit Type for X
+  Temperature,                            !- Input Unit Type for Y
+  Capacity;                               !- Output Unit Type
+
+OS:Refrigeration:Compressor,
   {56efd5d3-167b-4b77-b017-7704623596e1}, !- Handle
-  Refrigeration Compressor,               !- Name
+  Refrigeration Compressor - Rated Return Gas Temp,               !- Name
   {341b9403-ca2b-4895-a88f-57cf24eebda4}, !- Refrigeration Compressor Power Curve Name
   {fa8d1a11-1610-42d7-87bf-b9d29315c412}, !- Refrigeration Compressor Capacity Curve Name
   ,                                       !- Rated Superheat {deltaC}
@@ -2738,12 +2834,12 @@ OS:ScheduleTypeLimits,
   Continuous;                             !- Numeric Type
 
 OS:Refrigeration:System,
-  {c5203f94-88c4-413e-af5c-938dee4249e2}, !- Handle
-  Refrigeration System,                   !- Name
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Refrigerated CaseAndWalkInList Name
-  ,                                       !- Refrigeration TransferLoad List Name
+  {d94c076d-2f56-436e-84eb-8f8b77ff0dd1}, !- Handle
+  Refrigeration System,                 !- Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Refrigerated CaseAndWalkInList Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Refrigeration TransferLoad List Name
   ,                                       !- Refrigeration Condenser Name
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- CompressorList Name
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- CompressorList Name
   21,                                     !- Minimum Condensing Temperature {C}
   R404a,                                  !- Refrigeration System Working Fluid Type
   ConstantSuctionTemperature,             !- Suction Temperature Control Type
@@ -2754,15 +2850,66 @@ OS:Refrigeration:System,
   ,                                       !- End-Use Subcategory
   ,                                       !- Intercooler Type
   ,                                       !- Shell-and-Coil Intercooler Effectiveness
-  ;                                       !- High-Stage CompressorList Name
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}; !- High-Stage CompressorList Name
 
 OS:ModelObjectList,
-  {41a2349c-4282-44b1-8864-d1b3c49510c1}, !- Handle
-  Refrigeration System Case and Walkin List; !- Name
+  {7434e491-ed4e-43dc-b2af-0370833430b8}, !- Handle
+  Refrigeration System Case and Walkin List 1; !- Name
 
 OS:ModelObjectList,
-  {45a627d5-cbbc-47cb-8067-ca6a204bfbd2}, !- Handle
-  Refrigeration System Compressor List;   !- Name
+  {3cd7697b-8f3d-487d-9ef3-c2ccf8635a5f}, !- Handle
+  Refrigeration System Transfer Load List 1; !- Name
+
+OS:ModelObjectList,
+  {ec8867e9-18dd-44cd-bd2b-61500ce34da4}, !- Handle
+  Refrigeration System Compressor List 1; !- Name
+
+OS:ModelObjectList,
+  {db92a6fd-85be-488e-ad32-42c50fecc9df}, !- Handle
+  Refrigeration System High Stage Compressor List 1; !- Name
+
+OS:Refrigeration:System,
+  {2443bf2b-46a6-49bd-a044-6d8a8c6a7a30}, !- Handle
+  Cascade System,                         !- Name
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Refrigerated CaseAndWalkInList Name
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Refrigeration TransferLoad List Name
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Refrigeration Condenser Name
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- CompressorList Name
+  21,                                     !- Minimum Condensing Temperature {C}
+  R404a,                                  !- Refrigeration System Working Fluid Type
+  ConstantSuctionTemperature,             !- Suction Temperature Control Type
+  ,                                       !- Mechanical Subcooler Name
+  ,                                       !- Liquid Suction Heat Exchanger Subcooler Name
+  ,                                       !- Sum UA Suction Piping {W/K}
+  ,                                       !- Suction Piping Zone Name
+  ,                                       !- End-Use Subcategory
+  ,                                       !- Intercooler Type
+  ,                                       !- Shell-and-Coil Intercooler Effectiveness
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}; !- High-Stage CompressorList Name
+
+OS:ModelObjectList,
+  {98d6c46c-2737-49b8-b1b1-548afc4b4276}, !- Handle
+  Refrigeration System 1 Case and Walkin List; !- Name
+
+OS:ModelObjectList,
+  {f1cd5b78-5da2-4ed2-bac3-3f4815682658}, !- Handle
+  Refrigeration System 1 Transfer Load List; !- Name
+
+OS:ModelObjectList,
+  {93bf30a9-2362-4aa0-8ab5-8a3a8ee011e1}, !- Handle
+  Refrigeration System 1 Compressor List; !- Name
+
+OS:ModelObjectList,
+  {0361fdf7-9895-4bce-abc3-baeb8acc651d}, !- Handle
+  Refrigeration System 1 High Stage Compressor List; !- Name
+
+OS:Refrigeration:Condenser:Cascade,
+  {8c1ef62d-e23d-4791-9b59-ed9122d27cde}, !- Handle
+  Cascade Condenser,                      !- Name
+  -4,                                     !- Rated Condensing Temperature {C}
+  3,                                      !- Rated Approach Temperature Difference {deltaC}
+  20000,                                  !- Rated Effective Total Heat Rejection Rate {W}
+  Fixed;                                  !- Condensing Temperature Control Type
 
 OS:Refrigeration:Subcooler:Mechanical,
   {95085174-fabf-4659-a947-6ec9fc65c977}, !- Handle

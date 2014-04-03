@@ -159,8 +159,7 @@ end
 # make a run manager
 runDir = outPath / OpenStudio::Path.new("gen_eplus/")
 runmanager_path = OpenStudio::Path.new("runmanager.db")
-runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true)
-runmanager.setPaused(true)
+runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
 # run 
 runDir = OpenStudio::system_complete(runDir)
@@ -178,11 +177,13 @@ runmanager.waitForFinished()
 runmanager.getJobs.each { |job| 
 
   if not job.errors.succeeded   
-    puts "The EnergyPlusjob in '" + job.outdir.to_s + "' did not finish successfully."
+    puts "The job in '" + job.outdir.to_s + "' did not finish successfully."
     job.errors.errors.each { |err|
       puts "ERROR: " + err
       puts "Radiance export aborted."
-      exit
+      #make sure it gets to the error log
+      $stderr.puts err
+      abort
     }
   elsif not job.errors.warnings.empty?
     puts "The job in '" + job.outdir.to_s + "' has warnings."

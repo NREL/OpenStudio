@@ -72,12 +72,26 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
   ++row;
 
   // Standards
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,3);
+
+  ++row;
+
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
 
   QVBoxLayout* vLayout = new QVBoxLayout();
 
   label = new QLabel();
   label->setText("Intended Surface Type: ");
-  label->setObjectName("H2");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_intendedSurfaceType = new OSComboBox2();
@@ -90,7 +104,7 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
 
   label = new QLabel();
   label->setText("Standards Construction Type: ");
-  label->setObjectName("H2");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_standardsConstructionType = new QComboBox();
@@ -100,6 +114,13 @@ void ConstructionCfactorUndergroundWallInspectorView::createLayout()
   vLayout->addWidget(m_standardsConstructionType);
 
   mainGridLayout->addLayout(vLayout,row,1);
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,3);
 
   ++row;
 
@@ -225,12 +246,13 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
     m_standardsInformation->setIntendedSurfaceType("GroundContactWall");
   }
 
-  m_intendedSurfaceType->bind(
+  m_intendedSurfaceType->bind<std::string>(
       *m_standardsInformation,
-      boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      OptionalStringGetter(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      boost::optional<StringSetter>(boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      &openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues,
+      boost::function<boost::optional<std::string> ()>(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1),
+      NoFailAction(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
   bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
   OS_ASSERT(test);

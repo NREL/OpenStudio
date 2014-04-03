@@ -270,7 +270,8 @@ namespace detail {
         OS_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
         std::vector<runmanager::WorkItem> workItems = workflowRecords[wrIndex].workflow().toWorkItems();
         BOOST_FOREACH(const runmanager::WorkItem& workItem,workItems) {
-          if (fixupPaths && (workItem.type == runmanager::JobType::UserScript)) {
+          if (fixupPaths && (workItem.type == runmanager::JobType::UserScript || workItem.type == runmanager::JobType::Ruby)) {
+            LOG(Debug, "Updating paths for ruby / userscript job. Keyname: " + workItem.jobkeyname);
             // hoping that this resets the location of UserScriptAdapter.rb
             runmanager::RubyJobBuilder rjb(workItem,originalBasePath,newBasePath);
             runmanager::WorkItem refreshedWorkItem = rjb.toWorkItem();
