@@ -238,6 +238,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   mainGridLayout->setSpacing(14);
   visibleWidget->setLayout(mainGridLayout);
 
+  int row = 0;
+
   // name
   QVBoxLayout* vLayout = new QVBoxLayout();
 
@@ -249,14 +251,33 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   m_nameEdit = new OSLineEdit();
   vLayout->addWidget(m_nameEdit);
 
-  mainGridLayout->addLayout(vLayout,0,0,1,2);
+  mainGridLayout->addLayout(vLayout,row,0,1,2);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // building type and space type
+  ++row;
+
+  // building type 
+
+  QFrame * line;
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,2);
+
+  ++row;
+
+  label = new QLabel();
+  label->setText("Measure Tags (Optional):");
+  label->setObjectName("H2");
+  mainGridLayout->addWidget(label,row,0);
+
+  ++row;
+
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
   label->setText("Standards Building Type: ");
-  label->setStyleSheet("QLabel { font: bold; }");
+  label->setObjectName("StandardsInfo");
   vLayout->addWidget(label);
 
   m_standardsBuildingTypeComboBox = new QComboBox();
@@ -265,9 +286,42 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
   m_standardsBuildingTypeComboBox->setFixedWidth(OSItem::ITEM_WIDTH);
   vLayout->addWidget(m_standardsBuildingTypeComboBox);
 
+  mainGridLayout->addLayout(vLayout,row,0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  // DLM: should we put "Standards Number of Stories", "Standards Number of Above Ground Stories", 
+  // or "Nominal Floor to Floor Height" in measure tags?  We could undeprecate "Building Sector Type" and put
+  // it here too?
+
+  ++row;
+
+  line = new QFrame();
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  mainGridLayout->addWidget(line,row,0,1,2);
+
+  ++row;
+
+  // north axis and space type
+  vLayout = new QVBoxLayout();
+
+  label = new QLabel();
+  label->setText("North Axis: ");
+  label->setStyleSheet("QLabel { font: bold; }");
+  vLayout->addWidget(label);
+
+  bool isConnected = false;
+
+  m_northAxisEdit = new OSQuantityEdit(m_isIP);
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
+  OS_ASSERT(isConnected);
+
+  vLayout->addWidget(m_northAxisEdit);
+
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout,1,0);
+  mainGridLayout->addLayout(vLayout,row,0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
   vLayout = new QVBoxLayout();
 
@@ -285,7 +339,10 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout,1,1);
+  mainGridLayout->addLayout(vLayout,row,1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
+
+  ++row;
 
   // default construction set and default schedule set
   vLayout = new QVBoxLayout();
@@ -304,7 +361,8 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout,2,0);
+  mainGridLayout->addLayout(vLayout,row,0);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
   vLayout = new QVBoxLayout();
 
@@ -322,52 +380,17 @@ BuildingInspectorView::BuildingInspectorView(bool isIP, const openstudio::model:
 
   vLayout->addStretch();
 
-  mainGridLayout->addLayout(vLayout,2,1);
+  mainGridLayout->addLayout(vLayout,row,1);
+  mainGridLayout->setRowMinimumHeight(row, 30);
 
-  // north axis and floor to floor height
-  vLayout = new QVBoxLayout();
+  ++row;
 
-  label = new QLabel();
-  label->setText("North Axis: ");
-  label->setStyleSheet("QLabel { font: bold; }");
-  vLayout->addWidget(label);
-
-  bool isConnected = false;
-
-  m_northAxisEdit = new OSQuantityEdit(m_isIP);
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_northAxisEdit, SLOT(onUnitSystemChange(bool)));
-  OS_ASSERT(isConnected);
-
-  vLayout->addWidget(m_northAxisEdit);
-
-  vLayout->addStretch();
-
-  mainGridLayout->addLayout(vLayout,3,0);
-
-  //vLayout = new QVBoxLayout();
-
-  //label = new QLabel();
-  //label->setText("Floor To Floor Height: ");
-  //label->setStyleSheet("QLabel { font: bold; }");
-  //vLayout->addWidget(label);
-
-  //m_floorToFloorHeightEdit = new OSQuantityEdit(m_isIP);
-  //isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), , SLOT(onUnitSystemChange(bool)));
-  //OS_ASSERT(isConnected);
-  //vLayout->addWidget(m_floorToFloorHeightEdit);
-
-  //vLayout->addStretch();
-
-  //mainGridLayout->addLayout(vLayout,3,1);
+  // widths and heights 
 
   mainGridLayout->setColumnMinimumWidth(0, 80);
   mainGridLayout->setColumnMinimumWidth(1, 80);
   mainGridLayout->setColumnStretch(2,1);
-  mainGridLayout->setRowMinimumHeight(0, 30);
-  mainGridLayout->setRowMinimumHeight(1, 30);
-  mainGridLayout->setRowMinimumHeight(2, 30);
-  mainGridLayout->setRowMinimumHeight(3, 30);
-  mainGridLayout->setRowStretch(4,1);
+  mainGridLayout->setRowStretch(row,1);
 }
 
 void BuildingInspectorView::onClearSelection()
