@@ -122,7 +122,6 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   bool isInsulatedFloorUValueDefaulted() const;
 
-<<<<<<< HEAD
   boost::optional<int> durationofDefrostCycle() const;
 
   boost::optional<int> dripDownTime() const;
@@ -142,7 +141,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   boost::optional<openstudio::Time> defrost7StartTime() const;
 
   boost::optional<openstudio::Time> defrost8StartTime() const;
-=======
+
   boost::optional<RefrigerationSystem> system() const;
 
   boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
@@ -164,7 +163,6 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
 
   boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
->>>>>>> develop
 
   //@}
   /** @name Setters */
@@ -236,7 +234,6 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   void resetInsulatedFloorUValue();
 
-<<<<<<< HEAD
   bool setDurationofDefrostCycle(int durationofDefrostCycle);
 
   void resetDurationofDefrostCycle();
@@ -276,7 +273,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
   void resetDefrost8StartTime();
-=======
+
   bool addToSystem(RefrigerationSystem & system);
 
   void removeFromSystem();
@@ -304,7 +301,6 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
 
   void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
->>>>>>> develop
 
   //@}
   /** @name Other */

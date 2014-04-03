@@ -192,7 +192,6 @@ namespace detail {
 
     bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
-<<<<<<< HEAD
     boost::optional<RefrigerationDefrostCycleParameters> optionalCaseDefrostCycleParameters() const;
 
     RefrigerationDefrostCycleParameters caseDefrostCycleParameters();
@@ -218,9 +217,8 @@ namespace detail {
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
     std::vector<openstudio::Time> defrostStartTimes() const;
-=======
+
     boost::optional<RefrigerationSystem> system() const;
->>>>>>> develop
 
     //@}
     /** @name Setters */
@@ -360,7 +358,6 @@ namespace detail {
 
     void resetAverageRefrigerantChargeInventory();
 
-<<<<<<< HEAD
     bool setCaseDefrostCycleParameters(const RefrigerationDefrostCycleParameters& caseDefrostCycleParameters);
 
     bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
@@ -402,11 +399,10 @@ namespace detail {
     bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
     void resetDefrost8StartTime();
-=======
+
     bool addToSystem(RefrigerationSystem & system);
 
     void removeFromSystem();
->>>>>>> develop
 
     //@}
     /** @name Other */

@@ -118,15 +118,13 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
-<<<<<<< HEAD
+    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
+    t_model->blockSignals(true);
+
     if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
       std::vector<IdfObject> removedDefrostCycleParameters = walkinDefrostCycleParameters->remove();
       result.insert(result.end(), removedDefrostCycleParameters.begin(), removedDefrostCycleParameters.end());
     }
-=======
-    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
-    t_model->blockSignals(true);
->>>>>>> develop
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
@@ -137,15 +135,10 @@ namespace detail {
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
 
-<<<<<<< HEAD
-    std::vector<IdfObject> removedRefrigerationWalkIn = ModelObject_Impl::remove();
-    result.insert(result.end(), removedRefrigerationWalkIn.begin(), removedRefrigerationWalkIn.end());
-=======
     t_model->blockSignals(false);
 
     std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
     result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());
->>>>>>> develop
 
     return result;
   }
@@ -354,7 +347,6 @@ namespace detail {
     return isEmpty(OS_Refrigeration_WalkInFields::InsulatedFloorUValue);
   }
 
-<<<<<<< HEAD
   boost::optional<RefrigerationDefrostCycleParameters> RefrigerationWalkIn_Impl::optionalWalkinDefrostCycleParameters() const {
     return getObject<ModelObject>().getModelObjectTarget<RefrigerationDefrostCycleParameters>(OS_Refrigeration_WalkInFields::WalkInDefrostCycleParametersName);
   }
@@ -373,21 +365,10 @@ namespace detail {
   boost::optional<int> RefrigerationWalkIn_Impl::durationofDefrostCycle() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->durationofDefrostCycle();
-=======
-  boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
-    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
-    RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
-      RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
-      if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
-        return refrigerationSystem;
-      }
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<int> RefrigerationWalkIn_Impl::dripDownTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->dripDownTime();
@@ -398,114 +379,59 @@ namespace detail {
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost1StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost1StartTime();
-=======
-  boost::optional<ThermalZone> RefrigerationWalkIn_Impl::zoneBoundaryThermalZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->thermalZone();
-    }
-    return boost::none;    
-  }
-
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->totalInsulatedSurfaceAreaFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost2StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost2StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofGlassReachInDoorsFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->areaofGlassReachInDoorsFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost3StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost3StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofGlassReachInDoorsFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->heightofGlassReachInDoorsFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost4StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost4StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofStockingDoorsFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->areaofStockingDoorsFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost5StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost5StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofStockingDoorsFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->heightofStockingDoorsFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost6StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost6StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryInsulatedSurfaceUValueFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->insulatedSurfaceUValueFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost7StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost7StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryGlassReachInDoorUValueFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->glassReachInDoorUValueFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost8StartTime() const {
     if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
       return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost8StartTime();
-=======
-  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorUValueFacingZone() const {
-    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
-      return t_zoneBoundary->stockingDoorUValueFacingZone();
->>>>>>> develop
     }
     return boost::none;
   }
 
-<<<<<<< HEAD
   std::vector<openstudio::Time> RefrigerationWalkIn_Impl::defrostStartTimes() const {
     std::vector<openstudio::Time> result;
     if( boost::optional<openstudio::Time> defrost1StartTime = this->defrost1StartTime() ) {
@@ -533,13 +459,88 @@ namespace detail {
       result.push_back(*defrost8StartTime);
     }
     return result;
-=======
+  }
+
+  boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+      RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
+      if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
+        return refrigerationSystem;
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<ThermalZone> RefrigerationWalkIn_Impl::zoneBoundaryThermalZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->thermalZone();
+    }
+    return boost::none;    
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->totalInsulatedSurfaceAreaFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofGlassReachInDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->areaofGlassReachInDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofGlassReachInDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->heightofGlassReachInDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofStockingDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->areaofStockingDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofStockingDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->heightofStockingDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryInsulatedSurfaceUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->insulatedSurfaceUValueFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryGlassReachInDoorUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->glassReachInDoorUValueFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->stockingDoorUValueFacingZone();
+    }
+    return boost::none;
+  }
+
   boost::optional<Schedule> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
     if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
       return t_zoneBoundary->stockingDoorOpeningScheduleFacingZone();
     }
     return boost::none;
->>>>>>> develop
   }
 
   bool RefrigerationWalkIn_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -1105,7 +1106,6 @@ bool RefrigerationWalkIn::isInsulatedFloorUValueDefaulted() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->isInsulatedFloorUValueDefaulted();
 }
 
-<<<<<<< HEAD
 boost::optional<int> RefrigerationWalkIn::durationofDefrostCycle() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->durationofDefrostCycle();
 }
@@ -1144,7 +1144,8 @@ boost::optional<openstudio::Time> RefrigerationWalkIn::defrost7StartTime() const
 
 boost::optional<openstudio::Time> RefrigerationWalkIn::defrost8StartTime() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost8StartTime();
-=======
+}
+
 boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
 }
@@ -1187,7 +1188,6 @@ boost::optional<double> RefrigerationWalkIn::zoneBoundaryStockingDoorUValueFacin
 
 boost::optional<Schedule> RefrigerationWalkIn::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryStockingDoorOpeningScheduleFacingZone();
->>>>>>> develop
 }
 
 bool RefrigerationWalkIn::setAvailabilitySchedule(Schedule& schedule) {
@@ -1322,7 +1322,6 @@ void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
 }
 
-<<<<<<< HEAD
 bool RefrigerationWalkIn::setDurationofDefrostCycle(int durationofDefrostCycle) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
 }
@@ -1369,7 +1368,8 @@ bool RefrigerationWalkIn::setDefrost7StartTime(const openstudio::Time& defrost7S
 
 bool RefrigerationWalkIn::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost8StartTime(defrost8StartTime);
-=======
+}
+
 bool RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
 }
@@ -1424,7 +1424,6 @@ bool RefrigerationWalkIn::setZoneBoundaryStockingDoorOpeningScheduleFacingZone(S
 
 void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
->>>>>>> develop
 }
 
 /// @cond

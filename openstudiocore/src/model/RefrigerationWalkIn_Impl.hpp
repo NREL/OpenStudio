@@ -135,7 +135,6 @@ namespace detail {
 
     bool isInsulatedFloorUValueDefaulted() const;
 
-<<<<<<< HEAD
     boost::optional<RefrigerationDefrostCycleParameters> optionalWalkinDefrostCycleParameters() const;
 
     RefrigerationDefrostCycleParameters walkinDefrostCycleParameters();
@@ -161,7 +160,7 @@ namespace detail {
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
     std::vector<openstudio::Time> defrostStartTimes() const;
-=======
+
     boost::optional<RefrigerationSystem> system() const;
 
     boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
@@ -183,7 +182,6 @@ namespace detail {
     boost::optional<double> zoneBoundaryStockingDoorUValueFacingZone() const;
 
     boost::optional<Schedule> zoneBoundaryStockingDoorOpeningScheduleFacingZone() const;
->>>>>>> develop
 
     //@}
     /** @name Setters */
@@ -255,7 +253,6 @@ namespace detail {
 
     void resetInsulatedFloorUValue();
 
-<<<<<<< HEAD
     bool setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters);
 
     bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
@@ -297,7 +294,7 @@ namespace detail {
     bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
 
     void resetDefrost8StartTime();
-=======
+
     bool addToSystem(RefrigerationSystem & system);
 
     void removeFromSystem();
@@ -325,7 +322,6 @@ namespace detail {
     bool setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone);
 
     void resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
->>>>>>> develop
 
     //@}
     /** @name Other */
