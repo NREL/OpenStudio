@@ -523,6 +523,35 @@ namespace detail {
     return boost::none;
   }
 
+  std::vector<openstudio::Time> RefrigerationCase_Impl::defrostStartTimes() const {
+    std::vector<openstudio::Time> result;
+    if( boost::optional<openstudio::Time> defrost1StartTime = this->defrost1StartTime() ) {
+      result.push_back(*defrost1StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost2StartTime = this->defrost2StartTime() ) {
+      result.push_back(*defrost2StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost3StartTime = this->defrost3StartTime() ) {
+      result.push_back(*defrost3StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost4StartTime = this->defrost4StartTime() ) {
+      result.push_back(*defrost4StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost5StartTime = this->defrost5StartTime() ) {
+      result.push_back(*defrost5StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost6StartTime = this->defrost6StartTime() ) {
+      result.push_back(*defrost6StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost7StartTime = this->defrost7StartTime() ) {
+      result.push_back(*defrost7StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost8StartTime = this->defrost8StartTime() ) {
+      result.push_back(*defrost8StartTime);
+    }
+    return result;
+  }
+
   bool RefrigerationCase_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Refrigeration_CaseFields::AvailabilityScheduleName,
                               "RefrigerationCase",

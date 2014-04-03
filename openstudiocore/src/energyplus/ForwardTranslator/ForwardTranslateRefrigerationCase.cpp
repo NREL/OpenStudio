@@ -20,9 +20,11 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model/RefrigerationCase.hpp>
+#include <model/RefrigerationCase_Impl.hpp>
 #include <model/CurveCubic.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/Schedule.hpp>
+#include <utilities/time/Time.hpp>
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -222,29 +224,70 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     object.setString(Refrigeration_CaseFields::CaseDefrostType,s.get());
   }
 
-//CaseDefrostScheduleName
-  boost::optional<Schedule> caseDefrostSchedule = modelObject.caseDefrostSchedule();
+//DefrostCycleParameters
+  boost::optional<int> durationofDefrostCycle = modelObject.durationofDefrostCycle();
+  boost::optional<int> dripDownTime = modelObject.dripDownTime();
+  std::vector<openstudio::Time> defrostStartTimes = modelObject.getImpl<model::detail::RefrigerationCase_Impl>()->defrostStartTimes();
 
-  if( caseDefrostSchedule )
-  {
-    boost::optional<IdfObject> _caseDefrostSchedule = translateAndMapModelObject(caseDefrostSchedule.get());
+  if( durationofDefrostCycle && dripDownTime && !defrostStartTimes.empty() ) {
+    int defrostTimeHour = *durationofDefrostCycle / 60;
+    int defrostTimeMin = *durationofDefrostCycle % 60;
+    int dripDownTimeHour = *dripDownTime / 60;
+    int dripDownTimeMin = *dripDownTime % 60;
 
-    if( _caseDefrostSchedule && _caseDefrostSchedule->name() )
+    std::vector< std::pair<openstudio::Time, double> > defrostDefaultDay;
+    std::vector< std::pair<openstudio::Time, double> > dripDownDefaultDay;
+    for( std::vector<openstudio::Time>::iterator _defrostStartTime = defrostStartTimes.begin();
+       _defrostStartTime != defrostStartTimes.end();
+       ++_defrostStartTime )
     {
-      object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
+      defrostDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // defrost off
+      openstudio::Time defrostEndTime(0, _defrostStartTime->hours() + defrostTimeHour, _defrostStartTime->minutes() + defrostTimeMin);
+      defrostDefaultDay.push_back(std::make_pair(defrostEndTime, 1)); // defrost on
+
+      dripDownDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // drip down off
+      openstudio::Time dripDownEndTime(0, _defrostStartTime->hours() + defrostTimeHour + dripDownTimeHour, _defrostStartTime->minutes() + defrostTimeMin + dripDownTimeMin);
+      dripDownDefaultDay.push_back(std::make_pair(dripDownEndTime, 1)); // drip down on
     }
-  }
 
-//CaseDefrostDripDownScheduleName
-  boost::optional<Schedule> caseDefrostDripDownSchedule = modelObject.caseDefrostDripDownSchedule();
+    //CaseDefrostScheduleName
+    std::string defrostName(modelObject.name().get() + " Defrost Schedule");
+    boost::optional<IdfObject> defrostSchedule = this->createSimpleSchedule(defrostName, defrostDefaultDay);
+    if( defrostSchedule ) {
+      object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName, defrostName);
+    }
 
-  if( caseDefrostDripDownSchedule )
-  {
-    boost::optional<IdfObject> _caseDefrostDripDownSchedule = translateAndMapModelObject(caseDefrostDripDownSchedule.get());
+    //CaseDefrostDripDownScheduleName
+    std::string dripDownName(modelObject.name().get() + " Defrost Drip Down Schedule");
+    boost::optional<IdfObject> defrostDripDownSchedule = this->createSimpleSchedule(dripDownName, dripDownDefaultDay);
+    if( defrostDripDownSchedule ) {
+      object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName, dripDownName);
+    }
+  } else {
+  //CaseDefrostScheduleName
+    boost::optional<Schedule> caseDefrostSchedule = modelObject.caseDefrostSchedule();
 
-    if( _caseDefrostDripDownSchedule && _caseDefrostDripDownSchedule->name() )
+    if( caseDefrostSchedule )
     {
-      object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
+      boost::optional<IdfObject> _caseDefrostSchedule = translateAndMapModelObject(caseDefrostSchedule.get());
+
+      if( _caseDefrostSchedule && _caseDefrostSchedule->name() )
+      {
+        object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
+      }
+    }
+
+  //CaseDefrostDripDownScheduleName
+    boost::optional<Schedule> caseDefrostDripDownSchedule = modelObject.caseDefrostDripDownSchedule();
+
+    if( caseDefrostDripDownSchedule )
+    {
+      boost::optional<IdfObject> _caseDefrostDripDownSchedule = translateAndMapModelObject(caseDefrostDripDownSchedule.get());
+
+      if( _caseDefrostDripDownSchedule && _caseDefrostDripDownSchedule->name() )
+      {
+        object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
+      }
     }
   }
 

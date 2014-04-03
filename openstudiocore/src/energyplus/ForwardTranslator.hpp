@@ -727,6 +727,12 @@ class ENERGYPLUS_API ForwardTranslator {
    *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
 
+  /** Create a simple Schedule:Compact based on input vectors. The function will consume the vectors in
+   *  order, so the times must be in chronological order otherwise E+ will output an error. Summer and
+   *  winter design days are not required entries, only defaultDay and name are required. At the moment,
+   *  there is no ScheduleTypeLimit so there is no validation and E+ outputs a warning. It is up to the 
+   *  developer to make sure all E+ rules and validation for Schedule:Compact are upheld.
+   */
   boost::optional<IdfObject> createSimpleSchedule(const std::string & name,
                                                   const std::vector< std::pair<openstudio::Time, double> > & defaultDay,
                                                   const std::vector< std::pair<openstudio::Time, double> > & summerDesignDay = std::vector< std::pair<openstudio::Time, double> > (),

@@ -157,6 +157,8 @@ namespace detail {
 
     boost::optional<openstudio::Time> defrost8StartTime() const;
 
+    std::vector<openstudio::Time> defrostStartTimes() const;
+
     //@}
     /** @name Setters */
     //@{

@@ -2521,15 +2521,12 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
 
   idfObject.setName(name);
 
-  // std::sort(defaultDay.begin(), defaultDay.end());
   StringVector values;
   values.push_back("Through: 12/31");
   IdfExtensibleGroup eg = idfObject.pushExtensibleGroup(values);
   OS_ASSERT(!eg.empty());
 
   if(!summerDesignDay.empty()) {
-    // std::sort(summerDesignDay.begin(), summerDesignDay.end());
-
     values[0] = "For: SummerDesignDay";
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
@@ -2538,7 +2535,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
          it != summerDesignDay.end();
          ++it )
     {
-      values[0] = "Until: " + boost::lexical_cast<std::string>(it->first.hours()) + ":" + boost::lexical_cast<std::string>(it->first.minutes());
+      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2550,8 +2547,6 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
   }
 
   if(!winterDesignDay.empty()) {
-    // std::sort(winterDesignDay.begin(), winterDesignDay.end());
-
     values[0] = "For: WinterDesignDay";
     eg = idfObject.pushExtensibleGroup(values);
     OS_ASSERT(!eg.empty());
@@ -2560,7 +2555,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
          it != winterDesignDay.end();
          ++it )
     {
-      values[0] = "Until: " + boost::lexical_cast<std::string>(it->first.hours()) + ":" + boost::lexical_cast<std::string>(it->first.minutes());
+      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2585,7 +2580,7 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
          it != defaultDay.end();
          ++it )
     {
-      values[0] = "Until: " + boost::lexical_cast<std::string>(it->first.hours()) + ":" + boost::lexical_cast<std::string>(it->first.minutes());
+      values[0] = "Until: " + std::string(it->first.hours() < 10 ? "0" : "") + boost::lexical_cast<std::string>(it->first.hours()) + std::string(it->first.minutes() < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(it->first.minutes());
       eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
       values[0] = "";
@@ -2594,6 +2589,8 @@ boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::st
       bool ok = eg.setDouble(0,it->second);
       OS_ASSERT(ok);
     }
+
+  m_idfObjects.push_back(idfObject);
 
   return idfObject;
 }
