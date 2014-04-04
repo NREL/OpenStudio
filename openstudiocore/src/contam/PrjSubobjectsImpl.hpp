@@ -31,7 +31,7 @@ namespace openstudio {
 namespace contam {
 namespace detail {
 
-class WeatherDataImpl : public QSharedData
+class WeatherDataImpl
 {
 public:
   WeatherDataImpl();
@@ -108,7 +108,7 @@ private:
 };
 
 
-class IconImpl : public QSharedData
+class IconImpl
 {
 public:
   /** @name Constructors */
