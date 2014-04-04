@@ -21,30 +21,20 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include <model/WaterToAirComponent_Impl.hpp>
 
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ThermalZone;
 class Schedule;
-class Connection;
-class Connection;
-class FansCVandOnOffandVAV;
-class Schedule;
-class HeatingCoilsDX;
-class CoolingCoilsDX;
-class HeatingCoilName;
-class Connection;
-class Connection;
-class UnitarySystemPerformace;
+class HVACComponent;
+class Node;
 
 namespace detail {
 
-  /** AirLoopHVACUnitarySystem_Impl is a ModelObject_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
-  class MODEL_API AirLoopHVACUnitarySystem_Impl : public ModelObject_Impl {
-    Q_OBJECT;
+  /** AirLoopHVACUnitarySystem_Impl is a WaterToAirComponent_Impl that is the implementation class for AirLoopHVACUnitarySystem.*/
+  class MODEL_API AirLoopHVACUnitarySystem_Impl : public WaterToAirComponent_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -67,11 +57,23 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
+    virtual ModelObject clone(Model model) const;
+
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+
+    virtual unsigned airInletPort();
+   
+    virtual unsigned airOutletPort();
+
+    virtual unsigned waterInletPort();
+
+    virtual unsigned waterOutletPort();
+
+    virtual bool addToNode(Node & node);
 
     //@}
     /** @name Getters */
@@ -81,39 +83,27 @@ namespace detail {
 
     bool isControlTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
     std::string dehumidificationControlType() const;
 
     bool isDehumidificationControlTypeDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection airInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection airOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: FansCVandOnOffandVAV.
-    boost::optional<FansCVandOnOffandVAV> supplyFan() const;
+    boost::optional<HVACComponent> supplyFan() const;
 
     boost::optional<std::string> fanPlacement() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: HeatingCoilsDX, HeatingCoilsDXMultiSpeed, HeatingCoilsDXVariableSpeed, HeatingCoilsWaterToAirHP, HeatingCoilsWaterToAirVSHP, HeatingCoilName, HeatingCoilsElectricMultiStage, HeatingCoilsGasMultiStage, HeatingCoilsDesuperheater.
-    boost::optional<HeatingCoilsDX> heatingCoil() const;
+    boost::optional<HVACComponent> heatingCoil() const;
 
     double dXHeatingCoilSizingRatio() const;
 
     bool isDXHeatingCoilSizingRatioDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: CoolingCoilsDX, CoolingCoilsDXMultiSpeed, CoolingCoilsDXVariableSpeed, CoolingCoilsWaterToAirHP, CoolingCoilsWaterToAirVSHP, CoolingCoilsWater.
-    boost::optional<CoolingCoilsDX> coolingCoil() const;
+    boost::optional<HVACComponent> coolingCoil() const;
 
     bool useDOASDXCoolingCoil() const;
 
@@ -127,8 +117,7 @@ namespace detail {
 
     bool isLatentLoadControlDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: HeatingCoilName, HeatingCoilsDesuperheater.
-    boost::optional<HeatingCoilName> supplementalHeatingCoil() const;
+    boost::optional<HVACComponent> supplementalHeatingCoil() const;
 
     boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation() const;
 
@@ -214,14 +203,7 @@ namespace detail {
 
     bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> heatRecoveryWaterOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: UnitarySystemPerformace.
-    boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
+    // boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
 
     //@}
     /** @name Setters */
@@ -231,7 +213,6 @@ namespace detail {
 
     void resetControlType();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setControllingZoneorThermostatLocation(const boost::optional<ThermalZone>& thermalZone);
 
     void resetControllingZoneorThermostatLocation();
@@ -240,19 +221,11 @@ namespace detail {
 
     void resetDehumidificationControlType();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: FansCVandOnOffandVAV.
-    bool setSupplyFan(const boost::optional<FansCVandOnOffandVAV>& fansCVandOnOffandVAV);
+    bool setSupplyFan(const boost::optional<HVACComponent>& supplyFan);
 
     void resetSupplyFan();
 
@@ -260,13 +233,11 @@ namespace detail {
 
     void resetFanPlacement();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
     void resetSupplyAirFanOperatingModeSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: HeatingCoilsDX, HeatingCoilsDXMultiSpeed, HeatingCoilsDXVariableSpeed, HeatingCoilsWaterToAirHP, HeatingCoilsWaterToAirVSHP, HeatingCoilName, HeatingCoilsElectricMultiStage, HeatingCoilsGasMultiStage, HeatingCoilsDesuperheater.
-    bool setHeatingCoil(const boost::optional<HeatingCoilsDX>& heatingCoilsDX);
+    bool setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil);
 
     void resetHeatingCoil();
 
@@ -274,8 +245,7 @@ namespace detail {
 
     void resetDXHeatingCoilSizingRatio();
 
-    // TODO: Check argument type. From object lists, some candidates are: CoolingCoilsDX, CoolingCoilsDXMultiSpeed, CoolingCoilsDXVariableSpeed, CoolingCoilsWaterToAirHP, CoolingCoilsWaterToAirVSHP, CoolingCoilsWater.
-    bool setCoolingCoil(const boost::optional<CoolingCoilsDX>& coolingCoilsDX);
+    bool setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil);
 
     void resetCoolingCoil();
 
@@ -291,8 +261,7 @@ namespace detail {
 
     void resetLatentLoadControl();
 
-    // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName, HeatingCoilsDesuperheater.
-    bool setSupplementalHeatingCoil(const boost::optional<HeatingCoilName>& heatingCoilName);
+    bool setSupplementalHeatingCoil(const boost::optional<HVACComponent>& supplementalHeatingCoil);
 
     void resetSupplementalHeatingCoil();
 
@@ -416,20 +385,9 @@ namespace detail {
 
     void resetMaximumTemperatureforHeatRecovery();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatRecoveryWaterInletNode(const boost::optional<Connection>& connection);
+    // bool setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace);
 
-    void resetHeatRecoveryWaterInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatRecoveryWaterOutletNode(const boost::optional<Connection>& connection);
-
-    void resetHeatRecoveryWaterOutletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: UnitarySystemPerformace.
-    bool setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace);
-
-    void resetDesignSpecificationMultispeedHeatPumpObject();
+    // void resetDesignSpecificationMultispeedHeatPumpObject();
 
     //@}
     /** @name Other */
@@ -440,12 +398,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitarySystem");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Connection> optionalAirInletNode() const;
-    boost::optional<Connection> optionalAirOutletNode() const;
   };
 
 } // detail

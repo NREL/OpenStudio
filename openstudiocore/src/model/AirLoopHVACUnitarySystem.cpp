@@ -20,31 +20,16 @@
 #include <model/AirLoopHVACUnitarySystem.hpp>
 #include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 
-// TODO: Check the following class names against object getters and setters.
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/FansCVandOnOffandVAV.hpp>
-#include <model/FansCVandOnOffandVAV_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/HeatingCoilsDX.hpp>
-#include <model/HeatingCoilsDX_Impl.hpp>
-#include <model/CoolingCoilsDX.hpp>
-#include <model/CoolingCoilsDX_Impl.hpp>
-#include <model/HeatingCoilName.hpp>
-#include <model/HeatingCoilName_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/UnitarySystemPerformace.hpp>
-#include <model/UnitarySystemPerformace_Impl.hpp>
+#include <model/Model.hpp>
+#include <model/Model_Impl.hpp>
+#include <model/HVACComponent.hpp>
+#include <model/HVACComponent_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -63,7 +48,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const IdfObject& idfObject,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
+    : WaterToAirComponent_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACUnitarySystem::iddObjectType());
   }
@@ -71,7 +56,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : WaterToAirComponent_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == AirLoopHVACUnitarySystem::iddObjectType());
   }
@@ -79,7 +64,7 @@ namespace detail {
   AirLoopHVACUnitarySystem_Impl::AirLoopHVACUnitarySystem_Impl(const AirLoopHVACUnitarySystem_Impl& other,
                                                                Model_Impl* model,
                                                                bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
+    : WaterToAirComponent_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& AirLoopHVACUnitarySystem_Impl::outputVariableNames() const
@@ -111,6 +96,58 @@ namespace detail {
     return result;
   }
 
+  ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const
+  {
+    AirLoopHVACUnitarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+
+    if( boost::optional<HVACComponent> supplyFan = this->supplyFan()) {
+      modelObjectClone.setSupplyFan(supplyFan->clone(model).cast<HVACComponent>());
+    }
+    if( boost::optional<HVACComponent> coolingCoil = this->coolingCoil()) {
+      modelObjectClone.setCoolingCoil(coolingCoil->clone(model).cast<HVACComponent>());
+    }
+    if( boost::optional<HVACComponent> heatingCoil = this->heatingCoil()) {
+      modelObjectClone.setHeatingCoil(heatingCoil->clone(model).cast<HVACComponent>());
+    }
+    if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
+      modelObjectClone.setSupplementalHeatingCoil(supplementalHeatingCoil->clone(model).cast<HVACComponent>());
+    }
+
+    return modelObjectClone;
+  }
+
+  bool AirLoopHVACUnitarySystem_Impl::addToNode(Node & node)
+  {
+    if( node.airLoopHVAC() )
+    {
+      return WaterToAirComponent_Impl::addToNode(node);
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  unsigned AirLoopHVACUnitarySystem_Impl::airInletPort()
+  {
+    return OS_AirLoopHVAC_UnitarySystemFields::AirInletNodeName;
+  }
+
+  unsigned AirLoopHVACUnitarySystem_Impl::airOutletPort()
+  {
+    return OS_AirLoopHVAC_UnitarySystemFields::AirOutletNodeName;
+  }
+
+  unsigned AirLoopHVACUnitarySystem_Impl::waterInletPort()
+  {
+    return OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName;
+  }
+
+  unsigned AirLoopHVACUnitarySystem_Impl::waterOutletPort()
+  {
+    return OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName;
+  }
+
   std::string AirLoopHVACUnitarySystem_Impl::controlType() const {
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::ControlType,true);
     OS_ASSERT(value);
@@ -139,24 +176,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName);
   }
 
-  Connection AirLoopHVACUnitarySystem_Impl::airInletNode() const {
-    boost::optional<Connection> value = optionalAirInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection AirLoopHVACUnitarySystem_Impl::airOutletNode() const {
-    boost::optional<Connection> value = optionalAirOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Air Outlet Node attached.");
-    }
-    return value.get();
-  }
-
-  boost::optional<FansCVandOnOffandVAV> AirLoopHVACUnitarySystem_Impl::supplyFan() const {
-    return getObject<ModelObject>().getModelObjectTarget<FansCVandOnOffandVAV>(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName);
+  boost::optional<HVACComponent> AirLoopHVACUnitarySystem_Impl::supplyFan() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName);
   }
 
   boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::fanPlacement() const {
@@ -167,8 +188,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName);
   }
 
-  boost::optional<HeatingCoilsDX> AirLoopHVACUnitarySystem_Impl::heatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HeatingCoilsDX>(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
+  boost::optional<HVACComponent> AirLoopHVACUnitarySystem_Impl::heatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName);
   }
 
   double AirLoopHVACUnitarySystem_Impl::dXHeatingCoilSizingRatio() const {
@@ -181,8 +202,8 @@ namespace detail {
     return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio);
   }
 
-  boost::optional<CoolingCoilsDX> AirLoopHVACUnitarySystem_Impl::coolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<CoolingCoilsDX>(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName);
+  boost::optional<HVACComponent> AirLoopHVACUnitarySystem_Impl::coolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName);
   }
 
   bool AirLoopHVACUnitarySystem_Impl::useDOASDXCoolingCoil() const {
@@ -215,8 +236,8 @@ namespace detail {
     return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl);
   }
 
-  boost::optional<HeatingCoilName> AirLoopHVACUnitarySystem_Impl::supplementalHeatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HeatingCoilName>(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName);
+  boost::optional<HVACComponent> AirLoopHVACUnitarySystem_Impl::supplementalHeatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName);
   }
 
   boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::supplyAirFlowRateMethodDuringCoolingOperation() const {
@@ -425,17 +446,9 @@ namespace detail {
     return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery);
   }
 
-  boost::optional<Connection> AirLoopHVACUnitarySystem_Impl::heatRecoveryWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName);
-  }
-
-  boost::optional<Connection> AirLoopHVACUnitarySystem_Impl::heatRecoveryWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName);
-  }
-
-  boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem_Impl::designSpecificationMultispeedHeatPumpObject() const {
-    return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformace>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName);
-  }
+  // boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem_Impl::designSpecificationMultispeedHeatPumpObject() const {
+  //   return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformace>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName);
+  // }
 
   bool AirLoopHVACUnitarySystem_Impl::setControlType(std::string controlType) {
     bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::ControlType, controlType);
@@ -487,20 +500,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::AirInletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirLoopHVACUnitarySystem_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::AirOutletNodeName, connection.handle());
-    return result;
-  }
-
-  bool AirLoopHVACUnitarySystem_Impl::setSupplyFan(const boost::optional<FansCVandOnOffandVAV>& fansCVandOnOffandVAV) {
+  bool AirLoopHVACUnitarySystem_Impl::setSupplyFan(const boost::optional<HVACComponent>& supplyFan) {
     bool result(false);
-    if (fansCVandOnOffandVAV) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, fansCVandOnOffandVAV.get().handle());
+    if (supplyFan) {
+      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplyFanName, supplyFan.get().handle());
     }
     else {
       resetSupplyFan();
@@ -544,10 +547,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setHeatingCoil(const boost::optional<HeatingCoilsDX>& heatingCoilsDX) {
+  bool AirLoopHVACUnitarySystem_Impl::setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil) {
     bool result(false);
-    if (heatingCoilsDX) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName, heatingCoilsDX.get().handle());
+    if (heatingCoil) {
+      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::HeatingCoilName, heatingCoil.get().handle());
     }
     else {
       resetHeatingCoil();
@@ -571,10 +574,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setCoolingCoil(const boost::optional<CoolingCoilsDX>& coolingCoilsDX) {
+  bool AirLoopHVACUnitarySystem_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil) {
     bool result(false);
-    if (coolingCoilsDX) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName, coolingCoilsDX.get().handle());
+    if (coolingCoil) {
+      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::CoolingCoilName, coolingCoil.get().handle());
     }
     else {
       resetCoolingCoil();
@@ -589,13 +592,7 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil) {
-    bool result = false;
-    if (useDOASDXCoolingCoil) {
-      result = setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, "No");
-    }
-    OS_ASSERT(result);
+    setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil, useDOASDXCoolingCoil);
   }
 
   void AirLoopHVACUnitarySystem_Impl::resetUseDOASDXCoolingCoil() {
@@ -623,10 +620,10 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setSupplementalHeatingCoil(const boost::optional<HeatingCoilName>& heatingCoilName) {
+  bool AirLoopHVACUnitarySystem_Impl::setSupplementalHeatingCoil(const boost::optional<HVACComponent>& supplementalHeatingCoil) {
     bool result(false);
-    if (heatingCoilName) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, heatingCoilName.get().handle());
+    if (supplementalHeatingCoil) {
+      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, supplementalHeatingCoil.get().handle());
     }
     else {
       resetSupplementalHeatingCoil();
@@ -1073,81 +1070,31 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setHeatRecoveryWaterInletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName, connection.get().handle());
-    }
-    else {
-      resetHeatRecoveryWaterInletNode();
-      result = true;
-    }
-    return result;
-  }
+  // bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace) {
+  //   bool result(false);
+  //   if (unitarySystemPerformace) {
+  //     result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, unitarySystemPerformace.get().handle());
+  //   }
+  //   else {
+  //     resetDesignSpecificationMultispeedHeatPumpObject();
+  //     result = true;
+  //   }
+  //   return result;
+  // }
 
-  void AirLoopHVACUnitarySystem_Impl::resetHeatRecoveryWaterInletNode() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirLoopHVACUnitarySystem_Impl::setHeatRecoveryWaterOutletNode(const boost::optional<Connection>& connection) {
-    bool result(false);
-    if (connection) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName, connection.get().handle());
-    }
-    else {
-      resetHeatRecoveryWaterOutletNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirLoopHVACUnitarySystem_Impl::resetHeatRecoveryWaterOutletNode() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace) {
-    bool result(false);
-    if (unitarySystemPerformace) {
-      result = setPointer(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, unitarySystemPerformace.get().handle());
-    }
-    else {
-      resetDesignSpecificationMultispeedHeatPumpObject();
-      result = true;
-    }
-    return result;
-  }
-
-  void AirLoopHVACUnitarySystem_Impl::resetDesignSpecificationMultispeedHeatPumpObject() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<Connection> AirLoopHVACUnitarySystem_Impl::optionalAirInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirLoopHVAC_UnitarySystemFields::AirInletNodeName);
-  }
-
-  boost::optional<Connection> AirLoopHVACUnitarySystem_Impl::optionalAirOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_AirLoopHVAC_UnitarySystemFields::AirOutletNodeName);
-  }
+  // void AirLoopHVACUnitarySystem_Impl::resetDesignSpecificationMultispeedHeatPumpObject() {
+  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName, "");
+  //   OS_ASSERT(result);
+  // }
 
 } // detail
 
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
-  : ModelObject(AirLoopHVACUnitarySystem::iddObjectType(),model)
+  : WaterToAirComponent(AirLoopHVACUnitarySystem::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitarySystem_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_AirLoopHVAC_UnitarySystemFields::AirInletNodeName
-  //     OS_AirLoopHVAC_UnitarySystemFields::AirOutletNodeName
   bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setAirInletNode();
-  OS_ASSERT(ok);
-  // ok = setAirOutletNode();
   OS_ASSERT(ok);
 }
 
@@ -1214,15 +1161,7 @@ boost::optional<Schedule> AirLoopHVACUnitarySystem::availabilitySchedule() const
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->availabilitySchedule();
 }
 
-Connection AirLoopHVACUnitarySystem::airInletNode() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->airInletNode();
-}
-
-Connection AirLoopHVACUnitarySystem::airOutletNode() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->airOutletNode();
-}
-
-boost::optional<FansCVandOnOffandVAV> AirLoopHVACUnitarySystem::supplyFan() const {
+boost::optional<HVACComponent> AirLoopHVACUnitarySystem::supplyFan() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->supplyFan();
 }
 
@@ -1234,7 +1173,7 @@ boost::optional<Schedule> AirLoopHVACUnitarySystem::supplyAirFanOperatingModeSch
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->supplyAirFanOperatingModeSchedule();
 }
 
-boost::optional<HeatingCoilsDX> AirLoopHVACUnitarySystem::heatingCoil() const {
+boost::optional<HVACComponent> AirLoopHVACUnitarySystem::heatingCoil() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->heatingCoil();
 }
 
@@ -1246,7 +1185,7 @@ bool AirLoopHVACUnitarySystem::isDXHeatingCoilSizingRatioDefaulted() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isDXHeatingCoilSizingRatioDefaulted();
 }
 
-boost::optional<CoolingCoilsDX> AirLoopHVACUnitarySystem::coolingCoil() const {
+boost::optional<HVACComponent> AirLoopHVACUnitarySystem::coolingCoil() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->coolingCoil();
 }
 
@@ -1274,7 +1213,7 @@ bool AirLoopHVACUnitarySystem::isLatentLoadControlDefaulted() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isLatentLoadControlDefaulted();
 }
 
-boost::optional<HeatingCoilName> AirLoopHVACUnitarySystem::supplementalHeatingCoil() const {
+boost::optional<HVACComponent> AirLoopHVACUnitarySystem::supplementalHeatingCoil() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->supplementalHeatingCoil();
 }
 
@@ -1446,17 +1385,9 @@ bool AirLoopHVACUnitarySystem::isMaximumTemperatureforHeatRecoveryDefaulted() co
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isMaximumTemperatureforHeatRecoveryDefaulted();
 }
 
-boost::optional<Connection> AirLoopHVACUnitarySystem::heatRecoveryWaterInletNode() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->heatRecoveryWaterInletNode();
-}
-
-boost::optional<Connection> AirLoopHVACUnitarySystem::heatRecoveryWaterOutletNode() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->heatRecoveryWaterOutletNode();
-}
-
-boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem::designSpecificationMultispeedHeatPumpObject() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
-}
+// boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem::designSpecificationMultispeedHeatPumpObject() const {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
+// }
 
 bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
@@ -1490,16 +1421,8 @@ void AirLoopHVACUnitarySystem::resetAvailabilitySchedule() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetAvailabilitySchedule();
 }
 
-bool AirLoopHVACUnitarySystem::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setAirInletNode(connection);
-}
-
-bool AirLoopHVACUnitarySystem::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setAirOutletNode(connection);
-}
-
-bool AirLoopHVACUnitarySystem::setSupplyFan(const FansCVandOnOffandVAV& fansCVandOnOffandVAV) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyFan(fansCVandOnOffandVAV);
+bool AirLoopHVACUnitarySystem::setSupplyFan(const HVACComponent& supplyFan) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyFan(supplyFan);
 }
 
 void AirLoopHVACUnitarySystem::resetSupplyFan() {
@@ -1522,8 +1445,8 @@ void AirLoopHVACUnitarySystem::resetSupplyAirFanOperatingModeSchedule() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetSupplyAirFanOperatingModeSchedule();
 }
 
-bool AirLoopHVACUnitarySystem::setHeatingCoil(const HeatingCoilsDX& heatingCoilsDX) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatingCoil(heatingCoilsDX);
+bool AirLoopHVACUnitarySystem::setHeatingCoil(const HVACComponent& heatingCoil) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatingCoil(heatingCoil);
 }
 
 void AirLoopHVACUnitarySystem::resetHeatingCoil() {
@@ -1538,8 +1461,8 @@ void AirLoopHVACUnitarySystem::resetDXHeatingCoilSizingRatio() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDXHeatingCoilSizingRatio();
 }
 
-bool AirLoopHVACUnitarySystem::setCoolingCoil(const CoolingCoilsDX& coolingCoilsDX) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setCoolingCoil(coolingCoilsDX);
+bool AirLoopHVACUnitarySystem::setCoolingCoil(const HVACComponent& coolingCoil) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setCoolingCoil(coolingCoil);
 }
 
 void AirLoopHVACUnitarySystem::resetCoolingCoil() {
@@ -1570,8 +1493,8 @@ void AirLoopHVACUnitarySystem::resetLatentLoadControl() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetLatentLoadControl();
 }
 
-bool AirLoopHVACUnitarySystem::setSupplementalHeatingCoil(const HeatingCoilName& heatingCoilName) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplementalHeatingCoil(heatingCoilName);
+bool AirLoopHVACUnitarySystem::setSupplementalHeatingCoil(const HVACComponent& supplementalHeatingCoil) {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplementalHeatingCoil(supplementalHeatingCoil);
 }
 
 void AirLoopHVACUnitarySystem::resetSupplementalHeatingCoil() {
@@ -1818,33 +1741,17 @@ void AirLoopHVACUnitarySystem::resetMaximumTemperatureforHeatRecovery() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumTemperatureforHeatRecovery();
 }
 
-bool AirLoopHVACUnitarySystem::setHeatRecoveryWaterInletNode(const Connection& connection) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatRecoveryWaterInletNode(connection);
-}
+// bool AirLoopHVACUnitarySystem::setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace) {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignSpecificationMultispeedHeatPumpObject(unitarySystemPerformace);
+// }
 
-void AirLoopHVACUnitarySystem::resetHeatRecoveryWaterInletNode() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetHeatRecoveryWaterInletNode();
-}
-
-bool AirLoopHVACUnitarySystem::setHeatRecoveryWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setHeatRecoveryWaterOutletNode(connection);
-}
-
-void AirLoopHVACUnitarySystem::resetHeatRecoveryWaterOutletNode() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetHeatRecoveryWaterOutletNode();
-}
-
-bool AirLoopHVACUnitarySystem::setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignSpecificationMultispeedHeatPumpObject(unitarySystemPerformace);
-}
-
-void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedHeatPumpObject() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSpecificationMultispeedHeatPumpObject();
-}
+// void AirLoopHVACUnitarySystem::resetDesignSpecificationMultispeedHeatPumpObject() {
+//   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignSpecificationMultispeedHeatPumpObject();
+// }
 
 /// @cond
 AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(boost::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
-  : ModelObject(impl)
+  : WaterToAirComponent(impl)
 {}
 /// @endcond
 

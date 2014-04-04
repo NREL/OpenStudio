@@ -21,25 +21,15 @@
 #define MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
 
 #include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include <model/WaterToAirComponent.hpp>
 
 namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class ThermalZone;
 class Schedule;
-class Connection;
-class Connection;
-class FansCVandOnOffandVAV;
-class Schedule;
-class HeatingCoilsDX;
-class CoolingCoilsDX;
-class HeatingCoilName;
-class Connection;
-class Connection;
-class UnitarySystemPerformace;
+class HVACComponent;
 
 namespace detail {
 
@@ -47,8 +37,8 @@ namespace detail {
 
 } // detail
 
-/** AirLoopHVACUnitarySystem is a ModelObject that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitarySystem'. */
-class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
+/** AirLoopHVACUnitarySystem is a WaterToAirComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:UnitarySystem'. */
+class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -82,39 +72,27 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   bool isControlTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
 
   std::string dehumidificationControlType() const;
 
   bool isDehumidificationControlTypeDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection airInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection airOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: FansCVandOnOffandVAV.
-  boost::optional<FansCVandOnOffandVAV> supplyFan() const;
+  boost::optional<HVACComponent> supplyFan() const;
 
   boost::optional<std::string> fanPlacement() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: HeatingCoilsDX, HeatingCoilsDXMultiSpeed, HeatingCoilsDXVariableSpeed, HeatingCoilsWaterToAirHP, HeatingCoilsWaterToAirVSHP, HeatingCoilName, HeatingCoilsElectricMultiStage, HeatingCoilsGasMultiStage, HeatingCoilsDesuperheater.
-  boost::optional<HeatingCoilsDX> heatingCoil() const;
+  boost::optional<HVACComponent> heatingCoil() const;
 
   double dXHeatingCoilSizingRatio() const;
 
   bool isDXHeatingCoilSizingRatioDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: CoolingCoilsDX, CoolingCoilsDXMultiSpeed, CoolingCoilsDXVariableSpeed, CoolingCoilsWaterToAirHP, CoolingCoilsWaterToAirVSHP, CoolingCoilsWater.
-  boost::optional<CoolingCoilsDX> coolingCoil() const;
+  boost::optional<HVACComponent> coolingCoil() const;
 
   bool useDOASDXCoolingCoil() const;
 
@@ -128,8 +106,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   bool isLatentLoadControlDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: HeatingCoilName, HeatingCoilsDesuperheater.
-  boost::optional<HeatingCoilName> supplementalHeatingCoil() const;
+  boost::optional<HVACComponent> supplementalHeatingCoil() const;
 
   boost::optional<std::string> supplyAirFlowRateMethodDuringCoolingOperation() const;
 
@@ -215,14 +192,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> heatRecoveryWaterInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> heatRecoveryWaterOutletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: UnitarySystemPerformace.
-  boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
+  // boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
 
   //@}
   /** @name Setters */
@@ -232,7 +202,6 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetControlType();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 
   void resetControllingZoneorThermostatLocation();
@@ -241,19 +210,11 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetDehumidificationControlType();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setAvailabilitySchedule(Schedule& schedule);
 
   void resetAvailabilitySchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: FansCVandOnOffandVAV.
-  bool setSupplyFan(const FansCVandOnOffandVAV& fansCVandOnOffandVAV);
+  bool setSupplyFan(const HVACComponent& supplyFan);
 
   void resetSupplyFan();
 
@@ -261,13 +222,11 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetFanPlacement();
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
   bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
   void resetSupplyAirFanOperatingModeSchedule();
 
-  // TODO: Check argument type. From object lists, some candidates are: HeatingCoilsDX, HeatingCoilsDXMultiSpeed, HeatingCoilsDXVariableSpeed, HeatingCoilsWaterToAirHP, HeatingCoilsWaterToAirVSHP, HeatingCoilName, HeatingCoilsElectricMultiStage, HeatingCoilsGasMultiStage, HeatingCoilsDesuperheater.
-  bool setHeatingCoil(const HeatingCoilsDX& heatingCoilsDX);
+  bool setHeatingCoil(const HVACComponent& heatingCoil);
 
   void resetHeatingCoil();
 
@@ -275,8 +234,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetDXHeatingCoilSizingRatio();
 
-  // TODO: Check argument type. From object lists, some candidates are: CoolingCoilsDX, CoolingCoilsDXMultiSpeed, CoolingCoilsDXVariableSpeed, CoolingCoilsWaterToAirHP, CoolingCoilsWaterToAirVSHP, CoolingCoilsWater.
-  bool setCoolingCoil(const CoolingCoilsDX& coolingCoilsDX);
+  bool setCoolingCoil(const HVACComponent& coolingCoil);
 
   void resetCoolingCoil();
 
@@ -292,8 +250,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetLatentLoadControl();
 
-  // TODO: Check argument type. From object lists, some candidates are: HeatingCoilName, HeatingCoilsDesuperheater.
-  bool setSupplementalHeatingCoil(const HeatingCoilName& heatingCoilName);
+  bool setSupplementalHeatingCoil(const HVACComponent& supplementalHeatingCoil);
 
   void resetSupplementalHeatingCoil();
 
@@ -417,20 +374,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public ModelObject {
 
   void resetMaximumTemperatureforHeatRecovery();
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setHeatRecoveryWaterInletNode(const Connection& connection);
+  // bool setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace);
 
-  void resetHeatRecoveryWaterInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setHeatRecoveryWaterOutletNode(const Connection& connection);
-
-  void resetHeatRecoveryWaterOutletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: UnitarySystemPerformace.
-  bool setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace);
-
-  void resetDesignSpecificationMultispeedHeatPumpObject();
+  // void resetDesignSpecificationMultispeedHeatPumpObject();
 
   //@}
   /** @name Other */

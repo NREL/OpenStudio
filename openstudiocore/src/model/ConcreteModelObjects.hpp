@@ -27,6 +27,7 @@
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACReturnPlenum.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
 #include <model/AirLoopHVACZoneMixer.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
@@ -282,6 +283,7 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/AirLoopHVACZoneMixer_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
