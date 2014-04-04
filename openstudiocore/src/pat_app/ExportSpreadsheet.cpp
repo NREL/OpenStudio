@@ -47,20 +47,7 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   //get the project's directory
   openstudio::path projectPath = project.projectDir();
 
-  // remove previous export
-  openstudio::path modelMeasuresCSV = projectPath / toPath("spreadsheet_model_measures_export.csv");
-  openstudio::path energyplusMeasuresCSV = projectPath / toPath("spreadsheet_energyplus_measures_export.csv");
-  openstudio::path reportingMeasuresCSV = projectPath / toPath("spreadsheet_reporting_measures_export.csv");
-
-  if (boost::filesystem::exists(modelMeasuresCSV)) {
-    boost::filesystem::remove(modelMeasuresCSV);
-  }
-  if (boost::filesystem::exists(energyplusMeasuresCSV)) {
-    boost::filesystem::remove(energyplusMeasuresCSV);
-  }
-  if (boost::filesystem::exists(reportingMeasuresCSV)) {
-    boost::filesystem::remove(reportingMeasuresCSV);
-  }
+  LOG_FREE(Debug, "ExportSpreadsheet", "Starting export of projectPath:" << toString(projectPath));
 
   openstudio::path rubyPath = getOpenStudioEmbeddedRubyPath();
 #if defined(Q_OS_WIN32)
@@ -111,10 +98,18 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   std::string outputString = toString(QString(output));
   LOG_FREE(Debug, "ExportSpreadsheet", "StandardOutput:" << std::endl << outputString);
 
+  // remove previous export
+  openstudio::path exportPath = projectPath / toPath("analysis_spreadsheet_export");
+  openstudio::path modelMeasuresCSV = exportPath / toPath("spreadsheet_model_measures_export.csv");
+  openstudio::path energyplusMeasuresCSV = exportPath / toPath("spreadsheet_energyplus_measures_export.csv");
+  openstudio::path reportingMeasuresCSV = exportPath / toPath("spreadsheet_reporting_measures_export.csv");
+  openstudio::path outputsCSV = exportPath / toPath("spreadsheet_outputs_export.csv");
+
   bool result = ((p->exitStatus() == QProcess::NormalExit) &&
                   boost::filesystem::exists(modelMeasuresCSV) &&
                   boost::filesystem::exists(energyplusMeasuresCSV) &&
-                  boost::filesystem::exists(reportingMeasuresCSV));
+                  boost::filesystem::exists(reportingMeasuresCSV) && 
+                  boost::filesystem::exists(outputsCSV));
 
   p->deleteLater();
   return result;
