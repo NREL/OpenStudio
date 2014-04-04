@@ -24,8 +24,6 @@
 #include "PrjObjects.hpp"
 #include "PrjAirflowElements.hpp"
 
-#include <QSharedData>
-
 #include <utilities/core/Path.hpp>
 #include <utilities/data/TimeSeries.hpp>
 
@@ -38,7 +36,7 @@ class SimFile;
 
 namespace detail {
 
-class PrjModelImpl : public QSharedData
+class PrjModelImpl
 {
 public:
   PrjModelImpl();

@@ -24,7 +24,7 @@
 #include "PrjObjects.hpp"
 #include "PrjAirflowElements.hpp"
 
-#include <QExplicitlySharedDataPointer>
+#include <boost/shared_ptr.hpp>
 
 #include <utilities/core/Path.hpp>
 #include <utilities/data/TimeSeries.hpp>
@@ -422,7 +422,7 @@ public:
   //@}
 
 private:
-  QExplicitlySharedDataPointer<detail::PrjModelImpl> d;
+  boost::shared_ptr<detail::PrjModelImpl> m_impl;
 };
 
 } // contam

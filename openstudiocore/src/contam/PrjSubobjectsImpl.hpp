@@ -25,7 +25,6 @@
 #include <utilities/core/String.hpp>
 
 #include <QVector>
-#include <QSharedData>
 
 namespace openstudio {
 namespace contam {
