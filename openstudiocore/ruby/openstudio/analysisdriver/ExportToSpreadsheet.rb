@@ -205,8 +205,11 @@ measures.each { |measure|
   measure_dir_name = OpenStudio::toString(measure["bcl_measure"].directory.stem)
   if not OpenStudio::toUUID(measure_dir_name).isNull
     # measure dir name is a uuid, rename it something else
-    measure_dir_name = measure["bcl_measure"].name.gsub(/[^0-9A-Za-z.\-]/, "")
+    measure_dir_name = measure["bcl_measure"].name
   end
+  parts = measure_dir_name.split(" ")
+  parts.each {|part| part[0] = part[0].capitalize}
+  measure_dir_name = parts.join(" ").gsub(/[^0-9A-Za-z.\-]/, "")
 
   # ensure directory name is unique
   measure_path = export_dir / OpenStudio::Path.new(measure_dir_name)
@@ -217,24 +220,28 @@ measures.each { |measure|
   end
   
   csv_file = nil
+  measure_type = nil
   if measure["bcl_measure"].measureType == "ModelMeasure".to_MeasureType
     csv_file = model_measures_csv
+    measure_type = "RubyMeasure"
   elsif measure["bcl_measure"].measureType == "EnergyPlusMeasure".to_MeasureType
     csv_file = energyplus_measures_csv
+    measure_type = "EnergyPlusMeasure"
   elsif measure["bcl_measure"].measureType == "ReportingMeasure".to_MeasureType
     csv_file = reporting_measures_csv
+    measure_type = "ReportingMeasure"
   else
     puts "Skipping #{measure["bcl_measure"].name}, because it is of unexpected type '#{measure["bcl_measure"].measureType.valueDescription}'." 
   end
-    
+ 
   # copy the measure
   FileUtils.cp_r(measure["bcl_measure"].directory.to_s, measure_path.to_s)
   
   row = []
-  row << "FALSE"
+  row << "TRUE"
   row << measure["bcl_measure"].name
   row << measure_dir_name
-  row << "RubyMeasure"
+  row << measure_type
   csv_file << row
   row = []
   measure["arguments"].each { |arg|
@@ -244,7 +251,7 @@ measures.each { |measure|
     row << arg.name
     row << "static"
     if arg.type == "Choice".to_OSArgumentType
-      row << "String"
+      row << "Choice"
       row << ""    
       if arg.hasValue
         row << arg.valueDisplayName
@@ -254,7 +261,7 @@ measures.each { |measure|
         row << ""
       end
     else
-      row << arg.type.valueName
+      row << arg.type.valueName.gsub("Boolean", "Bool")
       row << ""    
       if arg.hasValue
         row << arg.valueAsString
