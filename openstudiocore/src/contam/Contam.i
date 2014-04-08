@@ -24,7 +24,6 @@
   #include <model/ModelObject.hpp>
 %}
 
-%ignore QSharedData;
 %ignore PrjModelImpl;
 %ignore PrjModel(Reader &input);
 
