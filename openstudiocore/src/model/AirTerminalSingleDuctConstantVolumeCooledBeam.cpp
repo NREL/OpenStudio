@@ -183,7 +183,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                 AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true;
