@@ -402,19 +402,14 @@ namespace detail {
       return results;
     }
 
-    std::vector<FileInfo> files = outputFiles().files();
-
     // search for stderr file in case of failure
     boost::optional<FileInfo> stderrFile;
-    for (std::vector<FileInfo>::const_iterator itr = files.begin();
-         itr != files.end();
-         ++itr)
-    {
-      if (itr->fullPath.filename() == openstudio::toPath("stderr"))
-      {
-        stderrFile = *itr;
-      }
+    try { 
+      stderrFile = outputFiles().getLastByFilename("stderr"); 
+    } catch (...) {
     }
+
+    std::vector<FileInfo> files = outputFiles().files();
 
     // loop over all merged jobs
     bool errorAssigned = false;
@@ -474,10 +469,10 @@ namespace detail {
         // if this was the first merged job without an ossr we know this was the error
         if (!errorAssigned){
 
-          // check the parent job for errors
-          JobErrors parentErrors = this->errors();
-          for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = parentErrors.allErrors.begin();
-               itr != parentErrors.allErrors.end();
+          // look through all JobErrors from all the merged jobs
+          JobErrors thisErrors = this->errors();
+          for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = thisErrors.allErrors.begin();
+               itr != thisErrors.allErrors.end();
                ++itr)
           {
             std::string error = itr->first.valueName() + itr->second;
@@ -492,7 +487,7 @@ namespace detail {
             e.addError(ErrorType::Error, "Unknown error.");
           }
 
-          // assign the parent's stderr if it exists
+          // assign stderrFile here if it exists
           if (stderrFile){
             jobfiles.append(*stderrFile);
           }
