@@ -402,14 +402,16 @@ namespace detail {
       return results;
     }
 
+    Files outputFiles = this->outputFiles();
+
     // search for stderr file in case of failure
     boost::optional<FileInfo> stderrFile;
     try { 
-      stderrFile = outputFiles().getLastByFilename("stderr"); 
+      stderrFile = outputFiles.getLastByFilename("stderr"); 
     } catch (...) {
     }
 
-    std::vector<FileInfo> files = outputFiles().files();
+    std::vector<FileInfo> files = outputFiles.files();
 
     // loop over all merged jobs
     bool errorAssigned = false;
@@ -482,14 +484,15 @@ namespace detail {
             }
           }
 
-          // should have at least one error here
-          if (e.errors().empty()){
-            e.addError(ErrorType::Error, "Unknown error.");
-          }
-
           // assign stderrFile here if it exists
           if (stderrFile){
+            // should have at least one error here
+            if (e.errors().empty()){
+              e.addError(ErrorType::Error, "Merged job failed.");
+            }
             jobfiles.append(*stderrFile);
+          }else{
+            e.addError(ErrorType::Error, "Merged job failed but cannot find stderr file, check " + toString(this->outdir(false)) + " for output.");
           }
 
           errorAssigned = true;
