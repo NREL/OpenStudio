@@ -254,6 +254,7 @@ namespace sdd {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::BuildingStory& buildingStory)
   {
     QDomElement nameElement = element.firstChildElement("Name");
+    QDomElement volElement = element.firstChildElement("Vol");
     QDomElement hotWtrHtgRtElement = element.firstChildElement("HotWtrHtgRtSim");
     QDomElement hotWtrHtgSchRefElement = element.firstChildElement("HotWtrHtgSchRef");
     QDomElement shwFluidSegRefElement = element.firstChildElement("SHWFluidSegRef");
@@ -339,6 +340,24 @@ namespace sdd {
       if (exteriorShadingElements.at(i).parentNode() == element){
         boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
        OS_ASSERT(exteriorShading);
+      }
+    }
+
+    // volume
+    if (!volElement.isNull()){
+      // sdd units = ft^3, os units = m^3
+      Quantity spaceVolumeIP(volElement.text().toDouble(), BTUUnit(BTUExpnt(0,3,0,0)));
+      OptionalQuantity spaceVolumeSI = QuantityConverter::instance().convert(spaceVolumeIP, UnitSystem(UnitSystem::Wh));
+      OS_ASSERT(spaceVolumeSI);
+      OS_ASSERT(spaceVolumeSI->units() == WhUnit(WhExpnt(0,0,3,0)));
+
+      if (thermalZone->isVolumeDefaulted()){
+        thermalZone->setVolume(spaceVolumeSI->value());
+      }else{
+        boost::optional<double> zoneVolume = thermalZone->volume();
+        OS_ASSERT(zoneVolume);
+        zoneVolume = *zoneVolume + spaceVolumeSI->value();
+        thermalZone->setVolume(zoneVolume);
       }
     }
 
