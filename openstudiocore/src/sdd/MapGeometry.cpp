@@ -562,10 +562,18 @@ namespace sdd {
     {
       //<IntLPDReg>1.1</IntLPDReg> - W per ft2
       //<IntLtgRegSchRef>Office Lighting Sched</IntLtgRegSchRef>
+      //<IntLtgRegHtGnSpcFrac>0.61</IntLtgRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgRegHtGnRadFrac>0.75</IntLtgRegHtGnRadFrac> - radiant fraction
       //<IntLPDNonReg>0</IntLPDNonReg> - W per ft2
+      //<IntLtgNonRegSchRef>Office Lighting Sched</IntLtgNonRegSchRef>
+      //<IntLtgNonRegHtGnSpcFrac>0.5</IntLtgNonRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgNonRegHtGnRadFrac>0.55</IntLtgNonRegHtGnRadFrac> - radiant fraction
+
 
       QDomElement intLPDRegElement = element.firstChildElement("IntLPDReg");
       QDomElement intLtgRegSchRefElement = element.firstChildElement("IntLtgRegSchRef");
+      QDomElement intLtgRegHtGnSpcFracElement = element.firstChildElement("IntLtgRegHtGnSpcFrac");
+      QDomElement intLtgRegHtGnRadFracElement = element.firstChildElement("IntLtgRegHtGnRadFrac");
       if (!intLPDRegElement.isNull() && (intLPDRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -591,10 +599,22 @@ namespace sdd {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
+
+        if (!intLtgRegHtGnSpcFracElement.isNull()){
+          double returnAirFraction = 1.0 - intLtgRegHtGnSpcFracElement.text().toDouble();
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+        }
+      
+        if (!intLtgRegHtGnRadFracElement.isNull()){
+          double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble();
+          lightsDefinition.setFractionRadiant(fractionRadiant);
+        }
       }
 
       QDomElement intLPDNonRegElement = element.firstChildElement("IntLPDNonReg");
-      QDomElement intLPDNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegHtGnSpcFracElement = element.firstChildElement("IntLtgNonRegHtGnSpcFrac");
+      QDomElement intLtgNonRegHtGnRadFracElement = element.firstChildElement("IntLtgNonRegHtGnRadFrac");
       if (!intLPDNonRegElement.isNull() && (intLPDNonRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDNonRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -611,14 +631,24 @@ namespace sdd {
         lights.setSpace(space);
         lights.setEndUseSubcategory("NonReg Ltg");
 
-        if (!intLPDNonRegSchRefElement.isNull()){
-          std::string scheduleName = escapeName(intLPDNonRegSchRefElement.text());
+        if (!intLtgNonRegSchRefElement.isNull()){
+          std::string scheduleName = escapeName(intLtgNonRegSchRefElement.text());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
           if (schedule){
             lights.setSchedule(*schedule);
           }else{
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
+        }
+
+        if (!intLtgNonRegHtGnSpcFracElement.isNull()){
+          double returnAirFraction = 1.0 - intLtgNonRegHtGnSpcFracElement.text().toDouble();
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+        }
+      
+        if (!intLtgNonRegHtGnRadFracElement.isNull()){
+          double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble();
+          lightsDefinition.setFractionRadiant(fractionRadiant);
         }
       }
     }
