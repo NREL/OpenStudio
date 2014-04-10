@@ -54,6 +54,8 @@ class PatMainMenu : public QMenuBar
 
   void exportXmlClicked();
 
+  void exportSpreadsheetClicked();
+
   void scanForToolsClicked();
 
   void showToolsClicked();
@@ -100,6 +102,7 @@ class PatMainMenu : public QMenuBar
   QAction * m_saveAsFileAction;
   QAction * m_clearAllResultsAction;
   QAction * m_exportXmlAction;
+  QAction * m_exportSpreadsheetAction;
   QAction * m_scanForToolsAction;
   QAction * m_showToolsAction;
   QAction * m_exitAction;

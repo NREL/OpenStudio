@@ -78,6 +78,8 @@ class PatMainWindow : public QMainWindow
 
   void exportXmlClicked();
 
+  void exportSpreadsheetClicked();
+
   void showToolsClicked();
 
   void scanForToolsClicked();
