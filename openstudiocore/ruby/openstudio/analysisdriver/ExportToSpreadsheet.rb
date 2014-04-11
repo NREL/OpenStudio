@@ -284,8 +284,8 @@ measures.each { |measure|
   row = []
   measure["arguments"].each { |arg|
     row << ""
-    row << ""
     row << "argument"
+    row << ""
     row << arg.displayName
     row << arg.name
     row << "static"
