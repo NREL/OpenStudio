@@ -49,11 +49,11 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
 
   LOG_FREE(Debug, "ExportSpreadsheet", "Starting export of projectPath:" << toString(projectPath));
 
-  openstudio::path rubyPath = getOpenStudioEmbeddedRubyPath();
+  openstudio::path rubyPath;
 #if defined(Q_OS_WIN32)
   rubyPath = getOpenStudioEmbeddedRubyPath() / toPath("bin/ruby.exe");
 #else
-  rubyPath("ruby");
+  rubyPath = "ruby";
 #endif
 
   openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();
@@ -69,10 +69,10 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   }
 
   QStringList args;
-  args << toQString("-I");
-  args << toQString(rubyIncludePath);
-  args << toQString(scriptPath);
-  args << toQString(projectPath);
+  args << "-I";
+  args << openstudio::toQString(rubyIncludePath);
+  args << openstudio::toQString(scriptPath);
+  args << openstudio::toQString(projectPath);
 
   QProcess *p = new QProcess();
   p->start(toQString(rubyPath), args);
