@@ -620,13 +620,16 @@ namespace sdd {
         }
 
         if (!intLtgRegHtGnSpcFracElement.isNull()){
-          double returnAirFraction = 1.0 - intLtgRegHtGnSpcFracElement.text().toDouble();
+          double spaceFraction = intLtgRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
-        }
-      
-        if (!intLtgRegHtGnRadFracElement.isNull()){
-          double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble();
-          lightsDefinition.setFractionRadiant(fractionRadiant);
+        
+          if (!intLtgRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
         }
       }
 
@@ -661,13 +664,16 @@ namespace sdd {
         }
 
         if (!intLtgNonRegHtGnSpcFracElement.isNull()){
-          double returnAirFraction = 1.0 - intLtgNonRegHtGnSpcFracElement.text().toDouble();
+          double spaceFraction = intLtgNonRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
           lightsDefinition.setReturnAirFraction(returnAirFraction);
-        }
-      
-        if (!intLtgNonRegHtGnRadFracElement.isNull()){
-          double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble();
-          lightsDefinition.setFractionRadiant(fractionRadiant);
+
+          if (!intLtgNonRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgNonRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgNonRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
         }
       }
     }
