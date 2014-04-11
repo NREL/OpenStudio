@@ -72,6 +72,39 @@ if not File.exists?(export_dir.to_s)
   raise "Could not create #{export_dir}"
 end
 
+def extractMeasureClass(measurePath)
+  currentObjects = Hash.new
+  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+
+  ObjectSpace.garbage_collect
+  load(measurePath) # need load in case have seen this script before
+
+  userScript = nil
+  type = String.new
+  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
+    if not currentObjects[obj]
+      if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+        userScript = obj
+        type = "model"
+      elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+        userScript = obj
+        type = "workspace"
+      elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+        userScript = obj
+        type = "translation"
+      elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+        userScript = obj
+        type = "utility"    
+      elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+        userScript = obj
+        type = "report"    
+      end
+    end
+  }
+  
+  return userScript.class
+end
+
 # Step through the workflow and construct ordered array of measure information
 # Each element of measures will be hash
 #   "workflow_step"      - used to match up outputs with measures
@@ -205,11 +238,15 @@ measures.each { |measure|
   measure_dir_name = OpenStudio::toString(measure["bcl_measure"].directory.stem)
   if not OpenStudio::toUUID(measure_dir_name).isNull
     # measure dir name is a uuid, rename it something else
-    measure_dir_name = measure["bcl_measure"].name
+    # DLM: do not rename uuid to human readable dir name per Nick and Brian
+    #measure_dir_name = measure["bcl_measure"].name
   end
-  parts = measure_dir_name.split(" ")
-  parts.each {|part| part[0] = part[0].capitalize}
-  measure_dir_name = parts.join(" ").gsub(/[^0-9A-Za-z.\-]/, "")
+  # DLM: do not clean up dir name per Nick and Brian
+  #parts = measure_dir_name.split(" ")
+  #parts.each {|part| part[0] = part[0].capitalize}
+  #measure_dir_name = parts.join(" ").gsub(/[^0-9A-Za-z.\-]/, "")
+  
+  measure_class_name = extractMeasureClass(measure["bcl_measure"].primaryRubyScriptPath.get.to_s)
 
   # ensure directory name is unique
   measure_path = export_dir / OpenStudio::Path.new(measure_dir_name)
@@ -241,10 +278,12 @@ measures.each { |measure|
   row << "TRUE"
   row << measure["bcl_measure"].name
   row << measure_dir_name
+  row << measure_class_name
   row << measure_type
   csv_file << row
   row = []
   measure["arguments"].each { |arg|
+    row << ""
     row << ""
     row << "argument"
     row << arg.displayName
