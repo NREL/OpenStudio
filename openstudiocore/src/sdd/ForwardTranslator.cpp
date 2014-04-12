@@ -197,11 +197,6 @@ namespace sdd {
     //<RunPeriodEndDay>0</RunPeriodEndDay>
     //<RunPeriodYear>0</RunPeriodYear>
 
-    // DLM: Kyle look here
-    QDomElement hvacAutoSizingElement = doc.createElement("HVACAutoSizing");
-    projectElement.appendChild(hvacAutoSizingElement);
-    hvacAutoSizingElement.appendChild( doc.createTextNode( "1"));
-
     // do materials before constructions 
     std::vector<model::Material> materials = model.getModelObjects<model::Material>();
     std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
