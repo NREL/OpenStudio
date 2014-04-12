@@ -76,6 +76,7 @@ namespace sdd {
     boost::optional<openstudio::model::Model> translateSDD(const QDomElement& element, const QDomDocument& doc);
     boost::optional<openstudio::model::ModelObject> translateRunPeriod(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSite(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     std::vector<openstudio::WorkspaceObject> translateDesignDays(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWeatherFile(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateMaterial(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model);
