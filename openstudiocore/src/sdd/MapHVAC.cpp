@@ -1243,6 +1243,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   {
     if( deckSPM )
     {
+      deckSPM->setName(airLoopHVAC.name().get() + " Deck SPM");
       std::vector<model::ModelObject> supplyNodes;
 
       if( boost::optional<model::Node> mixedAirNode = airLoopHVAC.mixedAirNode() )
