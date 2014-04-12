@@ -4834,19 +4834,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
   chiller.setName(nameElement.text().toStdString());
 
+  double value;
+  bool ok;
+
   // CndsrInRef
-
+  boost::optional<double> condDsgnSupWtrDelT;
   QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
-
   boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text(),doc,model);
-
   if( condenserSystem )
   {
     condenserSystem->addDemandBranchForComponent(chiller);
+    condDsgnSupWtrDelT = condenserSystem->sizingPlant().loopDesignTemperatureDifference();
   }
-
-  double value;
-  bool ok;
 
   // COP
   boost::optional<double> cop;
@@ -4911,9 +4910,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
       chiller.setReferenceChilledWaterFlowRate(flow);
 
-      double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * (entTempDsgn.get() - lvgTempDsgn.get()));
-
-      chiller.setReferenceCondenserFluidFlowRate(condFlow);
+      if( condDsgnSupWtrDelT )
+      {
+        double condFlow = capRtd.get() * (1.0 + 1.0 / cop.get()) / ( cpWater * densityWater * condDsgnSupWtrDelT.get() );
+        chiller.setReferenceCondenserFluidFlowRate(condFlow);
+      }
     }
   }
 
