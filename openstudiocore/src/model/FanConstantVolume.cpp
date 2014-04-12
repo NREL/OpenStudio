@@ -37,6 +37,8 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
@@ -263,6 +265,22 @@ namespace detail {
   boost::optional<HVACComponent> FanConstantVolume_Impl::containingHVACComponent() const
   {
     // Process all types that might contain a CoilHeatingWater object.
+
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
 
     // AirTerminalSingleDuctParallelPIUReheat
 

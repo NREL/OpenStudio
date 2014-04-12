@@ -217,6 +217,8 @@ namespace detail {
 
     bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setBasinHeaterOperatingScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const;
   };
 
 } // detail
