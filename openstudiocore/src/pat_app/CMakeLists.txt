@@ -12,6 +12,8 @@ SET( ${target_name}_SRC
   DesignAlternativesTabController.hpp
   DesignAlternativesView.cpp
   DesignAlternativesView.hpp
+  ExportSpreadsheet.cpp
+  ExportSpreadsheet.hpp  
   ExportXML.cpp
   ExportXML.hpp
   ExportXMLDialog.cpp

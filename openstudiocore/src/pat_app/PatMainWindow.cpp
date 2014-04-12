@@ -117,6 +117,9 @@ PatMainWindow::PatMainWindow(QWidget *parent) :
   isConnected = connect(mainMenu, SIGNAL(exportXmlClicked()), this, SIGNAL(exportXmlClicked()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(mainMenu, SIGNAL(exportSpreadsheetClicked()), this, SIGNAL(exportSpreadsheetClicked()));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
   OS_ASSERT(isConnected);
 
