@@ -43,7 +43,7 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 #include <polypartition/polypartition.h>
 
 #include <list>
-
+/*
 // adapted from Boost Geometry \algorithms\remove_spikes.hpp Revision: 86523
 namespace boost { 
 namespace geometry {
@@ -243,20 +243,24 @@ inline void remove_spikes(Geometry& geometry)
 
 }} // namespace boost::geometry
 
-
+*/
 namespace openstudio{
 
   // Private implementation functions
 
   std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
   {
+    // DLM: not needed in 1.55? need to use append_no_dups_or_spikes?
+    return polygons;
+/*
     std::vector<BoostPolygon> result;
     BOOST_FOREACH(const BoostPolygon& polygon, polygons){
       BoostPolygon temp(polygon);
-      boost::geometry::remove_spikes(temp);
+      boost::geometry::detail::remove_spikes(temp);
       result.push_back(temp);
     }
     return result;
+*/
   }
 
   std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon)
