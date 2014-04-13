@@ -250,8 +250,8 @@ IF (WIN32)
 #  ENDIF (MSVC)
 ENDIF (WIN32)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.54")
-FIND_PACKAGE( Boost 1.54.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
+SET( Boost_ADDITIONAL_VERSIONS "1.55")
+FIND_PACKAGE( Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
 
 IF(Boost_THREAD_FOUND)
   OPTION( BUILD_BOOST "Build Boost" OFF)
@@ -467,12 +467,12 @@ ENDIF()
 IF(BUILD_BOOST)
   IF(APPLE)
     STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
-    # DLM: address comment
+    # DLM: TODO address comment on Mac
     # Added cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" for Boost 1.47.0 to compile when osx_deployment_target=10.9
     # These flags can be removed if Boost is updated to newer version (~1.55.0), may need --c++11 flag?
     ExternalProject_Add( Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_54_0.tar.gz
-      URL_MD5 efbfbff5a85a9330951f243d0a46e4b9
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" variant=debug,release address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION} architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
@@ -480,8 +480,8 @@ IF(BUILD_BOOST)
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
   ELSEIF(UNIX)
     ExternalProject_Add( Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_54_0.tar.gz
-      URL_MD5 efbfbff5a85a9330951f243d0a46e4b9
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
@@ -498,8 +498,8 @@ IF(BUILD_BOOST)
 
     IF(CMAKE_CL_64)
       ExternalProject_Add( Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_54_0.tar.gz
-        URL_MD5 efbfbff5a85a9330951f243d0a46e4b9
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL_MD5 93780777cfbf999a600f62883bd54b17
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
@@ -507,8 +507,8 @@ IF(BUILD_BOOST)
         )
     ELSE()
       ExternalProject_Add( Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_54_0.tar.gz
-        URL_MD5 efbfbff5a85a9330951f243d0a46e4b9
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL_MD5 93780777cfbf999a600f62883bd54b17
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
