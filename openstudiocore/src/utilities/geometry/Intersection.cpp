@@ -43,61 +43,30 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 #include <polypartition/polypartition.h>
 
 #include <list>
+
+// remove_spikes 
+// adapted from https://github.com/boostorg/geometry/commits/develop/include/boost/geometry/algorithms/remove_spikes.hpp eb3260708eb241d8da337f4be73b41d69d33cd09
+
 /*
-// adapted from Boost Geometry \algorithms\remove_spikes.hpp Revision: 86523
-namespace boost { 
-namespace geometry {
-namespace detail { 
+Remove spikes from a ring/polygon.
+Ring (having 8 vertices, including closing vertex)
++------+
+| |
+| +--+
+| | ^this "spike" is removed, can be located outside/inside the ring
++------+
+(the actualy determination if it is removed is done by a strategy)
 
-template <typename Point1, typename Point2, typename Point3>
-static inline bool point_is_spike_or_equal(Point1 const& last_point, Point2 const& segment_a, Point3 const& segment_b)
+*/
+
+namespace boost { namespace geometry
 {
-  // adapted from point_is_spike_or_equal to include tolerance checking
 
-  // segment_a is at the begining
-  // segment_b is in the middle
-  // last_point is at the end
 
-  // segment_b is being considered for deletion
+#ifndef DOXYGEN_NO_DETAIL
+namespace detail { namespace remove_spikes
+{
 
-  double normTol = 0.001; // 1 mm
-  double tol = 0.001; // relative to 1
-    
-  double diff1_x = last_point.x()-segment_b.x();
-  double diff1_y = last_point.y()-segment_b.y();
-  double norm1 = sqrt(pow(diff1_x, 2) + pow(diff1_y, 2)); 
-  if (norm1 > normTol){
-    diff1_x = diff1_x/norm1;
-    diff1_y = diff1_y/norm1;
-  }else{
-    // last point is too close to segement b
-    return true;
-  }
-
-  double diff2_x = segment_b.x()-segment_a.x();
-  double diff2_y = segment_b.y()-segment_a.y();
-  double norm2 = sqrt(pow(diff2_x, 2) + pow(diff2_y, 2));
-  if (norm2 > normTol){
-    diff2_x = diff2_x/norm2;
-    diff2_y = diff2_y/norm2;
-  }else{
-    // segement b is too close to segement a
-    return true;
-  }
-
-  double crossProduct = diff1_x*diff2_y-diff1_y*diff2_x;
-  if (abs(crossProduct) < tol){
-    double dotProduct = diff1_x*diff2_x+diff1_y*diff2_y;
-    if (dotProduct <= -1.0 + tol){
-      // reversal
-      return true;
-    }
-  }
-
-  return false;
-}
-
-namespace remove_spikes {
 
 template <typename Range>
 struct range_remove_spikes
@@ -109,6 +78,7 @@ struct range_remove_spikes
 
     typedef typename coordinate_type<Range>::type coordinate_type;
     typedef typename point_type<Range>::type point_type;
+
 
     static inline void apply(Range& range)
     {
@@ -125,7 +95,7 @@ struct range_remove_spikes
         typedef typename boost::range_iterator<Range>::type iterator;
 
         std::deque<point_type> cleaned;
-        for (typename boost::range_iterator<Range const>::type it = boost::begin(range); 
+        for (typename boost::range_iterator<Range const>::type it = boost::begin(range);
             it != boost::end(range); ++it)
         {
             // Add point
@@ -199,7 +169,11 @@ struct polygon_remove_spikes
 
 
 }} // namespace detail::remove_spikes
+#endif // DOXYGEN_NO_DETAIL
 
+
+
+#ifndef DOXYGEN_NO_DISPATCH
 namespace dispatch
 {
 
@@ -231,36 +205,71 @@ struct remove_spikes<Polygon, polygon_tag>
 
 
 } // namespace dispatch
+#endif
 
+
+namespace resolve_variant {
+
+template <typename Geometry>
+struct remove_spikes
+{
+    static void apply(Geometry& geometry)
+    {
+        concept::check<Geometry>();
+        dispatch::remove_spikes<Geometry>::apply(geometry);
+    }
+};
+
+template <BOOST_VARIANT_ENUM_PARAMS(typename T)>
+struct remove_spikes<boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)> >
+{
+    struct visitor: boost::static_visitor<void>
+    {
+        template <typename Geometry>
+        void operator()(Geometry& geometry) const
+        {
+            remove_spikes<Geometry>::apply(geometry);
+        }
+    };
+
+    static inline void apply(boost::variant<BOOST_VARIANT_ENUM_PARAMS(T)>& geometry)
+    {
+        boost::apply_visitor(visitor(), geometry);
+    }
+};
+
+} // namespace resolve_variant
+
+
+/*!
+\ingroup remove_spikes
+\tparam Geometry geometry type
+\param geometry the geometry to make remove_spikes
+*/
 template <typename Geometry>
 inline void remove_spikes(Geometry& geometry)
 {
-    concept::check<Geometry>();
-
-    dispatch::remove_spikes<Geometry>::apply(geometry);
+    resolve_variant::remove_spikes<Geometry>::apply(geometry);
 }
 
 
 }} // namespace boost::geometry
+// remove_spikes 
 
-*/
+
 namespace openstudio{
 
   // Private implementation functions
 
   std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
   {
-    // DLM: not needed in 1.55? need to use append_no_dups_or_spikes?
-    return polygons;
-/*
     std::vector<BoostPolygon> result;
     BOOST_FOREACH(const BoostPolygon& polygon, polygons){
       BoostPolygon temp(polygon);
-      boost::geometry::detail::remove_spikes(temp);
+      boost::geometry::remove_spikes(temp);
       result.push_back(temp);
     }
     return result;
-*/
   }
 
   std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon)
