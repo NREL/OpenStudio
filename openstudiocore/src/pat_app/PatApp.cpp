@@ -24,6 +24,7 @@
 #include <pat_app/DesignAlternativesTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
 #include <pat_app/ExportXML.hpp>
+#include <pat_app/ExportSpreadsheet.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
 #include <pat_app/MainRightColumnController.hpp>
 #include <pat_app/MeasuresTabController.hpp>
@@ -45,6 +46,7 @@
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/ProcessEventsProgressBar.hpp"
+#include "../shared_gui_components/WorkflowTools.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/AnalysisObject.hpp>
@@ -229,6 +231,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exportXmlClicked()), this, SLOT(exportXml()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainWindow, SIGNAL(exportSpreadsheetClicked()), this, SLOT(exportSpreadsheet()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
@@ -747,11 +752,15 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
         if (!m_project->getCalibrationReportWorkflowStep()) {
           m_project->insertCalibrationReportWorkflowStep();
         }
-      }
-      else {
+      } else {
         if (m_project->getCalibrationReportWorkflowStep()) {
           m_project->clearCalibrationReportWorkflowStep();
         }
+      }
+
+      // DLM: TODO check imported model to see what this should do
+      if (projectHasRadiance(*m_project)){
+        removeRadianceFromProject(*m_project);
       }
       
       // get new number of variables and report out how many fixed measures were added
@@ -1122,6 +1131,34 @@ void PatApp::exportXml()
 
 }
 
+void PatApp::exportSpreadsheet()
+{
+  //make sure the project exists
+  if (!m_project){
+    // log
+    return;
+  }
+
+  if (m_project->analysis().successfulDataPoints().empty()){
+    QMessageBox::warning(mainWindow, "Export Failed", QString("You must have run at least one datapoint before exporting Analysis Spreadsheet."));
+    return;
+  }
+
+  //QMessageBox::information(mainWindow, "Exporting Analysis Spreadsheet", "This may take several minutes, you will get a message when the export is complete.");
+  mainWindow->setEnabled(false);
+  this->processEvents();
+
+  ExportSpreadsheet exporter;
+  bool result = exporter.exportSpreadsheet(*m_project);
+
+  mainWindow->setEnabled(true);
+  if (result){
+    QMessageBox::information(mainWindow, "Export Complete", QString("Your export is available under '") + toQString(m_project->projectDir()) + QString("'"));
+  }else{
+    QMessageBox::warning(mainWindow, "Export Failed", QString("Export to '") + toQString(m_project->projectDir()) + QString("' failed"));
+  }
+}
+
 void PatApp::scanForTools()
 {
   openstudio::runmanager::RunManager rm;
@@ -1209,6 +1246,12 @@ void PatApp::analysisSeedChanged()
     // Changing the seed can make script arguments invalid
     m_measureManager.updateMeasures(*m_project, m_project->measures(), false);
 
+    // DLM: this should never happen if the run tab is active
+    //if (m_runTabController)
+    //{
+    //  m_runTabController->seedChanged();
+    //
+    //}
     // DLM: Elaine changing the seed doesn't also make data points invalid right?
 
     // ETH@20130319 - Deleting explicit call to clearAllResults. analysisChanged() slot will take
@@ -1644,6 +1687,9 @@ void PatApp::setAppState(const CloudStatus & cloudStatus, const analysisdriver::
   if( m_runTabController )
   {
     m_runTabController->runView->runStatusView->setStatus(cloudStatus, analysisStatus);
+
+    // DLM: this should not be called every time cloud or analysis status changes
+    //m_runTabController->seedChanged();
   }
 }
 

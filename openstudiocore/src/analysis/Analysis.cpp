@@ -544,6 +544,7 @@ namespace detail {
         m_dataPointsAreInvalid = false;
       }
       onChange(AnalysisObject_Impl::Benign);
+      emit removedDataPoint(dataPoint.uuid());
       return true;
     }
     return false;
@@ -560,6 +561,7 @@ namespace detail {
     m_resultsAreInvalid = false;
     m_dataPointsAreInvalid = false;
     onChange(AnalysisObject_Impl::Benign);
+    emit removedAllDataPoints();
   }
 
   bool Analysis_Impl::clearResults(DataPoint& dataPoint) {
@@ -571,6 +573,7 @@ namespace detail {
         m_resultsAreInvalid = false;
       }
       onChange(AnalysisObject_Impl::Benign);
+      emit clearedDataPointResults(dataPoint.uuid());
       return true;
     }
     return false;
@@ -586,6 +589,7 @@ namespace detail {
     }
     m_resultsAreInvalid = false;
     onChange(AnalysisObject_Impl::Benign);
+    emit clearedAllResults();
   }
 
   bool Analysis_Impl::clearDirtyFlag() {

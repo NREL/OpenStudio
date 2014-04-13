@@ -87,6 +87,9 @@ namespace runmanager {
       //! Automatically find EnergyPlus if it is in a well defined, known place, then add to ConfigOptions
       void fastFindEnergyPlus();
 
+      //! Automatically find Radiance if it is in a well defined, known place, then add to ConfigOptions
+      void fastFindRadiance();
+
       //! Saves the tools to the appropriate QSettings location.
       void saveQSettings() const;
 
@@ -293,6 +296,9 @@ namespace runmanager {
       REGISTER_LOGGER("RunManager.ConfigOptions");
       //! Returns a vector of paths that may contain EnergyPlus
       std::vector<openstudio::path> potentialEnergyPlusLocations() const;
+
+      //! Returns a vector of paths that may contain Radiance
+      std::vector<openstudio::path> potentialRadianceLocations() const;
 
       void saveQSettings(const std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> > &t_tools) const;
       std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> > loadQSettingsTools() const;

@@ -46,7 +46,7 @@ class BCLFixture : public ::testing::Test {
   // set up logging
   REGISTER_LOGGER("BCLFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static std::string prodAuthKey;
   static std::string devAuthKey;
   static std::string defaultProdAuthKey;
