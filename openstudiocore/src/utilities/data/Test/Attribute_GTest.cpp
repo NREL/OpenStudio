@@ -372,3 +372,56 @@ TEST_F(DataFixture, Attribute_JsonSerialization) {
   QVariant variant = detail::toVariant(attribute);
   EXPECT_NO_THROW(toJSON(variant));
 }
+
+TEST_F(DataFixture, Attribute_DisplayName) {
+  Attribute attribute("WWR",0.23);
+  OptionalString displayName = attribute.displayName();
+  EXPECT_FALSE(displayName);
+  displayName = attribute.displayName(true);
+  ASSERT_TRUE(displayName);
+  EXPECT_EQ("WWR",displayName.get());
+  attribute.setDisplayName("Window-to-wall ratio (ratio of fenestration area to gross surface area).");
+  displayName = attribute.displayName(true);
+  ASSERT_TRUE(displayName);
+  EXPECT_NE("WWR",displayName.get());
+}
+
+TEST_F(DataFixture, Attribute_Source) {
+  AttributeVector attributes;
+
+  // create vector of attributes with no sources
+  attributes.push_back("My Boolean Attribute",false);
+  attributes.push_back("My Double Attribute",34.2,"W");
+  attributes.push_back("My Integer Attribute",5);
+  attributes.push_back("My String Attribute","flat finish");
+  attributes.push_back("tricky_source","don't talk back");
+
+  // xml and back
+  Attribute container("Containing Attribute",attributes);
+  QDomDocument doc = container.toXml();
+  OptionalAttribute containerCopy = Attribute::loadFromXml(doc);
+  ASSERT_TRUE(containerCopy);
+  AttributeVector attributesCopy = containerCopy.get().valueAsAttributeVector();
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_TRUE(attributeCopy.source().empty());
+  }
+
+  // json and back
+  QVariant variant = detail::toVariant(attributes);
+  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
+  // HERE  
+
+  // appy same source to all attributes
+
+  // xml and back
+
+  // json and back
+
+  // change one attribute's source to something different
+
+  // xml and back
+
+  // json and back
+
+}
