@@ -417,7 +417,11 @@ boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
 
 std::vector<openstudio::DateTime> SimFile::dateTimes() const
 {
-  return std::vector<openstudio::DateTime>(m_dateTimes.begin()+1,m_dateTimes.end());
+  if(m_dateTimes.size() == 1) {
+    return std::vector<openstudio::DateTime>(m_dateTimes.begin(),m_dateTimes.end());
+  } else {
+    return std::vector<openstudio::DateTime>(m_dateTimes.begin()+1,m_dateTimes.end());
+  }
 }
 
 /*
