@@ -65,7 +65,7 @@ if ARGV[2] and /[tT]rue/.match(ARGV[2])
 end
 
 # find EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 ep_parent_path = ep_path.parent_path();
 idd_path = OpenStudio::Path.new(ep_hash[:energyplus_idd].to_s)
