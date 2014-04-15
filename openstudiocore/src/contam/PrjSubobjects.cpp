@@ -24,22 +24,22 @@ namespace contam {
 
 WeatherData::WeatherData()
 {
-  d = new detail::WeatherDataImpl;
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl);
 }
 
 WeatherData::WeatherData(std::string Tambt,std::string barpres,std::string windspd,std::string winddir,std::string relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  d = new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
 }
 
 WeatherData::WeatherData(double Tambt,double barpres,double windspd,double winddir,double relhum,int daytyp,
                          int uTa,int ubP,int uws,int uwd)
 {
-  d = new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
 }
 
-WeatherData::WeatherData(const WeatherData &other) : d(other.d)
+WeatherData::WeatherData(const WeatherData &other) : m_impl(other.m_impl)
 {}
 
 WeatherData::~WeatherData()
@@ -47,166 +47,166 @@ WeatherData::~WeatherData()
 
 WeatherData& WeatherData::operator=(const WeatherData &other)
 {
-  d = other.d;
+  m_impl = other.m_impl;
   return *this;
 }
 
 bool WeatherData::operator==(const WeatherData &other) const
 {
-  return d==other.d;
+  return m_impl==other.m_impl;
 }
 
 bool WeatherData::operator!=(const WeatherData &other) const
 {
-  return d!=other.d;
+  return m_impl!=other.m_impl;
 }
 
 std::string WeatherData::write()
 {
-  return d->write();
+  return m_impl->write();
 }
 
 void WeatherData::read(Reader &input)
 {
-  d->read(input);
+  m_impl->read(input);
 }
 
 double WeatherData::Tambt() const
 {
-  return d->Tambt();
+  return m_impl->Tambt();
 }
 
 bool WeatherData::setTambt(const double Tambt)
 {
-  return d->setTambt(Tambt);
+  return m_impl->setTambt(Tambt);
 }
 
 bool WeatherData::setTambt(const std::string &Tambt)
 {
-  return d->setTambt(Tambt);
+  return m_impl->setTambt(Tambt);
 }
 
 double WeatherData::barpres() const
 {
-  return d->barpres();
+  return m_impl->barpres();
 }
 
 bool WeatherData::setBarpres(const double barpres)
 {
-  return d->setBarpres(barpres);
+  return m_impl->setBarpres(barpres);
 }
 
 bool WeatherData::setBarpres(const std::string &barpres)
 {
-  return d->setBarpres(barpres);
+  return m_impl->setBarpres(barpres);
 }
 
 double WeatherData::windspd() const
 {
-  return d->windspd();
+  return m_impl->windspd();
 }
 
 bool WeatherData::setWindspd(const double windspd)
 {
-  return d->setWindspd(windspd);
+  return m_impl->setWindspd(windspd);
 }
 
 bool WeatherData::setWindspd(const std::string &windspd)
 {
-  return d->setWindspd(windspd);
+  return m_impl->setWindspd(windspd);
 }
 
 double WeatherData::winddir() const
 {
-  return d->winddir();
+  return m_impl->winddir();
 }
 
 bool WeatherData::setWinddir(const double winddir)
 {
-  return d->setWinddir(winddir);
+  return m_impl->setWinddir(winddir);
 }
 
 bool WeatherData::setWinddir(const std::string &winddir)
 {
-  return d->setWinddir(winddir);
+  return m_impl->setWinddir(winddir);
 }
 
 double WeatherData::relhum() const
 {
-  return d->relhum();
+  return m_impl->relhum();
 }
 
 bool WeatherData::setRelhum(const double relhum)
 {
-  return d->setRelhum(relhum);
+  return m_impl->setRelhum(relhum);
 }
 
 bool WeatherData::setRelhum(const std::string &relhum)
 {
-  return d->setRelhum(relhum);
+  return m_impl->setRelhum(relhum);
 }
 
 int WeatherData::daytyp() const
 {
-  return d->daytyp();
+  return m_impl->daytyp();
 }
 
 void WeatherData::setDaytyp(const int daytyp)
 {
-  d->setDaytyp(daytyp);
+  m_impl->setDaytyp(daytyp);
 }
 
 int WeatherData::uTa() const
 {
-  return d->uTa();
+  return m_impl->uTa();
 }
 
 void WeatherData::setUTa(const int uTa)
 {
-  d->setUTa(uTa);
+  m_impl->setUTa(uTa);
 }
 
 int WeatherData::ubP() const
 {
-  return d->ubP();
+  return m_impl->ubP();
 }
 
 void WeatherData::setUbP(const int ubP)
 {
-  d->setUbP(ubP);
+  m_impl->setUbP(ubP);
 }
 
 int WeatherData::uws() const
 {
-  return d->uws();
+  return m_impl->uws();
 }
 
 void WeatherData::setUws(const int uws)
 {
-  d->setUws(uws);
+  m_impl->setUws(uws);
 }
 
 int WeatherData::uwd() const
 {
-  return d->uwd();
+  return m_impl->uwd();
 }
 
 void WeatherData::setUwd(const int uwd)
 {
-  d->setUwd(uwd);
+  m_impl->setUwd(uwd);
 }
 
 Icon::Icon()
 {
-  d = new detail::IconImpl();
+  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl());
 }
 
 Icon::Icon(int icon,int col,int row,int nr)
 {
-  d = new detail::IconImpl(icon,col,row,nr);
+  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr));
 }
 
-Icon::Icon(const Icon &other) : d(other.d)
+Icon::Icon(const Icon &other) : m_impl(other.m_impl)
 {}
 
 Icon::~Icon()
@@ -214,73 +214,73 @@ Icon::~Icon()
 
 Icon& Icon::operator=(const Icon &other)
 {
-  d = other.d;
+  m_impl = other.m_impl;
   return *this;
 }
 
 bool Icon::operator==(const Icon &other) const
 {
-  return d==other.d;
+  return m_impl==other.m_impl;
 }
 
 bool Icon::operator!=(const Icon &other) const
 {
-  return d!=other.d;
+  return m_impl!=other.m_impl;
 }
 
 std::string Icon::write()
 {
-  return d->write();
+  return m_impl->write();
 }
 
 void Icon::read(Reader &input)
 {
-  d->read(input);
+  m_impl->read(input);
 }
 
 int Icon::icon() const
 {
-  return d->icon();
+  return m_impl->icon();
 }
 
 void Icon::setIcon(const int icon)
 {
-  d->setIcon(icon);
+  m_impl->setIcon(icon);
 }
 
 int Icon::col() const
 {
-  return d->col();
+  return m_impl->col();
 }
 
 void Icon::setCol(const int col)
 {
-  d->setCol(col);
+  m_impl->setCol(col);
 }
 
 int Icon::row() const
 {
-  return d->row();
+  return m_impl->row();
 }
 
 void Icon::setRow(const int row)
 {
-  d->setRow(row);
+  m_impl->setRow(row);
 }
 
 int Icon::nr() const
 {
-  return d->nr();
+  return m_impl->nr();
 }
 
 void Icon::setNr(const int nr)
 {
-  d->setNr(nr);
+  m_impl->setNr(nr);
 }
 
 bool Icon::isWall()
 {
-  return d->isWall();
+  return m_impl->isWall();
 }
 
 void FanDataPoint::setDefaults()

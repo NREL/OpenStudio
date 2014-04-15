@@ -22,13 +22,12 @@
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
 #include "PrjSubobjects.hpp"
-#include <QSharedData>
 
 namespace openstudio {
 namespace contam {
 namespace detail {
 
-class PlrOrfImpl : public QSharedData
+class PlrOrfImpl
 {
 public:
   PlrOrfImpl();
@@ -128,7 +127,7 @@ private:
   int m_u_D;  // units of diameter (I2) {X}
 };
 
-class PlrLeakImpl : public QSharedData
+class PlrLeakImpl
 {
 public:
   PlrLeakImpl();
@@ -243,7 +242,7 @@ private:
   int m_u_dP;  // units of pressure (I2) {W}
 };
 
-class PlrConnImpl : public QSharedData
+class PlrConnImpl
 {
 public:
   PlrConnImpl();
@@ -324,7 +323,7 @@ private:
   int m_u_A;  // units of area (I2) {W}
 };
 
-class PlrGeneralImpl : public QSharedData
+class PlrGeneralImpl
 {
 public:
   PlrGeneralImpl();
@@ -382,7 +381,7 @@ private:
   PRJFLOAT m_expt;  // pressure exponent (R4)
 };
 
-class PlrTest1Impl : public QSharedData
+class PlrTest1Impl
 {
 public:
   PlrTest1Impl();
@@ -466,7 +465,7 @@ private:
   int m_u_F;  // units of flow (I2) {W}
 };
 
-class PlrTest2Impl : public QSharedData
+class PlrTest2Impl
 {
 public:
   PlrTest2Impl();
@@ -576,7 +575,7 @@ private:
   int m_u_F2;  // units of flow (I2) {W}
 };
 
-class PlrCrackImpl : public QSharedData
+class PlrCrackImpl
 {
 public:
   PlrCrackImpl();
@@ -660,7 +659,7 @@ private:
   int m_u_W;  // units of width (I2) {W}
 };
 
-class PlrStairImpl : public QSharedData
+class PlrStairImpl
 {
 public:
   PlrStairImpl();
@@ -756,7 +755,7 @@ private:
   int m_u_D;  // units of distance (I2) {W}
 };
 
-class PlrShaftImpl : public QSharedData
+class PlrShaftImpl
 {
 public:
   PlrShaftImpl();
@@ -867,7 +866,7 @@ private:
   int m_u_R;  // units of roughness (I2) {W}
 };
 
-class PlrBackDamperImpl : public QSharedData
+class PlrBackDamperImpl
 {
 public:
   PlrBackDamperImpl();
@@ -939,7 +938,7 @@ private:
   PRJFLOAT m_xn;  // pressure exponent ( dP < 0 ) {R4}
 };
 
-class QfrQuadraticImpl : public QSharedData
+class QfrQuadraticImpl
 {
 public:
   QfrQuadraticImpl();
@@ -989,7 +988,7 @@ private:
   PRJFLOAT m_b;  // {R4}
 };
 
-class QfrCrackImpl : public QSharedData
+class QfrCrackImpl
 {
 public:
   QfrCrackImpl();
@@ -1089,7 +1088,7 @@ private:
   int m_u_D;  // units of depth (IX)
 };
 
-class QfrTest2Impl : public QSharedData
+class QfrTest2Impl
 {
 public:
   QfrTest2Impl();
@@ -1190,7 +1189,7 @@ private:
   int m_u_F2;  // units of flow (I2) {W}
 };
 
-class AfeDorImpl : public QSharedData
+class AfeDorImpl
 {
 public:
   AfeDorImpl();
@@ -1296,7 +1295,7 @@ private:
   int m_u_W;  // units of width (I2) {W}
 };
 
-class DrPl2Impl : public QSharedData
+class DrPl2Impl
 {
 public:
   DrPl2Impl();
@@ -1397,7 +1396,7 @@ private:
   int m_u_W;  // units of width (I2) {W}
 };
 
-class AfeFlowImpl : public QSharedData
+class AfeFlowImpl
 {
 public:
   AfeFlowImpl();
@@ -1446,7 +1445,7 @@ private:
   int m_u_F;  // units of flow (I2) {W}
 };
 
-class AfeFanImpl : public QSharedData
+class AfeFanImpl
 {
 public:
   AfeFanImpl();
@@ -1562,7 +1561,7 @@ private:
   std::vector<FanDataPoint> m_data;  // measured fan data points (FanDataPoint)
 };
 
-class AfeCsfImpl : public QSharedData
+class AfeCsfImpl
 {
 public:
   AfeCsfImpl();
@@ -1613,7 +1612,7 @@ private:
   std::vector<DataPoint> m_data;  // data points (DataPoint)
 };
 
-class AfeSupImpl : public QSharedData
+class AfeSupImpl
 {
 public:
   AfeSupImpl();

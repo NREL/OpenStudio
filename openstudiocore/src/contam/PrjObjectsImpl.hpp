@@ -22,13 +22,12 @@
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
 #include "PrjSubobjects.hpp"
-#include <QSharedData>
 
 namespace openstudio {
 namespace contam {
 namespace detail {
 
-class ZoneImpl : public QSharedData
+class ZoneImpl
 {
 public:
   ZoneImpl();
@@ -244,7 +243,7 @@ private:
 
 };
 
-class SpeciesImpl : public QSharedData
+class SpeciesImpl
 {
 public:
   /** @name Constructors */
@@ -374,7 +373,7 @@ private:
   std::string m_desc;  // species description (CS) {W}
 };
 
-class AhsImpl : public QSharedData
+class AhsImpl
 {
 public:
   AhsImpl();
@@ -428,7 +427,7 @@ private:
   std::string m_desc;  // AHS description (CS) {W} may be blank
 };
 
-class PathImpl : public QSharedData
+class PathImpl
 {
 public:
   PathImpl();
@@ -640,7 +639,7 @@ private:
   int m_cfd_capp;  // coupling approach (1=pressure-pressure) (I2)
 };
 
-class RunControlImpl : public QSharedData
+class RunControlImpl
 {
 public:
   RunControlImpl();
@@ -1252,7 +1251,7 @@ private:
   int m_cfd_dtcmo;  // number of iterations between outputs to .cmo file (I2)
 };
 
-class LevelImpl : public QSharedData
+class LevelImpl
 {
 public:
   LevelImpl();
@@ -1307,7 +1306,7 @@ private:
   std::vector<Icon> m_icons;  // level icons (Icon)
 };
 
-class DayScheduleImpl : public QSharedData
+class DayScheduleImpl
 {
 public:
   DayScheduleImpl();
@@ -1357,7 +1356,7 @@ private:
   std::vector<SchedulePoint> m_points;  // control points (SchedulePoint)
 };
 
-class WeekScheduleImpl : public QSharedData
+class WeekScheduleImpl
 {
 public:
   WeekScheduleImpl();
@@ -1401,7 +1400,7 @@ private:
   std::vector<int> m_j;  // 12 day schedule indices (IX) - converted to pointers
 };
 
-class WindPressureProfileImpl : public QSharedData
+class WindPressureProfileImpl
 {
 public:
   WindPressureProfileImpl();
@@ -1443,7 +1442,7 @@ private:
 
 };
 
-class CdvDatImpl : public QSharedData
+class CdvDatImpl
 {
 public:
   CdvDatImpl();
