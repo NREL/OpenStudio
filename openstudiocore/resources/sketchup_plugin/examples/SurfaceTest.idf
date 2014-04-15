@@ -86,7 +86,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.0;
+  Version,8.1;
 
   Timestep,4;
 
@@ -552,6 +552,8 @@
     zoneaveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     Work Eff Sch,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     Clothing Sch,            !- Clothing Insulation Schedule Name
     Air Velo Sch,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -598,6 +600,8 @@
     zoneaveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     Work Eff Sch,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     Clothing Sch,            !- Clothing Insulation Schedule Name
     Air Velo Sch,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -644,6 +648,8 @@
     zoneaveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     Work Eff Sch,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     Clothing Sch,            !- Clothing Insulation Schedule Name
     Air Velo Sch,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -690,6 +696,8 @@
     zoneaveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     Work Eff Sch,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     Clothing Sch,            !- Clothing Insulation Schedule Name
     Air Velo Sch,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -736,6 +744,8 @@
     zoneaveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     Work Eff Sch,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     Clothing Sch,            !- Clothing Insulation Schedule Name
     Air Velo Sch,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
