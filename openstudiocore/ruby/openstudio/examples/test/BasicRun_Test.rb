@@ -33,7 +33,7 @@ class BasicRun_Test < Test::Unit::TestCase
   def test_BasicRun
     idfPathAndFilename = OpenStudio::Path.new($OpenStudio_ResourcePath + "resultsviewer/SmallOffice/in.idf")  
     # find EnergyPlus
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     weatherDir = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
     weatherPathAndFilename = weatherDir / OpenStudio::Path.new("USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
     outputDirectory = OpenStudio::Path.new
