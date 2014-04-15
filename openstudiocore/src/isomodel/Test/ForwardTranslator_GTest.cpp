@@ -76,7 +76,6 @@ TEST_F(ISOModelFixture, ForwardTranslator)
 
   EXPECT_GT(elec, 0);
   EXPECT_GT(gas, 0);
-  EXPECT_NEAR(1.1856e11, elec, 0.1e11);
-  EXPECT_NEAR(4.7223e10, gas, 0.1e10);
+  EXPECT_NEAR(118.32e9, elec, 10e9); // J, running exampleModel from OS 1.3.1 in E+ 8.0
+  EXPECT_NEAR(46.50e9, gas, 10e9); // J, running exampleModel from OS 1.3.1 in E+ 8.0
 }
-
