@@ -32,7 +32,7 @@ module OpenStudio
         # register each release version
         case match_data[1].to_s
           when "8-1-0"
-            version = 8
+            version = 9
           when "8-0-0"
             version = 8
           when "7-2-0"

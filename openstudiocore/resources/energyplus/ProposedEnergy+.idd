@@ -1,4 +1,4 @@
-!IDD_Version 8.1.0.008
+!IDD_Version 8.1.0.009
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
 ! The IDD defines the syntax and data model for each type of input "Object."
@@ -7246,7 +7246,7 @@ SurfaceConvectionAlgorithm:Inside:AdaptiveModelSelections,
        \key ISO15099Windows
        \key UserCurve
   A3 , \field Simple Bouyancy Vertical Wall User Curve Name
-       \note The SurfaceConvectionAlgorithm:UserCurve named in this field is used when the previous field is set to UserCurve
+       \note The SurfaceConvectionAlgorithm:Inside:UserCurve named in this field is used when the previous field is set to UserCurve
        \type object-list
        \object-list UserConvectionInsideModels
   A4 , \field Simple Bouyancy Stable Horizontal Equation Source
@@ -41999,6 +41999,7 @@ EnergyManagementSystem:ProgramCallingManager,
        \key EndOfSystemSizing
        \key AfterComponentInputReadIn
        \key UserDefinedComponentModel
+       \key UnitarySystemSizing
   A3 ; \field Program Name 1
        \begin-extensible
        \required-field
@@ -45589,6 +45590,7 @@ Refrigeration:AirChiller,
         \object-list ScheduleNames
   A3 ,  \field Capacity Rating Type
         \required-field
+        \type choice
         \note In each case, select the rating option that corresponds to the expected service conditions.
         \note For example, U.S. manufacturers quote a separate Unit Load Factor for wet or frosted coils.
         \note If the evaporating temperature is less than 0C, input the frosted coil value.
@@ -46626,11 +46628,11 @@ PhotovoltaicPerformance:EquivalentOne-Diode,
          \units V
          \minimum 0.0
    N12, \field Temperature Coefficient of Short Circuit Current
-         \default -0.079
+         \default 0.02
          \type real
          \units A/K
    N13, \field Temperature Coefficient of Open Circuit Voltage
-         \default 0.02
+         \default -0.079
          \type real
          \units V/K
    N14, \field Nominal Operating Cell Temperature Test Ambient Temperature
