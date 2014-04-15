@@ -116,16 +116,29 @@ namespace detail {
     return modelObjectClone;
   }
 
+  std::vector<ModelObject> AirLoopHVACUnitarySystem_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    if( boost::optional<HVACComponent> supplyFan = this->supplyFan()) {
+      result.push_back( *supplyFan );
+    }
+    if( boost::optional<HVACComponent> coolingCoil = this->coolingCoil()) {
+      result.push_back( *coolingCoil );
+    }
+    if( boost::optional<HVACComponent> heatingCoil = this->heatingCoil()) {
+      result.push_back( *heatingCoil );
+    }
+    if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
+      result.push_back( *supplementalHeatingCoil );
+    }
+
+    return result;
+  }
+
   bool AirLoopHVACUnitarySystem_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
-    {
-      return WaterToAirComponent_Impl::addToNode(node);
-    }
-    else
-    {
-      return false;
-    }
+    return WaterToAirComponent_Impl::addToNode(node);
   }
 
   unsigned AirLoopHVACUnitarySystem_Impl::airInletPort()
@@ -1095,6 +1108,35 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitarySystem_Impl>());
 
   bool ok = true;
+  ok = setControlType("Load");
+  OS_ASSERT(ok);
+  ok = setDehumidificationControlType("None");
+  OS_ASSERT(ok);
+  ok = setDXHeatingCoilSizingRatio(1.0);
+  OS_ASSERT(ok);
+  setUseDOASDXCoolingCoil(false);
+  ok = setDOASDXCoolingCoilLeavingMinimumAirTemperature(2.0);
+  OS_ASSERT(ok);
+  ok = setLatentLoadControl("SensibleOnlyLoadControl");
+  OS_ASSERT(ok);
+  autosizeSupplyAirFlowRateDuringCoolingOperation();
+  autosizeSupplyAirFlowRateDuringHeatingOperation();
+  autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+  setMaximumSupplyAirTemperature(80.0);
+  setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
+  ok = setMaximumCyclingRate(2.5);
+  OS_ASSERT(ok);
+  ok = setHeatPumpTimeConstant(60.0);
+  OS_ASSERT(ok);
+  ok = setFractionofOnCyclePowerUse(0.01);
+  OS_ASSERT(ok);
+  ok = setHeatPumpFanDelayTime(60);
+  OS_ASSERT(ok);
+  ok = setAncilliaryOnCycleElectricPower(0.0);
+  OS_ASSERT(ok);
+  ok = setAncilliaryOffCycleElectricPower(0.0);
+  OS_ASSERT(ok);
+  ok = setMaximumTemperatureforHeatRecovery(80.0);
   OS_ASSERT(ok);
 }
 

@@ -228,7 +228,7 @@ namespace detail {
           return *it;
         }
       }
-      else if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
       {
         if( suppHeatingCoil->handle() == this->handle() )
         {
