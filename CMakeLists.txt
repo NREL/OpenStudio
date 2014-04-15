@@ -4,7 +4,7 @@ PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
 SET(CMAKE_VERSION_MINOR 3)
-SET(CMAKE_VERSION_PATCH 0)
+SET(CMAKE_VERSION_PATCH 1)
 
 SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 FIND_PACKAGE(Git)
@@ -16,7 +16,7 @@ IF(GIT_FOUND)
                   OUTPUT_VARIABLE GIT_VERSION
                   ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
-  IF(${RESULT} EQUAL 0)
+  IF(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
     SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
   ENDIF()
 ENDIF()
@@ -34,7 +34,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
-OPTION( BUILD_DOCUMENTATION "Build Documenation" OFF )
+OPTION( BUILD_DOCUMENTATION "Build Documentation" OFF )
 
 IF(BUILD_DOCUMENTATION)
   Find_Package( Doxygen REQUIRED )
@@ -79,20 +79,23 @@ IF(UNIX)
   ENDIF()
 ELSEIF(WIN32)
   IF(CMAKE_CL_64)
-    SET(OPENSSL_PATH "OpenSSL-Win64")
-    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-      MESSAGE(STATUS "Downloading OpenSSL (x64)")
-    ENDIF()
-    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win64.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 974FDD1EDD3CBDCC54A0EEEE0DBB00CC)
+    SET(OPENSSL_ARCH 64)
+    SET(OPENSSL_EXPECTED_HASH b63ff40c9d4f94aef43e3c4d8085a5c5)
   ELSE()
-    SET(OPENSSL_PATH "OpenSSL-Win32")
-    IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-      MESSAGE(STATUS "Downloading OpenSSL (x86)")
-    ENDIF()
-    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win32.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 890EA14E30C5BE3C4F9298DBC516AA33)
+    SET(OPENSSL_ARCH 32)
+    SET(OPENSSL_EXPECTED_HASH 507b6a190e282ab3018ee4a69371f6d8)
   ENDIF()
-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-  EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  SET(OPENSSL_VERSION "1.0.1g")
+  SET(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
+  IF(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
+    FILE(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
+  ENDIF()
+  IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
+    MESSAGE(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
+    FILE(DOWNLOAD "http://developer.nrel.gov/downloads/buildings/openstudio/src/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  ENDIF()
   SET(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 ENDIF()
 
@@ -490,6 +493,11 @@ IF(BUILD_BOOST)
   ELSE()
     # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't 
     # be trying to find it
+    
+    SET(B2_TOOLSET "")
+    IF(MSVC90)
+      SET(B2_TOOLSET "toolset=msvc-9.0")
+    ENDIF(MSVC90)
 
     IF(CMAKE_CL_64)
       ExternalProject_Add( Boost
@@ -497,7 +505,7 @@ IF(BUILD_BOOST)
         URL_MD5 b0d9b288627b6a57d41d425d4f467592
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 link=static address-model=64 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ELSE()
@@ -506,7 +514,7 @@ IF(BUILD_BOOST)
         URL_MD5 b0d9b288627b6a57d41d425d4f467592
         PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 link=static address-model=32 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ENDIF()
@@ -726,17 +734,26 @@ ExternalProject_Add( OpenStudioCore
 )
 
 if (BUILD_QT AND MSVC)
-  # Install Qt DLL's to Release directory. This is brute force-ish, it copies all files in the bin folder
-  ExternalProject_Add_Step(OpenStudioCore InstallQtReleaseDLLs
-     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
-     DEPENDERS configure
-   )     
-   
-  # Install Qt DLL's to Debug directory. This is brute force-ish, it copies all files in the bin folder
-  ExternalProject_Add_Step(OpenStudioCore InstallQtDebugDLLs
-     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug
-     DEPENDERS configure
-   )     
+  file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
+  foreach(dll ${dlls})
+    get_filename_component(filename "${dll}" NAME_WE)
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}ReleaseDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}DebugDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Debug"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}RelWithDebInfoDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/RelWithDebInfo"
+       DEPENDERS configure
+     )
+    ExternalProject_Add_Step(OpenStudioCore "Install${filename}MinSizeRelDLL"
+       COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/MinSizeRel"
+       DEPENDERS configure
+     )
+  endforeach()
 endif()
 
 if (BUILD_RUBY AND MSVC)

@@ -312,6 +312,9 @@ namespace detail {
       /// Connected to m_process
       void processStatusChanged(const openstudio::runmanager::AdvancedStatus &t_stat);
 
+      /// handles processing of output files
+      void processResultFiles(const openstudio::path &t_outpath, const Files &t_outfiles);
+
   }; 
 
 }

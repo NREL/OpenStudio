@@ -133,7 +133,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
         model().connect( demandInletNode.get(), demandInletNode->outletPort(), 
                          demandOutletNode.get(), demandOutletNode->inletPort() );
       }
-      // If the component is at the very end of the supply path, but there is another component preceeding this one.
+      // If the component is at the very end of the supply path, but there is another component preceding this one.
       else if( demandOutletNode->handle() == outletModelObject()->handle() )
       {
         model().disconnect(thisObject,outletPort()); 
@@ -218,7 +218,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
         model().connect( supplyInletNode.get(), supplyInletNode->outletPort(), 
                          supplyOutletNode.get(), supplyOutletNode->inletPort() );
       }
-      // If the component is at the very end of the supply path, but there is another component preceeding this one.
+      // If the component is at the very end of the supply path, but there is another component preceding this one.
       else if( supplyOutletNode->handle() == outletModelObject()->handle() )
       {
         model().disconnect(thisObject,outletPort()); 

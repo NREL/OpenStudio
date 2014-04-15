@@ -118,6 +118,12 @@ HVACToolbarView::HVACToolbarView()
   zoomButtonGroup->addButton(controlsViewButton);
   controlLayout->addWidget(controlsViewButton);
 
+  gridViewButton = new GrayButton();
+  gridViewButton->setCheckable(true);
+  gridViewButton->setText("Grid");
+  zoomButtonGroup->addButton(gridViewButton);
+  controlLayout->addWidget(gridViewButton);
+
   topologyViewButton->setChecked(true);
 
   controlLayout->addStretch();

@@ -66,6 +66,10 @@
 #include <model/BoilerHotWater_Impl.hpp>
 #include <model/SizingParameters.hpp>
 #include <model/SizingParameters_Impl.hpp>
+#include <model/SiteWaterMainsTemperature.hpp>
+#include <model/SiteWaterMainsTemperature_Impl.hpp>
+#include <model/Schedule.hpp>
+#include <model/Schedule_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -409,6 +413,10 @@ namespace sdd {
         }
       }
 
+      // do water mains temperatures, do after schedules
+      boost::optional<model::ModelObject> waterMainsTemperature = translateWaterMainsTemperature(projectElement, doc, *result);
+      //OS_ASSERT(waterMainsTemperature); // what type of error handling do we want?
+
       // FluidSys
       QDomNodeList fluidSysElements = projectElement.elementsByTagName("FluidSys");
       if (m_progressBar){
@@ -526,9 +534,20 @@ namespace sdd {
         }
       }
 
-      // request 15 min timestep
-      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-      timestep.setNumberOfTimestepsPerHour(4);
+      bool ok;
+      // timestep
+      QDomElement numTimeStepsPerHrElement = projectElement.firstChildElement("NumTimeStepsPerHr");
+      int numTimeStepsPerHr = numTimeStepsPerHrElement.text().toInt(&ok);
+      if( ok )
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(numTimeStepsPerHr);
+      }
+      else
+      {
+        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+        timestep.setNumberOfTimestepsPerHour(4);
+      }
 
       // request output meters for TDV calculations
       std::set<int> fuelTypes = FuelType::getValues();
@@ -1043,6 +1062,23 @@ namespace sdd {
     site.setTimeZone(-8.0);
 
     return site;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWaterMainsTemperature(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  {
+    //<WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
+
+    QDomElement wtrMnTempSchRefElement = element.firstChildElement("WtrMnTempSchRef");
+    if (!wtrMnTempSchRefElement.isNull()){
+      boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(wtrMnTempSchRefElement.text().toStdString());
+      if (schedule){
+        model::SiteWaterMainsTemperature waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
+        waterMains.setTemperatureSchedule(*schedule);
+        return waterMains;
+      }
+    }
+
+    return boost::none;
   }
 
   std::vector<WorkspaceObject> ReverseTranslator::translateDesignDays(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)

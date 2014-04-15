@@ -71,7 +71,7 @@ namespace runmanager {
   /// Operator overload for streaming ToolLocationInfo to ostream
   RUNMANAGER_API std::ostream &operator<<(std::ostream &os, const ToolLocationInfo &epi);
 
-     
+
   //! Stores configuration options for the runmanager project
   //! \sa openstudio::runmanager::Configuration
   class RUNMANAGER_API ConfigOptions
@@ -86,6 +86,9 @@ namespace runmanager {
 
       //! Automatically find EnergyPlus if it is in a well defined, known place, then add to ConfigOptions
       void fastFindEnergyPlus();
+
+      //! Automatically find Radiance if it is in a well defined, known place, then add to ConfigOptions
+      void fastFindRadiance();
 
       //! Saves the tools to the appropriate QSettings location.
       void saveQSettings() const;
@@ -293,6 +296,9 @@ namespace runmanager {
       REGISTER_LOGGER("RunManager.ConfigOptions");
       //! Returns a vector of paths that may contain EnergyPlus
       std::vector<openstudio::path> potentialEnergyPlusLocations() const;
+
+      //! Returns a vector of paths that may contain Radiance
+      std::vector<openstudio::path> potentialRadianceLocations() const;
 
       void saveQSettings(const std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> > &t_tools) const;
       std::vector<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> > loadQSettingsTools() const;

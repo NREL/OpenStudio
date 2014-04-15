@@ -196,14 +196,14 @@ end
 # execute DaylightSim to create daylighting coefficients
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc --x")
 if not result
-  puts "failed to run DaylightSim"
+  puts "failed to run DaylightSim for daylight coefficients"
   exit false
 end
 
 # execute DaylightSim to run annual simulation
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts --x")
 if not result
-  puts "failed to run DaylightSim"
+  puts "failed to run DaylightSim for annual daylight simulation"
   exit false
 end
 

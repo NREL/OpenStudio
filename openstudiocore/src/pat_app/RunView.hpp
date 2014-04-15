@@ -37,6 +37,7 @@
 #include <QProgressBar>
 
 class QPushButton;
+class QRadioButton;
 
 namespace openstudio{
 
@@ -92,6 +93,7 @@ class RunStatusView : public QWidget
 
    QString m_runText;
 
+
    CloudOnButton * cloudOnButton;
 
    CloudStartingButton * cloudStartingButton;
@@ -108,9 +110,15 @@ class RunStatusView : public QWidget
 
    void dataPointResultsCleared(const openstudio::UUID& dataPoint);
 
+   void radianceEnabledChanged(bool enabled);
+
  public slots:
    
   void setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus);
+
+  void setRadianceEnabled(bool t_radianceEnabled);
+
+  void radianceToggled(bool t_state);
 
  private slots:
 
@@ -139,6 +147,9 @@ class RunStatusView : public QWidget
   QLabel * m_cloudTime;
   QLabel * m_cloudInstances;
   QTimer * m_timer;
+  QRadioButton *m_energyPlus;
+  QRadioButton *m_radiance;
+  bool m_disableRadianceEvents;
 };
 
 class DataPointRunHeaderView : public OSHeader
@@ -283,8 +294,9 @@ class DataPointJobContentView : public QWidget
   void addStdErrorMessage(const std::string& message);
 
  private:
+  static QString formatMessageForHTML(const std::string &t_message);
 
-   QLabel * m_textEdit;
+  QLabel * m_textEdit;
 
 };
 

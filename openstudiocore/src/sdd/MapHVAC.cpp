@@ -805,20 +805,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
             hvacComponent.addToNode(dropNode.get());
 
-            if( ! autosize() )
+            if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
             {
-              if( boost::optional<model::CoilCoolingWater> coilCoolingWater = hvacComponent.optionalCast<model::CoilCoolingWater>() )
+              boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
+              OS_ASSERT(controller);
+
+              controller->setMinimumActuatedFlow(0.0);
+
+              if( ! autosize() )
               {
-                boost::optional<model::ControllerWaterCoil> controller = coilCoolingWater->controllerWaterCoil();
-
-                OS_ASSERT(controller);
-
                 controller->setControllerConvergenceTolerance(0.1);
-
                 boost::optional<double> maxFlow = coilCoolingWater->designWaterFlowRate();
-
                 OS_ASSERT(maxFlow);
-
                 controller->setMaximumActuatedFlow(maxFlow.get() * 1.25);
               }
             }
@@ -844,10 +842,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           if( boost::optional<model::CoilHeatingWater> coilHeatingWater = hvacComponent.optionalCast<model::CoilHeatingWater>() )
           {
             boost::optional<model::ControllerWaterCoil> controller = coilHeatingWater->controllerWaterCoil();
-
             OS_ASSERT(controller);
 
             controller->setControllerConvergenceTolerance(0.1);
+            controller->setMinimumActuatedFlow(0.0);
 
             if( ! autosize() )
             {
@@ -870,12 +868,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               double maxFlow = capacity.get() / ( density * cp * std::abs(inletTemp.get() - outletTemp.get()));
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
-
-              controller->setMinimumActuatedFlow(maxFlow * 1.25 * 0.05);
-            }
-            else
-            {
-              controller->setMinimumActuatedFlow(0.000001);
             }
           }
         }
@@ -2507,6 +2499,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coilCooling.setName(nameElement.text().toStdString());
 
+    coilCooling.setTypeOfAnalysis("DetailedAnalysis");
+
     // Plant
 
     QDomElement fluidSegNameElement = coolingCoilElement.firstChildElement("FluidSegInRef");
@@ -2517,6 +2511,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     {
       plant->addDemandBranchForComponent(coilCooling);
     }
+
+    coilCooling.autosizeDesignInletAirTemperature();
+    coilCooling.autosizeDesignOutletAirTemperature();
+    coilCooling.autosizeDesignInletAirHumidityRatio();
+    coilCooling.autosizeDesignOutletAirHumidityRatio();
 
     if( ! autosize() )
     {
@@ -2529,40 +2528,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       // Design defaults
 
       coilCooling.setDesignInletWaterTemperature(7.22); // From Sizing Plant
-
-      coilCooling.setDesignInletAirTemperature(25.0); // Assumption
-
-      coilCooling.setDesignOutletAirTemperature(12.8); // From Sizing System
-
-      coilCooling.setDesignInletAirHumidityRatio(0.012); // Assumption
-
-      coilCooling.setDesignOutletAirHumidityRatio(0.0085); // From Sizing System
-
-      // Find related/containing systems (aka figure out the context of the coil)
-
-      QDomElement sysElement;
-
-      QDomElement airSysElement = coolingCoilElement.parentNode().parentNode().toElement();
-
-      QDomElement znSysElement = coolingCoilElement.parentNode().toElement();
-
-      if( airSysElement.tagName().compare("AirSys",Qt::CaseInsensitive) == 0 )
-      {
-        sysElement = airSysElement;
-      }
-      else if( znSysElement.tagName().compare("ZnSys",Qt::CaseInsensitive) == 0 )
-      {
-        sysElement = znSysElement;
-      }
-
-      QDomElement clgDsgnSupAirTempElement = sysElement.firstChildElement("ClgDsgnSupAirTemp");
-
-      value = clgDsgnSupAirTempElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        coilCooling.setDesignOutletAirTemperature(unitToUnit(value,"F","C").get());
-      }
 
       if( plant )
       {
@@ -2630,6 +2595,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }else{
       LOG(Error, "Unknown thermal zone type '" << toString(typeElement.text()) << "'");
     }
+  }
+
+  // Volume
+  QDomElement volElement = thermalZoneElement.firstChildElement("VolSim");
+  if (!volElement.isNull()){
+    // sdd units = ft^3, os units = m^3
+    Quantity thermalZoneVolumeIP(volElement.text().toDouble(), BTUUnit(BTUExpnt(0,3,0,0)));
+    OptionalQuantity thermalZoneVolumeSI = QuantityConverter::instance().convert(thermalZoneVolumeIP, UnitSystem(UnitSystem::Wh));
+    OS_ASSERT(thermalZoneVolumeSI);
+    OS_ASSERT(thermalZoneVolumeSI->units() == WhUnit(WhExpnt(0,0,3,0)));
+    thermalZone.setVolume(thermalZoneVolumeSI->value());
   }
 
   // Sizing
@@ -3127,6 +3103,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement airSystemElement;
 
   // Add an air terminal to serve the zone
+  // Connect to plenum(s) if required
   if( airLoopHVAC )
   {
     bool terminalFound = false;
@@ -3198,6 +3175,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       }
 
       if( terminalFound ) { break; }
+    }
+
+    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RtnPlenumZnRef");
+    boost::optional<model::ThermalZone> returnPlenumZone;
+    returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().toStdString()); 
+    if( returnPlenumZone )
+    {
+      thermalZone.setReturnPlenum(returnPlenumZone.get());  
+    }
+
+    QDomElement supPlenumZnRefElement = thermalZoneElement.firstChildElement("SupPlenumZnRef");
+    boost::optional<model::ThermalZone> supplyPlenumZone;
+    supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().toStdString());
+    if( supplyPlenumZone )
+    {
+      thermalZone.setSupplyPlenum(supplyPlenumZone.get());
     }
   }
 
@@ -4614,6 +4607,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
     {
       tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
     }
+
+    tower.setDesignInletAirWetBulbTemperature(20.01);
 
     if( dsgnSupWtrTemp && wetBulbApproach )
     {

@@ -457,7 +457,7 @@ IF( BUILD_DOCUMENTATION )
   FOREACH( D ${doxygen_directories} )
     STRING( REPLACE "/" "_" DOC_NAME ${D} )
     IF( ${D} MATCHES "utilities/idd" )
-      # We want to build the idd documentation seperately because of the generated files
+      # We want to build the idd documentation separately because of the generated files
       SET( DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_FILES "" )
@@ -857,7 +857,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_2_0_20131220.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_3_0_20140328.pdf" DESTINATION . )
 
 ###############################################################################
 

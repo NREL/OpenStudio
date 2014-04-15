@@ -821,8 +821,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Equipment_Definition,"Water Use Equipment Definition");  
   myModelList->addModelObjectType(IddObjectType::OS_WaterUse_Connections,"Water Use Connections");  
   myModelList->addModelObjectType(IddObjectType::OS_ThermalZone,"Thermal Zone");  
+  myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_System,"Refrigeration System");
+  myModelList->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled,"Refrigeration Condenser Water Cooled");  
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_Water,"Coil Heating Water");
- // myModelList->addModelObjectType(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit,"Coil Heating Water To Air HP");
   myModelList->addModelObjectType(IddObjectType::OS_Coil_Cooling_Water,"Coil Cooling Water");
   myModelList->addModelObjectType(IddObjectType::OS_Chiller_Electric_EIR,"Chiller Electric EIR");
   myModelList->addModelObjectType(IddObjectType::OS_Schedule_Ruleset,"Schedules");
@@ -853,6 +854,9 @@ void MainRightColumnController::configureForHVACSystemsSubTab(int subTabID)
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_Mechanical,"Refrigeration Subcooler Mechanical");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction,"Refrigeration Subcooler Liquid Suction");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Compressor,"Refrigeration Compressor");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_Cascade,"Refrigeration Condenser Cascade");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_WaterCooled,"Refrigeration Condenser Water Cooled");
+  libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled,"Refrigeration Condenser Evaporative Cooled");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Condenser_AirCooled,"Refrigeration Condenser Air Cooled");
   libraryWidget->addModelObjectType(IddObjectType::OS_Refrigeration_Case,"Refrigeration Case");
   libraryWidget->addModelObjectType(IddObjectType::OS_Pump_ConstantSpeed,"Pump Constant Speed");

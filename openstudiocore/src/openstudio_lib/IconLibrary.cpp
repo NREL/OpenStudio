@@ -85,6 +85,10 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pipe_Adiabatic).value()] = new QPixmap(":images/pipe.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pump_ConstantSpeed).value()] = new QPixmap(":images/pump_constant.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Pump_VariableSpeed).value()] = new QPixmap(":images/pump_variable.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled).value()] = new QPixmap(":images/air_cooled.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade).value()] = new QPixmap(":images/condenser_cascade.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled).value()] = new QPixmap(":images/evap_cooled.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_WaterCooled).value()] = new QPixmap(":images/water_cooled.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ThermalZone).value()] = new QPixmap(":images/zone.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterHeater_Mixed).value()] = new QPixmap(":images/water_heater.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_WaterUse_Connections).value()] = new QPixmap(":images/water_connection.png");
@@ -156,6 +160,10 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Subcooler_LiquidSuction).value()] = new QPixmap(":images/mini_icons/mini_slhx.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_System).value()] = new QPixmap(":images/mini_icons/mini_refrigeration_system.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_WalkIn).value()] = new QPixmap(":images/mini_icons/mini_walkin_case.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_AirCooled).value()] = new QPixmap(":images/mini_icons/mini_air_cooled.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_Cascade).value()] = new QPixmap(":images/mini_icons/mini_condenser_cascade.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled).value()] = new QPixmap(":images/mini_icons/mini_evap_cooled.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Refrigeration_Condenser_WaterCooled).value()] = new QPixmap(":images/mini_icons/mini_water_cooled.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Schedule_Compact).value()] = new QPixmap(":images/mini_icons/schedule.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Schedule_Constant).value()] = new QPixmap(":images/mini_icons/schedule.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Schedule_FixedInterval).value()] = new QPixmap(":images/mini_icons/schedule.png");

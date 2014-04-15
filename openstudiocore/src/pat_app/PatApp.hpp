@@ -200,6 +200,8 @@ class PatApp : public QApplication, public BaseApp
 
   void exportXml();
 
+  void exportSpreadsheet();
+
   void openBclDlg();
 
   void on_closeBclDlg();
