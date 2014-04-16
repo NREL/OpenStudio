@@ -30,6 +30,7 @@
 #include <model/HVACComponent_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -132,6 +133,48 @@ namespace detail {
     if( boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
       result.push_back( *supplementalHeatingCoil );
     }
+
+    return result;
+  }
+
+  std::vector<IdfObject> AirLoopHVACUnitarySystem_Impl::remove()
+  {
+    std::vector<IdfObject> result;
+
+    if ( boost::optional<HVACComponent> _supplyFan = this->supplyFan() ) {
+      std::vector<IdfObject> removedFans = _supplyFan->remove();
+      result.insert(result.end(), removedFans.begin(), removedFans.end());
+    }
+
+    if (boost::optional<HVACComponent> _coolingCoil = this->coolingCoil()) {
+      if( boost::optional<PlantLoop> loop = _coolingCoil->plantLoop() )
+      {
+        loop->removeDemandBranchWithComponent(*_coolingCoil);
+      }
+      std::vector<IdfObject> removedCoolingCoils = _coolingCoil->remove();
+      result.insert(result.end(), removedCoolingCoils.begin(), removedCoolingCoils.end());
+    }
+
+    if (boost::optional<HVACComponent> _heatingCoil = this->heatingCoil()) {
+      if( boost::optional<PlantLoop> loop = _heatingCoil->plantLoop() )
+      {
+        loop->removeDemandBranchWithComponent(*_heatingCoil);
+      }
+      std::vector<IdfObject> removedHeatingCoils = _heatingCoil->remove();
+      result.insert(result.end(), removedHeatingCoils.begin(), removedHeatingCoils.end());
+    }
+
+    if (boost::optional<HVACComponent> _supplementalHeatingCoil = this->supplementalHeatingCoil()) {
+      if( boost::optional<PlantLoop> loop = _supplementalHeatingCoil->plantLoop() )
+      {
+        loop->removeDemandBranchWithComponent(*_supplementalHeatingCoil);
+      }
+      std::vector<IdfObject> removedSuppHeatingCoils = _supplementalHeatingCoil->remove();
+      result.insert(result.end(), removedSuppHeatingCoils.begin(), removedSuppHeatingCoils.end());
+    }
+
+    std::vector<IdfObject> removedUnitarySystem = WaterToAirComponent_Impl::remove();
+    result.insert(result.end(), removedUnitarySystem.begin(), removedUnitarySystem.end());
 
     return result;
   }

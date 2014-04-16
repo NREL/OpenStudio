@@ -67,6 +67,8 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const;
 
+    virtual std::vector<IdfObject> remove();
+
     virtual unsigned airInletPort();
    
     virtual unsigned airOutletPort();
