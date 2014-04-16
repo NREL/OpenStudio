@@ -261,13 +261,18 @@ namespace openstudio{
 
   // Private implementation functions
 
+  BoostPolygon removeSpikes(const BoostPolygon& polygon)
+  {
+    BoostPolygon temp(polygon);
+    boost::geometry::remove_spikes(temp);
+    return temp;
+  }
+
   std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
     BOOST_FOREACH(const BoostPolygon& polygon, polygons){
-      BoostPolygon temp(polygon);
-      boost::geometry::remove_spikes(temp);
-      result.push_back(temp);
+      result.push_back(removeSpikes(polygon));
     }
     return result;
   }
@@ -554,6 +559,23 @@ namespace openstudio{
   std::vector< std::vector<Point3d> > IntersectionResult::newPolygons2() const
   {
     return m_newPolygons2;
+  }
+  
+  std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol)
+  {
+    // convert vertices to boost rings
+    std::vector<Point3d> allPoints;
+    
+    boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+    if (!boostPolygon){
+      return std::vector<Point3d>();
+    }
+
+    BoostPolygon boostResult = removeSpikes(*boostPolygon);
+
+    std::vector<Point3d> result = verticesFromBoostPolygon(boostResult, allPoints, tol);
+
+    return result;
   }
   
   bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol)

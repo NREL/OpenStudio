@@ -56,6 +56,9 @@ namespace openstudio{
     std::vector< std::vector<Point3d> > m_newPolygons2;
   };
 
+  /// removes spikes from a polygon, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
+  UTILITIES_API std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol);
+  
   /// returns true if point is inside polygon, requires that all vertices are in counter clockwise order on the z = 0 plane (e.g. in face coordinates) 
   UTILITIES_API bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol);
   
