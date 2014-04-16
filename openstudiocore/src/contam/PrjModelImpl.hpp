@@ -370,9 +370,9 @@ public:
   void setZones(const std::vector<Zone> &zones);
   void addZone(Zone &zone);
 
-  std::vector<Path> paths() const;
-  void setPaths(const std::vector<Path> &paths);
-  void addPath(Path &path);
+  std::vector<AirflowPath> airflowPaths() const;
+  void setAirflowPaths(const std::vector<AirflowPath> &paths);
+  void addAirflowPath(AirflowPath &path);
 
   bool valid() const;
 
@@ -456,7 +456,7 @@ private:
   QVector<QSharedPointer<ControlNode> > m_controlNodes;
   std::vector<Ahs> m_ahs;
   std::vector<Zone> m_zones;
-  std::vector<Path> m_paths;
+  std::vector<AirflowPath> m_paths;
 };
 
 template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<T> vector, std::string label, int start)
@@ -480,7 +480,7 @@ template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<T>
 }
 
 template <class T> std::string IndexModelImpl::writeSectionVector(QVector<QSharedPointer<T> > vector,
-                                                                std::string label, int start)
+  std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;

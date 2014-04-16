@@ -208,7 +208,7 @@ bool IndexModelImpl::read(Reader &input)
   // Section 15: Initial Zone Concentrations
   readZoneIc(input);
   // Section 16: Airflow Paths
-  m_paths = input.readSectionVector<Path>("path");
+  m_paths = input.readSectionVector<AirflowPath>("path");
   // Section 17: Duct Junctions
   std::string jct = input.readSection(); // Skip it
   m_unsupported["DuctJunction"] = jct;
@@ -1212,17 +1212,17 @@ bool IndexModelImpl::valid() const
   return m_valid;
 }
 
-std::vector<Path> IndexModelImpl::paths() const
+std::vector<AirflowPath> IndexModelImpl::airflowPaths() const
 {
   return m_paths;
 }
 
-void IndexModelImpl::setPaths(const std::vector<Path> &paths)
+void IndexModelImpl::setAirflowPaths(const std::vector<AirflowPath> &paths)
 {
   m_paths = paths;
 }
 
-void IndexModelImpl::addPath(Path &path)
+void IndexModelImpl::addAirflowPath(AirflowPath &path)
 {
   path.setNr(m_paths.size()+1);
   m_paths.push_back(path);
@@ -1417,7 +1417,7 @@ std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNr
     }
     else
     {
-      contam::Path path = m_paths[pathNrs[i]-1];
+      contam::AirflowPath path = m_paths[pathNrs[i]-1];
       if(path.pzn() == -1)
       {
         // This flow path is negative for flow into zone

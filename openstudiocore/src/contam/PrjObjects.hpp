@@ -33,7 +33,7 @@ namespace detail {
   class ZoneImpl;
   class SpeciesImpl;
   class AhsImpl;
-  class PathImpl;
+  class AirflowPathImpl;
   class RunControlImpl;
   class LevelImpl;
   class DayScheduleImpl;
@@ -468,40 +468,40 @@ private:
   boost::shared_ptr<detail::AhsImpl> m_impl;
 };
 
-/** The Path object stores one flow linkage in the airflow network. */
-class CONTAM_API Path
+/** The AirflowPath object stores one flow linkage in the airflow network. */
+class CONTAM_API AirflowPath
 {
 public:
   /** @name Constructors and Destructors */
   //@{
 
   /** Create a new object with default values. */
-  Path();
+  AirflowPath();
   /** Create a new object. */
-  Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,std::string Y,
+  AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,std::string Y,
     std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,std::string Xmax,std::string Xmin,
     unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,std::string cfd_name,
     int cfd_ptype,int cfd_btype,int cfd_capp);
   /** Create a new object. */
-  Path(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,double X,double Y,
+  AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,double X,double Y,
     double relHt,double mult,double wPset,double wPmod,double wazm,double Fahs,double Xmax,double Xmin,
     unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,std::string cfd_name,
     int cfd_ptype,int cfd_btype,int cfd_capp);
   /** Create a new object from another object. */
-  Path(const Path &other);
+  AirflowPath(const AirflowPath &other);
   /** Destroy the object. */
-  ~Path();
+  ~AirflowPath();
 
   //@}
   /** @name Operators */
   //@{
 
   /** Copy operator */
-  Path& operator=(const Path &other);
+  AirflowPath& operator=(const AirflowPath &other);
   /** Equality operator */
-  bool operator==(const Path &other) const;
+  bool operator==(const AirflowPath &other) const;
   /** Inequality operator */
-  bool operator!=(const Path &other) const;
+  bool operator!=(const AirflowPath &other) const;
 
   //@}
   /** @name Input and Output */
@@ -688,7 +688,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PathImpl> m_impl;
+  boost::shared_ptr<detail::AirflowPathImpl> m_impl;
 };
 
 /** The RunControl object stores most of the information related to how CONTAM solves the airflow network
@@ -703,38 +703,38 @@ public:
   RunControl();
   /* Create a new object.
   RunControl(int sim_af,int afcalc,int afmaxi,double afrcnvg,double afacnvg,double afrelax,int uac2,
-    double Pres,int uPres,int afslae,int afrseq,int aflmaxi,double aflcnvg,int aflinit,int Tadj,
-    int sim_mf,int ccmaxi,double ccrcnvg,double ccacnvg,double ccrelax,int uccc,int mfnmthd,
-    int mfnrseq,int mfnmaxi,double mfnrcnvg,double mfnacnvg,double mfnrelax,double mfngamma,
-    int uccn,int mftmthd,int mftrseq,int mftmaxi,double mftrcnvg,double mftacnvg,double mftrelax,
-    double mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,double mfvrcnvg,double mfvacnvg,
-    double mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,double celldx,int sim_vjt,
-    int udx,int cvode_mth,double cvode_rcnvg,double cvode_acnvg,double cvode_dtmax,int tsdens,
-    double tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,
-    std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,
-    std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,
-    int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,
-    int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,
-    int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<double> rvals,int BldgFlowZ,
-    int BldgFlowD,int BldgFlowC,int cfd_ctype,double cfd_convcpl,int cfd_var,int cfd_zref,
-    int cfd_imax,int cfd_dtcmo);*/
+  double Pres,int uPres,int afslae,int afrseq,int aflmaxi,double aflcnvg,int aflinit,int Tadj,
+  int sim_mf,int ccmaxi,double ccrcnvg,double ccacnvg,double ccrelax,int uccc,int mfnmthd,
+  int mfnrseq,int mfnmaxi,double mfnrcnvg,double mfnacnvg,double mfnrelax,double mfngamma,
+  int uccn,int mftmthd,int mftrseq,int mftmaxi,double mftrcnvg,double mftacnvg,double mftrelax,
+  double mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,double mfvrcnvg,double mfvacnvg,
+  double mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,double celldx,int sim_vjt,
+  int udx,int cvode_mth,double cvode_rcnvg,double cvode_acnvg,double cvode_dtmax,int tsdens,
+  double tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,
+  std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,
+  std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,
+  int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,
+  int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,
+  int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<double> rvals,int BldgFlowZ,
+  int BldgFlowD,int BldgFlowC,int cfd_ctype,double cfd_convcpl,int cfd_var,int cfd_zref,
+  int cfd_imax,int cfd_dtcmo);*/
   /** Create a new object.
   RunControl(int sim_af,int afcalc,int afmaxi,std::string afrcnvg,std::string afacnvg,std::string afrelax,int uac2,
-    std::string Pres,int uPres,int afslae,int afrseq,int aflmaxi,std::string aflcnvg,int aflinit,int Tadj,
-    int sim_mf,int ccmaxi,std::string ccrcnvg,std::string ccacnvg,std::string ccrelax,int uccc,int mfnmthd,
-    int mfnrseq,int mfnmaxi,std::string mfnrcnvg,std::string mfnacnvg,std::string mfnrelax,std::string mfngamma,
-    int uccn,int mftmthd,int mftrseq,int mftmaxi,std::string mftrcnvg,std::string mftacnvg,std::string mftrelax,
-    std::string mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,std::string mfvrcnvg,std::string mfvacnvg,
-    std::string mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,std::string celldx,int sim_vjt,
-    int udx,int cvode_mth,std::string cvode_rcnvg,std::string cvode_acnvg,std::string cvode_dtmax,int tsdens,
-    std::string tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,
-    std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,
-    std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,
-    int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,
-    int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,
-    int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<std::string> rvals,int BldgFlowZ,
-    int BldgFlowD,int BldgFlowC,int cfd_ctype,std::string cfd_convcpl,int cfd_var,int cfd_zref,
-    int cfd_imax,int cfd_dtcmo);*/
+  std::string Pres,int uPres,int afslae,int afrseq,int aflmaxi,std::string aflcnvg,int aflinit,int Tadj,
+  int sim_mf,int ccmaxi,std::string ccrcnvg,std::string ccacnvg,std::string ccrelax,int uccc,int mfnmthd,
+  int mfnrseq,int mfnmaxi,std::string mfnrcnvg,std::string mfnacnvg,std::string mfnrelax,std::string mfngamma,
+  int uccn,int mftmthd,int mftrseq,int mftmaxi,std::string mftrcnvg,std::string mftacnvg,std::string mftrelax,
+  std::string mftgamma,int ucct,int mfvmthd,int mfvrseq,int mfvmaxi,std::string mfvrcnvg,std::string mfvacnvg,
+  std::string mfvrelax,int uccv,int mf_solver,int sim_1dz,int sim_1dd,std::string celldx,int sim_vjt,
+  int udx,int cvode_mth,std::string cvode_rcnvg,std::string cvode_acnvg,std::string cvode_dtmax,int tsdens,
+  std::string tsrelax,int tsmaxi,int cnvgSS,int densZP,int stackD,int dodMdt,std::string date_st,
+  std::string time_st,std::string date_0,std::string time_0,std::string date_1,std::string time_1,std::string time_step,
+  std::string time_list,std::string time_scrn,int restart,std::string rstdate,std::string rsttime,int list,
+  int doDlg,int pfsave,int zfsave,int zcsave,int achvol,int achsave,int abwsave,int cbwsave,
+  int expsave,int ebwsave,int zaasave,int zbwsave,int rzfsave,int rzmsave,int rz1save,
+  int csmsave,int srfsave,int logsave,std::vector<int> save,std::vector<std::string> rvals,int BldgFlowZ,
+  int BldgFlowD,int BldgFlowC,int cfd_ctype,std::string cfd_convcpl,int cfd_var,int cfd_zref,
+  int cfd_imax,int cfd_dtcmo);*/
   /** Create a new object from another object. */
   RunControl(const RunControl &other);
   /** Destroy the object. */

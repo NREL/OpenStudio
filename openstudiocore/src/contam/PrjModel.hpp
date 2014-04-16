@@ -386,11 +386,11 @@ public:
   void addZone(Zone zone);
 
   /** Returns a vector of all airflow paths in the model. */
-  std::vector<Path> paths() const;
+  std::vector<AirflowPath> airflowPaths() const;
   /** Sets the model airflow paths vector. */
-  void setPaths(const std::vector<Path> paths);
+  void setAirflowPaths(const std::vector<AirflowPath> paths);
   /** Add an airflow path to the model. */
-  void addPath(Path path);
+  void addAirflowPath(AirflowPath path);
 
   /** Returns false if the model is not a legitimate PRJ model. */
   bool valid() const;

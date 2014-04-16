@@ -637,7 +637,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
   double wind_H = prjModel.wind_H();
   BOOST_FOREACH(model::Surface surface,surfaces)
   {
-    contam::Path path;
+    contam::AirflowPath path;
     std::string bc = surface.outsideBoundaryCondition();
     if(!used.contains(surface.handle()) && bc != "Ground")
     {
@@ -710,7 +710,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         }
         path.setNr(++nr);
         m_surfaceMap[surface.handle()] = path.nr();
-        prjModel.addPath(path);
+        prjModel.addAirflowPath(path);
       }
       else if (bc == "Surface")
       {
@@ -748,7 +748,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
           }
           path.setNr(++nr);
           m_surfaceMap[surface.handle()] = path.nr();
-          prjModel.addPath(path);
+          prjModel.addAirflowPath(path);
           used << adjacentSurface->handle();
         }
       }
@@ -814,8 +814,8 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       {
         int zoneNr = tableLookup(m_zoneMap,thermalZone.handle(),"zoneMap");
         // Supply path
-        openstudio::contam::Path sp;
-        sp.setNr(prjModel.paths().size()+1);
+        openstudio::contam::AirflowPath sp;
+        sp.setNr(prjModel.airflowPaths().size()+1);
         sp.setPld(1);
         sp.setPzn(ahs.zone_s());
         sp.setPzm(zoneNr);
@@ -823,7 +823,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         sp.setSystem(true);
         m_pathMap[(thermalZone.name().get()+" supply")] = sp.nr();
         // Return path
-        openstudio::contam::Path rp;
+        openstudio::contam::AirflowPath rp;
         rp.setNr(sp.nr()+1);
         rp.setPld(1);
         rp.setPzn(zoneNr);
@@ -832,8 +832,8 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         rp.setSystem(true);
         m_pathMap[(thermalZone.name().get()+" return")] = rp.nr();
         // Add the paths to the path list
-        prjModel.addPath(sp);
-        prjModel.addPath(rp);
+        prjModel.addAirflowPath(sp);
+        prjModel.addAirflowPath(rp);
       }
       prjModel.addAhs(ahs);
       if (m_progressBar)
@@ -854,8 +854,8 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     {
       std::string loopName = QString("AHS_%1").arg(i+1).toStdString();
       // Recirculation path
-      openstudio::contam::Path recirc;
-      recirc.setNr(prjModel.paths().size()+1);
+      openstudio::contam::AirflowPath recirc;
+      recirc.setNr(prjModel.airflowPaths().size()+1);
       recirc.setPld(1);
       // Set the OA fraction schedule here
       //recirc.ps = ?
@@ -864,7 +864,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       recirc.setRecirculation(true);
       m_pathMap[loopName + " recirculation"] = recirc.nr();
       // Outside air path
-      openstudio::contam::Path oa;
+      openstudio::contam::AirflowPath oa;
       oa.setNr(recirc.nr()+1);
       oa.setPld(1);
       oa.setPzn(-1);
@@ -872,7 +872,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       oa.setOutsideAir(true);
       m_pathMap[loopName + " oa"] = oa.nr();
       // Exhaust path;
-      openstudio::contam::Path exhaust;
+      openstudio::contam::AirflowPath exhaust;
       exhaust.setNr(oa.nr()+1);
       exhaust.setPld(1);
       exhaust.setPzn(prjModel.ahs()[i].zone_r());
@@ -880,9 +880,9 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       exhaust.setExhaust(true);
       m_pathMap[loopName + " exhaust"] = exhaust.nr();
       // Add the paths to the path list
-      prjModel.addPath(recirc);
-      prjModel.addPath(oa); 
-      prjModel.addPath(exhaust);
+      prjModel.addAirflowPath(recirc);
+      prjModel.addAirflowPath(oa); 
+      prjModel.addAirflowPath(exhaust);
       // Store the nrs in the ahs
       prjModel.ahs()[i].setPath_r(recirc.nr());
       prjModel.ahs()[i].setPath_s(oa.nr());
@@ -992,7 +992,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
               ctrl.setValuename(valueName);
               prjModel.addControlNode(ctrl);
               // Connect to the path
-              prjModel.paths()[nr-1].setPc(ctrl.nr());
+              prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
               if(m_ratioOverride) // This assumes that there *is* a return, which could be wrong? maybe?
               {
                 // Create a new time series
@@ -1013,7 +1013,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
                 ctrl.setValuename(valueName);
                 prjModel.addControlNode(ctrl);
                 // Connect to the path
-                prjModel.paths()[nr-1].setPc(ctrl.nr());
+                prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
               }
             }
           }
@@ -1051,7 +1051,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
                 ctrl.setValuename(valueName);
                 prjModel.addControlNode(ctrl);
                 // Connect to the path
-                prjModel.paths()[nr-1].setPc(ctrl.nr());
+                prjModel.airflowPaths()[nr-1].setPc(ctrl.nr());
               }
             }
           }
@@ -1086,12 +1086,12 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
           int supplyNr = m_pathMap.value(supplyName,0);
           if(supplyNr)
           {
-            prjModel.paths()[supplyNr-1].setFahs(QString().sprintf("%g",flowRate).toStdString());
+            prjModel.airflowPaths()[supplyNr-1].setFahs(QString().sprintf("%g",flowRate).toStdString());
           }
           int returnNr = m_pathMap.value(returnName,0);
           if(returnNr)
           {
-            prjModel.paths()[returnNr-1].setFahs(QString().sprintf("%g",m_returnSupplyRatio*flowRate).toStdString());
+            prjModel.airflowPaths()[returnNr-1].setFahs(QString().sprintf("%g",m_returnSupplyRatio*flowRate).toStdString());
           }
         }
       }

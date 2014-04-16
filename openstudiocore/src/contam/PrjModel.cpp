@@ -584,97 +584,97 @@ void IndexModel::setWpctrig(const int wpctrig)
 
 double IndexModel::latd() const
 {
-    return m_impl->latd();
+  return m_impl->latd();
 }
 
 bool IndexModel::setLatd(const double latd)
 {
-    return m_impl->setLatd(latd);
+  return m_impl->setLatd(latd);
 }
 
 bool IndexModel::setLatd(const std::string &latd)
 {
-    return m_impl->setLatd(latd);
+  return m_impl->setLatd(latd);
 }
 
 double IndexModel::lgtd() const
 {
-    return m_impl->lgtd();
+  return m_impl->lgtd();
 }
 
 bool IndexModel::setLgtd(const double lgtd)
 {
-    return m_impl->setLgtd(lgtd);
+  return m_impl->setLgtd(lgtd);
 }
 
 bool IndexModel::setLgtd(const std::string &lgtd)
 {
-    return m_impl->setLgtd(lgtd);
+  return m_impl->setLgtd(lgtd);
 }
 
 double IndexModel::Tznr() const
 {
-    return m_impl->Tznr();
+  return m_impl->Tznr();
 }
 
 bool IndexModel::setTznr(const double Tznr)
 {
-    return m_impl->setTznr(Tznr);
+  return m_impl->setTznr(Tznr);
 }
 
 bool IndexModel::setTznr(const std::string &Tznr)
 {
-    return m_impl->setTznr(Tznr);
+  return m_impl->setTznr(Tznr);
 }
 
 double IndexModel::altd() const
 {
-    return m_impl->altd();
+  return m_impl->altd();
 }
 
 bool IndexModel::setAltd(const double altd)
 {
-    return m_impl->setAltd(altd);
+  return m_impl->setAltd(altd);
 }
 
 bool IndexModel::setAltd(const std::string &altd)
 {
-    return m_impl->setAltd(altd);
+  return m_impl->setAltd(altd);
 }
 
 double IndexModel::Tgrnd() const
 {
-    return m_impl->Tgrnd();
+  return m_impl->Tgrnd();
 }
 
 bool IndexModel::setTgrnd(const double Tgrnd)
 {
-    return m_impl->setTgrnd(Tgrnd);
+  return m_impl->setTgrnd(Tgrnd);
 }
 
 bool IndexModel::setTgrnd(const std::string &Tgrnd)
 {
-    return m_impl->setTgrnd(Tgrnd);
+  return m_impl->setTgrnd(Tgrnd);
 }
 
 int IndexModel::utg() const
 {
-    return m_impl->utg();
+  return m_impl->utg();
 }
 
 void IndexModel::setUtg(const int utg)
 {
-    m_impl->setUtg(utg);
+  m_impl->setUtg(utg);
 }
 
 int IndexModel::u_a() const
 {
-    return m_impl->u_a();
+  return m_impl->u_a();
 }
 
 void IndexModel::setU_a(const int u_a)
 {
-    m_impl->setU_a(u_a);
+  m_impl->setU_a(u_a);
 }
 
 RunControl IndexModel::rc() const
@@ -796,17 +796,17 @@ void IndexModel::addZone(Zone zone)
   m_impl->addZone(zone);
 }
 
-std::vector<Path> IndexModel::paths() const
+std::vector<AirflowPath> IndexModel::airflowPaths() const
 {
-  return m_impl->paths();
+  return m_impl->airflowPaths();
 }
-void IndexModel::setPaths(const std::vector<Path> paths)
+void IndexModel::setAirflowPaths(const std::vector<AirflowPath> paths)
 {
-  m_impl->setPaths(paths);
+  m_impl->setAirflowPaths(paths);
 }
-void IndexModel::addPath(Path path)
+void IndexModel::addAirflowPath(AirflowPath path)
 {
-  m_impl->addPath(path);
+  m_impl->addAirflowPath(path);
 }
 
 bool IndexModel::valid() const
