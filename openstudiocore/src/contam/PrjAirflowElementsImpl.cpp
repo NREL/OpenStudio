@@ -5084,7 +5084,7 @@ AfeCsfImpl::AfeCsfImpl(int nr,int icon,std::string name,std::string desc)
 }
 
 AfeCsfImpl::AfeCsfImpl(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,
-                       std::vector<DataPoint> data)
+                       std::vector<XyDataPoint> data)
 {
   setDefaults();
   setNr(nr);
@@ -5108,7 +5108,7 @@ void AfeCsfImpl::read(Reader &input)
   setU_y(input.read<int>());
   for(int i=0;i<npts;i++)
   {
-    DataPoint object;
+    XyDataPoint object;
     object.read(input);
     m_data.push_back(object);
   }
@@ -5121,7 +5121,7 @@ void AfeCsfImpl::readDetails(Reader &input)
   setU_y(input.read<int>());
   for(int i=0;i<npts;i++)
   {
-    DataPoint object;
+    XyDataPoint object;
     object.read(input);
     m_data.push_back(object);
   }
@@ -5201,12 +5201,12 @@ void AfeCsfImpl::setU_y(const int u_y)
   m_u_y = u_y;
 }
 
-std::vector<DataPoint> AfeCsfImpl::data() const
+std::vector<XyDataPoint> AfeCsfImpl::data() const
 {
   return m_data;
 }
 
-void AfeCsfImpl::setData(const std::vector<DataPoint> &data)
+void AfeCsfImpl::setData(const std::vector<XyDataPoint> &data)
 {
   m_data = data;
 }
