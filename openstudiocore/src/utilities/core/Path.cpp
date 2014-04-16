@@ -73,13 +73,13 @@ path tempDir()
 /** path to UTF-8 encoding. */
 std::string toString(const path& p) 
 {
-  return toString(toQString(p));
+  return p.generic_string();
 }
 
 /** path to QString. */
 QString toQString(const path& p) 
 {
-  return toQString(p.string());
+  return toQString(toString(p));
 }
 
 /** UTF-8 encoded char* to path*/
