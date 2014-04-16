@@ -36,12 +36,12 @@ namespace contam {
 
 class SimFile;
 namespace detail {
-  class PrjModelImpl;
+  class IndexModelImpl;
 }
 
-/** PrjModel is primarily a container for CONTAM airflow model data.
+/** IndexModel is primarily a container for CONTAM airflow model data.
 *
-*  PrjModel contains CONTAM airflow model elements and has several methods 
+*  IndexModel contains CONTAM airflow model elements and has several methods 
 *  to produce the PRJ file. The PRJ file is a positional text file and is
 *  the primary way in which data is provided to the ContamX solver. The 
 *  format is documented here: 
@@ -53,35 +53,35 @@ namespace detail {
 *  modifications to the model should be made with care.
 *
 */
-class CONTAM_API PrjModel
+class CONTAM_API IndexModel
 {
 public:
   /** @name Constructors and Destructors */
   //@{
 
   /** Creates a new, empty PRJ model. */
-  PrjModel();
+  IndexModel();
   /** Creates a new PRJ model from input file at specified path. */
-  explicit PrjModel(openstudio::path path);
+  explicit IndexModel(openstudio::path path);
   /** Creates a new PRJ model from named input file. */
-  explicit PrjModel(std::string filename);
+  explicit IndexModel(std::string filename);
   /** Creates a new PRJ model from an input object. */
-  explicit PrjModel(Reader &input);
+  explicit IndexModel(Reader &input);
   /** Creates a new PRJ model from another PRJ model. */
-  PrjModel(const PrjModel &other);
+  IndexModel(const IndexModel &other);
   /** Destroy the model. */
-  ~PrjModel();
+  ~IndexModel();
 
   //@}
   /** @name Operators */
   //@{
 
   /** Copy operator */
-  PrjModel& operator=(const PrjModel &other);
+  IndexModel& operator=(const IndexModel &other);
   /** Equality operator */
-  bool operator==(const PrjModel &other) const;
+  bool operator==(const IndexModel &other) const;
   /** Inequality operator */
-  bool operator!=(const PrjModel &other) const;
+  bool operator!=(const IndexModel &other) const;
 
   //@}
   /** @name Getters and Setters */
@@ -422,7 +422,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PrjModelImpl> m_impl;
+  boost::shared_ptr<detail::IndexModelImpl> m_impl;
 };
 
 } // contam

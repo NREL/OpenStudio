@@ -36,13 +36,13 @@ class SimFile;
 
 namespace detail {
 
-class PrjModelImpl
+class IndexModelImpl
 {
 public:
-  PrjModelImpl();
-  explicit PrjModelImpl(openstudio::path path);
-  explicit PrjModelImpl(std::string filename);
-  explicit PrjModelImpl(Reader &input);
+  IndexModelImpl();
+  explicit IndexModelImpl(openstudio::path path);
+  explicit IndexModelImpl(std::string filename);
+  explicit IndexModelImpl(Reader &input);
   bool read(openstudio::path path);
   bool read(std::string filename);
   bool read(Reader &input);
@@ -459,7 +459,7 @@ private:
   std::vector<Path> m_paths;
 };
 
-template <class T> std::string PrjModelImpl::writeSectionVector(std::vector<T> vector, std::string label, int start)
+template <class T> std::string IndexModelImpl::writeSectionVector(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;
@@ -479,7 +479,7 @@ template <class T> std::string PrjModelImpl::writeSectionVector(std::vector<T> v
   return string;
 }
 
-template <class T> std::string PrjModelImpl::writeSectionVector(QVector<QSharedPointer<T> > vector,
+template <class T> std::string IndexModelImpl::writeSectionVector(QVector<QSharedPointer<T> > vector,
                                                                 std::string label, int start)
 {
   std::string string;
@@ -500,7 +500,7 @@ template <class T> std::string PrjModelImpl::writeSectionVector(QVector<QSharedP
   return string;
 }
 
-template <class T> std::string PrjModelImpl::writeArray(std::vector<T> vector, std::string label, int start)
+template <class T> std::string IndexModelImpl::writeArray(std::vector<T> vector, std::string label, int start)
 {
   std::string string;
   int number = vector.size()-start;

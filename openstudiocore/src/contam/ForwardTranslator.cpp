@@ -296,7 +296,7 @@ void ForwardTranslator::setAirtightnessLevel(std::string level)
   m_deltaP = boost::optional<double>();
 }
 
-bool ForwardTranslator::applyAirtightnessLevel(contam::PrjModel prjModel)
+bool ForwardTranslator::applyAirtightnessLevel(contam::IndexModel model)
 {
   // For this to work, the "standard" names must be in the PRJ data
   if(!m_leakageDescriptor)
@@ -318,28 +318,28 @@ bool ForwardTranslator::applyAirtightnessLevel(contam::PrjModel prjModel)
   }
   int nr;
   // Exterior walls
-  nr = prjModel.airflowElementNrByName(wallExt[index]);
+  nr = model.airflowElementNrByName(wallExt[index]);
   if(!nr)
   {
     return false;
   }
   afeMap["exterior"] = nr;
   // Interior walls
-  nr = prjModel.airflowElementNrByName(wallInt[index]);
+  nr = model.airflowElementNrByName(wallInt[index]);
   if(!nr)
   {
     return false;
   }
   afeMap["interior"] =  nr;
   // Floors
-  nr = prjModel.airflowElementNrByName(floor[index]);
+  nr = model.airflowElementNrByName(floor[index]);
   if(!nr)
   {
     return false;
   }
   afeMap["floor"] = nr;
   // Roof
-  nr = prjModel.airflowElementNrByName(roof[index]);
+  nr = model.airflowElementNrByName(roof[index]);
   if(!nr)
   {
     return false;
@@ -377,15 +377,15 @@ bool ForwardTranslator::setExteriorFlowRate(double flow, double n, double deltaP
   return false;
 }
 
-bool ForwardTranslator::applyExteriorFlowRate(contam::PrjModel prjModel)
+bool ForwardTranslator::applyExteriorFlowRate(contam::IndexModel model)
 {
   if(m_flow && m_n && m_deltaP)
   {
     std::map<std::string,int> afeMap;
-    afeMap["exterior"] = addNewAirflowElement(prjModel,"CustomExterior",m_flow.get(),m_n.get(),m_deltaP.get());
-    afeMap["roof"] = addNewAirflowElement(prjModel,"CustomRoof",m_flow.get(),m_n.get(),m_deltaP.get());
-    afeMap["interior"] = addNewAirflowElement(prjModel,"CustomInterior",2*m_flow.get(),m_n.get(),m_deltaP.get());
-    afeMap["floor"] = addNewAirflowElement(prjModel,"CustomFloor",2*m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["exterior"] = addNewAirflowElement(model,"CustomExterior",m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["roof"] = addNewAirflowElement(model,"CustomRoof",m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["interior"] = addNewAirflowElement(model,"CustomInterior",2*m_flow.get(),m_n.get(),m_deltaP.get());
+    afeMap["floor"] = addNewAirflowElement(model,"CustomFloor",2*m_flow.get(),m_n.get(),m_deltaP.get());
     m_afeMap = afeMap;
     m_leakageDescriptor = boost::optional<std::string>();
     return true;
@@ -400,7 +400,7 @@ bool ForwardTranslator::modelToPrj(const openstudio::model::Model& model, const 
   translator.setTranslateHVAC(translateHVAC);
   translator.setAirtightnessLevel(leakageDescriptor);
 
-  boost::optional<contam::PrjModel> prjModel = translator.translateModel(model);
+  boost::optional<contam::IndexModel> prjModel = translator.translateModel(model);
   if(prjModel)
   {
     boost::optional<std::string> output = prjModel->toString();
@@ -429,16 +429,16 @@ bool compareElevation(openstudio::model::BuildingStory a, openstudio::model::Bui
 
 // This function is altogether too long and needs to be broken up into smaller functions.
 // This is particularly true for the HVAC translation.
-boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model model)
+boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Model model)
 {
   m_logSink.setThreadId(QThread::currentThread());
   m_logSink.resetStringStream();
 
-  contam::PrjModel prjModel;
+  contam::IndexModel prjModel;
   prjModel.read(std::string(":/templates/template.prj"));
   if(!prjModel.valid())
   {
-    return boost::optional<contam::PrjModel>();
+    return boost::optional<contam::IndexModel>();
   }
   // The template is a legal PRJ file, so it has one level. Not for long.
   prjModel.setLevels(std::vector<Level>());
@@ -449,7 +449,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     if(!applyAirtightnessLevel(prjModel))
     {
       LOG(Error,"Application of airtightness level failed.");
-      return boost::optional<contam::PrjModel>();
+      return boost::optional<contam::IndexModel>();
     }
   }
   else
@@ -457,7 +457,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     if(!applyExteriorFlowRate(prjModel))
     {
       LOG(Error,"Application of exterior flow rate failed.");
-      return boost::optional<contam::PrjModel>();
+      return boost::optional<contam::IndexModel>();
     }
   }
 
@@ -514,7 +514,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     if(!elevation)
     {
       LOG(Error, "Story '" << buildingStory.name().get() << "' has no elevation, translation aborted");
-      return boost::optional<contam::PrjModel>();
+      return boost::optional<contam::IndexModel>();
     }
   }
   // Sort the stories by elevation
@@ -544,7 +544,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
   if(prjModel.levels().size() == 0)
   {
     LOG(Error, "Failed to find building stories in model, translation aborted");
-    return boost::optional<contam::PrjModel>();
+    return boost::optional<contam::IndexModel>();
   }
   // Translate each thermal zone and generate a lookup table by name.
   std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
@@ -611,7 +611,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     else
     {
       LOG(Error, "Unable to set level for zone '" << thermalZone.name().get() << "', translation aborted");
-      return boost::optional<contam::PrjModel>();
+      return boost::optional<contam::IndexModel>();
     }
     // set T0
     zone.setT0(QString("293.15").toStdString());
@@ -718,19 +718,19 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
         if(!adjacentSurface)
         {
           LOG(Error, "Unable to find adjacent surface for surface '" << surface.name().get() << "'");
-          return boost::optional<contam::PrjModel>();
+          return boost::optional<contam::IndexModel>();
         }
         boost::optional<openstudio::model::Space> adjacentSpace = adjacentSurface->space();
         if(!adjacentSpace)
         {
           LOG(Error, "Unattached adjacent surface '" << adjacentSurface->name().get() << "'");
-          return boost::optional<contam::PrjModel>();
+          return boost::optional<contam::IndexModel>();
         }
         boost::optional<openstudio::model::ThermalZone> adjacentZone = adjacentSpace->thermalZone();
         if(!adjacentZone)
         {
           LOG(Error, "Unattached adjacent space '" << adjacentSpace->name().get() << "'");
-          return boost::optional<contam::PrjModel>();
+          return boost::optional<contam::IndexModel>();
         }
         if(adjacentZone.get() != thermalZone.get()) // I don't really like doing this
         {
@@ -1098,7 +1098,7 @@ boost::optional<contam::PrjModel> ForwardTranslator::translateModel(model::Model
     }
   }
 
-  return boost::optional<contam::PrjModel>(prjModel);
+  return boost::optional<contam::IndexModel>(prjModel);
 
   // these are probably useful, will have to ask Kyle
   // Kyle, should these functions be const?
@@ -1144,7 +1144,7 @@ static double laminarCoefficient(double Ct, double x)
 
 }
 
-int ForwardTranslator::addNewAirflowElement(contam::PrjModel prjModel,std::string name, double flow,double n,double deltaP)
+int ForwardTranslator::addNewAirflowElement(contam::IndexModel model,std::string name, double flow,double n,double deltaP)
 {
   // flow - volume flow rate in m^3/h
   // deltaP - pressure difference in Pa
@@ -1169,7 +1169,7 @@ int ForwardTranslator::addNewAirflowElement(contam::PrjModel prjModel,std::strin
   // Create a 1-point test element with display units of m^3/h
   PlrTest1 afe(0, 0, name, " ", lam, turb, expt, dP, Flow, u_P, u_F);
 
-  prjModel.addAirflowElement(afe);
+  model.addAirflowElement(afe);
 
   return afe.nr();
 }

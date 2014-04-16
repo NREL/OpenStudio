@@ -244,7 +244,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
 
   contam::ForwardTranslator translator;
 
-  boost::optional<openstudio::contam::PrjModel> prjModel = translator.translateModel(demoModel.get());
+  boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
 
   ASSERT_TRUE(prjModel);
 
