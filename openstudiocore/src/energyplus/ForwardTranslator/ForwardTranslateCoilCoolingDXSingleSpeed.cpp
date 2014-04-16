@@ -92,27 +92,27 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeedW
   OptionalDouble d = modelObject.ratedTotalCoolingCapacity();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity,*d);
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedTotalCoolingCapacity,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::GrossRatedTotalCoolingCapacity,"Autosize");
   }
 
   d = modelObject.ratedSensibleHeatRatio();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio,*d);
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedSensibleHeatRatio,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::GrossRatedSensibleHeatRatio,"Autosize");
   }
 
   d = modelObject.getRatedCOP();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedCOP,*d);
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedCoolingCOP,*d);
   }
 
   d = modelObject.ratedAirFlowRate();

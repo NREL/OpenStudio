@@ -83,18 +83,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   if( modelObject.isRatedTotalCoolingCapacityAutosized() )
   {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,"Autosize");
   }
   else if( (value = modelObject.ratedTotalCoolingCapacity()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,value.get());
   }
 
   // RatedCoolingCOP
 
   if( (value = modelObject.ratedCoolingCOP()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedCoolingCOP,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedCoolingCOP,value.get());
   }
 
   // MinimumOutdoorTemperatureinCoolingMode
@@ -216,25 +216,25 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   
   if( modelObject.isRatedTotalHeatingCapacityAutosized() )
   {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::RatedTotalHeatingCapacity,"Autosize");
+    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,"Autosize");
   }
   else if( (value = modelObject.ratedTotalHeatingCapacity()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedTotalHeatingCapacity,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,value.get());
   }
 
   // RatedTotalHeatingCapacitySizingRatio
 
   if( (value = modelObject.ratedTotalHeatingCapacitySizingRatio()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedTotalHeatingCapacitySizingRatio,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio,value.get());
   }
   
   // RatedHeatingCOP
 
   if( (value = modelObject.ratedHeatingCOP()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCOP,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCOP,value.get());
   }
   
   // MinimumOutdoorTemperatureinHeatingMode
@@ -481,7 +481,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   
   if( (value = modelObject.maximumOutdoorDrybulbTemperatureforCrankcaseHeater()) )
   {
-    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforCrankcaseHeater,value.get());
+    idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeater,value.get());
   }
 
   // DefrostStrategy
