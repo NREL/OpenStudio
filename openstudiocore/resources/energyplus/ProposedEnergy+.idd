@@ -30568,7 +30568,7 @@ AirLoopHVAC:UnitarySystem,
        \note Enter the supply air volume flow rate as a fraction of the cooling capacity.
        \note Required field when Supply air Flow Rate Method During Cooling Operation is FlowPerCoolingCapacity.
        \note This field may be blank if a cooling coil is not included in the unitary system.
-  A21, \field Supply air Flow Rate Method During Heating Operation
+  A21, \field Supply Air Flow Rate Method During Heating Operation
        \type choice
        \key None
        \key SupplyAirFlowRate
@@ -30647,23 +30647,23 @@ AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \note Enter the supply air volume flow rate per total floor area fraction.
        \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FlowPerFloorArea.
-  N13, \field Fraction of Autosized Design Cooling Supply Air Flow Rate
+  N13, \field Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
        \type real
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
        \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FractionOfAutosizedCoolingValue.
-  N14, \field Fraction of Autosized Design Heating Supply Air Flow Rate
+  N14, \field Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
        \type real
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
        \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FractionOfAutosizedHeatingValue.
-  N15, \field Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
+  N15, \field Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
        \type real
        \units m3/s-W
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the cooling capacity.
        \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerCoolingCapacity.
-  N16, \field Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
+  N16, \field Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
        \type real
        \units m3/s-W
        \minimum 0.0
