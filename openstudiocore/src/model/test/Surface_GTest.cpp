@@ -2888,6 +2888,11 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   EXPECT_EQ(0u, intersect->newSurfaces1().size());
   ASSERT_EQ(1u, intersect->newSurfaces2().size());
   Surface surface4 = intersect->newSurfaces2()[0];
+  surface4.setName("New Surface");
+  EXPECT_EQ(4u, surface4.vertices().size());
+
+  //std::cout << model << std::endl;
+
   intersect = surface1.computeIntersection(surface3);
   EXPECT_FALSE(intersect);
   intersect = surface1.computeIntersection(surface4);
@@ -2902,6 +2907,9 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2){
   EXPECT_EQ(surface4.handle(), surface1.adjacentSurface()->handle());
   ASSERT_TRUE(surface2.adjacentSurface());
   EXPECT_EQ(surface3.handle(), surface2.adjacentSurface()->handle());
+
+  EXPECT_NEAR(surface1.netArea(), surface4.netArea(), 0.001);
+  EXPECT_NEAR(surface2.netArea(), surface3.netArea(), 0.001);
 }
 
 TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3){

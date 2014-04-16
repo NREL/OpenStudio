@@ -640,10 +640,10 @@ TEST_F(GeometryFixture, RemoveSpikes)
   { 
     points.clear();
     points.push_back(Point3d(10, 10, 0)); // the spike
-    points.push_back(Point3d(10, 5, 0));
     points.push_back(Point3d(10, 0, 0));
     points.push_back(Point3d(0, 0, 0));
     points.push_back(Point3d(0, 5, 0));
+    points.push_back(Point3d(10, 5, 0));
 
     expected.clear();
     expected.push_back(Point3d(10, 5, 0)); 

@@ -59,6 +59,58 @@ Ring (having 8 vertices, including closing vertex)
 
 */
 
+namespace openstudio {
+
+  template <typename Point1, typename Point2, typename Point3>
+  static inline bool point_is_spike_or_equal(Point1 const& last_point, Point2 const& segment_a, Point3 const& segment_b)
+  {
+    // adapted from boost\geometry\algorithms\detail\point_is_spike_or_equal.hpp to include tolerance checking
+
+    // segment_a is at the begining
+    // segment_b is in the middle
+    // last_point is at the end
+
+    // segment_b is being considered for deletion
+
+    double normTol = 0.001; // 1 mm
+    double tol = 0.001; // relative to 1
+      
+    double diff1_x = last_point.x()-segment_b.x();
+    double diff1_y = last_point.y()-segment_b.y();
+    double norm1 = sqrt(pow(diff1_x, 2) + pow(diff1_y, 2)); 
+    if (norm1 > normTol){
+      diff1_x = diff1_x/norm1;
+      diff1_y = diff1_y/norm1;
+    }else{
+      // last point is too close to segement b
+      return true;
+    }
+
+    double diff2_x = segment_b.x()-segment_a.x();
+    double diff2_y = segment_b.y()-segment_a.y();
+    double norm2 = sqrt(pow(diff2_x, 2) + pow(diff2_y, 2));
+    if (norm2 > normTol){
+      diff2_x = diff2_x/norm2;
+      diff2_y = diff2_y/norm2;
+    }else{
+      // segement b is too close to segement a
+      return true;
+    }
+
+    double crossProduct = diff1_x*diff2_y-diff1_y*diff2_x;
+    if (abs(crossProduct) < tol){
+      double dotProduct = diff1_x*diff2_x+diff1_y*diff2_y;
+      if (dotProduct <= -1.0 + tol){
+        // reversal
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+}
+
 namespace boost { namespace geometry
 {
 
@@ -102,7 +154,7 @@ struct range_remove_spikes
             cleaned.push_back(*it);
 
             while(cleaned.size() >= 3
-                    && detail::point_is_spike_or_equal(cleaned.back(), *(cleaned.end() - 3), *(cleaned.end() - 2)))
+                    && openstudio::point_is_spike_or_equal(cleaned.back(), *(cleaned.end() - 3), *(cleaned.end() - 2)))
             {
                 // Remove pen-ultimate point causing the spike (or which was equal)
                 cleaned.erase(cleaned.end() - 2);
@@ -121,13 +173,13 @@ struct range_remove_spikes
             found = false;
             // Check for spike in first point
             int const penultimate = 2;
-            while(cleaned.size() > 3 && detail::point_is_spike_or_equal(cleaned.front(), *(cleaned.end() - penultimate), cleaned.back()))
+            while(cleaned.size() > 3 && openstudio::point_is_spike_or_equal(cleaned.front(), *(cleaned.end() - penultimate), cleaned.back()))
             {
                 cleaned.pop_back();
                 found = true;
             }
             // Check for spike in second point
-            while(cleaned.size() > 3 && detail::point_is_spike_or_equal(*(cleaned.begin() + 1), cleaned.back(), cleaned.front()))
+            while(cleaned.size() > 3 && openstudio::point_is_spike_or_equal(*(cleaned.begin() + 1), cleaned.back(), cleaned.front()))
             {
                 cleaned.pop_front();
                 found = true;
@@ -566,7 +618,7 @@ namespace openstudio{
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
     
-    boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+    boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
     if (!boostPolygon){
       return std::vector<Point3d>();
     }
