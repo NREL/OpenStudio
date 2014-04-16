@@ -44,7 +44,6 @@
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 
 #include <boost/foreach.hpp>
-#include <QTemporaryFile>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -167,9 +166,8 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
 TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
-  
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+
+  openstudio::path outpath = toPath(openstudio::createUUID());
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -188,8 +186,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
     illuminanceMap.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath(openstudio::createUUID());
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -208,8 +205,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
     daylightingControl.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath(openstudio::createUUID());
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -228,8 +224,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
     glareSensor.remove();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath(openstudio::createUUID());
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -250,8 +245,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
     thermalZone.resetIlluminanceMap();
   } 
   
-  QTemporaryFile tempFile;
-  openstudio::path outpath = toPath(tempFile.fileName());
+  openstudio::path outpath = toPath(openstudio::createUUID());
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
