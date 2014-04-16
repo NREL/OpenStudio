@@ -602,7 +602,7 @@ TEST_F(GeometryFixture, JoinAll)
   polygons.clear();
   polygons.push_back(makeRectangleDown(0, 0, 1, 1));
   polygons.push_back(makeRectangleDown(2, 0, 1, 1));
-  polygons.push_back(makeRectangleDown(3, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(4, 0, 1, 1));
   test = joinAll(polygons, tol);
   ASSERT_EQ(3u, test.size());
 
