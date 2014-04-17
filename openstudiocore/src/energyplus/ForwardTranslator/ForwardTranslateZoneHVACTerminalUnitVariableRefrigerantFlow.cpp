@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   {
     if( boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get()) )
     {
-      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAvailabilityschedule,_schedule->name().get());
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::TerminalUnitAvailabilitySchedule,_schedule->name().get());
     }
   }
 
@@ -172,7 +172,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   // SupplyAirFanplacement
 
-  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanplacement,"DrawThrough");
+  idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFanPlacement,"DrawThrough");
 
   model::ModelObject fan = modelObject.supplyAirFan();
 

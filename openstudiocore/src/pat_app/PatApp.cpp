@@ -24,6 +24,7 @@
 #include <pat_app/DesignAlternativesTabController.hpp>
 #include <pat_app/DesignAlternativesView.hpp>
 #include <pat_app/ExportXML.hpp>
+#include <pat_app/ExportSpreadsheet.hpp>
 #include <pat_app/HorizontalTabWidget.hpp>
 #include <pat_app/MainRightColumnController.hpp>
 #include <pat_app/MeasuresTabController.hpp>
@@ -230,6 +231,9 @@ PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUser
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(exportXmlClicked()), this, SLOT(exportXml()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(mainWindow, SIGNAL(exportSpreadsheetClicked()), this, SLOT(exportSpreadsheet()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
@@ -1125,6 +1129,34 @@ void PatApp::exportXml()
     QMessageBox::warning(mainWindow, "Export Failed", QString("Export to '") + toQString(outzip) + QString("' failed"));
   }
 
+}
+
+void PatApp::exportSpreadsheet()
+{
+  //make sure the project exists
+  if (!m_project){
+    // log
+    return;
+  }
+
+  if (m_project->analysis().successfulDataPoints().empty()){
+    QMessageBox::warning(mainWindow, "Export Failed", QString("You must have run at least one datapoint before exporting Analysis Spreadsheet."));
+    return;
+  }
+
+  //QMessageBox::information(mainWindow, "Exporting Analysis Spreadsheet", "This may take several minutes, you will get a message when the export is complete.");
+  mainWindow->setEnabled(false);
+  this->processEvents();
+
+  ExportSpreadsheet exporter;
+  bool result = exporter.exportSpreadsheet(*m_project);
+
+  mainWindow->setEnabled(true);
+  if (result){
+    QMessageBox::information(mainWindow, "Export Complete", QString("Your export is available under '") + toQString(m_project->projectDir()) + QString("'"));
+  }else{
+    QMessageBox::warning(mainWindow, "Export Failed", QString("Export to '") + toQString(m_project->projectDir()) + QString("' failed"));
+  }
 }
 
 void PatApp::scanForTools()

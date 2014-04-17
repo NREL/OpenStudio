@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,8.0;
+  Version,8.1;
 
   Timestep,6;
 
@@ -1113,6 +1113,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -1444,9 +1446,9 @@
   Coil:Cooling:DX:SingleSpeed,
     PSZ-AC:1_CoolC DXCoil,   !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    AUTOSIZE,                !- Rated Total Cooling Capacity {W}
-    AUTOSIZE,                !- Rated Sensible Heat Ratio
-    3,                       !- Rated COP {W/W}
+    AUTOSIZE,                !- Gross Rated Total Cooling Capacity {W}
+    AUTOSIZE,                !- Gross Rated Sensible Heat Ratio
+    3,                       !- Gross Rated Cooling COP {W/W}
     AUTOSIZE,                !- Rated Air Flow Rate {m3/s}
     ,                        !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PSZ-AC:1_OA-PSZ-AC:1_CoolCNode,  !- Air Inlet Node Name
@@ -1522,7 +1524,7 @@
   Fan:ConstantVolume,
     PSZ-AC:1_Fan,            !- Name
     HVACOperationSchd,       !- Availability Schedule Name
-    0.4,                     !- Fan Efficiency
+    0.4,                     !- Fan Total Efficiency
     500,                     !- Pressure Rise {Pa}
     AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     0.9000,                  !- Motor Efficiency
