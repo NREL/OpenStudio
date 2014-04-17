@@ -732,6 +732,10 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
+  /** Determines whether or not the HVACComponent is part of a unitary sytem or on an
+   *  AirLoopHVAC */
+  bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
+
   /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
    *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
