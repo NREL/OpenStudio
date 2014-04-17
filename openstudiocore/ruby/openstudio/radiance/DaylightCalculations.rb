@@ -121,6 +121,10 @@ if modelPath.empty?
   exit false
 end
 
+parentDir = OpenStudio::Path.new(modelPath).parent_path
+modelDir = parentDir / OpenStudio::Path.new(OpenStudio::Path.new(modelPath).stem)
+outDir = parentDir / OpenStudio::Path.new("out")
+
 radiancePath = ""
 
 if ARGV[1]
@@ -214,8 +218,8 @@ if not result
   exit false
 end
 
-FileUtils.copy("in/model/radiance/out.osm", "out.osm");
-FileUtils.copy("in/model/radiance/output/radout.sql", "radout.sql");
+FileUtils.copy("#{modelDir.to_s}/model/radiance/out.osm", "out.osm");
+FileUtils.copy("#{modelDir.to_s}/model/radiance/output/radout.sql", "radout.sql");
 
 # execute DaylightMetrics
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightMetrics.rb' '#{modelPath}' '#{sqlPath}' radout.sql")
@@ -224,9 +228,9 @@ if not result
   exit false
 end
 
-files = Dir.glob('*') - ['in/files']
-FileUtils.mkdir_p 'out/files'
-FileUtils.cp_r files, 'out/files'
+files = Dir.glob("#{parentDir.to_s}/*") - ["#{modelDir.to_s}/files"]
+FileUtils.mkdir_p "#{outDir}/files"
+FileUtils.cp_r files, "#{outDir}/files"
 
-weather = Dir.glob('in/files/*.epw')
-FileUtils.cp weather, 'out/files/'
+weather = Dir.glob("#{modelDir.to_s}/files/*.epw")
+FileUtils.cp weather, "#{outDir}/files/"
