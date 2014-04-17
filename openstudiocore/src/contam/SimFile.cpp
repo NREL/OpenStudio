@@ -415,6 +415,15 @@ boost::optional<openstudio::TimeSeries> SimFile::nodeDensity(int nr) const
   return boost::optional<openstudio::TimeSeries>(series);
 }
 
+std::vector<openstudio::DateTime> SimFile::dateTimes() const
+{
+  if(m_dateTimes.size() == 1) {
+    return std::vector<openstudio::DateTime>(m_dateTimes.begin(),m_dateTimes.end());
+  } else {
+    return std::vector<openstudio::DateTime>(m_dateTimes.begin()+1,m_dateTimes.end());
+  }
+}
+
 /*
 
 This code is a holdover from earlier versions that also read in contaminants. Hopefully, this text-based
