@@ -483,6 +483,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
+    {
+      model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
+      retVal = translateAirLoopHVACUnitarySystem(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
       return retVal;

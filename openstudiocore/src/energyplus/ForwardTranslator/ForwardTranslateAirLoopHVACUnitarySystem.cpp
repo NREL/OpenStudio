@@ -61,7 +61,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Control Type
   s = modelObject.controlType();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::ControlType,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
   }
 
   // Controlling Zone or Thermostat Location
@@ -71,14 +71,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _controllingZoneorThermostatLocation && _controllingZoneorThermostatLocation->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::ControllingZoneorThermostatLocation,_controllingZoneorThermostatLocation->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControllingZoneorThermostatLocation,_controllingZoneorThermostatLocation->name().get());
     }
   }
 
   // Dehumidification Control Type
   s = modelObject.dehumidificationControlType();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::DehumidificationControlType,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DehumidificationControlType,s.get());
   }
 
   // Availability Schedule Name
@@ -88,7 +88,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _availabilitySchedule && _availabilitySchedule->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::AvailabilityScheduleName,_availabilitySchedule->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
     }
   }
 
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
       airInletNodeName = node->name().get();
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::AirInletNodeName,node->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName,node->name().get());
     }
   }
 
@@ -111,29 +111,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
       airOutletNodeName = node->name().get();
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::AirOutletNodeName,node->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName,node->name().get());
     }
   }
 
   // Supply Fan Object Type
   // Supply Fan Name
-  boost::optional<IdfObject> _supplyFan;
+  boost::optional<IdfObject> _fan;
 
   if( boost::optional<HVACComponent> supplyFan = modelObject.supplyFan() )
   {
-    _supplyFan = translateAndMapModelObject(supplyFan.get());
+    _fan = translateAndMapModelObject(supplyFan.get());
 
-    if( _supplyFan && _supplyFan->name() )
+    if( _fan && _fan->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyFanObjectType,_supplyFan->iddObject().get());
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyFanName,_supplyFan->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyFanObjectType,_fan->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyFanName,_fan->name().get());
     }
   }
 
   // Fan Placement
   s = modelObject.fanPlacement();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::FanPlacement,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::FanPlacement,s.get());
   }
 
   // Supply Air Fan Operating Mode Schedule Name
@@ -143,13 +143,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _supplyAirFanOperatingModeSchedule && _supplyAirFanOperatingModeSchedule->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFanOperatingModeScheduleName,_supplyAirFanOperatingModeSchedule->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFanOperatingModeScheduleName,_supplyAirFanOperatingModeSchedule->name().get());
     }
   }
 
   // Heating Coil Object Type
   // Heating Coil Name
-  boost::optional<IdfObject> _heatingCoil
+  boost::optional<IdfObject> _heatingCoil;
 
   if( boost::optional<HVACComponent> heatingCoil = modelObject.heatingCoil() )
   {
@@ -157,20 +157,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _heatingCoil && _heatingCoil->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::HeatingCoilObjectType,_heatingCoil->iddObject().get());
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::HeatingCoilName,_heatingCoil->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingCoilObjectType,_heatingCoil->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatingCoilName,_heatingCoil->name().get());
     }
   }
 
   // DX Heating Coil Sizing Ratio
-  d = modelObject.minimumCondensingTemperature();
+  d = modelObject.dXHeatingCoilSizingRatio();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::MinimumCondensingTemperature,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DXHeatingCoilSizingRatio,d.get());
   }
 
   // Cooling Coil Object Type
   // Cooling Coil Name
-  boost::optional<IdfObject> _coolingCoil
+  boost::optional<IdfObject> _coolingCoil;
 
   if( boost::optional<HVACComponent> coolingCoil = modelObject.coolingCoil() )
   {
@@ -178,40 +178,40 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _coolingCoil && _coolingCoil->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::CoolingCoilObjectType,_coolingCoil->iddObject().get());
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::CoolingCoilName,_coolingCoil->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingCoilObjectType,_coolingCoil->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::CoolingCoilName,_coolingCoil->name().get());
     }
   }
 
   // Use DOAS DX Cooling Coil
   if( modelObject.useDOASDXCoolingCoil() )
   {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::UseDOASDXCoolingCoil,"Yes");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil,"Yes");
   }
   else
   {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::UseDOASDXCoolingCoil,"No");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::UseDOASDXCoolingCoil,"No");
   }
 
   // DOAS DX Cooling Coil Leaving Minimum Air Temperature
   if( modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature() )
   {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"Yes");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"Yes");
   }
   else
   {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"No");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"No");
   }
 
   // Latent Load Control
   s = modelObject.latentLoadControl();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::LatentLoadControl,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::LatentLoadControl,s.get());
   }
 
   // Supplemental Heating Coil Object Type
   // Supplemental Heating Coil Name
-  boost::optional<IdfObject> _supplementalHeatingCoil
+  boost::optional<IdfObject> _supplementalHeatingCoil;
 
   if( boost::optional<HVACComponent> supplementalHeatingCoil = modelObject.supplementalHeatingCoil() )
   {
@@ -219,185 +219,185 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
     if( _supplementalHeatingCoil && _supplementalHeatingCoil->name() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplementalHeatingCoilObjectType,_supplementalHeatingCoil->iddObject().get());
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilObjectType,_supplementalHeatingCoil->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName,_supplementalHeatingCoil->name().get());
     }
   }
 
   // Supply Air Flow Rate Method During Cooling Operation
   s = modelObject.supplyAirFlowRateMethodDuringCoolingOperation();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateMethodDuringCoolingOperation,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringCoolingOperation,s.get());
   }
 
   // Supply Air Flow Rate During Cooling Operation
   if( modelObject.isSupplyAirFlowRateDuringCoolingOperationAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateDuringCoolingOperation()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area During Cooling Operation
   d = modelObject.supplyAirFlowRatePerFloorAreaDuringCoolingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaDuringCoolingOperation,d.get());
   }
 
   // Fraction of Autosized Design Cooling Supply Air Flow Rate
   d = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::FractionofAutosizedDesignCoolingSupplyAirFlowRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRate,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation,d.get());
   }
 
   // Supply Air Flow Rate Method During Heating Operation
   s = modelObject.supplyAirFlowRateMethodDuringHeatingOperation();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateMethodDuringHeatingOperation,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodDuringHeatingOperation,s.get());
   }
 
   // Supply Air Flow Rate During Heating Operation
   if( modelObject.isSupplyAirFlowRateDuringHeatingOperationAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateDuringHeatingOperation()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateDuringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area during Heating Operation
   d = modelObject.supplyAirFlowRatePerFloorAreaduringHeatingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaduringHeatingOperation,d.get());
   }
 
   // Fraction of Autosized Design Heating Supply Air Flow Rate
   d = modelObject.fractionofAutosizedDesignHeatingSupplyAirFlowRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRate,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation,d.get());
   }
 
   // Supply Air Flow Rate Method When No Cooling or Heating is Required
   s = modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired,s.get());
   }
 
   // Supply Air Flow Rate When No Cooling or Heating is Required
   if( modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,"Autosize");
   } 
   else if ( (d = modelObject.supplyAirFlowRateWhenNoCoolingorHeatingisRequired()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
   d = modelObject.supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
   d = modelObject.fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
   d = modelObject.fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
   d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired,d.get());
   }
 
   // Maximum Supply Air Temperature
   if( modelObject.isMaximumSupplyAirTemperatureAutosized() ) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::MaximumSupplyAirTemperature,"Autosize");
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,"Autosize");
   } 
   else if ( (d = modelObject.maximumSupplyAirTemperature()) ) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::MaximumSupplyAirTemperature,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature,d.get());
   }
 
   // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
   d = modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,d.get());
   }
 
   // Outdoor Dry-Bulb Temperature Sensor Node Name
   s = modelObject.outdoorDryBulbTemperatureSensorNodeName();
   if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::OutdoorDryBulbTemperatureSensorNodeName,s.get());
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName,s.get());
   }
 
   // Maximum Cycling Rate
   d = modelObject.maximumCyclingRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::MaximumCyclingRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate,d.get());
   }
 
   // Heat Pump Time Constant
   d = modelObject.heatPumpTimeConstant();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::HeatPumpTimeConstant,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant,d.get());
   }
 
   // Fraction of On-Cycle Power Use
   d = modelObject.fractionofOnCyclePowerUse();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::FractionofOnCyclePowerUse,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse,d.get());
   }
 
   // Heat Pump Fan Delay Time
   d = modelObject.heatPumpFanDelayTime();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::HeatPumpFanDelayTime,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime,d.get());
   }
 
   // Ancilliary On-Cycle Electric Power
   d = modelObject.ancilliaryOnCycleElectricPower();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::AncilliaryOnCycleElectricPower,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncilliaryOnCycleElectricPower,d.get());
   }
 
   // Ancilliary Off-Cycle Electric Power
   d = modelObject.ancilliaryOffCycleElectricPower();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::AncilliaryOffCycleElectricPower,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower,d.get());
   }
 
   // Design Heat Recovery Water Flow Rate
   d = modelObject.designHeatRecoveryWaterFlowRate();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::DesignHeatRecoveryWaterFlowRate,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate,d.get());
   }
 
   // Maximum Temperature for Heat Recovery
   d = modelObject.maximumTemperatureforHeatRecovery();
   if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystem_Fields::MaximumTemperatureforHeatRecovery,d.get());
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery,d.get());
   }
 
   // Heat Recovery Water Inlet Node Name
@@ -405,7 +405,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::HeatRecoveryWaterInletNodeName,node->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName,node->name().get());
     }
   }
 
@@ -414,7 +414,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   {
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::HeatRecoveryWaterOutletNodeName,node->name().get());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName,node->name().get());
     }
   }
 
@@ -427,8 +427,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
   //   if( _designSpecificationMultispeedHeatPumpObject && _designSpecificationMultispeedHeatPumpObject->name() )
   //   {
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::DesignSpecificationMultispeedHeatPumpObjectType,_designSpecificationMultispeedHeatPumpObject->iddObject().get());
-  //     unitarySystem.setString(AirLoopHVAC_UnitarySystem_Fields::DesignSpecificationMultispeedHeatPumpObjectName,_designSpecificationMultispeedHeatPumpObject->name().get());
+  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectType,_designSpecificationMultispeedHeatPumpObject->iddObject().name());
+  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName,_designSpecificationMultispeedHeatPumpObject->name().get());
   //   }
   // }
 
@@ -452,7 +452,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     } else {
       outletNodeName = airOutletNodeName.get();
     }
-    
+
     if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
     {
       _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName.get());
@@ -594,7 +594,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     }
   }
 
-  return idfObject;
+  return unitarySystem;
 }
 
 } // energyplus
