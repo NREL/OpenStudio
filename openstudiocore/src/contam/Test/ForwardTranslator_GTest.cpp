@@ -244,7 +244,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
 
   contam::ForwardTranslator translator;
 
-  boost::optional<openstudio::contam::PrjModel> prjModel = translator.translateModel(demoModel.get());
+  boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
 
   ASSERT_TRUE(prjModel);
 
@@ -266,14 +266,14 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(2,systemZoneCount);
   EXPECT_EQ(4,interiorZoneCount);
   // 26 Paths
-  EXPECT_EQ(26,prjModel->paths().size());
+  EXPECT_EQ(26,prjModel->airflowPaths().size());
   int exhaustPathCount=0;
   int systemPathCount=0;
   int windPressurePathCount=0;
   int outsideAirPathCount=0;
   int recirculationPathCount=0;
   int plainPathCount=0;
-  BOOST_FOREACH(contam::Path afp, prjModel->paths())
+  BOOST_FOREACH(contam::AirflowPath afp, prjModel->airflowPaths())
   {
     if(afp.system())
     {

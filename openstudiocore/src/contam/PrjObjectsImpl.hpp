@@ -427,15 +427,15 @@ private:
   std::string m_desc;  // AHS description (CS) {W} may be blank
 };
 
-class PathImpl
+class AirflowPathImpl
 {
 public:
-  PathImpl();
-  PathImpl(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
+  AirflowPathImpl();
+  AirflowPathImpl(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
     std::string Y,std::string relHt,std::string mult,std::string wPset,std::string wPmod,std::string wazm,std::string Fahs,std::string Xmax,
     std::string Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,
     std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp);
-  PathImpl(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,double X,
+  AirflowPathImpl(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,double X,
     double Y,double relHt,double mult,double wPset,double wPmod,double wazm,double Fahs,double Xmax,
     double Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,int u_F,int cfd,
     std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp);

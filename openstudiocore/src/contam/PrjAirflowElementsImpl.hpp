@@ -1566,7 +1566,7 @@ class AfeCsfImpl
 public:
   AfeCsfImpl();
   AfeCsfImpl(int nr,int icon,std::string name,std::string desc);
-  AfeCsfImpl(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfeCsfImpl(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   void read(Reader &reader);
   std::string write(std::string datatype);
   void readDetails(Reader &input);
@@ -1596,9 +1596,9 @@ public:
   /** Sets the display units for y. */
   void setU_y(const int u_y);
   /** Returns the data point vector of (x,y) pairs. */
-  std::vector<DataPoint> data() const;
+  std::vector<XyDataPoint> data() const;
   /** Sets the data point vector. */
-  void setData(const std::vector<DataPoint> &data);
+  void setData(const std::vector<XyDataPoint> &data);
 private:
   void setDefaults();
 
@@ -1609,7 +1609,7 @@ private:
   std::string m_desc;  // element description (CS) {W} may be blank
   int m_u_x;  // units for x (I2)
   int m_u_y;  // units for y (I2)
-  std::vector<DataPoint> m_data;  // data points (DataPoint)
+  std::vector<XyDataPoint> m_data;  // data points (XyDataPoint)
 };
 
 class AfeSupImpl
