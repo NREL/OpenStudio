@@ -305,7 +305,7 @@ module OpenStudio
             # Save the dir so we can start here next time
             Plugin.write_pref("Last Idf Import Dir", File.dirname(path))
           else
-            UI.messagebox("Failed to import #{path}.  If this is an older EnergyPlus Idf please upgrade to version 8.0 using the EnergyPlus transition program.")
+            UI.messagebox("Failed to import #{path}.  If this is an older EnergyPlus Idf please upgrade to version 8.1 using the EnergyPlus transition program.")
           end
           
         end

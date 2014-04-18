@@ -229,19 +229,19 @@ OptionalModelObject result,temp;
     }
 
 
-    OptionalDouble d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedTotalCoolingCapacity);
+    OptionalDouble d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedTotalCoolingCapacity);
     if(d)
     {
       coil.setRatedTotalCoolingCapacity(*d);
     }
 
-    d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedSensibleHeatRatio);
+    d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedSensibleHeatRatio);
     if(d)
     {
       coil.setRatedSensibleHeatRatio(*d);
     }
 
-    d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedCOP);
+    d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::GrossRatedCoolingCOP);
     if(d)
     {
       coil.setRatedCOP(*d);

@@ -131,12 +131,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWaterToAirHeat
   
   if( value )
   {
-    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity,*value);
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedTotalCoolingCapacity,*value);
   }
   
   else
   {
-    idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedTotalCoolingCapacity,"Autosize");
   }
   
   // N4,  Field Rated Sensible Cooling Capacity
@@ -145,12 +145,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWaterToAirHeat
   
   if( value )
   {
-    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity,*value);
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedSensibleCoolingCapacity,*value);
   }
   
   else
   {
-    idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedSensibleCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedSensibleCoolingCapacity,"Autosize");
   }
   
   //   N5, Field Rated Cooling Coefficient of Performance
@@ -159,7 +159,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWaterToAirHeat
   
   if( value )
   {
-    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedCoolingCoefficientofPerformance,*value);
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP,*value);
   }
   
   // N6,  Field Total Cooling Capacity Coefficient 1

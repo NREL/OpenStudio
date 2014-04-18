@@ -59,7 +59,7 @@ TEST_F(IddFixture, IddFile)
   boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
-  EXPECT_EQ("8.0.0.008",loadedIddFile->version());
+  EXPECT_EQ("8.1.0.009",loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(),loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType

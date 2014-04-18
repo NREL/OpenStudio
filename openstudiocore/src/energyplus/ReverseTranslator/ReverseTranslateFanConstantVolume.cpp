@@ -69,7 +69,7 @@ OptionalModelObject result,temp;
   }
   //inlet and outlet nodes are set my the HVACAirLoop
   OptionalDouble d;
-  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::FanEfficiency);
+  d = workspaceObject.getDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency);
   if(d)
   {
     fan.setFanEfficiency(*d);

@@ -70,7 +70,7 @@ projectDir = ospPath.parent_path / Path.new(ospPath.stem)
 
 
 # EnergyPlus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
 ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 
 

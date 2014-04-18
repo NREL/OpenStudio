@@ -110,7 +110,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.0;
+  Version,8.1;
 
   Building,
     Building,                !- Name
@@ -2636,7 +2636,7 @@
   Fan:VariableVolume,
     Supply Fan 1,            !- Name
     FanAvailSched,           !- Availability Schedule Name
-    0.7,                     !- Fan Efficiency
+    0.7,                     !- Fan Total Efficiency
     600.0,                   !- Pressure Rise {Pa}
     autosize,                !- Maximum Flow Rate {m3/s}
     Fraction,                !- Fan Power Minimum Flow Rate Input Method
@@ -2984,10 +2984,6 @@
     Boiler:HotWater,         !- Equipment 1 Object Type
     Central Boiler;          !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Boiler:HotWater="Central Boiler",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
   Boiler:HotWater,
     Central Boiler,          !- Name
     NaturalGas,              !- Fuel Type
@@ -3240,10 +3236,6 @@ InputOutputReference document for details.;
     Chiller:Electric,        !- Equipment 1 Object Type
     Central Chiller;         !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Chiller:Electric="Central Chiller",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
   Chiller:Electric,
     Central Chiller,         !- Name
     WaterCooled,             !- Condenser Type
@@ -3506,10 +3498,14 @@ InputOutputReference document for details.;
     Condenser Tower Outlet Node,  !- Water Outlet Node Name
     autosize,                !- Design Water Flow Rate {m3/s}
     autosize,                !- Design Air Flow Rate {m3/s}
-    autosize,                !- Fan Power at Design Air Flow Rate {W}
-    autosize,                !- U-Factor Times Area Value at Design Air Flow Rate {W/K}
-    0.0,                     !- Air Flow Rate in Free Convection Regime {m3/s}
-    0.0;                     !- U-Factor Times Area Value at Free Convection Air Flow Rate {W/K}
+    autosize,                !- Design Fan Power {W}
+    autosize,                !- Design U-Factor Times Area Value {W/K}
+    0.0,                     !- Free Convection Air Flow Rate {m3/s}
+    ,                        !- Free Convection Air Flow Rate Sizing Factor
+    0.0,                     !- Free Convection U-Factor Times Area Value {W/K}
+    ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
+    ,                        !- Performance Input Method
+    ;                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
 
   Pump:VariableSpeed,
     Cond Circ Pump,          !- Name
