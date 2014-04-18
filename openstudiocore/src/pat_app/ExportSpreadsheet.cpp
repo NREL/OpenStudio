@@ -58,13 +58,13 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
 
   openstudio::path rubyIncludePath = getOpenStudioRubyIncludePath();
   if (!boost::filesystem::exists(rubyIncludePath)) {
-    LOG_FREE(Error, "ExportSpreadsheet", "Ruby include paths cannot be found.");
+    LOG_FREE(Error, "ExportSpreadsheet", "Ruby include path '" << rubyIncludePath << "' cannot be found.");
     return false;
   }
 
   openstudio::path scriptPath = getOpenStudioRubyScriptsPath() / openstudio::toPath("openstudio/analysisdriver/ExportToSpreadsheet.rb");
   if (!boost::filesystem::exists(scriptPath)) {
-    LOG_FREE(Error, "ExportSpreadsheet", "ExportToSpreadsheet script cannot be found.");
+    LOG_FREE(Error, "ExportSpreadsheet", "ExportToSpreadsheet script '" << scriptPath << "' cannot be found.");
     return false;
   }
 
