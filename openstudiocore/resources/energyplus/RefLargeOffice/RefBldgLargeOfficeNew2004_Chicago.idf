@@ -7207,13 +7207,6 @@
 
 ! ***EQUIPMENT***
 
-  Output:PreprocessorMessage,
-    Conversion 7.2 => 8.0,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    Boiler:HotWater="HeatSys1 Boiler",  !- Message Line 1
-    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
-    InputOutputReference document for details.;  !- Message Line 3
-
   Boiler:HotWater,
     HeatSys1 Boiler,         !- Name
     NATURALGAS,              !- Fuel Type
@@ -7238,12 +7231,6 @@
     Temperature,             !- Control Variable
     HW-Loop-Temp-Schedule,   !- Schedule Name
     HeatSys1 Supply Equipment Outlet Node;  !- Setpoint Node or NodeList Name
-
-  Output:PreprocessorMessage,
-    Conversion 7.2 => 8.0,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    Chiller:Electric:ReformulatedEIR="CoolSys1 Chiller 1",  !- Message Line 1
-    defaults for this object have changed. See InputOutputReference document for details.;  !- Message Line 2
 
   Chiller:Electric:ReformulatedEIR,
     CoolSys1 Chiller 1,      !- Name
@@ -7277,12 +7264,6 @@
     Temperature,             !- Control Variable
     CW-Loop-Temp-Schedule,   !- Schedule Name
     CoolSys1 Supply Equipment Outlet Node 1;  !- Setpoint Node or NodeList Name
-
-  Output:PreprocessorMessage,
-    Conversion 7.2 => 8.0,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    Chiller:Electric:ReformulatedEIR="CoolSys1 Chiller 2",  !- Message Line 1
-    defaults for this object have changed. See InputOutputReference document for details.;  !- Message Line 2
 
   Chiller:Electric:ReformulatedEIR,
     CoolSys1 Chiller 2,      !- Name

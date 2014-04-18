@@ -27569,7 +27569,7 @@ Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
         \note must be lower than or equal to the highest speed number
    N3,  \field Gross Rated Total Cooling Capacity At Selected Nominal Speed Level
         \note Total cooling capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \autosizable
         \default autosize
@@ -27615,7 +27615,7 @@ Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit,
    N9,  \field Speed 1 Reference Unit Gross Rated Total Cooling Capacity
         \begin-extensible
         \note Total cooling capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
@@ -27831,7 +27831,7 @@ Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit,
         \note PLR = part load ratio (heating load/steady state capacity)
    N6,  \field Speed 1 Reference Unit Gross Rated Heating Capacity
         \note Heating capacity not accounting for the effect of supply air fan heat
-        \units w
+        \units W
         \type real
         \minimum 0
         \required-field
