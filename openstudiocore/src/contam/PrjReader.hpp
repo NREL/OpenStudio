@@ -37,39 +37,39 @@ public:
   explicit Reader(QString string, int starting=0);
   ~Reader();
 
-  float readFloat(DECFILELINE);
-  double readDouble(DECFILELINE);
-  std::string readString(DECFILELINE);
-  int readInt(DECFILELINE);
-  unsigned readUInt(DECFILELINE);
+  float readFloat();
+  double readDouble();
+  std::string readString();
+  int readInt();
+  unsigned readUInt();
 
-  std::string readLine(DECFILELINE);
-  void read999(DECFILELINE);
-  void read999(std::string mesg DECCFILELINE);
-  void readEnd(DECFILELINE);
+  std::string readLine();
+  void read999();
+  void read999(std::string mesg);
+  void readEnd();
 
-  void skipSection(DECFILELINE);
-  std::string readSection(DECFILELINE);
+  void skipSection();
+  std::string readSection();
   int lineNumber(){return m_lineNumber;}
 
-  template <class T> std::vector<T> readSectionVector(DECFILELINEC std::string name=std::string());
+  template <class T> std::vector<T> readSectionVector(std::string name=std::string());
 
-  std::vector<int> readIntVector(DECFILELINEC bool terminated=false);
-  //    std::vector<int> readIntStdVector(DECFILELINEC bool terminated=false);
-  //    template <class T> QList<T*> readSectionPointers(DECFILELINEC std::string name=STRING_INIT);
-  //    template <class T> QList<T> readSectionList(DECFILELINEC STRING name=STRING_INIT);
-  //    template <class T, template <class T> class V> V<T> readSectionVector(DECFILELINEC STRING name);
-  //    template <class T> QVector<T> readSectionQVector(DECFILELINEC STRING name=STRING_INIT);
-  //    template <class T> std::vector<T> readSectionStdVector(DECFILELINEC STRING name=STRING_INIT);
-  template <class T> QVector<QSharedPointer<T> > readElementVector(DECFILELINEC std::string name=std::string());
+  std::vector<int> readIntVector(bool terminated=false);
+  //    std::vector<int> readIntStdVector(bool terminated=false);
+  //    template <class T> QList<T*> readSectionPointers(std::string name=STRING_INIT);
+  //    template <class T> QList<T> readSectionList(STRING name=STRING_INIT);
+  //    template <class T, template <class T> class V> V<T> readSectionVector(STRING name);
+  //    template <class T> QVector<T> readSectionQVector(STRING name=STRING_INIT);
+  //    template <class T> std::vector<T> readSectionStdVector(STRING name=STRING_INIT);
+  template <class T> QVector<QSharedPointer<T> > readElementVector(std::string name=std::string());
 
-  template <class T> T read(DECFILELINE);
-  template <class T> T readNumber(DECFILELINE);
+  template <class T> T read();
+  template <class T> T readNumber();
 
 private:
-  QString readQString(DECFILELINE);
-  std::string readStdString(DECFILELINE);
-  QString readLineQString(DECFILELINE);
+  QString readQString();
+  std::string readStdString();
+  QString readLineQString();
 
   QTextStream *stream;
   int m_lineNumber;
@@ -79,9 +79,9 @@ private:
   REGISTER_LOGGER("openstudio.contam.Reader");
 };
 
-template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::string name)
+template <class T> std::vector<T> Reader::readSectionVector(std::string name)
 {
-  int n = readInt(ARGFILELINE);
+  int n = readInt();
   std::vector<T> vector;
   for(int i=0;i<n;i++)
   {
@@ -90,17 +90,17 @@ template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::st
     vector.push_back(value);
   }
   if(name.empty())
-    read999("Failed to find section termination" ARGCFILELINE);
+    read999("Failed to find section termination");
   else
-    read999("Failed to find "+name+" section termination" ARGCFILELINE);
+    read999("Failed to find "+name+" section termination");
   return vector;
 }
 
-//template <class T> QList<T*> Reader::readSectionPointers(DECFILELINEC std::string name)
+//template <class T> QList<T*> Reader::readSectionPointers(std::string name)
 //{
 //    QList<T*> list;
 //    T *object;
-//    int n = readInt(ARGFILELINE);
+//    int n = readInt();
 //    for(int i=0;i<n;i++)
 //    {
 //        object = new T();
@@ -108,16 +108,16 @@ template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::st
 //        object->read(this);
 //    }
 //    if(IS_NULL(name))
-//        read999("Failed to find section termination" ARGCFILELINE);
+//        read999("Failed to find section termination");
 //    else
-//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//        read999("Failed to find "+name+" section termination");
 //    return list;
 //}
 
-//template <class T> QList<T> Reader::readSectionList(DECFILELINEC std::string name)
+//template <class T> QList<T> Reader::readSectionList(std::string name)
 //{
 //    QList<T> list;
-//    int n = readInt(ARGFILELINE);
+//    int n = readInt();
 //    for(int i=0;i<n;i++)
 //    {
 //        T object;
@@ -125,41 +125,41 @@ template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::st
 //        list << object;
 //    }
 //    if(IS_NULL(name))
-//        read999("Failed to find section termination" ARGCFILELINE);
+//        read999("Failed to find section termination");
 //    else
-//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//        read999("Failed to find "+name+" section termination");
 //    return list;
 //}
 
-//template <class T, template <class T> class V> V<T> Reader::readSectionVector(DECFILELINEC std::string name)
+//template <class T, template <class T> class V> V<T> Reader::readSectionVector(std::string name)
 //{
-//    int n = readInt(ARGFILELINE);
+//    int n = readInt();
 //    V<T> vector(n);
 //    for(int i=0;i<n;i++)
 //        vector[i].read(*this);
 //    if(IS_NULL(name))
-//        read999("Failed to find section termination" ARGCFILELINE);
+//        read999("Failed to find section termination");
 //    else
-//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//        read999("Failed to find "+name+" section termination");
 //    return vector;
 //}
 
-//template <class T> QVector<T> Reader::readSectionQVector(DECFILELINEC std::string name)
+//template <class T> QVector<T> Reader::readSectionQVector(std::string name)
 //{
-//    int n = readInt(ARGFILELINE);
+//    int n = readInt();
 //    QVector<T> vector(n);
 //    for(int i=0;i<n;i++)
 //        vector[i].read(*this);
 //    if(IS_NULL(name))
-//        read999("Failed to find section termination" ARGCFILELINE);
+//        read999("Failed to find section termination");
 //    else
-//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//        read999("Failed to find "+name+" section termination");
 //    return vector;
 //}
 
-//template <class T> std::vector<T> Reader::readSectionStdVector(DECFILELINEC std::string name)
+//template <class T> std::vector<T> Reader::readSectionStdVector(std::string name)
 //{
-//    int n = readInt(ARGFILELINE);
+//    int n = readInt();
 //    std::vector<T> vector;
 //    for(int i=0;i<n;i++)
 //    {
@@ -168,15 +168,15 @@ template <class T> std::vector<T> Reader::readSectionVector(DECFILELINEC std::st
 //        vector.push_back(v);
 //    }
 //    if(IS_NULL(name))
-//        read999("Failed to find section termination" ARGCFILELINE);
+//        read999("Failed to find section termination");
 //    else
-//        read999("Failed to find "+name+" section termination" ARGCFILELINE);
+//        read999("Failed to find "+name+" section termination");
 //    return vector;
 //}
 
-template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILELINEC std::string name)
+template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(std::string name)
 {
-  int n = readInt(ARGFILELINE);
+  int n = readInt();
   QVector<QSharedPointer<T> > vector(n);
   for(int i=0;i<n;i++)
   {
@@ -186,9 +186,9 @@ template <class T> QVector<QSharedPointer<T> > Reader::readElementVector(DECFILE
     //vector[i].reset(T::readElement(this));
   }
   if(name.empty())
-    read999("Failed to find section termination" ARGCFILELINE);
+    read999("Failed to find section termination");
   else
-    read999("Failed to find "+name+" section termination" ARGCFILELINE);
+    read999("Failed to find "+name+" section termination");
   return vector;
 }
 

@@ -70,8 +70,14 @@ public:
   boost::optional<openstudio::TimeSeries> nodeTemperature(int nr) const;
   boost::optional<openstudio::TimeSeries> nodePressure(int nr) const;
   boost::optional<openstudio::TimeSeries> nodeDensity(int nr) const;
+  /** Returns a vector of DateTime objects that give the EnergyPlus-style
+   *  end of interval times. These are not the actual times in the SIM file */
+  std::vector<openstudio::DateTime> dateTimes() const;
 
-  std::vector<openstudio::DateTime> dateTimes() const
+  /** Returns a vector of DateTime objects that the SIM file contains data for.
+   *  CONTAM always includes a start time result, so a yearly simulation will
+   *  result in 8761 times. */
+  std::vector<openstudio::DateTime> fileDateTimes() const
   {
     return m_dateTimes;
   }
