@@ -257,8 +257,10 @@ namespace openstudio {
       return getApplicationBuildDirectory() / openstudio::toPath("ruby") / *buildname;
 #endif
     } else {
+      // DLM: do not rely on installer adding this to the ruby path
       // installer makes openstudio readily available
-      return openstudio::path();
+      //return openstudio::path();
+      return getOpenStudioRubyScriptsPath();
     }
   }
 
