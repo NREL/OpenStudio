@@ -2984,13 +2984,6 @@
     Boiler:HotWater,         !- Equipment 1 Object Type
     Central Boiler;          !- Equipment 1 Name
 
-  Output:PreprocessorMessage,
-    Conversion 7.2 => 8.0,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    Boiler:HotWater="Central Boiler",  !- Message Line 1
-    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
-    InputOutputReference document for details.;  !- Message Line 3
-
   Boiler:HotWater,
     Central Boiler,          !- Name
     NaturalGas,              !- Fuel Type
@@ -3242,13 +3235,6 @@
     Cooling Plant,           !- Name
     Chiller:Electric,        !- Equipment 1 Object Type
     Central Chiller;         !- Equipment 1 Name
-
-  Output:PreprocessorMessage,
-    Conversion 7.2 => 8.0,   !- Preprocessor Name
-    Warning,                 !- Error Severity
-    Chiller:Electric="Central Chiller",  !- Message Line 1
-    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
-    InputOutputReference document for details.;  !- Message Line 3
 
   Chiller:Electric,
     Central Chiller,         !- Name
