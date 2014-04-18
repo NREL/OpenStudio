@@ -94,7 +94,6 @@ IddUnitString::IddUnitString (const std::string &s)
   if ((!m_converted.empty()) && boost::regex_search(m_converted,boost::regex("micron"))) {
     Unit temp = parseUnitString(m_converted);
 
-    // g -> m(kg)
     int gExp = temp.baseUnitExponent("micron");
     if (gExp != 0) {
       temp.setBaseUnitExponent("micron",0);
