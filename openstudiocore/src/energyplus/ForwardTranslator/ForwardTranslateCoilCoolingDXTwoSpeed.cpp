@@ -67,40 +67,40 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   d = modelObject.getRatedHighSpeedTotalCoolingCapacity();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedGrossRatedTotalCoolingCapacity,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedGrossRatedTotalCoolingCapacity,"Autosize");
   }
 
   //  N2 , \field Rated High Speed Sensible Heat Ratio
   d = modelObject.getRatedHighSpeedSensibleHeatRatio();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedSensibleHeatRatio,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedSensibleHeatRatio,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedSensibleHeatRatio,"Autosize");
   }
 
   //  N3 , \field Rated High Speed COP
   d = modelObject.getRatedHighSpeedCOP();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedCOP,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedGrossRatedCoolingCOP,*d);
   }
 
   //  N4 , \field Rated High Speed Air Flow Rate
   d = modelObject.getRatedHighSpeedAirFlowRate();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedAirFlowRate,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedHighSpeedAirFlowRate,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedAirFlowRate,"Autosize");
   }
 
   //A3 , \field Air Inlet Node Name
@@ -161,40 +161,40 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   d = modelObject.getRatedLowSpeedTotalCoolingCapacity();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedTotalCoolingCapacity,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedTotalCoolingCapacity,"Autosize");
   }
 
   //  N6 , \field Rated Low Speed Sensible Heat Ratio
   d = modelObject.getRatedLowSpeedSensibleHeatRatio();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedSensibleHeatRatio,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedSensibleHeatRatio,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedSensibleHeatRatio,"Autosize");
   }
 
   //  N7 , \field Rated Low Speed COP
   d = modelObject.getRatedLowSpeedCOP();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedCOP,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedCoolingCOP,*d);
   }
 
   //  N8 , \field Rated Low Speed Air Flow Rate
   d = modelObject.getRatedLowSpeedAirFlowRate();
   if( d )
   {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,*d);
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedAirFlowRate,*d);
   }
   else
   {
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::RatedLowSpeedAirFlowRate,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedAirFlowRate,"Autosize");
   }
 
   //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name

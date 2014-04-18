@@ -43,7 +43,7 @@ OpenStudio::create_directory(OpenStudio::Path.new($OpenStudio_ResourcePath + "mo
 OpenStudio::create_directory(runDir)
 
 # find energyplus
-ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
 ep_exe = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
 weatherFilePath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / 
     OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")

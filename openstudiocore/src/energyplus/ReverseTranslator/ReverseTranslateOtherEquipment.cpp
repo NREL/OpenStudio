@@ -121,7 +121,7 @@ OptionalModelObject ReverseTranslator::translateOtherEquipment(
     otherEquipment.setName(*s);
   }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ZoneName);
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ZoneorZoneListName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
