@@ -249,7 +249,7 @@ void RunView::locateEnergyPlus()
   if (major && minor){
     energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
   } else {
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,0)).tools().size() == 0;
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,1)).tools().size() == 0;
   }
   
   if (energyplus_not_installed){

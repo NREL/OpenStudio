@@ -22,7 +22,7 @@ IF(GIT_FOUND)
 ENDIF()
 
 # EnergyPlus Idd version
-SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
+SET(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
 
 
 OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )

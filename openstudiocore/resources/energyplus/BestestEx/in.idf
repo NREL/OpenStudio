@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,8.0;
+  Version,8.1;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
