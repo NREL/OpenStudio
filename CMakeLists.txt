@@ -253,6 +253,8 @@ IF (WIN32)
 #  ENDIF (MSVC)
 ENDIF (WIN32)
 
+# DLM: should we allow boost to be linked dynamically on Unix or should we force static for all platforms?
+
 SET( Boost_ADDITIONAL_VERSIONS "1.55")
 FIND_PACKAGE( Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
 
