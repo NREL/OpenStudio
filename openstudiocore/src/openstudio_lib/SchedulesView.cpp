@@ -150,8 +150,8 @@ SchedulesView::SchedulesView(bool isIP,
                         this,SIGNAL(purgeUnusedScheduleRulesetsClicked()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(selectorButtons,SIGNAL(openBclDlgClicked()),
-                        this,SIGNAL(openBclDlgClicked()));
+  isConnected = connect(selectorButtons,SIGNAL(downloadComponentsClicked()),
+                        this,SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),

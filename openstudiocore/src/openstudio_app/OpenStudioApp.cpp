@@ -141,6 +141,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
     connect( m_startupMenu.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
     connect( m_startupMenu.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+    connect( m_startupMenu.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
     connect( m_startupMenu.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
     connect( m_startupMenu.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
     //connect( m_startupMenu.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
@@ -156,6 +157,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newFromTemplateSlot( NewFromTemplateEnum ) ) ) ;
   connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( open() ) ) ;
   connect( m_startupView.get(), SIGNAL( importClicked() ), this, SLOT( importIdf() ) ) ;
+  connect( m_startupView.get(), SIGNAL( importgbXMLClicked() ), this, SLOT( importgbXML() ) ) ;
   connect( m_startupView.get(), SIGNAL( importSDDClicked() ), this, SLOT( importSDD() ) ) ;
 
   bool openedCommandLine = false;
@@ -181,6 +183,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -263,6 +266,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -341,6 +345,7 @@ void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum
   connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
   connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
   connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+  connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
   connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
   connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
   connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -421,6 +426,7 @@ void OpenStudioApp::importIdf()
         connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
         connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
         connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+        connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
         connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
         connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
         connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -466,6 +472,11 @@ void OpenStudioApp::importIdf()
       }
     }
   }
+}
+
+void OpenStudioApp::importgbXML()
+{
+  //TODO
 }
 
 void OpenStudioApp::importSDD()
@@ -514,6 +525,7 @@ void OpenStudioApp::importSDD()
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );

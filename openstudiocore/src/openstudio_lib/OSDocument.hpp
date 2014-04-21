@@ -196,6 +196,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void importClicked();
 
+  void importgbXMLClicked();
+
   void importSDDClicked();
 
   void loadFileClicked();
@@ -214,7 +216,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void modelSaving(const openstudio::path &t_path);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
 
@@ -232,11 +234,17 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void runComplete();
 
-  void exportIdf(); 
+  void exportIdf();
+
+  void exportgbXML();
+
+  void exportSDD();
 
   void save();
 
   void saveAs();
+
+  void revert();
 
   void showRunManagerPreferences();
 
@@ -247,6 +255,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void openSidebar();
 
   void openBclDlg();
+
+  void openMeasuresDlg();
+
+  void openChangeMeasuresDirDlg();
 
  private slots:
 
@@ -264,7 +276,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void on_closeMeasuresBclDlg();
 
+  void changeBclLogin();
+
  private:
+
   friend class OpenStudioApp;
 
   REGISTER_LOGGER("openstudio.OSDocument");

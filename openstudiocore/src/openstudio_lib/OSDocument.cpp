@@ -155,7 +155,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   }
 
   m_mainWindow = new MainWindow(m_isPlugin);
-  isConnected = connect(m_mainWindow, SIGNAL(openBclDlgClicked()), this, SLOT(openBclDlg()));
+  isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
   OS_ASSERT(isConnected);
@@ -322,8 +322,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
                         m_schedulesTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_schedulesTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -345,8 +345,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
                         m_constructionsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_constructionsTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -368,8 +368,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
                         m_loadsTabController.get(),SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_loadsTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -392,8 +392,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
            m_mainRightColumnController.get(),
            SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
 
-  isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -411,8 +411,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
   connect(m_buildingStoriesTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForBuildingSummarySubTab(int)));
   
-  isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_buildingStoriesTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -439,8 +439,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
            m_mainRightColumnController.get(),
            SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
 
-  isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_facilityTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -539,8 +539,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
   //connect(m_scriptsTabController->scriptFolderListView(), SIGNAL(scriptListChanged()),
   //    this, SLOT(markAsModified()));
 
-  //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(openBclDlgClicked()),
-  //                               this, SIGNAL(openBclDlgClicked()));
+  //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(downloadComponentsClicked()),
+  //                               this, SIGNAL(downloadComponentsClicked()));
   //OS_ASSERT(isConnected);
 
   //isConnected = QObject::connect(m_scriptsTabController.get(), SIGNAL(openLibDlgClicked()),
@@ -635,6 +635,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   isConnected = connect(m_mainWindow, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
   OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
@@ -653,9 +655,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(exportClicked()), this, SLOT(exportIdf()));
   OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exportgbXMLClicked()), this, SLOT(exportgbXML()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exportSDDClicked()), this, SLOT(exportSDD()));
+  OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), this, SLOT(revert()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
   OS_ASSERT(isConnected);
@@ -663,13 +671,17 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(toggleUnitsClicked(bool)), this, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(this, SIGNAL(openBclDlgClicked()),
-                                 this, SLOT(openBclDlg()));
+  isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
   OS_ASSERT(isConnected);
-
-  isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()),
-                                 this, SLOT(openLibDlg()));
+  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
+  OS_ASSERT(isConnected);
+  isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
   OS_ASSERT(isConnected);
 
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
@@ -924,6 +936,48 @@ void OSDocument::exportIdf()
   }
 }
 
+void OSDocument::exportgbXML()
+{
+
+  QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
+                                                  tr("Export gbXML"),
+                                                  QDir::homePath(),
+                                                  tr("(*.xml)") );
+
+  if( ! fileName.isEmpty() )
+  {
+    // TODO
+    //model::Model m = this->model();
+    //energyplus::ForwardTranslator trans;
+    //Workspace workspace = trans.translateModel(m);
+    //openstudio::path outDir = toPath(fileName);
+    //boost::filesystem::ofstream ofs(outDir);
+    //workspace.toIdfFile().print(ofs);
+    //ofs.close();
+  }
+}
+
+void OSDocument::exportSDD()
+{
+
+  QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
+                                                  tr("Export SDD"),
+                                                  QDir::homePath(),
+                                                  tr("(*.xml)") );
+
+  if( ! fileName.isEmpty() )
+  {
+    //TODO
+    //model::Model m = this->model();
+    //energyplus::ForwardTranslator trans;
+    //Workspace workspace = trans.translateModel(m);
+    //openstudio::path outDir = toPath(fileName);
+    //boost::filesystem::ofstream ofs(outDir);
+    //workspace.toIdfFile().print(ofs);
+    //ofs.close();
+  }
+}
+
 void OSDocument::save()
 {
   // save the project file
@@ -965,6 +1019,11 @@ void OSDocument::save()
   }else{
     saveAs();
   }
+}
+
+void OSDocument::revert()
+{
+  // TODO
 }
 
 void OSDocument::scanForTools()
@@ -1180,6 +1239,34 @@ ScriptFolderListView* OSDocument::scriptFolderListView() {
 
 void OSDocument::toggleUnits(bool displayIP)
 {
+}
+
+void OSDocument::openMeasuresDlg()
+{
+  // TODO
+}
+
+void OSDocument::openChangeMeasuresDirDlg()
+{
+  // TODO 
+  //openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+ 
+  //QString dirName = QFileDialog::getExistingDirectory( this,
+  //                                                     tr("Select My Measures Directory"),
+  //                                                     toQString(userMeasuresDir));
+ 
+  //if(dirName.length() > 0){
+  //  userMeasuresDir = toPath(dirName);
+  //  if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
+  //    emit userMeasuresDirChanged();
+  //  }
+  //}
+
+}
+
+void OSDocument::changeBclLogin()
+{
+  // TODO
 }
 
 void OSDocument::openBclDlg()

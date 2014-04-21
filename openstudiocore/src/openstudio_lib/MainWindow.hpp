@@ -71,7 +71,13 @@ class MainWindow : public QMainWindow
 
   void exportClicked();
 
+  void exportgbXMLClicked();
+
+  void exportSDDClicked();
+
   void importClicked();
+
+  void importgbXMLClicked();
 
   void importSDDClicked();
 
@@ -84,6 +90,8 @@ class MainWindow : public QMainWindow
   void saveAsFileClicked(); 
 
   void saveFileClicked();
+
+  void revertFileClicked();
 
   void scanForToolsClicked();
 
@@ -101,16 +109,24 @@ class MainWindow : public QMainWindow
 
   void toggleUnitsClicked(bool displayIP);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
+
+  void changeMyMeasuresDir();
+
+  void changeBclLogin();
+
+  void applyMeasureClicked();
+
+  void downloadMeasuresClicked();
 
   protected:
 
   void closeEvent(QCloseEvent * event);
 
   void dragEnterEvent(QDragEnterEvent * event);
-  
+
   void dropEvent(QDropEvent * event);
 
   QSize sizeHint() const;
@@ -135,9 +151,8 @@ class MainWindow : public QMainWindow
 
   void toggleUnits(bool displayIP);
 
-  private slots:
-  
   void configureProxyClicked();
+
   void loadProxySettings();
 
 };
