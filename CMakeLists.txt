@@ -460,12 +460,17 @@ ENDIF()
 
 IF(BUILD_BOOST)
   IF(APPLE)
+    IF (CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
+      set(apple-frameworks "-stdlib=libc++")
+    ELSE()
+      set(apple-frameworks "-stdlib=libstdc++")
+    ENDIF()
     ExternalProject_Add( Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 variant=debug,release address-model=32_64 architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-frameworks} linkflags=${apple-frameworks} variant=debug,release address-model=32_64 architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
