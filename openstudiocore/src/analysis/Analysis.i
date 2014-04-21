@@ -126,7 +126,8 @@ SWIG_ANALYSISOBJECT(AnalysisObject);
 
 // measures
 SWIG_ANALYSISOBJECT(Measure);
-#ifdef SWIGCSHARP
+
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %template(OptionalMeasureVector) std::vector<boost::optional<openstudio::analysis::Measure> >;
 #endif
 SWIG_ANALYSISOBJECT(NullMeasure);

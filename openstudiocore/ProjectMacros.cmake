@@ -542,6 +542,92 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     ENDIF()
   ENDIF()
 
+  # java
+  IF ( BUILD_JAVA_BINDINGS )
+    SET( swig_target "java_${NAME}" )
+    
+    IF(IS_UTILTIES)
+      SET( NAMESPACE "OpenStudio")
+      SET( MODULE "${NAME}" )
+    ELSE()
+      #SET( NAMESPACE "OpenStudio.${NAME}" )
+      SET( NAMESPACE "OpenStudio" )  
+      SET( MODULE "${NAME}" )
+    ENDIF()    
+
+    SET(SWIG_WRAPPER "java_${NAME}_wrap.cxx")    
+    SET(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}") 
+
+    SET(JAVA_OUTPUT_NAME "openstudio_${NAME}_java")
+    SET(JAVA_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources/${NAME}" )
+    FILE(MAKE_DIRECTORY ${JAVA_GENERATED_SRC_DIR})
+
+    ADD_CUSTOM_COMMAND(
+    OUTPUT ${SWIG_WRAPPER}
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${JAVA_GENERATED_SRC_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${JAVA_GENERATED_SRC_DIR}"
+    COMMAND "${SWIG_EXECUTABLE}"
+            "-java" "-c++" 
+            -package ${NAMESPACE}
+            #          -features autodoc=1
+            -outdir "${JAVA_GENERATED_SRC_DIR}"  "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+            -module "${MODULE}"
+            -o "${SWIG_WRAPPER_FULL_PATH}"
+            # -dllimport "${JAVA_OUTPUT_NAME}"
+            "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}  
+     DEPENDS ${this_depends}
+
+    )
+
+    INCLUDE_DIRECTORIES("${JAVA_INCLUDE_PATH}")
+
+    ADD_LIBRARY(
+      ${swig_target}
+      MODULE
+      ${SWIG_WRAPPER}
+    )
+
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME "${JAVA_OUTPUT_NAME}" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/java/" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java/" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/java/" )
+    IF(MSVC)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+    ENDIF()
+    TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} )
+
+    #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+    
+    # add this target to a "global" variable so java tests can require these
+    LIST( APPEND ALL_JAVA_BINDING_TARGETS "${swig_target}" )
+    SET( ALL_JAVA_BINDING_TARGETS "${ALL_JAVA_BINDING_TARGETS}" PARENT_SCOPE )
+  
+    LIST( APPEND ALL_JAVA_SRC_DIRECTORIES "${JAVA_GENERATED_SRC_DIR}" )
+    SET( ALL_JAVA_SRC_DIRECTORIES "${ALL_JAVA_SRC_DIRECTORIES}" PARENT_SCOPE )
+  
+  
+    IF( WIN32 )
+      INSTALL( TARGETS ${swig_target} DESTINATION Java/openstudio/ )
+
+      INSTALL(CODE "
+       INCLUDE(GetPrerequisites)
+       GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Java/openstudio/openstudio_${NAME}_java.dll PREREQUISITES 1 1 \"\" \"${CMAKE_BINARY_DIR}/Products/\" )
+      
+       IF(WIN32)
+         LIST(REVERSE PREREQUISITES)
+       ENDIF(WIN32)
+       
+       FOREACH( PREREQ IN LISTS PREREQUISITES )
+         GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+         EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\") 
+
+         GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )  
+      ")
+    ENDIF()
+  ENDIF()
+
 
   # v8
   IF(BUILD_V8_BINDINGS)

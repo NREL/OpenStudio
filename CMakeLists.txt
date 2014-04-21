@@ -44,6 +44,10 @@ ENDIF()
 # Requires: SWIG
 OPTION( BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF )
 
+# Build Java bindings
+# Requires: SWIG
+OPTION( BUILD_JAVA_BINDINGS "Build Java bindings" OFF )
+
 # Build Node V8 bindings
 # Requires: SWIG
 OPTION( BUILD_V8_BINDINGS "Build V8 bindings" OFF )
@@ -445,8 +449,10 @@ IF(BUILD_SWIG)
     ELSE()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add( SWIG
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
-        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
+        #        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
+        URL http://downloads.sourceforge.net/project/swig/swig/swig-3.0.0/swig-3.0.0.tar.gz
+        #        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
+
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
@@ -687,6 +693,7 @@ ExternalProject_Add( OpenStudioCore
     -DENERGYPLUS_VERSION:STRING=${ENERGYPLUS_VERSION}
     -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
     -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
+    -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
     -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
     -DBUILD_NODE_MODULES:BOOL=${BUILD_NODE_MODULES}
     -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
