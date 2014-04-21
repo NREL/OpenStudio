@@ -449,9 +449,9 @@ IF(BUILD_SWIG)
     ELSE()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add( SWIG
-        #        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
-        URL http://downloads.sourceforge.net/project/swig/swig/swig-3.0.0/swig-3.0.0.tar.gz
-        #        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
+        #URL http://downloads.sourceforge.net/project/swig/swig/swig-3.0.0/swig-3.0.0.tar.gz
+        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
 
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
