@@ -130,6 +130,12 @@ SWIG_ANALYSISOBJECT(Measure);
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %template(OptionalMeasureVector) std::vector<boost::optional<openstudio::analysis::Measure> >;
 #endif
+
+#if defined(SWIGJAVA)
+%ignore openstudio::analysis::UncertaintyDescription::type;
+#endif
+
+
 SWIG_ANALYSISOBJECT(NullMeasure);
 SWIG_ANALYSISOBJECT(RubyMeasure);
 

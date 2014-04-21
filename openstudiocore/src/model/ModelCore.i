@@ -45,6 +45,11 @@
   #include <utilities/units/Unit.hpp>
 %}
 
+#if defined SWIGJAVA
+%rename(loadComponent) openstudio::model::Component::load;
+%ignore openstudio::model::Meter::name;
+%ignore openstudio::model::Meter::setName;
+#endif
 
 // templates for non-ModelObjects
 %template(ModelVector) std::vector<openstudio::model::Model>;
