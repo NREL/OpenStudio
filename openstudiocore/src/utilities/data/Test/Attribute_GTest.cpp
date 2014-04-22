@@ -24,9 +24,14 @@
 
 #include <utilities/core/Json.hpp>
 
+#include <QDomDocument>
+
+#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 #include <limits>
+
+#include <OpenStudio.hxx>
 
 using namespace openstudio;
 
@@ -390,11 +395,11 @@ TEST_F(DataFixture, Attribute_Source) {
   AttributeVector attributes;
 
   // create vector of attributes with no sources
-  attributes.push_back("My Boolean Attribute",false);
-  attributes.push_back("My Double Attribute",34.2,"W");
-  attributes.push_back("My Integer Attribute",5);
-  attributes.push_back("My String Attribute","flat finish");
-  attributes.push_back("tricky_source","don't talk back");
+  attributes.push_back(Attribute("My Boolean Attribute",false));
+  attributes.push_back(Attribute("My Double Attribute",34.2,"W"));
+  attributes.push_back(Attribute("My Integer Attribute",5));
+  attributes.push_back(Attribute("My String Attribute","flat finish"));
+  attributes.push_back(Attribute("tricky_source","don't talk back"));
 
   // xml and back
   Attribute container("Containing Attribute",attributes);
@@ -409,19 +414,59 @@ TEST_F(DataFixture, Attribute_Source) {
 
   // json and back
   QVariant variant = detail::toVariant(attributes);
+  int n = variant.toMap().size();
   attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
-  // HERE  
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_TRUE(attributeCopy.source().empty());
+  }
 
   // appy same source to all attributes
+  BOOST_FOREACH(Attribute& attribute,attributes) {
+    attribute.setSource("big data set");
+  }
 
   // xml and back
+  doc = container.toXml();
+  containerCopy = Attribute::loadFromXml(doc);
+  ASSERT_TRUE(containerCopy);
+  attributesCopy = containerCopy.get().valueAsAttributeVector();
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_EQ("big data set",attributeCopy.source());
+  }
 
   // json and back
+  variant = detail::toVariant(attributes);
+  EXPECT_EQ(n+1,variant.toMap().size());
+  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_EQ("big data set",attributeCopy.source());
+  }
 
   // change one attribute's source to something different
+  attributes[2].setSource("a wiki");
 
   // xml and back
+  doc = container.toXml();
+  containerCopy = Attribute::loadFromXml(doc);
+  ASSERT_TRUE(containerCopy);
+  attributesCopy = containerCopy.get().valueAsAttributeVector();
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_FALSE(attributeCopy.source().empty());
+  }
+  EXPECT_EQ("a wiki",attributesCopy[2].source());
 
   // json and back
+  variant = detail::toVariant(attributes);
+  EXPECT_EQ(n+attributes.size(),variant.toMap().size());
+  attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
+  EXPECT_EQ(attributes.size(),attributesCopy.size());
+  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+    EXPECT_FALSE(attributeCopy.source().empty());
+  }
+  // order is not guaranteed
 
 }
