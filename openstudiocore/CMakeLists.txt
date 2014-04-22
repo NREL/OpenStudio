@@ -559,6 +559,13 @@ add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 # use chrono as a header only library
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 
+# check if boost is being linked dynamically
+# DLM: should we allow this on Unix or should we force static for all platforms?
+STRING(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}" )
+IF (BOOST_IS_DYN_LIBS)
+  add_definitions(-DBOOST_ALL_DYN_LINK)
+ENDIF()
+
 # QJSON 
 
 find_package(QJSON REQUIRED)
