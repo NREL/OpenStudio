@@ -599,7 +599,10 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
     ENDIF()
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
-
+    IF(APPLE)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".dylib" )
+    ENDIF() 
+    
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
     
     # add this target to a "global" variable so java tests can require these
