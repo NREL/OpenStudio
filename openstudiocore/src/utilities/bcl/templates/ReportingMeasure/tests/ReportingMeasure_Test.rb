@@ -9,7 +9,9 @@ require 'fileutils'
 require 'test/unit'
 
 class ReportingMeasure_Test < Test::Unit::TestCase
-    
+  
+  @@co = OpenStudio::Runmanager::ConfigOptions.new(true)
+  
   # paths to expected test files, includes osm and eplusout.sql
   def modelPath
     return "#{File.dirname(__FILE__)}/ExampleModel.osm"
@@ -36,18 +38,20 @@ class ReportingMeasure_Test < Test::Unit::TestCase
     
     assert(File.exist?(modelPath()))
     
+    if not File.exist?(runDir())
+      Dir.mkdir "#{runDir()}"
+    end
     assert(File.exist?(runDir()))
+    
+    @@co.findTools(false, true, false, true)
     
     if not File.exist?(sqlPath())
       puts "Running EnergyPlus"
       
-      co = OpenStudio::Runmanager::ConfigOptions.new(true)
-      co.findTools(false, true, false, true)
-      
       wf = OpenStudio::Runmanager::Workflow.new("modeltoidf->energypluspreprocess->energyplus")
-      wf.add(co.getTools())
+      wf.add(@@co.getTools())
       job = wf.create(OpenStudio::Path.new(runDir()), OpenStudio::Path.new(modelPath()))
-
+      
       rm = OpenStudio::Runmanager::RunManager.new
       rm.enqueue(job, true)
       rm.waitForFinished
@@ -70,24 +74,29 @@ class ReportingMeasure_Test < Test::Unit::TestCase
   
   # the actual test
   def test_ReportingMeasure
-     
+    
     assert(File.exist?(modelPath()))
     assert(File.exist?(sqlPath()))
-     
+    
     # create an instance of the measure
     measure = ReportingMeasure.new
     
     # create an instance of a runner
     runner = OpenStudio::Ruleset::OSRunner.new
     
+    assert(!@@co.getDefaultEPWLocation.to_s.empty?)
+    epw = @@co.getDefaultEPWLocation / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
+    assert(File.exist?(epw.to_s))
+    
     # get arguments and test that they are what we are expecting
     arguments = measure.arguments()
     assert_equal(0, arguments.size)
     
     # set up runner, this will happen automatically when measure is run in PAT
-    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))    
-    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath))    
-       
+    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(modelPath))
+    runner.setLastEpwFilePath(epw)
+    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath))
+    
     # set argument values to good values and run the measure
     argument_map = OpenStudio::Ruleset::OSArgumentMap.new
     measure.run(runner, argument_map)

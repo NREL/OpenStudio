@@ -267,7 +267,6 @@ bool removeDirectory(const path& dirName) {
       if (info.isDir()) 
       {
         result = removeDirectory(toPath(info.absoluteFilePath()));
-        if (result == false) std::cout << "First: " << toString(info.absoluteFilePath()) << std::endl;
       }
       else 
       {
@@ -280,7 +279,6 @@ bool removeDirectory(const path& dirName) {
       }
     }
     result = QDir().rmdir(toQString(dirName));
-    if (result == false) std::cout << "Second: " << toString(dirName) << std::endl;
   }
 
   return result;
@@ -320,10 +318,10 @@ bool copyDirectory(const path& source, const path& destination) {
 
 bool isEmptyDirectory(const path& dirName)
 {
-  if (!exists(dirName)){
+  if (!QFile::exists(toQString(dirName))){
     return false;
   }
-  if (!is_directory(dirName)){
+  if (!QFileInfo(toQString(dirName)).isDir()){
     return false;
   }
 
