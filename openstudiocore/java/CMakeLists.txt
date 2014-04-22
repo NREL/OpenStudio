@@ -36,19 +36,25 @@
     COMMAND "${Java_JAR_EXECUTABLE}"  -cvf ${OPENSTUDIO_JAVA_JAR} -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
     APPEND
     )
- 
+
   # convienience target to just build the SDK
   ADD_CUSTOM_TARGET( java_sdk ALL
     DEPENDS ${OPENSTUDIO_JAVA_JAR}
     COMMENT "Compiling Java JAR"
   )
 
-  
-  
-#  INSTALL( FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG  )
-#  INSTALL( FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE  )
- 
 
+
+
+  IF(MSVC)
+    INSTALL( FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/Debug/OpenStudio.jar" DESTINATION Java/openstudio/ CONFIGURATIONS DEBUG )
+    INSTALL( FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/Release/OpenStudio.jar" DESTINATION Java/openstudio/ )
+  ELSEIF(APPLE)
+    INSTALL( FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION Java/openstudio/ )
+  ELSE()
+    INSTALL( FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio/java  )
+  ENDIF()
+ 
 
 
 

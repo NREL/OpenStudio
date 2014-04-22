@@ -357,6 +357,8 @@ ENDIF()
 
 # JAVA
 IF ( BUILD_JAVA_BINDINGS )
+  find_package(JNI)
+  find_package(Java)
   SET( ALL_JAVA_BINDING_TARGETS "" ) # global list
   SET( ALL_JAVA_SRC_DIRECTORIES "" ) # global list
 ENDIF()
@@ -789,8 +791,6 @@ if ( BUILD_CSHARP_BINDINGS )
 endif ( BUILD_CSHARP_BINDINGS )
 
 if ( BUILD_JAVA_BINDINGS )
-  find_package(JNI)
-  find_package(Java)
   ADD_CUSTOM_TARGET( ALL_JAVA_BINDINGS )
   #  ADD_DEPENDENCIES( ALL_JAVA_BINDINGS java_sdk ${ALL_JAVA_BINDING_TARGETS} )
 endif ( BUILD_JAVA_BINDINGS )
