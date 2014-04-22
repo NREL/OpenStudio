@@ -243,8 +243,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         end #end of if entity.class.to_s == "Sketchup::Face"
       end #end of entities.each.do
 
-      #todo - update base surfaces to include area from doors
-
       #create base surfaces
       base_surface_array.each do |entity|
 
@@ -306,7 +304,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               # temp array to fix base surface
               possible_source_surfaces << k
 
-              # get vertices for OpenStudio base surface
+              # get vertices for OpenStudio sub surface
               loop = k.outer_loop
               vertices = loop.vertices
 
@@ -324,16 +322,23 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               new_sub_surface = OpenStudio::Model::SubSurface.new(newVertices,@background_osm_model)
               new_sub_surface.setSurface(new_surface)
 
-              #remove edges from door if shared with base surface
-              # todo - this is a bad idea, re-work on OS side vs. in SketchUp so I don't end up with out of sync issue due to swapped surfaces
+              # store all sub surface edges
+              doorEdges = []
+              doorPoints = []
               edges = loop.edges
               edges.each do |edge|
-                if edge.faces.include? v
-                  erasedEdges << [edge.vertices[0].position,edge.vertices[1].position,k,v] #k is entity (door), v is parent (base surface), need this in case surface swapped
-                  edge.erase!
-                  remake_base_surface = true
-                else
-                end
+                doorEdges << [edge.vertices[0].position,edge.vertices[1].position,k,v] #k is entity (door), v is parent (base surface), need this in case surface swapped
+                doorPoints << edge.vertices[0].position
+              end
+
+              # erase door surface
+              #k.erase!
+
+              # redraw erased edges to preserve door in current SketchUp model
+              doorEdges.each do |edgePoints|
+                pointA = edgePoints[0]
+                pointB = edgePoints[1]
+                line = entity.parent.entities.add_line pointA,pointB
               end
 
             end
@@ -363,24 +368,10 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               newVertices << OpenStudio::Point3d.new(x,y,z)
             end  #end of vertices.each do
 
-            #make update surface
+            #make updated surface
             new_surface.setVertices(newVertices)
 
           end  #end of if remake_base_surface
-
-          # redraw erased edges to preserve door in current SketchUp model
-          erasedEdges.each do |edgePoints|
-            pointA = edgePoints[0]
-            pointB = edgePoints[1]
-            if not entity.deleted?
-              line = entity.parent.entities.add_line pointA,pointB
-            elsif edgePoints[2].deleted?
-              # if face doesn't exist then try the door
-              line = edgePoints[2].parent.entities.add_line pointA,pointB
-            else
-              # todo - this could happen if multiple doors in base surface and if base surface swapped when one door edge deleted.
-            end
-          end
 
       end #end of base_surfaces_array.each.do
 
