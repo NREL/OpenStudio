@@ -753,7 +753,10 @@ void StartCloudWorker::startWorking()
  
     if(serverUrl){
 
-      for(int i = 0; i < 15; i++)
+      unsigned waitMS = 3000; // 3000
+      int increment = 15; // 15
+      int maxTries = increment;
+      for(int i = 0; i < maxTries; i++)
       {
         OSServer server(serverUrl.get());
 
@@ -765,10 +768,22 @@ void StartCloudWorker::startWorking()
         }
         else
         {
-          if (i < 14) {
-            System::msleep(3000);
-          } else {
-            serverErrors = server.errors();
+          if (i < maxTries - 1) 
+          {
+            System::msleep(waitMS);
+          } 
+          else 
+          {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(PatApp::instance()->mainWidget(), QString("Continue Waiting For Cloud?"), QString("Cloud has not yet started, continue waiting for cloud to launch?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+            if (reply == QMessageBox::Yes) 
+            {
+              maxTries += increment;
+            }
+            else
+            {
+              serverErrors = server.errors();
+            }
           }
         }
       } 
@@ -854,12 +869,12 @@ void StopCloudWorker::startWorking()
 ReconnectCloudWorker::ReconnectCloudWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_status(CLOUD_STOPPED),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
     m_cloudServiceRunning(false),
-    m_projectIsOnCloud(false)
+    m_projectIsOnCloud(false),
+    m_status(CLOUD_STOPPED)
 {
 }
 
@@ -986,11 +1001,11 @@ bool RecoverCloudWorker::authenticated() const
 CloudMonitorWorker::CloudMonitorWorker(CloudMonitor * monitor)
   : QObject(),
     m_monitor(monitor),
-    m_count(0),
     m_internetAvailable(false),
     m_authenticated(false),
     m_cloudRunning(false),
-    m_cloudServiceRunning(false)
+    m_cloudServiceRunning(false),
+    m_count(0)
 {
 }
 
@@ -1006,7 +1021,14 @@ void CloudMonitorWorker::monitorCloudRunning()
 
     if( ! m_cloudServiceRunning )
     {
-      m_cloudRunning = detail::checkCloudRunning();
+      // Fixing OS_ASSERT crash on exiting PAT with Cloud running, 
+      // but definitely not fixing it in the best way. TODO: Do it right.
+      try {
+        m_cloudRunning = detail::checkCloudRunning();
+      }
+      catch (...) {
+        m_cloudRunning = false;
+      }
       m_authenticated = detail::checkAuthenticated();
       m_internetAvailable = detail::checkInternetAvailable();
       m_count++;

@@ -11,7 +11,7 @@ SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version 
-SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
+SET(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
 
 # Dakota version
 SET(DAKOTA_VERSION "5.3.1")
@@ -457,7 +457,7 @@ IF( BUILD_DOCUMENTATION )
   FOREACH( D ${doxygen_directories} )
     STRING( REPLACE "/" "_" DOC_NAME ${D} )
     IF( ${D} MATCHES "utilities/idd" )
-      # We want to build the idd documentation seperately because of the generated files
+      # We want to build the idd documentation separately because of the generated files
       SET( DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_FILES "" )
@@ -857,7 +857,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_2_0_20131220.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_3_0_20140328.pdf" DESTINATION . )
 
 ###############################################################################
 

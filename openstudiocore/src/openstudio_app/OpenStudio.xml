@@ -13,4 +13,10 @@
     <icon name="application-openstudio.osc"/>
   </mime-type>
 
+  <mime-type type="application/openstudio.ossr">
+    <comment>OpenStudio Standard Result</comment>
+    <glob pattern="*.ossr"/>
+    <icon name="application-openstudio.ossr"/>
+  </mime-type>
+
 </mime-info>

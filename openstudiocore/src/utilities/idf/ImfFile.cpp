@@ -324,7 +324,7 @@ bool ImfFile::m_load(std::istream& is) {
       while((!foundEndLine) && (std::getline(filt, line))){
         ++lineNum;
 
-        // add line to text, include newline seperator
+        // add line to text, include newline separator
         text += (line + idfRegex::newLinestring());
 
         // check if we have found the last field

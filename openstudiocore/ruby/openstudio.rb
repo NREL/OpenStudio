@@ -83,13 +83,11 @@ require 'openstudiosdd'
 # restore original path
 ENV['PATH'] = original_path
 
-if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio"))
-  puts "OpenSSL loaded"
-elsif OpenStudio::RemoteBCL::initializeSSL()
-  puts "OpenSSL loaded"
-else
-  raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
-end  
+if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_Dir}OpenStudio")))
+  if (!OpenStudio::RemoteBCL::initializeSSL())
+    raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+  end
+end
 
 
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)

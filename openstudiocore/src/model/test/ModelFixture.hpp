@@ -52,7 +52,7 @@ class ModelFixture : public ::testing::Test {
   // set up logging
   REGISTER_LOGGER("ModelFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static double tol;
   static boost::optional<openstudio::FileLogSink> logFile;
 };

@@ -595,6 +595,8 @@ begin
       #@aws.client.delete_security_group({:group_name=>'openstudio-worker-sg-v1'}"})
       @aws.client.delete_key_pair({:key_name => "key-pair-#{@timestamp}"})
 
+      puts ({:terminate_session => true}.to_json)
+
     when 'termination_status'
       if ARGV.length < 6
         error(-1, 'Invalid number of args')

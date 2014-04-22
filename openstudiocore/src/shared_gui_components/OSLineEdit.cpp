@@ -71,7 +71,7 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
 {
   m_modelObject = modelObject;
   m_getOptionalBoolArg = get;
-  m_set = m_setOptionalStringReturn;
+  m_setOptionalStringReturn = set;
   m_reset = reset;
   m_isDefaulted = isDefaulted;
 

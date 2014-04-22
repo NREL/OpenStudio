@@ -3244,6 +3244,7 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
     ASSERT_TRUE(result[0].daylightingDeviceShelf());
     ASSERT_TRUE(result[0].daylightingDeviceShelf()->insideShelf());
+    EXPECT_FALSE(result[0].daylightingDeviceShelf()->outsideShelf());
     EXPECT_NEAR(interiorShelfProjectionFactor*daylightingGlassToWallRatio*area, result[0].daylightingDeviceShelf()->insideShelf()->netArea(), 0.001);
     EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
   }

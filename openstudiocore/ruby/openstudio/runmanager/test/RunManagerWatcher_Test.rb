@@ -104,7 +104,7 @@ class RunManagerWatcher_Test < Test::Unit::TestCase
     wf.addJob(OpenStudio::Runmanager::JobType.new("ModelToIdf"));
     wf.addJob(OpenStudio::Runmanager::JobType.new("EnergyPlus"));
 
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
     ep_parent_path = ep_path.parent_path();
 

@@ -19,38 +19,10 @@
 #ifndef PRJDEFINES_H
 #define PRJDEFINES_H
 
-#define STD_STRING
-#define RX_IS_STRING
-
-#ifdef RX_IS_STRING
-#define RX std::string
-#define RX_C(v) v
-#define RX_INIT(v) std::string(#v)
-#endif
-
-#define NOFILELINE
-
-#ifdef NOFILELINE
-#define DECFILELINE
-#define DECFILELINEC
-#define DECCFILELINE
-#define ARGFILELINE
-#define ARGFILELINEC
-#define ARGCFILELINE
-#define FILELINE
-#define CFILELINE
-#define FILELINEC
-#else
-#define DECFILELINE const char *file, int line
-#define DECFILELINEC const char *file, int line,
-#define DECCFILELINE ,const char *file, int line
-#define ARGFILELINE file,line
-#define ARGFILELINEC file,line,
-#define ARGCFILELINE ,file,line
-#define FILELINE __FILE__,__LINE__
-#define CFILELINE ,__FILE__,__LINE__
-#define FILELINEC __FILE__,__LINE__,
-#endif
+#define PRJFLOAT QString
+#define STR_TO_FLOAT(a) QString::fromStdString(a)
+#define FLOAT_CHECK(a,b) QString::fromStdString(a).toDouble(b)
+#define ANY_TO_STR openstudio::toString
 
 // CONTAM icon definitions
 #define FLOW_E      1  /* flow arrow - pointing east */
@@ -168,41 +140,35 @@
 #define EXP_2     253  /* FD 375 exponent 2 */
 #define SUB_2     254  /* FE 376 subscript 2 */
 
-// The defines below were mainly for the ReverseTranslator object - so
-// can be eliminated if that object doesn't ever come back.
-// Directional icon defines: E=1, N=2, W=4, S=8
-#define BIT_E       1
-#define BIT_N       2
-#define BIT_W       4
-#define BIT_S       8
-#define BIT_NE      3
-#define BIT_EW      5
-#define BIT_NW      6
-#define BIT_NEW     7
-#define BIT_ES      9
-#define BIT_NS     10
-#define BIT_NES    11
-#define BIT_SW     12
-#define BIT_ESW    13
-#define BIT_NSW    14
-#define BIT_NESW   15
+enum PathFlags {
+    WIND=0x0001, // Path is subject to wind pressure
+    WPC_P=0x0002, // Path uses WPC file pressure
+    WPC_C=0x0004, // Path uses WPC file contaminants
+    WPC_F=0x0006, // Path uses WPC pressure or contaminants
+    AHS_S=0x0008, // Path is a system (supply or return) flow path
+    AHS_R=0x0010, // Path is a recirculation flow path
+    AHS_O=0x0020, // Path is an outside air flow path
+    AHS_X=0x0040, // Path is an exhaust flow path
+    AHS_P=0x0078, // Path is any AHS path
+    LIM_P=0x0080, // Path is pressure limited
+    LIM_F=0x0100, // Path is flow limited
+    FAN_F=0x0200}; // Path is a constant flow fan element
 
-namespace BitMath { // Take that, C++!
-const unsigned int E = BIT_E;
-const unsigned int N = BIT_N;
-const unsigned int W = BIT_W;
-const unsigned int S = BIT_S;
-const unsigned int NE = BIT_NE;
-const unsigned int EW = BIT_EW;
-const unsigned int NW = BIT_NW;
-const unsigned int NEW = BIT_NEW;
-const unsigned int ES = BIT_ES;
-const unsigned int NS = BIT_NS;
-const unsigned int NES = BIT_NES;
-const unsigned int SW = BIT_SW;
-const unsigned int ESW = BIT_ESW;
-const unsigned int NSW = BIT_NSW;
-const unsigned int NESW = BIT_NESW;
-}
+enum ZoneFlags {
+    // Zone flag bit 1; variable pressure
+    VAR_P=0x0001,NVAR_P=0xFFFE,
+    // Zone flag bit 2; variable contaminants
+    VAR_C=0x0002,NVAR_C=0xFFFD,
+    // Zone flag bit 3; variable temperature
+    VAR_T=0x0004,NVAR_T=0xFFFB,
+    // Zone flag bit 4; system zone: to avoid zone volume check
+    SYS_N=0x0008,NSYS_N=0xFFF7,
+    // Zone flag bit 5; un|conditioned space: to compute air change rate
+    UNCZN =0x0010 , // flags | UNCZN to indicate unconditioned zone
+    SETCZN=0xFFEF, // flags & SETCZN to indicate conditioned zone
+    // Zone flag bit 6; CFD zone
+    CFDZN =0x0020, // flags | CFDZN to set CFD zone / flags & CFDZN to test for CFD zone
+    NCFDZN=0xFFDF,   // flags & NCFDZN to unset CFD zone
+    FLAG_N=0x003F};   // all zone flag bits, used in PrjRead()
 
 #endif

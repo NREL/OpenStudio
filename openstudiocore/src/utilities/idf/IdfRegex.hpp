@@ -50,13 +50,13 @@ namespace idfRegex {
   UTILITIES_API const boost::regex & objectEnd();
 
   // Match line with an object type and name
-  // matches[1], before first seperator
-  // matches[2], after first seperator and before second seperator
+  // matches[1], before first separator
+  // matches[2], after first separator and before second separator
   UTILITIES_API const boost::regex & objectTypeAndName();
 
-  // Match line with either a ',' or a ';' that are not preceeded by '!'
-  // matches[1], before seperator
-  // matches[2], after seperator and before new line
+  // Match line with either a ',' or a ';' that are not preceded by '!'
+  // matches[1], before separator
+  // matches[2], after separator and before new line
   // matches[3], after new line
   UTILITIES_API const boost::regex & line();
 
@@ -66,12 +66,12 @@ namespace idfRegex {
   // Match an autocalculate field
   UTILITIES_API const boost::regex & autocalculate();
 
-  // Match line with '##def SomeSection[]' preceeded only by whitespace
+  // Match line with '##def SomeSection[]' preceded only by whitespace
   // matches[1], the imf section name (e.g. 'SomeSection')
   // matches[2], inside the [] brackets
   UTILITIES_API const boost::regex & imfSection();
 
-  // Match line with '##enddef' preceeded and followed only by whitespace
+  // Match line with '##enddef' preceded and followed only by whitespace
   UTILITIES_API const boost::regex & imfSectionEnd();
 
   namespace detail {

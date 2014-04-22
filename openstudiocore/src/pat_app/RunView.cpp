@@ -54,6 +54,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QRadioButton>
 
 #include <fstream>
 
@@ -96,7 +97,7 @@ RunView::RunView()
 }
 
 RunStatusView::RunStatusView()
-  : QWidget()
+  : QWidget(), m_disableRadianceEvents(false)
 {
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
@@ -109,6 +110,11 @@ RunStatusView::RunStatusView()
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   mainVLayout->addLayout(mainHLayout);
+
+  QHBoxLayout * radianceHLayout = new QHBoxLayout(); 
+  radianceHLayout->setContentsMargins(5,5,5,5);
+  radianceHLayout->setSpacing(0);
+  mainVLayout->addLayout(radianceHLayout);
 
   QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
   buttonHLayout->setContentsMargins(5,5,5,5);
@@ -190,6 +196,33 @@ RunStatusView::RunStatusView()
   OS_ASSERT(isConnected);
   mainHLayout->addWidget(statusContainer);
 
+  // "Radiance" Button Layout
+ 
+  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
+  m_energyPlus = new QRadioButton("EnergyPlus");
+  m_radiance = new QRadioButton("Radiance");
+
+  QWidget *radianceWidget = new QWidget();
+  radianceWidget->setObjectName("RunStatusViewRadiance");
+  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+
+  isConnected = connect(m_radiance, SIGNAL(toggled(bool)),
+                        this, SLOT(radianceToggled(bool)));
+  OS_ASSERT(isConnected);
+
+  radianceWidget->setLayout(radianceInteriorLayout);
+  radianceInteriorLayout->addWidget(radianceLabel);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_energyPlus);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_radiance);
+
+
+  radianceHLayout->addSpacing(100);
+  radianceHLayout->addWidget(radianceWidget, 3);
+  radianceHLayout->addStretch(2);
+  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+
   // "Select All" Button Layout
 
   QLabel * label = 0;
@@ -270,6 +303,22 @@ RunStatusView::RunStatusView()
   analysisdriver::AnalysisStatus analysisStatus = project->status();
 
   setStatus(cloudStatus, analysisStatus);
+}
+
+void RunStatusView::setRadianceEnabled(bool t_radianceEnabled)
+{
+  m_disableRadianceEvents = true;
+  m_radiance->setChecked(t_radianceEnabled);
+  m_energyPlus->setChecked(!t_radianceEnabled);
+  m_disableRadianceEvents = false;
+}
+
+void RunStatusView::radianceToggled(bool t_checked)
+{
+  if (!m_disableRadianceEvents)
+  {
+    emit radianceEnabledChanged(t_checked);
+  }
 }
 
 void RunStatusView::setStatus(const CloudStatus & cloudStatus, analysisdriver::AnalysisStatus analysisStatus)
@@ -444,8 +493,10 @@ void RunStatusView::on_selectAllDataPoints(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only select points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only select points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (!isProjectIdle){
       return;
@@ -469,8 +520,10 @@ void RunStatusView::on_clearSelectionDataPoints(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only select points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only select points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (!isProjectIdle){
       return;
@@ -509,8 +562,10 @@ void RunStatusView::on_selectAllClears(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
 
-    // Can only clear points if project is idle
-    bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+    // Can only clear points if project is idle (including in error)
+    analysisdriver::AnalysisStatus status = project->status();
+    bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                          (status == analysisdriver::AnalysisStatus::Error));
 
     if (isProjectIdle){
       QMessageBox::StandardButton test = QMessageBox::question(this, "Clear Results", "Do you want to clear all results?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
@@ -858,10 +913,12 @@ void DataPointRunHeaderView::update()
 
 void DataPointRunHeaderView::on_clicked(bool checked)
 {
-  // Can only select points if project is idle
+  // Can only select points if project is idle (including in error)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
-  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+  analysisdriver::AnalysisStatus status = project->status();
+  bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                        (status == analysisdriver::AnalysisStatus::Error));
 
   // Ignore signal if dataPoint has data
   bool isCompleteOrStarted = this->m_dataPoint.complete() || !this->m_dataPoint.directory().empty();
@@ -891,10 +948,12 @@ void DataPointRunHeaderView::on_downloadClicked(bool checked)
 
 void DataPointRunHeaderView::on_clearClicked(bool checked)
 {
-  // Can only clear points if project is idle
+  // Can only clear points if project is idle (including in error)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   OS_ASSERT(project);
-  bool isProjectIdle = (project->status() == analysisdriver::AnalysisStatus::Idle);
+  analysisdriver::AnalysisStatus status = project->status();
+  bool isProjectIdle = ((status == analysisdriver::AnalysisStatus::Idle) ||
+                        (status == analysisdriver::AnalysisStatus::Error));
 
   if (isProjectIdle){
     analysis::Analysis analysis = project->analysis();
@@ -1063,45 +1122,52 @@ void DataPointJobContentView::clear()
   m_textEdit->setText("");
 }
 
+QString DataPointJobContentView::formatMessageForHTML(const std::string &t_message)
+{
+  QString str = QString::fromStdString(t_message);
+  str.replace("\n", "<br>");
+  return str;
+}
+
 void DataPointJobContentView::addInitialConditionMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:blue\">Initial Condition</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:blue\">Initial Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addFinalConditionMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:blue\">Final Condition</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:blue\">Final Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addInfoMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:green\">Info</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:green\">Info</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addWarningMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addErrorMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:red\">Error</b>: ") + QString::fromStdString(message) + QString("<br></br>");
+  html += QString("<b style=\"color:red\">Error</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
 void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 {
   QString html = m_textEdit->text();
-  html += QString::fromStdString(message) + QString("<br></br>");
+  html += formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
@@ -1146,9 +1212,12 @@ void DataPointJobItemView::update()
   }
   else {
     OS_ASSERT(m_workflowStepJob.step.isWorkItem());
+
     bool nameSet = false;
-    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript) {
-      runmanager::RubyJobBuilder rjb(m_workflowStepJob.step.workItem());
+    if (m_workflowStepJob.step.workItemType() == runmanager::JobType::UserScript)
+    {
+      openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+      runmanager::RubyJobBuilder rjb(wi);
       if (OptionalUUID measureUUID = rjb.bclMeasureUUID()) {
         boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
         OS_ASSERT(project);
@@ -1157,7 +1226,16 @@ void DataPointJobItemView::update()
           nameSet = true;
         }
       }
+    } else if (m_workflowStepJob.step.workItemType() == runmanager::JobType::Ruby) {
+      openstudio::runmanager::WorkItem wi = m_workflowStepJob.step.workItem();
+
+      if (wi.jobkeyname == "pat-radiance-job"){
+        // give it a special name instead of just "Ruby" when we find the radiance job
+        dataPointJobHeaderView->setName("Radiance Daylighting");
+        nameSet = true;
+      }
     }
+
     if (!nameSet) {
       dataPointJobHeaderView->setName(m_workflowStepJob.step.workItemType().valueName());
     }

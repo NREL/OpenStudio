@@ -403,6 +403,11 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   airLoop.remove();
 
+  EXPECT_EQ( 10u,plantLoop.demandComponents().size() );
+
+  coolingCoil.remove();
+  heatingCoil.remove();
+
   EXPECT_EQ( 5u,plantLoop.demandComponents().size() );
 
   EXPECT_EXIT ( 

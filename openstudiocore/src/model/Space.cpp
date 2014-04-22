@@ -84,6 +84,8 @@
 #include <model/SteamEquipment_Impl.hpp>
 #include <model/OtherEquipment.hpp>
 #include <model/OtherEquipment_Impl.hpp>
+#include <model/WaterUseEquipment.hpp>
+#include <model/WaterUseEquipment_Impl.hpp>
 #include <model/DaylightingControl.hpp>
 #include <model/DaylightingControl_Impl.hpp>
 #include <model/IlluminanceMap.hpp>
@@ -210,8 +212,12 @@ namespace detail {
 
     // other equipment
     OtherEquipmentVector otherEquipment = this->otherEquipment();
-    result.insert(result.end(), otherEquipment.begin(), otherEquipment.end());    
-    
+    result.insert(result.end(), otherEquipment.begin(), otherEquipment.end());
+
+    // water use equipment
+    WaterUseEquipmentVector waterUseEquipment = this->waterUseEquipment();
+    result.insert(result.end(), waterUseEquipment.begin(), waterUseEquipment.end());    
+   
     // daylighting controls
     DaylightingControlVector daylightingControls = this->daylightingControls();
     result.insert(result.end(), daylightingControls.begin(), daylightingControls.end());
@@ -784,6 +790,12 @@ namespace detail {
   {
     return getObject<ModelObject>().getModelObjectSources<OtherEquipment>(
       OtherEquipment::iddObjectType());
+  }
+
+  WaterUseEquipmentVector Space_Impl::waterUseEquipment() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<WaterUseEquipment>(
+      WaterUseEquipment::iddObjectType());
   }
 
   DaylightingControlVector Space_Impl::daylightingControls() const
@@ -3074,6 +3086,11 @@ std::vector<SteamEquipment> Space::steamEquipment() const {
 std::vector<OtherEquipment> Space::otherEquipment() const {
   return getImpl<detail::Space_Impl>()->otherEquipment();
 } 
+
+std::vector<WaterUseEquipment> Space::waterUseEquipment() const
+{
+  return getImpl<detail::Space_Impl>()->waterUseEquipment();
+}
 
 std::vector<DaylightingControl> Space::daylightingControls() const {
   return getImpl<detail::Space_Impl>()->daylightingControls();

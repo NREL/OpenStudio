@@ -70,8 +70,32 @@ namespace detail {
       m_onlyProcessingDownloadRequests(true),
       m_noNewReadyDataPointsCount(0),
       m_numDetailsTries(0),
-      m_waitForAlreadyRunningDataPoints(false)
-  {}
+      m_waitForAlreadyRunningDataPoints(false),
+      m_numDeleteDataPointTries(0),
+      m_needToDeleteProject(false),
+      m_numDeleteProjectTries(0)
+  {
+    bool connected;
+    connected = m_project.analysis().connect(SIGNAL(removedDataPoint(const openstudio::UUID&)),
+                                             this,
+                                             SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
+    OS_ASSERT(connected);
+
+    connected = m_project.analysis().connect(SIGNAL(clearedDataPointResults(const openstudio::UUID&)),
+                                             this,
+                                             SLOT(dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID&)));
+    OS_ASSERT(connected);
+
+    connected = m_project.analysis().connect(SIGNAL(removedAllDataPoints()),
+                                             this,
+                                             SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
+    OS_ASSERT(connected);
+
+    connected = m_project.analysis().connect(SIGNAL(clearedAllResults()),
+                                             this,
+                                             SLOT(allDataPointsOrResultsRemovedFromAnalysis()));
+    OS_ASSERT(connected);
+  }
 
   CloudSession CloudAnalysisDriver_Impl::session() const {
     return m_session;
@@ -174,7 +198,7 @@ namespace detail {
   }
 
   bool CloudAnalysisDriver_Impl::isStopping() const {
-    return m_requestStop;
+    return (m_requestStop || m_requestDeleteProject);
   }
 
   bool CloudAnalysisDriver_Impl::isDownloading() const {
@@ -245,7 +269,10 @@ namespace detail {
 
       // make sure the server is available
       LOG(Debug,"Checking that server is available.");
-      bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(availableForRun(bool)),Qt::QueuedConnection);
+      bool test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                        this,
+                                        SLOT(availableForRun(bool)),
+                                        Qt::QueuedConnection);
       OS_ASSERT(test);
 
       test = m_requestRun->requestAvailable();
@@ -279,7 +306,10 @@ namespace detail {
       setStatus(AnalysisStatus::Stopping);
 
       // request analysis to stop
-      bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisStopped(bool)),Qt::QueuedConnection);
+      bool test = m_requestStop->connect(SIGNAL(requestProcessed(bool)),
+                                         this,
+                                         SLOT(analysisStopped(bool)),
+                                         Qt::QueuedConnection);
       OS_ASSERT(test);
 
       test = m_requestStop->requestStop(project().analysis().uuid());
@@ -399,7 +429,10 @@ namespace detail {
       LOG(Debug,"Server is available.");
 
       // see if the project needs to be created
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectOnServer(bool)),Qt::QueuedConnection);
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                   this,
+                                   SLOT(projectOnServer(bool)),
+                                   Qt::QueuedConnection);
       OS_ASSERT(test);
 
       LOG(Debug,"Requesting project UUIDs.");
@@ -428,7 +461,10 @@ namespace detail {
       {
         LOG(Debug,"Project is not yet on server, create it.");
         // project is not yet on server, create it
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(projectCreated(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(projectCreated(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestCreateProject(project().projectDatabase().handle());
@@ -436,7 +472,10 @@ namespace detail {
       else {
         LOG(Debug,"Project is on server, see if analysis is on server.");
         // see if the analysis needs to be posted
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisOnServer(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(analysisOnServer(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestAnalysisUUIDs(project().projectDatabase().handle());
@@ -466,7 +505,10 @@ namespace detail {
     if (success) {
       LOG(Debug,"Successfully created the project. Now post the analysis.");
       // project was not on the server, so analysis can't be either, post it.
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)),Qt::QueuedConnection);
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                   this,
+                                   SLOT(analysisPosted(bool)),
+                                   Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_requestRun->startPostAnalysisJSON(
@@ -492,7 +534,10 @@ namespace detail {
       if (std::find(analysisUUIDs.begin(),analysisUUIDs.end(),project().analysis().uuid()) == analysisUUIDs.end()) {
         LOG(Debug,"The analysis is not on the server, so post it.");
         // analysis not found -- post it
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(analysisPosted(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->startPostAnalysisJSON(
@@ -502,7 +547,10 @@ namespace detail {
       else {
         LOG(Debug,"The analysis is on the server, see if there are data points there.");
         // analysis found -- see if there are any data points already on the server
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(allDataPointUUIDsReturned(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(allDataPointUUIDsReturned(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestDataPointUUIDs(project().analysis().uuid());
@@ -515,7 +563,9 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::analysisPosted(bool success) {
-    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisPosted(bool)));
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),
+                                         this,
+                                         SLOT(analysisPosted(bool)));
     OS_ASSERT(test);
 
     if (!success) {
@@ -532,7 +582,10 @@ namespace detail {
     if (success) {
       // upload the analysis
       LOG(Debug,"The analysis was posted, now upload its files.");
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                   this,
+                                   SLOT(analysisUploaded(bool)),
+                                   Qt::QueuedConnection);
       OS_ASSERT(test);
 
       success = m_requestRun->startUploadAnalysisFiles(project().analysis().uuid(),
@@ -556,7 +609,10 @@ namespace detail {
       if (m_requestRun->lastDataPointUUIDs().empty()) {
         LOG(Debug,"There are no data points, go ahead and upload the analysis files.");
         // no data points posted yet, upload the analysis files
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(analysisUploaded(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->startUploadAnalysisFiles(project().analysis().uuid(),
@@ -567,7 +623,10 @@ namespace detail {
         // there are data points, sort out all the queues--have list of all data points
         // server knows about. need list of complete data points to determine waiting versus
         // downloading queues
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(readyToSortOutQueues(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(readyToSortOutQueues(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestCompleteDataPointUUIDs(project().analysis().uuid());
@@ -580,7 +639,9 @@ namespace detail {
   }
 
   void CloudAnalysisDriver_Impl::analysisUploaded(bool success) {
-    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisUploaded(bool)));
+    bool test = m_requestRun->disconnect(SIGNAL(requestProcessed(bool)),
+                                         this,
+                                         SLOT(analysisUploaded(bool)));
     OS_ASSERT(test);
 
     if (!success) {
@@ -597,7 +658,10 @@ namespace detail {
     if (success) {
       LOG(Debug,"The analysis files were successfully uploaded. Start posting data points.");
       // start posting DataPoints
-      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsQueued(bool)),Qt::QueuedConnection);
+      test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                   this,
+                                   SLOT(dataPointsQueued(bool)),
+                                   Qt::QueuedConnection);
       OS_ASSERT(test);
 
       // initialize queue
@@ -672,14 +736,20 @@ namespace detail {
       if (m_postQueue.size() > 0) {
         LOG(Debug,"Have some data points to post, so do it.");
         // start posting DataPoints
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(dataPointsQueued(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(dataPointsQueued(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = postNextDataPointBatch();
       }
       else if (m_waitingQueue.size() > 0) {
         LOG(Debug,"No data points need to be posted, so see if the analysis is already running.");
-        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),this,SLOT(analysisRunningOnServer(bool)),Qt::QueuedConnection);
+        test = m_requestRun->connect(SIGNAL(requestProcessed(bool)),
+                                     this,
+                                     SLOT(analysisRunningOnServer(bool)),
+                                     Qt::QueuedConnection);
         OS_ASSERT(test);
 
         success = m_requestRun->requestIsAnalysisRunning(project().analysis().uuid());
@@ -1363,12 +1433,140 @@ namespace detail {
         // DLM: are these 1 second checks?  this is only 5 minutes.  Should we wait longer here?
         m_maxAnalysisNotRunningCount = 300; // wait up to 15 minutes for DataPoints to stop running
       }
+      if (m_needToDeleteProject) {
+        requestProjectDeletion();
+        return;
+      }
       checkForRunCompleteOrStopped();
       // otherwise, will keep spinning until all processes cease
     }
 
     if (!success) {
-      registerStopRequestFailure();
+      if (m_needToDeleteProject) {
+        registerProjectDeletionFailure();
+      }
+      else {
+        registerStopRequestFailure();
+      }
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID& dataPointUUID)
+  {
+    if (analysis::OptionalDataPoint dataPoint = m_project.analysis().getDataPointByUUID(dataPointUUID)) {
+      m_deleteDataPointsQueue.push_back(*dataPoint);
+    }
+    if (!m_requestDeleteDataPoint && !m_deleteDataPointsQueue.empty()) {
+      requestNextDataPointDeletion();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::dataPointDeletedFromServer(bool success) {
+    success = success && m_requestDeleteDataPoint->lastDeleteDataPointSuccess();
+
+    if (!success) {
+      ++m_numDeleteDataPointTries;
+      if (m_numDeleteDataPointTries >= 3) {
+        logError("Unable to delete DataPoint '" +
+                 m_deleteDataPointsQueue.front().name() + "', " + removeBraces(m_deleteDataPointsQueue.front().uuid()) +
+                 " from server.");
+        m_deleteDataPointFailures.push_back(m_deleteDataPointsQueue.front());
+        m_deleteDataPointsQueue.pop_front();
+      }
+      else {
+        QTimer::singleShot(1000,this,SLOT(requestDeleteDataPointRetry()));
+        return;
+      }
+    }
+
+    if (success) {
+      DataPoint deletedPoint = m_deleteDataPointsQueue.front();
+      removeFromIteration(deletedPoint);
+      m_deleteDataPointsQueue.pop_front();
+      emit resultsChanged();
+      emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
+
+      if (m_deleteDataPointsQueue.empty()) {
+        bool test = m_requestDeleteDataPoint->disconnect(SIGNAL(requestProcessed(bool)),
+                                                         this,
+                                                         SLOT(dataPointDeletedFromServer(bool)));
+        OS_ASSERT(test);
+        appendErrorsAndWarnings(*m_requestDeleteDataPoint);
+        m_requestDeleteDataPoint.reset();
+      }
+      else {
+        LOG(Info,"Have " << m_deleteDataPointsQueue.size() << " DataPoints to delete from the server.");
+        success = requestNextDataPointDeletion();
+      }
+    }
+
+    if (!success) {
+      registerDataPointDeletionFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::requestDeleteDataPointRetry() {
+    LOG(Info,"Have " << m_deleteDataPointsQueue.size() << " DataPoints to delete from the server (retrying).");
+    bool success = requestNextDataPointDeletion();
+
+    if (!success) {
+      registerDataPointDeletionFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::allDataPointsOrResultsRemovedFromAnalysis() {
+    LOG(Info,"All data points or results deleted locally. Will try to delete the project from the server.");
+    m_needToDeleteProject = true;
+
+    if (isRunning() || isDownloading()) {
+      requestStop(false);
+    }
+    else {
+      requestProjectDeletion();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::projectDeletedFromServer(bool success) {
+    success = success && m_requestDeleteProject->lastDeleteProjectSuccess();
+
+    if (!success) {
+      ++m_numDeleteProjectTries;
+      if (m_numDeleteProjectTries >= 30) {
+        logError("Unable to delete project from server.");
+      }
+      else {
+        QTimer::singleShot(1000,this,SLOT(requestDeleteProjectRetry()));
+        return;
+      }
+    }
+
+    if (success) {
+      bool test = m_requestDeleteProject->disconnect(SIGNAL(requestProcessed(bool)),
+                                                     this,
+                                                     SLOT(projectDeletedFromServer(bool)));
+      OS_ASSERT(test);
+      appendErrorsAndWarnings(*m_requestDeleteProject);
+      m_requestDeleteProject.reset();
+      OS_ASSERT(!isRunning() && !isDownloading() && !isStopping());
+      resetState();
+      setStatus(AnalysisStatus::Idle);
+      emit resultsChanged();
+      emit iterationProgress(numCompleteDataPoints(),numDataPointsInIteration());
+    }
+
+    if (!success) {
+      registerProjectDeletionFailure();
+    }
+  }
+
+  void CloudAnalysisDriver_Impl::requestDeleteProjectRetry() {
+    LOG(Debug,"Trying to delete project from the server for the " << (m_numDeleteProjectTries + 1)
+        << "th time.");
+
+    bool success = requestProjectDeletion();
+
+    if (!success) {
+      registerProjectDeletionFailure();
     }
   }
 
@@ -1385,6 +1583,8 @@ namespace detail {
     m_preDetailsQueue.clear();
     m_detailsQueue.clear();
     m_detailsFailures.clear();
+    m_deleteDataPointsQueue.clear();
+    m_deleteDataPointFailures.clear();
 
     m_processingQueuesInitialized = false;
     m_batchSize = 0;
@@ -1395,6 +1595,10 @@ namespace detail {
     m_numJsonTries = 0;
     m_noNewReadyDataPointsCount = 0;
     m_numDetailsTries = 0;
+    m_numDeleteDataPointTries = 0;
+    m_numDeleteProjectTries = 0;
+
+    m_needToDeleteProject = false;
   }
 
   void CloudAnalysisDriver_Impl::logError(const std::string& error) {
@@ -1729,6 +1933,64 @@ namespace detail {
     emit stopRequestComplete(m_lastStopSuccess);
   }
 
+  bool CloudAnalysisDriver_Impl::requestNextDataPointDeletion() {
+    if (!m_requestDeleteDataPoint) {
+      if (OptionalUrl url = session().serverUrl()) {
+        m_requestDeleteDataPoint = OSServer(*url);
+
+        bool test = m_requestDeleteDataPoint->connect(SIGNAL(requestProcessed(bool)),
+                                                      this,
+                                                      SLOT(dataPointDeletedFromServer(bool)),
+                                                      Qt::QueuedConnection);
+        OS_ASSERT(test);
+      }
+      else {
+        return false;
+      }
+    }
+    return m_requestDeleteDataPoint->requestDeleteDataPoint(project().analysis().uuid(),
+                                                            m_deleteDataPointsQueue.front().uuid());
+  }
+
+  void CloudAnalysisDriver_Impl::registerDataPointDeletionFailure() {
+    appendErrorsAndWarnings(*m_requestDeleteDataPoint);
+    m_requestDeleteDataPoint.reset();
+    setStatus(AnalysisStatus::Error);
+  }
+
+  bool CloudAnalysisDriver_Impl::requestProjectDeletion() {
+    if (!m_requestDeleteProject) {
+      // if not already trying to delete the project ... go for it
+      // otherwise, assume that the original request is going through
+      if (OptionalUrl url = session().serverUrl()) {
+        setStatus(AnalysisStatus::Stopping);
+
+        m_requestDeleteProject = OSServer(*url);
+
+        bool test = m_requestDeleteProject->connect(SIGNAL(requestProcessed(bool)),
+                                                    this,
+                                                    SLOT(projectDeletedFromServer(bool)),
+                                                    Qt::QueuedConnection);
+        OS_ASSERT(test);
+
+        return m_requestDeleteProject->requestDeleteProject(project().projectDatabase().handle());
+      }
+    }
+    return false;
+  }
+
+  void CloudAnalysisDriver_Impl::registerProjectDeletionFailure() {
+    if (m_requestStop) {
+      appendErrorsAndWarnings(*m_requestStop);
+      m_requestStop.reset();
+    }
+    if (m_requestDeleteProject) {
+      appendErrorsAndWarnings(*m_requestDeleteProject);
+      m_requestDeleteProject.reset();
+    }
+    setStatus(AnalysisStatus::Error);
+  }
+
   void CloudAnalysisDriver_Impl::checkForRunCompleteOrStopped() {
     if (isStopping()) {
       bool stopped = !isDownloading() && !isRunning();
@@ -1790,6 +2052,46 @@ namespace detail {
       return true;
     }
     return false;
+  }
+
+  void CloudAnalysisDriver_Impl::removeFromIteration(const analysis::DataPoint& dataPoint) {
+    std::vector<analysis::DataPoint>::iterator vit;
+    std::deque<analysis::DataPoint>::iterator dit;
+
+    vit = std::find(m_iteration.begin(),m_iteration.end(),dataPoint);
+    if (vit != m_iteration.end()) {
+      m_iteration.erase(vit);
+    }
+
+    dit = std::find(m_postQueue.begin(),m_postQueue.end(),dataPoint);
+    if (dit != m_postQueue.end()) {
+      m_postQueue.erase(dit);
+    }
+
+    vit = std::find(m_waitingQueue.begin(),m_waitingQueue.end(),dataPoint);
+    if (vit != m_waitingQueue.end()) {
+      m_waitingQueue.erase(vit);
+    }
+
+    vit = std::find(m_runningQueue.begin(),m_runningQueue.end(),dataPoint);
+    if (vit != m_runningQueue.end()) {
+      m_runningQueue.erase(vit);
+    }
+
+    dit = std::find(m_jsonQueue.begin(),m_jsonQueue.end(),dataPoint);
+    if (dit != m_jsonQueue.end()) {
+      m_jsonQueue.erase(dit);
+    }
+
+    vit = std::find(m_preDetailsQueue.begin(),m_preDetailsQueue.end(),dataPoint);
+    if (vit != m_preDetailsQueue.end()) {
+      m_preDetailsQueue.erase(vit);
+    }
+
+    dit = std::find(m_detailsQueue.begin(),m_detailsQueue.end(),dataPoint);
+    if (dit != m_detailsQueue.end()) {
+      m_detailsQueue.erase(dit);
+    }
   }
 
   std::string CloudAnalysisDriver_Impl::sessionTag() const {
