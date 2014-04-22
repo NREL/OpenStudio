@@ -631,6 +631,15 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
          EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\") 
 
          GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+
+         IF(APPLE)
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${_NAME}\")
+           FOREACH( PR IN LISTS PREREQUISITES )
+             GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
+             GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
+             EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\${PREREQNAME}\")
+           ENDFOREACH()
+         ENDIF()
        ENDFOREACH( PREREQ IN LISTS PREREQUISITES )  
       ")
     ELSE(WIN32 OR APPLE)
