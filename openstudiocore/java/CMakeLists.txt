@@ -28,11 +28,25 @@
       )
   ENDFOREACH()
 
+  IF(MSVC)
+    ADD_CUSTOM_COMMAND(
+      OUTPUT  ${OPENSTUDIO_JAVA_JAR}
+      COMMAND cmd /C dir /B "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/*.java" > "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+      APPEND
+      )
+  ELSE()
+    ADD_CUSTOM_COMMAND(
+      OUTPUT  ${OPENSTUDIO_JAVA_JAR}
+      COMMAND find "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/" -name "\"*.java\"" > "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+      APPEND
+      )
+  ENDIF()
+
   ADD_CUSTOM_COMMAND(
     OUTPUT ${OPENSTUDIO_JAVA_JAR}
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
-    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/*"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "@${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
     COMMAND "${Java_JAR_EXECUTABLE}"  -cvf ${OPENSTUDIO_JAVA_JAR} -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
     APPEND
     )
