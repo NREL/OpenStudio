@@ -28,8 +28,6 @@
 #include <utilities/core/Enum.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/config.hpp>
-
 #include <QVariant>
 
 namespace openstudio {
