@@ -708,6 +708,8 @@ SET( depends
   openstudio_ruleset
   openstudio_analysis
   openstudio_analysisdriver
+  openstudio_sdd
+  openstudio_gbxml
   ${QT_LIBS}
   #${RUBY_LIBRARY}
 )

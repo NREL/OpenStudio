@@ -94,6 +94,7 @@ SET( depends
   openstudio_energyplus
   openstudio_modeleditor
   openstudio_sdd
+  openstudio_gbxml
   ${QT_LIBS}
   ${RUBY_LIBRARY}
 )

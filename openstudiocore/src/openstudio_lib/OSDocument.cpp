@@ -88,6 +88,8 @@
 #include <OpenStudio.hxx>
 
 #include <energyplus/ForwardTranslator.hpp>
+#include <gbXML/ForwardTranslator.hpp>
+#include <sdd/ForwardTranslator.hpp>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
@@ -938,43 +940,81 @@ void OSDocument::exportIdf()
 
 void OSDocument::exportgbXML()
 {
-
-  QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
-                                                  tr("Export gbXML"),
-                                                  QDir::homePath(),
-                                                  tr("(*.xml)") );
-
-  if( ! fileName.isEmpty() )
-  {
-    // TODO
-    //model::Model m = this->model();
-    //energyplus::ForwardTranslator trans;
-    //Workspace workspace = trans.translateModel(m);
-    //openstudio::path outDir = toPath(fileName);
-    //boost::filesystem::ofstream ofs(outDir);
-    //workspace.toIdfFile().print(ofs);
-    //ofs.close();
-  }
+  exportFile(GBXML);
 }
 
 void OSDocument::exportSDD()
 {
+  exportFile(SDD);
+}
+
+void OSDocument::exportFile(fileType type)
+{
+
+  std::vector<LogMessage> translatorErrors, translatorWarnings;
+ 
+  QString text("Export ");
+  if(type == SDD){
+    text.append("SDD");
+  } else if(type == GBXML) {
+    text.append("gbXML");
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
 
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
-                                                  tr("Export SDD"),
+                                                  tr(text.toStdString().c_str()),
                                                   QDir::homePath(),
                                                   tr("(*.xml)") );
 
   if( ! fileName.isEmpty() )
   {
-    //TODO
-    //model::Model m = this->model();
-    //energyplus::ForwardTranslator trans;
-    //Workspace workspace = trans.translateModel(m);
-    //openstudio::path outDir = toPath(fileName);
-    //boost::filesystem::ofstream ofs(outDir);
-    //workspace.toIdfFile().print(ofs);
-    //ofs.close();
+    model::Model m = this->model();
+    openstudio::path outDir = toPath(fileName);
+
+    if(type == SDD){
+      sdd::ForwardTranslator trans;
+      Workspace workspace = trans.modelToSDD(m, outDir);
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } else if(type == GBXML) {
+      gbxml::ForwardTranslator trans;
+      Workspace workspace = trans.modelToGbXML(m, outDir);
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } 
+
+    bool errorsOrWarnings = false;
+    QString log;
+    for( std::vector<LogMessage>::iterator it = translatorErrors.begin();
+          it < translatorErrors.end();
+          ++it )
+    {
+      errorsOrWarnings = true;
+
+      log.append(QString::fromStdString(it->logMessage()));
+      log.append("\n");
+      log.append("\n");
+    }  
+
+    for( std::vector<LogMessage>::iterator it = translatorWarnings.begin();
+          it < translatorWarnings.end();
+          ++it )
+    {
+      errorsOrWarnings = true;
+
+      log.append(QString::fromStdString(it->logMessage()));
+      log.append("\n");
+      log.append("\n");
+    }
+
+    if (errorsOrWarnings){
+      QMessageBox messageBox;
+      messageBox.setText("Errors or warnings occurred on export.");
+      messageBox.setDetailedText(log);
+      messageBox.exec();
+    }
   }
 }
 
@@ -1248,25 +1288,25 @@ void OSDocument::openMeasuresDlg()
 
 void OSDocument::openChangeMeasuresDirDlg()
 {
-  // TODO 
-  //openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
  
-  //QString dirName = QFileDialog::getExistingDirectory( this,
-  //                                                     tr("Select My Measures Directory"),
-  //                                                     toQString(userMeasuresDir));
+  QString dirName = QFileDialog::getExistingDirectory( this->mainWindow(),
+                                                       tr("Select My Measures Directory"),
+                                                       toQString(userMeasuresDir));
  
-  //if(dirName.length() > 0){
-  //  userMeasuresDir = toPath(dirName);
-  //  if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
-  //    emit userMeasuresDirChanged();
-  //  }
-  //}
+  if(dirName.length() > 0){
+    userMeasuresDir = toPath(dirName);
+    if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
+      OSAppBase::instance()->measureManager().updateMeasuresLists();
+    }
+  }
 
 }
 
 void OSDocument::changeBclLogin()
 {
   // TODO
+  QMessageBox::information( this->mainWindow(), QString("Change BCL Login Information"), QString("Not yet available.\nMiddleware testing required."));
 }
 
 void OSDocument::openBclDlg()

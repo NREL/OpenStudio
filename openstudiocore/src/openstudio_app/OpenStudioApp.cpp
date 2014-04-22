@@ -91,6 +91,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <energyplus/ReverseTranslator.hpp>
 
+#include <gbXML/ReverseTranslator.hpp>
 #include <sdd/ReverseTranslator.hpp>
 
 #include <QAbstractButton>
@@ -476,12 +477,29 @@ void OpenStudioApp::importIdf()
 
 void OpenStudioApp::importgbXML()
 {
-  //TODO
+  import(GBXML);
 }
 
 void OpenStudioApp::importSDD()
 {
+  import(SDD);
+}
+
+void OpenStudioApp::import(OpenStudioApp::fileType type)
+{
   QWidget * parent = NULL;
+
+  std::vector<LogMessage> translatorErrors, translatorWarnings;
+ 
+  QString text("Import ");
+  if(type == SDD){
+    text.append("SDD");
+  } else if(type == GBXML) {
+    text.append("gbXML");
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
 
   if( this->currentDocument() )
   {
@@ -489,7 +507,7 @@ void OpenStudioApp::importSDD()
   }
 
   QString fileName = QFileDialog::getOpenFileName( parent,
-                                                   tr("Import SDD"),
+                                                   tr(text.toStdString().c_str()),
                                                    QDir::homePath(),
                                                    tr("(*.xml)") );
 
@@ -497,8 +515,17 @@ void OpenStudioApp::importSDD()
   {
     boost::optional<model::Model> model;
 
-    sdd::ReverseTranslator trans;
-    model = trans.loadModel(toPath(fileName));
+    if(type == SDD){
+      sdd::ReverseTranslator trans;
+      model = trans.loadModel(toPath(fileName));
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } else if(type == GBXML) {
+      gbxml::ReverseTranslator trans;
+      model = trans.loadModel(toPath(fileName));
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } 
 
     if( model )
     {
@@ -540,10 +567,8 @@ void OpenStudioApp::importSDD()
 
       QString log;
 
-      std::vector<LogMessage> messages = trans.errors();
-
-      for( std::vector<LogMessage>::iterator it = messages.begin();
-           it < messages.end();
+      for( std::vector<LogMessage>::iterator it = translatorErrors.begin();
+           it < translatorErrors.end();
            ++it )
       {
         errorsOrWarnings = true;
@@ -551,12 +576,10 @@ void OpenStudioApp::importSDD()
         log.append(QString::fromStdString(it->logMessage()));
         log.append("\n");
         log.append("\n");
-      }
+      }  
 
-      messages = trans.warnings();
-
-      for( std::vector<LogMessage>::iterator it = messages.begin();
-           it < messages.end();
+      for( std::vector<LogMessage>::iterator it = translatorWarnings.begin();
+           it < translatorWarnings.end();
            ++it )
       {
         errorsOrWarnings = true;

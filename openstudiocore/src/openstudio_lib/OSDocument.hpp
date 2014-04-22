@@ -280,6 +280,13 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
  private:
 
+  enum fileType{
+    SDD,
+    GBXML
+  };
+
+  void exportFile(fileType type);
+
   friend class OpenStudioApp;
 
   REGISTER_LOGGER("openstudio.OSDocument");

@@ -128,6 +128,13 @@ class OpenStudioApp : public OSAppBase
 
  private:
 
+  enum fileType{
+    SDD,
+    GBXML
+  };
+
+  void import(fileType type);
+
   bool openFile(const QString& fileName);
 
   void buildCompLibraries();
