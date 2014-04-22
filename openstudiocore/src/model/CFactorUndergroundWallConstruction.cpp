@@ -71,6 +71,8 @@ namespace detail {
 
   bool CFactorUndergroundWallConstruction_Impl::isFenestration() const { return false; }
 
+  bool CFactorUndergroundWallConstruction_Impl::isSolarDiffusing() const { return false; }
+
   bool CFactorUndergroundWallConstruction_Impl::isModelPartition() const { return false; }
 
   int CFactorUndergroundWallConstruction_Impl::renderingColorIndex() const
