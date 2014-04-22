@@ -17,6 +17,39 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
+module TransformationHelper  # this was added to identify if a group in SketchUp has scale of -1
+
+  def flipped_x?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_x < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  def flipped_y?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_y < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  def flipped_z?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_z < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  private
+
+  def axes_dot_products
+    [
+        xaxis.dot(X_AXIS),
+        yaxis.dot(Y_AXIS),
+        zaxis.dot(Z_AXIS)
+    ]
+  end
+
+  def flipped?(dot_x, dot_y, dot_z)
+    dot_x * dot_y * dot_z < 0
+  end
+
+end
+
 # Each user script is implemented within a class that derives from OpenStudio::Ruleset::UserScript
 class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
@@ -575,6 +608,12 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       # address scaling and not z axis rotation
       explodeNeededFlag = false
       if not (t.xscale.to_s == "1.0" and t.yscale.to_s == "1.0" and t.zscale.to_s == "1.0" and t.zaxis.to_s == "(0.0, 0.0, 1.0)")  then explodeNeededFlag = true end
+
+      # this was added to catch flipped group or group with scale of -1 that isn't caught by test above
+      t.extend(TransformationHelper)
+      if t.flipped_x?.inspect then explodeNeededFlag = true end
+      if t.flipped_y?.inspect then explodeNeededFlag = true end
+      if t.flipped_z?.inspect then explodeNeededFlag = true end
 
       if explodeNeededFlag == true
 
