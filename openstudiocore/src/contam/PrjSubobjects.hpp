@@ -274,20 +274,20 @@ private:
   int m_u_rP;  // units of revised pressures (I2) {W}
 };
 
-/** The DataPoint object is used by a number of the airflow element objects to
+/** The XyDataPoint object is used by a number of the airflow element objects to
 *  store data specific to the element. */
-class CONTAM_API DataPoint
+class CONTAM_API XyDataPoint
 {
 public:
   /** @name Constructors */
   //@{
 
   /** Create a new object with default values. */
-  DataPoint();
+  XyDataPoint();
   /** Create a new object. */
-  DataPoint(double x,double y);
+  XyDataPoint(double x,double y);
   /** Create a new object. */
-  DataPoint(std::string x,std::string y);
+  XyDataPoint(std::string x,std::string y);
 
   //@}
   /** @name Input and Output */

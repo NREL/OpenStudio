@@ -352,9 +352,9 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
     puts "#{Time.now.getutc}: creating model_dc.oct"
-    system("oconv #{t_outPath}/materials/materials.rad model.rad #{t_outPath}/skies/dc.sky > model_dc.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
     puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
-    system("oconv #{t_outPath}/skies/dc.sky > model_dc_skyonly.oct")
+    system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
 #    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: computing daylight coefficients..."
@@ -362,8 +362,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 #    end
 
     # do map
-    exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} \
+      -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" -m skyglow model_dc.oct")
 
 #    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
@@ -388,10 +388,10 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-            -f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+            -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}_treg%03d.hdr\" -m skyglow model_dc.oct")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
+            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}treg%03d.hdr\" -m skyglow model_dc.oct")
         end
         
         # create "contact sheet" of DC images for reference/troubleshooting
@@ -898,8 +898,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         if t_options.glare == true
           puts "image based glare analysis temporarily disabled, sorry."
           #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
-          #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
-          #  #{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
+          #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
+          #  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
         end
         if t_options.x == true
 

@@ -35,7 +35,7 @@ class DaylightSim_Test < Test::Unit::TestCase
     modelExample = OpenStudio::Model::exampleModel()
     modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
     FileUtils.mkdir_p(modelPath.parent_path.to_s)
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)

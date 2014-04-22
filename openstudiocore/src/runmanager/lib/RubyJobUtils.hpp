@@ -149,7 +149,8 @@ namespace runmanager {
 
       bool addRequiredFile(const openstudio::path& currentPath,
                            const openstudio::path& copyPath,
-                           const openstudio::path& relativeTo = openstudio::path());
+                           const openstudio::path& relativeTo = openstudio::path(),
+                           bool verifyExistence = true);
 
       /// Specifies that the "requiredFiles" from an input file with given extension (t_infileextension)
       /// to all generated output files with the matching extension
@@ -262,6 +263,8 @@ namespace runmanager {
       boost::optional<openstudio::UUID> m_originalUUID;
 
       bool m_userScriptJob;
+      std::string m_jobkeyname;
+
       boost::optional<openstudio::UUID> m_bclMeasureUUID;
 
       static bool stringToBool(const std::string &t_val);

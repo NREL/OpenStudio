@@ -41,7 +41,7 @@ namespace iddRegex{
     return result; 
   }
 
-  /// Search for IDD header, each line must start with '!', no preceeding whitespace
+  /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
   const boost::regex &header(){
     const static boost::regex result("^(^!.*?^[^!])");
@@ -71,7 +71,7 @@ namespace iddRegex{
   }
 
   /// Match include-file identifier
-  /// matches[1], incluced Idd file name
+  /// matches[1], included Idd file name
   const boost::regex &includeFile() {
     const static boost::regex result("^[\\\\][iI]nclude-[fF]ile(.*)");
     return result;
@@ -84,9 +84,9 @@ namespace iddRegex{
     return result;
   }
 
-  /// Match line with either a ',' or a ';' that are not preceeded by '!'
-  /// matches[1], before seperator
-  /// matches[2], after seperator
+  /// Match line with either a ',' or a ';' that are not preceded by '!'
+  /// matches[1], before separator
+  /// matches[2], after separator
   const boost::regex &line(){
     const static boost::regex result("^([^!]*?)[,;](.*)");
     return result;
@@ -107,8 +107,8 @@ namespace iddRegex{
   }
 
   /// Match an object with no fields in the idd
-  /// matches[1], before seperator
-  /// matches[2], after seperator
+  /// matches[1], before separator
+  /// matches[2], after separator
   const boost::regex &objectNoFields(){
     const static boost::regex result("^([^!^,]*?)[;](.*)");
     return result;
@@ -177,7 +177,7 @@ namespace iddRegex{
   /// A or N, then one or more numbers then white space and then a ',' or ';'
   /// matches[1], alpha or numeric indicator
   /// matches[2], alpha or numeric number
-  /// matches[3], after seperator
+  /// matches[3], after separator
   const boost::regex &field(){
     const static boost::regex result("^[\\s\\t]*?([AN])([0-9]+)[\\s\\t]*[,;](.*)");
     return result;

@@ -24,20 +24,13 @@
   #include <model/ModelObject.hpp>
 %}
 
-%ignore PrjModelImpl;
-%ignore PrjModel(Reader &input);
+%ignore IndexModelImpl;
+%ignore IndexModel(Reader &input);
 
 // #ifdef SWIGCSHARP
 //%rename(ContamReverseTranslator) openstudio::contam::ReverseTranslator;
 %rename(ContamForwardTranslator) openstudio::contam::ForwardTranslator;
 // #endif
-
-// DLM: this is neccesary for now due to https://github.com/NREL/OpenStudio/issues/679
-// eventually we should compile C# code into separate namespaces
-#ifdef SWIGCSHARP
-%rename(PrjDataPoint) openstudio::contam::DataPoint;
-%rename(PrjPath) openstudio::contam::Path;
-#endif
 
 %include <contam/PrjSubobjects.hpp>
 %include <contam/PrjObjects.hpp>

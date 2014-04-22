@@ -436,56 +436,56 @@ void FanDataPoint::setU_rP(const int u_rP)
   m_u_rP = u_rP;
 }
 
-void DataPoint::setDefaults()
+void XyDataPoint::setDefaults()
 {
   m_x = PRJFLOAT("0.0");
   m_y = PRJFLOAT("0.0");
 }
 
-DataPoint::DataPoint()
+XyDataPoint::XyDataPoint()
 {
   setDefaults();
 }
 
-DataPoint::DataPoint(double x,double y)
-{
-  setDefaults();
-  setX(x);
-  setY(y);
-}
-
-DataPoint::DataPoint(std::string x,std::string y)
+XyDataPoint::XyDataPoint(double x,double y)
 {
   setDefaults();
   setX(x);
   setY(y);
 }
 
-void DataPoint::read(Reader &input)
+XyDataPoint::XyDataPoint(std::string x,std::string y)
+{
+  setDefaults();
+  setX(x);
+  setY(y);
+}
+
+void XyDataPoint::read(Reader &input)
 {
   setX(input.readNumber<std::string>());
   setY(input.readNumber<std::string>());
 }
 
-std::string DataPoint::write()
+std::string XyDataPoint::write()
 {
   std::string string;
   string += ANY_TO_STR(m_x) + ' ' + ANY_TO_STR(m_y) + '\n';
   return string;
 }
 
-double DataPoint::x() const
+double XyDataPoint::x() const
 {
   return m_x.toDouble();
 }
 
-bool DataPoint::setX(const double x)
+bool XyDataPoint::setX(const double x)
 {
   m_x = QString::number(x);
   return true;
 }
 
-bool DataPoint::setX(const std::string &x)
+bool XyDataPoint::setX(const std::string &x)
 {
   bool ok;
   FLOAT_CHECK(x,&ok);
@@ -497,18 +497,18 @@ bool DataPoint::setX(const std::string &x)
   return false;
 }
 
-double DataPoint::y() const
+double XyDataPoint::y() const
 {
   return m_y.toDouble();
 }
 
-bool DataPoint::setY(const double y)
+bool XyDataPoint::setY(const double y)
 {
   m_y = QString::number(y);
   return true;
 }
 
-bool DataPoint::setY(const std::string &y)
+bool XyDataPoint::setY(const std::string &y)
 {
   bool ok;
   FLOAT_CHECK(y,&ok);

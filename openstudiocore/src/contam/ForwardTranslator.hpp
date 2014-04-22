@@ -103,7 +103,7 @@ public:
   //@{
 
   /** Translates an OpenStudio thermal model into a CONTAM airflow model. */
-  boost::optional<contam::PrjModel> translateModel(model::Model model);
+  boost::optional<contam::IndexModel> translateModel(model::Model model);
   
   /** Static translation function to translate an OpenStudio into a CONTAM airflow model and write it to a path. */
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
@@ -166,11 +166,11 @@ public:
 
 private:
   // Do the work to set up the leakage paths
-  bool applyExteriorFlowRate(contam::PrjModel prjModel);
-  bool applyAirtightnessLevel(contam::PrjModel prjModel);
+  bool applyExteriorFlowRate(contam::IndexModel prjModel);
+  bool applyAirtightnessLevel(contam::IndexModel prjModel);
 
   // Convenience function to add a new one-point test airflow element to the model
-  int addNewAirflowElement(contam::PrjModel prjModel,std::string name,double flow,double n=0.65,double deltaP=75.0);
+  int addNewAirflowElement(contam::IndexModel model,std::string name,double flow,double n=0.65,double deltaP=75.0);
 
   // Clear out the translator and reset to the defaults
   void clear();

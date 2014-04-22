@@ -190,7 +190,7 @@ class OSItemSelectionController : public QObject
  * OSListItem to the view.  OSItemDelegate should be subclassed, and the view() method should be reimplemented to provide a
  * QWidget that is not empty.  This class will be commonly subclassed and is a member of the controller logic.  It is particular
  * to the view and the data source.  If the view proivded by OSItemDelegate is used often or if the view has a signficant amount 
- * of detail, a seperate view class should be defined outside of the OSItemDelegate and merely instantiated here.  On the other hand 
+ * of detail, a separate view class should be defined outside of the OSItemDelegate and merely instantiated here.  On the other hand 
  * if the view very specific with little opportunity for reuse, and if the design is simple, it is acceptable for OSItemDelegate::view()
  * to build up a widget conglomeration on the fly from primitive widget types like QLabel, QWidget, etc.
  */

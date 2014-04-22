@@ -77,11 +77,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableRefr
 
   if( modelObject.isRatedTotalHeatingCapacityAutosized() )
   {
-    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlowFields::RatedTotalHeatingCapacity,"Autosize");
+    idfObject.setString(Coil_Heating_DX_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,"Autosize");
   }
   else if( (value = modelObject.ratedTotalHeatingCapacity()) )
   {
-    idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlowFields::RatedTotalHeatingCapacity,value.get());
+    idfObject.setDouble(Coil_Heating_DX_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,value.get());
   }
 
   // RatedAirFlowRate

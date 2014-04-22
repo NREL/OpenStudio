@@ -791,7 +791,7 @@ bool LayeredConstruction::layersAreValid(const std::vector<OpaqueMaterial>& opaq
     if (opaqueMaterials[i].optionalCast<AirGap>()) {
       if (!previousWasNonAirGap) {
         LOG(Info,"Proposed OpaqueMaterials are invalid because an AirGap at layer " << i
-            << " either starts the construction, or is preceeded by " << "another AirGap.");
+            << " either starts the construction, or is preceded by " << "another AirGap.");
         return false;
       }
       previousWasNonAirGap = false;

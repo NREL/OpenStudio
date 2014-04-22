@@ -2350,7 +2350,7 @@ public:
   /** Create a new object. */
   AfeCsf(int nr,int icon,std::string name,std::string desc);
   /** Create a new object. */
-  AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   /** Create a new object from another object. */
   AfeCsf(const AfeCsf &other);
   /** Destroy the object. */
@@ -2406,9 +2406,9 @@ public:
   /** Sets the display units for y. */
   void setU_y(const int u_y);
   /** Returns the data point vector of (x,y) pairs. */
-  std::vector<DataPoint> data() const;
+  std::vector<XyDataPoint> data() const;
   /** Sets the data point vector. */
-  void setData(const std::vector<DataPoint> &data);
+  void setData(const std::vector<XyDataPoint> &data);
   //@}
 private:
   boost::shared_ptr<detail::AfeCsfImpl> m_impl;
@@ -2426,7 +2426,7 @@ public:
   /** Create a new object. */
   AfeFsp(int nr,int icon,std::string name,std::string desc);
   /** Create a new object. */
-  AfeFsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfeFsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   /** Create a new object from another object. */
   //AfeFsp(const AfeCsf &other);
   /** Destroy the object. */
@@ -2454,7 +2454,7 @@ public:
   /** Create a new object. */
   AfeQsp(int nr,int icon,std::string name,std::string desc);
   /** Create a new object. */
-  AfeQsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfeQsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   /** Create a new object from another object. */
   //AfeQsp(const AfeCsf &other);
   /** Destroy the object. */
@@ -2482,7 +2482,7 @@ public:
   /** Create a new object. */
   AfePsf(int nr,int icon,std::string name,std::string desc);
   /** Create a new object. */
-  AfePsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfePsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   /** Create a new object from another object. */
   //AfePsf(const AfePsf &other);
   /** Destroy the object. */
@@ -2510,7 +2510,7 @@ public:
   /** Create a new object. */
   AfePsq(int nr,int icon,std::string name,std::string desc);
   /** Create a new object. */
-  AfePsq(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data);
+  AfePsq(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data);
   /** Create a new object from another object. */
   //AfePsq(const AfePsq &other);
   /** Destroy the object. */

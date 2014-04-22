@@ -125,7 +125,7 @@ if (not ARGV[1] or not File::file?(ARGV[1]) or File::directory?(ARGV[1]))
   puts "no sql file given, running EnergyPlus..."
  
   # find EnergyPlus
-  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
   ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
   ep_parent_path = ep_path.parent_path()
 
@@ -162,8 +162,7 @@ workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
 # make a run manager
 runDir = outPath / OpenStudio::Path.new("gen_eplus/")
 runmanager_path = OpenStudio::Path.new("runmanager.db")
-runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true)
-runmanager.setPaused(true)
+runmanager = OpenStudio::Runmanager::RunManager.new(runmanager_path, true, true, false, false)
 
 # run 
 runDir = OpenStudio::system_complete(runDir)
@@ -181,7 +180,7 @@ runmanager.waitForFinished()
 runmanager.getJobs.each { |job| 
 
   if not job.errors.succeeded   
-    puts "The EnergyPlusjob in '" + job.outdir.to_s + "' did not finish successfully."
+    puts "The job in '" + job.outdir.to_s + "' did not finish successfully."
     job.errors.errors.each { |err|
       puts "ERROR: " + err
       puts "Radiance export aborted."

@@ -3947,7 +3947,7 @@ AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc)
   m_impl = boost::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc));
 }
 
-AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfeCsf::AfeCsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
 {
   m_impl = boost::shared_ptr<detail::AfeCsfImpl>(new detail::AfeCsfImpl(nr,icon,name,desc,u_x,u_y,data));
 }
@@ -4049,12 +4049,12 @@ void AfeCsf::setU_y(const int u_y)
   m_impl->setU_y(u_y);
 }
 
-std::vector<DataPoint> AfeCsf::data() const
+std::vector<XyDataPoint> AfeCsf::data() const
 {
   return m_impl->data();
 }
 
-void AfeCsf::setData(const std::vector<DataPoint> &data)
+void AfeCsf::setData(const std::vector<XyDataPoint> &data)
 {
   m_impl->setData(data);
 }
@@ -4065,7 +4065,7 @@ AfeFsp::AfeFsp() : AfeCsf()
 AfeFsp::AfeFsp(int nr,int icon,std::string name,std::string desc) : AfeCsf(nr,icon,name,desc)
 {}
 
-AfeFsp::AfeFsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfeFsp::AfeFsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
 : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
 {}
 
@@ -4078,7 +4078,7 @@ AfeQsp::AfeQsp() : AfeCsf()
 AfeQsp::AfeQsp(int nr,int icon,std::string name,std::string desc) : AfeCsf(nr,icon,name,desc)
 {}
 
-AfeQsp::AfeQsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfeQsp::AfeQsp(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
 : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
 {}
 
@@ -4091,7 +4091,7 @@ AfePsf::AfePsf() : AfeCsf()
 AfePsf::AfePsf(int nr,int icon,std::string name,std::string desc) : AfeCsf(nr,icon,name,desc)
 {}
 
-AfePsf::AfePsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfePsf::AfePsf(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
 : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
 {}
 
@@ -4104,7 +4104,7 @@ AfePsq::AfePsq() : AfeCsf()
 AfePsq::AfePsq(int nr,int icon,std::string name,std::string desc) : AfeCsf(nr,icon,name,desc)
 {}
 
-AfePsq::AfePsq(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<DataPoint> data)
+AfePsq::AfePsq(int nr,int icon,std::string name,std::string desc,int u_x,int u_y,std::vector<XyDataPoint> data)
 : AfeCsf(nr,icon,name,desc,u_x,u_y,data)
 {}
 

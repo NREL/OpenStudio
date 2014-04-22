@@ -25,7 +25,7 @@ namespace openstudio {
 namespace contam {
 namespace detail {
 
-void PrjModelImpl::setDefaults()
+void IndexModelImpl::setDefaults()
 {
   m_programName = "ContamW";
   m_echo = 0;
@@ -65,36 +65,36 @@ void PrjModelImpl::setDefaults()
   m_u_a = 0;
 }
 
-PrjModelImpl::PrjModelImpl()
+IndexModelImpl::IndexModelImpl()
 {
   setDefaults();
   m_valid=false;
 }
 
-PrjModelImpl::PrjModelImpl(openstudio::path path)
+IndexModelImpl::IndexModelImpl(openstudio::path path)
 {
   setDefaults();
   read(path);
 }
 
-PrjModelImpl::PrjModelImpl(std::string filename)
+IndexModelImpl::IndexModelImpl(std::string filename)
 {
   setDefaults();
   read(filename);
 }
 
-PrjModelImpl::PrjModelImpl(Reader &input)
+IndexModelImpl::IndexModelImpl(Reader &input)
 {
   setDefaults();
   read(input);
 }
 
-bool PrjModelImpl::read(openstudio::path path)
+bool IndexModelImpl::read(openstudio::path path)
 {
   return read(openstudio::toString(path));
 }
 
-bool PrjModelImpl::read(std::string filename)
+bool IndexModelImpl::read(std::string filename)
 {
   setDefaults();
   QFile fp(QString().fromStdString(filename));
@@ -110,7 +110,7 @@ bool PrjModelImpl::read(std::string filename)
   return m_valid;
 }
 
-bool PrjModelImpl::read(Reader &input)
+bool IndexModelImpl::read(Reader &input)
 {
   m_valid = false;
   // Section 1: Project, Weather, Simulation, and Output Controls
@@ -208,7 +208,7 @@ bool PrjModelImpl::read(Reader &input)
   // Section 15: Initial Zone Concentrations
   readZoneIc(input);
   // Section 16: Airflow Paths
-  m_paths = input.readSectionVector<Path>("path");
+  m_paths = input.readSectionVector<AirflowPath>("path");
   // Section 17: Duct Junctions
   std::string jct = input.readSection(); // Skip it
   m_unsupported["DuctJunction"] = jct;
@@ -236,7 +236,7 @@ bool PrjModelImpl::read(Reader &input)
   return true;
 }
 
-std::string PrjModelImpl::toString()
+std::string IndexModelImpl::toString()
 {
   std::string output;
   if(!m_valid)
@@ -326,98 +326,98 @@ std::string PrjModelImpl::toString()
   return output;
 }
 
-std::string PrjModelImpl::programName() const
+std::string IndexModelImpl::programName() const
 {
   return m_programName;
 }
 
-void PrjModelImpl::setProgramName(const std::string &name)
+void IndexModelImpl::setProgramName(const std::string &name)
 {
   m_programName = name;
 }
 
-std::string PrjModelImpl::version() const
+std::string IndexModelImpl::version() const
 {
   return m_programVersion;
 }
 
-void PrjModelImpl::setVersion(const std::string &version)
+void IndexModelImpl::setVersion(const std::string &version)
 {
   m_programVersion = version;
 }
 
-int PrjModelImpl::echo() const
+int IndexModelImpl::echo() const
 {
   return m_echo;
 }
 
-void PrjModelImpl::setEcho(const int echo)
+void IndexModelImpl::setEcho(const int echo)
 {
   m_echo = echo;
 }
 
-std::string PrjModelImpl::desc() const
+std::string IndexModelImpl::desc() const
 {
   return m_desc;
 }
 
-void PrjModelImpl::setDesc(const std::string &prjdesc)
+void IndexModelImpl::setDesc(const std::string &prjdesc)
 {
   m_desc = prjdesc;
 }
 
-int PrjModelImpl::skheight() const
+int IndexModelImpl::skheight() const
 {
   return m_skheight;
 }
 
-void PrjModelImpl::setSkheight(const int skheight)
+void IndexModelImpl::setSkheight(const int skheight)
 {
   m_skheight = skheight;
 }
 
-int PrjModelImpl::skwidth() const
+int IndexModelImpl::skwidth() const
 {
   return m_skwidth;
 }
 
-void PrjModelImpl::setSkwidth(const int skwidth)
+void IndexModelImpl::setSkwidth(const int skwidth)
 {
   m_skwidth = skwidth;
 }
 
-int PrjModelImpl::def_units() const
+int IndexModelImpl::def_units() const
 {
   return m_def_units;
 }
 
-void PrjModelImpl::setDef_units(const int def_units)
+void IndexModelImpl::setDef_units(const int def_units)
 {
   m_def_units = def_units;
 }
 
-int PrjModelImpl::def_flows() const
+int IndexModelImpl::def_flows() const
 {
   return m_def_flows;
 }
 
-void PrjModelImpl::setDef_flows(const int def_flows)
+void IndexModelImpl::setDef_flows(const int def_flows)
 {
   m_def_flows = def_flows;
 }
 
-double PrjModelImpl::def_T() const
+double IndexModelImpl::def_T() const
 {
   return m_def_T.toDouble();
 }
 
-bool PrjModelImpl::setDef_T(const double def_T)
+bool IndexModelImpl::setDef_T(const double def_T)
 {
   m_def_T = QString::number(def_T);
   return true;
 }
 
-bool PrjModelImpl::setDef_T(const std::string &def_T)
+bool IndexModelImpl::setDef_T(const std::string &def_T)
 {
   bool ok;
   FLOAT_CHECK(def_T,&ok);
@@ -429,28 +429,28 @@ bool PrjModelImpl::setDef_T(const std::string &def_T)
   return false;
 }
 
-int PrjModelImpl::udefT() const
+int IndexModelImpl::udefT() const
 {
   return m_udefT;
 }
 
-void PrjModelImpl::setUdefT(const int udefT)
+void IndexModelImpl::setUdefT(const int udefT)
 {
   m_udefT = udefT;
 }
 
-double PrjModelImpl::rel_N() const
+double IndexModelImpl::rel_N() const
 {
   return m_rel_N.toDouble();
 }
 
-bool PrjModelImpl::setRel_N(const double rel_N)
+bool IndexModelImpl::setRel_N(const double rel_N)
 {
   m_rel_N = QString::number(rel_N);
   return true;
 }
 
-bool PrjModelImpl::setRel_N(const std::string &rel_N)
+bool IndexModelImpl::setRel_N(const std::string &rel_N)
 {
   bool ok;
   FLOAT_CHECK(rel_N,&ok);
@@ -462,18 +462,18 @@ bool PrjModelImpl::setRel_N(const std::string &rel_N)
   return false;
 }
 
-double PrjModelImpl::wind_H() const
+double IndexModelImpl::wind_H() const
 {
   return m_wind_H.toDouble();
 }
 
-bool PrjModelImpl::setWind_H(const double wind_H)
+bool IndexModelImpl::setWind_H(const double wind_H)
 {
   m_wind_H = QString::number(wind_H);
   return true;
 }
 
-bool PrjModelImpl::setWind_H(const std::string &wind_H)
+bool IndexModelImpl::setWind_H(const std::string &wind_H)
 {
   bool ok;
   FLOAT_CHECK(wind_H,&ok);
@@ -485,28 +485,28 @@ bool PrjModelImpl::setWind_H(const std::string &wind_H)
   return false;
 }
 
-int PrjModelImpl::uwH() const
+int IndexModelImpl::uwH() const
 {
   return m_uwH;
 }
 
-void PrjModelImpl::setUwH(const int uwH)
+void IndexModelImpl::setUwH(const int uwH)
 {
   m_uwH = uwH;
 }
 
-double PrjModelImpl::wind_Ao() const
+double IndexModelImpl::wind_Ao() const
 {
   return m_wind_Ao.toDouble();
 }
 
-bool PrjModelImpl::setWind_Ao(const double wind_Ao)
+bool IndexModelImpl::setWind_Ao(const double wind_Ao)
 {
   m_wind_Ao = QString::number(wind_Ao);
   return true;
 }
 
-bool PrjModelImpl::setWind_Ao(const std::string &wind_Ao)
+bool IndexModelImpl::setWind_Ao(const std::string &wind_Ao)
 {
   bool ok;
   FLOAT_CHECK(wind_Ao,&ok);
@@ -518,18 +518,18 @@ bool PrjModelImpl::setWind_Ao(const std::string &wind_Ao)
   return false;
 }
 
-double PrjModelImpl::wind_a() const
+double IndexModelImpl::wind_a() const
 {
   return m_wind_a.toDouble();
 }
 
-bool PrjModelImpl::setWind_a(const double wind_a)
+bool IndexModelImpl::setWind_a(const double wind_a)
 {
   m_wind_a = QString::number(wind_a);
   return true;
 }
 
-bool PrjModelImpl::setWind_a(const std::string &wind_a)
+bool IndexModelImpl::setWind_a(const std::string &wind_a)
 {
   bool ok;
   FLOAT_CHECK(wind_a,&ok);
@@ -541,18 +541,18 @@ bool PrjModelImpl::setWind_a(const std::string &wind_a)
   return false;
 }
 
-double PrjModelImpl::scale() const
+double IndexModelImpl::scale() const
 {
   return m_scale.toDouble();
 }
 
-bool PrjModelImpl::setScale(const double scale)
+bool IndexModelImpl::setScale(const double scale)
 {
   m_scale = QString::number(scale);
   return true;
 }
 
-bool PrjModelImpl::setScale(const std::string &scale)
+bool IndexModelImpl::setScale(const std::string &scale)
 {
   bool ok;
   FLOAT_CHECK(scale,&ok);
@@ -564,158 +564,158 @@ bool PrjModelImpl::setScale(const std::string &scale)
   return false;
 }
 
-int PrjModelImpl::uScale() const
+int IndexModelImpl::uScale() const
 {
   return m_uScale;
 }
 
-void PrjModelImpl::setUScale(const int uScale)
+void IndexModelImpl::setUScale(const int uScale)
 {
   m_uScale = uScale;
 }
 
-int PrjModelImpl::orgRow() const
+int IndexModelImpl::orgRow() const
 {
   return m_orgRow;
 }
 
-void PrjModelImpl::setOrgRow(const int orgRow)
+void IndexModelImpl::setOrgRow(const int orgRow)
 {
   m_orgRow = orgRow;
 }
 
-int PrjModelImpl::orgCol() const
+int IndexModelImpl::orgCol() const
 {
   return m_orgCol;
 }
 
-void PrjModelImpl::setOrgCol(const int orgCol)
+void IndexModelImpl::setOrgCol(const int orgCol)
 {
   m_orgCol = orgCol;
 }
 
-int PrjModelImpl::invYaxis() const
+int IndexModelImpl::invYaxis() const
 {
   return m_invYaxis;
 }
 
-void PrjModelImpl::setInvYaxis(const int invYaxis)
+void IndexModelImpl::setInvYaxis(const int invYaxis)
 {
   m_invYaxis = invYaxis;
 }
 
-int PrjModelImpl::showGeom() const
+int IndexModelImpl::showGeom() const
 {
   return m_showGeom;
 }
 
-void PrjModelImpl::setShowGeom(const int showGeom)
+void IndexModelImpl::setShowGeom(const int showGeom)
 {
   m_showGeom = showGeom;
 }
 
-WeatherData PrjModelImpl::ssWeather() const
+WeatherData IndexModelImpl::ssWeather() const
 {
   return m_ssWeather;
 }
 
-void PrjModelImpl::setSsWeather(const WeatherData &ssWeather)
+void IndexModelImpl::setSsWeather(const WeatherData &ssWeather)
 {
   m_ssWeather = ssWeather;
 }
 
-WeatherData PrjModelImpl::wptWeather() const
+WeatherData IndexModelImpl::wptWeather() const
 {
   return m_wptWeather;
 }
 
-void PrjModelImpl::setWptWeather(const WeatherData &wptWeather)
+void IndexModelImpl::setWptWeather(const WeatherData &wptWeather)
 {
   m_wptWeather = wptWeather;
 }
 
-std::string PrjModelImpl::WTHpath() const
+std::string IndexModelImpl::WTHpath() const
 {
   return m_WTHpath;
 }
 
-void PrjModelImpl::setWTHpath(const std::string &WTHpath)
+void IndexModelImpl::setWTHpath(const std::string &WTHpath)
 {
   m_WTHpath = WTHpath;
 }
 
-std::string PrjModelImpl::CTMpath() const
+std::string IndexModelImpl::CTMpath() const
 {
   return m_CTMpath;
 }
 
-void PrjModelImpl::setCTMpath(const std::string &CTMpath)
+void IndexModelImpl::setCTMpath(const std::string &CTMpath)
 {
   m_CTMpath = CTMpath;
 }
 
-std::string PrjModelImpl::CVFpath() const
+std::string IndexModelImpl::CVFpath() const
 {
   return m_CVFpath;
 }
 
-void PrjModelImpl::setCVFpath(const std::string &CVFpath)
+void IndexModelImpl::setCVFpath(const std::string &CVFpath)
 {
   m_CVFpath = CVFpath;
 }
 
-std::string PrjModelImpl::DVFpath() const
+std::string IndexModelImpl::DVFpath() const
 {
   return m_DVFpath;
 }
 
-void PrjModelImpl::setDVFpath(const std::string &DVFpath)
+void IndexModelImpl::setDVFpath(const std::string &DVFpath)
 {
   m_DVFpath = DVFpath;
 }
 
-std::string PrjModelImpl::WPCfile() const
+std::string IndexModelImpl::WPCfile() const
 {
   return m_WPCfile;
 }
 
-void PrjModelImpl::setWPCfile(const std::string &WPCfile)
+void IndexModelImpl::setWPCfile(const std::string &WPCfile)
 {
   m_WPCfile = WPCfile;
 }
 
-std::string PrjModelImpl::EWCfile() const
+std::string IndexModelImpl::EWCfile() const
 {
   return m_EWCfile;
 }
 
-void PrjModelImpl::setEWCfile(const std::string &EWCfile)
+void IndexModelImpl::setEWCfile(const std::string &EWCfile)
 {
   m_EWCfile = EWCfile;
 }
 
-std::string PrjModelImpl::WPCdesc() const
+std::string IndexModelImpl::WPCdesc() const
 {
   return m_WPCdesc;
 }
 
-void PrjModelImpl::setWPCdesc(const std::string &WPCdesc)
+void IndexModelImpl::setWPCdesc(const std::string &WPCdesc)
 {
   m_WPCdesc = WPCdesc;
 }
 
-double PrjModelImpl::X0() const
+double IndexModelImpl::X0() const
 {
   return m_X0.toDouble();
 }
 
-bool PrjModelImpl::setX0(const double X0)
+bool IndexModelImpl::setX0(const double X0)
 {
   m_X0 = QString::number(X0);
   return true;
 }
 
-bool PrjModelImpl::setX0(const std::string &X0)
+bool IndexModelImpl::setX0(const std::string &X0)
 {
   bool ok;
   FLOAT_CHECK(X0,&ok);
@@ -727,18 +727,18 @@ bool PrjModelImpl::setX0(const std::string &X0)
   return false;
 }
 
-double PrjModelImpl::Y0() const
+double IndexModelImpl::Y0() const
 {
   return m_Y0.toDouble();
 }
 
-bool PrjModelImpl::setY0(const double Y0)
+bool IndexModelImpl::setY0(const double Y0)
 {
   m_Y0 = QString::number(Y0);
   return true;
 }
 
-bool PrjModelImpl::setY0(const std::string &Y0)
+bool IndexModelImpl::setY0(const std::string &Y0)
 {
   bool ok;
   FLOAT_CHECK(Y0,&ok);
@@ -750,18 +750,18 @@ bool PrjModelImpl::setY0(const std::string &Y0)
   return false;
 }
 
-double PrjModelImpl::Z0() const
+double IndexModelImpl::Z0() const
 {
   return m_Z0.toDouble();
 }
 
-bool PrjModelImpl::setZ0(const double Z0)
+bool IndexModelImpl::setZ0(const double Z0)
 {
   m_Z0 = QString::number(Z0);
   return true;
 }
 
-bool PrjModelImpl::setZ0(const std::string &Z0)
+bool IndexModelImpl::setZ0(const std::string &Z0)
 {
   bool ok;
   FLOAT_CHECK(Z0,&ok);
@@ -773,18 +773,18 @@ bool PrjModelImpl::setZ0(const std::string &Z0)
   return false;
 }
 
-double PrjModelImpl::angle() const
+double IndexModelImpl::angle() const
 {
   return m_angle.toDouble();
 }
 
-bool PrjModelImpl::setAngle(const double angle)
+bool IndexModelImpl::setAngle(const double angle)
 {
   m_angle = QString::number(angle);
   return true;
 }
 
-bool PrjModelImpl::setAngle(const std::string &angle)
+bool IndexModelImpl::setAngle(const std::string &angle)
 {
   bool ok;
   FLOAT_CHECK(angle,&ok);
@@ -796,28 +796,28 @@ bool PrjModelImpl::setAngle(const std::string &angle)
   return false;
 }
 
-int PrjModelImpl::u_XYZ() const
+int IndexModelImpl::u_XYZ() const
 {
   return m_u_XYZ;
 }
 
-void PrjModelImpl::setU_XYZ(const int u_XYZ)
+void IndexModelImpl::setU_XYZ(const int u_XYZ)
 {
   m_u_XYZ = u_XYZ;
 }
 
-double PrjModelImpl::epsPath() const
+double IndexModelImpl::epsPath() const
 {
   return m_epsPath.toDouble();
 }
 
-bool PrjModelImpl::setEpsPath(const double epsPath)
+bool IndexModelImpl::setEpsPath(const double epsPath)
 {
   m_epsPath = QString::number(epsPath);
   return true;
 }
 
-bool PrjModelImpl::setEpsPath(const std::string &epsPath)
+bool IndexModelImpl::setEpsPath(const std::string &epsPath)
 {
   bool ok;
   FLOAT_CHECK(epsPath,&ok);
@@ -829,18 +829,18 @@ bool PrjModelImpl::setEpsPath(const std::string &epsPath)
   return false;
 }
 
-double PrjModelImpl::epsSpcs() const
+double IndexModelImpl::epsSpcs() const
 {
   return m_epsSpcs.toDouble();
 }
 
-bool PrjModelImpl::setEpsSpcs(const double epsSpcs)
+bool IndexModelImpl::setEpsSpcs(const double epsSpcs)
 {
   m_epsSpcs = QString::number(epsSpcs);
   return true;
 }
 
-bool PrjModelImpl::setEpsSpcs(const std::string &epsSpcs)
+bool IndexModelImpl::setEpsSpcs(const std::string &epsSpcs)
 {
   bool ok;
   FLOAT_CHECK(epsSpcs,&ok);
@@ -852,78 +852,78 @@ bool PrjModelImpl::setEpsSpcs(const std::string &epsSpcs)
   return false;
 }
 
-std::string PrjModelImpl::tShift() const
+std::string IndexModelImpl::tShift() const
 {
   return m_tShift;
 }
 
-void PrjModelImpl::setTShift(const std::string &tShift)
+void IndexModelImpl::setTShift(const std::string &tShift)
 {
   m_tShift = tShift;
 }
 
-std::string PrjModelImpl::dStart() const
+std::string IndexModelImpl::dStart() const
 {
   return m_dStart;
 }
 
-void PrjModelImpl::setDStart(const std::string &dStart)
+void IndexModelImpl::setDStart(const std::string &dStart)
 {
   m_dStart = dStart;
 }
 
-std::string PrjModelImpl::dEnd() const
+std::string IndexModelImpl::dEnd() const
 {
   return m_dEnd;
 }
 
-void PrjModelImpl::setDEnd(const std::string &dEnd)
+void IndexModelImpl::setDEnd(const std::string &dEnd)
 {
   m_dEnd = dEnd;
 }
 
-int PrjModelImpl::useWPCwp() const
+int IndexModelImpl::useWPCwp() const
 {
   return m_useWPCwp;
 }
 
-void PrjModelImpl::setUseWPCwp(const int useWPCwp)
+void IndexModelImpl::setUseWPCwp(const int useWPCwp)
 {
   m_useWPCwp = useWPCwp;
 }
 
-int PrjModelImpl::useWPCmf() const
+int IndexModelImpl::useWPCmf() const
 {
   return m_useWPCmf;
 }
 
-void PrjModelImpl::setUseWPCmf(const int useWPCmf)
+void IndexModelImpl::setUseWPCmf(const int useWPCmf)
 {
   m_useWPCmf = useWPCmf;
 }
 
-int PrjModelImpl::wpctrig() const
+int IndexModelImpl::wpctrig() const
 {
   return m_wpctrig;
 }
 
-void PrjModelImpl::setWpctrig(const int wpctrig)
+void IndexModelImpl::setWpctrig(const int wpctrig)
 {
   m_wpctrig = wpctrig;
 }
 
-double PrjModelImpl::latd() const
+double IndexModelImpl::latd() const
 {
   return m_latd.toDouble();
 }
 
-bool PrjModelImpl::setLatd(const double latd)
+bool IndexModelImpl::setLatd(const double latd)
 {
   m_latd = QString::number(latd);
   return true;
 }
 
-bool PrjModelImpl::setLatd(const std::string &latd)
+bool IndexModelImpl::setLatd(const std::string &latd)
 {
   bool ok;
   FLOAT_CHECK(latd,&ok);
@@ -935,18 +935,18 @@ bool PrjModelImpl::setLatd(const std::string &latd)
   return false;
 }
 
-double PrjModelImpl::lgtd() const
+double IndexModelImpl::lgtd() const
 {
   return m_lgtd.toDouble();
 }
 
-bool PrjModelImpl::setLgtd(const double lgtd)
+bool IndexModelImpl::setLgtd(const double lgtd)
 {
   m_lgtd = QString::number(lgtd);
   return true;
 }
 
-bool PrjModelImpl::setLgtd(const std::string &lgtd)
+bool IndexModelImpl::setLgtd(const std::string &lgtd)
 {
   bool ok;
   FLOAT_CHECK(lgtd,&ok);
@@ -958,18 +958,18 @@ bool PrjModelImpl::setLgtd(const std::string &lgtd)
   return false;
 }
 
-double PrjModelImpl::Tznr() const
+double IndexModelImpl::Tznr() const
 {
   return m_Tznr.toDouble();
 }
 
-bool PrjModelImpl::setTznr(const double Tznr)
+bool IndexModelImpl::setTznr(const double Tznr)
 {
   m_Tznr = QString::number(Tznr);
   return true;
 }
 
-bool PrjModelImpl::setTznr(const std::string &Tznr)
+bool IndexModelImpl::setTznr(const std::string &Tznr)
 {
   bool ok;
   FLOAT_CHECK(Tznr,&ok);
@@ -981,18 +981,18 @@ bool PrjModelImpl::setTznr(const std::string &Tznr)
   return false;
 }
 
-double PrjModelImpl::altd() const
+double IndexModelImpl::altd() const
 {
   return m_altd.toDouble();
 }
 
-bool PrjModelImpl::setAltd(const double altd)
+bool IndexModelImpl::setAltd(const double altd)
 {
   m_altd = QString::number(altd);
   return true;
 }
 
-bool PrjModelImpl::setAltd(const std::string &altd)
+bool IndexModelImpl::setAltd(const std::string &altd)
 {
   bool ok;
   FLOAT_CHECK(altd,&ok);
@@ -1004,18 +1004,18 @@ bool PrjModelImpl::setAltd(const std::string &altd)
   return false;
 }
 
-double PrjModelImpl::Tgrnd() const
+double IndexModelImpl::Tgrnd() const
 {
   return m_Tgrnd.toDouble();
 }
 
-bool PrjModelImpl::setTgrnd(const double Tgrnd)
+bool IndexModelImpl::setTgrnd(const double Tgrnd)
 {
   m_Tgrnd = QString::number(Tgrnd);
   return true;
 }
 
-bool PrjModelImpl::setTgrnd(const std::string &Tgrnd)
+bool IndexModelImpl::setTgrnd(const std::string &Tgrnd)
 {
   bool ok;
   FLOAT_CHECK(Tgrnd,&ok);
@@ -1027,102 +1027,102 @@ bool PrjModelImpl::setTgrnd(const std::string &Tgrnd)
   return false;
 }
 
-int PrjModelImpl::utg() const
+int IndexModelImpl::utg() const
 {
   return m_utg;
 }
 
-void PrjModelImpl::setUtg(const int utg)
+void IndexModelImpl::setUtg(const int utg)
 {
   m_utg = utg;
 }
 
-int PrjModelImpl::u_a() const
+int IndexModelImpl::u_a() const
 {
   return m_u_a;
 }
 
-void PrjModelImpl::setU_a(const int u_a)
+void IndexModelImpl::setU_a(const int u_a)
 {
   m_u_a = u_a;
 }
 
-RunControl PrjModelImpl::rc() const
+RunControl IndexModelImpl::rc() const
 {
   return m_rc;
 }
-void PrjModelImpl::setRc(const RunControl rc)
+void IndexModelImpl::setRc(const RunControl rc)
 {
   m_rc = rc;
 }
 
-std::vector<int> PrjModelImpl::contaminants() const
+std::vector<int> IndexModelImpl::contaminants() const
 {
   return m_contaminants;
 }
 
-std::vector<Species> PrjModelImpl::species() const
+std::vector<Species> IndexModelImpl::species() const
 {
   return m_species;
 }
 
-void PrjModelImpl::setSpecies(const std::vector<Species> &species)
+void IndexModelImpl::setSpecies(const std::vector<Species> &species)
 {
   m_species = species;
   rebuildContaminants();
 }
 
-void PrjModelImpl::addSpecies(Species &species)
+void IndexModelImpl::addSpecies(Species &species)
 {
   species.setNr(m_species.size()+1);
   m_species.push_back(species);
 }
 
-std::vector<Level> PrjModelImpl::levels() const
+std::vector<Level> IndexModelImpl::levels() const
 {
   return m_levels;
 }
 
-void PrjModelImpl::setLevels(const std::vector<Level> &levels)
+void IndexModelImpl::setLevels(const std::vector<Level> &levels)
 {
   m_levels = levels;
 }
 
-void PrjModelImpl::addLevel(Level &level)
+void IndexModelImpl::addLevel(Level &level)
 {
   level.setNr(m_levels.size()+1);
   m_levels.push_back(level);
 }
 
-std::vector<DaySchedule> PrjModelImpl::daySchedules() const
+std::vector<DaySchedule> IndexModelImpl::daySchedules() const
 {
   return m_daySchedules;
 }
 
-void PrjModelImpl::setDaySchedules(const std::vector<DaySchedule> &daySchedules)
+void IndexModelImpl::setDaySchedules(const std::vector<DaySchedule> &daySchedules)
 {
   m_daySchedules = daySchedules;
 }
 
-std::vector<WeekSchedule> PrjModelImpl::weekSchedules() const
+std::vector<WeekSchedule> IndexModelImpl::weekSchedules() const
 {
   return m_weekSchedules;
 }
-void PrjModelImpl::setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules)
+void IndexModelImpl::setWeekSchedules(const std::vector<WeekSchedule> &weekSchedules)
 {
   m_weekSchedules = weekSchedules;
 }
 
-std::vector<WindPressureProfile> PrjModelImpl::windPressureProfiles() const
+std::vector<WindPressureProfile> IndexModelImpl::windPressureProfiles() const
 {
   return m_windPressureProfiles;
 }
-void PrjModelImpl::setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles)
+void IndexModelImpl::setWindPressureProfiles(const std::vector<WindPressureProfile> &windPressureProfiles)
 {
   m_windPressureProfiles = windPressureProfiles;
 }
 
-std::vector<PlrLeak1> PrjModelImpl::getPlrLeak1()
+std::vector<PlrLeak1> IndexModelImpl::getPlrLeak1()
 {
   std::vector<PlrLeak1> afe;
   for(int i=0;i<m_airflowElements.size();i++)
@@ -1135,7 +1135,7 @@ std::vector<PlrLeak1> PrjModelImpl::getPlrLeak1()
   return afe;
 }
 
-std::vector<PlrLeak2> PrjModelImpl::getPlrLeak2()
+std::vector<PlrLeak2> IndexModelImpl::getPlrLeak2()
 {
   std::vector<PlrLeak2> afe;
   for(int i=0;i<m_airflowElements.size();i++)
@@ -1148,7 +1148,7 @@ std::vector<PlrLeak2> PrjModelImpl::getPlrLeak2()
   return afe;
 }
 
-std::vector<PlrTest1> PrjModelImpl::getPlrTest1()
+std::vector<PlrTest1> IndexModelImpl::getPlrTest1()
 {
   std::vector<PlrTest1> afe;
   for(int i=0;i<m_airflowElements.size();i++)
@@ -1161,7 +1161,7 @@ std::vector<PlrTest1> PrjModelImpl::getPlrTest1()
   return afe;
 }
 
-std::vector<CvfDat> PrjModelImpl::getCvfDat()
+std::vector<CvfDat> IndexModelImpl::getCvfDat()
 {
   std::vector<CvfDat> ctrl;
   for(int i=0;i<m_controlNodes.size();i++)
@@ -1175,60 +1175,60 @@ std::vector<CvfDat> PrjModelImpl::getCvfDat()
   return ctrl;
 }
 
-std::vector<Ahs> PrjModelImpl::ahs() const
+std::vector<Ahs> IndexModelImpl::ahs() const
 {
   return m_ahs;
 }
 
-void PrjModelImpl::setAhs(const std::vector<Ahs> &ahs)
+void IndexModelImpl::setAhs(const std::vector<Ahs> &ahs)
 {
   m_ahs = ahs;
 }
 
-void PrjModelImpl::addAhs(Ahs &ahs)
+void IndexModelImpl::addAhs(Ahs &ahs)
 {
   ahs.setNr(m_ahs.size()+1);
   m_ahs.push_back(ahs);
 }
 
-std::vector<Zone> PrjModelImpl::zones() const
+std::vector<Zone> IndexModelImpl::zones() const
 {
   return m_zones;
 }
 
-void PrjModelImpl::setZones(const std::vector<Zone> &zones)
+void IndexModelImpl::setZones(const std::vector<Zone> &zones)
 {
   m_zones = zones;
 }
 
-void PrjModelImpl::addZone(Zone &zone)
+void IndexModelImpl::addZone(Zone &zone)
 {
   zone.setNr(m_zones.size()+1);
   m_zones.push_back(zone);
 }
 
-bool PrjModelImpl::valid() const
+bool IndexModelImpl::valid() const
 {
   return m_valid;
 }
 
-std::vector<Path> PrjModelImpl::paths() const
+std::vector<AirflowPath> IndexModelImpl::airflowPaths() const
 {
   return m_paths;
 }
 
-void PrjModelImpl::setPaths(const std::vector<Path> &paths)
+void IndexModelImpl::setAirflowPaths(const std::vector<AirflowPath> &paths)
 {
   m_paths = paths;
 }
 
-void PrjModelImpl::addPath(Path &path)
+void IndexModelImpl::addAirflowPath(AirflowPath &path)
 {
   path.setNr(m_paths.size()+1);
   m_paths.push_back(path);
 }
 
-void PrjModelImpl::rebuildContaminants()
+void IndexModelImpl::rebuildContaminants()
 {
   m_contaminants.clear();
   for(unsigned i=1;i<=m_species.size();i++)
@@ -1241,7 +1241,7 @@ void PrjModelImpl::rebuildContaminants()
   }
 }
 
-void PrjModelImpl::readZoneIc(Reader &input)
+void IndexModelImpl::readZoneIc(Reader &input)
 {
   unsigned int nn = input.readUInt();
   if(nn != 0)
@@ -1272,7 +1272,7 @@ void PrjModelImpl::readZoneIc(Reader &input)
   input.read999("Failed to find zone IC section termination");
 }
 
-std::string PrjModelImpl::writeZoneIc(int start)
+std::string IndexModelImpl::writeZoneIc(int start)
 {
   int offset = 1;
   if(start != 0)
@@ -1296,7 +1296,7 @@ std::string PrjModelImpl::writeZoneIc(int start)
   return string  + "-999\n";
 }
 
-int PrjModelImpl::airflowElementNrByName(std::string name) const
+int IndexModelImpl::airflowElementNrByName(std::string name) const
 {
   for(int i=0;i<m_airflowElements.size();i++)
   {
@@ -1308,7 +1308,7 @@ int PrjModelImpl::airflowElementNrByName(std::string name) const
   return 0;
 }
 
-std::vector<std::vector<int> > PrjModelImpl::zoneExteriorFlowPaths()
+std::vector<std::vector<int> > IndexModelImpl::zoneExteriorFlowPaths()
 {
   std::vector<std::vector<int> > paths(m_zones.size());
 
@@ -1334,7 +1334,7 @@ std::vector<std::vector<int> > PrjModelImpl::zoneExteriorFlowPaths()
   return paths;
 }
 
-std::vector<TimeSeries> PrjModelImpl::zoneInfiltration(SimFile *sim)
+std::vector<TimeSeries> IndexModelImpl::zoneInfiltration(SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -1394,7 +1394,7 @@ std::vector<TimeSeries> PrjModelImpl::zoneInfiltration(SimFile *sim)
   return results;
 }
 
-std::vector<TimeSeries> PrjModelImpl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
+std::vector<TimeSeries> IndexModelImpl::pathInfiltration(std::vector<int> pathNrs, SimFile *sim)
 {
   // This should probably include a lot more checks of things and is written in
   // somewhat strange way to avoid taking too much advantage of the specifics 
@@ -1417,7 +1417,7 @@ std::vector<TimeSeries> PrjModelImpl::pathInfiltration(std::vector<int> pathNrs,
     }
     else
     {
-      contam::Path path = m_paths[pathNrs[i]-1];
+      contam::AirflowPath path = m_paths[pathNrs[i]-1];
       if(path.pzn() == -1)
       {
         // This flow path is negative for flow into zone
