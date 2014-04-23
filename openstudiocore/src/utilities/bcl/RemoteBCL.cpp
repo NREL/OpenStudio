@@ -613,7 +613,6 @@ namespace openstudio{
 
     QByteArray data;
     url.addQueryItem("uids", toQString(uid));
-    url.addQueryItem("api_version", toQString(m_apiVersion));
     data.append(url.encodedQuery());
     LOG(Warn, url.toString().toStdString());
 
