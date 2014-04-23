@@ -121,7 +121,7 @@ TEST(Filetypes, EpwFile_TMY)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("3CF64E88", epwFile.checksum());
+    EXPECT_TRUE(epwFile.checksum() == "3CF64E88" || epwFile.checksum() == "BDF687C1");
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -160,7 +160,7 @@ TEST(Filetypes, EpwFile_AMY)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.amy");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("1B0D9577", epwFile.checksum());
+    EXPECT_TRUE(epwFile.checksum() == "1B0D9577" || epwFile.checksum() == "521A957C");
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
@@ -190,7 +190,7 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("7E3B5B40", epwFile.checksum());
+    EXPECT_TRUE(epwFile.checksum() == "7E3B5B40" || epwFile.checksum() == "8F74A20B");
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
     EXPECT_EQ("USA", epwFile.country());
