@@ -46,6 +46,8 @@
 %ignore openstudio::energyplus::detail;
 %ignore openstudio::energyplus::detail::ForwardTranslatorInitializer;
 
+%template(RepeatingWarningVector) std::vector<RepeatingWarning>;
+
 %include <energyplus/ErrorFile.hpp>
 %include <energyplus/ForwardTranslator.hpp>
 %include <energyplus/ReverseTranslator.hpp>

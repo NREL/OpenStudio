@@ -52,6 +52,13 @@ namespace energyplus {
     return m_fatalErrors;
   }
 
+  /// get repeating warnings
+  std::vector<RepeatingWarning> ErrorFile::repeatingWarnings() const
+  {
+    return m_repeatingWarnings;
+  }
+
+
   /// did EnergyPlus complete or crash
   bool ErrorFile::completed() const
   {
@@ -71,10 +78,10 @@ namespace energyplus {
 
     // matches[1], warning/error type
     // matches[2], rest of line
-    boost::regex warningOrError("^\\s*\\*\\*\\s*([^\\s\\*]+)\\s*\\*\\*(.*)$");
+    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([^\\s\\*]+)\\s*\\*\\*(.*)$");
 
     // matches[1], rest of line
-    boost::regex warningOrErrorContinue("^\\s*\\*\\*\\s*~~~\\s*\\*\\*(.*)$");
+    boost::regex warningOrErrorContinue("^\\s*\\**\\s+\\*\\*\\s*~~~\\s*\\*\\*(.*)$");
 
     // completed successfully
     boost::regex completedSuccessful("^\\s*\\*+ EnergyPlus Completed Successfully.*");
