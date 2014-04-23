@@ -132,8 +132,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
   // Fan Placement
   s = modelObject.fanPlacement();
+  bool blowThroughFan = false;
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::FanPlacement,s.get());
+    if( istringEqual(*s, "BlowThrough") ) {
+      blowThroughFan = true;
+    }
   }
 
   // Supply Air Fan Operating Mode Schedule Name
@@ -194,13 +198,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   }
 
   // DOAS DX Cooling Coil Leaving Minimum Air Temperature
-  if( modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature() )
-  {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"Yes");
-  }
-  else
-  {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,"No");
+  d = modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature();
+  if (d) {
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature,d.get());
   }
 
   // Latent Load Control
@@ -443,29 +443,43 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   if( _fan )
   {
     std::string outletNodeName;
-    if( _coolingCoil ) {
-      outletNodeName = baseName + " Fan - Cooling Coil Node";
-    } else if( _heatingCoil ) {
-      outletNodeName = baseName + " Fan - Heating Coil Node";
-    } else if( _supplementalHeatingCoil ) {
-      outletNodeName = baseName + " Fan - Supplemental Coil Node";
+    std::string inletNodeName = airInletNodeName.get();
+    if( blowThroughFan ) {
+      if( _coolingCoil ) {
+        outletNodeName = baseName + " Fan - Cooling Coil Node";
+      } else if( _heatingCoil ) {
+        outletNodeName = baseName + " Fan - Heating Coil Node";
+      } else if( _supplementalHeatingCoil ) {
+        outletNodeName = baseName + " Fan - Supplemental Coil Node";
+      } else {
+        outletNodeName = airOutletNodeName.get();
+      }
     } else {
-      outletNodeName = airOutletNodeName.get();
+      if( _heatingCoil ) {
+        inletNodeName = baseName + " Heating Coil - Fan Node";
+      } else if( _coolingCoil ) {
+        inletNodeName = baseName + " Cooling Coil - Fan Node";
+      }
+      if( _supplementalHeatingCoil ) {
+        outletNodeName = baseName + " Fan - Supplemental Coil Node";
+      } else {
+        outletNodeName = airOutletNodeName.get();
+      }
     }
 
     if( _fan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
     {
-      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,airInletNodeName.get());
+      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,inletNodeName);
       _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,outletNodeName);
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_VariableVolume )
     {
-      _fan->setString(Fan_VariableVolumeFields::AirInletNodeName,airInletNodeName.get());
+      _fan->setString(Fan_VariableVolumeFields::AirInletNodeName,inletNodeName);
       _fan->setString(Fan_VariableVolumeFields::AirOutletNodeName,outletNodeName);
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
     {
-      _fan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName.get());
+      _fan->setString(Fan_OnOffFields::AirInletNodeName,inletNodeName);
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
     }
   }
@@ -474,15 +488,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   {
     std::string outletNodeName;
     std::string inletNodeName;
-    if( _fan ) {
+    if( blowThroughFan && _fan ) {
       inletNodeName = baseName + " Fan - Cooling Coil Node";
     } else {
       inletNodeName = airInletNodeName.get();
     }
     if( _heatingCoil ) {
       outletNodeName = baseName + " Cooling Coil - Heating Coil Node";
-    } else if( _supplementalHeatingCoil ) {
+    } else if( blowThroughFan && _supplementalHeatingCoil ) {
       outletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
+    } else if( !blowThroughFan && _fan ) {
+      outletNodeName = baseName + " Cooling Coil - Fan Node";
     } else {
       outletNodeName = airOutletNodeName.get();
     }
@@ -515,13 +531,15 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     std::string inletNodeName;
     if( _coolingCoil ) {
       inletNodeName = baseName + " Cooling Coil - Heating Coil Node";
-    } else if( _fan ) {
+    } else if( blowThroughFan && _fan ) {
       inletNodeName = baseName + " Fan - Heating Coil Node";
     } else {
       inletNodeName = airInletNodeName.get();
     }
-    if( _supplementalHeatingCoil ) {
+    if( blowThroughFan && _supplementalHeatingCoil ) {
       outletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
+    } else if( !blowThroughFan && _fan ) {
+      outletNodeName = baseName + " Heating Coil - Fan Node";
     } else {
       outletNodeName = airOutletNodeName.get();
     }
