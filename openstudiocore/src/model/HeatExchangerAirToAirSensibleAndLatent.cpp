@@ -438,11 +438,7 @@ namespace detail {
   }
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::setSupplyAirOutletTemperatureControl(bool supplyAirOutletTemperatureControl) {
-    if (supplyAirOutletTemperatureControl) {
-      setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, "Yes");
-    } else {
-      setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, "No");
-    }
+    setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, supplyAirOutletTemperatureControl);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent_Impl::setHeatExchangerType(std::string heatExchangerType) {
@@ -539,11 +535,7 @@ namespace detail {
   }
 
   void HeatExchangerAirToAirSensibleAndLatent_Impl::setEconomizerLockout(bool economizerLockout) {
-    if (economizerLockout) {
-      setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, "Yes");
-    } else {
-      setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, "No");
-    }
+    setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, economizerLockout);
   }
 
   boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {

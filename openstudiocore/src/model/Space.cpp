@@ -3459,9 +3459,6 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
 
   double floorPrintWidth = (xmax-xmin);
   double floorPrintHeight = (ymax-ymin);
-  double floorPrintArea = floorPrintWidth * floorPrintHeight;
-  double desiredArea = desiredWidth * desiredHeight;
-  double numSkylights = skylightToProjectedFloorRatio*floorPrintArea/desiredArea;
 
   double numSkylightsX = std::sqrt(skylightToProjectedFloorRatio)*floorPrintWidth/desiredWidth;
   double numSkylightsY = std::sqrt(skylightToProjectedFloorRatio)*floorPrintHeight/desiredHeight;
