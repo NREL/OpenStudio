@@ -40,11 +40,6 @@ namespace energyplus {
       ((Severe)) 
       ((Fatal)) );
 
-  struct RepeatingWarning {
-    std::string message;
-    int count;
-  };
-
   class ENERGYPLUS_API ErrorFile {
    public:
 
@@ -59,9 +54,6 @@ namespace energyplus {
 
     /// get fatal errors
     std::vector<std::string> fatalErrors() const;
-
-    /// get repeating warnings
-    std::vector<RepeatingWarning> repeatingWarnings() const;
 
     /// did EnergyPlus complete or crash
     bool completed() const;
@@ -78,7 +70,6 @@ namespace energyplus {
     std::vector<std::string> m_warnings;
     std::vector<std::string> m_severeErrors;
     std::vector<std::string> m_fatalErrors;
-    std::vector<RepeatingWarning> m_repeatingWarnings;
     bool m_completed;
     bool m_completedSuccessfully;
 

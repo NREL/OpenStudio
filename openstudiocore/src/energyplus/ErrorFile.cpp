@@ -52,12 +52,6 @@ namespace energyplus {
     return m_fatalErrors;
   }
 
-  /// get repeating warnings
-  std::vector<RepeatingWarning> ErrorFile::repeatingWarnings() const
-  {
-    return m_repeatingWarnings;
-  }
-
 
   /// did EnergyPlus complete or crash
   bool ErrorFile::completed() const
@@ -92,6 +86,9 @@ namespace energyplus {
     // completed unsuccessfully
     boost::regex completedUnsuccessful("^\\s*\\*+ EnergyPlus Terminated.*");
 
+    // repeat count
+    boost::regex occurredTotalTimes(".*occurred ([0-9]+) total times.*");
+
 
     // read the file line by line using regexes
     while(std::getline(is, line)){
@@ -113,8 +110,8 @@ namespace energyplus {
             break;
           }
           if (boost::regex_search(line, matches, warningOrErrorContinue)){
-            std::string temp = std::string(matches[1].first, matches[1].second); boost::trim(temp);
-            warningOrErrorString += " " + temp;
+            std::string temp = std::string(matches[1].first, matches[1].second); boost::trim_right(temp);
+            warningOrErrorString += "\n" + temp;
           }else{
             // unget the line
             is.seekg(pos);
@@ -122,19 +119,35 @@ namespace energyplus {
           }
         }
 
+        LOG(Trace, "Error parsed: " << warningOrErrorString);
+
+        int repeatCount = 0;
+
+        if (boost::regex_search(warningOrErrorString, matches, occurredTotalTimes)) {
+          std::string temp = std::string(matches[1].first, matches[1].second); 
+          repeatCount = atoi(temp.c_str()) - 1;
+        }
+
+        if (repeatCount < 1) repeatCount = 1;
+
+
         // correctly sort warnings and errors
         try{
           ErrorLevel level(warningOrErrorType);
-          switch(level.value()){
-            case ErrorLevel::Warning:
-              m_warnings.push_back(warningOrErrorString);
-              break;
-            case ErrorLevel::Severe:
-              m_severeErrors.push_back(warningOrErrorString);
-              break;
-            case ErrorLevel::Fatal:
-              m_fatalErrors.push_back(warningOrErrorString);
-              break;
+
+          for (int i = 0; i < repeatCount; ++i)
+          {
+            switch(level.value()){
+              case ErrorLevel::Warning:
+                m_warnings.push_back(warningOrErrorString);
+                break;
+              case ErrorLevel::Severe:
+                m_severeErrors.push_back(warningOrErrorString);
+                break;
+              case ErrorLevel::Fatal:
+                m_fatalErrors.push_back(warningOrErrorString);
+                break;
+            }
           }
 
         }catch(...){
