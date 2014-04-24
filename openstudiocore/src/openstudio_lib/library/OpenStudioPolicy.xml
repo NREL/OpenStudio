@@ -104,7 +104,8 @@
     <rule IddField="Heating Coil Name" Access="LOCKED"/>
     <rule IddField="Cooling Coil Name" Access="LOCKED"/>
     <rule IddField="Supplemental Heating Coil Name" Access="LOCKED"/>
-    <rule IddField="Controlling Zone or Thermostat Location" Access="HIDDEN"/>
+    <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
+    <rule IddField="Control Type" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Pipe_Adiabatic">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
