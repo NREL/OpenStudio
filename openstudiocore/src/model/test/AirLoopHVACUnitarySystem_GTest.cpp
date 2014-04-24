@@ -133,7 +133,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
 
   AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
   
-  EXPECT_EQ("Load", testObjectClone.controlType());
+  // EXPECT_EQ("Load", testObjectClone.controlType());
   EXPECT_EQ("None", testObjectClone.dehumidificationControlType());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.dXHeatingCoilSizingRatio());
   EXPECT_FALSE(testObjectClone.useDOASDXCoolingCoil());
@@ -185,7 +185,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   testObject.setHeatingCoil(heatingCoil);
   testObject.setSupplementalHeatingCoil(suppHeatingCoil);
 
-  testObject.setControlType("SetPoint");
+  // testObject.setControlType("SetPoint");
   testObject.setDehumidificationControlType("CoolReheat");
   testObject.setFanPlacement("BlowThrough");
   testObject.setDXHeatingCoilSizingRatio(999.0);
@@ -207,7 +207,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
 
   AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
-  EXPECT_EQ("SetPoint", testObjectClone.controlType());
+  // EXPECT_EQ("SetPoint", testObjectClone.controlType());
   EXPECT_EQ("CoolReheat", testObjectClone.dehumidificationControlType());
   EXPECT_EQ("BlowThrough", testObjectClone.fanPlacement().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.dXHeatingCoilSizingRatio());

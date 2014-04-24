@@ -59,10 +59,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   IdfObject unitarySystem = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_UnitarySystem, modelObject);
 
   // Control Type
-  s = modelObject.controlType();
-  if (s) {
-    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
-  }
+  unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
+  // s = modelObject.controlType();
+  // if (s) {
+  //   unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
+  // }
 
   // Controlling Zone or Thermostat Location
   if( boost::optional<ThermalZone> controllingZoneorThermostatLocation = modelObject.controllingZoneorThermostatLocation() )
@@ -580,7 +581,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   {
     std::string outletNodeName;
     std::string inletNodeName;
-    if( _heatingCoil ) {
+    if( !blowThroughFan && _fan ) {
+      inletNodeName = baseName + " Fan - Supplemental Coil Node";
+    } else if( _heatingCoil ) {
       inletNodeName = baseName + " Heating Coil - Supplemental Coil Node";
     } else if( _coolingCoil ) {
       inletNodeName = baseName + " Cooling Coil - Supplemental Coil Node";
