@@ -244,6 +244,10 @@ bool ConstructionBase::isFenestration() const {
   return getImpl<detail::ConstructionBase_Impl>()->isFenestration();
 }
 
+bool ConstructionBase::isSolarDiffusing() const {
+  return getImpl<detail::ConstructionBase_Impl>()->isSolarDiffusing();
+}
+
 bool ConstructionBase::isModelPartition() const {
   return getImpl<detail::ConstructionBase_Impl>()->isModelPartition();
 }

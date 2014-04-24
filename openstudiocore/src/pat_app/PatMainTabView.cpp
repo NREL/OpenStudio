@@ -32,8 +32,6 @@
 
 #include <vector>
 
-static const int TAB_SEPARATION = 10;
-
 namespace openstudio {
   
 namespace pat { 

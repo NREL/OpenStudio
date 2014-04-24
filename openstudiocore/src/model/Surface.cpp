@@ -1336,7 +1336,6 @@ namespace detail {
     }
 
     double oneInch = 0.0254;
-    double oneFoot = 0.3048;
 
     // DLM: preserve a 1" gap between window and edge to keep SketchUp happy
     double minGlassToEdgeDistance = oneInch;

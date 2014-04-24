@@ -77,6 +77,9 @@ class MODEL_API ConstructionBase : public ResourceObject {
 
   bool isFenestration() const;
 
+  /** Returns true if isFenestration and any material layers are solar diffusing. */
+  bool isSolarDiffusing() const;
+
   bool isModelPartition() const;
 
   /** Returns true if the construction has RoofVegetation as the outer layer. */
