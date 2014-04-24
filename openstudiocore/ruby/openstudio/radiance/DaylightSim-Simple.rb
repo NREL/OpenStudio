@@ -125,7 +125,7 @@ class ParseOptions
       end
       opts.on("--x", "Use single-phase method") do |x|
         options.x = x
-        options.y = "false"
+        options.z = ""
       end
       opts.on("--z", "Use three-phase DC method") do |z|
         options.x = ""
@@ -304,8 +304,6 @@ def mergeSpaces(t_space_names_to_calculate, t_outPath)
   end
 end
 
-
-
 def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
   perlPrefix = ""
   perlExtension = ""
@@ -334,17 +332,16 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   File.open("#{t_outPath}/skies/dc.sky", "w") do |file|
     file << radEnvSphere
   end
-  puts "wrote sky: #{t_outPath}/skies/dc.sky"
 
   binDir = "#{t_outPath}/output/dc/merged_space/maps"
   FileUtils.mkdir_p("#{binDir}") unless File.exists?("#{binDir}")
 
   procsUsed = ""
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-    puts "rcontrib does not support multiple cores on Windows"
+    puts "Radiance does not support multiple cores on Windows"
     procsUsed = ""
   else
-    puts "rcontrib using #{t_simCores} core(s)"
+    puts "using #{t_simCores} core(s)"
     procsUsed = "-n #{t_simCores}"
   end
 

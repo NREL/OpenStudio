@@ -1024,10 +1024,12 @@ namespace radiance {
 
             LOG(Info, "found a "+subSurface->subSurfaceType()+", azimuth = "+formatString(azi)+ "("+subSurface_name+")");
 
+            // set transmittance...
             double visibleTransmittance = subSurface->visibleTransmittance().get();
 
             // convert transmittance (Tn) to transmissivity (tn) for Radiance material
             // tn = (sqrt(.8402528435+.0072522239*Tn*Tn)-.9166530661)/.0036261119/Tn
+            // or: tn = 1.0895 * Tn (Thanks, Axel Jacobs! (http://www.jaloxa.eu/resources/radiance/documentation/docs/radiance_cookbook.pdf, p. 21))
             double tVis = visibleTransmittance;
             double tn = 0;
             if (tVis == 0.0) {
@@ -1035,16 +1037,60 @@ namespace radiance {
               tn = 0.0;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
             } else {
-              double tn_x = 0.0072522239 * tVis * tVis;
-              double tn_y = sqrt(tn_x + 0.8402528435) - 0.9166530661;
-              tn = tn_y / 0.0036261119 /tVis;
+              // double tn_x = 0.0072522239 * tVis * tVis;
+              // double tn_y = sqrt(tn_x + 0.8402528435) - 0.9166530661;
+              // simplified thx to Axel...
+              tn = tVis * 1.0895;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
             }
 
-            /// \todo add support for translucent materials
+            std::string rMaterial = "glass";
+            std::string matString = "";
+            // std::string isDiffusing = "false";
+            //std::string constrTemp = subSurface.construction;
+            if (construction->isSolarDiffusing()) {
+              // create Radiance trans material based on transmittance, 100% diffuse (to match E+ performance)
+              // trans formulae (from "Rendering with Radiance", sec. 5.2.6):
+              // A7=Ts / ( Td+Ts )
+              // A6=( Td+Ts ) / ( Rd+Td+Ts ) 
+              // A5=Sr
+              // A4=Rs
+              // A3=Cb / ( (1-Rs)*(1-A6) ) 
+              // A2=Cg / ( (1-Rs)*(1-A6) ) 
+              // A1=Cr / ( (1-Rs)*(1-A6) )
+
+              // set some constants, let's not get crazy
+              double tS = 0.0; // transmitted specularity
+              // rD = 0.95 // diffuse reflectance (not used for monochromatic trans mats)
+              double sR = 0.0; // surface roughness
+              double rS = 0.05; // specular reflectance
+              double cRGB = (0.95 - tVis);
+
+              // trans parameters
+              double transA7 = tS / (tVis+tS);
+              // transA6 = (tn + tS) / (rD + tVis + tS);
+              double transA6 = (tn + tS) / (cRGB + tn + tS);
+              double transA5 = sR;
+              double transA4 = rS;
+              // transA3 = cRGB / (1-rS)*(1-transA6);
+              // transA2 = cRGB / (1-rS)*(1-transA6);
+              // transA1 = cRGB / (1-rS)*(1-transA6);
+              double transA3 = cRGB; // monochromatic
+              double transA2 = cRGB; // monochromatic
+              double transA1 = cRGB; // monochromatic
+
+              rMaterial = "trans";
+              matString = "\n0\n7\n "+formatString(transA1, 4)+" "+formatString(transA2, 4)+" "+formatString(transA3, 4)+" "+formatString(transA4, 4)+" "+formatString(transA5, 4)+" "+formatString(transA6, 4)+" "+formatString(transA7, 4)+"\n";
+              double nTs = 0.95; // transmitted specularity
+            } else {
+
+              matString = "0\n0\n3\n "+formatString(tn, 4)+" "+formatString(tn, 4)+" "+formatString(tn, 4)+"\n";
+              double nTs = 1.0; // transmitted specularity
+            }
+
             m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
             // write material
-            m_radMaterials.insert("void glass glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n"+formatString(tn, 4)+" "+formatString(tn, 4)+" "+ formatString(tn, 4) +"\n");
+            m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
             // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
             if (shadingControl){
