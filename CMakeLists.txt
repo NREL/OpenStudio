@@ -318,6 +318,30 @@ IF(BUILD_WITH_MULTIPLE_PROCESSES)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 ENDIF()
 
+IF(CMAKE_CL_64 OR (MSVC AND BUILD_QT))
+  IF(CMAKE_CL_64)
+    SET(NMAKE_ARCH "/amd64")
+  ELSE()
+    SET(NMAKE_ARCH "")
+  ENDIF()
+  IF(MSVC10)
+    FIND_PROGRAM(NMAKE_EXE nmake PATHS
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\10.0;InstallDir]/../../VC/bin${NMAKE_ARCH}"
+      $ENV{VS100COMNTOOLS}../../VC/bin${NMAKE_ARCH}
+    )
+  ELSEIF(MSVC12)
+    FIND_PROGRAM(NMAKE_EXE nmake PATHS
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\12.0;InstallDir]/../../VC/bin${NMAKE_ARCH}"
+      $ENV{VS120COMNTOOLS}../../VC/bin${NMAKE_ARCH}
+    )
+  ENDIF()
+
+  IF(NMAKE_EXE STREQUAL "NMAKE_EXE-NOTFOUND" OR NMAKE_EXE STREQUAL "nmake")
+    MESSAGE(WARNING "NMake not found - CMake will attempt to call nmake directly")
+    SET(NMAKE_EXE "nmake" CACHE STRING "nmake executable" FORCE)
+  ENDIF()
+ENDIF()
+
 IF(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
@@ -362,9 +386,7 @@ IF(BUILD_RUBY)
       )
     SET(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
   ELSE()
-    IF(CMAKE_CL_64)
-       find_program(NMAKE_EXE nmake)
-       
+    IF(CMAKE_CL_64)       
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
@@ -600,8 +622,6 @@ IF(BUILD_QT)
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
       )
   ELSE()
-    find_program(NMAKE_EXE nmake)
-    
     ExternalProject_Add( Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-4.8.5.tar.gz
       URL_MD5 1864987bdbb2f58f8ae8b350dfdbe133
