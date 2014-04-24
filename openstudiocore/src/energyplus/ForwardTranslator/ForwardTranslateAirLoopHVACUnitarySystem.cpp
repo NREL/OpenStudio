@@ -389,35 +389,39 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower,d.get());
   }
 
+  // Not Implemented
   // Design Heat Recovery Water Flow Rate
-  d = modelObject.designHeatRecoveryWaterFlowRate();
-  if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate,d.get());
-  }
+  // d = modelObject.designHeatRecoveryWaterFlowRate();
+  // if (d) {
+  //   unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate,d.get());
+  // }
 
+  // Not Implemented
   // Maximum Temperature for Heat Recovery
-  d = modelObject.maximumTemperatureforHeatRecovery();
-  if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery,d.get());
-  }
+  // d = modelObject.maximumTemperatureforHeatRecovery();
+  // if (d) {
+  //   unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery,d.get());
+  // }
 
+  // Not Implemented
   // Heat Recovery Water Inlet Node Name
-  if( boost::optional<ModelObject> mo = modelObject.waterInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName,node->name().get());
-    }
-  }
+  // if( boost::optional<ModelObject> mo = modelObject.waterInletModelObject() )
+  // {
+  //   if( boost::optional<Node> node = mo->optionalCast<Node>() )
+  //   {
+  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterInletNodeName,node->name().get());
+  //   }
+  // }
 
+  // Not Implemented
   // Heat Recovery Water Outlet Node Name
-  if( boost::optional<ModelObject> mo = modelObject.waterOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName,node->name().get());
-    }
-  }
+  // if( boost::optional<ModelObject> mo = modelObject.waterOutletModelObject() )
+  // {
+  //   if( boost::optional<Node> node = mo->optionalCast<Node>() )
+  //   {
+  //     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::HeatRecoveryWaterOutletNodeName,node->name().get());
+  //   }
+  // }
 
   // Not Implemented
   // Design Specification Multispeed Heat Pump Object Type

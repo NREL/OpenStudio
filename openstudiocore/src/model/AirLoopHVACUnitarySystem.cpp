@@ -181,6 +181,10 @@ namespace detail {
 
   bool AirLoopHVACUnitarySystem_Impl::addToNode(Node & node)
   {
+    // remove once heat recovery is re-enabled in future
+    if( node.plantLoop() ) {
+      return false;
+    }
     return WaterToAirComponent_Impl::addToNode(node);
   }
 
@@ -482,25 +486,25 @@ namespace detail {
     return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::AncilliaryOffCycleElectricPower);
   }
 
-  double AirLoopHVACUnitarySystem_Impl::designHeatRecoveryWaterFlowRate() const {
-    boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+  // double AirLoopHVACUnitarySystem_Impl::designHeatRecoveryWaterFlowRate() const {
+  //   boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate,true);
+  //   OS_ASSERT(value);
+  //   return value.get();
+  // }
 
-  bool AirLoopHVACUnitarySystem_Impl::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-    return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate);
-  }
+  // bool AirLoopHVACUnitarySystem_Impl::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
+  //   return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate);
+  // }
 
-  double AirLoopHVACUnitarySystem_Impl::maximumTemperatureforHeatRecovery() const {
-    boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+  // double AirLoopHVACUnitarySystem_Impl::maximumTemperatureforHeatRecovery() const {
+  //   boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery,true);
+  //   OS_ASSERT(value);
+  //   return value.get();
+  // }
 
-  bool AirLoopHVACUnitarySystem_Impl::isMaximumTemperatureforHeatRecoveryDefaulted() const {
-    return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery);
-  }
+  // bool AirLoopHVACUnitarySystem_Impl::isMaximumTemperatureforHeatRecoveryDefaulted() const {
+  //   return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery);
+  // }
 
   // boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem_Impl::designSpecificationMultispeedHeatPumpObject() const {
   //   return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformace>(OS_AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedHeatPumpObjectName);
@@ -1106,25 +1110,25 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirLoopHVACUnitarySystem_Impl::setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate) {
-    bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
-    return result;
-  }
+  // bool AirLoopHVACUnitarySystem_Impl::setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate) {
+  //   bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
+  //   return result;
+  // }
 
-  void AirLoopHVACUnitarySystem_Impl::resetDesignHeatRecoveryWaterFlowRate() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, "");
-    OS_ASSERT(result);
-  }
+  // void AirLoopHVACUnitarySystem_Impl::resetDesignHeatRecoveryWaterFlowRate() {
+  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DesignHeatRecoveryWaterFlowRate, "");
+  //   OS_ASSERT(result);
+  // }
 
-  bool AirLoopHVACUnitarySystem_Impl::setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery) {
-    bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, maximumTemperatureforHeatRecovery);
-    return result;
-  }
+  // bool AirLoopHVACUnitarySystem_Impl::setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery) {
+  //   bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, maximumTemperatureforHeatRecovery);
+  //   return result;
+  // }
 
-  void AirLoopHVACUnitarySystem_Impl::resetMaximumTemperatureforHeatRecovery() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, "");
-    OS_ASSERT(result);
-  }
+  // void AirLoopHVACUnitarySystem_Impl::resetMaximumTemperatureforHeatRecovery() {
+  //   bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumTemperatureforHeatRecovery, "");
+  //   OS_ASSERT(result);
+  // }
 
   // bool AirLoopHVACUnitarySystem_Impl::setDesignSpecificationMultispeedHeatPumpObject(const boost::optional<UnitarySystemPerformace>& unitarySystemPerformace) {
   //   bool result(false);
@@ -1179,8 +1183,8 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
   OS_ASSERT(ok);
   ok = setAncilliaryOffCycleElectricPower(0.0);
   OS_ASSERT(ok);
-  ok = setMaximumTemperatureforHeatRecovery(80.0);
-  OS_ASSERT(ok);
+  // ok = setMaximumTemperatureforHeatRecovery(80.0);
+  // OS_ASSERT(ok);
 }
 
 IddObjectType AirLoopHVACUnitarySystem::iddObjectType() {
@@ -1454,21 +1458,21 @@ bool AirLoopHVACUnitarySystem::isAncilliaryOffCycleElectricPowerDefaulted() cons
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isAncilliaryOffCycleElectricPowerDefaulted();
 }
 
-double AirLoopHVACUnitarySystem::designHeatRecoveryWaterFlowRate() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designHeatRecoveryWaterFlowRate();
-}
+// double AirLoopHVACUnitarySystem::designHeatRecoveryWaterFlowRate() const {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designHeatRecoveryWaterFlowRate();
+// }
 
-bool AirLoopHVACUnitarySystem::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isDesignHeatRecoveryWaterFlowRateDefaulted();
-}
+// bool AirLoopHVACUnitarySystem::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isDesignHeatRecoveryWaterFlowRateDefaulted();
+// }
 
-double AirLoopHVACUnitarySystem::maximumTemperatureforHeatRecovery() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->maximumTemperatureforHeatRecovery();
-}
+// double AirLoopHVACUnitarySystem::maximumTemperatureforHeatRecovery() const {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->maximumTemperatureforHeatRecovery();
+// }
 
-bool AirLoopHVACUnitarySystem::isMaximumTemperatureforHeatRecoveryDefaulted() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isMaximumTemperatureforHeatRecoveryDefaulted();
-}
+// bool AirLoopHVACUnitarySystem::isMaximumTemperatureforHeatRecoveryDefaulted() const {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isMaximumTemperatureforHeatRecoveryDefaulted();
+// }
 
 // boost::optional<UnitarySystemPerformace> AirLoopHVACUnitarySystem::designSpecificationMultispeedHeatPumpObject() const {
 //   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
@@ -1810,21 +1814,21 @@ void AirLoopHVACUnitarySystem::resetAncilliaryOffCycleElectricPower() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetAncilliaryOffCycleElectricPower();
 }
 
-bool AirLoopHVACUnitarySystem::setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignHeatRecoveryWaterFlowRate(designHeatRecoveryWaterFlowRate);
-}
+// bool AirLoopHVACUnitarySystem::setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate) {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignHeatRecoveryWaterFlowRate(designHeatRecoveryWaterFlowRate);
+// }
 
-void AirLoopHVACUnitarySystem::resetDesignHeatRecoveryWaterFlowRate() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignHeatRecoveryWaterFlowRate();
-}
+// void AirLoopHVACUnitarySystem::resetDesignHeatRecoveryWaterFlowRate() {
+//   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDesignHeatRecoveryWaterFlowRate();
+// }
 
-bool AirLoopHVACUnitarySystem::setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setMaximumTemperatureforHeatRecovery(maximumTemperatureforHeatRecovery);
-}
+// bool AirLoopHVACUnitarySystem::setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery) {
+//   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setMaximumTemperatureforHeatRecovery(maximumTemperatureforHeatRecovery);
+// }
 
-void AirLoopHVACUnitarySystem::resetMaximumTemperatureforHeatRecovery() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumTemperatureforHeatRecovery();
-}
+// void AirLoopHVACUnitarySystem::resetMaximumTemperatureforHeatRecovery() {
+//   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetMaximumTemperatureforHeatRecovery();
+// }
 
 // bool AirLoopHVACUnitarySystem::setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace) {
 //   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setDesignSpecificationMultispeedHeatPumpObject(unitarySystemPerformace);

@@ -184,13 +184,13 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   bool isAncilliaryOffCycleElectricPowerDefaulted() const;
 
-  double designHeatRecoveryWaterFlowRate() const;
+  // double designHeatRecoveryWaterFlowRate() const;
 
-  bool isDesignHeatRecoveryWaterFlowRateDefaulted() const;
+  // bool isDesignHeatRecoveryWaterFlowRateDefaulted() const;
 
-  double maximumTemperatureforHeatRecovery() const;
+  // double maximumTemperatureforHeatRecovery() const;
 
-  bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
+  // bool isMaximumTemperatureforHeatRecoveryDefaulted() const;
 
   // boost::optional<UnitarySystemPerformace> designSpecificationMultispeedHeatPumpObject() const;
 
@@ -366,13 +366,13 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
 
   void resetAncilliaryOffCycleElectricPower();
 
-  bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
+  // bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
-  void resetDesignHeatRecoveryWaterFlowRate();
+  // void resetDesignHeatRecoveryWaterFlowRate();
 
-  bool setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery);
+  // bool setMaximumTemperatureforHeatRecovery(double maximumTemperatureforHeatRecovery);
 
-  void resetMaximumTemperatureforHeatRecovery();
+  // void resetMaximumTemperatureforHeatRecovery();
 
   // bool setDesignSpecificationMultispeedHeatPumpObject(const UnitarySystemPerformace& unitarySystemPerformace);
 

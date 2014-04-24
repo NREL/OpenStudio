@@ -150,7 +150,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(60, testObjectClone.heatPumpFanDelayTime());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOnCycleElectricPower());
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOffCycleElectricPower());
-  EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumTemperatureforHeatRecovery());
+  // EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
   EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
   EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
@@ -203,7 +203,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   testObject.setHeatPumpFanDelayTime(999.0);
   testObject.setAncilliaryOnCycleElectricPower(999.0);
   testObject.setAncilliaryOffCycleElectricPower(999.0);
-  testObject.setMaximumTemperatureforHeatRecovery(100.0);
+  // testObject.setMaximumTemperatureforHeatRecovery(100.0);
 
   AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
@@ -225,7 +225,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.heatPumpFanDelayTime());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOnCycleElectricPower());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOffCycleElectricPower());
-  EXPECT_DOUBLE_EQ(100.0, testObjectClone.maximumTemperatureforHeatRecovery());
+  // EXPECT_DOUBLE_EQ(100.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
   EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
   EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
@@ -349,15 +349,18 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
 
   Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_TRUE(testObject.addToNode(demandInletNode));
-  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());  
+  EXPECT_FALSE(testObject.addToNode(demandInletNode));
+  EXPECT_FALSE(plantLoop.addDemandBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
 
   Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObject.addToNode(supplyInletNode));
   EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
-  ASSERT_TRUE(testObject.plantLoop());
-  EXPECT_EQ(plantLoop, testObject.plantLoop().get());
+  EXPECT_FALSE(plantLoop.addSupplyBranchForComponent(testObject));
+  EXPECT_EQ((unsigned)6, plantLoop.supplyComponents().size());
+  ASSERT_FALSE(testObject.plantLoop());
+  // EXPECT_EQ(plantLoop, testObject.plantLoop().get());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_WaterHeatingCoilToPlant)
