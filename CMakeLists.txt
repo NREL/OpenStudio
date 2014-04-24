@@ -549,8 +549,8 @@ ExternalProject_Add( BoostLog
    )
 
 ExternalProject_Add( GoogleTest
-  URL ${CMAKE_SOURCE_DIR}/dependencies/gtest-1.6.0.tar.gz
-  URL_MD5 69035f444dfd565466a7d22f67cafecd
+  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/gtest-1.7.0.tar.gz
+  URL_MD5 bad74f626d18f724cad4c9fe2e6ef27d
   PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/GoogleTest ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest
   INSTALL_COMMAND ""
   CMAKE_CACHE_ARGS
