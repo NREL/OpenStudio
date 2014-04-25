@@ -383,15 +383,40 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_addToNode)
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
+  CurveBiquadratic  c1(m);
+  CurveCubic  c2(m);
+  CurveBiquadratic  c3(m);
+  CurveQuadratic  c4(m);
+  CurveCubic  c5(m);
+  CurveBiquadratic c6(m);
+  CurveBiquadratic c7(m);
+
+  CoilCoolingDXTwoSpeed testObject2(m, s, c1, c2, c3, c4, c5, c6, c7);
+
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
+  CurveBiquadratic  c1_2(m);
+  CurveCubic  c2_2(m);
+  CurveBiquadratic  c3_2(m);
+  CurveQuadratic  c4_2(m);
+  CurveCubic  c5_2(m);
+  CurveBiquadratic c6_2(m);
+  CurveBiquadratic c7_2(m);
+
+  CoilCoolingDXTwoSpeed testObject3(m, s, c1_2, c2_2, c3_2, c4_2, c5_2, c6_2, c7_2);
+
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
+
+  CoilCoolingDXTwoSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXTwoSpeed>();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

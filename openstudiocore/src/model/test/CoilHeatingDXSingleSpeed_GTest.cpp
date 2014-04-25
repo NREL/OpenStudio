@@ -27,6 +27,7 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
+#include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/CurveBiquadratic.hpp>
 #include <model/CurveQuadratic.hpp>
@@ -100,15 +101,36 @@ TEST_F(ModelFixture,CoilHeatingDXSingleSpeed_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
+  CurveBiquadratic  c1(m);
+  CurveQuadratic  c2(m);
+  CurveBiquadratic  c3(m);
+  CurveQuadratic  c4(m);
+  CurveQuadratic  c5(m);
+
+  CoilHeatingDXSingleSpeed testObject2(m, s, c1, c2, c3, c4, c5);
+
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
+  CurveBiquadratic  c1_2(m);
+  CurveQuadratic  c2_2(m);
+  CurveBiquadratic  c3_2(m);
+  CurveQuadratic  c4_2(m);
+  CurveQuadratic  c5_2(m);
+
+  CoilHeatingDXSingleSpeed testObject3(m, s, c1_2, c2_2, c3_2, c4_2, c5_2);
+
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
+
+  CoilHeatingDXSingleSpeed testObjectClone = testObject.clone(m).cast<CoilHeatingDXSingleSpeed>();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

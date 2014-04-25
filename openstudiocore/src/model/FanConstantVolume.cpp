@@ -212,47 +212,6 @@ namespace detail {
     }
 
     return false;
-
-    // if( OptionalAirLoopHVAC airLoopHVAC = node.airLoopHVAC() )
-    // {
-    //   if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
-    //   {
-    //     if( oaSystem->component(node.handle()) )
-    //     {
-    //       return false;
-    //     }
-    //   }
-
-    //   if( ! airLoopHVAC->supplyComponent(node.handle()) )
-    //   {
-    //     return false;
-    //   }
-
-    //   std::vector<ModelObject> allFans;
-
-    //   std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-
-    //   std::vector<ModelObject> variableFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-
-    //   allFans = constantFans;
-    //   allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
-
-    //   if( allFans.size() > 0 )
-    //   {
-    //     return false;
-    //   }
-
-    //   bool result = StraightComponent_Impl::addToNode( node );
-
-    //   if( result )
-    //   {
-    //     SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
-    //   }
-
-    //   return result;
-    // }
-
-    // return false;
   }
 
   std::vector<openstudio::IdfObject> FanConstantVolume_Impl::remove()

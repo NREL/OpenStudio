@@ -60,7 +60,7 @@ TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
 
-  CoilHeatingGas testObject(m, s); 
+  CoilHeatingGas testObject(m, s);
 
   AirLoopHVAC airLoop(m);
   ControllerOutdoorAir controllerOutdoorAir(m);
@@ -86,15 +86,23 @@ TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
+  CoilHeatingGas testObject2(m, s);
+  CoilHeatingGas testObject3(m, s);
+
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
+
+  CoilHeatingGas testObjectClone = testObject.clone(m).cast<CoilHeatingGas>();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

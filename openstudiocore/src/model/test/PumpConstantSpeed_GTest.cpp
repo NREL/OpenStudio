@@ -68,8 +68,18 @@ TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
   EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 
   Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  PumpConstantSpeed testObject2(m);
+
+  EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  PlantLoop plantLoop2(m);
+  demandOutletNode = plantLoop2.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop2.demandComponents().size() );
 }
 
 TEST_F(ModelFixture,PumpConstantSpeed_RatedFlowRate_Quantity) {

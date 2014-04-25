@@ -354,15 +354,9 @@ bool StraightComponent_Impl::addToNode(Node & node)
   boost::optional<Loop> loop = node.loop();
   boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
 
-  if( loop )
+  if( boost::optional<Loop> currentLoop = this->loop() )
   {
-    if( boost::optional<Loop> currentLoop = this->loop() )
-    {
-      if( currentLoop->handle() == loop->handle() )
-      {
-        return false;
-      }
-    }
+    return false;
   }
 
   if( loop && ! oaSystem )

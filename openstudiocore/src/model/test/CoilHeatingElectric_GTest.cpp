@@ -27,6 +27,7 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/CoilHeatingElectric.hpp>
+#include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
 #include <model/Schedule.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
@@ -53,7 +54,7 @@ TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
 
-  CoilHeatingElectric testObject(m, s); 
+  CoilHeatingElectric testObject(m, s);
 
   AirLoopHVAC airLoop(m);
   ControllerOutdoorAir controllerOutdoorAir(m);
@@ -79,15 +80,23 @@ TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
+  CoilHeatingElectric testObject2(m, s);
+  CoilHeatingElectric testObject3(m, s);
+
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
+
+  CoilHeatingElectric testObjectClone = testObject.clone(m).cast<CoilHeatingElectric>();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }
