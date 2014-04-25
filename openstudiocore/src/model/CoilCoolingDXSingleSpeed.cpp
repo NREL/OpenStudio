@@ -780,9 +780,9 @@ namespace detail{
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( airLoop->supplyComponent(node.handle()) )
+      if( ! airLoop->demandComponent(node.handle()) )
       {
-        return StraightComponent_Impl::addToNode(node);
+        return StraightComponent_Impl::addToNode( node );
       }
     }
 

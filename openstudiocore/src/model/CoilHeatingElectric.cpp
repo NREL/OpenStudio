@@ -195,15 +195,14 @@ namespace detail {
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( airLoop->supplyComponent(node.handle()) )
+      if( ! airLoop->demandComponent(node.handle()) )
       {
-        if( StraightComponent_Impl::addToNode(node) )
+        if( StraightComponent_Impl::addToNode( node ) )
         {
           if( boost::optional<Node> node = outletModelObject()->optionalCast<Node>() )
           {
             setTemperatureSetpointNode(node.get());
           }
-
           return true;
         }
       }
