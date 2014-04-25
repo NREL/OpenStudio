@@ -37,6 +37,10 @@
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/core/Assert.hpp>
@@ -702,6 +706,19 @@ namespace detail {
         return setAvailabilitySchedule(schedule);
       }
     }
+    return false;
+  }
+
+  bool CoilHeatingDXSingleSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( airLoop->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
     return false;
   }
 

@@ -164,14 +164,15 @@ namespace detail {
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      return StraightComponent_Impl::addToNode(node);
+      if( airLoop->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplyAirFlowRateDuringCoolingOperation() const {

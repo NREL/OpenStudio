@@ -182,10 +182,11 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodeTwoUniqueObjects
   EvaporativeFluidCoolerSingleSpeed testObject2 = EvaporativeFluidCoolerSingleSpeed(model);
 
   Node inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
-  testObject.addToNode(inletNode);
-  inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
-  EXPECT_FALSE(testObject2.addToNode(inletNode)); 
+  EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size()); 
+  inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
+  EXPECT_TRUE(testObject2.addToNode(inletNode)); 
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size()); 
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_IsRemovable)

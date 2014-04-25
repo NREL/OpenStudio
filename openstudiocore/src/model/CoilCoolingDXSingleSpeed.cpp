@@ -37,6 +37,10 @@
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 #include <model/Model.hpp>
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
@@ -772,6 +776,19 @@ namespace detail{
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedAirFlowRate() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, "autosize");
     OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXSingleSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( airLoop->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
 }// detail

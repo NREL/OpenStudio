@@ -147,8 +147,8 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( (target2ModelObject.get() == mixer) && 
                (source2ModelObject.get() == splitter) )
       {
-        if( boost::optional<PlantLoop> plantLoop = loop->optionalCast<PlantLoop>() )
-        {
+        //if( boost::optional<PlantLoop> plantLoop = loop->optionalCast<PlantLoop>() )
+        //{
           Model _model = model();
 
           int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
@@ -171,7 +171,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
             _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
             _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
           }
-        }
+        //}
       }
       // Else remove the component and the outlet node
       else
@@ -232,8 +232,8 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( mixer && (target2ModelObject.get() == mixer.get()) && 
                splitter && (source2ModelObject.get() == splitter.get()) )
       {
-        if( plantLoop )
-        {
+        //if( plantLoop )
+        //{
           Model _model = model();
 
           int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
@@ -256,7 +256,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
             _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
             _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
           }
-        }
+        //}
       }
       // Else remove the component and the outlet node
       else

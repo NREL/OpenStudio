@@ -122,6 +122,8 @@ class MODEL_API CoilCoolingLowTempRadiantVarFlow_Impl : public StraightComponent
     //@}
     /** @name Other */
     //@{
+    
+    bool addToNode(Node & node);
 
     //@}
    protected:
