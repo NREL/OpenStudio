@@ -33,13 +33,13 @@ IddFactoryOutFile::IddFactoryOutFile(const std::string& filename,
                                      const openstudio::path& outPath,
                                      const std::string& outFileHeader) 
   : filename(filename), 
-    finalPath(outPath / toPath(filename)), 
-    tempPath(outPath / toPath(filename + ".temp"))
+    finalPath(outPath / path(filename)), 
+    tempPath(outPath / path(filename + ".temp"))
 {
   std::stringstream ss;
   tempFile.open(tempPath);
   if (!tempFile) {
-    ss << "Unable to open '" << toString(tempPath) << "' for writing.";
+    ss << "Unable to open '" << tempPath.string() << "' for writing.";
     throw std::runtime_error(ss.str().c_str());
   }
   tempFile << outFileHeader << std::endl;
@@ -70,7 +70,7 @@ GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
     iddFieldEnumsIxx("IddFieldEnums.ixx",outPath,outFileHeader),
     iddFactoryHxx("IddFactory.hxx",outPath,outFileHeader),
     iddFactoryCxx("IddFactory.cxx",outPath,outFileHeader),
-    m_fileIndexPath(outPath / toPath("IddFactoryFileIndex.hxx"))
+    m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
 {
   BOOST_FOREACH(const IddFileFactoryData& iddFile,iddFiles) {
     boost::shared_ptr<IddFactoryOutFile> cxxFile(new 

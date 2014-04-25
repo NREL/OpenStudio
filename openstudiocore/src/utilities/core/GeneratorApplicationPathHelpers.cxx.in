@@ -17,14 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-
-#include <QCoreApplication>
 #include <sstream>
 #include <boost/algorithm/string/case_conv.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 #include <iostream>
 
-#ifdef Q_OS_WIN32
+#ifdef WIN32
 #include <Windows.h>
 #else
 #include <dlfcn.h>
@@ -32,13 +31,15 @@
 
 namespace openstudio {
 
+typedef boost::filesystem::path path;
+
 openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
-  openstudio::path result(openstudio::toPath(outdir));
+  openstudio::path result(outdir);
   std::stringstream ss, tss;
 
   // turn relative path into absolute path
   result = boost::filesystem::system_complete(result);
-  std::string dirStr = openstudio::toString(result);
+  std::string dirStr = result.string();
   // create string used in error messages
   if (dirStr != outdir) { tss << " (" << dirStr << ")"; }
 
@@ -54,7 +55,7 @@ openstudio::path getApplicationOutputDirectory(const std::string& outdir) {
     // parent path must be an existing directory
     if (!boost::filesystem::is_directory(result.parent_path())) {
       ss << "Invalid outdir, " << outdir << tss.str()
-         << ", has a parent_path, " << openstudio::toString(result.parent_path()) 
+         << ", has a parent_path, " << result.parent_path().string()
          << ", that is either invalid, or corresponds to a non-existent directory.";
       throw std::runtime_error(ss.str().c_str());
     }
