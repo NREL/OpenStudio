@@ -1044,7 +1044,7 @@ namespace radiance {
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
             }
 
-            std::string rMaterial = "glass";
+            std::string rMaterial = "glass ";
             std::string matString = "";
             // std::string isDiffusing = "false";
             //std::string constrTemp = subSurface.construction;
@@ -1079,8 +1079,8 @@ namespace radiance {
               double transA2 = cRGB; // monochromatic
               double transA1 = cRGB; // monochromatic
 
-              rMaterial = "trans";
-              matString = "\n0\n7\n "+formatString(transA1, 4)+" "+formatString(transA2, 4)+" "+formatString(transA3, 4)+" "+formatString(transA4, 4)+" "+formatString(transA5, 4)+" "+formatString(transA6, 4)+" "+formatString(transA7, 4)+"\n";
+              rMaterial = "trans ";
+              matString = "0\n0\n7\n"+formatString(transA1, 4)+" "+formatString(transA2, 4)+" "+formatString(transA3, 4)+" "+formatString(transA4, 4)+" "+formatString(transA5, 4)+" "+formatString(transA6, 4)+" "+formatString(transA7, 4)+"\n";
               double nTs = 0.95; // transmitted specularity
             } else {
 
@@ -1090,7 +1090,7 @@ namespace radiance {
 
             m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
             // write material
-            m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
+            m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n"+matString+"");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
             // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
             if (shadingControl){
