@@ -18,47 +18,45 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
 #include <model/FanVariableVolume.hpp>
-#include <model/ScheduleCompact.hpp>
+#include <model/Schedule.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(FanVariableVolume,FanVariableVolume_FanVariableVolume)
+TEST_F(ModelFixture, FanVariableVolume_FanVariableVolume)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
-
-     model::ScheduleCompact s(m);
-
-     model::FanVariableVolume fan(m,s); 
+     Model m;
+     Schedule s = m.alwaysOnDiscreteSchedule();
+     FanVariableVolume fan(m,s);
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(FanVariableVolume,FanVariableVolume_addToNode)
+TEST_F(ModelFixture, FanVariableVolume_addToNode)
 {
-  model::Model m; 
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanVariableVolume fan(m,s);
+  FanVariableVolume fan2(m,s);
+  FanVariableVolume fan3(m,s);
 
-  model::ScheduleCompact s(m);
-  
-  model::FanVariableVolume fan(m,s); 
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-  model::AirLoopHVAC airLoop(m);
-
-  model::Node supplyOutletNode = airLoop.supplyOutletNode();
-
-  fan.addToNode(supplyOutletNode);
-
-  ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan2.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_FALSE(fan3.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 }
-
-
