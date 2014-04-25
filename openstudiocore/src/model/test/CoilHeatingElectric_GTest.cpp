@@ -20,6 +20,8 @@
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
 #include <model/PlantLoop.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
@@ -54,11 +56,14 @@ TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
   CoilHeatingElectric testObject(m, s); 
 
   AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
 
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -73,4 +78,16 @@ TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+  }
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+  }
 }

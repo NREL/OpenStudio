@@ -1173,6 +1173,7 @@ SET( ${target_name}_test_src
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
+  test/FanConstantVolume_GTest.cpp
   test/FanZoneExhaust_GTest.cpp  
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp

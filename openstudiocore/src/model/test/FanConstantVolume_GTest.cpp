@@ -19,62 +19,37 @@
 
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
+#include <model/FanConstantVolume.hpp>
+#include <model/Schedule.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/ControllerOutdoorAir.hpp>
+#include <model/AirLoopHVAC.hpp>
 #include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/Schedule.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingDXSingleSpeed_CoilHeatingDXSingleSpeed)
+TEST_F(ModelFixture,FanConstantVolume_FanConstantVolume)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     Model m;
-     Schedule s = m.alwaysOnDiscreteSchedule();
-     CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
-     CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
-     CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
-     CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
-     CurveQuadratic  partLoadFractionCorrelationCurve(m);
+    Model m;
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume testObject(m,s);
 
-     CoilHeatingDXSingleSpeed coil(m, s,
-                                   totalHeatingCapacityFunctionofTemperatureCurve,
-                                   totalHeatingCapacityFunctionofFlowFractionCurve,
-                                   energyInputRatioFunctionofTemperatureCurve,
-                                   energyInputRatioFunctionofFlowFractionCurve,
-                                   partLoadFractionCorrelationCurve); 
-
-     exit(0); 
+    exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,CoilHeatingDXSingleSpeed_addToNode) {
+TEST_F(ModelFixture,FanConstantVolume_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
-  CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
-  CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
-  CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
-  CurveQuadratic  partLoadFractionCorrelationCurve(m);
-
-  CoilHeatingDXSingleSpeed testObject(m, s,
-                                      totalHeatingCapacityFunctionofTemperatureCurve,
-                                      totalHeatingCapacityFunctionofFlowFractionCurve,
-                                      energyInputRatioFunctionofTemperatureCurve,
-                                      energyInputRatioFunctionofFlowFractionCurve,
-                                      partLoadFractionCorrelationCurve); 
+  FanConstantVolume testObject(m,s);
 
   AirLoopHVAC airLoop(m);
   ControllerOutdoorAir controllerOutdoorAir(m);
@@ -101,14 +76,14 @@ TEST_F(ModelFixture,CoilHeatingDXSingleSpeed_addToNode) {
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_TRUE(testObject.addToNode(*OANode));
+    EXPECT_FALSE(testObject.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.oaComponents().size() );
   }
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_TRUE(testObject.addToNode(*reliefNode));
+    EXPECT_FALSE(testObject.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)2, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
 }
