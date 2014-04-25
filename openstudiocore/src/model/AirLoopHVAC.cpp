@@ -551,14 +551,14 @@ namespace detail {
 
   AirLoopHVACZoneMixer AirLoopHVAC_Impl::zoneMixer()
   {
-    std::vector<AirLoopHVACZoneMixer> mixers = subsetCastVector<AirLoopHVACZoneMixer>(demandComponents());
+    std::vector<AirLoopHVACZoneMixer> mixers = subsetCastVector<AirLoopHVACZoneMixer>(demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneMixer ));
     OS_ASSERT(! mixers.empty());
     return mixers.front();
   }
 
   AirLoopHVACZoneSplitter AirLoopHVAC_Impl::zoneSplitter()
   {
-    std::vector<AirLoopHVACZoneSplitter> splitters = subsetCastVector<AirLoopHVACZoneSplitter>(demandComponents());
+    std::vector<AirLoopHVACZoneSplitter> splitters = subsetCastVector<AirLoopHVACZoneSplitter>(demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneSplitter ));
     OS_ASSERT(! splitters.empty());
     return splitters.front();
   }

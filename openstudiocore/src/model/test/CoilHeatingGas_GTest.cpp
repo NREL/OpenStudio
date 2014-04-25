@@ -18,16 +18,17 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/ScheduleConstant.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include <model/Schedule.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,CoilHeatingGas) {
@@ -53,3 +54,30 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
 }
 
+TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+
+  CoilHeatingGas testObject(m, s); 
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+}

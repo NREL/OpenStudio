@@ -147,31 +147,28 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( (target2ModelObject.get() == mixer) && 
                (source2ModelObject.get() == splitter) )
       {
-        //if( boost::optional<PlantLoop> plantLoop = loop->optionalCast<PlantLoop>() )
-        //{
-          Model _model = model();
+        Model _model = model();
 
-          int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
-          int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
+        int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
+        int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
 
-          OS_ASSERT(i == j);
+        OS_ASSERT(i == j);
 
-          splitter.removePortForBranch(i);
-          mixer.removePortForBranch(i);
+        splitter.removePortForBranch(i);
+        mixer.removePortForBranch(i);
 
-          _model.disconnect(thisObject,outletPort()); 
-          _model.disconnect(thisObject,inletPort()); 
+        _model.disconnect(thisObject,outletPort()); 
+        _model.disconnect(thisObject,inletPort()); 
 
-          targetModelObject->remove();
-          sourceModelObject->remove();
+        targetModelObject->remove();
+        sourceModelObject->remove();
 
-          if( ! splitter.lastOutletModelObject() )
-          {
-            Node newNode(_model);
-            _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
-            _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
-          }
-        //}
+        if( ! splitter.lastOutletModelObject() )
+        {
+          Node newNode(_model);
+          _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
+          _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
+        }
       }
       // Else remove the component and the outlet node
       else
@@ -232,31 +229,28 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( mixer && (target2ModelObject.get() == mixer.get()) && 
                splitter && (source2ModelObject.get() == splitter.get()) )
       {
-        //if( plantLoop )
-        //{
-          Model _model = model();
+        Model _model = model();
 
-          int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
-          int j = mixer->branchIndexForInletModelObject(targetModelObject.get());
+        int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
+        int j = mixer->branchIndexForInletModelObject(targetModelObject.get());
 
-          OS_ASSERT(i == j);
+        OS_ASSERT(i == j);
 
-          splitter->removePortForBranch(i);
-          mixer->removePortForBranch(i);
+        splitter->removePortForBranch(i);
+        mixer->removePortForBranch(i);
 
-          _model.disconnect(thisObject,outletPort()); 
-          _model.disconnect(thisObject,inletPort()); 
+        _model.disconnect(thisObject,outletPort()); 
+        _model.disconnect(thisObject,inletPort()); 
 
-          targetModelObject->remove();
-          sourceModelObject->remove();
+        targetModelObject->remove();
+        sourceModelObject->remove();
 
-          if( ! splitter->lastOutletModelObject() )
-          {
-            Node newNode(_model);
-            _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
-            _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
-          }
-        //}
+        if( ! splitter->lastOutletModelObject() )
+        {
+          Node newNode(_model);
+          _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
+          _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
+        }
       }
       // Else remove the component and the outlet node
       else

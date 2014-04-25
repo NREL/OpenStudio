@@ -18,48 +18,59 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilCoolingWater.hpp>
-#include <model/ScheduleCompact.hpp>
+#include <model/Schedule.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(CoilHeatingElectric,CoilHeatingElectric_CoilHeatingElectric)
+TEST_F(ModelFixture,CoilHeatingElectric_CoilHeatingElectric)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
+     Model m; 
+     Schedule s = m.alwaysOnDiscreteSchedule();
 
-     model::ScheduleCompact s(m);
-
-     model::CoilHeatingElectric coil(m,s); 
+     CoilHeatingElectric coil(m,s); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(CoilHeatingElectric,CoilHeatingElectric_addToNode)
-{
-  model::Model m; 
+TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
 
-  model::ScheduleCompact s(m);
-  
-  model::CoilHeatingElectric coil(m,s); 
+  CoilHeatingElectric testObject(m, s); 
 
-  model::AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-  model::Node supplyOutletNode = airLoop.supplyOutletNode();
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-  coil.addToNode(supplyOutletNode);
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
 
-  ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
-
-

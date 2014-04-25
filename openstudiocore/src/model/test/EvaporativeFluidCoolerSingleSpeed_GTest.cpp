@@ -45,7 +45,6 @@
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
 
-//using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor)
@@ -84,62 +83,29 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor)
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNode)
 {
-  Model model;
-  PlantLoop plantLoop(model);
+  Model m;
+  EvaporativeFluidCoolerSingleSpeed testObject(m);
 
-  EXPECT_EQ( (unsigned)5,plantLoop.supplyComponents().size() );
+  AirLoopHVAC airLoop(m);
 
-  Node inletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
-  
-  EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
 
-  EXPECT_TRUE(testObject.addToNode(inletNode));
-
-  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
-  
-  EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
-}
-
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodePlantLoopDemand)
-{
-  Model model;
-  PlantLoop plantLoop(model);
-
-  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
-
-  Node inletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
-  
-  EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
-
-  EXPECT_FALSE(testObject.addToNode(inletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
-}
-
-TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNodeAirLoop)
-{
-  Model model;
-  AirLoopHVAC airLoop(model);
-  ThermalZone thermalZone(model);
-
-  EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_FALSE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
 
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
-
-  //The following test returns false BUT it doesn't remove the object from air loop causing the number of components to be wrong
-  //EXPECT_FALSE(airLoop.addBranchForHVACComponent(testObject));
-  //EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
-  //The following test does not fail and adds the thermalZone to the airloop it appears
-  //EXPECT_FALSE(airLoop.addBranchForZone(thermalZone, testObject));
-  //EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddObjectByPlantLoopAddSupplyBranchForComponent)
