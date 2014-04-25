@@ -601,11 +601,7 @@ namespace detail {
   }
 
   void StandardGlazing_Impl::setSolarDiffusing(bool solarDiffusing) {
-    if (solarDiffusing) {
-      setBooleanFieldValue(OS_WindowMaterial_GlazingFields::SolarDiffusing, "Yes");
-    } else {
-      setBooleanFieldValue(OS_WindowMaterial_GlazingFields::SolarDiffusing, "No");
-    }
+    setBooleanFieldValue(OS_WindowMaterial_GlazingFields::SolarDiffusing, solarDiffusing);
   }
 
   void StandardGlazing_Impl::resetSolarDiffusing() {
