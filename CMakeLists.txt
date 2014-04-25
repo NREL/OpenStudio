@@ -19,11 +19,20 @@ IF(GIT_FOUND)
   IF(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
     SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
   ENDIF()
+  
+  GET_FILENAME_COMPONENT(GIT_DIR "${GIT_EXECUTABLE}" PATH)
+ELSE()
+  SET(GIT_DIR "")
+ENDIF()
+
+FIND_PROGRAM(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/")
+STRING(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
+IF ($PATCH_EXE_NOTFOUND)
+  MESSAGE(SEND_ERROR "Required program patch not found")
 ENDIF()
 
 # EnergyPlus Idd version
 SET(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
-
 
 OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 
@@ -471,7 +480,7 @@ IF(BUILD_BOOST)
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-frameworks} linkflags=${apple-frameworks} variant=debug,release address-model=32_64 architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
@@ -502,8 +511,8 @@ IF(BUILD_BOOST)
       ExternalProject_Add( Boost
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
         URL_MD5 93780777cfbf999a600f62883bd54b17
-        PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        CONFIGURE_COMMAND ""
+        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
+        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
         BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
@@ -511,8 +520,8 @@ IF(BUILD_BOOST)
       ExternalProject_Add( Boost
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
         URL_MD5 93780777cfbf999a600f62883bd54b17
-        PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        CONFIGURE_COMMAND ""
+        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
+        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
         BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
