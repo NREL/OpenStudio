@@ -19,6 +19,8 @@
 
 #include <openstudio_lib/ModelObjectItem.hpp>
 
+#include <openstudio_lib/OSItem.hpp>
+
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/ComponentData.hpp>
@@ -62,7 +64,7 @@ ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObje
   OS_ASSERT(isConnected);
 
   if (!modelObject.getModelObjectSources<model::ComponentData>().empty()){
-    m_bclBadge->setVisible(true);
+    m_measureBadge->setMeasureBadgeType(MeasureBadge::BCL);
   }
 }
 

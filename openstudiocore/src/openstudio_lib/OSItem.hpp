@@ -20,17 +20,19 @@
 #ifndef OPENSTUDIO_OSITEM_H
 #define OPENSTUDIO_OSITEM_H
 
+#include <QLabel>
 #include <QVariant>
 #include <QWidget>
 #include <vector>
 
-class QLabel;
-class QPushButton;
-class QMimeData;
 class QDragEnterEvent;
 class QDropEvent;
+class QMimeData;
+class QPushButton;
 
 namespace openstudio {
+
+class MeasureBadge;
 
 class OSItemId
 {
@@ -157,7 +159,7 @@ class OSItem : public QWidget
 
     QColor textColor();
     void setTextColor(QColor color = Qt::black);
-    QLabel * m_bclBadge;
+    MeasureBadge * m_measureBadge;
 
   private:
     void setFixedSize(const QSize & size);
@@ -188,6 +190,20 @@ class OSItem : public QWidget
     // Large icon used behind everything else
     // For items that map to model objects, this will be set to the icon as opposed to the mini icon mapped to the type.
     QPixmap m_largePixmap;
+};
+
+class MeasureBadge : public QLabel
+{
+
+  public:
+
+    enum measureBadgeType{
+      BCL,
+      MY
+    };
+
+    void setMeasureBadgeType(measureBadgeType type);
+
 };
 
 } // openstudio

@@ -74,17 +74,13 @@ class LocalLibraryController : public QObject
 
   public slots:
 
-  void showMyMeasures(bool down);
-
-  void showBCLMeasures(bool down);
+  void showMeasures();
 
   void showMyMeasuresFolder();
 
   private slots:
   void addMeasure();
   void duplicateSelectedMeasure();
-  void updateMyMeasures();
-  void updateBCLMeasures();
   void downloadUpdatedBCLMeasures();
   void openBclDlg();
 
@@ -93,9 +89,7 @@ class LocalLibraryController : public QObject
 
   BaseApp *m_app;
 
-  QPointer<OSListView> userLibraryView;
-
-  QPointer<OSListView> bclLibraryView;
+  QPointer<OSListView> libraryView;
 
   QSharedPointer<LibraryTypeListController> createLibraryListController(const QDomDocument & taxonomy,LocalLibrary::LibrarySource source);
 

@@ -18,13 +18,16 @@
  **********************************************************************/
 
 #include "LocalLibraryController.hpp"
+
+#include "HeaderViews.hpp"
 #include "LocalLibraryView.hpp"
+#include "MeasureDragData.hpp"
+#include "MeasureManager.hpp"
 #include "OSListView.hpp"
 #include "OSViewSwitcher.hpp"
 #include "OSListController.hpp"
-#include "HeaderViews.hpp"
-#include "MeasureDragData.hpp"
-#include "MeasureManager.hpp"
+
+#include <openstudio_lib/OSItem.hpp>
 
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Assert.hpp>
@@ -58,40 +61,23 @@ LocalLibraryController::LocalLibraryController(BaseApp *t_app)
   doc.setContent(&file);
   file.close();
 
-  QSharedPointer<LibraryTypeListController> userLibraryListController = createLibraryListController(doc,LocalLibrary::USER);
+  QSharedPointer<LibraryTypeListController> libraryListController = createLibraryListController(doc,LocalLibrary::COMBINED);
 
-  userLibraryView = new OSListView(true);
-  userLibraryView->setContentsMargins(0,0,0,0);
-  userLibraryView->setSpacing(0);
-  userLibraryView->setDelegate(QSharedPointer<LibraryTypeItemDelegate>(new LibraryTypeItemDelegate(m_app)));
-  userLibraryView->setListController(userLibraryListController); 
-
-  QSharedPointer<LibraryTypeListController> bclLibraryListController = createLibraryListController(doc,LocalLibrary::BCL);
-
-  bclLibraryView = new OSListView(true);
-  bclLibraryView->setContentsMargins(0,0,0,0);
-  bclLibraryView->setSpacing(0);
-  bclLibraryView->setDelegate(QSharedPointer<LibraryTypeItemDelegate>(new LibraryTypeItemDelegate(m_app)));
-  bclLibraryView->setListController(bclLibraryListController); 
+  libraryView = new OSListView(true);
+  libraryView->setContentsMargins(0,0,0,0);
+  libraryView->setSpacing(0);
+  libraryView->setDelegate(QSharedPointer<LibraryTypeItemDelegate>(new LibraryTypeItemDelegate(m_app)));
+  libraryView->setListController(libraryListController); 
 
   QString organizationName = QCoreApplication::organizationName();
   QString applicationName = QCoreApplication::applicationName();
   QSettings m_settings(organizationName, applicationName);
 
   localLibraryView = new LocalLibraryView();
-  if (m_settings.value("library_view", "bcl") == "user"){
-    showMyMeasures(true);
-  }else{
-    showBCLMeasures(true);
-  }
 
-  bool bingo = connect(localLibraryView->bclMeasuresButton,SIGNAL(toggled(bool)),this,SLOT(showBCLMeasures(bool)));
+  showMeasures();
 
-  OS_ASSERT(bingo);
-
-  bingo = connect(localLibraryView->myMeasuresButton,SIGNAL(toggled(bool)),this,SLOT(showMyMeasures(bool)));
-
-  OS_ASSERT(bingo);
+  bool bingo = false;
 
   bingo = connect(localLibraryView->addMeasureButton,SIGNAL(clicked()), this,SLOT(addMeasure()));
 
@@ -105,13 +91,6 @@ LocalLibraryController::LocalLibraryController(BaseApp *t_app)
 
   OS_ASSERT(bingo);
 
-  bingo = connect(localLibraryView->updateMyMeasuresButton,SIGNAL(clicked()), this,SLOT(updateMyMeasures()));
-
-  OS_ASSERT(bingo);
-
-  bingo = connect(localLibraryView->updateBCLMeasuresButton,SIGNAL(clicked()), this,SLOT(updateBCLMeasures()));
-
-  OS_ASSERT(bingo);
 
   bingo = connect(localLibraryView->addBCLMeasureButton,SIGNAL(clicked()), this,SLOT(openBclDlg()));
 
@@ -128,16 +107,6 @@ void LocalLibraryController::duplicateSelectedMeasure()
   m_app->duplicateSelectedMeasure();
 }
 
-void LocalLibraryController::updateMyMeasures()
-{
-  m_app->updateMyMeasures();
-}
-
-void LocalLibraryController::updateBCLMeasures()
-{
-  m_app->updateBCLMeasures();
-}
-
 void LocalLibraryController::downloadUpdatedBCLMeasures()
 {
   m_app->downloadUpdatedBCLMeasures();
@@ -150,91 +119,35 @@ void LocalLibraryController::openBclDlg()
 
 LocalLibraryController::~LocalLibraryController()
 {
-  if( localLibraryView ) { delete localLibraryView; }
+  if( localLibraryView ) { delete localLibraryView; } // TODO what is this?
 
-  if( userLibraryView ) { delete userLibraryView; }
-
-  if( bclLibraryView ) { delete bclLibraryView; }
+  if( libraryView ) { delete libraryView; }
 }
 
 void LocalLibraryController::reset()
 {
-  userLibraryView->listController().objectCast<LibraryTypeListController>()->reset();
-
-  bclLibraryView->listController().objectCast<LibraryTypeListController>()->reset();
+  libraryView->listController().objectCast<LibraryTypeListController>()->reset();
 }
 
 QPointer<LibraryItem> LocalLibraryController::selectedItem() const
 {
-  if( userLibraryView->isVisible() )
+
+  std::vector<QPointer<OSListItem> > items = libraryView->listController()->selectionController()->selectedItems();
+
+  if( items.size() > 0 )
   {
-    std::vector<QPointer<OSListItem> > items = userLibraryView->listController()->selectionController()->selectedItems();
-
-    if( items.size() > 0 )
-    {
-      return qobject_cast<LibraryItem *>(items.front());    
-    }
-  }
-
-  if( bclLibraryView->isVisible() )
-  {
-    std::vector<QPointer<OSListItem> > items = bclLibraryView->listController()->selectionController()->selectedItems();
-
-    if( items.size() > 0 )
-    {
-      return qobject_cast<LibraryItem *>(items.front());    
-    }
+    return qobject_cast<LibraryItem *>(items.front());    
   }
 
   return QPointer<LibraryItem>();
 }
 
-void LocalLibraryController::showMyMeasures(bool down)
+
+void LocalLibraryController::showMeasures()
 {
-  if( down )
-  {
-    localLibraryView->mainViewSwitcher->setView(userLibraryView);
+  localLibraryView->mainViewSwitcher->setView(libraryView);
 
-    localLibraryView->myMeasuresFolderButton->show();
-
-    localLibraryView->addBCLMeasureButton->hide();
-
-    localLibraryView->updateBCLMeasuresButton->hide();
-
-    localLibraryView->updateMyMeasuresButton->show();
-
-    localLibraryView->addMeasureButton->show();
-
-    localLibraryView->myMeasuresButton->setChecked(true);
-
-    m_app->updateSelectedMeasureState();
-
-    m_settings.setValue("library_view", "user");
-  }
-}
-
-void LocalLibraryController::showBCLMeasures(bool down)
-{
-  if( down )
-  {
-    localLibraryView->mainViewSwitcher->setView(bclLibraryView);
-
-    localLibraryView->myMeasuresFolderButton->hide();
-
-    localLibraryView->updateMyMeasuresButton->hide();
-
-    localLibraryView->addBCLMeasureButton->show();
-
-    localLibraryView->updateBCLMeasuresButton->show();
-
-    localLibraryView->addMeasureButton->hide();
-
-    localLibraryView->bclMeasuresButton->setChecked(true);
-
-    m_app->updateSelectedMeasureState();
-
-    m_settings.setValue("library_view", "bcl");
-  }
+  m_app->updateSelectedMeasureState();
 }
 
 void LocalLibraryController::showMyMeasuresFolder()
@@ -597,7 +510,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){
-      widget->m_bclBadge->setVisible(true);
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadge::BCL);
     }
 
     // Name
@@ -686,11 +599,22 @@ void LibraryListController::createItems()
   {
     measures = m_app->measureManager().myMeasures();
   }
-  else
+  else if( m_source == LocalLibrary::BCL )
   {
     measures = m_app->measureManager().bclMeasures();
   }
-
+  else if( m_source == LocalLibrary::COMBINED )
+  {
+    measures = m_app->measureManager().myMeasures();
+    std::vector<BCLMeasure> bclMeasures = m_app->measureManager().bclMeasures();
+    measures.insert(measures.end(), bclMeasures.begin(), bclMeasures.end());
+  }
+  else
+  {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  
   // sort measures
   std::sort(measures.begin(), measures.end(), MeasureSorter());
 

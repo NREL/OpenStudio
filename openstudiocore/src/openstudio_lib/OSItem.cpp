@@ -189,10 +189,11 @@ void OSItem::createLayout()
   m_imageLeftLbl = new QLabel(this);
   leftVBoxLayout->addWidget(m_imageLeftLbl);
 
-  m_bclBadge = new QLabel("BCL",this);
-  m_bclBadge->setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");
-  m_bclBadge->setVisible(false);
-  leftVBoxLayout->addWidget(m_bclBadge);
+  m_measureBadge = new MeasureBadge();
+  //m_measureBadge->setFixedWidth(25); NOTE mirror other instance?
+  m_measureBadge->setMeasureBadgeType(MeasureBadge::MY);
+
+  leftVBoxLayout->addWidget(m_measureBadge);
 
   mainHLayout->addLayout(leftVBoxLayout);
 
@@ -616,6 +617,19 @@ void OSItem::dropEvent(QDropEvent *event)
 void OSItem::onRemoveClicked()
 {
   emit itemRemoveClicked(this);
+}
+
+void MeasureBadge::setMeasureBadgeType(measureBadgeType type)
+{
+  if(type == BCL) {
+    setText("BCL");
+    setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");
+  } else if(type == MY) {
+    setText("My");
+    setStyleSheet("QLabel { color: #882255; font-size: 10pt; }");
+  } else {
+    OS_ASSERT(false);
+  }
 }
 
 } // openstudio

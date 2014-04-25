@@ -18,8 +18,10 @@
  **********************************************************************/
 
 #include "LocalLibraryView.hpp"
+
 #include "Buttons.hpp"
 #include "OSViewSwitcher.hpp"
+#include <openstudio_lib/OSItem.hpp>
 
 #include <QApplication>
 #include <QButtonGroup>
@@ -42,30 +44,8 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   mainVLayout->setContentsMargins(0,0,0,0);
   setLayout(mainVLayout);
 
-  QWidget * buttonContainer = new QWidget();
-  buttonContainer->setFixedHeight(40);
-  
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
-  buttonLayout->setContentsMargins(5,5,5,5);
-  buttonLayout->setSpacing(5);
-  buttonContainer->setLayout(buttonLayout);
-
-  mainVLayout->addWidget(buttonContainer);
-
   QButtonGroup * buttonGroup = new QButtonGroup();
   buttonGroup->setExclusive(true);
-
-  bclMeasuresButton = new GrayButton();
-  bclMeasuresButton->setCheckable(true);
-  buttonGroup->addButton(bclMeasuresButton);
-  bclMeasuresButton->setText("BCL Measures");
-  buttonLayout->addWidget(bclMeasuresButton);
-
-  myMeasuresButton = new GrayButton();
-  myMeasuresButton->setCheckable(true);
-  myMeasuresButton->setText("My Measures");
-  buttonGroup->addButton(myMeasuresButton);
-  buttonLayout->addWidget(myMeasuresButton);
 
   mainViewSwitcher = new OSViewSwitcher();
   mainVLayout->addWidget(mainViewSwitcher);
@@ -98,7 +78,7 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   duplicateMeasureButton->setDisabled(true);
 
   addMeasureButton = new AddScriptButton();
-  addMeasureButton->setToolTip("Create New Template Script File");
+  addMeasureButton->setToolTip("Create a Measure from Template and add to My Measures");
   footerHLayout->addWidget(addMeasureButton);
   
   footerHLayout->addStretch();
@@ -113,23 +93,10 @@ LocalLibraryView::LocalLibraryView(QWidget * parent)
   footerVLayout->addLayout(footerHLayout2);
 
   addBCLMeasureButton = new BlueButton();
-  addBCLMeasureButton->setText("Add Measures From Online BCL"); 
+  addBCLMeasureButton->setText("Find Measures on BCL");
+  addBCLMeasureButton->setToolTip("Connect to Online BCL to Download New Measures and Update Existing Measures to Library");
   footerHLayout2->addWidget(addBCLMeasureButton);
 
-  QHBoxLayout * footerHLayout3 = new QHBoxLayout();
-  footerHLayout3->setContentsMargins(10,0,10,0);
-  footerHLayout3->setSpacing(5);
-  footerVLayout->addLayout(footerHLayout3);
-
-  updateMyMeasuresButton = new BlueButton();
-  updateMyMeasuresButton->setToolTip("Looks for new and updated measures in your My Measures directory and updates instances of them in your current project");
-  updateMyMeasuresButton->setText("Update All of My Measures");
-  footerHLayout3->addWidget(updateMyMeasuresButton);
-
-  updateBCLMeasuresButton = new BlueButton();
-  updateBCLMeasuresButton->setToolTip("Updates instances of BCL measures in your current project");
-  updateBCLMeasuresButton->setText("Update All BCL Measures");
-  footerHLayout3->addWidget(updateBCLMeasuresButton);
 }
 
 LibraryGroupItemHeader::LibraryGroupItemHeader()
@@ -182,11 +149,11 @@ LibraryItemView::LibraryItemView(QWidget * parent)
   m_measureTypeBadge->setVisible(false);
   mainHBoxLayout->addWidget(m_measureTypeBadge,Qt::AlignLeft);
 
-  m_bclBadge = new QLabel("BCL",this);
-  m_bclBadge->setFixedWidth(25);
-  m_bclBadge->setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");
-  m_bclBadge->setVisible(false);
-  mainHBoxLayout->addWidget(m_bclBadge,Qt::AlignLeft);
+  m_measureBadge = new MeasureBadge();
+  m_measureBadge->setFixedWidth(25);
+  m_measureBadge->setMeasureBadgeType(MeasureBadge::MY);
+  
+  mainHBoxLayout->addWidget(m_measureBadge,Qt::AlignLeft);
 
   label = new QLabel("Measure");
   mainHBoxLayout->addWidget(label,Qt::AlignLeft);

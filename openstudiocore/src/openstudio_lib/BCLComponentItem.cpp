@@ -18,9 +18,12 @@
 **********************************************************************/
 
 #include <openstudio_lib/BCLComponentItem.hpp>
+
 #include <openstudio_lib/OSItem.hpp>
+
 #include <utilities/bcl/BCLComponent.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
+
 #include <QLabel>
 
 namespace openstudio {
@@ -40,7 +43,7 @@ BCLComponentItem::BCLComponentItem( const BCLComponent & component,
 {
   setText(QString::fromStdString(m_bclComponent.name()));
 
-  m_bclBadge->setVisible(true);
+  m_measureBadge->setMeasureBadgeType(MeasureBadge::BCL);
 }
 
 bool BCLComponentItem::equal(const openstudio::OSItem * item) const
@@ -55,7 +58,6 @@ bool BCLComponentItem::equal(const openstudio::OSItem * item) const
 
   return false;
 }
-
 
 } // openstudio
 
