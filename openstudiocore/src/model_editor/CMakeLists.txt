@@ -159,92 +159,92 @@ SET( ${target_name}_swig_src
 MAKE_SWIG_TARGET( OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus )
 ADD_DEPENDENCIES( ruby_OpenStudioModelEditor ruby_OpenStudioModel )
 
-#--------------------------------------------------------------------------------
-# Now the ModelEditor.exe stuff below
-#--------------------------------------------------------------------------------
-
-SET( target_name ModelEditor )
-
-MAKE_LITE_SQL_TARGET(ModelEditor.xml modelobjectdatabase)
-MAKE_LITE_SQL_TARGET(ProjectModel.xml projectmodeldatabase)
-
-# source files
-SET(${target_name}_src
-  main.cpp
-  mainpage.hpp
-  ModelEditor.hpp
-  ModelEditor.cpp
-  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.cxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.cxx"
-)
-
-# moc files
-SET( ${target_name}_moc
-  ModelEditor.hpp
-)
-
-# lib ui files
-SET( ${target_name}_ui
-)
-
-# resource files
-SET( ${target_name}_qrc
-  application.qrc
-)
-
+##--------------------------------------------------------------------------------
+## Now the ModelEditor.exe stuff below
+##--------------------------------------------------------------------------------
+#
+#SET( target_name ModelEditor )
+#
+#MAKE_LITE_SQL_TARGET(ModelEditor.xml modelobjectdatabase)
+#MAKE_LITE_SQL_TARGET(ProjectModel.xml projectmodeldatabase)
+#
+## source files
+#SET(${target_name}_src
+#  main.cpp
+#  mainpage.hpp
+#  ModelEditor.hpp
+#  ModelEditor.cpp
+#  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.hxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.cxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.hxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.cxx"
+#)
+#
+## moc files
+#SET( ${target_name}_moc
+#  ModelEditor.hpp
+#)
+#
+## lib ui files
+#SET( ${target_name}_ui
+#)
+#
+## resource files
+#SET( ${target_name}_qrc
+#  application.qrc
+#)
+#
 ## Qt MOC generation
-qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
-
+#qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
+#
 ## Qt UI generation
-qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
-
-# generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
-
-# configure the AboutBox.hpp file
-# this needs to be configured to embed the build number
-CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
-
-#--------------------------------------------------------------------------------
-# Icons
-#--------------------------------------------------------------------------------
-# For Windows set the rc file pointing to the icon file
-IF( WIN32 )
-  SET(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.rc")
-ENDIF()
-# For Apple set the icns file containing icons
-IF(APPLE)
-  # set how it shows up in the Info.plist file
-  SET(MACOSX_BUNDLE_ICON_FILE me.icns)
-  # set where in the bundle to put the icns file
-  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns
-      PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  # include the icns file in the target
-  SET(ICON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns)
-ENDIF(APPLE)
-
-ADD_EXECUTABLE( ${target_name}
-  WIN32
-  MACOSX_BUNDLE
-  ${${target_name}_src}
-  ${${target_name}_ui}
-  ${${target_name}_uis}
-  ${${target_name}_moc}
-  ${${target_name}_mocs}
-  ${${target_name}_qrc}
-  ${${target_name}_qrcs}
-  ${ICON_SRC}
-)
-
-SET( ${target_name}_depends
-  openstudio_modeleditor
-)
-
-TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
-AddPCH(${target_name})
-
+#qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
+#
+## generate rules for building source files from the resources
+#qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+#
+## configure the AboutBox.hpp file
+## this needs to be configured to embed the build number
+#CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+#
+##--------------------------------------------------------------------------------
+## Icons
+##--------------------------------------------------------------------------------
+## For Windows set the rc file pointing to the icon file
+#IF( WIN32 )
+#  SET(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.rc")
+#ENDIF()
+## For Apple set the icns file containing icons
+#IF(APPLE)
+#  # set how it shows up in the Info.plist file
+#  SET(MACOSX_BUNDLE_ICON_FILE me.icns)
+#  # set where in the bundle to put the icns file
+#  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns
+#      PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+#  # include the icns file in the target
+#  SET(ICON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns)
+#ENDIF(APPLE)
+#
+#ADD_EXECUTABLE( ${target_name}
+#  WIN32
+#  MACOSX_BUNDLE
+#  ${${target_name}_src}
+#  ${${target_name}_ui}
+#  ${${target_name}_uis}
+#  ${${target_name}_moc}
+#  ${${target_name}_mocs}
+#  ${${target_name}_qrc}
+#  ${${target_name}_qrcs}
+#  ${ICON_SRC}
+#)
+#
+#SET( ${target_name}_depends
+#  openstudio_modeleditor
+#)
+#
+#TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
+#AddPCH(${target_name})
+#
 ##--------------------------------------------------------------------------------
 ## Now the installation stuff below
 ##--------------------------------------------------------------------------------
