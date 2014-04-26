@@ -1488,7 +1488,7 @@ namespace detail {
       m_processingQueue(false),
       m_workPending(false), m_paused(t_paused), m_continue(true),
       m_localProcessCreator(new LocalProcessCreator()),
-      m_remoteProcessCreator(new SLURMManager()),
+      //m_remoteProcessCreator(new SLURMManager()),
       m_temporaryDB(t_temporaryDB),
       m_lastRunning(0),
       m_lastRunningRemotely(0),
@@ -1505,17 +1505,6 @@ namespace detail {
 
     LOG(Info, "Loading config options");
     ConfigOptions co = m_dbholder->getConfigOptions();
-
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
 
     // make sure a QApplication exists, it is required for the
     // Q-Model related code to work properly
@@ -1535,16 +1524,16 @@ namespace detail {
          itr != loadedjobs.end();
          ++itr)
     {
-      std::map<openstudio::UUID, std::pair<int, int> >::const_iterator itr2 = remotejobs.find(itr->uuid());
-      if (itr2 != remotejobs.end())
-      {
-        try {
-          m_remoteProcessCreator->activate(); // make sure we have an active connection
-          itr->start(m_remoteProcessCreator, itr2->second.first, itr2->second.second);
-        } catch (const std::exception &e) {
-          QMessageBox::information(0, "Error loading remote job", toQString(std::string("Error: ") + e.what() + " could not restore remote job: " + itr->description()));
-        }
-      }
+      //std::map<openstudio::UUID, std::pair<int, int> >::const_iterator itr2 = remotejobs.find(itr->uuid());
+      //if (itr2 != remotejobs.end())
+      //{
+      //  try {
+      //    m_remoteProcessCreator->activate(); // make sure we have an active connection
+      //    itr->start(m_remoteProcessCreator, itr2->second.first, itr2->second.second);
+      //  } catch (const std::exception &e) {
+      //    QMessageBox::information(0, "Error loading remote job", toQString(std::string("Error: ") + e.what() + " could not restore remote job: " + itr->description()));
+      //  }
+      //}
     }
 
     m_dbholder->setLoading(false);
@@ -2580,16 +2569,16 @@ namespace detail {
     QMutexLocker lock(&m_mutex);
     m_dbholder->setConfigOptions(co);
 
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
+//    if (!m_SLURMPassword.empty())
+//    {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    } else {
+//      m_remoteProcessCreator->setConfiguration(
+//       SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    }
 
   }
 
@@ -2674,14 +2663,13 @@ namespace detail {
           }
         }
 
-        if (remoterunnable)
-        {
-          try {
-            m_remoteProcessCreator->activate(); // make sure we have an active connection
-          } catch (...) {
-          }
-
-        }
+//        if (remoterunnable)
+//        {
+//          try {
+//            m_remoteProcessCreator->activate(); // make sure we have an active connection
+//          } catch (...) {
+//          }
+//        }
       }
 
       m_activate_mutex.unlock();
@@ -2777,21 +2765,21 @@ namespace detail {
     return m_statistics;
   }
 
-  void RunManager_Impl::setSLURMPassword(const std::string &t_pass)
-  {
-    m_SLURMPassword = t_pass;
-    ConfigOptions co = m_dbholder->getConfigOptions();
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
-  }
+//  void RunManager_Impl::setSLURMPassword(const std::string &t_pass)
+//  {
+//    m_SLURMPassword = t_pass;
+//    ConfigOptions co = m_dbholder->getConfigOptions();
+//    if (!m_SLURMPassword.empty())
+//    {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    } else {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    }
+//  }
 
   std::string RunManager_Impl::persistWorkflow(const Workflow &t_wf)
   {
@@ -3002,12 +2990,13 @@ namespace detail {
 
           if (itr->runnable())
           {
-            if (runningRemotely < maxremotejobs && m_remoteProcessCreator->hasConnection() && itr->remoteRunnable())
-            {
-              LOG(Info, "Starting job remotely: " << toString(itr->uuid()) << " " << itr->description() );
-              itr->start(m_remoteProcessCreator);
-              ++runningRemotely;
-            } else if (runningLocally < maxlocaljobs) {
+//            if (runningRemotely < maxremotejobs && m_remoteProcessCreator->hasConnection() && itr->remoteRunnable())
+//            {
+//              LOG(Info, "Starting job remotely: " << toString(itr->uuid()) << " " << itr->description() );
+//              itr->start(m_remoteProcessCreator);
+//              ++runningRemotely;
+//            } else if (runningLocally < maxlocaljobs) {
+            if (runningLocally < maxlocaljobs) {
               LOG(Info, "Starting job locally: " << toString(itr->uuid()) << " " << itr->description() );
               itr->start(m_localProcessCreator);
               ++runningLocally;

@@ -309,11 +309,11 @@ IF( BUILD_WITH_OPENSSL )
   ENDIF()
   
   #enable libssh
-  ADD_DEFINITIONS(-DLIBSSH_STATIC)
+  #ADD_DEFINITIONS(-DLIBSSH_STATIC)
   
   # add sub directory
-  ADD_SUBDIRECTORY( src/libssh )
-  INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
+  #ADD_SUBDIRECTORY( src/libssh )
+  #INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
       
 ENDIF()
 
@@ -795,11 +795,11 @@ endif( BUILD_DOCUMENTATION )
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-IF( BUILD_WITH_OPENSSL )
-  SET(LIBSSH_EXPORT "libssh_static")
-ELSE( BUILD_WITH_OPENSSL )
-  SET(LIBSSH_EXPORT "")
-ENDIF( BUILD_WITH_OPENSSL )
+#IF( BUILD_WITH_OPENSSL )
+#  SET(LIBSSH_EXPORT "libssh_static")
+#ELSE( BUILD_WITH_OPENSSL )
+#  SET(LIBSSH_EXPORT "")
+#ENDIF( BUILD_WITH_OPENSSL )
 
 IF( WIN32 )
   SET(QTWINMIGRATE_EXPORT "qtwinmigrate")
@@ -824,7 +824,6 @@ export(TARGETS openstudio_runmanager
                openstudio_lib
                openstudio_sdd
                openstudio_contam
-               ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat
                zkqwt

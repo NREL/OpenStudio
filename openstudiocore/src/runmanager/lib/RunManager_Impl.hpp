@@ -27,11 +27,11 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QTimer>
+#include <QThread>
 #include <QDateTime>
 #include "Job.hpp"
 #include "ConfigOptions.hpp"
 #include "LocalProcessCreator.hpp"
-#include "SLURMManager.hpp"
 #include "Workflow.hpp"
 #include "RunManagerStatus.hpp"
 #include <boost/weak_ptr.hpp>
@@ -199,9 +199,9 @@ namespace detail {
       /// Returns the path of the loaded db file
       openstudio::path dbPath() const;
 
-      /// Sets the password to use when making a SLURM connection.
-      /// Passwords are not persisted.
-      void setSLURMPassword(const std::string &t_pass);
+//      /// Sets the password to use when making a SLURM connection.
+//      /// Passwords are not persisted.
+//      void setSLURMPassword(const std::string &t_pass);
 
       /// Persist a workflow to the database
       /// \returns the key the workflow is stored under
@@ -305,10 +305,10 @@ namespace detail {
       volatile bool m_paused;
       volatile bool m_continue;
 
-      std::string m_SLURMPassword;
+//      std::string m_SLURMPassword;
 
       boost::shared_ptr<LocalProcessCreator> m_localProcessCreator;
-      boost::shared_ptr<SLURMManager> m_remoteProcessCreator;
+//      boost::shared_ptr<SLURMManager> m_remoteProcessCreator;
 
       boost::weak_ptr<runmanager::RunManagerStatus> m_statusUI;
 

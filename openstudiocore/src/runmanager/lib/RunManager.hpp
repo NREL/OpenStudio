@@ -278,9 +278,9 @@ namespace detail {
       /// \returns a set of named statistics regarding the job queue
       std::map<std::string, double> statistics() const;
 
-      /// Sets the password to use when making a SLURM connection.
-      /// Passwords are not persisted.
-      void setSLURMPassword(const std::string &t_pass);
+//      /// Sets the password to use when making a SLURM connection.
+//      /// Passwords are not persisted.
+//      void setSLURMPassword(const std::string &t_pass);
 
       /// Persist a workflow to the database
       /// \returns the key the workflow is stored under

@@ -427,10 +427,10 @@ namespace runmanager {
     return m;
   }
 
-  void RunManager::setSLURMPassword(const std::string &t_password)
-  {
-    m_impl->setSLURMPassword(t_password);
-  }
+//  void RunManager::setSLURMPassword(const std::string &t_password)
+//  {
+//    m_impl->setSLURMPassword(t_password);
+//  }
 
 
   std::map<std::string, double> RunManager::statistics() const
