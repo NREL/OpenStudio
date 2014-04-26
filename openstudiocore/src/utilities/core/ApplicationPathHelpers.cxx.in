@@ -78,8 +78,10 @@ namespace openstudio {
       openstudio::path candidate;
 #if defined(Q_OS_MAC)
       candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
-#else
+#elif defined(Q_OS_LINUX)
       candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "");
+#else
+      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
 #endif
       // revert to build directory location for regression tests and other external projects 
       // that link to a developer build of OpenStudio
