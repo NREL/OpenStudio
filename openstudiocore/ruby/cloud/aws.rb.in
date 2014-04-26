@@ -43,6 +43,8 @@ require 'net/scp'
 require 'net/ssh'
 require 'tempfile'
 require 'time'
+require 'cgi'
+require 'net/ssh/proxy/http'
 
 def error(code, msg)
   puts ({:error => {:code => code, :message => msg},
@@ -69,12 +71,90 @@ end
 if ARGV[4].empty?
   error(-1, 'Missing command argument')
 end
+def get_proxy_user()
+  return ENV["HTTP_PROXY_USER"]
+end
+
+def get_proxy_user_escaped()
+  user = get_proxy_user()
+  if user
+    user = CGI.escape(user)
+  end
+  
+  return user
+end
+
+def get_proxy_pass()
+  return ENV["HTTP_PROXY_PASS"]
+end
+
+def get_proxy_pass_escaped()
+  pass = get_proxy_pass()
+  if pass
+    pass = CGI.escape(pass)
+  end
+  
+  return pass
+end
+
+def get_proxy_user_info_escaped()
+  user = get_proxy_user_escaped()
+  pass = get_proxy_pass_escaped()
+  
+  if user && pass && !pass.empty?
+    return "#{user}:#{pass}"
+  end
+  
+  if user 
+    return user
+  end
+  
+  return nil
+end
+
+def get_proxy_port()
+  proxy_uri = ENV["HTTP_PROXY"]
+  if proxy_uri
+    uri = URI.parse(proxy_uri)
+    return uri.port()
+  else
+    return nil
+  end
+end
+
+def get_proxy_host()
+  proxy_uri = ENV["HTTP_PROXY"]
+  if proxy_uri
+    uri = URI.parse(proxy_uri)
+    return uri.host()
+  else
+    return nil
+  end
+end
+
+def get_proxy_uri()
+  if get_proxy_host()
+    return URI::Generic.new("http", get_proxy_user_info_escaped(), get_proxy_host(), get_proxy_port(), nil, nil, nil, nil, nil).to_s()
+  else
+    return nil
+  end
+end  
+
+def get_proxy()
+  if get_proxy_host()
+    proxy = Net::SSH::Proxy::HTTP.new(get_proxy_host(), get_proxy_port(), :user => get_proxy_user(), :password => get_proxy_pass())
+    return proxy
+  else
+    return nil
+  end
+end
 
 AWS.config(
     :access_key_id => ARGV[0],
     :secret_access_key => ARGV[1],
     :region => ARGV[2],
-    :ssl_verify_peer => false
+    :ssl_verify_peer => false,
+    :proxy_uri => get_proxy_uri()
 )
 
 if ARGV[3] == 'EC2'
@@ -95,7 +175,7 @@ end
 OPENSTUDIO_VERSION = '${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}' unless defined?(OPENSTUDIO_VERSION)
 
 if (!defined?(@server_image_id) || !defined?(@worker_image_id))
-  resp = Net::HTTP.get_response('developer.nrel.gov','/downloads/buildings/openstudio/rsrc/amis.json')
+  resp = Net::HTTP.new('developer.nrel.gov', nil, get_proxy_host(), get_proxy_port(), get_proxy_user(), get_proxy_pass()).get('/downloads/buildings/openstudio/rsrc/amis.json')
   if resp.code == '200'
     result = JSON.parse(resp.body)
     version = result.has_key?(OPENSTUDIO_VERSION) ? OPENSTUDIO_VERSION : 'default'
@@ -141,6 +221,8 @@ def find_processors(instance)
 
   return processors
 end
+
+
 
 def launch_server
   user_data = File.read(File.expand_path(File.dirname(__FILE__))+'/server_script.sh')
@@ -193,7 +275,8 @@ end
 def upload_file(host, local_path, remote_path)
   retries = 0
   begin
-    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+    proxy = get_proxy
+    Net::SCP.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |scp|
       scp.upload! local_path, remote_path
     end
   rescue SystemCallError, Timeout::Error => e
@@ -216,7 +299,8 @@ def send_command(host, command)
   #retries = 0
   begin
     output = ''
-    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+    proxy = get_proxy
+    Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
       response = ssh.exec!(command)
       output += response if !response.nil?
     end
@@ -248,7 +332,9 @@ end
 def shell_command(host, command)
   begin
     @logger.info("ssh_command #{command}")
-    Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+
+    proxy = get_proxy
+    Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
       channel = ssh.open_channel do |ch|
         ch.exec "#{command}" do |ch, success|
           raise "could not execute #{command}" unless success
@@ -285,7 +371,8 @@ def wait_command(host, command)
     flag = 0
     while flag == 0 do
       @logger.info("wait_command #{command}")
-      Net::SSH.start(host, 'ubuntu', :key_data => [@private_key]) do |ssh|
+      proxy = get_proxy
+      Net::SSH.start(host, 'ubuntu', :proxy => proxy, :key_data => [@private_key]) do |ssh|
         channel = ssh.open_channel do |ch|
           ch.exec "#{command}" do |ch, success|
             raise "could not execute #{command}" unless success
@@ -331,7 +418,8 @@ end
 def download_file(host, remote_path, local_path)
   retries = 0
   begin
-    Net::SCP.start(host, 'ubuntu', :key_data => [@private_key]) do |scp|
+    proxy = get_proxy
+    Net::SCP.start(host, 'ubuntu',  :proxy => proxy, :key_data => [@private_key]) do |scp|
       scp.download! remote_path, local_path
     end
   rescue SystemCallError, Timeout::Error => e
@@ -506,6 +594,8 @@ begin
       #@aws.client.delete_security_group({:group_name=>'openstudio-server-sg-v1'}"})
       #@aws.client.delete_security_group({:group_name=>'openstudio-worker-sg-v1'}"})
       @aws.client.delete_key_pair({:key_name => "key-pair-#{@timestamp}"})
+
+      puts ({:terminate_session => true}.to_json)
 
     when 'termination_status'
       if ARGV.length < 6

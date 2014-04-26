@@ -77,7 +77,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
   
   if( value )
   {
-    idfObject.setDouble(Fan_OnOffFields::FanEfficiency, *value);
+    idfObject.setDouble(Fan_OnOffFields::FanTotalEfficiency, *value);
   }
   
   //  N2 Pressure Rise

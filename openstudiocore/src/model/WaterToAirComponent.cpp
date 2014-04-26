@@ -458,7 +458,7 @@ bool WaterToAirComponent_Impl::removeFromPlantLoop()
       
       return true;
     }
-    // If the component is at the very end of the supply path, but there is another component preceeding this one.
+    // If the component is at the very end of the supply path, but there is another component preceding this one.
     else if( demandOutletNode->handle() == waterOutletModelObject()->handle() )
     {
       model().disconnect(thisObject,waterOutletPort()); 

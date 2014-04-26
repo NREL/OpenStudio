@@ -12,6 +12,8 @@ SET( ${target_name}_SRC
   DesignAlternativesTabController.hpp
   DesignAlternativesView.cpp
   DesignAlternativesView.hpp
+  ExportSpreadsheet.cpp
+  ExportSpreadsheet.hpp  
   ExportXML.cpp
   ExportXML.hpp
   ExportXMLDialog.cpp
@@ -126,6 +128,11 @@ SET( ${target_name}_SRC
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowTools.cpp
+  ../shared_gui_components/WorkflowTools.hpp
+
+  ../shared_gui_components/NetworkProxyDialog.cpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 )
 
 ## ui files
@@ -191,6 +198,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 )
 
 ## resource files

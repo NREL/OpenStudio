@@ -27,6 +27,7 @@ namespace openstudio {
 namespace model {
 
 class InteriorPartitionSurfaceGroup;
+class DaylightingDeviceShelf;
 
 namespace detail {
 
@@ -101,6 +102,8 @@ class MODEL_API InteriorPartitionSurface : public PlanarSurface {
   bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
 
   void resetInteriorPartitionSurfaceGroup();
+
+  boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
  protected:
   /// @cond

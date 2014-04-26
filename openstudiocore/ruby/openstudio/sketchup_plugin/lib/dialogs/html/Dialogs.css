@@ -9,4 +9,4 @@ td { font-size: 11px; font-family: tahoma; }
 .static_text { font-size: 11px; font-family: tahoma; }
 .button { font-size: 11px; font-family: tahoma; padding-top: 1px; padding-bottom: 2px }
 
-/* can create seperate classes for OK, Cancel, and Apply and add right/left padding individually */
+/* can create separate classes for OK, Cancel, and Apply and add right/left padding individually */

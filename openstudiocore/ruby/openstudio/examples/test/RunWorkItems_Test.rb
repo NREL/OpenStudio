@@ -50,7 +50,7 @@ class RunWorkItems_Test < Test::Unit::TestCase
     
     # copy weather file over to model_dir
     puts "Adding weather file and design days."
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     weather_dir = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s)
     weather_path = weather_dir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     ddy_path = weather_dir / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.ddy")

@@ -78,70 +78,70 @@ namespace detail {
     boost::optional<std::string> standardsConstructionType = this->standardsConstructionType();
 
     // todo: pull from standards JSON file, for now just hard code here
-	// note: didn't add DemsingCeiling choices here. Thinking Intended Surafce Types should instead be DemisingCeiling
-	if (intendedSurfaceType){
+	  // note: didn't add DemsingCeiling choices here. Thinking Intended Surafce Types should instead be DemisingCeiling
+	  if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "ExteriorFloor")){
         result.push_back("Mass");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
-	if (intendedSurfaceType){
+	  if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "ExteriorWall")){
         result.push_back("Mass");
         result.push_back("Metal");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
-	if (intendedSurfaceType){
+	  if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "ExteriorRoof")){
         result.push_back("IEAD");
         result.push_back("Metal");
-	  }
+	    }
     }
     if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "InteriorFloor")){
         result.push_back("Mass");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
     if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "InterorWall")){
         result.push_back("Mass");
         result.push_back("Metal");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
-	if (intendedSurfaceType){
+  	if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "InteriorCeling")){
         result.push_back("Mass");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
-	if (intendedSurfaceType){
+	  if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "DemisingFloor")){
         result.push_back("Mass");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
     if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "DemisingWall")){
         result.push_back("Mass");
         result.push_back("Metal");
         result.push_back("SteelFramed");
-		result.push_back("WoodFramed");
-	  }
+		    result.push_back("WoodFramed");
+	    }
     }
     if (intendedSurfaceType){
       if (istringEqual(*intendedSurfaceType, "GroundContactFloor")){
         result.push_back("Heated");
         result.push_back("Unheated");
-	  }
+	    }
     }
 
 	// include values from model
@@ -178,12 +178,13 @@ namespace detail {
     std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
-    // make unique
-    it = std::unique(result.begin(), result.end(), IstringEqual()); 
-    result.resize( std::distance(result.begin(),it) ); 
-
     // sort
     std::sort(result.begin(), result.end(), IstringCompare());
+
+    // make unique
+    // DLM: have to sort before calling unique, unique only works on consecutive elements
+    it = std::unique(result.begin(), result.end(), IstringEqual()); 
+    result.resize( std::distance(result.begin(),it) ); 
 
     // add current to front
     if (standardsConstructionType){

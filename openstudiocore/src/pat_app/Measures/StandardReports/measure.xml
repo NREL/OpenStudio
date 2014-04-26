@@ -1,7 +1,7 @@
 <measure>
   <name>Standard Reports</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>179bdef0-171e-4ecf-8255-fd5d4290a016</version_id>
+  <version_id>155b60ed-df4d-416f-95c4-b619f6972a39</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -47,7 +47,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>4CD4383A</checksum>
+      <checksum>B6B97009</checksum>
     </file>
   </files>
 </measure>

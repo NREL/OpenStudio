@@ -53,6 +53,7 @@ class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
 class OtherEquipment;
+class WaterUseEquipment;
 class DaylightingControl;
 class IlluminanceMap;
 class GlareSensor;
@@ -313,11 +314,14 @@ namespace detail {
     /// Returns all HotWaterEquipment in this space.
     std::vector<HotWaterEquipment> hotWaterEquipment() const;
 
-    /// Returns all SteamEquipment in this space type.
+    /// Returns all SteamEquipment in this space.
     std::vector<SteamEquipment> steamEquipment() const;
 
-    /// Returns all OtherEquipment in this space type.
+    /// Returns all OtherEquipment in this space.
     std::vector<OtherEquipment> otherEquipment() const;  
+
+    /// Returns all WaterUseEquipment in this space.
+    std::vector<WaterUseEquipment> waterUseEquipment() const; 
 
     /// Returns all DaylightingControls in this space.
     std::vector<DaylightingControl> daylightingControls() const;
@@ -515,6 +519,8 @@ namespace detail {
         Will return empty vector if all floors in space are not on the same x,y plane.
     */
     std::vector<Point3d> floorPrint() const;
+
+    bool isPlenum() const;
 
    private:
     REGISTER_LOGGER("openstudio.model.Space");

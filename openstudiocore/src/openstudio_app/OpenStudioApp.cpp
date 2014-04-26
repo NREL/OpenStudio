@@ -835,8 +835,13 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
       QString message;
       if (versionChanged)
       {
-        message = toQString("Model updated from " + originalVersion.str() + " to " + 
-                       currentVersion.str() + ".");
+        if (originalVersion > currentVersion) {
+          message = toQString("Opening future version " + originalVersion.str() + " using " + 
+                           currentVersion.str() + ".");
+        } else {
+          message = toQString("Model updated from " + originalVersion.str() + " to " + 
+                           currentVersion.str() + ".");
+        }
       }
 
       if (removedScriptDirs)

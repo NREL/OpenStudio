@@ -344,9 +344,9 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
     puts "#{Time.now.getutc}: creating model_dc.oct"
-    system("oconv #{t_outPath}/materials/materials.rad model.rad #{t_outPath}/skies/dc.sky > model_dc.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
     puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
-    system("oconv #{t_outPath}/skies/dc.sky > model_dc_skyonly.oct")
+    system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
 #    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: computing daylight coefficients..."
@@ -354,8 +354,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
 #    end
 
     # do map
-    exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | rcontrib #{rtrace_args} #{procsUsed} \
-      -I+ -fo #{t_options.tregVars} -o #{t_outPath}/output/dc/merged_space/maps/merged_space.dmx -m skyglow model_dc.oct")
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} \
+      -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" -m skyglow model_dc.oct")
 
 #    if t_options.verbose == 'v'
       puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
@@ -379,18 +379,18 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
           vwrays_out = `vwrays -d #{view_def}`.strip
           exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-            -f #{t_options.tregVars} -o #{binDir}/#{space_name}_treg%03d.hdr -m skyglow model_dc.oct")
+            -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}_treg%03d.hdr\" -m skyglow model_dc.oct")
         else
           exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o #{binDir}/#{space_name}treg%03d.hdr -m skyglow model_dc.oct")
+            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}treg%03d.hdr\" -m skyglow model_dc.oct")
           # create "contact sheet" of DC images for reference/troubleshooting
           if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
             hdrs = Dir.glob("#{binDir}/*.hdr")
             # there is a limit on the length of the command line on Windows systems -- just one of the OS's great many shortcomings.
             hdrs = hdrs[0..12]
-            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - #{binDir}/#{space_name}contact-sheet.bmp")
+            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - \"#{binDir}/#{space_name}contact-sheet.bmp\"")
           else
-            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - #{binDir}/#{space_name}contact-sheet.tif")
+            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - \"#{binDir}/#{space_name}contact-sheet.tif\"")
           end
         end
         puts "#{Time.now.getutc}: done computing daylight coefficients for #{space_name}"
@@ -408,14 +408,29 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   tempIO = IO.popen(t_cmd)
 
 
-  temp = tempIO.readlines.to_s
+  val_lines = tempIO.readlines("\n")
   tempIO.close
 
   linenum = 0
 
   puts "#{Time.now.getutc}: Parsing result"
   values = []
-  temp.split(/\n/).each do |val|
+ 
+  has_header = false
+  if not val_lines.empty?
+    has_header = /RADIANCE/.match(val_lines[0])
+  end
+  header_read = false
+  
+  val_lines.each do |val|
+    if has_header and not header_read
+      if /^\s?\d/.match(val)
+        header_read = true
+      else
+        next
+      end
+    end
+    
     line = OpenStudio::Radiance::parseGenDayMtxLine(val)
     if line.size != 8760
       abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
@@ -423,8 +438,10 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
 #      puts "Line Parsed: #{line}"
     end
     linenum = linenum + 1
-    values << line;
+    values << line
   end
+
+  puts "Generated #{linenum} lines"
 
   if values.empty?
     puts "ERROR: simulation command generated no results: #{t_cmd}"
@@ -454,6 +471,11 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
         end
 
         if File.exists?("#{t_outPath}/numeric/#{space_name}.sns")        
+          if index >= values.size
+            puts "index is #{index} but values.size is only #{values.size}"
+          elsif hour >= values[index].size
+            puts "hour is #{hour} but values.size[index] is only #{values[index].size}"
+          end
           illum = [values[index][hour]]
           index = index + 1
         end
@@ -746,8 +768,8 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
         if t_options.glare == true
           puts "image based glare analysis temporarily disabled, sorry."
           #  system("gendaylit -ang #{tsSolarAlt} #{tsSolarAzi} -L #{tsDirectNormIllum} #{tsDiffuseHorIllum} \
-          #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep #{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr | pfilt -1 -x /2 -y /2 > \
-          #  #{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr")
+          #  | #{perlPrefix}genskyvec#{perlExtension} -m 1 | dctimestep \"#{outPath}/output/dc/#{space_name}/views/#{space_name}treg%03d.hdr\" | pfilt -1 -x /2 -y /2 > \
+          #  \"#{outPath}/output/dc/#{space_name}/views/#{tsDateTime.gsub(/[: ]/,'_')}.hdr\"")
         end
         if t_options.x == true
 

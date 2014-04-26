@@ -274,6 +274,40 @@ class OneThreeStraightItem : public GridItem
   void mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
 };
 
+class SupplyPlenumItem : public GridItem
+{
+  public:
+
+  SupplyPlenumItem(const model::ModelObject & modelObject, QGraphicsItem * parent = 0);
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = 0);
+
+  void setModelObject( model::OptionalModelObject modelObject );
+
+  private:
+
+  QColor m_color;
+};
+
+class ReturnPlenumItem : public GridItem
+{
+  public:
+
+  ReturnPlenumItem(const model::ModelObject & modelObject, QGraphicsItem * parent = 0);
+
+  void paint(QPainter *painter, 
+             const QStyleOptionGraphicsItem *option, 
+             QWidget *widget = 0);
+
+  void setModelObject( model::OptionalModelObject modelObject );
+
+  private:
+
+  QColor m_color;
+};
+
 class LinkItem : public QGraphicsObject
 {
   Q_OBJECT;
@@ -877,9 +911,13 @@ class SystemItem : public GridItem
 
   SystemItem( model::Loop loop, LoopScene * loopScene );
 
+  virtual ~SystemItem();
+
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
              QWidget *widget = 0);
+
+  QColor plenumColor(const Handle & plenumHandle);
 
   private:
 
@@ -892,6 +930,11 @@ class SystemItem : public GridItem
   DemandSideItem * m_demandSideItem;
   
   SystemCenterItem * m_systemCenterItem;
+
+  std::map<Handle,int> m_plenumIndexMap;
+  std::map<Handle,QColor> m_plenumColorMap;
+
+  int plenumIndex(const Handle & plenumHandle);
 };
 
 class OneTwoFourStraightItem : public GridItem

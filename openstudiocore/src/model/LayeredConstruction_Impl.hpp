@@ -124,6 +124,8 @@ namespace detail {
 
     bool isFenestration() const;
 
+    bool isSolarDiffusing() const;
+
     bool isModelPartition() const;
 
     /** Returns true if the construction has RoofVegetation as the outer layer. */
@@ -194,6 +196,8 @@ namespace detail {
     /** Removes any existing insulation layer designations. Does not touch the actual composition 
      *  of the construction. */
     void resetInsulation();
+
+    void ensureUniqueLayers(); 
 
     //@}
 

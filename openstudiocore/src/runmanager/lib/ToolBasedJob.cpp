@@ -1020,42 +1020,47 @@ namespace detail {
 
   void ToolBasedJob::processError(QProcess::ProcessError t_e, const std::string &t_desc)
   {
+    Files outfiles = outputFiles();
+    openstudio::path outpath = outdir();
+
     QWriteLocker l(&m_mutex);
     LOG(Error, "ToolBasedJob processError: " << toString(uuid()) << " " << t_e << " " << t_desc);
     m_error_info.processError(t_e, t_desc);
+    processResultFiles(outpath, outfiles);
+    JobErrors e = m_error_info.errors();
+    l.unlock();
+    setErrors(e);
     quit();
   }
 
 
   void ToolBasedJob::processError(QProcess::ProcessError t_e)
   {
-    QWriteLocker l(&m_mutex);
-    LOG(Error, "ToolBasedJob processError: " << toString(uuid()) << " " << t_e);
-    m_error_info.processError(t_e);
-    quit();
-  }
-
-  void ToolBasedJob::processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus)
-  {
     Files outfiles = outputFiles();
     openstudio::path outpath = outdir();
 
-
     QWriteLocker l(&m_mutex);
-    LOG(Debug, "ToolBasedJob processFinished: " << toString(uuid()) << " " << t_exitCode << " " << t_exitStatus); 
+    LOG(Error, "ToolBasedJob processError: " << toString(uuid()) << " " << t_e);
+    m_error_info.processError(t_e);
 
+    processResultFiles(outpath, outfiles);
+    JobErrors e = m_error_info.errors();
+    l.unlock();
+    setErrors(e);
+    quit();
+  }
 
-    m_error_info.exitCode(t_exitCode);
-    m_error_info.exitStatus(t_exitStatus);
+  void ToolBasedJob::processResultFiles(const openstudio::path &t_outpath, const Files &t_outfiles)
+  {
     // If an eplusout.err file was created, let's parse it
-    openstudio::path errpath = outpath / toPath("eplusout.err");
+    openstudio::path errpath = t_outpath / toPath("eplusout.err");
     if (boost::filesystem::exists(errpath))
     {
       LOG(Debug, "Setting error file: " << openstudio::toString(errpath));
       m_error_info.errorFile(openstudio::energyplus::ErrorFile(errpath));
     }
 
-    std::vector<FileInfo> resultpaths = outfiles.getAllByFilename("result.ossr").files();
+    std::vector<FileInfo> resultpaths = t_outfiles.getAllByFilename("result.ossr").files();
     if (!resultpaths.empty())
     {
       std::vector<openstudio::ruleset::OSResult> results;
@@ -1094,8 +1099,24 @@ namespace detail {
       m_error_info.osResult(results);
 
     } else {
-      LOG(Debug, "No osresult file found at: " << openstudio::toString(outpath));
+      LOG(Debug, "No osresult file found at: " << openstudio::toString(t_outpath));
     }
+  }
+
+  void ToolBasedJob::processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus)
+  {
+    Files outfiles = outputFiles();
+    openstudio::path outpath = outdir();
+
+
+    QWriteLocker l(&m_mutex);
+    LOG(Debug, "ToolBasedJob processFinished: " << toString(uuid()) << " " << t_exitCode << " " << t_exitStatus); 
+
+
+    m_error_info.exitCode(t_exitCode);
+    m_error_info.exitStatus(t_exitStatus);
+
+    processResultFiles(outpath, outfiles);
 
     JobErrors e = m_error_info.errors();
     if (outfiles.files().empty())

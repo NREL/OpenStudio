@@ -38,6 +38,7 @@
 namespace openstudio {
 namespace runmanager {
   class RunManager;
+  struct JSONWorkflowOptions;
 
 namespace detail {
   /// WorkflowItem used for providing data about a job tree through the
@@ -95,6 +96,15 @@ namespace detail {
       boost::optional<openstudio::runmanager::Job> enqueueOrReturnExisting(const openstudio::runmanager::Job &job,
                                                                            bool force,
                                                                            const openstudio::path &path);
+
+      openstudio::runmanager::Job runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath, 
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
+
+      openstudio::runmanager::Job runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
+
+      openstudio::runmanager::Job runWorkflow(const QVariant &t_variant, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
+          const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options);
 
       /// Queue a vector of jobs and all children up for processing
       /// \param t_jobs jobs to queue up for processing
@@ -226,11 +236,14 @@ namespace detail {
       std::map<std::string, double> statistics() const;
 
     signals:
-      /// Emitted when the job's state has changed
+      /// Emitted when the paused state has change
       void pausedChanged(bool);
 
       /// Stats changed
       void statsChanged();
+
+      /// Job tree added
+      void jobTreeAdded(const openstudio::UUID &t_job);
 
     protected:
       virtual void run();

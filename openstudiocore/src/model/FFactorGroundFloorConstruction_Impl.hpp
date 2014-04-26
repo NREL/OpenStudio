@@ -76,6 +76,8 @@ namespace detail {
 
     virtual bool isFenestration() const;
 
+    virtual bool isSolarDiffusing() const;
+
     virtual bool isModelPartition() const;
 
     virtual int renderingColorIndex() const;

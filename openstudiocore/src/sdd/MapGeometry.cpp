@@ -342,6 +342,25 @@ namespace sdd {
       }
     }
 
+    // DLM: volume is now a property associated with Thermal Zone, http://code.google.com/p/cbecc/issues/detail?id=490
+    //// volume
+    //if (!volElement.isNull()){
+    //  // sdd units = ft^3, os units = m^3
+    //  Quantity spaceVolumeIP(volElement.text().toDouble(), BTUUnit(BTUExpnt(0,3,0,0)));
+    //  OptionalQuantity spaceVolumeSI = QuantityConverter::instance().convert(spaceVolumeIP, UnitSystem(UnitSystem::Wh));
+    //  OS_ASSERT(spaceVolumeSI);
+    //  OS_ASSERT(spaceVolumeSI->units() == WhUnit(WhExpnt(0,0,3,0)));
+    //
+    //  if (thermalZone->isVolumeDefaulted()){
+    //    thermalZone->setVolume(spaceVolumeSI->value());
+    //  }else{
+    //    boost::optional<double> zoneVolume = thermalZone->volume();
+    //    OS_ASSERT(zoneVolume);
+    //    zoneVolume = *zoneVolume + spaceVolumeSI->value();
+    //    thermalZone->setVolume(zoneVolume);
+    // }
+    //}
+
     // Service Hot Water
 
     bool ok;
@@ -562,10 +581,18 @@ namespace sdd {
     {
       //<IntLPDReg>1.1</IntLPDReg> - W per ft2
       //<IntLtgRegSchRef>Office Lighting Sched</IntLtgRegSchRef>
+      //<IntLtgRegHtGnSpcFrac>0.61</IntLtgRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgRegHtGnRadFrac>0.75</IntLtgRegHtGnRadFrac> - radiant fraction
       //<IntLPDNonReg>0</IntLPDNonReg> - W per ft2
+      //<IntLtgNonRegSchRef>Office Lighting Sched</IntLtgNonRegSchRef>
+      //<IntLtgNonRegHtGnSpcFrac>0.5</IntLtgNonRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgNonRegHtGnRadFrac>0.55</IntLtgNonRegHtGnRadFrac> - radiant fraction
+
 
       QDomElement intLPDRegElement = element.firstChildElement("IntLPDReg");
       QDomElement intLtgRegSchRefElement = element.firstChildElement("IntLtgRegSchRef");
+      QDomElement intLtgRegHtGnSpcFracElement = element.firstChildElement("IntLtgRegHtGnSpcFrac");
+      QDomElement intLtgRegHtGnRadFracElement = element.firstChildElement("IntLtgRegHtGnRadFrac");
       if (!intLPDRegElement.isNull() && (intLPDRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -591,10 +618,25 @@ namespace sdd {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
+
+        if (!intLtgRegHtGnSpcFracElement.isNull()){
+          double spaceFraction = intLtgRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+        
+          if (!intLtgRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
+        }
       }
 
       QDomElement intLPDNonRegElement = element.firstChildElement("IntLPDNonReg");
-      QDomElement intLPDNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegHtGnSpcFracElement = element.firstChildElement("IntLtgNonRegHtGnSpcFrac");
+      QDomElement intLtgNonRegHtGnRadFracElement = element.firstChildElement("IntLtgNonRegHtGnRadFrac");
       if (!intLPDNonRegElement.isNull() && (intLPDNonRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDNonRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -611,14 +653,27 @@ namespace sdd {
         lights.setSpace(space);
         lights.setEndUseSubcategory("NonReg Ltg");
 
-        if (!intLPDNonRegSchRefElement.isNull()){
-          std::string scheduleName = escapeName(intLPDNonRegSchRefElement.text());
+        if (!intLtgNonRegSchRefElement.isNull()){
+          std::string scheduleName = escapeName(intLtgNonRegSchRefElement.text());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
           if (schedule){
             lights.setSchedule(*schedule);
           }else{
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
+        }
+
+        if (!intLtgNonRegHtGnSpcFracElement.isNull()){
+          double spaceFraction = intLtgNonRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+
+          if (!intLtgNonRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgNonRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgNonRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
         }
       }
     }
@@ -831,29 +886,86 @@ namespace sdd {
 
     //***** Elevator Loads *****
     {
-      //<ElevEscalPwrDens>0</ElevEscalPwrDens> - W per ft2
-      //<ElevEscalSchRef>Office Elevator Sched</ElevEscalSchRef>
+      //<ElevPwr>20000</ElevPwr> 
+			//<ElevSchRef>OfficeElevator</ElevSchRef>
+			//<ElevRadFrac>0</ElevRadFrac>
+			//<ElevLatFrac>0</ElevLatFrac>
+			//<ElevLostFrac>0.8</ElevLostFrac>
 
-      QDomElement elevEscalPwrDensElement = element.firstChildElement("ElevEscalPwrDens");
-      QDomElement elevEscalSchRefElement = element.firstChildElement("ElevEscalSchRef");
-      if (!elevEscalPwrDensElement.isNull() && (elevEscalPwrDensElement.text().toDouble() > 0)){
-
-        openstudio::Quantity electricalDensityIP(elevEscalPwrDensElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
-        OptionalQuantity electricalDensitySI = QuantityConverter::instance().convert(electricalDensityIP, whSys);
-        OS_ASSERT(electricalDensitySI);
-        OS_ASSERT(electricalDensitySI->units() == WhUnit(WhExpnt(1,0,-2)));
+      QDomElement elevPwrElement = element.firstChildElement("ElevPwr");
+      QDomElement elevSchRefElement = element.firstChildElement("ElevSchRef");
+      QDomElement elevRadFracElement = element.firstChildElement("ElevRadFrac");
+      QDomElement elevLatFracElement = element.firstChildElement("ElevLatFrac");
+      QDomElement elevLostFracElement = element.firstChildElement("ElevLostFrac");
+      if (!elevPwrElement.isNull() && (elevPwrElement.text().toDouble() > 0)){
 
         openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
-        electricEquipmentDefinition.setName(name + " Elevator and Escalator Loads Definition");
-        electricEquipmentDefinition.setWattsperSpaceFloorArea(electricalDensitySI->value()); // W/m2
+        electricEquipmentDefinition.setName(name + " Elevator Definition");
+        electricEquipmentDefinition.setDesignLevel(elevPwrElement.text().toDouble()); 
+
+        if (!elevRadFracElement.isNull()){
+          electricEquipmentDefinition.setFractionRadiant(elevRadFracElement.text().toDouble());
+        }
+        if (!elevLatFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLatent(elevLatFracElement.text().toDouble());
+        }
+        if (!elevLostFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLost(elevLostFracElement.text().toDouble());
+        }
 
         openstudio::model::ElectricEquipment electricEquipment(electricEquipmentDefinition);
-        electricEquipment.setName(name + " Elevator and Escalator Loads");
+        electricEquipment.setName(name + " Elevator");
         electricEquipment.setSpace(space);
-        electricEquipment.setEndUseSubcategory("Process");
+        electricEquipment.setEndUseSubcategory("Internal Transport");
 
-        if (!elevEscalSchRefElement.isNull()){
-          std::string scheduleName = escapeName(elevEscalSchRefElement.text());
+        if (!elevSchRefElement.isNull()){
+          std::string scheduleName = escapeName(elevSchRefElement.text());
+          boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
+          if (schedule){
+            electricEquipment.setSchedule(*schedule);
+          }else{
+            LOG(Error, "Could not find schedule '" << scheduleName << "'");
+          }
+        }
+      }
+    }
+
+    //***** Escalator Loads *****
+    {
+			//<EscalPwr>7860</EscalPwr>
+			//<EscalSchRef>OfficeEscalator Sch</EscalSchRef>
+			//<EscalRadFrac>0</EscalRadFrac>
+			//<EscalLatFrac>0</EscalLatFrac>
+			//<EscalLostFrac>0.2</EscalLostFrac>
+
+      QDomElement escalPwrElement = element.firstChildElement("EscalPwr");
+      QDomElement escalSchRefElement = element.firstChildElement("EscalSchRef");
+      QDomElement escalRadFracElement = element.firstChildElement("EscalRadFrac");
+      QDomElement escalLatFracElement = element.firstChildElement("EscalLatFrac");
+      QDomElement escalLostFracElement = element.firstChildElement("EscalLostFrac");
+      if (!escalPwrElement.isNull() && (escalPwrElement.text().toDouble() > 0)){
+
+        openstudio::model::ElectricEquipmentDefinition electricEquipmentDefinition(model);
+        electricEquipmentDefinition.setName(name + " Escalator Definition");
+        electricEquipmentDefinition.setDesignLevel(escalPwrElement.text().toDouble()); 
+
+        if (!escalRadFracElement.isNull()){
+          electricEquipmentDefinition.setFractionRadiant(escalRadFracElement.text().toDouble());
+        }
+        if (!escalLatFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLatent(escalLatFracElement.text().toDouble());
+        }
+        if (!escalLostFracElement.isNull()){
+          electricEquipmentDefinition.setFractionLost(escalLostFracElement.text().toDouble());
+        }
+
+        openstudio::model::ElectricEquipment electricEquipment(electricEquipmentDefinition);
+        electricEquipment.setName(name + " Escalator");
+        electricEquipment.setSpace(space);
+        electricEquipment.setEndUseSubcategory("Internal Transport");
+
+        if (!escalSchRefElement.isNull()){
+          std::string scheduleName = escapeName(escalSchRefElement.text());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
           if (schedule){
             electricEquipment.setSchedule(*schedule);
@@ -1526,7 +1638,7 @@ namespace sdd {
     OptionalQuantity floorAreaIP = QuantityConverter::instance().convert(floorAreaSI, ipSys);
     OS_ASSERT(floorAreaIP);
     OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
-    QDomElement floorAreaElement = doc.createElement("FlrArea");
+    QDomElement floorAreaElement = doc.createElement("Area");  // SAC 3/14/14
     result.appendChild(floorAreaElement);
     floorAreaElement.appendChild(doc.createTextNode(QString::number(floorAreaIP->value())));
 

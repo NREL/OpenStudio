@@ -28,6 +28,8 @@ namespace model {
 
 class Space;
 class SubSurface;
+class ShadingSurfaceGroup;
+class ConstructionBase;
 
 namespace detail {
 
@@ -181,17 +183,67 @@ class MODEL_API Surface : public PlanarSurface {
   0 if this surface is not a wall. */
   double windowToWallRatio() const;
 
-  /** Sets the window to wall ratio for this surface.  Returns false if the
-  surface is not a wall, if the surface is not rectangular in face coordinates, if 
-  requested ratio is too large (window area ~= surface area) or too small (min dimension
-  of window < 1 foot), or if the window clips any remaining sub surfaces. Otherwise, removes
-  all existing windows and adds new window to meet requested ratio.*/
+  /** Get the skylight to roof ratio for this surface. Calculated as 
+  sum(surface.skylights.netArea)/surface.grossArea if this surface is a roof, returns
+  0 if this surface is not a roof. */
+  double skylightToRoofRatio() const;
+
+  /** Get the skylight to projected floor ratio for this surface. Calculated as 
+  sum(surface.skylights.netArea)/project(surface to z=0 plane).grossArea if this surface is a roof, returns
+  0 if this surface is not a roof. */
+  double skylightToProjectedFloorRatio() const;
+
+  /** Sets the window to wall ratio for this surface using a single banded window.  
+   *  Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr);
   
   /** Same as setWindowToWallRatio but with extra parameters desiredHeightOffset and heightOffsetFromFloor.
-  If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
-  offset from the ceiling. */
+   *  If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
+   *  offset from the ceiling. Uses applyViewAndDaylightingGlassRatios for implementation. */
   boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+
+  /** Applies banded view and daylighting windows to the surface with optional exterior shading and interior light shelf.
+   * 
+   *  Assumes that this surface spans the entire height of the space, this method should not be used if the wall is broken
+   *  into multiple vertical pieces.
+   * 
+   *  Returns false if the surface is not a wall, if the surface is not rectangular in face coordinates, 
+   *  if requested ratio is too large (window area ~= surface area), or if surface has any doors.  
+   *  
+   *  Otherwise, removes all existing windows and adds new windows to meet requested ratio.
+   *
+   *  viewGlassToWallRatio - the ratio of view glass to wall area, if 0 no view glass will be created
+   *  daylightingGlassToWallRatio - the ratio of daylighting glass to wall area, if 0 no daylighting glass will be created
+   *  desiredViewGlassSillHeight - the desired distance from the floor to the bottom of the view glass, this may be reduced if the requested window area is too high
+   *  desiredDaylightingGlassHeaderHeight - the distance from the ceiling to the top of the daylighting glass, this may be reduced if the requested window area is too high
+   *  exteriorShadingProjectionFactor - projection factor of exterior shading applied to the view window, if 0 no exterior shading will be created
+   *  interiorShelfProjectionFactor - projection factor of interior light shelf applied to the daylighting window, if 0 no interior light shelf will be created
+   *  viewGlassConstruction - optional construction to use for the view glass
+   *  daylightingGlassConstruction - optional construction to use for the daylighting glass
+   *
+   *  If successful returns a vector of sub surfaces created, view window will be the first in the vector if viewGlassToWallRatio > 0
+  */
+  std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                             double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                             double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                             const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                             const boost::optional<ConstructionBase>& daylightingGlassConstruction);
+
+
+  /** Returns any shading surface groups associated with this surface. */
+  std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+
+  /** Splits this surface vertically surrounding any sub surfaces.
+   *  This surface must be a wall and must not have an adjacent surface. 
+   *  Returns any new surfaces created in this routine.
+   *  Typically this is called on a surface that has doors but no windows before applying banded windows. */
+  std::vector<Surface> splitSurfaceForSubSurfaces();
+
+  /** Moves all of the surfaces vertices towards the centroid by inset then intersects each face with the inset polygon.
+   *  Faces are in space coordinates, it is expected that not all faces will intersect the surface.
+   *  Returns all new sub surfaces created, sub surface types are defaulted.  Optional construction is applied.
+   *  Returns false is this surface has any current sub surfaces or if there is an adjacent surface.*/
+  std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
  protected:
   /// @cond

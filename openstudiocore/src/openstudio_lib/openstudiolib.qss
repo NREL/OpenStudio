@@ -260,13 +260,6 @@ QToolButton {
   border: none;
 }
 
-systemoutliner--SystemFooterWidget {
-  background: white;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
 QGraphicsView {
   border: none;
 }
@@ -583,6 +576,11 @@ QLabel#H1 {
 QLabel#H2 {
   font-size: 12px;
   font: bold;
+}
+
+QLabel#StandardsInfo {
+  font-size: 12px;
+  font: italic;
 }
 
 QListView {

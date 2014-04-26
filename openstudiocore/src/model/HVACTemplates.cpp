@@ -560,12 +560,6 @@ Loop addSystemType3(Model & model)
                                                                    energyInputRatioFofFlow,
                                                                    partLoadFraction );
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
-  SetpointManagerMixedAir setpointMMA3(model);
-
   SetpointManagerSingleZoneReheat setpointMSZR(model);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -581,12 +575,6 @@ Loop addSystemType3(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
-  Node node2 = coilHeatingGas.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coilCooling.outletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
 
   AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
 
@@ -751,21 +739,9 @@ Loop addSystemType4(Model & model)
   airLoopHVAC.addBranchForHVACComponent(terminal);
 
   SetpointManagerSingleZoneReheat setpointMSZR(model);
-  SetpointManagerMixedAir setpointMMA1(model);
-  SetpointManagerMixedAir setpointMMA2(model);
-  SetpointManagerMixedAir setpointMMA3(model);
-  SetpointManagerMixedAir setpointMMA4(model);
 
   Node node1 = supplyFan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
-  Node node2 = coilHeatingElectric.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coolingCoil.outletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = heatingCoil.outletModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
-  Node node5 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA4.addToNode(node5);
 
   return airLoopHVAC;
 }
@@ -876,12 +852,6 @@ Loop addSystemType5(Model & model)
   coilCooling.setBasinHeaterCapacity(10);
   coilCooling.setBasinHeaterSetpointTemperature(2.0);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
-  SetpointManagerMixedAir setpointMMA3(model);
-
   SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model,_deckTempSchedule);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -897,12 +867,6 @@ Loop addSystemType5(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   deckTempSPM.addToNode(node1);
-  Node node2 = coilHeatingWater.airOutletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coilCooling.outletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
 
   // Hot Water Plant
 
@@ -1055,12 +1019,6 @@ Loop addSystemType6(Model & model)
   coilCooling.setBasinHeaterCapacity(10);
   coilCooling.setBasinHeaterSetpointTemperature(2.0);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
-  SetpointManagerMixedAir setpointMMA3(model);
-
   SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model,_deckTempSchedule);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -1077,12 +1035,6 @@ Loop addSystemType6(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   deckTempSPM.addToNode(node1);
-  Node node2 = coilHeatingElectric.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coilCooling.outletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
 
   CoilHeatingElectric reheatCoil(model,_alwaysOnSchedule);
   FanConstantVolume piuFan(model,_alwaysOnSchedule);
@@ -1118,12 +1070,6 @@ Loop addSystemType7(Model & model)
 
   CoilCoolingWater coilCoolingWater = CoilCoolingWater(model,_alwaysOnSchedule);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
-  SetpointManagerMixedAir setpointMMA3(model);
-
   SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model,_deckTempSchedule);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -1139,12 +1085,6 @@ Loop addSystemType7(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   deckTempSPM.addToNode(node1);
-  Node node2 = coilHeatingWater.airOutletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coilCoolingWater.airOutletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
 
   // Hot Water Plant
 
@@ -1350,12 +1290,6 @@ Loop addSystemType8(Model & model)
 
   CoilCoolingWater coilCoolingWater = CoilCoolingWater(model,_alwaysOnSchedule);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
-  SetpointManagerMixedAir setpointMMA3(model);
-
   SetpointManagerScheduled deckTempSPM = SetpointManagerScheduled(model,_deckTempSchedule);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -1372,12 +1306,6 @@ Loop addSystemType8(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   deckTempSPM.addToNode(node1);
-  Node node2 = coilHeatingElectric.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = coilCoolingWater.airOutletModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
-  Node node4 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA3.addToNode(node4);
 
   // Chilled Water Plant
 
@@ -1492,10 +1420,6 @@ Loop addSystemType9(Model & model)
 
   CoilHeatingGas coilHeatingGas = CoilHeatingGas(model,_alwaysOnSchedule);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
   SetpointManagerSingleZoneReheat setpointMSZR(model);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -1510,10 +1434,6 @@ Loop addSystemType9(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
-  Node node2 = coilHeatingGas.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
 
   AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
 
@@ -1562,10 +1482,6 @@ Loop addSystemType10(Model & model)
 
   CoilHeatingElectric coilHeatingElectric = CoilHeatingElectric(model,_alwaysOnSchedule);
 
-  SetpointManagerMixedAir setpointMMA1(model);
-
-  SetpointManagerMixedAir setpointMMA2(model);
-
   SetpointManagerSingleZoneReheat setpointMSZR(model);
 
   ControllerOutdoorAir controllerOutdoorAir = ControllerOutdoorAir(model);
@@ -1580,10 +1496,6 @@ Loop addSystemType10(Model & model)
 
   Node node1 = fan.outletModelObject()->cast<Node>();
   setpointMSZR.addToNode(node1);
-  Node node2 = coilHeatingElectric.outletModelObject()->cast<Node>();
-  setpointMMA1.addToNode(node2);
-  Node node3 = outdoorAirSystem.mixedAirModelObject()->cast<Node>();
-  setpointMMA2.addToNode(node3);
 
   AirTerminalSingleDuctUncontrolled terminal(model,_alwaysOnSchedule); 
 

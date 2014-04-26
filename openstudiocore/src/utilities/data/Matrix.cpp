@@ -351,4 +351,68 @@ namespace openstudio{
     return avg;
   }
 
+  /// get the connected components from an NxN adjacency matrix (1.0 for i-j connected, 0.0 for i-j not connected)
+  std::vector<std::vector<unsigned> > findConnectedComponents(const Matrix& matrix)
+  {
+    double tol = 0.001;
+
+    std::vector<std::vector<unsigned> > result;
+    
+    unsigned N = matrix.size1();
+    if (N != matrix.size2()){
+      return result;
+    }
+
+    Matrix A(N, N, 0.0);
+    for (unsigned i = 0; i < N; ++i){
+
+      A(i,i) = 1.0; // must be self connected
+      if ( abs(matrix(i,i) - 1.0) > tol){
+        // warn
+      }
+
+      for (unsigned j = i+1; j < N; ++j){
+
+        if (matrix(i,j) < 0){
+          // warn
+        }else if (matrix(i,j) > tol){
+          A(i,j) = 1.0;
+        }
+
+        if (matrix(j,i) < 0){
+          // warn
+        }else if (matrix(j,i) > tol){
+          A(j,i) = 1.0;
+        }
+      }
+    }
+
+    // raise A to the Nth power, maximum distance between two nodes
+    for (unsigned i = 0; i < N; ++i){
+      A = prod(A,A);
+    } 
+
+    std::set<unsigned> added;
+    for (unsigned i = 0; i < N; ++i){
+      if (added.find(i) != added.end()){
+        continue;
+      }
+
+      std::vector<unsigned> group;
+      group.push_back(i);
+      added.insert(i);
+
+      for (unsigned j = i+1; j < N; ++j){
+        if ((A(i,j) > 0) || (A(j,i) > 0)){
+          group.push_back(j);
+          added.insert(j);
+        }
+      }
+
+      result.push_back(group);
+    }
+
+    return result;
+  }
+
 } // openstudio

@@ -661,7 +661,7 @@ namespace detail {
       allFans = constantFans;
       allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
 
-      if( allFans.size() > 0 )
+      if( allFans.size() > 1 )
       {
         return false;
       }
