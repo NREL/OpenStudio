@@ -633,7 +633,7 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
          GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
 
          IF(APPLE)
-           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${_NAME}\")
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${final_name}\")
            FOREACH( PR IN LISTS PREREQUISITES )
              GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
              GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
@@ -770,7 +770,7 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
       IF(APPLE)
         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/Resources/\")
+          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/Resources/\")
       ENDIF()
       " )
     ELSE(WIN32 OR APPLE)
