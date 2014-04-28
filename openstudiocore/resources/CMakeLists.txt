@@ -316,6 +316,13 @@ if (APPLE)
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
            DESTINATION sharedresources
          )
+elseif(UNIX)
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+         )
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+         )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
            DESTINATION share/openstudio
