@@ -28,7 +28,7 @@ namespace runmanager {
 namespace detail {
 
 
-  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile)
+  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile, const std::string& jobType)
   {
     std::vector<Attribute> attributes;
     boost::optional<double> val;
@@ -38,42 +38,49 @@ namespace detail {
    val = t_sqlFile.totalSiteEnergy();
     if (val){
       attributes.push_back(Attribute("Total Site Energy", *val, "GJ"));
+      attributes.back().setSource(jobType);
     }
 
     //Net Site Energy (GJ)
     val = t_sqlFile.netSiteEnergy();
     if (val){
       attributes.push_back(Attribute("Net Site Energy", *val, "GJ"));
+      attributes.back().setSource(jobType);
     }
 
     //Total Source Energy (GJ)
     val = t_sqlFile.totalSourceEnergy();
     if (val){
       attributes.push_back(Attribute("Total Source Energy", *val, "GJ"));
+      attributes.back().setSource(jobType);
     }
 
     //Net Source Energy (GJ)
     val = t_sqlFile.totalSourceEnergy();
     if (val){
       attributes.push_back(Attribute("Net Source Energy", *val, "GJ"));
+      attributes.back().setSource(jobType);
     }
 
     //Annual Total Utility Cost ($)
     val = t_sqlFile.annualTotalUtilityCost();
     if (val){
       attributes.push_back(Attribute("Annual Total Utility Cost", *val, "$"));
+      attributes.back().setSource(jobType);
     }
 
     //Annual Electrict Total Cost ($)
     val = t_sqlFile.annualTotalCost(FuelType::Electricity);
     if (val){
       attributes.push_back(Attribute("Annual Electric Total Cost", *val, "$"));
+      attributes.back().setSource(jobType);
     }
 
     //Annual Gas Total Cost ($)
     val = t_sqlFile.annualTotalCost(FuelType::Gas);
     if (val){
       attributes.push_back(Attribute("Annual Gas Total Cost", *val, "$"));
+      // HERE
     }
 
     //Annual District Cooling Total Cost ($)

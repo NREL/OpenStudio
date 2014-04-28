@@ -294,6 +294,7 @@ class RULESET_API OSRunner {
   REGISTER_LOGGER("openstudio.ruleset.OSRunner");
 
   OSResult m_result;
+  std::string m_measureName;
   std::string m_channel;
 
   mutable boost::optional<openstudio::model::Model> m_lastOpenStudioModel;

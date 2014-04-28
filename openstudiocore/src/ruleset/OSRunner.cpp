@@ -118,8 +118,9 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 
 void OSRunner::prepareForUserScriptRun(const UserScript& userScript) {
   m_result = OSResult();
+  m_measureName = userScript.name();
   std::stringstream ss;
-  ss << "openstudio.ruleset." << userScript.name();
+  ss << "openstudio.ruleset." << m_measureName;
   m_channel = ss.str();
 }
 
@@ -152,6 +153,7 @@ void OSRunner::registerFinalCondition(const std::string& message) {
 }
 
 void OSRunner::registerAttribute(const Attribute& attribute) {
+  attribute.setSource(m_measureName);
   m_result.appendAttribute(attribute);
 }
 
