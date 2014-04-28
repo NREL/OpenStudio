@@ -61,7 +61,7 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleModel) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // run version translator on each example.osm
       openstudio::path modelPath = it->path() / toPath("example.osm");
@@ -104,7 +104,7 @@ TEST_F(OSVersionFixture,VersionTranslator_ExampleComponent) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // run version translator on each example.osm
       openstudio::path componentPath = it->path() / toPath("example.osc");
@@ -232,7 +232,7 @@ TEST_F(OSVersionFixture,VersionTranslator_AllDefaultObjects) {
 
   // iterate through osversion subfolders
   openstudio::path resources = resourcesPath() / toPath("osversion");
-  for (openstudio::directory_iterator it(resources); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(resources); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::filesystem::is_directory(it->status())) {
       // load each IddFile and create an IdfFile containing one of each of its objects
       openstudio::path iddPath = it->path() / toPath("OpenStudio.idd");

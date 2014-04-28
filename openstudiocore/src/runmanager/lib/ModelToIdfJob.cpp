@@ -366,7 +366,7 @@ namespace detail {
         if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
           LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
         }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native()));
         }
       }
 
@@ -377,7 +377,7 @@ namespace detail {
         if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
           LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
         }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native()));
         }
       }
 

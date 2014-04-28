@@ -3224,17 +3224,3 @@ OS:Rendering:Color,
   0,                                      !- Rendering Green Value
   255;                                    !- Rendering Blue Value
 
-OS:WeatherFile,
-  {cc5a7650-318f-41dd-a20a-acaeef25de6a}, !- Handle
-  Denver Centennial  Golden   Nr,         !- City
-  CO,                                     !- State Province Region
-  USA,                                    !- Country
-  TMY3,                                   !- Data Source
-  724666,                                 !- WMO Number
-  39.74,                                  !- Latitude {deg}
-  -105.18,                                !- Longitude {deg}
-  -7,                                     !- Time Zone {hr}
-  1829,                                   !- Elevation {m}
-  file:files/USA_CO_Golden-NREL.724666_TMY3.epw, !- Url
-  3CF64E88;                               !- Checksum
-

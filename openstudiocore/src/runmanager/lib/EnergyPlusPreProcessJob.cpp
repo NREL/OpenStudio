@@ -180,7 +180,7 @@ namespace detail {
         {
           try {
             boost::filesystem::remove(outfile);
-          } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+          } catch (const boost::filesystem::filesystem_error &e) {
             LOG(Error, "Error removing existing out.idf file: " + std::string(e.what()) + " continuing with run, if copy_file errors, the process will fail");
           }
         }

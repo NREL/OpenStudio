@@ -99,7 +99,7 @@ namespace openstudio{
     QByteArray oldpath = qgetenv("PATH");
     if (!t_pathToSSLLibraries.empty())
     {
-      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
+      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.string()).toUtf8());
     }
 
 #ifdef QT_NO_OPENSSL
@@ -613,12 +613,8 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-    QUrlQuery query;
-    query.addQueryItem("uids", toQString(uid));
-    query.addQueryItem("api_version", toQString(m_apiVersion));
-    url.setQuery(query);
-  
-    data.append(url.query());
+    url.addQueryItem("uids", toQString(uid));
+    data.append(url.encodedQuery());
     LOG(Warn, url.toString().toStdString());
 
     QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));

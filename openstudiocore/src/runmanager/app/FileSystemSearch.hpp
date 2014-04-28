@@ -49,34 +49,34 @@ namespace runmanager {
       private:
         REGISTER_LOGGER("openstudio.runmanager.detail.FileSystemSearchThread");
 
-        void no_push(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        void no_push(boost::filesystem::recursive_directory_iterator &i)
         {
           i.no_push();
         }
 
-        void no_push(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        void no_push(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have nopush - only recursive has it
         }
 
-        void pop(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        void pop(boost::filesystem::recursive_directory_iterator &i)
         {
           i.pop();
         }
 
-        void pop(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        void pop(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have pop - only recursive has it
           // but calling it on non-recursive will not help us here
           throw std::runtime_error("Invalid call of pop on non-recursive directory iterator");
         }
 
-        int level(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        int level(boost::filesystem::recursive_directory_iterator &i)
         {
           return i.level();
         }
 
-        int level(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        int level(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have level - return 0
           return 0;
@@ -133,7 +133,7 @@ namespace runmanager {
                     ++pathbegin;
                   }
 
-                  QString filestring = toQString(p.external_file_string());
+                  QString filestring = toQString(p.native());
 
                   if (   (extension.empty() || toString(p.extension()) == extension)
                       && (regex.isEmpty() || regex.exactMatch(filestring))
@@ -150,14 +150,14 @@ namespace runmanager {
 
                   }
                 }
-              } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+              } catch (const boost::filesystem::filesystem_error &e) {
                 //Ignore FS errors
                 LOG(Debug, "FileSystem Error: " << e.what());
               }
 
               try {
                 ++begin;
-              } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
+              } catch (const boost::filesystem::filesystem_error &) {
                 no_push(begin);
                 ++begin;
               }

@@ -236,7 +236,6 @@ SET( economics_src
 )
 
 SET( ${target_name}_depends
-  boost_log
   zkqwt
   sqlite
   litesql

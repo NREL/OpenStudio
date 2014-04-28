@@ -129,17 +129,17 @@ void FileInfo::prependRequiredFilePath(const openstudio::path &t_path)
 
 void FileInfo::addRequiredFile(const QUrl &t_url)
 {
-  addRequiredFile(t_url, toPath(toPath(t_url.toLocalFile()).filename()));
+  addRequiredFile(t_url, toPath(t_url.toLocalFile()).filename());
 }
   
 void FileInfo::addRequiredFile(const openstudio::path &t_location, const openstudio::path &t_target)
 {
-  addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native_file_string())), t_target);
+  addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native())), t_target);
 }
 
 void FileInfo::addRequiredFile(const openstudio::path &t_location)
 {
-  addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native_file_string())));
+  addRequiredFile(QUrl::fromLocalFile(toQString(t_location.native())));
 }
 
 bool FileInfo::hasRequiredFile(const openstudio::path &filename)
@@ -148,7 +148,7 @@ bool FileInfo::hasRequiredFile(const openstudio::path &filename)
        itr != requiredFiles.end();
        ++itr)
   {
-    if (toPath(itr->second.filename()) == filename)
+    if (itr->second.filename() == filename)
     {
       return true;
     }
@@ -163,7 +163,7 @@ std::pair<QUrl, openstudio::path> FileInfo::getRequiredFile(const openstudio::pa
        itr != requiredFiles.end();
        ++itr)
   {
-    if (toPath(itr->second.filename()) == filename)
+    if (itr->second.filename() == filename)
     {
       return *itr;
     }

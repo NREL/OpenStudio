@@ -15,9 +15,11 @@ SET(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
   utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/SetWindowToWallRatioByFacade/measure.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ExampleModel_Test.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel_Test.rb
-  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SimpleModel.osm
+  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
+  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_02_RotatedSpaceAndBuilding.osm
+  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/ReverseTranslatedModel.osm
+  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/SetWindowToWallRatioByFacade_Test.rb
+  utilities/BCL/Measures/SetWindowToWallRatioByFacade/tests/test.osm
   utilities/BCL/Measures/TestCreateWarningMsgs/measure.rb
   utilities/BCL/Measures/TestCreateWarningMsgs/measure.xml
   utilities/BCL/Measures/TestFlagAsNotApplicable/measure.rb

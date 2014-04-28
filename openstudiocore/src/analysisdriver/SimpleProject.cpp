@@ -233,7 +233,7 @@ namespace detail {
       return result;
     }
     StringVector candidateDirs;
-    for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+    for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
       if (boost::filesystem::is_directory(dit->status())) {
         candidateDirs.push_back(toString(dit->path().stem()));
       }
@@ -289,7 +289,7 @@ namespace detail {
       if (!boost::filesystem::exists(dir) || !boost::filesystem::is_directory(dir)) {
         return result;
       }
-      for (directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
+      for (boost::filesystem::directory_iterator dit(dir), ditEnd; dit != ditEnd; ++dit) {
         if (boost::filesystem::is_directory(dit->status())) {
           OptionalBCLMeasure candidate = BCLMeasure::load(dit->path());
           if (candidate) {
@@ -691,7 +691,7 @@ namespace detail {
     }
 
     // is not osm that made this osp
-    openstudio::path osmForThisOsp = projectDir().parent_path() / toPath(projectDir().stem());
+    openstudio::path osmForThisOsp = projectDir().parent_path() / projectDir().stem();
     osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
     if (currentSeedLocation.path() == osmForThisOsp) {
       LOG(Warn,"Cannot set seed to " << toString(currentSeedLocation.path()) <<
@@ -727,7 +727,7 @@ namespace detail {
     boost::filesystem::create_directories(seedDir);
 
     // copy over main file
-    openstudio::path newPath = seedDir / toPath(currentSeedLocation.path().filename());
+    openstudio::path newPath = seedDir / currentSeedLocation.path().filename();
     boost::filesystem::copy_file(currentSeedLocation.path(),newPath);
     FileReference newSeed(newPath);
     OS_ASSERT(newSeed.fileType() == fileType);
@@ -1211,7 +1211,7 @@ namespace detail {
 
     // add file to project
     copyModel(altModel,alternateModelsDir());
-    openstudio::path newPath = alternateModelsDir() / toPath(altModel.filename());
+    openstudio::path newPath = alternateModelsDir() / altModel.filename();
     OS_ASSERT(boost::filesystem::exists(newPath));
     upgradeModel(newPath);
 
@@ -1596,8 +1596,8 @@ namespace detail {
       return false;
     }
 
-    for (openstudio::directory_iterator it(newProjectDir),
-         itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(newProjectDir),
+         itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
@@ -1633,7 +1633,7 @@ namespace detail {
   std::vector<openstudio::path> SimpleProject_Impl::alternateModelPaths() const {
     std::vector<openstudio::path> result;
     if (boost::filesystem::exists(alternateModelsDir())) {
-      for (openstudio::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
+      for (boost::filesystem::directory_iterator it(alternateModelsDir()), itend; it != itend; ++it) {
         if (boost::filesystem::is_regular_file(it->path())) {
           FileReference temp(it->path());
           if (temp.fileType() == FileReferenceType::OSM) {
@@ -1668,15 +1668,15 @@ namespace detail {
     OS_ASSERT(boost::filesystem::exists(destinationDirectory));
 
     // copy primary file
-    openstudio::path newPath = destinationDirectory / toPath(modelPath.filename());
+    openstudio::path newPath = destinationDirectory / modelPath.filename();
     boost::filesystem::copy_file(modelPath,newPath,boost::filesystem::copy_option::overwrite_if_exists);
 
     // pick up auxillary data
-    openstudio::path companionFolder = modelPath.parent_path() / toPath(modelPath.stem());
+    openstudio::path companionFolder = modelPath.parent_path() / modelPath.stem();
     if (boost::filesystem::exists(companionFolder) &&
         boost::filesystem::is_directory(companionFolder))
     {
-      openstudio::path companionDestination = destinationDirectory / toPath(modelPath.stem());
+      openstudio::path companionDestination = destinationDirectory / modelPath.stem();
       if (minimal) {
         // only copy companionFolder/files
         openstudio::path filesFolder = companionFolder / toPath("files");
@@ -1754,7 +1754,7 @@ namespace detail {
 
     bool weatherFileLocated(false);
     openstudio::path modelPath = analysis().seed().path();
-    openstudio::path companionFolder = completeAndNormalize(modelPath.parent_path() / toPath(modelPath.stem()));
+    openstudio::path companionFolder = completeAndNormalize(modelPath.parent_path() / modelPath.stem());
     openstudio::path destinationFolder = companionFolder / toPath("files");
 
     // if absolute path, copy to companionFolder/files, set url relative to companionFolder
@@ -1766,7 +1766,7 @@ namespace detail {
 
     // if relative path, see if exists relative to companionFolder or destination folder
     if (!weatherFileLocated) {
-      openstudio::path filename = toPath(wfp->filename());
+      openstudio::path filename = wfp->filename();
       p = completeAndNormalize(companionFolder / *wfp);
       openstudio::path p2 = completeAndNormalize(companionFolder / filename);
       if (!(boost::filesystem::exists(p) || boost::filesystem::exists(p2))) {
@@ -1798,7 +1798,7 @@ namespace detail {
       if (!boost::filesystem::exists(destinationFolder)) {
         boost::filesystem::create_directories(destinationFolder);
       }
-      boost::filesystem::copy_file(p,destinationFolder / toPath(p.filename()),
+      boost::filesystem::copy_file(p,destinationFolder / p.filename(),
                                    boost::filesystem::copy_option::overwrite_if_exists);
     }
 
@@ -1820,7 +1820,7 @@ namespace detail {
 
   std::vector<BCLMeasure> SimpleProject_Impl::importSeedModelMeasures(ProgressBar* progressBar) {
     BCLMeasureVector result;
-    openstudio::path projectPath = seedDir() / toPath(seed().path().stem());
+    openstudio::path projectPath = seedDir() / seed().path().stem();
     if (boost::filesystem::exists(projectPath / toPath("project.osp"))) {
 
       // open seed model project
@@ -1943,7 +1943,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeOrphanedResultFiles() {
     // iterate through projectDir()
-    for(openstudio::directory_iterator it(projectDir()), endit; it != endit; ++it) {
+    for(boost::filesystem::directory_iterator it(projectDir()), endit; it != endit; ++it) {
       if (boost::filesystem::is_directory(it->status())) {
         boost::regex dpDir("dataPoint\\d+");
         boost::regex dakotaDir("[dD]akota");
@@ -1961,7 +1961,7 @@ namespace detail {
 
   BCLMeasure SimpleProject_Impl::addMeasure(const BCLMeasure& measure) {
     openstudio::path scriptsDir = this->scriptsDir();
-    openstudio::path dir = scriptsDir / toPath(measure.directory().stem());
+    openstudio::path dir = scriptsDir / measure.directory().stem();
 
     // DLM: boost::filesystem::exists can throw if the dir is in an indeterminate state (e.g. being deleted)
     bool fileExists = true;
@@ -2086,8 +2086,8 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
   }
 
   openstudio::path projectDatabasePath;
-  for (openstudio::directory_iterator it(projectDir),
-       itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+  for (boost::filesystem::directory_iterator it(projectDir),
+       itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
   {
     if (boost::filesystem::is_regular_file(it->status()))
     {
@@ -2167,8 +2167,8 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   if (!ignoreExistingFiles)
   {
-    for (openstudio::directory_iterator it(projectDir),
-        itEnd = openstudio::directory_iterator(); it != itEnd; ++it)
+    for (boost::filesystem::directory_iterator it(projectDir),
+        itEnd = boost::filesystem::directory_iterator(); it != itEnd; ++it)
     {
       if (boost::filesystem::is_directory(it->status()) ||
           boost::filesystem::is_regular_file(it->status()))
@@ -2576,7 +2576,7 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   // weather file path
   openstudio::path seedPath = project.analysis().seed().path();
   if (boost::filesystem::exists(seedPath)) {
-    openstudio::path searchPath = seedPath.parent_path() / toPath(seedPath.stem()) / toPath("files");
+    openstudio::path searchPath = seedPath.parent_path() / seedPath.stem() / toPath("files");
     LOG_FREE(Debug,"openstudio.analysisdriver.SimpleProject",
              "Appending search path for weather files: " << toString(searchPath));
     runOptions.setUrlSearchPaths(std::vector<openstudio::URLSearchPath>(1u,searchPath));

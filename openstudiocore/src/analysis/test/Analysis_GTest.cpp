@@ -424,9 +424,9 @@ TEST_F(AnalysisFixture,Analysis_JSONSerialization_Versioning) {
   EXPECT_TRUE(ok);
 
   // loop through all versions' json files
-  for (openstudio::directory_iterator it(dir); it != openstudio::directory_iterator(); ++it) {
+  for (boost::filesystem::directory_iterator it(dir); it != boost::filesystem::directory_iterator(); ++it) {
     if (boost::regex_match(toString(it->path().stem()),boost::regex("analysis_.*"))) {
-      LOG(Debug,"Loading " << toString(it->filename()) << ".");
+      LOG(Debug,"Loading " << toString(it->path().filename()) << ".");
 
       // open and check results
       AnalysisJSONLoadResult loadResult = loadJSON(it->path());

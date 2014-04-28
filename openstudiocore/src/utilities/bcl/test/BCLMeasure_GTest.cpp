@@ -19,6 +19,7 @@
 
 #include <gtest/gtest.h>
 #include <utilities/bcl/test/BCLFixture.hpp>
+#include <utilities/core/PathHelpers.hpp>
 #include <resources.hxx>
 
 #include <utilities/bcl/BCLFileReference.hpp>
@@ -36,25 +37,27 @@ TEST_F(BCLFixture, BCLMeasure)
 
   EXPECT_EQ("Set Window to Wall Ratio by Facade", measure->name());
   EXPECT_EQ("f347ae80-48b4-4c40-bfd4-6c5139b38136", measure->uid());
-  EXPECT_EQ("Description should be asked for upon creation.", measure->description());
-  EXPECT_EQ("Modeler description needs to be hand-edited.", measure->modelerDescription());
+  EXPECT_EQ("7c1d72ce-8e72-44a7-a0b0-d049cd5fb5d0", measure->versionId());
+  EXPECT_EQ("This measure will set the window to wall ratio for exterior surfaces with a specified orientation. If one or more windows exist on an affected wall, they will be removed and replaced with a single ribbon window. Doors will not be removed. If the requested ratio can't be achieved then the wall will remain untouched.", measure->description());
+  EXPECT_EQ("This measure identifies exterior surfaces of the proper orientation. Then it runs a method that removes existing windows and applies a new window with a specified window to wall ratio and sill height. The construction chosen for the new window is defaulted to what is assigned to the space, or inherited from a higher level object, such as the building. If the baseline model uses hard assigned constructions you may not get the expected results. The measure doesn't have any cost or lifecycle arguments, however if lifecycle objects exist for exterior wall and window constructions, then this measure will be able to calculate the economic impact of change in window to wall ratio.", measure->modelerDescription());
 
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType().value());
   EXPECT_FALSE(measure->usesSketchUpAPI());
   EXPECT_TRUE(measure->primaryRubyScriptPath());
-  EXPECT_EQ("Envelope", measure->taxonomyTag());
+  EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
-  EXPECT_EQ(4u, measure->files().size());
+  EXPECT_EQ(6u, measure->files().size());
   Q_FOREACH(BCLFileReference file, measure->files()){
     EXPECT_TRUE(exists(file.path()));
     EXPECT_FALSE(file.checkForUpdate());
   }
 
   openstudio::path dir2 = resourcesPath() / toPath("/utilities/BCL/Measures/SetWindowToWallRatioByFacade2/");
-  if (exists(dir2)){
-    boost::filesystem::remove_all(dir2);
+  if (QFile::exists(toQString(dir2))){
+    ASSERT_TRUE(removeDirectory(dir2));
   }
-  ASSERT_FALSE(exists(dir2));
+  // If this assertion fails, check that you don't have an Explorer window opened to the SetWindowToWallRatioByFacade2 directory
+  ASSERT_FALSE(QFile::exists(toQString(dir2)));
 
   boost::optional<BCLMeasure> measure2 = measure->clone(dir2);
   ASSERT_TRUE(measure2);
@@ -62,7 +65,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_TRUE(*measure == *measure2);
   EXPECT_FALSE(measure->directory() == measure2->directory());
   EXPECT_TRUE(dir2 == measure2->directory());
-  EXPECT_EQ(4u, measure2->files().size());
+  EXPECT_EQ(6u, measure2->files().size());
   
   measure2->setName("New Measure");
   EXPECT_FALSE(measure2->checkForUpdates());
@@ -76,7 +79,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_FALSE(*measure == *measure2);
   EXPECT_EQ("New Measure", measure2->name());
   ASSERT_TRUE(measure2->primaryRubyScriptPath());
-  EXPECT_EQ(4u, measure2->files().size());
+  EXPECT_EQ(6u, measure2->files().size());
 
   QFile file(toQString(measure2->primaryRubyScriptPath().get()));
   bool opened = file.open(QIODevice::WriteOnly | QIODevice::Text);
@@ -88,14 +91,14 @@ TEST_F(BCLFixture, BCLMeasure)
 
   measure2.reset();
   ASSERT_TRUE(exists(dir2));
-  boost::filesystem::remove_all(dir2);
+  ASSERT_TRUE(removeDirectory(dir2));
   ASSERT_FALSE(exists(dir2));
 
   std::string className = BCLMeasure::className("Another Measure");
   EXPECT_EQ("AnotherMeasure", className);
 
-  EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope", 
-                                          MeasureType::ModelMeasure, true) );
+  EXPECT_NO_THROW( measure2 = BCLMeasure("Another Measure", className, dir2, "Envelope.Fenestration", 
+    MeasureType::ReportingMeasure, false) );
   ASSERT_TRUE(measure2);
   ASSERT_TRUE(exists(dir2));
   EXPECT_EQ("Another Measure", measure2->name());
@@ -111,7 +114,7 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 {
   openstudio::path dir = boost::filesystem::system_complete(toPath("./TestMeasure/"));
   if(exists(dir)){
-    boost::filesystem::remove_all(dir);
+    removeDirectory(dir);
   }
   ASSERT_FALSE(exists(dir));
 

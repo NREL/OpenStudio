@@ -19,11 +19,20 @@ IF(GIT_FOUND)
   IF(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
     SET(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha                  
   ENDIF()
+  
+  GET_FILENAME_COMPONENT(GIT_DIR "${GIT_EXECUTABLE}" PATH)
+ELSE()
+  SET(GIT_DIR "")
+ENDIF()
+
+FIND_PROGRAM(PATCH_EXE patch HINTS "${GIT_DIR}" "${GIT_DIR}/../bin/")
+STRING(COMPARE EQUAL "${PATCH_EXE}" "PATCH_EXE-NOTFOUND" PATCH_EXE_NOTFOUND)
+IF ($PATCH_EXE_NOTFOUND)
+  MESSAGE(SEND_ERROR "Required program patch not found")
 ENDIF()
 
 # EnergyPlus Idd version
 SET(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
-
 
 OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 
@@ -273,15 +282,6 @@ MARK_AS_ADVANCED(Boost_LIB_DIAGNOSTIC_DEFINITIONS)
 MARK_AS_ADVANCED(ProcessorCount_cmd_getconf)
 MARK_AS_ADVANCED(ProcessorCount_cmd_sysctl)
 
-# Fix for OSX 10.9 Mavericks, allows osx_deployment_target=10.9
-if(APPLE)
-    set(apple-frameworks "-stdlib=libstdc++")
-    set(CMAKE_SHARED_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS " ${apple-frameworks} ${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_CXX_FLAGS " -stdlib=libstdc++ ${CMAKE_CXX_FLAGS}")
-endif()
-
 # Boost
 IF(APPLE)
   set(Boost_USE_STATIC_LIBS ON)  
@@ -299,8 +299,10 @@ IF (WIN32)
 #  ENDIF (MSVC)
 ENDIF (WIN32)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" "1.47" "1.47.0")
-FIND_PACKAGE( Boost 1.40.0 COMPONENTS filesystem regex program_options system thread date_time serialization)
+# DLM: should we allow boost to be linked dynamically on Unix or should we force static for all platforms?
+
+SET( Boost_ADDITIONAL_VERSIONS "1.55")
+FIND_PACKAGE( Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
 
 IF(Boost_THREAD_FOUND)
   OPTION( BUILD_BOOST "Build Boost" OFF)
@@ -542,24 +544,26 @@ ENDIF()
 
 IF(BUILD_BOOST)
   IF(APPLE)
-    STRING(REGEX MATCH "[0-9]+\\.[0-9]+" OSX_SDK_VERSION ${CMAKE_OSX_SYSROOT})
-    # Added cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" for Boost 1.47.0 to compile when osx_deployment_target=10.9
-    # These flags can be removed if Boost is updated to newer version (~1.55.0), may need --c++11 flag?
+    IF (CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
+      set(apple-frameworks "-stdlib=libc++")
+    ELSE()
+      set(apple-frameworks "-stdlib=libstdc++")
+    ENDIF()
     ExternalProject_Add( Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
-      URL_MD5 b0d9b288627b6a57d41d425d4f467592
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND patch -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_43.diff
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags="-stdlib=libstdc++" linkflags="-stdlib=libstdc++" variant=release variant=debug address-model=32_64 macosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} macosx-version=${OSX_SDK_VERSION}  architecture=x86 --layout=tagged  --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51a.diff < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51b.diff
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-frameworks} linkflags=${apple-frameworks} variant=debug,release address-model=32_64 architecture=x86 define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
   ELSEIF(UNIX)
     ExternalProject_Add( Boost
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
-      URL_MD5 b0d9b288627b6a57d41d425d4f467592
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+      URL_MD5 93780777cfbf999a600f62883bd54b17
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug variant=release --layout=tagged --without-python --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT} install
       INSTALL_COMMAND ""
       )
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -570,24 +574,28 @@ IF(BUILD_BOOST)
     SET(B2_TOOLSET "")
     IF(MSVC90)
       SET(B2_TOOLSET "toolset=msvc-9.0")
+    ELSEIF(MSVC10)
+      SET(B2_TOOLSET "toolset=msvc-10.0")
+    ELSEIF(MSVC12)
+      SET(B2_TOOLSET "toolset=msvc-12.0")
     ENDIF(MSVC90)
 
     IF(CMAKE_CL_64)
       ExternalProject_Add( Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
-        URL_MD5 b0d9b288627b6a57d41d425d4f467592
-        PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL_MD5 93780777cfbf999a600f62883bd54b17
+        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
+        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ELSE()
       ExternalProject_Add( Boost
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_47_0.tar.gz
-        URL_MD5 b0d9b288627b6a57d41d425d4f467592
-        PATCH_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        CONFIGURE_COMMAND ""
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 --build-type=minimal  --without-python  --without-math --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
+        URL_MD5 93780777cfbf999a600f62883bd54b17
+        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
+        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
+        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-serialization --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
         INSTALL_COMMAND ""
         )
     ENDIF()
@@ -595,31 +603,6 @@ IF(BUILD_BOOST)
     SET(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
   ENDIF()
 ENDIF()
-
-
-IF(BUILD_BOOST)
-  list(APPEND BoostLog_DEPENDS Boost)
-ENDIF()
-
-ExternalProject_Add( BoostLog
-  DEPENDS ${BoostLog_DEPENDS}
-  URL ${CMAKE_SOURCE_DIR}/dependencies/boost-log-1.1.tar.gz
-  URL_MD5 ae76f0c29ca42ba0dd889a9932c44999
-  PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/BoostLog ${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog
-  INSTALL_COMMAND ""
-  CMAKE_CACHE_ARGS
-  -DBOOST_ROOT:STRING=${BOOST_ROOT}
-  -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
-  -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-  -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-  -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-  -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-  -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-  -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-  -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-  -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-  -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-   )
 
 ExternalProject_Add( GoogleTest
   URL http://developer.nrel.gov/downloads/buildings/openstudio/src/gtest-1.7.0.tar.gz
@@ -697,11 +680,8 @@ ENDIF()
 
 set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build)
 
-set(BoostLog_DIR "${CMAKE_BINARY_DIR}/BoostLog-prefix/src/BoostLog-build")
-
 # Set up the dependencies for OpenStudioCore
-SET(OpenStudioCore_DEPENDS BoostLog)
-LIST(APPEND OpenStudioCore_DEPENDS GoogleTest)
+SET(OpenStudioCore_DEPENDS GoogleTest)
 
 IF(BUILD_QT)
   LIST(APPEND OpenStudioCore_DEPENDS Qt)
@@ -785,7 +765,11 @@ ExternalProject_Add( OpenStudioCore
     -DRUBY_LIBRARY:STRING=${RUBY_LIBRARY}
     -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
     -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
+<<<<<<< HEAD
     -DBoostLog_DIR:STRING=${BoostLog_DIR}
+=======
+    -DQJSON_DIR:STRING=${QJSON_DIR}
+>>>>>>> remotes/origin/68591002_UpdateBoost154
     -DPACKAGE_RADIANCE_AND_ENERGYPLUS:BOOL=${PACKAGE_RADIANCE_AND_ENERGYPLUS}
     -DENERGYPLUS_LOCATION:PATH=${ENERGYPLUS_LOCATION}
     -DRADIANCE_LOCATION:PATH=${RADIANCE_LOCATION}

@@ -46,7 +46,7 @@ namespace detail {
 
     if (t_jobTree.allParams().has("flatoutdir"))
     {
-      openstudio::path outdir = openstudio::toPath(t_jobTree.outdir().filename());
+      openstudio::path outdir = t_jobTree.outdir().filename();
       map["outdir"] = toQString(outdir);
     }
 

@@ -54,7 +54,6 @@ SET( ${target_name}_depends
   openstudio_utilities
   openstudio_model
   zkexpat
-  boost_log
 )
 
 ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} )

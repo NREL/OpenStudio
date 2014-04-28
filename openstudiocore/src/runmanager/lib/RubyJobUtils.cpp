@@ -713,8 +713,8 @@ std::vector<RubyJobBuilder> RubyJobBuilder::createRubyJobsFromFolder(
       && boost::filesystem::exists(t_path)
       && boost::filesystem::is_directory(t_path))
   {
-    for(boost::filesystem::basic_directory_iterator<openstudio::path> itr(t_path);
-        itr != boost::filesystem::basic_directory_iterator<openstudio::path>();
+    for(boost::filesystem::directory_iterator itr(t_path);
+        itr != boost::filesystem::directory_iterator();
         ++itr)
     {
       openstudio::path p = itr->path();

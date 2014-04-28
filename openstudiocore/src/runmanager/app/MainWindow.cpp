@@ -176,7 +176,7 @@ namespace runmanager {
     {
       if (!boost::filesystem::exists(itr->localBinPath))
       {
-        badtools.insert(toString(itr->localBinPath.external_file_string()));
+        badtools.insert(toString(itr->localBinPath.native()));
       }
     }
 
@@ -386,7 +386,7 @@ namespace runmanager {
   void MainWindow::settingsFileInfo()
   {
     if (QMessageBox::information(this, "Settings File", QString("The settings and job queue are currently stored in the file: ") 
-          + toQString(m_runmanager.dbPath().external_file_string()),
+          + toQString(m_runmanager.dbPath().native()),
           QMessageBox::Ok | QMessageBox::RestoreDefaults)
           == QMessageBox::RestoreDefaults)
     {
@@ -428,7 +428,7 @@ namespace runmanager {
   {
     if (toPath(ui.txtRootPath->text()) != p)
     {
-      ui.txtRootPath->setText(toQString(p.external_file_string()));
+      ui.txtRootPath->setText(toQString(p.native()));
     }
   }
 
@@ -675,10 +675,10 @@ namespace runmanager {
     if (openstudio::toString(t_file.stem()) == "in")
     {
       // The file is called "in", let's use the parent path's name as our job name
-      jobname = openstudio::toPath(parentdir.filename());
+      jobname = parentdir.filename();
     } else {
       // Let's use the stem of the file name to create a working dir, since it's a meaningful name
-      jobname = openstudio::toPath(t_file.stem());     
+      jobname = t_file.stem();     
     }
 
     //std::string workflowkey = "workflow-" + t_wf.key();
@@ -806,7 +806,7 @@ namespace runmanager {
         {
           text += "None";
         } else {
-          text += toQString(epw.external_file_string());
+          text += toQString(epw.native());
         }
       }
 
@@ -866,7 +866,7 @@ namespace runmanager {
   {
     if (!t_file.isEmpty())
     {
-      QString filename = toQString(toPath(t_file).external_file_string());
+      QString filename = toQString(toPath(t_file).native());
       int i = t_qcb.findText(filename);
       if (i == -1)
       {

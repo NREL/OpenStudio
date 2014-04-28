@@ -153,7 +153,7 @@ openstudio::path ScriptFolderListView::selectedFolder() const {
       {
         if (itr->second == selectedCollapsibleItem->itemList())
         {
-          return openstudio::toPath(itr->first.filename());
+          return itr->first.filename();
         }
       }
     }

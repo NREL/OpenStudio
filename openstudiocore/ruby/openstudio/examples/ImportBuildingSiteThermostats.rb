@@ -45,7 +45,7 @@ end
 idfFile = oIdfFile.get()
 
 # save idf
-File.open(idfPath.replace_extension(OpenStudio::Path.new('newidf').string).to_s, 'w') do |file|
+File.open(idfPath.replace_extension('newidf').to_s, 'w') do |file|
   file << idfFile.to_s
 end
 

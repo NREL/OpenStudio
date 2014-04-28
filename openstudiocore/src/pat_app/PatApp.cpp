@@ -1287,7 +1287,7 @@ bool PatApp::openFile(const QString& fileName)
       } else {
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
-      openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
+      openstudio::path osmForThisOsp = project->projectDir().parent_path() / project->projectDir().stem();
       osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
       if (boost::filesystem::exists(osmForThisOsp)) {
         QMessageBox::warning(mainWindow,

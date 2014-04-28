@@ -111,8 +111,8 @@ MARK_AS_ADVANCED( REQUIRE_DAKOTA )
 # Use PCH
 OPTION( USE_PCH "Use precompiled headers" OFF )
 
-# Enable support for boost > 1.42 ish by forcing boost_filesystem_version 2
-ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=2)
+# Enable support for boost > 1.49 ish by forcing boost_filesystem_version 3
+ADD_DEFINITIONS(-DBOOST_FILESYSTEM_VERSION=3)
 
 IF(WIN32)
   ADD_DEFINITIONS(-DNOMINMAX)
@@ -317,11 +317,11 @@ IF( BUILD_WITH_OPENSSL )
   ENDIF()
   
   #enable libssh
-  ADD_DEFINITIONS(-DLIBSSH_STATIC)
+  #ADD_DEFINITIONS(-DLIBSSH_STATIC)
   
   # add sub directory
-  ADD_SUBDIRECTORY( src/libssh )
-  INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
+  #ADD_SUBDIRECTORY( src/libssh )
+  #INCLUDE_DIRECTORIES( SYSTEM src/libssh/include/ )
       
 ENDIF()
 
@@ -563,26 +563,25 @@ ENDIF (WIN32)
 
 MARK_AS_ADVANCED(Boost_DIR)
 
-SET( Boost_ADDITIONAL_VERSIONS "1.40" )
-FIND_PACKAGE( Boost 1.40.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization)
+SET( Boost_ADDITIONAL_VERSIONS "1.55" )
+FIND_PACKAGE( Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
 INCLUDE_DIRECTORIES(SYSTEM ${Boost_INCLUDE_DIR} )
 MARK_AS_ADVANCED( Boost_LIB_DIAGNOSTIC_DEFINITIONS )
-
-# include after other boost include directories for cases where boost version < 1.47
-INCLUDE_DIRECTORIES( SYSTEM ${CMAKE_SOURCE_DIR}/../dependencies/boost_geometry )
 
 # require these run time checks
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 
-# Boost-log
-ADD_DEFINITIONS( -DBOOST_LOG_NO_LIB ) # disable autolinking
-ADD_DEFINITIONS( -DBOOST_LOG_SETUP_NO_LIB ) # disable autolinking
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 
-find_package(BoostLog REQUIRED)
-INCLUDE_DIRECTORIES( SYSTEM ${BoostLog_INCLUDE_DIRS} )
-LINK_DIRECTORIES( ${BoostLog_LIBRARY_DIRS} )
+# check if boost is being linked dynamically
+# DLM: should we allow this on Unix or should we force static for all platforms?
+STRING(REGEX MATCH "^.*libboost_log.so$" BOOST_IS_DYN_LIBS "${Boost_LOG_LIBRARY_RELEASE}" )
+IF (BOOST_IS_DYN_LIBS)
+  add_definitions(-DBOOST_ALL_DYN_LINK)
+ENDIF()
 
 # SQLite definitions, used in sqlite and litesql
 ADD_DEFINITIONS( -DSQLITE_THREADSAFE=1 ) # 1 is default, serial access
@@ -815,11 +814,11 @@ endif( BUILD_DOCUMENTATION )
 
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
-IF( BUILD_WITH_OPENSSL )
-  SET(LIBSSH_EXPORT "libssh_static")
-ELSE( BUILD_WITH_OPENSSL )
-  SET(LIBSSH_EXPORT "")
-ENDIF( BUILD_WITH_OPENSSL )
+#IF( BUILD_WITH_OPENSSL )
+#  SET(LIBSSH_EXPORT "libssh_static")
+#ELSE( BUILD_WITH_OPENSSL )
+#  SET(LIBSSH_EXPORT "")
+#ENDIF( BUILD_WITH_OPENSSL )
 
 IF( WIN32 )
   SET(QTWINMIGRATE_EXPORT "qtwinmigrate")
@@ -844,7 +843,6 @@ export(TARGETS openstudio_runmanager
                openstudio_lib
                openstudio_sdd
                openstudio_contam
-               ${LIBSSH_EXPORT}
                ${QTWINMIGRATE_EXPORT}
                zkexpat
                zkqwt

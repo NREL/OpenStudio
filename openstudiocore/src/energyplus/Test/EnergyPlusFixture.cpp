@@ -54,11 +54,11 @@ void EnergyPlusFixture::SetUpTestCase() {
   // delete translated components
   BOOST_FOREACH(const ComponentDirectoryAndType& idfComponent,idfComponents) {
     // delete any *.osc and oscomponent.xml files in the directory
-    for (openstudio::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
+    for (boost::filesystem::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
       if (boost::filesystem::is_regular_file(it->status())) {
         std::string ext = openstudio::toString(boost::filesystem::extension(*it));
         if (ext == ".osc") { boost::filesystem::remove(it->path()); }
-        if ((ext == ".xml") && (openstudio::toString(it->filename()) == "oscomponent")) { 
+        if ((ext == ".xml") && (openstudio::toString(it->path().filename()) == "oscomponent")) { 
           boost::filesystem::remove(it->path()); 
         }
       }

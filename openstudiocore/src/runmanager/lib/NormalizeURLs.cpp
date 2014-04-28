@@ -97,7 +97,7 @@ namespace runmanager {
       return t_filename;
     } else {
       openstudio::path newfilename 
-        = toPath(t_filename.stem() + toPath("-" + boost::lexical_cast<std::string>(existingcount)).file_string() + t_filename.extension());
+        = toPath(t_filename.stem().string() + toPath("-" + boost::lexical_cast<std::string>(existingcount)).string() + t_filename.extension().string());
 
       // Make sure both the newly generated file name and the passed in file name are tracked for counting purposes
       m_filenames.insert(newfilename);

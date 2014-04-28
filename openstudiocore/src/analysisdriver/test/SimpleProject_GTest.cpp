@@ -455,7 +455,7 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
       boost::filesystem::remove_all(remoteDir);
     }
     boost::filesystem::create_directory(remoteDir);
-    openstudio::path zipFilePath = remoteDir / toPath(tempZipFilePath.filename());
+    openstudio::path zipFilePath = remoteDir / tempZipFilePath.filename();
     boost::filesystem::copy_file(tempZipFilePath,zipFilePath);
     UnzipFile unzip(zipFilePath);
     unzip.extractAllFiles(remoteDir);

@@ -48,6 +48,7 @@
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/SIUnit.hpp>
 
+#include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Path.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -98,8 +99,7 @@ std::vector<openstudio::path> ProjectVersioningFixture::projectDatabasePaths(
     basePath = toPath("ProjectVersioningFixtureData") / toPath(toString(uuid));
   }
 
-  for (openstudio::directory_iterator it(basePath);
-       it != openstudio::directory_iterator(); ++it)
+  for (boost::filesystem::directory_iterator it(basePath), itend; it != itend; ++it)
   {
     if (getFileExtension(it->path()) == "osp") {
       result.push_back(it->path());

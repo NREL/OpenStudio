@@ -251,7 +251,7 @@ namespace detail {
           to = toPath(outfilename);
         } else {
           to = toPath(
-              boost::filesystem::path(outfilename).stem() + "-" + boost::lexical_cast<std::string>(namecount) 
+              boost::filesystem::path(outfilename).stem().string() + "-" + boost::lexical_cast<std::string>(namecount) 
               + boost::filesystem::extension(outfilename));
         }
 

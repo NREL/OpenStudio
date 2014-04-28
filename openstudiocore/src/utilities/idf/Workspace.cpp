@@ -2448,7 +2448,7 @@ namespace detail {
             QUrl destinationURL;
 
             openstudio::path relativepath = toPath(sourceurl.toLocalFile());
-            openstudio::path filename = toPath(relativepath.filename());
+            openstudio::path filename = relativepath.filename();
 
             LOG(Debug, "Extracted filename: " << toString(filename));
 

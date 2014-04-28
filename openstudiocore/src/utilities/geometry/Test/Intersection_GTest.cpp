@@ -626,3 +626,70 @@ TEST_F(GeometryFixture, JoinAll)
   EXPECT_TRUE(found1);
   EXPECT_TRUE(found2);
 }
+
+
+TEST_F(GeometryFixture, RemoveSpikes)
+{
+  double tol = 0.01;
+
+  std::vector<Point3d> points;
+  std::vector<Point3d> expected;
+  std::vector<Point3d> result;
+
+  // spike at beginning
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 10, 0)); // the spike
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+    points.push_back(Point3d(10, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike at beginning 2
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(10, 10, 0)); // the spike
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike in middle
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(-5, 0, 0)); // the spike
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+}

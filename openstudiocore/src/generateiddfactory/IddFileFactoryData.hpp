@@ -22,12 +22,13 @@
 
 #include <generateiddfactory/GenerateIddFactoryOutFiles.hpp>
 
-#include <utilities/core/Path.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <vector>
 
 namespace openstudio {
 
+typedef boost::filesystem::path path;
 typedef std::pair<std::string,std::string> StringPair;
 
 class IddFileFactoryData {

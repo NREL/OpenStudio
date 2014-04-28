@@ -121,7 +121,7 @@ namespace runmanager {
           {
             boost::filesystem::remove(wDB);
           }
-        } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
+        } catch (const boost::filesystem::filesystem_error &) {
           throw std::runtime_error("Unable to delete database file: " + toString(wDB));
         }
       }
@@ -427,10 +427,10 @@ namespace runmanager {
     return m;
   }
 
-  void RunManager::setSLURMPassword(const std::string &t_password)
-  {
-    m_impl->setSLURMPassword(t_password);
-  }
+//  void RunManager::setSLURMPassword(const std::string &t_password)
+//  {
+//    m_impl->setSLURMPassword(t_password);
+//  }
 
 
   std::map<std::string, double> RunManager::statistics() const
