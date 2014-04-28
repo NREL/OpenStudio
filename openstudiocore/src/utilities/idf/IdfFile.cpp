@@ -661,7 +661,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       while((!foundEndLine) && (std::getline(filt, line))){
         ++lineNum;
 
-        // add line to text, include newline seperator
+        // add line to text, include newline separator
         text += (line + idfRegex::newLinestring());
 
         // check if we have found the last field

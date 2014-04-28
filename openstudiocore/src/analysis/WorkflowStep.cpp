@@ -246,7 +246,8 @@ namespace detail {
     }
     else {
       // WorkItem -- Try to update files.
-      if (workItemType() == runmanager::JobType::UserScript) {
+      if (workItemType() == runmanager::JobType::UserScript || workItemType() == runmanager::JobType::Ruby) {
+        LOG(Debug, "Updating paths for ruby / userscript job. Keyname: " + m_workItem->jobkeyname);
         runmanager::RubyJobBuilder rjb(*m_workItem,originalBase,newBase);
         m_workItem = rjb.toWorkItem();
       }

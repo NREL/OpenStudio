@@ -70,8 +70,8 @@ OptionalModelObject ReverseTranslator::translateEvaporativeFluidCoolerSingleSpee
     }
 
     // FanPoweratDesignAirFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate);
+    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
+    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower);
     if( value )
     {
       evapCooler->setFanPoweratDesignAirFlowRate(value.get());
@@ -107,8 +107,8 @@ OptionalModelObject ReverseTranslator::translateEvaporativeFluidCoolerSingleSpee
     }
   
     // UfactorTimesAreaValueatDesignAirFlowRate
-    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate);
-    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate);
+    value = workspaceObject.getDouble(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
+    s = workspaceObject.getString(EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue);
     if( value )
     {
       evapCooler->setUfactorTimesAreaValueatDesignAirFlowRate(value.get());

@@ -13,14 +13,20 @@ SET( ${target_name}_src
   PrjDefines.hpp
   PrjModel.hpp
   PrjModel.cpp
-  PrjPublic.hpp
-  PrjPublic.cpp
-  PrjPrivate.hpp
-  PrjPrivate.cpp
+  PrjModelImpl.hpp
+  PrjModelImpl.cpp
+  PrjObjects.hpp
+  PrjObjects.cpp
+  PrjObjectsImpl.hpp
+  PrjObjectsImpl.cpp
   PrjSubobjects.hpp
   PrjSubobjects.cpp
-  PrjSubobjectsPrivate.hpp
-  PrjSubobjectsPrivate.cpp
+  PrjSubobjectsImpl.hpp
+  PrjSubobjectsImpl.cpp
+  PrjAirflowElements.hpp
+  PrjAirflowElements.cpp
+  PrjAirflowElementsImpl.hpp
+  PrjAirflowElementsImpl.cpp
 )
 
 # resource files

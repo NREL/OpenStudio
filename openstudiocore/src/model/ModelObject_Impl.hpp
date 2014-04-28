@@ -255,6 +255,11 @@ namespace detail {
      *  or required boolean fields. */
     void setBooleanFieldValue(unsigned index, bool value);
 
+    /** This is solely to prevent implicit conversion of types to bool. This will cause a link time
+     *  error if anything other than a bool is used for value. This has no implementation. */
+    template <class T>
+    void setBooleanFieldValue(unsigned index, const T& value);
+
     /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the 
      *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if 
      *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry

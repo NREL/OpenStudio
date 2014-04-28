@@ -48,7 +48,7 @@ public:
 
   REGISTER_LOGGER("CoreFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 

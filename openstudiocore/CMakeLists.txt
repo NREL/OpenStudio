@@ -12,7 +12,7 @@ SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VE
 SET(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}")
 
 # EnergyPlus Idd version 
-SET(ENERGYPLUS_VERSION "8.0" CACHE INTERNAL "EnergyPlus Version")
+SET(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
 
 # Dakota version
 SET(DAKOTA_VERSION "5.3.1")
@@ -44,6 +44,10 @@ OPTION( BUILD_DOCUMENTATION "Build Documentation" OFF )
 # Build CSharp bindings
 # Requires: SWIG
 OPTION( BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF )
+
+# Build Java bindings
+# Requires: SWIG
+OPTION( BUILD_JAVA_BINDINGS "Build Java bindings" OFF )
 
 # Build V8 Node bindings
 # Requires: SWIG, Node
@@ -355,6 +359,15 @@ IF ( BUILD_CSHARP_BINDINGS )
   SET( ALL_CSHARP_BINDING_TARGETS "" ) # global list
 ENDIF()
 
+# JAVA
+IF ( BUILD_JAVA_BINDINGS )
+  find_package(JNI)
+  find_package(Java)
+  SET( ALL_JAVA_BINDING_TARGETS "" ) # global list
+  SET( ALL_JAVA_SRC_DIRECTORIES "" ) # global list
+ENDIF()
+
+
 IF(BUILD_NODE_MODULES)
   ADD_DEFINITIONS(-DBUILD_NODE_MODULE)
 ENDIF()
@@ -461,7 +474,7 @@ IF( BUILD_DOCUMENTATION )
   FOREACH( D ${doxygen_directories} )
     STRING( REPLACE "/" "_" DOC_NAME ${D} )
     IF( ${D} MATCHES "utilities/idd" )
-      # We want to build the idd documentation seperately because of the generated files
+      # We want to build the idd documentation separately because of the generated files
       SET( DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"" )
       SET( DOXY_ADDITIONAL_FILES "" )
@@ -739,6 +752,11 @@ IF(BUILD_CSHARP_BINDINGS)
   ADD_SUBDIRECTORY( csharp )
 ENDIF(BUILD_CSHARP_BINDINGS)
 
+# java, after loading projects
+IF(BUILD_JAVA_BINDINGS)
+  ADD_SUBDIRECTORY( java )
+ENDIF(BUILD_JAVA_BINDINGS)
+
 # v8-node
 IF(BUILD_NODE_MODULES)
   ADD_SUBDIRECTORY( v8-node )
@@ -766,6 +784,12 @@ if ( BUILD_CSHARP_BINDINGS )
   ADD_CUSTOM_TARGET( ALL_CSHARP_BINDINGS )
   ADD_DEPENDENCIES( ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS} )
 endif ( BUILD_CSHARP_BINDINGS )
+
+if ( BUILD_JAVA_BINDINGS )
+  ADD_CUSTOM_TARGET( ALL_JAVA_BINDINGS )
+  #  ADD_DEPENDENCIES( ALL_JAVA_BINDINGS java_sdk ${ALL_JAVA_BINDING_TARGETS} )
+endif ( BUILD_JAVA_BINDINGS )
+
 
 IF(BUILD_V8_BINDINGS)
   ADD_CUSTOM_TARGET( ALL_V8_BINDINGS )

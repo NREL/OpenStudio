@@ -100,7 +100,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.0;
+  Version,8.1;
 
   Building,
     Building,                !- Name
@@ -2657,7 +2657,7 @@
   Fan:VariableVolume,
     Supply Fan 1,            !- Name
     FanAvailSched,           !- Availability Schedule Name
-    0.7,                     !- Fan Efficiency
+    0.7,                     !- Fan Total Efficiency
     600.0,                   !- Pressure Rise {Pa}
     autosize,                !- Maximum Flow Rate {m3/s}
     Fraction,                !- Fan Power Minimum Flow Rate Input Method
@@ -3041,10 +3041,13 @@
     Boiler:HotWater,         !- Equipment 1 Object Type
     Central Boiler;          !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Boiler:HotWater="Central Boiler",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
+  Output:PreprocessorMessage,
+    Conversion 7.2 => 8.0,   !- Preprocessor Name
+    Warning,                 !- Error Severity
+    Boiler:HotWater="Central Boiler",  !- Message Line 1
+    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
+    InputOutputReference document for details.;  !- Message Line 3
+
   Boiler:HotWater,
     Central Boiler,          !- Name
     NaturalGas,              !- Fuel Type
@@ -3318,10 +3321,13 @@ InputOutputReference document for details.;
     Chiller:Electric,        !- Equipment 1 Object Type
     Central Chiller;         !- Equipment 1 Name
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Chiller:Electric="Central Chiller",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
+  Output:PreprocessorMessage,
+    Conversion 7.2 => 8.0,   !- Preprocessor Name
+    Warning,                 !- Error Severity
+    Chiller:Electric="Central Chiller",  !- Message Line 1
+    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
+    InputOutputReference document for details.;  !- Message Line 3
+
   Chiller:Electric,
     Central Chiller,         !- Name
     AirCooled,               !- Condenser Type

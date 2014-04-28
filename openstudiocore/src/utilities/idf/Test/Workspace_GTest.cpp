@@ -1799,7 +1799,7 @@ TEST_F(IdfFixture, Workspace_Signals)
   IdfFile idfFile(IddFileType::EnergyPlus);
   Workspace workspace(idfFile);
 
-  WorkspaceReciever* reciever;
+  WorkspaceReciever* reciever = NULL;
 
   ASSERT_NO_THROW( reciever = new WorkspaceReciever(workspace) );
 

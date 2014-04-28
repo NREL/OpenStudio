@@ -22,6 +22,9 @@
 
 #include <model/ModelAPI.hpp>
 #include <model/ModelObject_Impl.hpp>
+#include <model/Meter.hpp>
+
+#include <utilities/core/StaticInitializer.hpp>
 
 namespace openstudio {
   
@@ -151,6 +154,22 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.Meter");
+  };
+
+  struct MeterRegexInitializer : StaticInitializer<MeterRegexInitializer>
+  {
+    static void initialize()
+    {
+      openstudio::model::Meter::meterRegex();
+    }
+  };
+
+  struct MakeSureMeterRegexInitializerIsInitialized
+  {
+    MakeSureMeterRegexInitializerIsInitialized()
+    {}
+
+    MeterRegexInitializer m_i;
   };
 
 } // detail

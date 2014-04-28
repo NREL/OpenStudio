@@ -37,7 +37,7 @@ FOREACH( f ${RUBY_TEST_SRC} )
       IF(MSVC)
         ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
-          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       ELSE()
         # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
@@ -205,10 +205,17 @@ ENDIF()
 
 # run all the unit tests
 IF( ENABLE_TEST_RUNNER_TARGETS )
-  ADD_CUSTOM_TARGET( ruby_run_tests
-    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
-    DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
-  )
+  IF(MSVC)
+    ADD_CUSTOM_TARGET( ruby_run_tests
+      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+    )  
+  ELSE()
+    ADD_CUSTOM_TARGET( ruby_run_tests
+      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+    )  
+  ENDIF()
 ENDIF()
 
 # install the files

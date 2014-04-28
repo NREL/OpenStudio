@@ -17,6 +17,39 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
+module TransformationHelper  # this was added to identify if a group in SketchUp has scale of -1
+
+  def flipped_x?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_x < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  def flipped_y?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_y < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  def flipped_z?
+    dot_x, dot_y, dot_z = axes_dot_products()
+    dot_z < 0 && flipped?(dot_x, dot_y, dot_z)
+  end
+
+  private
+
+  def axes_dot_products
+    [
+        xaxis.dot(X_AXIS),
+        yaxis.dot(Y_AXIS),
+        zaxis.dot(Z_AXIS)
+    ]
+  end
+
+  def flipped?(dot_x, dot_y, dot_z)
+    dot_x * dot_y * dot_z < 0
+  end
+
+end
+
 # Each user script is implemented within a class that derives from OpenStudio::Ruleset::UserScript
 class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
 
@@ -170,7 +203,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
             end
           end #end of edges.each do
 
-          if edge_faces.uniq.size >= 3
+          if edge_faces.uniq.size >= 3 # todo - update logic, this will catch doors with split floor under them
             #this is a base surface
             base_surface_array << entity #later make hash that includes value of an array of sub surfaces?
           elsif edge_faces.uniq.size == 1 and edge_faces.size == edges.size #this second test checks for edge that doesn't match to any faces
@@ -210,8 +243,6 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
         end #end of if entity.class.to_s == "Sketchup::Face"
       end #end of entities.each.do
 
-      #todo - update base surfaces to include area from doors
-
       #create base surfaces
       base_surface_array.each do |entity|
 
@@ -242,7 +273,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           window_hash.each do |k,v|
             if v == entity
 
-              # get vertices for OpenStudio base surface
+              # get vertices for OpenStudio sub surface
               loop = k.outer_loop
               vertices = loop.vertices
 
@@ -273,7 +304,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               # temp array to fix base surface
               possible_source_surfaces << k
 
-              # get vertices for OpenStudio base surface
+              # get vertices for OpenStudio sub surface
               loop = k.outer_loop
               vertices = loop.vertices
 
@@ -291,15 +322,23 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               new_sub_surface = OpenStudio::Model::SubSurface.new(newVertices,@background_osm_model)
               new_sub_surface.setSurface(new_surface)
 
-              #remove edges from door if shared with base surface
+              # store all sub surface edges
+              doorEdges = []
+              doorPoints = []
               edges = loop.edges
               edges.each do |edge|
-                if edge.faces.include? v
-                  erasedEdges << [edge.vertices[0].position,edge.vertices[1].position]
-                  edge.erase!
-                  remake_base_surface = true
-                else
-                end
+                doorEdges << [edge.vertices[0].position,edge.vertices[1].position,k,v] #k is entity (door), v is parent (base surface), need this in case surface swapped
+                doorPoints << edge.vertices[0].position
+              end
+
+              # erase door surface
+              #k.erase!
+
+              # redraw erased edges to preserve door in current SketchUp model
+              doorEdges.each do |edgePoints|
+                pointA = edgePoints[0]
+                pointB = edgePoints[1]
+                line = entity.parent.entities.add_line pointA,pointB
               end
 
             end
@@ -329,17 +368,10 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
               newVertices << OpenStudio::Point3d.new(x,y,z)
             end  #end of vertices.each do
 
-            #make update surface
+            #make updated surface
             new_surface.setVertices(newVertices)
 
           end  #end of if remake_base_surface
-
-          # redraw earsed edges to preserve door in current SketchUp model
-          erasedEdges.each do |edgePoints|
-            pointA = edgePoints[0]
-            pointB = edgePoints[1]
-            line = entity.parent.entities.add_line pointA,pointB
-          end
 
       end #end of base_surfaces_array.each.do
 
@@ -568,6 +600,12 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
       explodeNeededFlag = false
       if not (t.xscale.to_s == "1.0" and t.yscale.to_s == "1.0" and t.zscale.to_s == "1.0" and t.zaxis.to_s == "(0.0, 0.0, 1.0)")  then explodeNeededFlag = true end
 
+      # this was added to catch flipped group or group with scale of -1 that isn't caught by test above
+      t.extend(TransformationHelper)
+      if t.flipped_x?.inspect then explodeNeededFlag = true end
+      if t.flipped_y?.inspect then explodeNeededFlag = true end
+      if t.flipped_z?.inspect then explodeNeededFlag = true end
+
       if explodeNeededFlag == true
 
         # gather group inputs
@@ -648,7 +686,7 @@ class MergeSketchUpGroupsToOsm < OpenStudio::Ruleset::UtilityUserScript
           # get transformation
           nested_t = nested_group.transformation
 
-          if nested_group.layer.name == "OpenStudio BackgroundModel ShadingGroup"
+          if nested_group.layer.name == "OpenStudio BackgroundModel BuildingAndSpaceShadingGroup"
 
             #make or update group
             space_shading_group = make_shading_surface_group(nested_group.name,nested_t.origin.x.to_m,nested_t.origin.y.to_m,nested_t.origin.z.to_m,nested_t.rotz*-1,"Space",space)

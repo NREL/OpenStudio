@@ -218,10 +218,10 @@ namespace detail {
     this->setOutOfRangeValue(outOfRangeValue);
 
     // set the values
-    openstudio::Vector daysFromFirstReport = timeSeries.daysFromFirstReport();
+    std::vector<long> secondsFromFirstReport = timeSeries.secondsFromFirstReport();
     openstudio::Vector values = timeSeries.values();
     for (unsigned i = 0; i < values.size(); ++i){
-      DateTime dateTime = firstReportDateTime + Time(daysFromFirstReport[i]);
+      DateTime dateTime = firstReportDateTime + Time(0,0,0,secondsFromFirstReport[i]);
       Date date = dateTime.date();
       Time time = dateTime.time();
 

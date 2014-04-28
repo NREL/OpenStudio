@@ -124,6 +124,8 @@ namespace detail {
 
     bool isFenestration() const;
 
+    bool isSolarDiffusing() const;
+
     bool isModelPartition() const;
 
     /** Returns true if the construction has RoofVegetation as the outer layer. */

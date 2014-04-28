@@ -208,11 +208,33 @@ namespace detail {
         outfileinfos.append(fi);
       }
 
-      l.relock();
 
+      std::vector<openstudio::LogMessage> logwarnings = ft.warnings();
+      std::vector<openstudio::LogMessage> logerrors = ft.errors();
+
+      for (std::vector<openstudio::LogMessage>::const_iterator itr = logwarnings.begin();
+          itr != logwarnings.end();
+          ++itr)
+      {
+        errors.addError(ErrorType::Warning, itr->logMessage());
+      }
+
+      for (std::vector<openstudio::LogMessage>::const_iterator itr = logerrors.begin();
+          itr != logerrors.end();
+          ++itr)
+      {
+        errors.addError(ErrorType::Error, itr->logMessage());
+      }
+
+      if (!errors.errors().empty())
+      {
+        errors.result = ruleset::OSResultValue::Fail;
+      }
+      setErrors(errors);
+
+      l.relock();
       m_outputfiles = outfileinfos;
 
-      /// Do work here - and be sure to set output files too
     } catch (const std::runtime_error &e) {
       errors.addError(ErrorType::Error, "Error with conversion (runtime_error): " + std::string(e.what()));
       errors.result = ruleset::OSResultValue::Fail;

@@ -122,6 +122,9 @@ namespace detail{
     bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec);
     bool lastDownloadDataPointSuccess() const;
 
+    bool deleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
+    bool lastDeleteDataPointSuccess() const;
+
     bool waitForFinished(int msec);
 
     std::vector<std::string> errors() const;
@@ -171,6 +174,8 @@ namespace detail{
     bool requestDataPointJSON(const UUID& analysisUUID, const UUID& dataPointUUID);
 
     bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
+
+    bool requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID);
 
     //@}
     /** @name Signals, Slots, Threads */
@@ -234,6 +239,8 @@ namespace detail{
 
     void processDownloadDataPointComplete();
 
+    void processDeleteDataPoint();
+
     // slot provided for debugging
     void logUploadProgress(qint64 bytesSent, qint64 bytesTotal);
 
@@ -265,6 +272,7 @@ namespace detail{
     std::string m_lastDataPointJSON;
     bool m_lastDownloadDataPointSuccess;
     path m_lastDownloadDataPointPath;
+    bool m_lastDeleteDataPointSuccess;
 
     mutable std::vector<std::string> m_errors;
     mutable std::vector<std::string> m_warnings;
