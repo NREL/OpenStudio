@@ -1090,7 +1090,7 @@ namespace radiance {
 
             m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
             // write material
-            m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n"+matString+"");
+            m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
             // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
             if (shadingControl){
@@ -1199,7 +1199,6 @@ namespace radiance {
         {
           std::string shadingSurface_name = cleanName(shadingSurface->name().get());
 
-          //puts "found a shading surface"
           // add surface to zone geometry
           m_radSpaces[space_name] += "#-Surface = " + shadingSurface_name + "\n";
 
@@ -1207,12 +1206,26 @@ namespace radiance {
           std::string constructionName = shadingSurface->getString(1).get();
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
+
+
+          // YO!!!
+
           // get reflectance
           // no constructions yet, Rvis = .2 (same as EnergyPlus default)
-          double interiorVisibleReflectance = 0.2;
-          double exteriorVisibleReflectance = 0.2;
+ 
+          double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
+          double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
+          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
+          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+
+          //double interiorVisibleReflectance = 0.2;
+          //double exteriorVisibleReflectance = 0.2;
+          
+          // YO!!!
+
+
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic shd_refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
           // polygon header
           m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
           m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
