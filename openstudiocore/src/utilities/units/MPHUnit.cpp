@@ -83,20 +83,20 @@ namespace detail {
 MPHUnit::MPHUnit(const MPHExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::MPHUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 MPHUnit::MPHUnit(const std::string& scaleAbbreviation,
                  const MPHExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::MPHUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 MPHUnit::MPHUnit(boost::shared_ptr<detail::MPHUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

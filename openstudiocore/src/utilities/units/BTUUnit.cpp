@@ -84,20 +84,20 @@ namespace detail {
 BTUUnit::BTUUnit(const BTUExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::BTUUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 BTUUnit::BTUUnit(const std::string& scaleAbbreviation,
                  const BTUExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::BTUUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 BTUUnit::BTUUnit(boost::shared_ptr<detail::BTUUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

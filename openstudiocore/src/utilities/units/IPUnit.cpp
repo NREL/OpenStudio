@@ -129,14 +129,14 @@ namespace detail {
 IPUnit::IPUnit(const IPExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::IPUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::IPUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 IPUnit::IPUnit(const std::string& scaleAbbreviation,
                const IPExpnt& exponents,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::IPUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::IPUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
@@ -154,7 +154,7 @@ void IPUnit::lbfToLbm() {
 
 /// @cond
 IPUnit::IPUnit(boost::shared_ptr<detail::IPUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

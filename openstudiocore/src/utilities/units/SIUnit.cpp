@@ -83,20 +83,20 @@ namespace detail {
 SIUnit::SIUnit(const SIExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::SIUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 SIUnit::SIUnit(const std::string& scaleAbbreviation,
        const SIExpnt& exponents,
        const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::SIUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 SIUnit::SIUnit(boost::shared_ptr<detail::SIUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

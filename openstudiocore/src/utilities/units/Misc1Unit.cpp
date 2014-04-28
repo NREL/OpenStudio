@@ -83,20 +83,20 @@ namespace detail {
 Misc1Unit::Misc1Unit(const Misc1Expnt& exponents,
                      int scaleExponent,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Misc1Unit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::Misc1Unit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 Misc1Unit::Misc1Unit(const std::string& scaleAbbreviation,
                      const Misc1Expnt& exponents,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Misc1Unit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::Misc1Unit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 Misc1Unit::Misc1Unit(boost::shared_ptr<detail::Misc1Unit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

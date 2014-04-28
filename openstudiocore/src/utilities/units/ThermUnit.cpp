@@ -83,20 +83,20 @@ namespace detail {
 ThermUnit::ThermUnit(const ThermExpnt& exponents,
                      int scaleExponent,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::ThermUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::ThermUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 ThermUnit::ThermUnit(const std::string& scaleAbbreviation,
                      const ThermExpnt& exponents,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::ThermUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::ThermUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 ThermUnit::ThermUnit(boost::shared_ptr<detail::ThermUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

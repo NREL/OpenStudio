@@ -613,8 +613,12 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-    url.addQueryItem("uids", toQString(uid));
-    data.append(url.encodedQuery());
+	QUrlQuery query;
+	query.addQueryItem("uids", toQString(uid));
+	//query.addQueryItem("api_version", toQString(m_apiVersion));
+	url.setQuery(query);
+
+	data.append(url.query());
     LOG(Warn, url.toString().toStdString());
 
     QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));

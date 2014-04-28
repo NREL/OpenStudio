@@ -84,20 +84,20 @@ namespace detail {
 CFMUnit::CFMUnit(const CFMExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::CFMUnit_Impl>(
-             new detail::CFMUnit_Impl(exponents,scaleExponent,prettyString)))
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+             new detail::CFMUnit_Impl(exponents, scaleExponent, prettyString)))
 {}
 
 CFMUnit::CFMUnit(const std::string& scaleAbbreviation,
                  const CFMExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::CFMUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::CFMUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 CFMUnit::CFMUnit(boost::shared_ptr<detail::CFMUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

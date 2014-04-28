@@ -83,20 +83,20 @@ namespace detail {
 GPDUnit::GPDUnit(const GPDExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::GPDUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::GPDUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 GPDUnit::GPDUnit(const std::string& scaleAbbreviation,
                  const GPDExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::GPDUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::GPDUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 GPDUnit::GPDUnit(boost::shared_ptr<detail::GPDUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

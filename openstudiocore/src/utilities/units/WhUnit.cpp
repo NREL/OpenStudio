@@ -83,20 +83,20 @@ namespace detail {
 WhUnit::WhUnit(const WhExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::WhUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::WhUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 WhUnit::WhUnit(const std::string& scaleAbbreviation,
                const WhExpnt& exponents,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::WhUnit_Impl>(
+  : Unit(boost::shared_ptr<detail::Unit_Impl>(
              new detail::WhUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
 WhUnit::WhUnit(boost::shared_ptr<detail::WhUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

@@ -341,7 +341,7 @@ namespace openstudio{
       if (valueAsString){
         value = *valueAsString;
       }
-      searchTerms.push_back(std::make_pair<std::string, std::string>(argument.name(), value));
+      searchTerms.push_back(std::make_pair(argument.name(), value));
     }
 
     std::vector<BCLComponent> components = componentAttributeSearch(searchTerms);

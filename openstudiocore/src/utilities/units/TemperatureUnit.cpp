@@ -83,7 +83,7 @@ void TemperatureUnit::setAsRelative() {
 
 /// @cond
 TemperatureUnit::TemperatureUnit(boost::shared_ptr<detail::TemperatureUnit_Impl> impl)
-  : Unit(impl)
+  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 
