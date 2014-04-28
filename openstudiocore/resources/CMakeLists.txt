@@ -495,6 +495,7 @@ SET(energyplus_resources_src
   energyplus/ErrorFiles/Warnings.err
   energyplus/ErrorFiles/WarningsAndCrash.err
   energyplus/ErrorFiles/WarningsAndSevere.err
+  energyplus/ErrorFiles/RepeatingWarnings.err
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
