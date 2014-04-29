@@ -99,7 +99,7 @@ void VRFController::refreshNow()
 
     if( m_currentSystem )
     {
-      m_detailView->setId(OSItemId(m_currentSystem->handle(),modelToSourceId(m_currentSystem->model()),false));
+      m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),modelToSourceId(m_currentSystem->model()),false));
 
       bool bingo;
       bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
@@ -112,7 +112,7 @@ void VRFController::refreshNow()
           ++it)
       {
         VRFTerminalView * vrfTerminalView = new VRFTerminalView();
-        vrfTerminalView->setId(OSItemId(it->handle(),modelToSourceId(it->model()),false));
+        vrfTerminalView->setId(OSItemId(it->handle().toString(),modelToSourceId(it->model()),false));
         m_detailView->addVRFTerminalView(vrfTerminalView);
         bingo = connect(vrfTerminalView,SIGNAL(componentDroppedOnZone(const OSItemId &, const OSItemId &)),
                         this,SLOT(onVRFTerminalViewDrop(const OSItemId &, const OSItemId &)));
