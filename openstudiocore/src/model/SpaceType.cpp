@@ -78,7 +78,9 @@
 #include <utilities/core/Assert.hpp>
 
 #include <QFile>
-#include <qjson/parser.h>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
 namespace openstudio {
 namespace model {
@@ -1368,12 +1370,12 @@ namespace detail {
     if (m_standardsMap.empty()){
       QFile file(":/resources/standards/OpenStudio_Standards.json");
       if (file.open(QFile::ReadOnly)) {
-        QJson::Parser parser;
-        bool ok(false);
-        QVariant variant = parser.parse(&file,&ok);
-        OS_ASSERT(ok);
+        QJsonParseError parseError;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
-        m_standardsMap = variant.toMap();
+        if( QJsonParseError::NoError == parseError.error) {
+          m_standardsMap = jsonDoc.object().toVariantMap();
+        }
       }
     }
   }

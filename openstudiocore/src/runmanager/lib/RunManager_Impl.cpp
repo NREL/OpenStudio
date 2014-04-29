@@ -38,8 +38,8 @@
 #include <QFuture>
 #include <OpenStudio.hxx>
 
-#include <qjson/serializer.h>
-#include <qjson/parser.h>
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include "RubyJobUtils.hpp"
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
@@ -1793,13 +1793,13 @@ namespace detail {
   openstudio::runmanager::Job RunManager_Impl::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
       const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
-    QJson::Parser parser;
-    bool ok = false;
-    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
-    if (!ok) {
-      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+    QJsonParseError parseError;
+    QByteArray byteArray(t_json.c_str(), t_json.length());
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(byteArray, &parseError);
+    if( QJsonParseError::NoError != parseError.error) {
+      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parseError.errorString()));
     }
-    return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+    return runWorkflow(jsonDoc.toVariant(), t_basePath, t_runPath, t_tools, t_options);
   }
 
   openstudio::runmanager::Job RunManager_Impl::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
@@ -1807,14 +1807,13 @@ namespace detail {
   {
     QFile file(toQString(t_jsonPath));
     if (file.open(QFile::ReadOnly)) {
-      QJson::Parser parser;
-      bool ok(false);
-      QVariant variant = parser.parse(&file,&ok);
+      QJsonParseError parseError;
+      QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
       file.close();
-      if (!ok) {
-        LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+      if( QJsonParseError::NoError != parseError.error) {
+        LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parseError.errorString()));
       }
-      return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+      return runWorkflow(jsonDoc.toVariant(), t_basePath, t_runPath, t_tools, t_options);
     }
 
     LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(t_jsonPath) << " for reading.");
