@@ -46,7 +46,7 @@
     OUTPUT ${OPENSTUDIO_JAVA_JAR}
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
-    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "@${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -source 1.6 -target 1.6 -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "@${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
     COMMAND "${Java_JAR_EXECUTABLE}"  -cvf ${OPENSTUDIO_JAVA_JAR} -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
     APPEND
     )
