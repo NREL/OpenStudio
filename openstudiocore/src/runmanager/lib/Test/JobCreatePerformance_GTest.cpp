@@ -90,7 +90,7 @@ void populateJobs(RunManager &rm, bool bulkadd, const openstudio::path &t_model,
 
 TEST_F(RunManagerTestFixture, JobCreatePerformanceTest)
 {
-  int number = 100;
+  int number = 50;
 
   double oldway = 0;
 

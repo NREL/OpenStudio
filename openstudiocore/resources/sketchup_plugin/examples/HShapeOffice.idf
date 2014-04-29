@@ -111,7 +111,7 @@
 ! ZONE_TERMINAL_FAN_STATIC_PRESSURE=300
 ! End WebInterface Parameters
 
-  Version,8.0;
+  Version,8.1;
 
   Timestep,1;
 
@@ -2477,6 +2477,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -3652,6 +3654,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -5019,6 +5023,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -5489,6 +5495,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -5959,6 +5967,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -6477,6 +6487,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -7652,6 +7664,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -8827,6 +8841,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -10194,6 +10210,8 @@
     ZoneAveraged,            !- Mean Radiant Temperature Calculation Type
     ,                        !- Surface Name/Angle Factor List Name
     WORK_EFF_SCH,            !- Work Efficiency Schedule Name
+    ClothingInsulationSchedule,  !- Clothing Insulation Calculation Method
+    ,                        !- Clothing Insulation Calculation Method Schedule Name
     CLOTHING_SCH,            !- Clothing Insulation Schedule Name
     AIR_VELO_SCH,            !- Air Velocity Schedule Name
     FANGER;                  !- Thermal Comfort Model 1 Type
@@ -10566,7 +10584,7 @@
   Fan:VariableVolume,
     Air1 Fan,                !- Name
     HVACOperationSchd,       !- Availability Schedule Name
-    0.6,                     !- Fan Efficiency
+    0.6,                     !- Fan Total Efficiency
     500,                     !- Pressure Rise {Pa}
     AUTOSIZE,                !- Maximum Flow Rate {m3/s}
     Fraction,                !- Fan Power Minimum Flow Rate Input Method
@@ -10734,10 +10752,13 @@
     0.0,                     !- Minimum Flow Rate {m3/s}
     Intermittent;            !- Pump Control Type
 
- Output:PreprocessorMessage,Conversion 7.2 => 8.0,Warning,
-Boiler:HotWater="HeatSys1 Boiler",
- defaults for this object have changed. Results may be different than previous. See ,
-InputOutputReference document for details.;
+  Output:PreprocessorMessage,
+    Conversion 7.2 => 8.0,   !- Preprocessor Name
+    Warning,                 !- Error Severity
+    Boiler:HotWater="HeatSys1 Boiler",  !- Message Line 1
+    defaults for this object have changed. Results may be different than previous. See,  !- Message Line 2
+    InputOutputReference document for details.;  !- Message Line 3
+
   Boiler:HotWater,
     HeatSys1 Boiler,         !- Name
     NATURALGAS,              !- Fuel Type
@@ -11369,10 +11390,14 @@ InputOutputReference document for details.;
     TowerWaterSys Supply Equipment Outlet Node,  !- Water Outlet Node Name
     AUTOSIZE,                !- Design Water Flow Rate {m3/s}
     AUTOSIZE,                !- Design Air Flow Rate {m3/s}
-    AUTOSIZE,                !- Fan Power at Design Air Flow Rate {W}
-    AUTOSIZE,                !- U-Factor Times Area Value at Design Air Flow Rate {W/K}
-    AUTOSIZE,                !- Air Flow Rate in Free Convection Regime {m3/s}
-    AUTOSIZE;                !- U-Factor Times Area Value at Free Convection Air Flow Rate {W/K}
+    AUTOSIZE,                !- Design Fan Power {W}
+    AUTOSIZE,                !- Design U-Factor Times Area Value {W/K}
+    autocalculate,           !- Free Convection Air Flow Rate {m3/s}
+    ,                        !- Free Convection Air Flow Rate Sizing Factor
+    autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
+    ,                        !- Free Convection U-Factor Times Area Value Sizing Factor
+    ,                        !- Performance Input Method
+    ;                        !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio
 
   Branch,
     TowerWaterSys Supply Equipment Bypass Branch,  !- Name

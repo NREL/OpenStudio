@@ -18,11 +18,20 @@ ${CMAKE_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
 ${CMAKE_SOURCE_DIR}/resources/project/buildings/SmallOffice.idf
 ${CMAKE_SOURCE_DIR}/resources/project/results/MetricsOfInterest.idf
 ${CMAKE_SOURCE_DIR}/resources/project/results/ReportVariableRequests.idf
+${CMAKE_SOURCE_DIR}/resources/resultsviewer/1ZoneEvapCooler/in.idf
+${CMAKE_SOURCE_DIR}/resources/resultsviewer/1ZoneUncontrolled/in.idf
+${CMAKE_SOURCE_DIR}/resources/resultsviewer/DaylightingDeviceShelf/in.idf
 ${CMAKE_SOURCE_DIR}/resources/resultsviewer/QkSvcRest/in.idf
 ${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf
+${CMAKE_SOURCE_DIR}/resources/resultsviewer/SolarCollectorFlatPlateWater/in.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/GeometryTest.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/HShapeOffice.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/HVACTemplate-5ZoneFanCoil.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/PassiveSolarDormitory.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/PhilipMerrillEnvironmentalCenter.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/SurfaceTest.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_1.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_2.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/5ZoneAirCooled_SurfaceMatching.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Absolute_Relative.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Relative_Relative.idf
@@ -44,6 +53,7 @@ ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSubsurfaces_Detail
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Absolute.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Reference.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Relative.idf
+${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/PurchAirWithDaylighting.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0100 man-altered  wds.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf

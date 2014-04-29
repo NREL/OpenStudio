@@ -43,6 +43,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_saveAsFileAction = new QAction(tr("Save Project &As"), this);
   m_clearAllResultsAction = new QAction(tr("&Clear All Results"), this);
   m_exportXmlAction = new QAction(tr("&Export XML Report"), this);
+  m_exportSpreadsheetAction = new QAction(tr("&Export Analysis Spreadsheet"), this);
   m_scanForToolsAction = new QAction(tr("Scan for &Tools"), this);
   m_showToolsAction = new QAction(tr("Show Too&ls"), this);
   m_exitAction = new QAction(tr("E&xit"), this);
@@ -73,6 +74,9 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   isConnected = connect(m_exportXmlAction, SIGNAL(triggered()), this, SIGNAL(exportXmlClicked()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(m_exportSpreadsheetAction, SIGNAL(triggered()), this, SIGNAL(exportSpreadsheetClicked()));
+  OS_ASSERT(isConnected);
+
   isConnected = connect(m_scanForToolsAction, SIGNAL(triggered()), this, SIGNAL(scanForToolsClicked()));
   OS_ASSERT(isConnected);
 
@@ -92,6 +96,7 @@ PatMainMenu::PatMainMenu(QWidget *parent) :
   m_fileMenu->addSeparator();
   m_fileMenu->addAction(m_clearAllResultsAction);
   m_fileMenu->addAction(m_exportXmlAction);
+  m_fileMenu->addAction(m_exportSpreadsheetAction);
   /*************************/
   m_fileMenu->addSeparator();
   m_fileMenu->addAction(m_scanForToolsAction);
@@ -176,6 +181,7 @@ void PatMainMenu::configure(bool haveCurrentProject)
     m_saveAsFileAction->setEnabled(true);
     m_clearAllResultsAction->setEnabled(true);
     m_exportXmlAction->setEnabled(true);
+    m_exportSpreadsheetAction->setEnabled(true);
 
   }else{
 
@@ -183,6 +189,7 @@ void PatMainMenu::configure(bool haveCurrentProject)
     m_saveAsFileAction->setEnabled(false);
     m_clearAllResultsAction->setEnabled(false);
     m_exportXmlAction->setEnabled(false);
+    m_exportSpreadsheetAction->setEnabled(false);
 
   }
 }

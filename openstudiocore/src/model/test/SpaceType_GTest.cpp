@@ -129,7 +129,10 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   unsigned numBuildingTypes = suggestedStandardsBuildingTypes.size();
   ASSERT_GT(numBuildingTypes, 0u);
   EXPECT_FALSE(spaceType.standardsSpaceType());
-  EXPECT_TRUE(spaceType.suggestedStandardsSpaceTypes().empty());
+  std::vector<std::string> suggestedStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
+  ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
+  EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
+  EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 
   std::vector<std::string>::const_iterator it = std::find(suggestedStandardsBuildingTypes.begin(), suggestedStandardsBuildingTypes.end(), "SecondarySchool");
   EXPECT_NE(suggestedStandardsBuildingTypes.end(), it);
@@ -188,5 +191,8 @@ TEST_F(ModelFixture, SpaceType_StandardsTypes) {
   ASSERT_EQ(numBuildingTypes + 1, spaceType.suggestedStandardsBuildingTypes().size());
   EXPECT_EQ("Anything Goes", spaceType.suggestedStandardsBuildingTypes()[0]);
   EXPECT_FALSE(spaceType.standardsSpaceType());
-  EXPECT_TRUE(spaceType.suggestedStandardsSpaceTypes().empty());
+  suggestedStandardsSpaceTypes = spaceType.suggestedStandardsSpaceTypes();
+  ASSERT_EQ(2u, suggestedStandardsSpaceTypes.size());
+  EXPECT_EQ("Attic", suggestedStandardsSpaceTypes[0]);
+  EXPECT_EQ("Plenum", suggestedStandardsSpaceTypes[1]);
 } 

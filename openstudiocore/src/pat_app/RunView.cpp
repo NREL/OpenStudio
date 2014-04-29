@@ -1150,10 +1150,17 @@ void DataPointJobContentView::addInfoMessage(const std::string& message)
   m_textEdit->setText(html);
 }
 
-void DataPointJobContentView::addWarningMessage(const std::string& message)
+void DataPointJobContentView::addWarningMessage(const std::string& message, int count)
 {
+  std::stringstream countmessage;
+
+  if (count > 1)
+  {
+    countmessage << " (" << count << " times)";
+  }
+
   QString html = m_textEdit->text();
-  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  html += QString("<b style=\"color:#C47B06\">Warning") + openstudio::toQString(countmessage.str() + "</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
   m_textEdit->setText(html);
 }
 
@@ -1201,6 +1208,23 @@ void DataPointJobItemView::requestUpdate()
     m_updateRequested = true;
     QTimer::singleShot(0, this, SLOT(update()));
   }
+}
+
+std::vector<std::pair<std::string, int> > DataPointJobItemView::collateMessages(const std::vector<std::string> &t_messages)
+{
+  std::vector<std::pair<std::string, int> > retval;
+
+  for (std::vector<std::string>::const_iterator itr = t_messages.begin();
+       itr != t_messages.end();
+       ++itr)
+  {
+    if (retval.empty() || retval.back().first != *itr) {
+      retval.push_back(std::make_pair(*itr, 1));
+    } else {
+      ++(retval.back().second);
+    }
+  }
+  return retval;
 }
 
 void DataPointJobItemView::update()
@@ -1285,9 +1309,12 @@ void DataPointJobItemView::update()
   }
 
   std::vector<std::string> warnings = jobErrors.warnings();
+  std::vector<std::pair<std::string, int> > collatedWarnings = collateMessages(warnings);
+
   dataPointJobHeaderView->setNumWarnings(warnings.size());
-  Q_FOREACH(const std::string& warningMessage, warnings){
-    dataPointJobContentView->addWarningMessage(warningMessage);
+  typedef std::pair<std::string, int> Msg;
+  Q_FOREACH(const Msg& warningMessage, collatedWarnings){
+    dataPointJobContentView->addWarningMessage(warningMessage.first, warningMessage.second);
   }
 
   std::vector<std::string> infos = jobErrors.infos();

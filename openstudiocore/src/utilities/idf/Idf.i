@@ -118,6 +118,10 @@
   %alias openstudio::IdfObject::operator== "eql?";
 #endif
 
+#if defined(SWIGJAVA)
+  %ignore openstudio::Workspace::load;
+#endif
+
 %include <utilities/idf/Handle.hpp>
 %include <utilities/idf/ValidityEnums.hpp>
 %include <utilities/idf/DataError.hpp>

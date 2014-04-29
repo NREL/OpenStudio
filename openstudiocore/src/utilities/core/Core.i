@@ -20,6 +20,15 @@
   #include <QAction>
 %}
 
+#if defined(SWIGJAVA)
+
+  %ignore openstudio::toString(const std::string&);
+  %ignore openstudio::toString(const std::wstring&);
+  %ignore openstudio::toString(const char *);
+  %ignore openstudio::toQString(const std::wstring& w);
+#endif
+
+
 %include <utilities/core/Qt.i>
 %include <utilities/core/Enum.i>
 //%include <utilities/core/Exception.i> // moved ahead in include order in CommonInclude

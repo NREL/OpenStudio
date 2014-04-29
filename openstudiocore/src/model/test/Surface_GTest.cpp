@@ -1585,7 +1585,6 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   points1.push_back(Point3d(0,  10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
-  double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
   points2.push_back(Point3d(4, 6, 0));
@@ -3245,6 +3244,7 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
     ASSERT_TRUE(result[0].daylightingDeviceShelf());
     ASSERT_TRUE(result[0].daylightingDeviceShelf()->insideShelf());
+    EXPECT_FALSE(result[0].daylightingDeviceShelf()->outsideShelf());
     EXPECT_NEAR(interiorShelfProjectionFactor*daylightingGlassToWallRatio*area, result[0].daylightingDeviceShelf()->insideShelf()->netArea(), 0.001);
     EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
   }

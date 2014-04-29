@@ -166,8 +166,6 @@ namespace openstudio {
 namespace sdd {
 
 const double footToMeter =  0.3048;
-const double meterToFoot = 1.0/0.3048;
-const double footCandleToLux = 10.76391;
 const double cpWater = 4180.0;
 const double densityWater = 1000.0;
 
@@ -2595,6 +2593,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }else{
       LOG(Error, "Unknown thermal zone type '" << toString(typeElement.text()) << "'");
     }
+  }
+
+  // Volume
+  QDomElement volElement = thermalZoneElement.firstChildElement("VolSim");
+  if (!volElement.isNull()){
+    // sdd units = ft^3, os units = m^3
+    Quantity thermalZoneVolumeIP(volElement.text().toDouble(), BTUUnit(BTUExpnt(0,3,0,0)));
+    OptionalQuantity thermalZoneVolumeSI = QuantityConverter::instance().convert(thermalZoneVolumeIP, UnitSystem(UnitSystem::Wh));
+    OS_ASSERT(thermalZoneVolumeSI);
+    OS_ASSERT(thermalZoneVolumeSI->units() == WhUnit(WhExpnt(0,0,3,0)));
+    thermalZone.setVolume(thermalZoneVolumeSI->value());
   }
 
   // Sizing
