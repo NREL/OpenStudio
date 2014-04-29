@@ -86,6 +86,8 @@ class OSItemId;
 
 class BuildingComponentDialog;
 
+class ApplyMeasureNowDialog;
+
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
 
@@ -189,6 +191,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   };
 
   boost::shared_ptr<MainRightColumnController> mainRightColumnController() const;
+
+  QSharedPointer<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
 
  signals:
 

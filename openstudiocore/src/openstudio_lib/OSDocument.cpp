@@ -18,18 +18,14 @@
  **********************************************************************/
 
 #include <openstudio_lib/OSDocument.hpp>
-#include "OSAppBase.hpp"
-#include "../shared_gui_components/BuildingComponentDialog.hpp"
-#include "../shared_gui_components/LocalLibraryController.hpp"
-#include "../shared_gui_components/MeasureManager.hpp"
-
+#include <openstudio_lib/ApplyMeasureNowDialog.hpp>
 #include <openstudio_lib/BuildingStoriesTabController.hpp>
 #include <openstudio_lib/ConstructionsTabController.hpp>
 #include <openstudio_lib/FacilityTabController.hpp>
 #include <openstudio_lib/FacilityView.hpp>
 #include <openstudio_lib/FileOperations.hpp>
-#include <openstudio_lib/HVACSystemsTabController.hpp>
 #include <openstudio_lib/HorizontalTabWidget.hpp>
+#include <openstudio_lib/HVACSystemsTabController.hpp>
 #include <openstudio_lib/InspectorController.hpp>
 #include <openstudio_lib/InspectorView.hpp>
 #include <openstudio_lib/LibraryTabWidget.hpp>
@@ -40,6 +36,7 @@
 #include <openstudio_lib/MainWindow.hpp>
 #include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/ModelObjectTypeListView.hpp>
+#include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/ResultsTabController.hpp>
 #include <openstudio_lib/ResultsTabView.hpp>
 #include <openstudio_lib/RunTabController.hpp>
@@ -57,6 +54,10 @@
 #include <openstudio_lib/ThermalZonesTabController.hpp>
 #include <openstudio_lib/VariablesTabController.hpp>
 #include <openstudio_lib/YearSettingsWidget.hpp>
+
+#include "../shared_gui_components/BuildingComponentDialog.hpp"
+#include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
 
 #include <analysis/Analysis.hpp>
 
@@ -79,9 +80,9 @@
 #include <osversion/VersionTranslator.hpp>
 
 #include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
 #include <analysis/MeasureGroup.hpp>
 #include <analysis/NullMeasure.hpp>
+#include <analysis/Problem.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -98,11 +99,11 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QMenuBar>
 #include <QMessageBox>
 #include <QString>
 #include <QTemporaryFile>
 #include <QTimer>
-#include <QMenuBar>
 #include <QWidget>
 
 #ifdef _WINDOWS
@@ -1283,7 +1284,14 @@ void OSDocument::toggleUnits(bool displayIP)
 
 void OSDocument::openMeasuresDlg()
 {
-  // TODO
+  // open modal dialog
+  m_applyMeasureNowDialog = QSharedPointer<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
+
+  if(m_applyMeasureNowDialog->exec()){ // TODO
+
+  }else{
+
+  }
 }
 
 void OSDocument::openChangeMeasuresDirDlg()

@@ -175,12 +175,10 @@ VariableListController::VariableListController(MeasureType measureType, bool fil
 {
 }
 
-
 MeasureType VariableListController::measureType() const
 {
   return m_measureType;
 }
-
 
 QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 {
@@ -336,8 +334,6 @@ void VariableListController::addFixedItemForDroppedMeasure(QDropEvent *event)
 {
   addItemForDroppedMeasureImpl(event, true);
 }
-
-
 
 void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed)
 {
@@ -970,6 +966,8 @@ void MeasureItem::setSelected(bool isSelected)
       m_app->editController()->reset();
     }
   }
+
+  //TODO
 }
 
 QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)

@@ -13,12 +13,8 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
-  # TODO Deprecate these files
-  #ScriptsController.cpp
-  #ScriptsController.hpp
-  #ScriptsView.cpp
-  #ScriptsView.hpp
-
+  ApplyMeasureNowDialog.cpp
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.cpp
   BCLComponentItem.hpp
   BuildingComponentController.cpp
@@ -459,11 +455,7 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
-
-  # TODO Deprecate these files
-  #ScriptsController.hpp
-  #ScriptsView.hpp
-
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
   BuildingComponentController.hpp
   BuildingInspectorView.hpp

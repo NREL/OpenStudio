@@ -21,6 +21,7 @@
 
 #include "Buttons.hpp"
 #include "OSViewSwitcher.hpp"
+
 #include <openstudio_lib/OSItem.hpp>
 
 #include <QApplication>
@@ -34,7 +35,6 @@
 #include <QVBoxLayout>
 
 namespace openstudio{
-  
 
 LocalLibraryView::LocalLibraryView(QWidget * parent)
   : QWidget(parent)

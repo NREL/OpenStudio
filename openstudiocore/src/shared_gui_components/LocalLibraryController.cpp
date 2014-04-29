@@ -23,9 +23,9 @@
 #include "LocalLibraryView.hpp"
 #include "MeasureDragData.hpp"
 #include "MeasureManager.hpp"
+#include "OSListController.hpp"
 #include "OSListView.hpp"
 #include "OSViewSwitcher.hpp"
-#include "OSListController.hpp"
 
 #include <openstudio_lib/OSItem.hpp>
 
@@ -35,6 +35,7 @@
 
 #include <OpenStudio.hxx>
 
+#include <QCoreApplication>
 #include <QDesktopServices>
 #include <QDir>
 #include <QDomDocument>
@@ -44,7 +45,6 @@
 #include <QMimeData>
 #include <QSettings>
 #include <QVariant>
-#include <QCoreApplication>
 
 #include <map>
 
