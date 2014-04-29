@@ -1838,9 +1838,10 @@ namespace detail {
     }
 
     boost::shared_ptr<Job_Impl> myFinishedJob = m_finishedJob;
-    bool myHasFinishedJob = myFinishedJob;
+	bool myHasFinishedJob = (myFinishedJob ? true : false);
+
     boost::shared_ptr<Job_Impl> otherFinishedJob = t_other->finishedJob();
-    bool otherHasFinishedJob = otherFinishedJob;
+	bool otherHasFinishedJob = (otherFinishedJob ? true : false);
 
     if (myHasFinishedJob != otherHasFinishedJob)
     {

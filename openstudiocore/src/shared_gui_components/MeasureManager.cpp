@@ -477,7 +477,7 @@ void MeasureManager::updateMeasuresLists()
        it != localBCLMeasures.end();
        ++it )
   {
-    m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+    m_bclMeasures.insert(std::make_pair(it->uuid(),*it));
   }
 
   std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
@@ -485,7 +485,7 @@ void MeasureManager::updateMeasuresLists()
        it != userMeasures.end();
        ++it )
   {
-    m_myMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
+    m_myMeasures.insert(std::make_pair(it->uuid(),*it));
   }
 
   if (m_libraryController)

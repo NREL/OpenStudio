@@ -287,7 +287,7 @@ QGraphicsObject * GridLayoutItem::createNewItemView(int i)
 
     graphicsItem->setParentItem(this);
 
-    m_widgetItemPairs.insert( std::make_pair<QGraphicsObject *,QSharedPointer<OSListItem> >(graphicsItem,itemData) );
+    m_widgetItemPairs.insert( std::make_pair(graphicsItem,itemData) );
 
     bool bingo = connect(graphicsItem,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
 

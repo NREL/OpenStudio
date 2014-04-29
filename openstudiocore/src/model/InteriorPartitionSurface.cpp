@@ -103,7 +103,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_InteriorPartitionSurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
 
     boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup = this->interiorPartitionSurfaceGroup();

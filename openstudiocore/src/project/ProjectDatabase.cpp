@@ -642,7 +642,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleNewRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleNewRecordMap.insert(std::make_pair(handle, record));
 
   }
 
@@ -661,7 +661,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleDirtyRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleDirtyRecordMap.insert(std::make_pair(handle, record));
 
   }
 
@@ -680,7 +680,7 @@ namespace detail {
     connectSignals(record);
 
     // insert into map
-    m_handleCleanRecordMap.insert(std::make_pair<UUID, Record>(handle, record));
+    m_handleCleanRecordMap.insert(std::make_pair(handle, record));
   }
 
   void ProjectDatabase_Impl::updateDatabase(const std::string& dbVersion) {
@@ -2450,7 +2450,7 @@ namespace detail {
 
 RemoveUndo::RemoveUndo(UUID handle, RemoveSource removeSource)
 {
-  m_removedObjects.push_back(std::make_pair<UUID, RemoveSource>(handle, removeSource));
+  m_removedObjects.push_back(std::make_pair(handle, removeSource));
 }
 
 void RemoveUndo::concat(const RemoveUndo& other)

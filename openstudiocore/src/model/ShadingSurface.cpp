@@ -128,7 +128,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_ShadingSurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
 
     boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = this->shadingSurfaceGroup();
@@ -151,7 +151,7 @@ namespace detail {
         if (defaultConstructionSet){
           construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
           if (construction){
-            return std::make_pair<ConstructionBase, int>(*construction, 4);
+            return std::make_pair(*construction, 4);
           }
         }
 
@@ -162,7 +162,7 @@ namespace detail {
           if (defaultConstructionSet){
             construction = defaultConstructionSet->getDefaultConstruction(this->getObject<ShadingSurface>());
             if (construction){
-              return std::make_pair<ConstructionBase, int>(*construction, 5);
+              return std::make_pair(*construction, 5);
             }
           }
         }

@@ -204,7 +204,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_SubSurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
 
     boost::optional<Surface> surface = this->surface();

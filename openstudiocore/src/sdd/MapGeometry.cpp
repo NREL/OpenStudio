@@ -1417,7 +1417,7 @@ namespace sdd {
 
   model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl)
   {
-    std::pair<double, double> key = std::make_pair<double, double>(solRefl, visRefl);
+    std::pair<double, double> key = std::make_pair(solRefl, visRefl);
     std::map<std::pair<double, double>, model::ConstructionBase>::iterator it = m_shadingConstructionMap.find(key);
     if (it != m_shadingConstructionMap.end()){
       return it->second;
@@ -1449,7 +1449,7 @@ namespace sdd {
     test = construction.setLayers(materials);
     OS_ASSERT(test); // what type of error handling do we want?
 
-    m_shadingConstructionMap.insert(std::make_pair<std::pair<double, double>, model::ConstructionBase>(key, construction));
+    m_shadingConstructionMap.insert(std::make_pair(key, construction));
     return construction;
   }
 

@@ -277,7 +277,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   // search for components by type
   std::vector<std::pair<std::string, std::string> > searchTerms;
-  searchTerms.push_back(std::make_pair<std::string, std::string>("OpenStudio Type", openstudioType));
+  searchTerms.push_back(std::make_pair("OpenStudio Type", openstudioType));
 
   std::vector<BCLComponent> components = LocalBCL::instance().componentAttributeSearch(searchTerms);
   EXPECT_FALSE(components.empty());

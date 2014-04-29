@@ -167,7 +167,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
 
-  openstudio::path outpath = toPath(openstudio::createUUID());
+  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -186,7 +186,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
     illuminanceMap.remove();
   } 
   
-  openstudio::path outpath = toPath(openstudio::createUUID());
+  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -205,7 +205,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
     daylightingControl.remove();
   } 
   
-  openstudio::path outpath = toPath(openstudio::createUUID());
+  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -224,7 +224,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
     glareSensor.remove();
   } 
   
-  openstudio::path outpath = toPath(openstudio::createUUID());
+  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
@@ -245,7 +245,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
     thermalZone.resetIlluminanceMap();
   } 
   
-  openstudio::path outpath = toPath(openstudio::createUUID());
+  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);

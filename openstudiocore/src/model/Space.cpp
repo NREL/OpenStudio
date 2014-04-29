@@ -542,7 +542,7 @@ namespace detail {
     if (defaultConstructionSet){
       result = defaultConstructionSet->getDefaultConstruction(planarSurface);
       if (result){
-        return std::make_pair<ConstructionBase, int>(*result, 1);
+        return std::make_pair(*result, 1);
       }
     }
 
@@ -553,7 +553,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 2);
+          return std::make_pair(*result, 2);
         }
       }
     }
@@ -565,7 +565,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 3);
+          return std::make_pair(*result, 3);
         }
       }
     }
@@ -577,7 +577,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 4);
+          return std::make_pair(*result, 4);
         }
       }
 
@@ -588,7 +588,7 @@ namespace detail {
         if (defaultConstructionSet){
           result = defaultConstructionSet->getDefaultConstruction(planarSurface);
           if (result){
-            return std::make_pair<ConstructionBase, int>(*result, 5);
+            return std::make_pair(*result, 5);
           }
         }
       }

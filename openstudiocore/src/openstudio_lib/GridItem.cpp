@@ -1089,10 +1089,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
     i++;
   }
 
@@ -1108,10 +1108,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
     i++;
   }
 

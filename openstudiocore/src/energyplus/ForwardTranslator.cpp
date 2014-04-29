@@ -2078,26 +2078,26 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
   }
 
   if (!construction.optionalCast<model::LayeredConstruction>()){
-    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), construction));
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
     return construction;
   }
 
   model::LayeredConstruction layeredConstruction = construction.cast<model::LayeredConstruction>();
   
   if (layeredConstruction.isSymmetric()){
-    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), construction));
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
     return construction;
   }
 
   if (construction.optionalCast<model::Construction>()){
     model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
-    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
     return reversed;
   }
 
   if (construction.optionalCast<model::ConstructionWithInternalSource>()){
     model::ConstructionWithInternalSource reversed = construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
-    m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
+    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
     return reversed;
   }
 
@@ -2110,7 +2110,7 @@ model::ConstructionBase ForwardTranslator::reverseConstruction(const model::Cons
   model::Construction reversed = model::Construction(construction.model());
   reversed.setName(construction.name().get() + " Reversed");
   reversed.setLayers(layers);
-  m_constructionHandleToReversedConstructions.insert(std::make_pair<Handle, model::ConstructionBase>(construction.handle(), reversed)); 
+  m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed)); 
 
   return reversed;
 }

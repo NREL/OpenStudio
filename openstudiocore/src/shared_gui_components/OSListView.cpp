@@ -179,7 +179,7 @@ void OSListView::insertItemView(int i)
 
   m_mainVLayout->insertWidget(i,itemView);
 
-  m_widgetItemPairs.insert( std::make_pair<QObject *,QSharedPointer<OSListItem> >(itemView,itemData) );
+  m_widgetItemPairs.insert( std::make_pair(itemView,itemData) );
 
   bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
 

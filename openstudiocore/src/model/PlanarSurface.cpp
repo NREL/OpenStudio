@@ -816,7 +816,7 @@ std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<P
         siteTransformation = it->second;
       }else{
         siteTransformation = group->buildingTransformation();
-        siteTransformationMap.insert(std::make_pair<PlanarSurfaceGroup, Transformation>(*group, siteTransformation));
+        siteTransformationMap.insert(std::make_pair(*group, siteTransformation));
       }
     }
 

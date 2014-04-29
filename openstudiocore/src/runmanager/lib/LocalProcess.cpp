@@ -54,7 +54,7 @@ namespace detail {
 
   void MyQProcess::checkProcessStatus()
   {
-#ifndef Q_WS_WIN
+#ifndef Q_OS_WIN
     // Check for process status if the exit was not handled correctly. 
 
     Q_PID qpid = pid();

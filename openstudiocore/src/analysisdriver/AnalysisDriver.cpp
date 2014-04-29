@@ -308,8 +308,8 @@ namespace detail {
       OptionalDakotaParametersFile params = DakotaParametersFile::load(file.fullPath);
       if (!params) {
         LOG(Error,"Unable to load Dakota parameters file '" << toString(file.fullPath) << "'.");
-        LOG(Debug,"Offending parameters file:" << std::endl
-            << boost::filesystem::ifstream(file.fullPath));
+        //LOG(Debug,"Offending parameters file:" << std::endl
+        //    << boost::filesystem::ifstream(file.fullPath));
         writeDakotaResultsFile(dataPoint,file.fullPath);
         return;
       }
@@ -327,7 +327,7 @@ namespace detail {
         LOG(Error,"Unable to create valid dataPoint for Problem '"
             << currentAnalysis->analysis().problem().name()
             << "' from Dakota parameters file '" << toString(file.fullPath) << "'.");
-        LOG(Debug,"Offending parameters file: \n" << boost::filesystem::ifstream(file.fullPath));
+        //LOG(Debug,"Offending parameters file: \n" << boost::filesystem::ifstream(file.fullPath));
         dataPoint = algorithm.createNextDataPoint(analysis,*params);
         writeDakotaResultsFile(dataPoint,file.fullPath);
       }
