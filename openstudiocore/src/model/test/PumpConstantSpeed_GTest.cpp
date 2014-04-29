@@ -80,6 +80,12 @@ TEST_F(ModelFixture,PumpConstantSpeed_addToNode) {
   demandOutletNode = plantLoop2.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop2.demandComponents().size() );
+
+  PumpConstantSpeed testObjectClone = testObject.clone(m).cast<PumpConstantSpeed>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
 
 TEST_F(ModelFixture,PumpConstantSpeed_RatedFlowRate_Quantity) {

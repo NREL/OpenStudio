@@ -18,36 +18,69 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/CoilHeatingElectric.hpp>
-#include <model/ScheduleCompact.hpp>
+#include <model/Schedule.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(AirTerminalSingleDuctParallelPIUReheat,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuctParallelPIUReheat)
+TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuctParallelPIUReheat)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
+    Model m; 
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume piuFan = FanConstantVolume(m,s);
+    CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
+    AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
 
-     model::ScheduleCompact s(m);
-
-     model::FanConstantVolume piuFan = model::FanConstantVolume(m,s);
-     model::CoilHeatingElectric piuReheatCoil = model::CoilHeatingElectric(m,s);
-
-     model::AirTerminalSingleDuctParallelPIUReheat airTerminalSingleDuctParallelPIUReheat = 
-      model::AirTerminalSingleDuctParallelPIUReheat(m,s,piuFan,piuReheatCoil);
-
-     exit(0); 
+    exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
+  Model m; 
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume piuFan = FanConstantVolume(m,s);
+  CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
+  AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
 
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_TRUE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  AirTerminalSingleDuctParallelPIUReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctParallelPIUReheat>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObjectClone.addToNode(inletNode));
+  EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
+  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+}

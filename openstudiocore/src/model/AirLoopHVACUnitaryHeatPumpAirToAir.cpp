@@ -75,7 +75,7 @@ namespace detail {
 
   ModelObject AirLoopHVACUnitaryHeatPumpAirToAir_Impl::clone(Model model) const
   {
-    AirLoopHVACUnitaryHeatPumpAirToAir newUnitary = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+    AirLoopHVACUnitaryHeatPumpAirToAir newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
     HVACComponent newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
 

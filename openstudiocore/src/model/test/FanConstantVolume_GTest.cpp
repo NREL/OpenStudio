@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
 #include <model/FanConstantVolume.hpp>
+#include <model/FanConstantVolume_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/ControllerOutdoorAir.hpp>
@@ -86,4 +87,10 @@ TEST_F(ModelFixture,FanConstantVolume_addToNode) {
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
     EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
+
+  FanConstantVolume testObjectClone = testObject.clone(m).cast<FanConstantVolume>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

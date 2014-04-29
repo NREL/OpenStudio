@@ -425,7 +425,7 @@ namespace detail {
 
   ModelObject BoilerHotWater_Impl::clone(Model model) const
   {
-    BoilerHotWater newBoiler = ModelObject_Impl::clone(model).cast<BoilerHotWater>();
+    BoilerHotWater newBoiler = StraightComponent_Impl::clone(model).cast<BoilerHotWater>();
 
     if( boost::optional<Curve> c = normalizedBoilerEfficiencyCurve() )
     {

@@ -102,6 +102,7 @@ TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
   }
 
   CoilHeatingGas testObjectClone = testObject.clone(m).cast<CoilHeatingGas>();
+  supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );

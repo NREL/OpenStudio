@@ -21,10 +21,10 @@
 #include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
@@ -93,7 +93,7 @@ TEST_F(ModelFixture,AirLoopHVACUnitaryHeatPumpAirToAir_addToNode)
   CurveQuadratic  cenergyInputRatioFunctionofFlowFractionCurve(m);
   CurveQuadratic  cpartLoadFractionCorrelationCurve(m);
 
-  CoilHeatingDXSingleSpeed coolingCoil(m, s,
+  CoilCoolingDXSingleSpeed coolingCoil(m, s,
                                       ctotalHeatingCapacityFunctionofTemperatureCurve,
                                       ctotalHeatingCapacityFunctionofFlowFractionCurve,
                                       cenergyInputRatioFunctionofTemperatureCurve,
@@ -137,4 +137,10 @@ TEST_F(ModelFixture,AirLoopHVACUnitaryHeatPumpAirToAir_addToNode)
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 }

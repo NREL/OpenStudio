@@ -85,4 +85,10 @@ TEST_F(ModelFixture,BoilerHotWater_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  BoilerHotWater testObjectClone = testObject.clone(m).cast<BoilerHotWater>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }

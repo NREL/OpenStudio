@@ -612,7 +612,7 @@ namespace detail {
 
   ModelObject CoilHeatingDXSingleSpeed_Impl::clone(Model model) const
   {
-    CoilHeatingDXSingleSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
+    CoilHeatingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
 
     Curve curve1 = totalHeatingCapacityFunctionofTemperatureCurve();
     newCoil.setTotalHeatingCapacityFunctionofTemperatureCurve(curve1.clone(model).cast<Curve>());

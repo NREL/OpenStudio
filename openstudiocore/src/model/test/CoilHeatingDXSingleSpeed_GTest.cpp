@@ -130,6 +130,7 @@ TEST_F(ModelFixture,CoilHeatingDXSingleSpeed_addToNode) {
   }
 
   CoilHeatingDXSingleSpeed testObjectClone = testObject.clone(m).cast<CoilHeatingDXSingleSpeed>();
+  supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );

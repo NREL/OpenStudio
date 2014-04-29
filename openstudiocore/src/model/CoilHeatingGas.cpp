@@ -364,7 +364,7 @@ namespace detail{
 
   ModelObject CoilHeatingGas_Impl::clone(Model model) const
   {
-    CoilHeatingGas newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingGas>();
+    CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
     if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
     {

@@ -30,6 +30,8 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -91,11 +93,14 @@ TEST_F(ModelFixture,CoilHeatingDesuperheater_addToNode) {
   CoilHeatingDesuperheater testObject(m);
 
   AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
 
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -110,6 +115,28 @@ TEST_F(ModelFixture,CoilHeatingDesuperheater_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  CoilHeatingDesuperheater testObject2(m);
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_FALSE(testObject2.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.oaComponents().size() );
+  }
+
+  CoilHeatingDesuperheater testObject3(m);
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  CoilHeatingDesuperheater testObjectClone = testObject.clone(m).cast<CoilHeatingDesuperheater>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }
 
 TEST_F(ModelFixture, CoilHeatingDesuperheater_AddBranchForHVACComponent_AirLoop)

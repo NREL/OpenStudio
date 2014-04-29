@@ -68,7 +68,7 @@ namespace detail{
 
   ModelObject CoilCoolingDXTwoSpeed_Impl::clone(Model model) const
   {
-    CoilCoolingDXTwoSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
+    CoilCoolingDXTwoSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
 
     Curve ccfot = totalCoolingCapacityFunctionOfTemperatureCurve();
     newCoil.setTotalCoolingCapacityFunctionOfTemperatureCurve(ccfot.clone(model).cast<Curve>());

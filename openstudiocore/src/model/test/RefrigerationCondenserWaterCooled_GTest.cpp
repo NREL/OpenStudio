@@ -79,6 +79,12 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  RefrigerationCondenserWaterCooled testObjectClone = testObject.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRejectionRate)

@@ -92,4 +92,10 @@ TEST_F(ModelFixture,WaterUseConnections_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  WaterUseConnections testObjectClone = testObject.clone(m).cast<WaterUseConnections>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
 }

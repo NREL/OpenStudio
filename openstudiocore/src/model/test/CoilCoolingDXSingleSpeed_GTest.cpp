@@ -153,8 +153,32 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {
     EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
 
+  // tests and checks to figure out clone bug
+  // resolution: Due to using ModelObject::clone instead of StraightComponent::clone in reimplementation
+  AirLoopHVAC airLoop2(m);
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
   CoilCoolingDXSingleSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  CoilCoolingDXSingleSpeed testObjectClone2 = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  Node supplyOutletNode2 = airLoop2.supplyOutletNode();
+  supplyOutletNode = airLoop.supplyOutletNode();
 
-  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_NE(testObject, testObjectClone);
+  EXPECT_FALSE(testObjectClone.loop());
+  EXPECT_FALSE(testObjectClone.airLoopHVAC());
+  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfTemperatureCurve(), testObjectClone.totalCoolingCapacityFunctionOfTemperatureCurve());
+  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfFlowFractionCurve(), testObjectClone.totalCoolingCapacityFunctionOfFlowFractionCurve());
+  EXPECT_NE(testObject.energyInputRatioFunctionOfTemperatureCurve(), testObjectClone.energyInputRatioFunctionOfTemperatureCurve());
+  EXPECT_NE(testObject.energyInputRatioFunctionOfFlowFractionCurve(), testObjectClone.energyInputRatioFunctionOfFlowFractionCurve());
+  EXPECT_NE(testObject.partLoadFractionCorrelationCurve(), testObjectClone.partLoadFractionCorrelationCurve());
+  EXPECT_TRUE(testObject.inletModelObject());
+  EXPECT_TRUE(testObject.outletModelObject());
+  EXPECT_FALSE(testObjectClone.inletModelObject());
+  EXPECT_FALSE(testObjectClone.outletModelObject());
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode2));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)3, airLoop2.supplyComponents().size() );
+  EXPECT_TRUE(testObjectClone2.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

@@ -161,10 +161,17 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
 
   // add the coil
   EXPECT_TRUE(coilCoolingCooledBeam.addToNode(node));
+  EXPECT_EQ( (unsigned)7, hotWaterPlant.demandComponents().size() );
 
   supplyOutletNode = hotWaterPlant.supplyOutletNode();
   EXPECT_FALSE(coilCoolingCooledBeam.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, hotWaterPlant.supplyComponents().size() );
+
+  CoilCoolingCooledBeam testObjectClone = coilCoolingCooledBeam.clone(model).cast<CoilCoolingCooledBeam>();
+  node = hotWaterPlant.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(node));
+  EXPECT_EQ( (unsigned)9, hotWaterPlant.demandComponents().size() );
    
   // disconnect the coil and check if it works
   coilCoolingCooledBeam.disconnect();

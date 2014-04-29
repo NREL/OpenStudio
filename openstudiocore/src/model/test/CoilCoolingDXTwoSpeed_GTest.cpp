@@ -416,6 +416,7 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_addToNode)
   }
 
   CoilCoolingDXTwoSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXTwoSpeed>();
+  supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );

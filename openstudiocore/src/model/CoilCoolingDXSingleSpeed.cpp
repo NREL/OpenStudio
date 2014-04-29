@@ -76,7 +76,7 @@ namespace detail{
 
   ModelObject CoilCoolingDXSingleSpeed_Impl::clone(Model model) const
   {
-    CoilCoolingDXSingleSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
+    CoilCoolingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
 
     Curve ccfot = totalCoolingCapacityFunctionOfTemperatureCurve();
     newCoil.setTotalCoolingCapacityFunctionOfTemperatureCurve(ccfot.clone(model).cast<Curve>());

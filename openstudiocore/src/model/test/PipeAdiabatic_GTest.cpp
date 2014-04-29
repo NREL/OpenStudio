@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
 #include <model/PipeAdiabatic.hpp>
+#include <model/PipeAdiabatic_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/PlantLoop.hpp>
 #include <model/Node.hpp>
@@ -76,4 +77,10 @@ TEST_F(ModelFixture,PipeAdiabatic_addToNode) {
   demandOutletNode = plantLoop2.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop2.demandComponents().size() );
+
+  PipeAdiabatic testObjectClone = testObject.clone(m).cast<PipeAdiabatic>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }

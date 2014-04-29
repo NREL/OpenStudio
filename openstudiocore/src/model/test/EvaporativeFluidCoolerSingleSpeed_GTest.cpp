@@ -106,6 +106,12 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddToNode)
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  EvaporativeFluidCoolerSingleSpeed testObjectClone = testObject.clone(m).cast<EvaporativeFluidCoolerSingleSpeed>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_AddObjectByPlantLoopAddSupplyBranchForComponent)

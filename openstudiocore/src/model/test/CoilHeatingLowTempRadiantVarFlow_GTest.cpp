@@ -108,4 +108,10 @@ TEST_F(ModelFixture,CoilHeatingLowTempRadiantVarFlow_addToNode) {
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  CoilHeatingLowTempRadiantVarFlow testObjectClone = testObject.clone(m).cast<CoilHeatingLowTempRadiantVarFlow>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
 }
