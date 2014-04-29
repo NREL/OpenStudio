@@ -416,7 +416,7 @@ class RULESET_API OSArgument {
 
 #if _MSC_VER >= 1800
   friend class std::pair<const std::string, OSArgument>;
-#else if _MSC_VER >= 1600
+#elif _MSC_VER >= 1600
   friend class std::pair<const std::string, OSArgument>;
   friend class std::_Pair_base<std::string, OSArgument>;
 #endif
