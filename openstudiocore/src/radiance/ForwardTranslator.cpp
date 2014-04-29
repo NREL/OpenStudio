@@ -1044,6 +1044,7 @@ namespace radiance {
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
             }
 
+            // make materials for single phase (AKA two-phase, depends on whom you talk to)
             std::string rMaterial = "glass ";
             std::string matString = "";
             // std::string isDiffusing = "false";
@@ -1081,14 +1082,14 @@ namespace radiance {
 
               rMaterial = "trans ";
               matString = "0\n0\n7\n"+formatString(transA1, 4)+" "+formatString(transA2, 4)+" "+formatString(transA3, 4)+" "+formatString(transA4, 4)+" "+formatString(transA5, 4)+" "+formatString(transA6, 4)+" "+formatString(transA7, 4)+"\n";
-              double nTs = 0.95; // transmitted specularity
+              //double nTs = 0.0; // transmitted specularity
             } else {
 
               matString = "0\n0\n3\n "+formatString(tn, 4)+" "+formatString(tn, 4)+" "+formatString(tn, 4)+"\n";
-              double nTs = 1.0; // transmitted specularity
+              //double nTs = 1.0; // transmitted specularity
             }
 
-            m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis) + " (tn = "+formatString(tn)+")\n";
+            m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis) + " (tn = "+ formatString(tn) + ")\n";
             // write material
             m_radMaterials.insert("void "+rMaterial+"glaz_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
             m_radMaterialsDC.insert("void light glaz_spc-"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
@@ -1185,7 +1186,6 @@ namespace radiance {
       } // loop over surfaces
 
       // get shading surfaces
-      /// \note no constructions yet, so surface properties are hard coded to 20% Rvis, 100% opaque
 
       std::vector<openstudio::model::ShadingSurfaceGroup> shadingSurfaceGroups = space->shadingSurfaceGroups();
       for (std::vector<openstudio::model::ShadingSurfaceGroup>::const_iterator shadingSurfaceGroup = shadingSurfaceGroups.begin();
@@ -1205,24 +1205,11 @@ namespace radiance {
           // set construction of shadingSurface
           std::string constructionName = shadingSurface->getString(1).get();
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
-
-
-
-          // YO!!!
-
-          // get reflectance
-          // no constructions yet, Rvis = .2 (same as EnergyPlus default)
  
           double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
           double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
           double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
           double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
-
-          //double interiorVisibleReflectance = 0.2;
-          //double exteriorVisibleReflectance = 0.2;
-          
-          // YO!!!
-
 
           // write material
           m_radMaterials.insert("void plastic shd_refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
@@ -1242,7 +1229,9 @@ namespace radiance {
           }
 
         }
-      }
+      } // shading surfaces
+
+      //get the interior partitions
 
       std::vector<openstudio::model::InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroups = space->interiorPartitionSurfaceGroups();
       for (std::vector<openstudio::model::InteriorPartitionSurfaceGroup>::const_iterator interiorPartitionSurfaceGroup
@@ -1286,7 +1275,7 @@ namespace radiance {
             m_radSpaces[space_name] += formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n\n";
           }
         }
-      }
+      } //interior partitions
 
       // get luminaires
       ///  \todo fully implement once luminaires are fully supported in model
