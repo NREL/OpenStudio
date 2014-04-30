@@ -198,29 +198,16 @@ namespace detail {
         allFans = constantFans;
         allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
 
-        if( allFans.size() > 0 )
+        if( allFans.size() > 1 )
         {
           return false;
         }
 
-<<<<<<< HEAD
         if( StraightComponent_Impl::addToNode(node) ) 
         {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
           return true;
         }
-=======
-      if( allFans.size() > 1 )
-      {
-        return false;
-      }
-
-      bool result = StraightComponent_Impl::addToNode( node );
-
-      if( result )
-      {
-        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
->>>>>>> develop
       }
     }
 

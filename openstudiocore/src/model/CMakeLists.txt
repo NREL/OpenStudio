@@ -1122,7 +1122,9 @@ SET( ${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctUncontrolled_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
