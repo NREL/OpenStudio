@@ -22,10 +22,18 @@
 #include <model/Model.hpp>
 #include <model/DaylightingDeviceShelf.hpp>
 #include <model/DaylightingDeviceShelf_Impl.hpp>
+#include <model/Space.hpp>
+#include <model/Surface.hpp>
+#include <model/SubSurface.hpp>
+#include <model/ShadingSurface.hpp>
+#include <model/InteriorPartitionSurface.hpp>
+#include <model/InteriorPartitionSurfaceGroup.hpp>
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 
 #include <utilities/idd/DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/geometry/Point3d.hpp>
+#include <utilities/geometry/Transformation.hpp>
 
 using namespace openstudio::model;
 
@@ -37,42 +45,73 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateDaylightingDeviceShelf( model::DaylightingDeviceShelf & modelObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::DaylightingDevice_Shelf);
+  SubSurface window = modelObject.subSurface();
+  boost::optional<Space> space = window.space();
+  boost::optional<InteriorPartitionSurface> insideShelf = modelObject.insideShelf();
+  boost::optional<ShadingSurface> outsideShelf = modelObject.outsideShelf();
 
-  m_idfObjects.push_back(idfObject);
-
-  idfObject.setString(DaylightingDevice_ShelfFields::Name, modelObject.name().get());
-
-  OptionalString s = modelObject.getString(OS_DaylightingDevice_ShelfFields::WindowName, false, true);
-  if (s){
-    idfObject.setString(DaylightingDevice_ShelfFields::WindowName, *s);
-  }else{
-    LOG(Error, "Missing required input 'Window Name' for DaylightingDevice:Shelf named '" << modelObject.name().get() << "'");
+  if (!space){
+    return boost::none;
   }
 
-  // TODO: make sure inside shelf is converted to a surface
-  s = modelObject.getString(OS_DaylightingDevice_ShelfFields::InsideShelfName, false, true);
-  if (s){
-    idfObject.setString(DaylightingDevice_ShelfFields::InsideShelfName, *s);
+  if (!(insideShelf || outsideShelf)){
+    return boost::none;
   }
 
-  s = modelObject.getString(OS_DaylightingDevice_ShelfFields::OutsideShelfName, false, true);
-  if (s){
-    idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfName, *s);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf, 
+                                                       modelObject);
+
+  idfObject.setString(DaylightingDevice_ShelfFields::WindowName, window.name().get());
+
+
+  // inside shelf is converted to a surface
+  if (insideShelf){
+
+    openstudio::Transformation transformation;
+    boost::optional<InteriorPartitionSurfaceGroup> group = insideShelf->interiorPartitionSurfaceGroup();
+    if (group){
+      transformation = group->transformation();
+    }
+
+    Point3dVector vertices = transformation*insideShelf->vertices();
+    Surface newSurface(vertices, modelObject.model());
+    newSurface.setName(modelObject.name().get());
+    newSurface.setSpace(*space);
+    newSurface.setAdjacentSurface(newSurface);
+
+    boost::optional<ConstructionBase> construction = insideShelf->construction();
+    if (!construction){
+      Model t_model = modelObject.model();
+      construction = interiorPartitionSurfaceConstruction(t_model);
+    }
+    OS_ASSERT(construction);
+    newSurface.setConstruction(*construction);
+    
+    boost::optional<IdfObject> newSurfaceObject = translateAndMapModelObject(newSurface);
+    if (newSurfaceObject){
+      idfObject.setString(DaylightingDevice_ShelfFields::InsideShelfName, newSurfaceObject->name().get());
+    }
   }
 
-  // TODO: map construction from shading surface
-  s.reset();
-  if (s){
-    idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfConstructionName, *s);
+  if (outsideShelf){
+
+    idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfName, outsideShelf->name().get());
+    
+    boost::optional<ConstructionBase> construction = outsideShelf->construction();
+    if (!construction){
+      Model t_model = modelObject.model();
+      construction = exteriorSurfaceConstruction(t_model);
+    }
+    OS_ASSERT(construction);
+    idfObject.setString(DaylightingDevice_ShelfFields::OutsideShelfConstructionName, construction->name().get());
+
+    OptionalDouble d = modelObject.viewFactortoOutsideShelf();
+    if (d){
+      idfObject.setDouble(DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, *d);
+    }
   }
 
-  OptionalDouble d = modelObject.getDouble(OS_DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, false);
-  if (d){
-    idfObject.setDouble(DaylightingDevice_ShelfFields::ViewFactortoOutsideShelf, *d);
-  }
-
-  return boost::none;
+  return idfObject;
 }
 
 } // energyplus

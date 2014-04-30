@@ -31,6 +31,8 @@ namespace model {
   
 class Space;
 class ShadingSurface;
+class Surface;
+class SubSurface;
 
 namespace detail {
 
@@ -82,6 +84,21 @@ class MODEL_API ShadingSurfaceGroup : public PlanarSurfaceGroup {
 
   /// Returns child shading surfaces.
   std::vector<ShadingSurface> shadingSurfaces() const;
+
+  /** Returns the specific sub surface shaded by this group if specified. */
+  boost::optional<SubSurface> shadedSubSurface() const;
+
+  /** Returns the surface shaded by this group if specified. */
+  boost::optional<Surface> shadedSurface() const;
+
+  /** Sets the specifc sub surface shaded by this group, sub surface must be in the same parent space. */
+  bool setShadedSubSurface(const SubSurface& subSurface);
+
+  /** Sets the surface shaded by this group, surface must be in the same parent space. */
+  bool setShadedSurface(const Surface& surface);
+
+  /** Resets the sub surface shaded by this group. */
+  void resetShadedObject();
 
  protected:
   /// @cond

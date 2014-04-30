@@ -45,6 +45,11 @@
   #include <utilities/units/Unit.hpp>
 %}
 
+#if defined SWIGJAVA
+%rename(loadComponent) openstudio::model::Component::load;
+%ignore openstudio::model::Meter::name;
+%ignore openstudio::model::Meter::setName;
+#endif
 
 // templates for non-ModelObjects
 %template(ModelVector) std::vector<openstudio::model::Model>;
@@ -63,6 +68,9 @@
 
 // Ignore rawImpl, should that even be in the public interface?
 %ignore openstudio::model::Model::rawImpl;
+
+// Ignore plenum space type
+%ignore openstudio::model::Model::plenumSpaceType;
 
 // templates for ModelObject
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);

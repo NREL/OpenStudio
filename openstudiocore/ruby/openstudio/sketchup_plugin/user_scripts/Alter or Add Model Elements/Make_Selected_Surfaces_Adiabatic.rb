@@ -31,7 +31,7 @@ class MakeSelectedSurfacesAdiabatic < OpenStudio::Ruleset::ModelUserScript
     result = OpenStudio::Ruleset::OSArgumentVector.new
   
     construction_name = OpenStudio::Ruleset::makeChoiceArgumentOfWorkspaceObjects("construction_name", "OS_Construction".to_IddObjectType, model, false)
-    construction_name.setDisplayName("Pick a Construction For Selected Surfaes (Optional)")
+    construction_name.setDisplayName("Pick a Construction For Selected Surfaces (Optional)")
     result << construction_name
       
     return result

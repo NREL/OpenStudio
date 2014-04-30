@@ -38,6 +38,8 @@ class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
+class AirLoopHVACReturnPlenum;
+class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
 class AirTerminalSingleDuctConstantVolumeCooledBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
@@ -231,7 +233,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.0"
+#define ENERGYPLUS_VERSION "8.1"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -302,6 +304,10 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem( model::AirLoopHVACOutdoorAirSystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
+
+  boost::optional<IdfObject> translateAirLoopHVACReturnPlenum( model::AirLoopHVACReturnPlenum & airLoopHVACReturnPlenum );
+
+  boost::optional<IdfObject> translateAirLoopHVACSupplyPlenum( model::AirLoopHVACSupplyPlenum & airLoopHVACSupplyPlenum );
 
   boost::optional<IdfObject> translateAirLoopHVACZoneMixer( model::AirLoopHVACZoneMixer & modelObject  );
 
@@ -677,6 +683,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> createAirLoopHVACReturnPath( model::AirLoopHVAC & airLoopHVAC );
 
+  // reset the state of the translator between translations
+  void reset();
 
   // helper method used by ForwardTranslatePlantLoop
   IdfObject populateBranch( IdfObject & branchIdfObject, std::vector<model::ModelObject> & modelObjects, model::PlantLoop & plantLoop);
@@ -694,6 +702,14 @@ class ENERGYPLUS_API ForwardTranslator {
   // returns the always off schedule if found, otherwise creates one and saves for later
   IdfObject alwaysOffSchedule();
   boost::optional<IdfObject> m_alwaysOffSchedule;
+
+  // returns the default interior partition surface construction, otherwise creates one and saves for later
+  model::ConstructionBase interiorPartitionSurfaceConstruction(model::Model & model);
+  boost::optional<model::ConstructionBase> m_interiorPartitionSurfaceConstruction;
+
+  // returns the default exterior surface construction, otherwise creates one and saves for later
+  model::ConstructionBase exteriorSurfaceConstruction(model::Model & model);
+  boost::optional<model::ConstructionBase> m_exteriorSurfaceConstruction;
 
   // reverse a construction if needed
   model::ConstructionBase reverseConstruction(const model::ConstructionBase& construction);

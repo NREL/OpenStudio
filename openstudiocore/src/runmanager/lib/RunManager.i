@@ -9,6 +9,8 @@
 #define UTILITIES_API
 #define RUNMANAGER_API
 
+%feature("director") RunManagerWatcher;  
+
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
@@ -37,6 +39,7 @@
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
   #include <runmanager/lib/MergedJobResults.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
   
   #include <ruleset/OSArgument.hpp>
   #include <utilities/core/Path.hpp>
@@ -148,6 +151,7 @@
 %template(OptionalWorkItem) boost::optional<openstudio::runmanager::WorkItem>;
 %template(OptionalRunManager) boost::optional<openstudio::runmanager::RunManager>;
 %template(OptionalTools) boost::optional<openstudio::runmanager::Tools>;
+%template(OptionalFiles) boost::optional<openstudio::runmanager::Files>;
 
 %template(ErrorTypeStringPair) std::pair<openstudio::runmanager::ErrorType, std::string>;
 
@@ -184,6 +188,7 @@
 %include <runmanager/lib/ConfigOptions.hpp>
 %include <runmanager/lib/TreeStatus.hpp>
 %include <runmanager/lib/JobStatusWidget.hpp>
+%include <runmanager/lib/RunManagerWatcher.hpp>
 
 #endif // RUNMANAGER_RUNMANAGER_I
 

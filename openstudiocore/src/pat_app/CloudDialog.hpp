@@ -220,6 +220,8 @@ private:
 
   QCheckBox * m_runOnStartUpCheckBox;
 
+public:
+
   QLineEdit * m_serverUsernameLineEdit;
 
   QLineEdit * m_serverPasswordLineEdit;

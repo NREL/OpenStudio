@@ -333,7 +333,8 @@ module OpenStudio
         saved_path = OpenStudio::Openstudiolib::saveModel(@openstudio_model, OpenStudio::Path.new(path), @model_temp_dir)
 
         # save run manager database first so saveModelTempDir copies it
-        OpenStudio::Openstudiolib::saveRunManagerDatabase(saved_path, @model_temp_dir, false) 
+        # ACS: Commenting this out to prevent scanning for tools (creates run.db for running within SketchUp)
+        #OpenStudio::Openstudiolib::saveRunManagerDatabase(saved_path, @model_temp_dir, false) 
         
         OpenStudio::Openstudiolib::saveModelTempDir(@model_temp_dir, saved_path)
         

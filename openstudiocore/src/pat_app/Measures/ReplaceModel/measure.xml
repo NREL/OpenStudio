@@ -1,7 +1,7 @@
 <measure>
   <name>Replace OpenStudio Model</name>
   <uid>d234ecee-c118-44e7-a381-db0a8917d751</uid>
-  <version_id>71d2543d-5d6a-46bc-bba5-15fdc7b75c10</version_id>
+  <version_id>d6d99669-d14f-4d94-9a7a-4ed26c7e2ba9</version_id>
   <description></description>
   <modeler_description></modeler_description>
   <provenances/>
@@ -22,6 +22,12 @@
   </attributes>
   <files>
     <file>
+      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>15D4B9DC</checksum>
+    </file>
+    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.10.2</identifier>
@@ -29,19 +35,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>EA4A772C</checksum>
+      <checksum>AA467D68</checksum>
     </file>
     <file>
       <filename>ReplaceModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>3CA7D4D5</checksum>
-    </file>
-    <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>15D4B9DC</checksum>
+      <checksum>ACC46FE8</checksum>
     </file>
   </files>
 </measure>

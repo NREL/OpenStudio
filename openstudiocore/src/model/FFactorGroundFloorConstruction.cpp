@@ -70,6 +70,8 @@ namespace detail {
 
   bool FFactorGroundFloorConstruction_Impl::isFenestration() const { return false; }
 
+  bool FFactorGroundFloorConstruction_Impl::isSolarDiffusing() const { return false; }
+
   bool FFactorGroundFloorConstruction_Impl::isModelPartition() const { return false; }
   
   int FFactorGroundFloorConstruction_Impl::renderingColorIndex() const

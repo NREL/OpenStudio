@@ -91,6 +91,13 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     # set render mode to color by layers (interior partition and shading can match OpenStudio, spaces should be something unique)?
 
     # use building rotation to set north direction in SketchUp
+    building = background_osm_model.getBuilding
+    rotation = building.northAxis # not sure of units
+    info = skp_model.shadow_info
+    info["NorthAngle"] = rotation*-1.0
+    if rotation != 0.0
+      info["DisplayNorth"] = rotation*-1.0
+    end
 
     # create def to make group
     def make_group(parent,name,layer,xOrigin,yOrigin,zOrigin,rotation)
@@ -102,7 +109,9 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
       point = Geom::Point3d.new "#{xOrigin}m".to_l,"#{yOrigin}m".to_l,"#{zOrigin}m".to_l
       t = Geom::Transformation.new point
       group.move! t
-      #todo - still need to rotate as well
+      # rotate
+      tr = Geom::Transformation.rotation ["#{xOrigin}m".to_l,"#{yOrigin}m".to_l,"#{zOrigin}m".to_l], [0, 0, 1], rotation.degrees
+      group.transform! tr
 
       return group
 
@@ -112,10 +121,21 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     def make_surface(group, vertices)
       entities = group.entities
       pts = []
+      verticesTestString = []
+      toleranceValue = 10000
       vertices.each do |pt|
+        if verticesTestString.include? "#{(pt.x*toleranceValue).to_i},#{(pt.y*toleranceValue).to_i},#{(pt.z*toleranceValue).to_i}" # added test to resolve duplicate vertices, probably need to address tolerance.
+          puts "removing point within tolerance of another point in face in #{group.name}."
+          next # this was added to avoid ruby error on add_face pts if pts were too similar to each other SketchUp failed showing duplicate
+        end
+        verticesTestString << "#{(pt.x*toleranceValue).to_i},#{(pt.y*toleranceValue).to_i},#{(pt.z*toleranceValue).to_i}"
         pts << ["#{pt.x}m".to_l,"#{pt.y}m".to_l,"#{pt.z}m".to_l]
       end
-      face = entities.add_face pts
+      if pts.size < 3
+        puts "skipping face in #{group.name} because it has less than three vertices."
+      else
+        face = entities.add_face pts
+      end
     end
 
     # loop through spaces
@@ -204,7 +224,7 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
 
     end #end of shading_surface_groups.each do
 
-    #todo - see why spaces are not passing manifold solid test. Seems like old SketchUp issue where if I explosed and re-make it then shows as solid. Maybe even just re-open it.
+    #todo - see why spaces are not passing manifold solid test. Seems like old SketchUp issue where if I exploded and re-make it then shows as solid. Maybe even just re-open it.
 
     #zoom extents
     view = Sketchup.active_model.active_view

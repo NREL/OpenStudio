@@ -37,7 +37,7 @@ namespace iddRegex{
   /// matches[1], version identifier
   UTILITIES_API const boost::regex &version();
 
-  /// Search for IDD header, each line must start with '!', no preceeding whitespace
+  /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
   UTILITIES_API const boost::regex &header();
 
@@ -55,16 +55,16 @@ namespace iddRegex{
   UTILITIES_API const boost::regex &group();
 
   /// Match include-file identifier
-  /// matches[1], incluced Idd file name
+  /// matches[1], included Idd file name
   UTILITIES_API const boost::regex &includeFile();
 
   /// Match remove-object identifier
   /// matches[1], object in included Idd file that should not be included in this file
   UTILITIES_API const boost::regex &removeObject();
 
-  /// Match line with either a ',' or a ';' that are not preceeded by '!'
-  /// matches[1], before seperator
-  /// matches[2], after seperator
+  /// Match line with either a ',' or a ';' that are not preceded by '!'
+  /// matches[1], before separator
+  /// matches[2], after separator
   UTILITIES_API const boost::regex &line();
 
   /// Match an object memo property
@@ -76,8 +76,8 @@ namespace iddRegex{
   UTILITIES_API const boost::regex &noteProperty();
 
   /// Match an object with no fields in the idd
-  /// matches[1], before seperator
-  /// matches[2], after seperator
+  /// matches[1], before separator
+  /// matches[2], after separator
   UTILITIES_API const boost::regex &objectNoFields();
 
   /// Match an object with one or more fields in the idd
@@ -118,7 +118,7 @@ namespace iddRegex{
   /// A or N, then one or more numbers then white space and then a ',' or ';'
   /// matches[1], alpha or numeric indicator
   /// matches[2], alpha or numeric number
-  /// matches[3], after seperator
+  /// matches[3], after separator
   UTILITIES_API const boost::regex &field();
 
   /// Match the closing field in an idd object

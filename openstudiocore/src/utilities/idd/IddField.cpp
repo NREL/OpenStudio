@@ -254,9 +254,9 @@ namespace detail {
 
   std::ostream& IddField_Impl::print(std::ostream& os, bool lastField) const
   {
-    std::string seperator = (lastField ? std::string(";") : std::string(","));
+    std::string separator = (lastField ? std::string(";") : std::string(","));
 
-    os << "  " << m_fieldId << seperator;
+    os << "  " << m_fieldId << separator;
 
     if (m_name != m_fieldId){
       os << " \\field " << m_name;

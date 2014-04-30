@@ -21,10 +21,13 @@
 #define OPENSTUDIO_PATMAINWINDOW_H
 
 #include <QMainWindow>
+#include "../utilities/core/Logger.hpp"
 
 class QStackedWidget;
 
 class QSplitter;
+
+class QNetworkProxy;
 
 namespace openstudio{
   
@@ -38,7 +41,8 @@ class PatMainMenu;
 
 class PatMainWindow : public QMainWindow
 {
-  Q_OBJECT
+  Q_OBJECT;
+  REGISTER_LOGGER("openstudio.pat.PatMainWindow");
 
   public:
 
@@ -74,6 +78,8 @@ class PatMainWindow : public QMainWindow
 
   void exportXmlClicked();
 
+  void exportSpreadsheetClicked();
+
   void showToolsClicked();
 
   void scanForToolsClicked();
@@ -108,9 +114,16 @@ class PatMainWindow : public QMainWindow
 
   void writeSettings();
 
+  void setRubyProxyEnvironment(const QNetworkProxy &t_proxy);
+
   QStackedWidget * m_mainRightColumnContainer;
 
   QSplitter * m_mainSplitter;
+
+  private slots:
+  
+  void configureProxyClicked();
+  void loadProxySettings();
 
 };
 

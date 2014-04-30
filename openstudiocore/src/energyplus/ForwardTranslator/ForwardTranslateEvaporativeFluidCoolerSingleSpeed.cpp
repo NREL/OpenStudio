@@ -85,11 +85,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
   
   if( (d = modelObject.fanPoweratDesignAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower,d.get());
   }
   else if( modelObject.isFanPoweratDesignAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::FanPoweratDesignAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateFanPower,"Autosize");
   }
 
      
@@ -135,11 +135,11 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeFluidCoolerSin
 
   if( (d = modelObject.ufactorTimesAreaValueatDesignAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue,d.get());
   }
   else if( modelObject.isUfactorTimesAreaValueatDesignAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::UfactorTimesAreaValueatDesignAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::EvaporativeFluidCooler_SingleSpeedFields::DesignAirFlowRateUfactorTimesAreaValue,"Autosize");
   }
 
 

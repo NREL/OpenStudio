@@ -17,7 +17,10 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-$OpenStudio_Dir = "#{File.expand_path(File.dirname(__FILE__))}/"
+require 'pathname'
+
+# follow symlinks so that we find the original path to the so's 
+$OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpath()))}/"
 
 require "#{$OpenStudio_Dir}config"
 
@@ -77,13 +80,11 @@ require 'openstudiosdd'
 # restore original path
 ENV['PATH'] = original_path
 
-if OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_RubyBinaryDir}"))
-  puts "OpenSSL loaded"
-elsif OpenStudio::RemoteBCL::initializeSSL()
-  puts "OpenSSL loaded"
-else
-  raise "Unable to initialize OpenSSL: Verify that ruby can assess the OpenSSL libraries"
-end  
+if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new("#{$OpenStudio_RubyBinaryDir}")))
+  if (!OpenStudio::RemoteBCL::initializeSSL())
+    raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
+  end
+end
 
 
 # Find current ruby path, we may need this for launching ruby jobs later

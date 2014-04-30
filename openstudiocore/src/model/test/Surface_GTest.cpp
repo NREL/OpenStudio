@@ -58,6 +58,11 @@
 #include <model/SpaceType.hpp>
 #include <model/SpaceType_Impl.hpp>
 #include <model/Relationship.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
+#include <model/InteriorPartitionSurface.hpp>
+#include <model/InteriorPartitionSurfaceGroup.hpp>
+#include <model/ShadingSurface.hpp>
+#include <model/ShadingSurfaceGroup.hpp>
 
 #include <utilities/data/Attribute.hpp>
 #include <utilities/idf/IdfObject.hpp>
@@ -788,6 +793,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("regular case");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -808,6 +814,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, false);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("daylighting window");
     expect_point_eq(Point3d(x, 0, H-offset), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, y), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, y), window->vertices()[2]);
@@ -828,6 +835,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("window goes all the way up to min limit at ceiling");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -848,6 +856,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, 1.0, true);
     ASSERT_TRUE(window);
     ASSERT_EQ(4u, window->vertices().size());
+    SCOPED_TRACE("window extends below desired sill height");
     expect_point_eq(Point3d(x, 0, H-y), window->vertices()[0]);
     expect_point_eq(Point3d(x, 0, offset), window->vertices()[1]);
     expect_point_eq(Point3d(W-x, 0, offset), window->vertices()[2]);
@@ -855,6 +864,8 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
 
+/*
+  DLM: this is no longer supported
   {
     // window is too small, shrinks in x
     Model model;
@@ -874,7 +885,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     expect_point_eq(Point3d(W-x, 0, H-y), window->vertices()[3]);
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
-
+*/
   {
     // existing window is no problem
     Model model;
@@ -901,7 +912,8 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_EQ(1u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
-
+/*
+  DLM: this is no longer supported
   {
     // existing door is no problem if it does not intersect new window
     Model model;
@@ -927,6 +939,7 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR)
     EXPECT_EQ(2u, wall.subSurfaces().size());
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
+  */
 }
 
 TEST_F(ModelFixture, Surface_EastWall_WWR)
@@ -1572,7 +1585,6 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   points1.push_back(Point3d(0,  10, 0));
   Surface surface1(points1, model);
   surface1.setSpace(space1);
-  double surface1Area = surface1.grossArea();
 
   Point3dVector points2;
   points2.push_back(Point3d(4, 6, 0));
@@ -3101,3 +3113,176 @@ TEST_F(ModelFixture, GroundSurface)
   EXPECT_TRUE(surface.isGroundSurface());
 }
 
+TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
+{
+  double height = 1.2;
+  double width = 10;
+
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0,0,height));
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(width,0,0));
+  vertices.push_back(Point3d(width,0,height));
+
+  double area = 12;
+  boost::optional<double> testArea = getArea(vertices);
+  ASSERT_TRUE(testArea);
+  EXPECT_DOUBLE_EQ(area, *testArea);
+
+  {
+    // call with all zeros
+    double viewGlassToWallRatio = 0.0;
+    double daylightingGlassToWallRatio = 0.0;
+    double desiredViewGlassSillHeight = 0.0; 
+    double desiredDaylightingGlassHeaderHeight = 0.0;
+    double exteriorShadingProjectionFactor = 0.0;
+    double interiorShelfProjectionFactor = 0.0; 
+    boost::optional<ConstructionBase> viewGlassConstruction;
+    boost::optional<ConstructionBase> daylightingGlassConstruction;
+
+    Model model;
+    Space space(model);
+    Surface surface(vertices, model);
+    surface.setSpace(space);
+    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                                desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                                exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                                viewGlassConstruction, daylightingGlassConstruction);
+    EXPECT_EQ(0, result.size());
+    EXPECT_DOUBLE_EQ(area, surface.grossArea());
+    EXPECT_DOUBLE_EQ(area, surface.netArea());
+  }
+
+  {
+    // just view glass, different sill heights
+    double viewGlassToWallRatio = 0.2;
+    double daylightingGlassToWallRatio = 0.0;
+    double desiredViewGlassSillHeight = 0.0; 
+    double desiredDaylightingGlassHeaderHeight = 0.0;
+    double exteriorShadingProjectionFactor = 0.0;
+    double interiorShelfProjectionFactor = 0.0; 
+
+    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height/10.0){
+
+      Model model;
+      Construction viewGlassConstruction(model);
+      Construction daylightingGlassConstruction(model);
+      Space space(model);
+      Surface surface(vertices, model);
+      surface.setSpace(space);
+      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                                  desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                                  exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                                  viewGlassConstruction, daylightingGlassConstruction);
+      ASSERT_EQ(1, result.size());
+      EXPECT_DOUBLE_EQ(area, surface.grossArea());
+      EXPECT_NEAR((1-viewGlassToWallRatio)*area, surface.netArea(), 0.001);
+      EXPECT_NEAR(viewGlassToWallRatio*area, result[0].netArea(), 0.001);
+      ASSERT_TRUE(result[0].construction());
+      EXPECT_EQ(viewGlassConstruction.handle(), result[0].construction()->handle());
+      EXPECT_FALSE(result[0].daylightingDeviceShelf());
+      EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
+    }
+  }
+
+  {
+    // just daylighting glass, different header heights
+    double viewGlassToWallRatio = 0.0;
+    double daylightingGlassToWallRatio = 0.2;
+    double desiredViewGlassSillHeight = 0.0; 
+    double desiredDaylightingGlassHeaderHeight = 0.0;
+    double exteriorShadingProjectionFactor = 0.0;
+    double interiorShelfProjectionFactor = 0.0; 
+
+    for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height; desiredDaylightingGlassHeaderHeight += height/10.0){
+
+      Model model;
+      Construction viewGlassConstruction(model);
+      Construction daylightingGlassConstruction(model);
+      Space space(model);
+      Surface surface(vertices, model);
+      surface.setSpace(space);
+      std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                                  desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                                  exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                                  viewGlassConstruction, daylightingGlassConstruction);
+      ASSERT_EQ(1, result.size());
+      EXPECT_DOUBLE_EQ(area, surface.grossArea());
+      EXPECT_NEAR((1-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
+      EXPECT_NEAR(daylightingGlassToWallRatio*area, result[0].netArea(), 0.001);
+      ASSERT_TRUE(result[0].construction());
+      EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
+      EXPECT_FALSE(result[0].daylightingDeviceShelf());
+      EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
+    }
+  }
+
+  {
+    // just daylighting glass with inside shelf
+    double viewGlassToWallRatio = 0.0;
+    double daylightingGlassToWallRatio = 0.2;
+    double desiredViewGlassSillHeight = 0.0; 
+    double desiredDaylightingGlassHeaderHeight = 0.2;
+    double exteriorShadingProjectionFactor = 0.5;
+    double interiorShelfProjectionFactor = 0.5; 
+
+    Model model;
+    Construction viewGlassConstruction(model);
+    Construction daylightingGlassConstruction(model);
+    Space space(model);
+    Surface surface(vertices, model);
+    surface.setSpace(space);
+    std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                                desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                                exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                                viewGlassConstruction, daylightingGlassConstruction);
+    ASSERT_EQ(1, result.size());
+    EXPECT_DOUBLE_EQ(area, surface.grossArea());
+    EXPECT_NEAR((1-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
+    EXPECT_NEAR(daylightingGlassToWallRatio*area, result[0].netArea(), 0.001);
+    ASSERT_TRUE(result[0].construction());
+    EXPECT_EQ(daylightingGlassConstruction.handle(), result[0].construction()->handle());
+    ASSERT_TRUE(result[0].daylightingDeviceShelf());
+    ASSERT_TRUE(result[0].daylightingDeviceShelf()->insideShelf());
+    EXPECT_FALSE(result[0].daylightingDeviceShelf()->outsideShelf());
+    EXPECT_NEAR(interiorShelfProjectionFactor*daylightingGlassToWallRatio*area, result[0].daylightingDeviceShelf()->insideShelf()->netArea(), 0.001);
+    EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
+  }
+
+  {
+    // both glass, different header heights
+    double viewGlassToWallRatio = 0.2;
+    double daylightingGlassToWallRatio = 0.2;
+    double desiredViewGlassSillHeight = 0.0; 
+    double desiredDaylightingGlassHeaderHeight = 0.0;
+    double exteriorShadingProjectionFactor = 0.0;
+    double interiorShelfProjectionFactor = 0.0; 
+
+    for (desiredViewGlassSillHeight = 0.0; desiredViewGlassSillHeight < height; desiredViewGlassSillHeight += height/10.0){
+      for (desiredDaylightingGlassHeaderHeight = 0.0; desiredDaylightingGlassHeaderHeight < height; desiredDaylightingGlassHeaderHeight += height/10.0){
+
+        Model model;
+        Construction viewGlassConstruction(model);
+        Construction daylightingGlassConstruction(model);
+        Space space(model);
+        Surface surface(vertices, model);
+        surface.setSpace(space);
+        std::vector<SubSurface> result = surface.applyViewAndDaylightingGlassRatios(viewGlassToWallRatio, daylightingGlassToWallRatio, 
+                                                                                    desiredViewGlassSillHeight, desiredDaylightingGlassHeaderHeight,
+                                                                                    exteriorShadingProjectionFactor, interiorShelfProjectionFactor, 
+                                                                                    viewGlassConstruction, daylightingGlassConstruction);
+        ASSERT_EQ(2, result.size());
+        EXPECT_DOUBLE_EQ(area, surface.grossArea());
+        EXPECT_NEAR((1-viewGlassToWallRatio-daylightingGlassToWallRatio)*area, surface.netArea(), 0.001);
+        EXPECT_NEAR(viewGlassToWallRatio*area, result[0].netArea(), 0.001);
+        ASSERT_TRUE(result[0].construction());
+        EXPECT_EQ(viewGlassConstruction.handle(), result[0].construction()->handle());
+        EXPECT_NEAR(daylightingGlassToWallRatio*area, result[1].netArea(), 0.001);
+        ASSERT_TRUE(result[1].construction());
+        EXPECT_EQ(daylightingGlassConstruction.handle(), result[1].construction()->handle());
+        EXPECT_FALSE(result[0].daylightingDeviceShelf());
+        EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
+      }
+    }
+  }
+}

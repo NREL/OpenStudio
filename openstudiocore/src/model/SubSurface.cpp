@@ -36,6 +36,8 @@
 #include <model/ConstructionBase_Impl.hpp>
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
+#include <model/DaylightingDeviceShelf.hpp>
+#include <model/DaylightingDeviceShelf_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -96,6 +98,10 @@ namespace detail {
   std::vector<ModelObject> SubSurface_Impl::children() const
   {
     std::vector<ModelObject> result;
+    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf = this->daylightingDeviceShelf();
+    if (daylightingDeviceShelf){
+      result.push_back(*daylightingDeviceShelf);
+    }
     return result;
   }
 
@@ -416,6 +422,21 @@ namespace detail {
     return result;
   }
 
+  bool SubSurface_Impl::allowShadingControl() const
+  {
+    bool result = false;
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual("FixedWindow", subSurfaceType) ||
+        istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("GlassDoor", subSurfaceType))
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
   boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
   {
     return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
@@ -452,10 +473,15 @@ namespace detail {
     bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
     if (result){
 
-      if (!(istringEqual("FixedWindow", subSurfaceType) ||
-            istringEqual("OperableWindow", subSurfaceType) ||
-            istringEqual("GlassDor", subSurfaceType))){
+      if (!allowShadingControl()){
         this->resetShadingControl();
+      }
+
+      if (!allowDaylightingDeviceShelf()){
+        boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf();
+        if (shelf){
+          shelf->remove();
+        }
       }
 
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
@@ -495,10 +521,7 @@ namespace detail {
   bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
   {
     bool result = false;
-    std::string subSurfaceType = this->subSurfaceType();
-    if (istringEqual("FixedWindow", subSurfaceType) ||
-        istringEqual("OperableWindow", subSurfaceType) ||
-        istringEqual("GlassDor", subSurfaceType)){
+    if (allowShadingControl()){
       result = setPointer(OS_SubSurfaceFields::ShadingControlName, shadingControl.handle());
     }
     return result;
@@ -723,8 +746,6 @@ namespace detail {
 
     Model model = this->model();
     boost::optional<Space> space = this->space();
-    std::string shadingSurfaceGroupName = this->name().get() + " Shading Surfaces";
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
       
@@ -743,6 +764,9 @@ namespace detail {
         ymin = std::min(ymin, faceVertex.y());
         ymax = std::max(ymax, faceVertex.y());
       }
+      if ((xmin > xmax) || (ymin > ymax)){
+        return boost::none;
+      }
 
       Point3dVector overhangVertices;
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, 0));
@@ -750,20 +774,14 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, space->shadingSurfaceGroups()){
-        if (group.name() == shadingSurfaceGroupName){
-          shadingSurfaceGroup = group;
-          break;
-        }
-      }
-
-      if (!shadingSurfaceGroup){
-        shadingSurfaceGroup = ShadingSurfaceGroup(model);
-        shadingSurfaceGroup->setSpace(*space);
-      }
+      ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
+      shadingSurfaceGroup.setSpace(*space);
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
-      shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+      shadingSurface->setShadingSurfaceGroup(shadingSurfaceGroup);
+
+      shadingSurfaceGroup.setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
@@ -780,8 +798,6 @@ namespace detail {
 
     Model model = this->model();
     boost::optional<Space> space = this->space();
-    std::string shadingSurfaceGroupName = this->name().get() + " Shading Surfaces";
-    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup;
     boost::optional<ShadingSurface> shadingSurface;
     if (space){
       
@@ -800,6 +816,9 @@ namespace detail {
         ymin = std::min(ymin, faceVertex.y());
         ymax = std::max(ymax, faceVertex.y());
       }
+      if ((xmin > xmax) || (ymin > ymax)){
+        return boost::none;
+      }
 
       double offset = offsetFraction*(ymax-ymin);
       double depth = projectionFactor*(offset + (ymax-ymin));
@@ -810,23 +829,68 @@ namespace detail {
       overhangVertices.push_back(Point3d(xmin - offset, ymax + offset, depth));
       overhangVertices.push_back(Point3d(xmax + offset, ymax + offset, depth));
 
-      BOOST_FOREACH(ShadingSurfaceGroup group, space->shadingSurfaceGroups()){
-        if (group.name() == shadingSurfaceGroupName){
-          shadingSurfaceGroup = group;
-          break;
-        }
-      }
-
-      if (!shadingSurfaceGroup){
-        shadingSurfaceGroup = ShadingSurfaceGroup(model);
-        shadingSurfaceGroup->setSpace(*space);
-      }
+      ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName(this->name().get() + " Shading Surfaces");
+      shadingSurfaceGroup.setSpace(*space);
 
       shadingSurface = ShadingSurface(transformation*overhangVertices, model);
-      shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+      shadingSurface->setShadingSurfaceGroup(shadingSurfaceGroup);
+
+      shadingSurfaceGroup.setShadedSubSurface(getObject<SubSurface>());
     }
 
     return shadingSurface;
+  }
+
+  std::vector<ShadingSurfaceGroup> SubSurface_Impl::shadingSurfaceGroups() const
+  {
+    return getObject<ModelObject>().getModelObjectSources<ShadingSurfaceGroup>(ShadingSurfaceGroup::iddObjectType());
+  }
+
+  bool SubSurface_Impl::allowDaylightingDeviceShelf() const
+  {
+    bool result = false;
+
+    std::string subSurfaceType = this->subSurfaceType();
+    if (istringEqual(subSurfaceType, "FixedWindow") ||
+        istringEqual(subSurfaceType, "OperableWindow") ||
+        istringEqual(subSurfaceType, "GlassDoor"))
+    {
+      result = true;
+    }
+
+    return result;
+  }
+
+  boost::optional<DaylightingDeviceShelf> SubSurface_Impl::daylightingDeviceShelf() const
+  {
+    boost::optional<DaylightingDeviceShelf> result;
+
+    std::vector<DaylightingDeviceShelf> shelves = getObject<ModelObject>().getModelObjectSources<DaylightingDeviceShelf>(DaylightingDeviceShelf::iddObjectType());
+    if (shelves.size() == 1){
+      result = shelves[0];
+    }else if (shelves.size() > 1){
+      result = shelves[0];
+    }
+    return result;
+  }
+
+  boost::optional<DaylightingDeviceShelf> SubSurface_Impl::addDaylightingDeviceShelf() const
+  {
+    boost::optional<DaylightingDeviceShelf> result = this->daylightingDeviceShelf();
+    if (result){
+      return result;
+    }
+
+    if (allowDaylightingDeviceShelf())
+    {
+      try{
+        result = DaylightingDeviceShelf(getObject<SubSurface>());
+      }catch(const std::exception&){
+      }
+    }
+
+    return result;
   }
 
   boost::optional<ModelObject> SubSurface_Impl::surfaceAsModelObject() const {
@@ -906,6 +970,11 @@ bool SubSurface::isViewFactortoGroundDefaulted() const {
 
 bool SubSurface::isViewFactortoGroundAutocalculated() const {
   return getImpl<detail::SubSurface_Impl>()->isViewFactortoGroundAutocalculated();
+}
+
+bool SubSurface::allowShadingControl() const
+{
+  return getImpl<detail::SubSurface_Impl>()->allowShadingControl();
 }
 
 boost::optional<ShadingControl> SubSurface::shadingControl() const
@@ -1026,11 +1095,74 @@ boost::optional<ShadingSurface> SubSurface::addOverhangByProjectionFactor(double
   return getImpl<detail::SubSurface_Impl>()->addOverhangByProjectionFactor(projectionFactor, offsetFraction);
 }
 
+std::vector<ShadingSurfaceGroup> SubSurface::shadingSurfaceGroups() const
+{
+  return getImpl<detail::SubSurface_Impl>()->shadingSurfaceGroups();
+}
+
+bool SubSurface::allowDaylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceShelf();
+}
+
+boost::optional<DaylightingDeviceShelf> SubSurface::daylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->daylightingDeviceShelf();
+}
+
+boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() const
+{
+  return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceShelf();
+}
+
 /// @cond
 SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond
+
+std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction)
+{
+  double inset = 0.0254;
+
+  std::vector<SubSurface> result;
+
+  BOOST_FOREACH(const Space& space, spaces){
+
+    if (space.isPlenum()){
+      LOG_FREE(Warn, "OpenStudio.applySkylightPattern", "Cannot apply skylights to plenum space");
+      continue;
+    }
+
+    Transformation transformation = space.buildingTransformation();
+    Transformation inverseTransformation = transformation.inverse();
+
+    std::vector<std::vector<Point3d> > spacePattern;
+    spacePattern.reserve(pattern.size());
+    BOOST_FOREACH(const std::vector<Point3d>& face, pattern){
+      spacePattern.push_back(inverseTransformation*face);
+    }
+
+    BOOST_FOREACH(Surface surface, space.surfaces()){
+      if (istringEqual("RoofCeiling", surface.surfaceType()) &&
+          istringEqual("Outdoors", surface.outsideBoundaryCondition())){
+
+        Plane surfacePlane = surface.plane();
+
+        std::vector<std::vector<Point3d> > surfacePattern;
+        spacePattern.reserve(pattern.size());
+        BOOST_FOREACH(const std::vector<Point3d>& spaceFace, spacePattern){
+          surfacePattern.push_back(surfacePlane.project(spaceFace));
+        }
+
+        std::vector<SubSurface> newSkylights = surface.createSubSurfaces(surfacePattern, inset, construction);
+        result.insert(result.end(), newSkylights.begin(), newSkylights.end());
+      }
+    }
+  }
+
+  return result;
+}
 
 
 } // model

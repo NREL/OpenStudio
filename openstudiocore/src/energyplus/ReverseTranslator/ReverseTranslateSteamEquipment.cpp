@@ -112,7 +112,7 @@ OptionalModelObject ReverseTranslator::translateSteamEquipment(
     steamEquipment.setName(*s);
   }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SteamEquipmentFields::ZoneName);
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SteamEquipmentFields::ZoneorZoneListName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){

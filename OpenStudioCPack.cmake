@@ -96,6 +96,10 @@ ELSE()
     WriteRegStr HKCR 'OpenStudio.osp\\\\DefaultIcon' '' '$INSTDIR\\\\bin\\\\Pat.exe,1'
     WriteRegStr HKCR 'OpenStudio.osp\\\\\\\\shell\\\\open\\\\command' '' '$INSTDIR\\\\bin\\\\Pat.exe \\\"%1\\\"'
 
+    WriteRegStr HKCR '.ossr' '' 'OpenStudio.ossr'
+    WriteRegStr HKCR 'OpenStudio.ossr' '' 'OpenStudio Standard Result'
+    WriteRegStr HKCR 'OpenStudio.ossr\\\\DefaultIcon' '' '$INSTDIR\\\\bin\\\\OpenStudio.exe,3'
+
     WriteRegStr HKCR '.osp-journal' '' 'OpenStudio.osp-journal'
     WriteRegStr HKCR 'OpenStudio.osp-journal' '' 'OpenStudio Project Journal'
 
@@ -112,6 +116,7 @@ ELSE()
     DeleteRegKey HKCR 'OpenStudio.osm'
     DeleteRegKey HKCR 'OpenStudio.osp'
     DeleteRegKey HKCR 'OpenStudio.osp-journal'
+    DeleteRegKey HKCR 'OpenStudio.ossr'
   ")
 ENDIF()
 

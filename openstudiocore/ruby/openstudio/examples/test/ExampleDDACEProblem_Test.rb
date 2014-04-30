@@ -30,11 +30,6 @@ class ExampleDDACEProblem_Test < Test::Unit::TestCase
   # def teardown
   # end
   
-  def test_ExampleDDACEProblem
-    nSamples = 10
-    runEnergyPlus = false
-    showGUI = false
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/examples/ExampleDDACEProblem.rb' './ExampleDDACEProblem.osp' #{nSamples} #{runEnergyPlus} #{showGUI}"))
-  end
+  # DLM: removing tests of functionality to be deprecated
 
 end

@@ -129,6 +129,9 @@ namespace openstudio{
     bool downloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath, int msec=30000);
     bool lastDownloadDataPointSuccess() const;
 
+    bool deleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, int msec=30000);
+    bool lastDeleteDataPointSuccess() const;
+
     bool waitForFinished(int msec=30000);
 
     std::vector<std::string> errors() const;
@@ -193,6 +196,8 @@ namespace openstudio{
     /** Returns a zip file containing detailed simulation results for dataPointUUID. Should be 
      *  called after getting the high-level results from dataPointJSON. */
     bool startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath);
+
+    bool requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID);
 
     //@}
     /** @name Signals, Slots, Threads */

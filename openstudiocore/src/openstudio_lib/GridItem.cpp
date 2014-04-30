@@ -17,10 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/GridItem.hpp>
-#include <openstudio_lib/ServiceWaterGridItems.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
-#include <openstudio_lib/LoopScene.hpp>
+#include "GridItem.hpp"
+#include "ServiceWaterGridItems.hpp"
+#include "IconLibrary.hpp"
+#include "LoopScene.hpp"
+#include "SchedulesView.hpp"
+#include "OSDocument.hpp"
+#include "OSAppBase.hpp"
+#include "MainRightColumnController.hpp"
 
 #include <utilities/core/Assert.hpp>
 
@@ -45,6 +49,10 @@
 #include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACSupplyPlenum.hpp>
+#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/AirToAirComponent.hpp>
 #include <model/AirToAirComponent_Impl.hpp>
 #include <model/PlantLoop.hpp>
@@ -61,6 +69,8 @@
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
+#include <model/RenderingColor.hpp>
+#include <model/RenderingColor_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Splitter.hpp>
@@ -429,7 +439,7 @@ QRectF LinkItem::boundingRect() const
 }
 
 HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> modelObjects,
-                                            QGraphicsItem * parent )
+                                            QGraphicsItem * parent)
   : GridItem( parent ),
     m_isDropZone(false),
     m_text("Drag From Library"),
@@ -462,6 +472,24 @@ HorizontalBranchItem::HorizontalBranchItem( std::vector<model::ModelObject> mode
     {
       GridItem * gridItem = new OneThreeStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+    }
+    else if(model::OptionalAirLoopHVACSupplyPlenum comp = it->optionalCast<model::AirLoopHVACSupplyPlenum>())
+    {
+      GridItem * gridItem = new SupplyPlenumItem(comp.get(),this); 
+      if( comp->isRemovable() )
+      {
+        gridItem->setDeletable(true);
+      }
+      m_gridItems.push_back(gridItem);
+    }
+    else if(model::OptionalAirLoopHVACReturnPlenum comp = it->optionalCast<model::AirLoopHVACReturnPlenum>())
+    {
+      GridItem * gridItem = new ReturnPlenumItem(comp.get(),this); 
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
@@ -810,6 +838,49 @@ void ReverseVerticalBranchItem::layout()
   setVGridLength( j );
 }
 
+bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
+{
+  OS_ASSERT(! i.empty());
+  OS_ASSERT(! j.empty());
+
+  std::vector<ThermalZone> iZones = subsetCastVector<ThermalZone>(i);
+  std::vector<ThermalZone> jZones = subsetCastVector<ThermalZone>(j);
+
+  boost::optional<ModelObject> iModelObject;
+  boost::optional<ModelObject> jModelObject;
+
+  if( ! iZones.empty() )
+  {
+    iModelObject = iZones.front();
+  }
+  else if( i.size() > 1u )
+  {
+    iModelObject = i[1];
+  }
+  else
+  {
+    iModelObject = i[0];
+  }
+
+  if( ! jZones.empty() )
+  {
+    jModelObject = jZones.front();
+  }
+  else if( j.size() > 1u )
+  {
+    jModelObject = j[1];
+  }
+  else
+  {
+    jModelObject = j[0];
+  }
+
+  OS_ASSERT(iModelObject);
+  OS_ASSERT(jModelObject);
+
+  return iModelObject->name().get() < jModelObject->name().get();
+}
+
 HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter,
                                                       model::Mixer & mixer,
                                                       QGraphicsItem * parent ) 
@@ -819,54 +890,82 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
     m_dropZoneBranchItem(NULL)
 {
   boost::optional<model::Loop> optionalLoop = splitter.loop();
-
   OS_ASSERT( optionalLoop );
-
   model::Loop loop = optionalLoop.get(); 
 
   std::vector<model::ModelObject> splitterOutletObjects = splitter.outletModelObjects();
-  std::vector<model::ModelObject> mixerInletObjects = mixer.inletModelObjects();
-
   bool isSupplySide = loop.supplyComponent(splitter.handle());
+
+  std::vector<model::ModelObject> branchComponents;
+  std::vector< std::vector<model::ModelObject> > allBranchComponents;
 
   if( ! (splitterOutletObjects.front() == mixer) )
   {
-    std::vector<model::ModelObject>::iterator it2 = mixerInletObjects.begin();
-    for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin(); 
-         it1 < splitterOutletObjects.end();
+    for( std::vector<model::ModelObject>::iterator it1 = splitterOutletObjects.begin();
+         it1 != splitterOutletObjects.end();
          ++it1 )
     {
-      model::HVACComponent node1 = it1->optionalCast<model::HVACComponent>().get();
-      model::HVACComponent node2 = it2->optionalCast<model::HVACComponent>().get();
-
-      std::vector<model::ModelObject> branchComponents;
-
-      if( isSupplySide )
+      bool isSupplyPlenum = false;
+      if( boost::optional<model::Node> node = it1->optionalCast<model::Node>() )
       {
-        branchComponents = loop.supplyComponents(node1,node2);
-      }
-      else
-      {
-        branchComponents = loop.demandComponents(node1,node2);
-      }
-
-      if( isSupplySide )
-      {
-        m_branchItems.push_back(new HorizontalBranchItem(branchComponents,this));
-        ++it2;
-      }
-      else
-      {
-        std::vector<model::ModelObject> rBranchComponents;
-        for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
-             rit < branchComponents.rend(); ++rit )
+        boost::optional<model::ModelObject> outletMo = node->outletModelObject();
+        OS_ASSERT(outletMo);
+        if(boost::optional<model::Splitter> plenumSplitter = outletMo->optionalCast<model::Splitter>())
         {
-          rBranchComponents.push_back( *rit );
+          isSupplyPlenum = true;
+          std::vector<model::ModelObject> plenumOutletObjects = plenumSplitter->outletModelObjects();
+          for( std::vector<model::ModelObject>::iterator it2 = plenumOutletObjects.begin();
+               it2 != plenumOutletObjects.end();
+               ++it2 )
+          {
+            boost::optional<model::HVACComponent> comp1 = it2->optionalCast<model::HVACComponent>();
+            OS_ASSERT(comp1);
+            branchComponents = loop.components(comp1.get(),mixer);
+            branchComponents.erase(branchComponents.end() - 1);
+            branchComponents.insert(branchComponents.begin(),plenumSplitter.get());
+            branchComponents.insert(branchComponents.begin(),*it1);
+
+            std::vector<model::ModelObject> rBranchComponents;
+            for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+                 rit < branchComponents.rend(); ++rit )
+            {
+              rBranchComponents.push_back( *rit );
+            }
+            allBranchComponents.push_back(rBranchComponents);
+          }
         }
-        m_branchItems.push_back(new HorizontalBranchItem(rBranchComponents,this));
-        ++it2;
+      }
+      if( ! isSupplyPlenum )
+      {
+        boost::optional<model::HVACComponent> comp1 = it1->optionalCast<model::HVACComponent>();
+        OS_ASSERT(comp1);
+        branchComponents = loop.components(comp1.get(),mixer);
+        branchComponents.erase(branchComponents.end() - 1);
+
+        if( isSupplySide )
+        {
+          allBranchComponents.push_back(branchComponents);
+        }
+        else
+        {
+          std::vector<model::ModelObject> rBranchComponents;
+          for( std::vector<model::ModelObject>::reverse_iterator rit = branchComponents.rbegin();
+               rit < branchComponents.rend(); ++rit )
+          {
+            rBranchComponents.push_back( *rit );
+          }
+          allBranchComponents.push_back(rBranchComponents);
+        }
       }
     }
+  }
+
+  std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+  for(std::vector< std::vector<ModelObject> >::iterator it = allBranchComponents.begin();
+      it != allBranchComponents.end();
+      ++it)
+  {
+    m_branchItems.push_back(new HorizontalBranchItem(*it,this));
   }
 
   layout();
@@ -964,10 +1063,57 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     m_loop(loop),
     m_loopScene(loopScene)
 {
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  mrc->registerSystemItem(m_loop.handle(),this);
+
   m_loopScene->addItem(this);
 
   model::Node supplyInletNode = m_loop.supplyInletNode();
   model::Node supplyOutletNode = m_loop.supplyOutletNode();
+
+  std::vector<model::AirLoopHVACSupplyPlenum> supplyPlenums = subsetCastVector<model::AirLoopHVACSupplyPlenum>(loop.demandComponents());
+  std::vector<model::AirLoopHVACReturnPlenum> returnPlenums = subsetCastVector<model::AirLoopHVACReturnPlenum>(loop.demandComponents());
+
+  int i = 0;
+
+  for(std::vector<model::AirLoopHVACSupplyPlenum>::iterator it = supplyPlenums.begin();
+      it != supplyPlenums.end();
+      ++it)
+  {
+    if( boost::optional<model::ThermalZone> tz = it->thermalZone() )
+    {
+      if( boost::optional<model::RenderingColor> rc = tz->renderingColor() )
+      {
+        QColor color;
+        color.setRed(rc->renderingRedValue());
+        color.setBlue(rc->renderingBlueValue());
+        color.setGreen(rc->renderingGreenValue());
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+      }
+    }
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    i++;
+  }
+
+  for(std::vector<model::AirLoopHVACReturnPlenum>::iterator it = returnPlenums.begin();
+      it != returnPlenums.end();
+      ++it)
+  {
+    if( boost::optional<model::ThermalZone> tz = it->thermalZone() )
+    {
+      if( boost::optional<model::RenderingColor> rc = tz->renderingColor() )
+      {
+        QColor color;
+        color.setRed(rc->renderingRedValue());
+        color.setBlue(rc->renderingBlueValue());
+        color.setGreen(rc->renderingGreenValue());
+        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+      }
+    }
+    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    i++;
+  }
 
   m_supplySideItem = new SupplySideItem( this,
                                          supplyInletNode,
@@ -1015,6 +1161,57 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
   setHGridLength( m_supplySideItem->getHGridLength() );
 }
 
+SystemItem::~SystemItem()
+{
+  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  mrc->unregisterSystemItem(m_loop.handle());
+}
+
+int SystemItem::plenumIndex(const Handle & plenumHandle)
+{
+  std::map<Handle,int>::iterator it = m_plenumIndexMap.find(plenumHandle);
+  if( it != m_plenumIndexMap.end() )
+  {
+    return it->second;
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+QColor SystemItem::plenumColor(const Handle & plenumHandle)
+{
+  QColor color;
+
+  std::map<Handle,QColor>::iterator it = m_plenumColorMap.find(plenumHandle);
+  if( it != m_plenumColorMap.end() )
+  {
+    color = it->second;
+  }
+  else
+  {
+    int index = plenumIndex(plenumHandle);
+    if( index < 0 )
+    {
+      color = SchedulesView::colors[0];
+    }
+    else if( index > 12 )
+    {
+      color = SchedulesView::colors[12];
+    }
+    else
+    {
+      color = SchedulesView::colors[index];
+    }
+
+    // DLM: Create a RenderingColor and associate it with the thermal zone?
+  }
+
+  return color;
+}
+
 void SystemItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 } 
@@ -1051,7 +1248,7 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->drawPixmap((m_hLength - 1) * 100 + 37.5,yOrigin + 25,25,25,QPixmap(":/images/arrow.png"));
 
   painter->rotate(180);
-  painter->drawPixmap(-62.5,-(yOrigin + 75),25,25,QPixmap(":/images/arrow.png"));
+  painter->drawPixmap(-62,-(yOrigin + 75),25,25,QPixmap(":/images/arrow.png"));
 
   painter->rotate(-180);
 
@@ -1071,8 +1268,102 @@ void SystemCenterItem::paint( QPainter *painter,
   painter->drawText(QRect(110,52,200,25),Qt::AlignTop,"Demand Equipment");
 }
 
+SupplyPlenumItem::SupplyPlenumItem(const model::ModelObject & mo, QGraphicsItem * parent)
+  : GridItem(parent)
+{
+  setModelObject(mo);
+
+  // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
+  m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
+}
+
+void SupplyPlenumItem::setModelObject( model::OptionalModelObject modelObject )
+{
+  if( modelObject )
+  {
+    boost::optional<model::AirLoopHVACSupplyPlenum> plenum = modelObject->optionalCast<model::AirLoopHVACSupplyPlenum>();
+    OS_ASSERT(plenum);
+
+    GridItem::setModelObject(modelObject);
+
+    if( boost::optional<model::ThermalZone> tz = plenum->thermalZone() )
+    {
+      setToolTip(QString::fromStdString(tz->name().get()));
+    }
+  }
+}
+
+void SupplyPlenumItem::paint(QPainter *painter, 
+                             const QStyleOptionGraphicsItem *option, 
+                             QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(QBrush(m_color,Qt::SolidPattern));
+
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(75,50,100,50);
+
+  QPointF points[4] = {
+    QPointF(25,25),
+    QPointF(75,40),
+    QPointF(75,60),
+    QPointF(25,75),
+  };
+  painter->drawPolygon(points,4);
+}
+
+ReturnPlenumItem::ReturnPlenumItem(const model::ModelObject & mo, QGraphicsItem * parent)
+  : GridItem(parent)
+{
+  setModelObject(mo);
+
+  // HorizontalBranchItem -> BranchGroupItem -> DemandSideItem -> SystemItem
+  m_color = static_cast<SystemItem *>(parentItem()->parentItem()->parentItem()->parentItem())->plenumColor(mo.handle());
+}
+
+void ReturnPlenumItem::setModelObject( model::OptionalModelObject modelObject )
+{
+  if( modelObject )
+  {
+    boost::optional<model::AirLoopHVACReturnPlenum> plenum = modelObject->optionalCast<model::AirLoopHVACReturnPlenum>();
+    OS_ASSERT(plenum);
+
+    GridItem::setModelObject(modelObject);
+
+    if( boost::optional<model::ThermalZone> tz = plenum->thermalZone() )
+    {
+      setToolTip(QString::fromStdString(tz->name().get()));
+    }
+  }
+}
+
+void ReturnPlenumItem::paint(QPainter *painter, 
+                             const QStyleOptionGraphicsItem *option, 
+                             QWidget *widget)
+{
+  GridItem::paint(painter,option,widget);
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
+  painter->setBrush(QBrush(m_color,Qt::SolidPattern));
+
+  painter->drawLine(0,50,25,50);
+  painter->drawLine(75,50,100,50);
+
+  QPointF points[4] = {
+    QPointF(25,40),
+    QPointF(75,25),
+    QPointF(75,75),
+    QPointF(25,60),
+  };
+  painter->drawPolygon(points,4);
+}
+
 OneThreeStraightItem::OneThreeStraightItem( QGraphicsItem * parent )
-  : GridItem( parent )
+  : GridItem(parent)
 {
 }
 

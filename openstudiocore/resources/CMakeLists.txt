@@ -60,19 +60,37 @@ SET(ENERGYPLUS_OUTPUTS "")
 
 SET(runmanager_resources_src
   runmanager/5ZoneWarmest.idf
-  runmanager/USA_CO_Golden-NREL.724666_TMY3.epw
-  runmanager/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
-  runmanager/USA_FL_Tampa.Intl.AP.722110_TMY3.epw
-  runmanager/in.file
-  runmanager/test.rb
-  runmanager/ScheduleFile.csv
-  runmanager/databasev1.db
   runmanager/create_os_result.rb
   runmanager/create_os_result_success.rb
-  runmanager/DummyMeasure/measure.xml
+  runmanager/databasev1.db
   runmanager/DummyMeasure/measure.rb
+  runmanager/DummyMeasure/measure.xml
+  runmanager/in.file
+  runmanager/jsonworkflowtest/small_seed.json
+  runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/adjust_thermostat_setpoints_by_degrees/measure.xml
+  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_exterior_walls/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_exterior_walls/measure.xml
+  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_roofs/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/increase_insulation_r_value_for_roofs/measure.xml
+  runmanager/jsonworkflowtest/inputs/measures/reduce_lighting_loads_by_percentage/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/reduce_lighting_loads_by_percentage/measure.xml
+  runmanager/jsonworkflowtest/inputs/measures/reduce_space_infiltration_by_percentage/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/reduce_space_infiltration_by_percentage/measure.xml
+  runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.rb
+  runmanager/jsonworkflowtest/inputs/measures/reduce_ventilation_by_percentage/measure.xml
+  runmanager/killtree.sh
+  runmanager/ScheduleFile.csv
   runmanager/SimpleModel.osm
-)
+  runmanager/test.ies
+  runmanager/test.rb
+  runmanager/test.xml
+  runmanager/UrlTest.osm.in
+  runmanager/USA_CA_San.Francisco.Intl.AP.724940_TMY3.epw
+  runmanager/USA_CO_Golden-NREL.724666_TMY3.epw
+  runmanager/USA_FL_Tampa.Intl.AP.722110_TMY3.epw
+
+  )
 
 # update the resources
 UPDATE_RESOURCES("${runmanager_resources_src}")
@@ -260,6 +278,21 @@ SET(osversion_resources_src
   osversion/1_2_3/OpenStudio.idd
   osversion/1_2_3/example.osm
   osversion/1_2_3/example.osc
+  osversion/1_2_4/OpenStudio.idd
+  osversion/1_2_4/example.osm
+  osversion/1_2_4/example.osc
+  osversion/1_2_5/OpenStudio.idd
+  osversion/1_2_5/example.osm
+  osversion/1_2_5/example.osc
+  osversion/1_3_0/OpenStudio.idd
+  osversion/1_3_0/example.osm
+  osversion/1_3_0/example.osc
+  osversion/1_3_1/OpenStudio.idd
+  osversion/1_3_1/example.osm
+  osversion/1_3_1/example.osc
+  osversion/1_3_2/OpenStudio.idd
+  osversion/1_3_2/example.osm
+  osversion/1_3_2/example.osc
   osversion/unknown.osc
 )
 
@@ -282,6 +315,13 @@ if (APPLE)
          )
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
            DESTINATION sharedresources
+         )
+elseif(UNIX)
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+         )
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
@@ -455,6 +495,7 @@ SET(energyplus_resources_src
   energyplus/ErrorFiles/Warnings.err
   energyplus/ErrorFiles/WarningsAndCrash.err
   energyplus/ErrorFiles/WarningsAndSevere.err
+  energyplus/ErrorFiles/RepeatingWarnings.err
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf

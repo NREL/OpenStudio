@@ -29,7 +29,9 @@ namespace model {
 class Space;
 class SubSurface;
 class Surface;
+class ShadingSurfaceGroup;
 class SurfaceIntersection;
+class ConstructionBase;
 
 namespace detail {
 
@@ -77,65 +79,44 @@ namespace detail {
 
     //@}
 
-    // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const;
 
-    /// set the parent, child may have to call methods on the parent
     virtual bool setParent(ParentObject& newParent);
 
-    // return any children objects in the hierarchy
     virtual std::vector<ModelObject> children() const;
 
-    /// remove self and all children objects recursively
     virtual std::vector<IdfObject> remove();
 
-    /// get a vector of allowable children types
     virtual std::vector<IddObjectType> allowableChildTypes() const;
 
     virtual const std::vector<std::string>& outputVariableNames() const;
     
     virtual IddObjectType iddObjectType() const;
 
-    /// should subtract this surface from parent's gross area for net area
     virtual bool subtractFromGrossArea() const;
 
-    /// get the construction object
-    /// if the planar surface is paired with an adjacent planar surface, attempts to resolve any surface matching conflict
     virtual boost::optional<ConstructionBase> construction() const;
 
-    /// get the construction object and the search distance that was needed to find the construction
-    /// does not consider adjacent planar surfaces
     virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const;
 
-    /// Returns true if the construction is not directly referenced by this surface .
     virtual bool isConstructionDefaulted() const;
 
     virtual bool setVertices(const std::vector<Point3d>& vertices);
 
-    /// set the construction object
     virtual bool setConstruction(const ConstructionBase& construction);
 
-    /// Resets the construction object.
     virtual void resetConstruction();
 
-    /// Returns the containing PlanarSurfaceGroup if available.
     virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const;
 
-    /// Returns the containing Space if available.
     virtual boost::optional<Space> space() const;
 
-    /** Get the u-factor of this surface. Includes film coefficients. */
     virtual boost::optional<double> uFactor() const;
 
-    /** Get the conductance of this surface. Does not include film coefficients. */
     virtual boost::optional<double> thermalConductance() const;
 
-    /** Set the u-factor of this surface in W/m^2*K, if possible. value should already include appropriate
-     *  film coefficients. By default, assumes still air indoors and 15 mph outdoor air speed. */
     virtual bool setUFactor(double value);
 
-    /** Set the conductance of this surface in W/m^2*K, if possible. value should not include any film
-     *  coefficients. */
     virtual bool setThermalConductance(double value);
 
     /** @name Getters */
@@ -213,73 +194,58 @@ namespace detail {
 
     //@}
 
-    /// Returns all child \link SubSurface SubSurfaces \endlink.
     std::vector<SubSurface> subSurfaces() const;
 
-    /// Sets the parent Space.
     bool setSpace(const Space& space);
 
-    /** Returns the adjacent Surface, if it exists. */
     boost::optional<Surface> adjacentSurface() const;
 
-    /** Sets the adjacent Surface. */
     bool setAdjacentSurface(Surface& surface);
 
-    /** Resets the adjacent Surface. */
     void resetAdjacentSurface();
 
-     /** Intersect with other Surface in other Space.
-     *  Returns false if either surface has child windows.
-     *  Returns false if either surface has an adjacent surface.
-     *  Returns false if surfaces are not on the same plane with opposing outward normals.
-     *  If the surfaces are the same, returns true but no new geometry is created.
-     *  Returns true if an intersection occurred. Does not set surface adjacency. */
     bool intersect(Surface& otherSurface);
     boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
-    /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.  
-        Returns the new Surface if created. */
     boost::optional<Surface> createAdjacentSurface(const Space& otherSpace);
 
-    /** Returns true if the Surface is part of the building envelope. */
     bool isPartOfEnvelope() const;
 
-    /** Assign default surface type based on vertices. */
     void assignDefaultSurfaceType();
     void assignDefaultSurfaceType(bool driverMethod);
 
-    /** Assign default boundary condition. */
     void assignDefaultBoundaryCondition();
     void assignDefaultBoundaryCondition(bool driverMethod);
 
-    /** Assign default sun exposure. */
     void assignDefaultSunExposure();
     void assignDefaultSunExposure(bool driverMethod);
 
-    /** Assign default wind exposure. */
     void assignDefaultWindExposure();
     void assignDefaultWindExposure(bool driverMethod);
 
-    /** Get the default film thermal resistance (m^2*K/W) for this surface. Assumes still indoor
-     *  air, and 15 mph wind outside. */
     double filmResistance() const;
 
-    /** Get the window to wall ratio for this surface. Calculated as 
-    sum(surface.windows.netArea)/surface.grossArea if this surface is a wall, returns
-    0 if this surface is not a wall. */
     double windowToWallRatio() const;
 
-    /** Sets the window to wall ratio for this surface.  Returns false if the
-    surface is not a wall, if the surface is not rectangular in face coordinates, if 
-    requested ratio is too large (window area ~= surface area) or too small (min dimension
-    of window < 1 foot), or if the window clips any remaining sub surfaces. Otherwise, removes
-    all existing windows and adds new window to meet requested ratio.*/
+    double skylightToRoofRatio() const;
+
+    double skylightToProjectedFloorRatio() const;
+
     boost::optional<SubSurface> setWindowToWallRatio(double wwr);
     
-    /** Same as setWindowToWallRatio but with extra parameters desiredHeightOffset and heightOffsetFromFloor.
-    If heightOffsetFromFloor is true then desiredHeightOffset is the desired sill height, otherwise it is the
-    offset from the ceiling. */
     boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+
+    std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio, 
+                                                               double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                               double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor, 
+                                                               const boost::optional<ConstructionBase>& viewGlassConstruction, 
+                                                               const boost::optional<ConstructionBase>& daylightingGlassConstruction);
+
+    std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+
+    std::vector<Surface> splitSurfaceForSubSurfaces();
+
+    std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
 
    protected:
    private:

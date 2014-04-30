@@ -302,6 +302,24 @@ namespace detail {
      // 2. Wait (almost-as) usual. If isStopping() and all processes have stopped, emit
      //    signal.
 
+     // MAINTENANCE ============================================================
+
+     // DataPoint or its results removed locally. Have server delete it too.
+     void dataPointOrItsResultsRemovedFromAnalysis(const openstudio::UUID& dataPointUUID);
+
+     // Process result of request put to server.
+     void dataPointDeletedFromServer(bool success);
+
+     void requestDeleteDataPointRetry();
+
+     // All data points or all results removed locally. Stop analysis and remove project.
+     void allDataPointsOrResultsRemovedFromAnalysis();
+
+     // Process result of request to delete project from server.
+     void projectDeletedFromServer(bool success);
+
+     void requestDeleteProjectRetry();
+
    private:
     REGISTER_LOGGER("openstudio.analysisdriver.CloudAnalysisDriver");
 
@@ -358,6 +376,17 @@ namespace detail {
     boost::optional<OSServer> m_requestStop;
     bool m_waitForAlreadyRunningDataPoints;
 
+    // delete data point
+    boost::optional<OSServer> m_requestDeleteDataPoint;
+    std::deque<analysis::DataPoint> m_deleteDataPointsQueue;
+    unsigned m_numDeleteDataPointTries;
+    std::vector<analysis::DataPoint> m_deleteDataPointFailures;
+
+    // stop analysis and delete project
+    boost::optional<OSServer> m_requestDeleteProject;
+    bool m_needToDeleteProject;
+    unsigned m_numDeleteProjectTries;
+
     void resetState();
 
     void logError(const std::string& error);
@@ -382,10 +411,17 @@ namespace detail {
 
     void registerStopRequestFailure();
 
+    bool requestNextDataPointDeletion();
+    void registerDataPointDeletionFailure();
+
+    bool requestProjectDeletion();
+    void registerProjectDeletionFailure();
+
     void checkForRunCompleteOrStopped();
 
     bool inIteration(const analysis::DataPoint& dataPoint) const;
     bool inProcessingQueues(const analysis::DataPoint& dataPoint) const;
+    void removeFromIteration(const analysis::DataPoint& dataPoint);
 
     std::string sessionTag() const;
     void clearSessionTags(analysis::DataPoint& dataPoint) const;
