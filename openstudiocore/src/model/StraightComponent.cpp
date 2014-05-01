@@ -468,63 +468,6 @@ bool StraightComponent_Impl::addToNode(Node & node)
       return false;
     }
   }
-  else if( boost::optional<PlantLoop> _plantLoop = node.plantLoop() )
-  {
-    PlantLoop plantLoop = _plantLoop.get();
-    if( plantLoop.supplyComponent(node.handle()) )
-    {
-      if( node == plantLoop.supplyOutletNode() &&
-          node.inletModelObject().get() == plantLoop.supplyInletNode() )
-      {
-        unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
-        unsigned oldInletPort = node.inletPort();
-        ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
-        ModelObject oldTargetModelObject = node;
-
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        thisModelObject, inletPort() );
-        _model.connect( thisModelObject, outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
-      else if( node == plantLoop.supplyOutletNode() )
-      {
-        unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
-        unsigned oldInletPort = node.inletPort();
-        ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
-        ModelObject oldTargetModelObject = node;
-
-        Node newNode( _model );
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        newNode, newNode.inletPort() );
-        _model.connect( newNode, newNode.outletPort(),
-                        thisModelObject, inletPort() );                        
-        _model.connect( thisModelObject, outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
-      else
-      {
-        unsigned oldOutletPort = node.outletPort();
-        unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
-        ModelObject oldSourceModelObject = node;
-        ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
-  
-        Node newNode( _model );
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        thisModelObject, inletPort() );
-        _model.connect( thisModelObject, outletPort(),
-                        newNode, newNode.inletPort() );
-        _model.connect( newNode, newNode.outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
-    }
-    else
-    {
-      return false;
-    }
-  }
   else
   {
     return false;
