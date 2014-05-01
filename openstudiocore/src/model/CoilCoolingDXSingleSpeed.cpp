@@ -37,13 +37,10 @@
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-<<<<<<< HEAD
 #include <model/AirLoopHVACUnitarySystem.hpp>
 #include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-=======
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
->>>>>>> develop
 #include <model/Model.hpp>
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
