@@ -193,19 +193,22 @@ namespace detail {
 
   bool CoilHeatingElectric_Impl::addToNode(Node & node)
   {
-    if( StraightComponent_Impl::addToNode(node) )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( boost::optional<Node> node = this->outletModelObject()->optionalCast<Node>() )
+      if( ! airLoop->demandComponent(node.handle()) )
       {
-        setTemperatureSetpointNode(node.get());
+        if( StraightComponent_Impl::addToNode( node ) )
+        {
+          if( boost::optional<Node> node = outletModelObject()->optionalCast<Node>() )
+          {
+            setTemperatureSetpointNode(node.get());
+          }
+          return true;
+        }
       }
+    }
 
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return false;
   }
 
   boost::optional<HVACComponent> CoilHeatingElectric_Impl::containingHVACComponent() const

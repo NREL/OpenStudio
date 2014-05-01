@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
+#include <model/FanConstantVolume.hpp>
+#include <model/FanConstantVolume_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/ControllerOutdoorAir.hpp>
@@ -32,7 +32,7 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,FanVariableVolume_FanVariableVolume)
+TEST_F(ModelFixture,FanConstantVolume_FanConstantVolume)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -40,17 +40,17 @@ TEST_F(ModelFixture,FanVariableVolume_FanVariableVolume)
   {  
     Model m;
     Schedule s = m.alwaysOnDiscreteSchedule();
-    FanVariableVolume testObject(m,s);
+    FanConstantVolume testObject(m,s);
 
     exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture,FanVariableVolume_addToNode) {
+TEST_F(ModelFixture,FanConstantVolume_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume testObject(m,s);
+  FanConstantVolume testObject(m,s);
 
   AirLoopHVAC airLoop(m);
   ControllerOutdoorAir controllerOutdoorAir(m);
@@ -88,13 +88,9 @@ TEST_F(ModelFixture,FanVariableVolume_addToNode) {
     EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
   }
 
-  FanVariableVolume testObjectClone = testObject.clone(m).cast<FanVariableVolume>();
+  FanConstantVolume testObjectClone = testObject.clone(m).cast<FanConstantVolume>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
-
-  FanVariableVolume fan2(m,s);
-  EXPECT_FALSE(fan2.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

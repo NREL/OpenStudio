@@ -29,6 +29,10 @@
 #include <model/Curve_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 
 #include <model/Model.hpp>
 #include <utilities/idd/OS_Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -64,7 +68,7 @@ namespace detail{
 
   ModelObject CoilCoolingDXTwoSpeed_Impl::clone(Model model) const
   {
-    CoilCoolingDXTwoSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
+    CoilCoolingDXTwoSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
 
     Curve ccfot = totalCoolingCapacityFunctionOfTemperatureCurve();
     newCoil.setTotalCoolingCapacityFunctionOfTemperatureCurve(ccfot.clone(model).cast<Curve>());
@@ -721,6 +725,19 @@ namespace detail{
       resetBasinHeaterOperatingSchedule();
     }
     return true;
+  }
+
+  bool CoilCoolingDXTwoSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
   }
 
 }// detail
