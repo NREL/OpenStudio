@@ -60,7 +60,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
-  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
+  EXPECT_EQ((unsigned)6, airLoop.demandComponents().size());
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
@@ -74,5 +74,5 @@ TEST_F(ModelFixture,AirTerminalSingleDuctUncontrolled_addToNode) {
   AirTerminalSingleDuctUncontrolled testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctUncontrolled>();
   
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
-  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+  EXPECT_EQ( (unsigned)8, airLoop.demandComponents().size() );
 }
