@@ -188,20 +188,17 @@ namespace radiance {
       std::vector<openstudio::model::IlluminanceMap> illuminanceMaps = space.illuminanceMaps();
       std::vector<openstudio::model::GlareSensor> glareSensors = space.glareSensors();
 
-      // do we really need both a daylighting control point and an illuminance map?  MakeSchedules seems to take
-      // either one or the other?
       if (daylightingControls.size() > 0 && illuminanceMaps.size() > 0){
         numSpacesToSimulate += 1;
 
         if (glareSensors.empty()){
-          LOG(Warn, "Space " << space.name().get() << " contains DaylightingControl and IlluminanceMap objects but no GlareSensor objects.");
+          LOG(Warn, "Space " << space.name().get() << " contains Radiance daylighting objects but no GlareSensor objects.");
         }
       }
     }
 
     if (numSpacesToSimulate == 0){
-      // need better message?
-      LOG(Error, "No spaces in model satisfy requirements for daylighting simulation using radiance.");
+      LOG(Error, "Model does not contain any Radiance daylighting objects.");
       return outfiles;
     }
 
@@ -237,16 +234,11 @@ namespace radiance {
       // get site shading
       siteShadingSurfaceGroups(radDir, site.shadingSurfaceGroups(), outfiles);
 
-      // loop through the model, get spaces
+      // get spaces
       buildingSpaces(radDir, building.spaces(), outfiles);
 
       // write options files
-      // todo generate options based on model
-      //
-      // get materials list for DC bins
-
       std::string dcmatsStringin;
-
       std::ifstream dcmatfilein(openstudio::toString(radDir / openstudio::toPath("materials/materials_dc.rad")).c_str());
 
       while (dcmatfilein.good())
@@ -262,7 +254,7 @@ namespace radiance {
       int totalVectors = dcmatsArray.size();
 
       LOG(Debug, "Total aperture headings: " << totalVectors);
-      if (totalVectors > 5)
+      if (totalVectors > 8)
       {
         LOG(Warn, formatString(totalVectors) << " glazing orientations detected (can cause long simulation times if using daylight coefficient approach)");
       }
