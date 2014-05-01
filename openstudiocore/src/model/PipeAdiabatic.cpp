@@ -80,12 +80,12 @@ unsigned PipeAdiabatic_Impl::outletPort()
 
 bool PipeAdiabatic_Impl::addToNode(Node & node)
 {
-  if( node.airLoopHVAC() )
+  if( boost::optional<PlantLoop> plant = node.plantLoop() )
   {
-    return false;
+    return StraightComponent_Impl::addToNode(node);
   }
 
-  return StraightComponent_Impl::addToNode( node );
+  return false;
 }
 
 } // detail

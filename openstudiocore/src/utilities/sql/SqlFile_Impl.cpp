@@ -2288,8 +2288,6 @@ namespace openstudio{
 
           unsigned month = sqlite3_column_int(sqlStmtPtr, 1);
           unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
-          unsigned hour = sqlite3_column_int(sqlStmtPtr, 3);
-          unsigned minute = sqlite3_column_int(sqlStmtPtr, 4);
           unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
 
           if (!startDateTime){

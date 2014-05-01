@@ -36,6 +36,10 @@
 #include <model/CurveCubic_Impl.hpp>
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveQuadratic_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
@@ -385,7 +389,7 @@ namespace detail{
 
   ModelObject CoilHeatingGas_Impl::clone(Model model) const
   {
-    CoilHeatingGas newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingGas>();
+    CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
     if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
     {
@@ -393,6 +397,19 @@ namespace detail{
     }
 
     return newCoil;
+  }
+
+  bool CoilHeatingGas_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
   }
 
 }// detail

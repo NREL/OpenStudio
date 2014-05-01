@@ -20,6 +20,7 @@
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/String.hpp>
+#include <OpenStudio.hxx>
 
 #include <QWidget>
 #include <QSettings>
@@ -85,7 +86,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory() / toPath("plugins")));
 
       // And for any other random cases
-      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio/qtplugins")));
+      QCoreApplication::addLibraryPath(toQString(getApplicationRunDirectory().parent_path() / toPath("share/openstudio-" + openStudioVersion() + "/qtplugins")));
       dynamic_cast<QApplication*>(m_qApplication)->setQuitOnLastWindowClosed(false);
       defaultInstance = true;
 

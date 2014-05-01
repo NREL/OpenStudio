@@ -198,6 +198,8 @@ namespace detail {
 
     void resetBasinHeaterOperatingSchedule();
 
+    bool addToNode(Node & node);
+
     //@}
   private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");

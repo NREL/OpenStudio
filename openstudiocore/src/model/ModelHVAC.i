@@ -227,7 +227,7 @@ SWIG_MODELOBJECT(WaterUseConnections);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent);
 SWIG_MODELOBJECT(GroundHeatExchangerVertical);
 
-#if defined SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 
 %inline {
   namespace openstudio {

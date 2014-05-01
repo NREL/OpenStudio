@@ -85,6 +85,8 @@ class MODEL_API WaterUseConnections_Impl : public StraightComponent_Impl {
 
   bool removeWaterUseEquipment(WaterUseEquipment & waterUseEquipment);
 
+  bool addToNode(Node & node);
+
   protected:
 
   private:

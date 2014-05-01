@@ -232,6 +232,8 @@ class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
   boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
   bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const boost::optional<Curve> curve );
 
+  bool addToNode(Node & node);
+
   //@}
  protected:
  private:

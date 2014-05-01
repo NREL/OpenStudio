@@ -38,7 +38,7 @@
 namespace openstudio {
 namespace runmanager {
   class RunManager;
-  class JSONWorkflowOptions;
+  struct JSONWorkflowOptions;
 
 namespace detail {
   /// WorkflowItem used for providing data about a job tree through the

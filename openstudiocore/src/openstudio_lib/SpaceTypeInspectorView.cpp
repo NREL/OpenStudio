@@ -953,7 +953,6 @@ void SpaceTypeInspectorView::populateStandardsSpaceTypes()
       m_standardsSpaceTypeComboBox->setCurrentIndex(0);
     }
   }
-  QCompleter* c = m_standardsSpaceTypeComboBox->completer();
 
   bool isConnected = false;
   isConnected = connect(m_standardsSpaceTypeComboBox, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(standardsSpaceTypeChanged(const QString&)));
