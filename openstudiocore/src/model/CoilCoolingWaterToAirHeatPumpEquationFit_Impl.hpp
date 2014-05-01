@@ -224,6 +224,8 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const;
     
   };
 
