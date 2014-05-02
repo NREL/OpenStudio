@@ -28,6 +28,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -194,6 +196,33 @@ namespace detail {
   void CoilHeatingDesuperheater_Impl::resetParasiticElectricLoad() {
     bool result = setString(OS_Coil_Heating_DesuperheaterFields::ParasiticElectricLoad, "");
     OS_ASSERT(result);
+  }
+
+  boost::optional<HVACComponent> CoilHeatingDesuperheater_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      {
+        if( suppHeatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
   }
 
 } // detail
