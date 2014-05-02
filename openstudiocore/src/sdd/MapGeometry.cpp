@@ -545,7 +545,7 @@ namespace sdd {
           }
 
           if (!infModelCoefBElement.isNull()){
-            // convert delta F to detla C
+            // convert 1/deltaF to 1/detlaC
             spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBElement.text().toDouble() * 5.0 / 9.0);
           }
 
