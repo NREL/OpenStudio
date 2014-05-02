@@ -188,6 +188,7 @@ void LifeCycleCostsView::createWidgets()
   mainLayout->addWidget(m_stackedWidget);
 
   mainLayout->addStretch();
+
 }
 
 QWidget * LifeCycleCostsView::createInflationRatesWidget()
@@ -420,29 +421,6 @@ QWidget * LifeCycleCostsView::createNistWidget()
 
 void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lifeCycleCostParameters)
 {
-  OS_ASSERT(m_fempGroup->button(0));
-  QString type = m_lifeCycleCostParameters->analysisType().c_str();
-  if(type == "FEMP"){
-    m_fempGroup->button(0)->setChecked(true);
-    fempGroupClicked(0);
-  } else if(type == "Custom") {
-    m_fempGroup->button(1)->setChecked(true);
-    fempGroupClicked(1);
-  } else {
-    // should never get here
-    OS_ASSERT(false);
-  }
-  
-  OS_ASSERT(m_nistGroup->button(0));
-  bool useNist = m_lifeCycleCostParameters->useNISTFuelEscalationRates();
-  if(useNist){
-    m_nistGroup->button(0)->setChecked(true);
-    nistGroupClicked(0);
-  } else {
-    m_nistGroup->button(1)->setChecked(true);
-    nistGroupClicked(1);
-  }
-
   if(m_nistRegionComboBox){
     m_nistRegionComboBox->bind<std::string>(
       *m_lifeCycleCostParameters,
@@ -555,7 +533,29 @@ void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lif
       boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setWaterInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
       boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetWaterInflation,m_lifeCycleCostParameters.get_ptr())));
   }
-
+ 
+  OS_ASSERT(m_fempGroup->button(0));
+  QString type = m_lifeCycleCostParameters->analysisType().c_str();
+  if(type == "FEMP"){
+    m_fempGroup->button(0)->setChecked(true);
+    fempGroupClicked(0);
+  } else if(type == "Custom") {
+    m_fempGroup->button(1)->setChecked(true);
+    fempGroupClicked(1);
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  
+  OS_ASSERT(m_nistGroup->button(0));
+  bool useNist = m_lifeCycleCostParameters->useNISTFuelEscalationRates();
+  if(useNist){
+    m_nistGroup->button(0)->setChecked(true);
+    nistGroupClicked(0);
+  } else {
+    m_nistGroup->button(1)->setChecked(true);
+    nistGroupClicked(1);
+  }
 }
 
 void LifeCycleCostsView::detach()
