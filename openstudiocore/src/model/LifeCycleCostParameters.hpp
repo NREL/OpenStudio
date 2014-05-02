@@ -110,9 +110,13 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
 
   boost::optional<std::string> nistRegion() const;
 
+  std::vector<std::string> validNistRegionValues() const;
+
   bool isNISTRegionDefaulted() const;
 
   boost::optional<std::string> nistSector() const;
+
+  std::vector<std::string> validNistSectorValues() const;
 
   bool isNISTSectorDefaulted() const;
 

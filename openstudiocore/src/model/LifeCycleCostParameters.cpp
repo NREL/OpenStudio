@@ -242,6 +242,12 @@ namespace detail {
     return result;
   }
 
+  std::vector<std::string> LifeCycleCostParameters_Impl::validNistRegionValues() const
+  {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_LifeCycleCost_ParametersFields::NISTRegion);
+  }
+
   bool LifeCycleCostParameters_Impl::isNISTRegionDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::NISTRegion);
   }
@@ -253,6 +259,12 @@ namespace detail {
       result = getString(OS_LifeCycleCost_ParametersFields::NISTSector, true);
     }
     return result;
+  }
+
+  std::vector<std::string> LifeCycleCostParameters_Impl::validNistSectorValues() const
+  {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_LifeCycleCost_ParametersFields::NISTSector);
   }
 
   bool LifeCycleCostParameters_Impl::isNISTSectorDefaulted() const{
@@ -943,12 +955,22 @@ boost::optional<std::string> LifeCycleCostParameters::nistRegion() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->nistRegion();
 }
 
+std::vector<std::string> LifeCycleCostParameters::validNistRegionValues() const
+{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->validNistRegionValues();
+}
+
 bool LifeCycleCostParameters::isNISTRegionDefaulted() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->isNISTRegionDefaulted();
 }
 
 boost::optional<std::string> LifeCycleCostParameters::nistSector() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->nistSector();
+}
+
+std::vector<std::string> LifeCycleCostParameters::validNistSectorValues() const
+{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->validNistSectorValues();
 }
 
 bool LifeCycleCostParameters::isNISTSectorDefaulted() const {
