@@ -51,9 +51,9 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     ENDIF()
       
     TARGET_LINK_LIBRARIES( ${BASE_NAME}_tests 
-      ${ALL_DEPENDENCIES} 
       gtest 
       gtest_main
+      ${ALL_DEPENDENCIES}
     )
 
     ADD_GOOGLE_TESTS( ${BASE_NAME}_tests ${SRC} )
