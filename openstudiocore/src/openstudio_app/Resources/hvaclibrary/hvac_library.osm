@@ -3730,7 +3730,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {2e28adfb-474c-4f0c-84c5-88884963b30e}, !- Handle
@@ -3981,7 +3984,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {9be5fc48-23e1-43f4-9f73-8b838bf3ab13}, !- Handle
@@ -4262,7 +4268,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {92d46b63-bee9-4a68-9b87-0cf64c3c6db6}, !- Handle
@@ -4484,7 +4493,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {d89faefb-347b-43f3-a961-af51209d1bda}, !- Handle
@@ -4702,7 +4714,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {e803e540-d848-409c-9bad-0c0dc9c7b50a}, !- Handle
@@ -4890,7 +4905,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {705d20c8-7569-40b3-b69d-0ea966344238}, !- Handle
@@ -5082,7 +5100,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:VariableVolume,
   {057b7168-bdc2-418a-9961-3bfe683a200e}, !- Handle
@@ -5205,7 +5226,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:ConstantVolume,
   {0c016d27-85cb-4254-8b85-9a16c4586de5}, !- Handle
@@ -5320,7 +5344,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {499db098-1af5-4236-8115-51a38ac8163e}, !- Handle
@@ -5464,7 +5491,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {1fb3620b-be0e-4bf3-bdab-3320a2807269}, !- Handle
@@ -5673,7 +5703,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {69bcd821-df0e-4a8c-bced-33315e849e64}, !- Handle
@@ -5852,7 +5885,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {37e35cd8-c016-4d24-80db-b070cc5a1999}, !- Handle
@@ -5943,7 +5979,10 @@ OS:AirLoopHVAC:UnitarySystem,
   0,                                      !- Ancilliary On-Cycle Electric Power {W}
   0,                                      !- Ancilliary Off-Cycle Electric Power {W}
   ,                                       !- Design Heat Recovery Water Flow Rate {m3/s}
-  80;                                     !- Maximum Temperature for Heat Recovery {C}
+  80,                                     !- Maximum Temperature for Heat Recovery {C}
+  ,
+  ,
+  ;
 
 OS:Fan:OnOff,
   {9be0b11b-c585-4514-aa5a-9cb276e583c5}, !- Handle

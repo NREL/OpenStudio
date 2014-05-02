@@ -106,6 +106,8 @@
     <rule IddField="Supplemental Heating Coil Name" Access="LOCKED"/>
     <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
     <rule IddField="Control Type" Access="HIDDEN"/>
+    <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
+    <rule IddField="Fan Placement" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Pipe_Adiabatic">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
