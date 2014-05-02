@@ -32,6 +32,8 @@
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Fan_VariableVolume_FieldEnums.hxx>
@@ -777,6 +779,26 @@ namespace detail {
       }
     }
     return false;
+  }
+
+  boost::optional<HVACComponent> FanVariableVolume_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
   }
 
   boost::optional<ZoneHVACComponent> FanVariableVolume_Impl::containingZoneHVACComponent() const
