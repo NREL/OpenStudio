@@ -149,7 +149,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode() const;
 
-  boost::optional<CurveCubic> pipingCorrectionFactorforLengthinHeatingModeCurve() const;
+  boost::optional<CurveBiquadratic> pipingCorrectionFactorforLengthinHeatingModeCurve() const;
 
   double pipingCorrectionFactorforHeightinHeatingModeCoefficient() const;
 
@@ -357,7 +357,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   void setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(double equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
 
-  bool setPipingCorrectionFactorforLengthinHeatingModeCurve(const boost::optional<CurveCubic>& curve);
+  bool setPipingCorrectionFactorforLengthinHeatingModeCurve(const boost::optional<CurveBiquadratic>& curve);
 
   void resetPipingCorrectionFactorforLengthinHeatingModeCurve();
 

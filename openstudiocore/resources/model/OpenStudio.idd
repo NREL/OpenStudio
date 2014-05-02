@@ -11849,6 +11849,7 @@ OS:Curve:Linear,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11904,6 +11905,7 @@ OS:Curve:Quadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11962,6 +11964,7 @@ OS:Curve:Cubic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12020,6 +12023,7 @@ OS:Curve:Quartic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12075,6 +12079,7 @@ OS:Curve:Exponent,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12168,6 +12173,7 @@ OS:Curve:Bicubic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12249,6 +12255,7 @@ OS:Curve:Biquadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12327,6 +12334,7 @@ OS:Curve:QuadraticLinear,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12459,6 +12467,7 @@ OS:Curve:Triquadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
