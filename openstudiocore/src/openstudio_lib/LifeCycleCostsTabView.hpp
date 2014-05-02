@@ -22,18 +22,20 @@
 
 #include <openstudio_lib/MainTabView.hpp>
 
+#include <model/LifeCycleCostParameters.hpp>
 #include <model/Model.hpp>
 
 #include <QWidget>
 
 class QButtonGroup;
-class QComboBox;
+class QLabel;
 class QStackedWidget;
 
 namespace openstudio {
 
-class OSDoubleEdit;
-class OSIntegerEdit;
+class OSComboBox2;
+class OSDoubleEdit2;
+class OSIntegerEdit2;
 
 namespace model {
   class Model;
@@ -57,42 +59,47 @@ private:
 
   QWidget * createNistWidget();
 
+  void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lifeCycleCostParameters);
+
+  void LifeCycleCostsView::detach();
+
   model::Model m_model;
 
-  OSIntegerEdit * m_AnalysisLengthIntegerEdit;
+  boost::optional<model::LifeCycleCostParameters> m_lifeCycleCostParameters;
+
+  OSIntegerEdit2 * m_AnalysisLengthIntegerEdit;
   
-  OSDoubleEdit * m_RealDiscountRateDoubleEdit;
+  OSDoubleEdit2 * m_RealDiscountRateDoubleEdit;
 
-  OSDoubleEdit * m_ElectricityDoubleEdit;
-  OSDoubleEdit * m_NaturalGasDoubleEdit;
-  OSDoubleEdit * m_SteamDoubleEdit;
-  OSDoubleEdit * m_GasolineDoubleEdit;
+  OSDoubleEdit2 * m_ElectricityDoubleEdit;
+  OSDoubleEdit2 * m_NaturalGasDoubleEdit;
+  OSDoubleEdit2 * m_SteamDoubleEdit;
+  OSDoubleEdit2 * m_GasolineDoubleEdit;
 
-  OSDoubleEdit * m_DieselDoubleEdit;
-  OSDoubleEdit * m_PropaneDoubleEdit;
-  OSDoubleEdit * m_CoalDoubleEdit;
-  OSDoubleEdit * m_FuelOil_1DoubleEdit;
+  OSDoubleEdit2 * m_DieselDoubleEdit;
+  OSDoubleEdit2 * m_PropaneDoubleEdit;
+  OSDoubleEdit2 * m_CoalDoubleEdit;
+  OSDoubleEdit2 * m_FuelOil_1DoubleEdit;
 
-  OSDoubleEdit * m_FuelOil_2DoubleEdit;
-  OSDoubleEdit * m_WaterDoubleEdit;
+  OSDoubleEdit2 * m_FuelOil_2DoubleEdit;
+  OSDoubleEdit2 * m_WaterDoubleEdit;
 
   QButtonGroup * m_fempGroup;
   QButtonGroup * m_nistGroup;
 
-  QComboBox * m_nistRegionComboBox;
-  QComboBox * m_nistSectorComboBox;
+  OSComboBox2 * m_nistRegionComboBox;
+  OSComboBox2 * m_nistSectorComboBox;
 
   QStackedWidget * m_stackedWidget;
+
+  QLabel * m_analysisLengthLabel;
+  QLabel * m_realDiscountRateLabel;
 
 private slots:
 
   void fempGroupClicked(int index);
 
   void nistGroupClicked(int index);
-
-  void nistSectorChanged(const QString& string);
-
-  void nistRegionChanged(const QString& string);
 
 };
 
