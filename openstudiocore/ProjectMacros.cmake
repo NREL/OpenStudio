@@ -456,6 +456,15 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
 
     # SET( _NAME "_${LOWER_NAME}.so")
+    # IF(APPLE)
+    #   SET( _NAME "${LOWER_NAME}.so" )
+    # ELSE()
+    IF(MSVC)
+      SET( _NAME "_${LOWER_NAME}.pyd")
+    ELSE()
+      SET( _NAME "_${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    ENDIF()
+    # ENDIF()
 
     IF( WIN32 OR APPLE )
       INSTALL( TARGETS ${swig_target} DESTINATION Python/openstudio/ )
@@ -474,9 +483,9 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       # EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${CMAKE_BINARY_DIR}/Products/python/${LOWER_NAME}.py\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
 
       INSTALL(CODE "
-        #MESSAGE( \"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\" )
+        # MESSAGE( \"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\" )
         INCLUDE(GetPrerequisites)
-        GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/_${LOWER_NAME}.so PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
+        GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
         # GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${LOWER_NAME}.py PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
         #MESSAGE( \"PREREQUISITES = \${PREREQUISITES}\" )
 
@@ -494,7 +503,7 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
          GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
 
          IF(APPLE)
-           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/_${LOWER_NAME}.so\")
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME}\")
            FOREACH( PR IN LISTS PREREQUISITES )
             GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
             GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
