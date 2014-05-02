@@ -264,7 +264,6 @@ namespace radiance {
       // get Radiance sim settings
       openstudio::model::RadianceParameters radianceParameters = m_model.getUniqueModelObject<openstudio::model::RadianceParameters>();
       
-
       // write daylightsim options to files
       //
       std::vector<openstudio::model::ShadingControl> shadingControls = model.getModelObjects<openstudio::model::ShadingControl>();
@@ -1086,7 +1085,7 @@ namespace radiance {
               //double nTs = 0.0; // transmitted specularity
 
               if (tVis >= 0.6) {
-                LOG( Warn, "Radiance Translator: dubious glazing material defined for space: "+space_name+"; Tvis ="+formatString(tVis, 4)+", yet diffuse? Suspect!");  
+                LOG( Warn, "dubious glazing material defined for "+space_name+"; Tvis ="+formatString(tVis, 4)+", yet diffuse? Suspect!");  
               }
               
             } else {
@@ -1121,7 +1120,7 @@ namespace radiance {
 
           } else if (subSurfaceUpCase == "DOOR") {
 
-            LOG(Info, "Radiance Translator: found a door, will set to interior reflectance");
+            LOG(Info, "found a door, will set to interior reflectance");
 
             double interiorVisibleAbsorbtance = subSurface->interiorVisibleAbsorbtance().get();
             double exteriorVisibleAbsorbtance = subSurface->exteriorVisibleAbsorbtance().get();
@@ -1144,9 +1143,9 @@ namespace radiance {
             }
 
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDOME") {
-            LOG(Warn, "Radiance Translator: subsurface is a tdd dome, not translated (not yet implemented).");
+            LOG(Warn, "subsurface is a tdd dome, not translated (not yet implemented).");
           } else if (subSurfaceUpCase == "TUBULARDAYLIGHTDIFFUSER") {
-            LOG(Warn, "Radiance Translator: subsurface is a tdd diffuser, not translated (not yet implemented).");
+            LOG(Warn, "subsurface is a tdd diffuser, not translated (not yet implemented).");
           }
         }
       } // loop over surfaces
@@ -1273,10 +1272,10 @@ namespace radiance {
           t_outfiles.push_back(filename);
           file << m_radSensors[space_name];
         }else{
-          LOG(Error, "Radiance translator: cannot open file '" << toString(filename) << "' for writing");
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Radiance translator: wrote " << space_name << ".sns");
+        LOG(Debug, "Wrote " << space_name << ".sns");
       }
        
       
@@ -1302,10 +1301,10 @@ namespace radiance {
           t_outfiles.push_back(filename);
           file << m_radGlareSensors[space_name];
         }else{
-          LOG(Error, "Radiance translator: cannot open file '" << toString(filename) << "' for writing");
+          LOG(Error, "Cannot open file '" << toString(filename) << "' for writing");
         }
 
-        LOG(Debug, "Radiance translator: wrote " << space_name << ".glr");
+        LOG(Debug, "Wrote " << space_name << ".glr");
       }
 
       //{  

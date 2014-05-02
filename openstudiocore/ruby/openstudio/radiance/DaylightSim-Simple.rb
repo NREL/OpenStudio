@@ -95,10 +95,6 @@ class ParseOptions
       opts.on("--view front.vf,plan.vf", Array, "View argument(s)") do |simView|
         options.simView = simView
       end
-      ## Specify the illuminance map(s)
-      #opts.on("--map lobby.fld,room.fld", Array, "Illuminance Map argument(s)") do |simMap|
-      #  options.simMap = simMap
-      #end
       # Specify the space(s)
       opts.on("--spaces core,perimeter", Array, "Space argument(s)") do |simSpaces|
         options.simSpaces = simSpaces
@@ -296,7 +292,6 @@ def mergeSpaces(t_space_names_to_calculate, t_outPath)
         f.write IO.read("#{t_outPath}/numeric/#{space_name}.sns")
       end
 
-
       if File.exists?("#{t_outPath}/numeric/#{space_name}.glr")
         f.write IO.read("#{t_outPath}/numeric/#{space_name}.glr")
       end
@@ -361,10 +356,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     # do map
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} \
       -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" -m skyglow model_dc.oct")
-
-#    if t_options.verbose == 'v'
-      puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
-#    end
+    puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
 
     # do control point views, if requested
     # NOTE: this needs work. RPG 2012.02.18
@@ -375,9 +367,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
         binDir="#{t_outPath}/output/dc/#{space_name}/views"
         Dir.mkdir("#{binDir}") unless File.exists?("#{binDir}")
 
-#        if t_options.verbose == 'v'
-          puts "#{Time.now.getutc}: computing daylight coefficients for #{space_name}"
-#        end
+        puts "#{Time.now.getutc}: computing daylight coefficients for #{space_name}"
           
         view_def = ""
         dims = t_options.dims
@@ -569,7 +559,6 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
           index = index + 1
         end
 
-
         if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
           glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
 
@@ -598,7 +587,6 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
         end
       end
 
-
       splitvalues[space_name] = [space, illum, glaresensors]
     end
 
@@ -608,8 +596,6 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   puts "Returning annual results"
   return allhours;
 end
-
-
 
 def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
@@ -642,12 +628,12 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Run the simulation 
   puts "Running annual simulation"
-
+  
 
   simulations = []
   windowMapping = nil
 
-  exec_statement("gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+  exec_statement("gendaymtx -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
 
   if t_options.z == true
     # 3-phase
@@ -716,9 +702,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   end
 
   return values, dcVectors;
-
-end
-
+end #def
 
 def getTimeSeries(t_sqlFile, t_envPeriod)
   diffHorizIllumAll = []; dirNormIllumAll = [];
@@ -755,7 +739,6 @@ def getTimeSeries(t_sqlFile, t_envPeriod)
   return diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits
 
 end
-
 
 def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll, t_dirNormIllumAll, t_diffEfficacyAll, t_dirNormEfficacyAll, t_solarAltitudeAll, t_solarAzimuthAll)
 
@@ -1067,9 +1050,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
   end
 end
 
-
-
-
 # help those poor Windows users out
 perlExtension = ""
 catCommand = "cat"
@@ -1224,7 +1204,6 @@ building.spaces.each do |space|
     spaceHeights[space_name] = map.numberofYGridPoints
   end
 
-
   # get daylighting control points
   space.daylightingControls.each do |control|
     radDaylightingControls[space_name] = ""
@@ -1260,7 +1239,6 @@ space_names_to_calculate = filtered_space_names_to_calculate
 
 # run radiance
 # check for Radiance installation
-#
 
 puts "#{Time.now.getutc}: checking for radiance"
 
