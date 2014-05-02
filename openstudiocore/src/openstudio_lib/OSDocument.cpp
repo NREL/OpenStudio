@@ -18,7 +18,6 @@
  **********************************************************************/
 
 #include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/ApplyMeasureNowDialog.hpp>
 #include <openstudio_lib/BuildingStoriesTabController.hpp>
 #include <openstudio_lib/ConstructionsTabController.hpp>
 #include <openstudio_lib/FacilityTabController.hpp>
@@ -947,86 +946,6 @@ void OSDocument::exportIdf()
   }
 }
 
-void OSDocument::exportgbXML()
-{
-  exportFile(GBXML);
-}
-
-void OSDocument::exportSDD()
-{
-  exportFile(SDD);
-}
-
-void OSDocument::exportFile(fileType type)
-{
-
-  std::vector<LogMessage> translatorErrors, translatorWarnings;
- 
-  QString text("Export ");
-  if(type == SDD){
-    text.append("SDD");
-  } else if(type == GBXML) {
-    text.append("gbXML");
-  } else {
-    // should never get here
-    OS_ASSERT(false);
-  }
-
-  QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
-                                                  tr(text.toStdString().c_str()),
-                                                  QDir::homePath(),
-                                                  tr("(*.xml)") );
-
-  if( ! fileName.isEmpty() )
-  {
-    model::Model m = this->model();
-    openstudio::path outDir = toPath(fileName);
-
-    if(type == SDD){
-      sdd::ForwardTranslator trans;
-      Workspace workspace = trans.modelToSDD(m, outDir);
-      translatorErrors = trans.errors();
-      translatorWarnings = trans.warnings();
-    } else if(type == GBXML) {
-      gbxml::ForwardTranslator trans;
-      Workspace workspace = trans.modelToGbXML(m, outDir);
-      translatorErrors = trans.errors();
-      translatorWarnings = trans.warnings();
-    } 
-
-    bool errorsOrWarnings = false;
-    QString log;
-    for( std::vector<LogMessage>::iterator it = translatorErrors.begin();
-          it < translatorErrors.end();
-          ++it )
-    {
-      errorsOrWarnings = true;
-
-      log.append(QString::fromStdString(it->logMessage()));
-      log.append("\n");
-      log.append("\n");
-    }  
-
-    for( std::vector<LogMessage>::iterator it = translatorWarnings.begin();
-          it < translatorWarnings.end();
-          ++it )
-    {
-      errorsOrWarnings = true;
-
-      log.append(QString::fromStdString(it->logMessage()));
-      log.append("\n");
-      log.append("\n");
-    }
-
-    if (errorsOrWarnings){
-      QMessageBox messageBox;
-      messageBox.setText("Errors or warnings occurred on export.");
-      messageBox.setDetailedText(log);
-      messageBox.exec();
-    }
-  }
-}
-
 void OSDocument::save()
 {
   // save the project file
@@ -1068,11 +987,6 @@ void OSDocument::save()
   }else{
     saveAs();
   }
-}
-
-void OSDocument::revert()
-{
-  // TODO
 }
 
 void OSDocument::scanForTools()
@@ -1288,41 +1202,6 @@ ScriptFolderListView* OSDocument::scriptFolderListView() {
 
 void OSDocument::toggleUnits(bool displayIP)
 {
-}
-
-void OSDocument::openMeasuresDlg()
-{
-  // open modal dialog
-  m_applyMeasureNowDialog = QSharedPointer<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-
-  if(m_applyMeasureNowDialog->exec()){ // TODO
-
-  }else{
-
-  }
-}
-
-void OSDocument::openChangeMeasuresDirDlg()
-{
-  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
- 
-  QString dirName = QFileDialog::getExistingDirectory( this->mainWindow(),
-                                                       tr("Select My Measures Directory"),
-                                                       toQString(userMeasuresDir));
- 
-  if(dirName.length() > 0){
-    userMeasuresDir = toPath(dirName);
-    if (BCLMeasure::setUserMeasuresDir(userMeasuresDir)){
-      OSAppBase::instance()->measureManager().updateMeasuresLists();
-    }
-  }
-
-}
-
-void OSDocument::changeBclLogin()
-{
-  // TODO
-  QMessageBox::information( this->mainWindow(), QString("Change BCL Login Information"), QString("Not yet available.\nMiddleware testing required."));
 }
 
 void OSDocument::openBclDlg()
