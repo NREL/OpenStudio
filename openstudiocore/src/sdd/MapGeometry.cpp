@@ -514,7 +514,7 @@ namespace sdd {
 
           QDomElement infSchRefElement = element.firstChildElement("InfSchRef");
           QDomElement infModelCoefAElement = element.firstChildElement("InfModelCoefA"); // unitless
-          QDomElement infModelCoefBElement = element.firstChildElement("InfModelCoefB"); // 1/F
+          QDomElement infModelCoefBElement = element.firstChildElement("InfModelCoefB"); // 1/deltaF
           QDomElement infModelCoefCElement = element.firstChildElement("InfModelCoefC"); // hr/mile
           QDomElement infModelCoefDElement = element.firstChildElement("InfModelCoefD"); // hr^2/mile^2
 
@@ -545,15 +545,8 @@ namespace sdd {
           }
 
           if (!infModelCoefBElement.isNull()){
-            // SDD: 1/F, OpenStudio: 1/C
-            BTUUnit ipUnit(BTUExpnt(0,0,0,-1));
-            openstudio::TemperatureUnit ipTempUnit = ipUnit.cast<openstudio::TemperatureUnit>();
-            ipTempUnit.setAsRelative();
-            openstudio::Quantity infModelCoefBIP(infModelCoefBElement.text().toDouble(), ipTempUnit);
-            OptionalQuantity infModelCoefBSI = QuantityConverter::instance().convert(infModelCoefBIP, siSys);
-            OS_ASSERT(infModelCoefBSI);
-            OS_ASSERT(infModelCoefBSI->units() == SIUnit(SIExpnt(0,0,0,-1)));
-            spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBSI->value());
+            // convert delta F to detla C
+            spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBElement.text().toDouble() * 5.0 / 9.0);
           }
 
           if (!infModelCoefCElement.isNull()){
@@ -565,7 +558,7 @@ namespace sdd {
             spaceInfiltrationDesignFlowRate.setVelocityTermCoefficient(infModelCoefCSI->value());
           }
 
-          if (!infModelCoefAElement.isNull()){
+          if (!infModelCoefDElement.isNull()){
             // SDD: hr^2/mile^2, OpenStudio: s^2/m^2
             openstudio::Quantity infModelCoefDIP(infModelCoefDElement.text().toDouble(), MPHUnit(MPHExpnt(0,-2,2)));
             OptionalQuantity infModelCoefDSI = QuantityConverter::instance().convert(infModelCoefDIP, siSys);
