@@ -1496,6 +1496,36 @@ namespace detail {
       result.push_back(curve.get());
     }
 
+    curve = pipingCorrectionFactorforLengthinHeatingModeCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryCoolingCapacityModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryCoolingEnergyModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryHeatingCapacityModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryHeatingEnergyModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+
     return result;
   }
 
@@ -1634,6 +1664,36 @@ namespace detail {
     {
       airConditionerClone.setPipingCorrectionFactorforLengthinCoolingModeCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
     }
+    
+    curveCubic = pipingCorrectionFactorforLengthinHeatingModeCurve();
+    if( curveCubic )
+    {
+      airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(curveCubic->clone(model).cast<CurveCubic>());
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryCoolingCapacityModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryCoolingEnergyModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryHeatingCapacityModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryHeatingEnergyModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
 
     return airConditionerClone;
   }
@@ -1766,6 +1826,36 @@ namespace detail {
     }
     
     curveBiquadratic = pipingCorrectionFactorforLengthinCoolingModeCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = pipingCorrectionFactorforLengthinCoolingModeCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingEnergyModifierCurve();
     if( curveBiquadratic )
     {
       curveBiquadratic->remove();
