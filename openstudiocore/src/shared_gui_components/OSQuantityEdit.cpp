@@ -329,7 +329,17 @@ void OSQuantityEdit2::refreshTextAndLabel() {
         ss << std::fixed;
       }
       if (m_precision) {
-        ss << std::setprecision(*m_precision);
+
+        // check if precision is too small to display value
+        int precision = *m_precision;
+        double minValue = std::pow(10.0, -precision);
+        if (*displayValue < minValue){
+          m_precision.reset();
+        }
+
+        if (m_precision){
+          ss << std::setprecision(*m_precision);
+        }
       }
       ss << *displayValue;
       textValue = toQString(ss.str());
@@ -578,7 +588,17 @@ void OSQuantityEdit::refreshTextAndLabel() {
         ss << std::fixed;
       }
       if (m_precision) {
-        ss << std::setprecision(*m_precision);
+        
+        // check if precision is too small to display value
+        int precision = *m_precision;
+        double minValue = std::pow(10.0, -precision);
+        if (q.value() < minValue){
+          m_precision.reset();
+        }
+
+        if (m_precision){
+          ss << std::setprecision(*m_precision);
+        }
       }
       ss << q.value();
       textValue = toQString(ss.str());
