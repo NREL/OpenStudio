@@ -242,7 +242,8 @@ SET( ${target_name}_depends
   litesql-util
   miniziplib
   ${Boost_LIBRARIES}
-  ${CMAKE_THREAD_LIBS}
+  #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
+  # ${CMAKE_THREAD_LIBS}
   ${QT_LIBS}
 )
 
