@@ -140,7 +140,7 @@ void LifeCycleCostsView::createWidgets()
   vLayout->setSpacing(5);
 
   m_realDiscountRateLabel = new QLabel();
-  m_realDiscountRateLabel->setText("Real Discount Rate (%)");
+  m_realDiscountRateLabel->setText("Real Discount Rate (fraction)");
   m_realDiscountRateLabel->setObjectName("H2");
   vLayout->addWidget(m_realDiscountRateLabel);
 
