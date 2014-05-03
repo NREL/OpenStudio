@@ -581,9 +581,13 @@ void LifeCycleCostsView::detach()
 void LifeCycleCostsView::fempGroupClicked(int index)
 {  
   // 0 = FEMP, 1 = Custom
-  m_analysisLengthLabel->setEnabled(index);
+  // DLM: model object actually lets analysis length change under FEMP, it just can't be > 25
+  // DLM: analysis length can't be > 30 when using NIST fuel escalation
+  //m_analysisLengthLabel->setEnabled(index);
+  //m_AnalysisLengthIntegerEdit->setEnabled(index);
+
+  // this is locked under FEMP
   m_realDiscountRateLabel->setEnabled(index);
-  m_AnalysisLengthIntegerEdit->setEnabled(index);
   m_RealDiscountRateDoubleEdit->setEnabled(index);
 
   if(index == 0){

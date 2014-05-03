@@ -259,10 +259,18 @@ void OSDoubleEdit2::onEditingFinished() {
         double value = boost::lexical_cast<double>(str);
         setPrecision(str);
         if (m_set) {
-          (*m_set)(value);
+          bool result = (*m_set)(value);
+          if (!result){
+            //restore
+            refreshTextAndLabel();
+          }
         }
       }
-      catch (...) {}
+      catch (...) 
+      {
+        //restore
+        refreshTextAndLabel();
+      }
     }
   }
 }

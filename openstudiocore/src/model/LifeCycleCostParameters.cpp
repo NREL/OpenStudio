@@ -390,14 +390,24 @@ namespace detail {
   {
     bool changed = (this->analysisType() != analysisType);
 
-    bool result = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, analysisType);
+    bool result = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, analysisType, false);
     if (result && changed){
       if (isFEMPAnalysis()){
         if (isConstantDollarAnalysis()){
-          setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+          // DLM: don't emit change signals until end
+          //setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+          setDouble(OS_LifeCycleCost_ParametersFields::RealDiscountRate,LifeCycleCostParameters::fempRealDiscountRate(), false);
+          setString(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, "", false);
+          setString(OS_LifeCycleCost_ParametersFields::Inflation, "", false);
         }else{  
-          setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
-          setInflation(LifeCycleCostParameters::fempInflation());
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+          // DLM: don't emit change signals until end
+          //setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
+          //setInflation(LifeCycleCostParameters::fempInflation());
+          setString(OS_LifeCycleCost_ParametersFields::RealDiscountRate, "", false);
+          setDouble(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, LifeCycleCostParameters::fempNominalDiscountRate(), false);
+          setDouble(OS_LifeCycleCost_ParametersFields::Inflation, LifeCycleCostParameters::fempInflation(), false);
         }
 
         if (lengthOfStudyPeriodInYears() > 25){
@@ -405,6 +415,8 @@ namespace detail {
         }
       }
     }
+
+    emitChangeSignals();
 
     return result;
   }
