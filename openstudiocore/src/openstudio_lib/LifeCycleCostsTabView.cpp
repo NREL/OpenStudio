@@ -224,7 +224,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Electricity (%)");
+  label->setText("Electricity (fraction)");
   vLayout->addWidget(label);
 
   m_ElectricityDoubleEdit = new OSDoubleEdit2();
@@ -239,7 +239,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Natural Gas (%)");
+  label->setText("Natural Gas (fraction)");
   vLayout->addWidget(label);
 
   m_NaturalGasDoubleEdit = new OSDoubleEdit2();
@@ -253,7 +253,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Steam (%)");
+  label->setText("Steam (fraction)");
   vLayout->addWidget(label);
 
   m_SteamDoubleEdit = new OSDoubleEdit2();
@@ -266,7 +266,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Gasoline (%)");
+  label->setText("Gasoline (fraction)");
   vLayout->addWidget(label);
 
   m_GasolineDoubleEdit = new OSDoubleEdit2();
@@ -283,7 +283,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Diesel (%)");
+  label->setText("Diesel (fraction)");
   vLayout->addWidget(label);
 
   m_DieselDoubleEdit = new OSDoubleEdit2();
@@ -297,7 +297,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Propane (%)");
+  label->setText("Propane (fraction)");
   vLayout->addWidget(label);
 
   m_PropaneDoubleEdit = new OSDoubleEdit2();
@@ -311,7 +311,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Coal (%)");
+  label->setText("Coal (fraction)");
   vLayout->addWidget(label);
 
   m_CoalDoubleEdit = new OSDoubleEdit2();
@@ -325,7 +325,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Fuel Oil #1 (%)");
+  label->setText("Fuel Oil #1 (fraction)");
   vLayout->addWidget(label);
 
   m_FuelOil_1DoubleEdit = new OSDoubleEdit2();
@@ -342,7 +342,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Fuel Oil #2 (%)");
+  label->setText("Fuel Oil #2 (fraction)");
   vLayout->addWidget(label);
 
   m_FuelOil_2DoubleEdit = new OSDoubleEdit2();
@@ -356,7 +356,7 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Water (%)");
+  label->setText("Water (fraction)");
   vLayout->addWidget(label);
 
   m_WaterDoubleEdit = new OSDoubleEdit2();
