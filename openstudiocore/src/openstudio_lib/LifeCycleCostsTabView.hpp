@@ -67,22 +67,22 @@ private:
 
   boost::optional<model::LifeCycleCostParameters> m_lifeCycleCostParameters;
 
-  OSIntegerEdit2 * m_AnalysisLengthIntegerEdit;
+  OSIntegerEdit2 * m_analysisLengthIntegerEdit;
   
-  OSDoubleEdit2 * m_RealDiscountRateDoubleEdit;
+  OSDoubleEdit2 * m_realDiscountRateDoubleEdit;
 
-  OSDoubleEdit2 * m_ElectricityDoubleEdit;
-  OSDoubleEdit2 * m_NaturalGasDoubleEdit;
-  OSDoubleEdit2 * m_SteamDoubleEdit;
-  OSDoubleEdit2 * m_GasolineDoubleEdit;
+  OSDoubleEdit2 * m_electricityDoubleEdit;
+  OSDoubleEdit2 * m_naturalGasDoubleEdit;
+  OSDoubleEdit2 * m_steamDoubleEdit;
+  OSDoubleEdit2 * m_gasolineDoubleEdit;
 
-  OSDoubleEdit2 * m_DieselDoubleEdit;
-  OSDoubleEdit2 * m_PropaneDoubleEdit;
-  OSDoubleEdit2 * m_CoalDoubleEdit;
-  OSDoubleEdit2 * m_FuelOil_1DoubleEdit;
+  OSDoubleEdit2 * m_dieselDoubleEdit;
+  OSDoubleEdit2 * m_propaneDoubleEdit;
+  OSDoubleEdit2 * m_coalDoubleEdit;
+  OSDoubleEdit2 * m_fuelOil_1DoubleEdit;
 
-  OSDoubleEdit2 * m_FuelOil_2DoubleEdit;
-  OSDoubleEdit2 * m_WaterDoubleEdit;
+  OSDoubleEdit2 * m_fuelOil_2DoubleEdit;
+  OSDoubleEdit2 * m_waterDoubleEdit;
 
   QButtonGroup * m_fempGroup;
   QButtonGroup * m_nistGroup;
