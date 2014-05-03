@@ -257,12 +257,20 @@ void OSQuantityEdit2::onEditingFinished() {
         OS_ASSERT(modelValue);
 
         if (m_set) {
-          (*m_set)(*modelValue);
+          bool result = (*m_set)(*modelValue);
+          if (!result){
+            // restore
+            refreshTextAndLabel();
+          }
         } else if (m_setVoidReturn){
           (*m_setVoidReturn)(*modelValue);
         }
       }
-      catch (...) {}
+      catch (...) 
+      {
+        // restore
+        refreshTextAndLabel();
+      }
     }
   }
 }

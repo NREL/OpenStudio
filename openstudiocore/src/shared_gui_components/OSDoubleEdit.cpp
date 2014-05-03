@@ -264,6 +264,8 @@ void OSDoubleEdit2::onEditingFinished() {
             //restore
             refreshTextAndLabel();
           }
+        }else if (m_setVoidReturn){
+          (*m_setVoidReturn)(value);
         }
       }
       catch (...) 
