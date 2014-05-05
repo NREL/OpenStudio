@@ -932,6 +932,7 @@ class SystemItem : public GridItem
   SystemCenterItem * m_systemCenterItem;
 
   std::map<Handle,int> m_plenumIndexMap;
+  std::map<Handle,QColor> m_plenumColorMap;
 
   int plenumIndex(const Handle & plenumHandle);
 };

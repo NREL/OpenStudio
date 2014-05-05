@@ -107,18 +107,18 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 
   if( modelObject.isRatedTotalHeatingCapacityAutosized() )
   {
-    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::RatedTotalHeatingCapacity,"Autosize");
+    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCapacity,"Autosize");
   }
   else if( (value = modelObject.ratedTotalHeatingCapacity()) )
   {
-    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedTotalHeatingCapacity,value.get());
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCapacity,value.get());
   }
 
   // RatedCOP
   
   if( (value = modelObject.ratedCOP()) )
   {
-    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedCOP,value.get());
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCOP,value.get());
   }
 
   // RatedAirFlowRate
@@ -138,7 +138,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 
   if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve) )
   {
-    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofTemperatureCurveName,_curve->name().get());
+    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::HeatingCapacityFunctionofTemperatureCurveName,_curve->name().get());
   }
 
   // TotalHeatingCapacityFunctionofFlowFractionCurveName
@@ -147,7 +147,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXSingleSpeedW
 
   if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve) )
   {
-    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::TotalHeatingCapacityFunctionofFlowFractionCurveName,_curve->name().get());
+    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::HeatingCapacityFunctionofFlowFractionCurveName,_curve->name().get());
   }
 
   // EnergyInputRatioFunctionofTemperatureCurveName

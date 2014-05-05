@@ -233,7 +233,7 @@ namespace detail {
 
     Transformation transformation() const;
 
-    std::vector<std::vector<Point3d> > generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const;
+    std::vector<std::vector<Point3d> > generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
 
    protected:
    private:

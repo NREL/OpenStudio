@@ -149,7 +149,6 @@ namespace openstudio {
       QButtonGroup * m_radianceGroup;
       QRadioButton * m_radianceButton;
       QRadioButton * m_energyPlusButton;
-      QPushButton * m_radianceWarningsAndErrorsButton;
       std::vector<std::string> m_radianceWarnings;
       std::vector<std::string> m_radianceErrors;
       boost::shared_ptr<RunListModel> m_runListModel;

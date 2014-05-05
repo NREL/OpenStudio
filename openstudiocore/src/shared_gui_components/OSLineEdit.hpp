@@ -37,7 +37,7 @@ class OSLineEdit2 : public QLineEdit {
 
   virtual ~OSLineEdit2() {}
 
-  void bind(model::ModelObject& modelObject, 
+  void bind(model::ModelObject& modelObject,
             StringGetter get,
             boost::optional<StringSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,
@@ -46,6 +46,12 @@ class OSLineEdit2 : public QLineEdit {
   void bind(model::ModelObject& modelObject, 
             OptionalStringGetter get,
             boost::optional<StringSetter> set=boost::none,
+            boost::optional<NoFailAction> reset=boost::none,
+            boost::optional<BasicQuery> isDefaulted=boost::none);
+  
+  void bind(model::ModelObject& modelObject,
+            OptionalStringGetterBoolArg get,
+            boost::optional<StringSetterOptionalStringReturn> set,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none);
 
@@ -64,7 +70,9 @@ class OSLineEdit2 : public QLineEdit {
   boost::optional<model::ModelObject> m_modelObject;
   boost::optional<StringGetter> m_get;
   boost::optional<OptionalStringGetter> m_getOptional;
+  boost::optional<OptionalStringGetterBoolArg> m_getOptionalBoolArg;
   boost::optional<StringSetter> m_set;
+  boost::optional<StringSetterOptionalStringReturn> m_setOptionalStringReturn;
   boost::optional<NoFailAction> m_reset;
   boost::optional<BasicQuery> m_isDefaulted;
 

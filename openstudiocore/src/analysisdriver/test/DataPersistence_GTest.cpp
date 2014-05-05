@@ -146,7 +146,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     // this script not actually run, so result in default state
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
-    EXPECT_TRUE(errors.errors().empty());
+    EXPECT_EQ(1u, errors.errors().size());
     EXPECT_TRUE(errors.warnings().empty());
     EXPECT_TRUE(errors.infos().empty());
 
@@ -252,7 +252,7 @@ TEST_F(AnalysisDriverFixture,DataPersistence_DataPointErrors) {
     errors = jobResult.errors().get();
     EXPECT_EQ(OSResultValue(OSResultValue::Fail),errors.result);
     EXPECT_FALSE(errors.succeeded());
-    EXPECT_TRUE(errors.errors().empty());
+    EXPECT_EQ(1u, errors.errors().size());
     EXPECT_TRUE(errors.warnings().empty());
     EXPECT_TRUE(errors.infos().empty());
 

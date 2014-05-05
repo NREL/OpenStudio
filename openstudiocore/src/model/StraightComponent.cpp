@@ -133,7 +133,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
         model().connect( demandInletNode.get(), demandInletNode->outletPort(), 
                          demandOutletNode.get(), demandOutletNode->inletPort() );
       }
-      // If the component is at the very end of the supply path, but there is another component preceeding this one.
+      // If the component is at the very end of the supply path, but there is another component preceding this one.
       else if( demandOutletNode->handle() == outletModelObject()->handle() )
       {
         model().disconnect(thisObject,outletPort()); 
@@ -147,30 +147,27 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( (target2ModelObject.get() == mixer) && 
                (source2ModelObject.get() == splitter) )
       {
-        if( boost::optional<PlantLoop> plantLoop = loop->optionalCast<PlantLoop>() )
+        Model _model = model();
+
+        int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
+        int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
+
+        OS_ASSERT(i == j);
+
+        splitter.removePortForBranch(i);
+        mixer.removePortForBranch(i);
+
+        _model.disconnect(thisObject,outletPort()); 
+        _model.disconnect(thisObject,inletPort()); 
+
+        targetModelObject->remove();
+        sourceModelObject->remove();
+
+        if( ! splitter.lastOutletModelObject() )
         {
-          Model _model = model();
-
-          int i = splitter.branchIndexForOutletModelObject(sourceModelObject.get());
-          int j = mixer.branchIndexForInletModelObject(targetModelObject.get());
-
-          OS_ASSERT(i == j);
-
-          splitter.removePortForBranch(i);
-          mixer.removePortForBranch(i);
-
-          _model.disconnect(thisObject,outletPort()); 
-          _model.disconnect(thisObject,inletPort()); 
-
-          targetModelObject->remove();
-          sourceModelObject->remove();
-
-          if( ! splitter.lastOutletModelObject() )
-          {
-            Node newNode(_model);
-            _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
-            _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
-          }
+          Node newNode(_model);
+          _model.connect(splitter,splitter.nextOutletPort(),newNode,newNode.inletPort());
+          _model.connect(newNode,newNode.outletPort(),mixer,mixer.nextInletPort());
         }
       }
       // Else remove the component and the outlet node
@@ -218,7 +215,7 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
         model().connect( supplyInletNode.get(), supplyInletNode->outletPort(), 
                          supplyOutletNode.get(), supplyOutletNode->inletPort() );
       }
-      // If the component is at the very end of the supply path, but there is another component preceeding this one.
+      // If the component is at the very end of the supply path, but there is another component preceding this one.
       else if( supplyOutletNode->handle() == outletModelObject()->handle() )
       {
         model().disconnect(thisObject,outletPort()); 
@@ -232,30 +229,27 @@ std::vector<openstudio::IdfObject> StraightComponent_Impl::remove()
       else if( mixer && (target2ModelObject.get() == mixer.get()) && 
                splitter && (source2ModelObject.get() == splitter.get()) )
       {
-        if( plantLoop )
+        Model _model = model();
+
+        int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
+        int j = mixer->branchIndexForInletModelObject(targetModelObject.get());
+
+        OS_ASSERT(i == j);
+
+        splitter->removePortForBranch(i);
+        mixer->removePortForBranch(i);
+
+        _model.disconnect(thisObject,outletPort()); 
+        _model.disconnect(thisObject,inletPort()); 
+
+        targetModelObject->remove();
+        sourceModelObject->remove();
+
+        if( ! splitter->lastOutletModelObject() )
         {
-          Model _model = model();
-
-          int i = splitter->branchIndexForOutletModelObject(sourceModelObject.get());
-          int j = mixer->branchIndexForInletModelObject(targetModelObject.get());
-
-          OS_ASSERT(i == j);
-
-          splitter->removePortForBranch(i);
-          mixer->removePortForBranch(i);
-
-          _model.disconnect(thisObject,outletPort()); 
-          _model.disconnect(thisObject,inletPort()); 
-
-          targetModelObject->remove();
-          sourceModelObject->remove();
-
-          if( ! splitter->lastOutletModelObject() )
-          {
-            Node newNode(_model);
-            _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
-            _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
-          }
+          Node newNode(_model);
+          _model.connect(splitter.get(),splitter->nextOutletPort(),newNode,newNode.inletPort());
+          _model.connect(newNode,newNode.outletPort(),mixer.get(),mixer->nextInletPort());
         }
       }
       // Else remove the component and the outlet node
@@ -360,15 +354,9 @@ bool StraightComponent_Impl::addToNode(Node & node)
   boost::optional<Loop> loop = node.loop();
   boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = node.airLoopHVACOutdoorAirSystem();
 
-  if( loop )
+  if( boost::optional<Loop> currentLoop = this->loop() )
   {
-    if( boost::optional<Loop> currentLoop = this->loop() )
-    {
-      if( currentLoop->handle() == loop->handle() )
-      {
-        return false;
-      }
-    }
+    return false;
   }
 
   if( loop && ! oaSystem )
@@ -474,63 +462,6 @@ bool StraightComponent_Impl::addToNode(Node & node)
       _model.connect( newNode, newNode.outletPort(),
                       oldTargetModelObject, oldInletPort );
       return true;
-    }
-    else
-    {
-      return false;
-    }
-  }
-  else if( boost::optional<PlantLoop> _plantLoop = node.plantLoop() )
-  {
-    PlantLoop plantLoop = _plantLoop.get();
-    if( plantLoop.supplyComponent(node.handle()) )
-    {
-      if( node == plantLoop.supplyOutletNode() &&
-          node.inletModelObject().get() == plantLoop.supplyInletNode() )
-      {
-        unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
-        unsigned oldInletPort = node.inletPort();
-        ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
-        ModelObject oldTargetModelObject = node;
-
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        thisModelObject, inletPort() );
-        _model.connect( thisModelObject, outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
-      else if( node == plantLoop.supplyOutletNode() )
-      {
-        unsigned oldOutletPort = node.connectedObjectPort( node.inletPort() ).get();
-        unsigned oldInletPort = node.inletPort();
-        ModelObject oldSourceModelObject = node.connectedObject( node.inletPort() ).get();
-        ModelObject oldTargetModelObject = node;
-
-        Node newNode( _model );
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        newNode, newNode.inletPort() );
-        _model.connect( newNode, newNode.outletPort(),
-                        thisModelObject, inletPort() );                        
-        _model.connect( thisModelObject, outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
-      else
-      {
-        unsigned oldOutletPort = node.outletPort();
-        unsigned oldInletPort = node.connectedObjectPort( node.outletPort() ).get();
-        ModelObject oldSourceModelObject = node;
-        ModelObject oldTargetModelObject = node.connectedObject( node.outletPort() ).get();
-  
-        Node newNode( _model );
-        _model.connect( oldSourceModelObject, oldOutletPort,
-                        thisModelObject, inletPort() );
-        _model.connect( thisModelObject, outletPort(),
-                        newNode, newNode.inletPort() );
-        _model.connect( newNode, newNode.outletPort(),
-                        oldTargetModelObject, oldInletPort );
-        return true;
-      }
     }
     else
     {

@@ -34,6 +34,8 @@
 
 #include <boost/foreach.hpp>
 
+#include <QThreadPool>
+
 using namespace openstudio::model;
 using namespace openstudio;
 using std::string;
@@ -382,4 +384,29 @@ TEST_F(ModelFixture, MeterEnumValues)
       }
     }
   }
+}
+
+
+class GetMeterRegex : public QRunnable
+{
+    void run()
+    {
+      std::string subject = "Electricity:Facility";
+      boost::smatch matches;
+      boost::regex_search(subject, matches, Meter::meterRegex());
+    }
+};
+
+TEST_F(ModelFixture, GetMeterRegex_ThreadSafe)
+{
+  unsigned N = 20;
+  std::vector<GetMeterRegex*> workers;
+  for (unsigned i = 0; i < N; ++i){
+    workers.push_back(new GetMeterRegex());
+  }
+  QThreadPool::globalInstance()->setMaxThreadCount(N);
+  for (unsigned i = 0; i < N; ++i){
+    EXPECT_TRUE( QThreadPool::globalInstance()->tryStart(workers[i]) );
+  }
+  EXPECT_TRUE( QThreadPool::globalInstance()->waitForDone(3000) );
 }

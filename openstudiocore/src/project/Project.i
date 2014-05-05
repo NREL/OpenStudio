@@ -40,6 +40,7 @@
   #include <runmanager/lib/Workflow.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
   
   #include <utilities/cloud/AWSProvider.hpp>
   #include <utilities/cloud/VagrantProvider.hpp>
@@ -124,10 +125,12 @@
 %ignore openstudio::project::JoinRecord;
 %ignore openstudio::project::Record::joinRecords;
 
-#ifdef SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
   // hides static methods in derived classes
   %ignore openstudio::project::Record::databaseTableName;
 #endif
+
+
 
 // it seems that SWIG tries to create conversions of QObjects to these
 %ignore openstudio::Attribute;
@@ -149,6 +152,7 @@
 %define PROJECT_WRAP(_name) 
   // ignore impl
   %ignore boost::shared_ptr<openstudio::project::detail##_name_Impl>;
+
  
   // create an instantiation of the vector class
   %ignore std::vector<openstudio::project::##_name>::vector(size_type);
@@ -188,6 +192,11 @@ PROJECT_WRAP(Record);
  
 %define OBJECTRECORD_WRAP(_name)
   PROJECT_WRAP(_name)
+
+#if defined SWIGJAVA
+  %ignore openstudio::project::_name::factoryFromQuery;
+#endif
+
   namespace openstudio {
     namespace project {
       boost::optional<_name> get##_name##ByName(ProjectDatabase &t_database, const std::string &t_name);

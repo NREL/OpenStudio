@@ -30,41 +30,7 @@ class SimpleDakotaDemonstration_Test < Test::Unit::TestCase
   # def teardown
   # end
   
-  def test_RunDakotaOnTestProblem_Driver
-    outputDir = OpenStudio::Path.new("./RunDakotaOnTestProblem/Driver")
-    OpenStudio::create_directory(outputDir.parent_path)
-    outputDir = outputDir.to_s
-    problemFile = "#{$OpenStudio_LibPath}openstudio/analysis/problems/Rosenbrock.rb"  
-    initFile = "#{$OpenStudio_LibPath}openstudio/analysis/initializers/DaceLHS.rb"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/analysis/RunDakotaOnTestProblem.rb' -o '#{outputDir}' -p '#{problemFile}' -i '#{initFile}' -d"))    
-  end
-  
-  def test_RunDakotaOnTestProblem_NoDriver
-    outputDir = OpenStudio::Path.new("./RunDakotaOnTestProblem/NoDriver")
-    OpenStudio::create_directory(outputDir.parent_path)
-    outputDir = outputDir.to_s    
-    problemFile = "#{$OpenStudio_LibPath}openstudio/analysis/problems/Rosenbrock.rb" 
-    initFile = "#{$OpenStudio_LibPath}openstudio/analysis/initializers/DaceOAS.rb"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/analysis/RunDakotaOnTestProblem.rb' -o '#{outputDir}' -p '#{problemFile}' -i '#{initFile}'"))    
-  end  
-  
-  def test_RunDakotaOnTestProblem_MainEffectsModel
-    outputDir = OpenStudio::Path.new("./RunDakotaOnTestProblem/MainEffectsModel")
-    OpenStudio::create_directory(outputDir.parent_path)
-    outputDir = outputDir.to_s    
-    problemFile = "#{$OpenStudio_LibPath}openstudio/analysis/problems/TestFunction10D.rb"
-    
-    # create samples
-    initFile = "#{$OpenStudio_LibPath}openstudio/analysis/initializers/DaceLHS.rb"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/analysis/RunDakotaOnTestProblem.rb' -o '#{outputDir}' -p '#{problemFile}' -i '#{initFile}' -d"))
-  
-    # create and evaluate meta-model
-    initFile = "#{$OpenStudio_LibPath}openstudio/analysis/initializers/MainEffectsModel.rb"
-    restartFile = OpenStudio::Path.new(outputDir)/OpenStudio::Path.new("dakota1.rst")
-    restartFile = restartFile.to_s
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/analysis/RunDakotaOnTestProblem.rb' -o '#{outputDir}' -p '#{problemFile}' -i '#{initFile}' -r '#{restartFile}' -d"))
-  
-  end
+  # DLM: removing tests of functionality to be deprecated
 
 end
 

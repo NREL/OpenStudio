@@ -31,7 +31,7 @@ class SummarizeIdfs_Test < Test::Unit::TestCase
   # end
   
   def test_SummarizeIdfs
-    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+    ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     idfDir = OpenStudio::Path.new(ep_hash[:energyplus_examplefiles].to_s)
     outFile = OpenStudio::Path.new($OpenStudio_ResourcePath + "utilities/Idf/EnergyPlusExampleFilesSummary.html")
     cmd = "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/examples/SummarizeIdfs.rb' '#{idfDir}' '#{outFile}' 5"

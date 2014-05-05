@@ -90,7 +90,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
-  m_updateMethods[VersionString("1.2.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.3.3")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -145,6 +145,10 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.2.2"));
   m_startVersions.push_back(VersionString("1.2.3"));
   m_startVersions.push_back(VersionString("1.2.4"));
+  m_startVersions.push_back(VersionString("1.2.5"));
+  m_startVersions.push_back(VersionString("1.3.0"));
+  m_startVersions.push_back(VersionString("1.3.1"));
+  m_startVersions.push_back(VersionString("1.3.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -358,9 +362,7 @@ void VersionTranslator::initializeMap(std::istream& is) {
     if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
       LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
           << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
-          << "Proceeding as if these versions are the same. Use with caution. (You "
-          << "should only be seeing this if you are a developer working with cloud "
-          << "resources.)");
+          << "Proceeding as if these versions are the same. Use with caution.");
       currentVersion = VersionString(openStudioVersion());
     }
     else {

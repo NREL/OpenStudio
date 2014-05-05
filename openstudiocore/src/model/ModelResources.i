@@ -18,7 +18,7 @@
   #include <utilities/sql/SqlFile.hpp>
 %}
 
-#if defined SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelResources
@@ -32,6 +32,15 @@
   // ignore schedule type
   %ignore openstudio::model::ScheduleType;
   
+#endif
+
+#if defined(SWIGJAVA)
+%ignore openstudio::model::OpaqueMaterial::solarAbsorptance;
+%ignore openstudio::model::OpaqueMaterial::visibleAbsorptance;
+%ignore openstudio::model::OpaqueMaterial::thermalAbsorptance;
+%ignore openstudio::model::SimpleGlazing::getVisibleTransmittance;
+%ignore openstudio::model::Shade::getVisibleTransmittance;
+
 #endif
 
 namespace openstudio {

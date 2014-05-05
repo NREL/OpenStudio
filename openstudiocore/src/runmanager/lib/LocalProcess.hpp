@@ -33,9 +33,27 @@
 #include <QDateTime>
 #include <QTimer>
 
+
 namespace openstudio {
 namespace runmanager {
 namespace detail {
+
+  class MyQProcess : public QProcess
+  {
+    Q_OBJECT;
+    private:
+      REGISTER_LOGGER("openstudio.runmanager.MyQProcess");
+
+    public:
+      MyQProcess();
+      void checkProcessStatus();
+
+    signals:
+      void zombied(QProcess::ProcessError t_e);
+
+    private:
+      int m_exitedCount;
+  };
 
   /**
    * A utility class for creating a Process object that runs on the local system
@@ -129,7 +147,7 @@ namespace detail {
       FileSet m_outfiles;
 
       /// QProcess used to monitor the execution of the process.
-      QProcess m_process;
+      MyQProcess m_process;
 
       /// Set of files that have been copied into place because they were required and can be deleted after the process has completed
       std::set<openstudio::path> m_copiedRequiredFiles; 
@@ -137,6 +155,9 @@ namespace detail {
     private slots:
       /// connected to QProcess::error
       void processError(QProcess::ProcessError t_e);
+
+      /// connected to MyQProcess::zombied
+      void processZombied(QProcess::ProcessError t_e);
 
       /// connected to QProcess::finished
       void processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus);

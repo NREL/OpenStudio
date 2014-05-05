@@ -22,8 +22,7 @@
 #
 #   Pulls measure data (arguments and outputs) from an OpenStudio 
 #   SimpleProject containing at least one complete, not failed 
-#   DataPoint. Outputs that data as two csv files for import into 
-#   the spreadsheet tool.
+#   DataPoint. Outputs that data formatted for the spreadsheet tool.
 #
 # == Usage
 #
@@ -36,10 +35,11 @@
 ######################################################################
 
 require 'openstudio'
+require 'fileutils'
 require 'csv'
 
 if ARGV[0].nil?
-  puts "This script requires a path to a project directory as input."
+  raise "This script requires a path to a project directory as input."
 end
 
 # Open the SimpleProject
@@ -58,6 +58,52 @@ data_points = project.analysis.successfulDataPoints
 if data_points.empty?
   raise "This script requires at least one successful data point from which to pull outputs."
 end  
+
+# set up directories
+export_dir = OpenStudio::Path.new(project_dir) / OpenStudio::Path.new("analysis_spreadsheet_export")
+if File.exists?(export_dir.to_s)
+  FileUtils.rm_rf(export_dir.to_s)
+end
+if File.exists?(export_dir.to_s)
+  raise "Could not remove #{export_dir}"
+end
+FileUtils.mkdir_p(export_dir.to_s)
+if not File.exists?(export_dir.to_s)
+  raise "Could not create #{export_dir}"
+end
+
+def extractMeasureClass(measurePath)
+  currentObjects = Hash.new
+  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj| currentObjects[obj] = true }
+
+  ObjectSpace.garbage_collect
+  load(measurePath) # need load in case have seen this script before
+
+  userScript = nil
+  type = String.new
+  ObjectSpace.each_object(OpenStudio::Ruleset::UserScript) { |obj|
+    if not currentObjects[obj]
+      if obj.is_a? OpenStudio::Ruleset::ModelUserScript
+        userScript = obj
+        type = "model"
+      elsif obj.is_a? OpenStudio::Ruleset::WorkspaceUserScript
+        userScript = obj
+        type = "workspace"
+      elsif obj.is_a? OpenStudio::Ruleset::TranslationUserScript
+        userScript = obj
+        type = "translation"
+      elsif obj.is_a? OpenStudio::Ruleset::UtilityUserScript
+        userScript = obj
+        type = "utility"    
+      elsif obj.is_a? OpenStudio::Ruleset::ReportingUserScript
+        userScript = obj
+        type = "report"    
+      end
+    end
+  }
+  
+  return userScript.class
+end
 
 # Step through the workflow and construct ordered array of measure information
 # Each element of measures will be hash
@@ -160,7 +206,10 @@ data_points.each { |data_point|
         next
       end
       result = OpenStudio::Ruleset::OSResult::load(result_path)
-      raise "Unable to load result from '${result_path}'" if result.empty?
+      # DLM: this results in a crash for cloud data points that are not downloaded, issue #959
+      if result.empty?
+        next
+      end
       result = result.get
       if not result.attributes.empty?
         # find measure
@@ -177,43 +226,71 @@ data_points.each { |data_point|
 }
 
 # create csv files
-csv_path = OpenStudio::Path.new(project_dir) / 
-           OpenStudio::Path.new("spreadsheet_model_measures_export.csv")
+csv_path = export_dir / OpenStudio::Path.new("spreadsheet_model_measures_export.csv")
 model_measures_csv = CSV.open(csv_path.to_s,"wb")
-csv_path = OpenStudio::Path.new(project_dir) / 
-           OpenStudio::Path.new("spreadsheet_energyplus_measures_export.csv")
+csv_path = export_dir / OpenStudio::Path.new("spreadsheet_energyplus_measures_export.csv")
 energyplus_measures_csv = CSV.open(csv_path.to_s,"wb")
-csv_path = OpenStudio::Path.new(project_dir) / 
-           OpenStudio::Path.new("spreadsheet_reporting_measures_export.csv")
+csv_path = export_dir / OpenStudio::Path.new("spreadsheet_reporting_measures_export.csv")
 reporting_measures_csv = CSV.open(csv_path.to_s,"wb")
 
 measures.each { |measure|
+
+  measure_dir_name = OpenStudio::toString(measure["bcl_measure"].directory.stem)
+  if not OpenStudio::toUUID(measure_dir_name).isNull
+    # measure dir name is a uuid, rename it something else
+    # DLM: do not rename uuid to human readable dir name per Nick and Brian
+    #measure_dir_name = measure["bcl_measure"].name
+  end
+  # DLM: do not clean up dir name per Nick and Brian
+  #parts = measure_dir_name.split(" ")
+  #parts.each {|part| part[0] = part[0].capitalize}
+  #measure_dir_name = parts.join(" ").gsub(/[^0-9A-Za-z.\-]/, "")
+  
+  measure_class_name = extractMeasureClass(measure["bcl_measure"].primaryRubyScriptPath.get.to_s)
+
+  # ensure directory name is unique
+  measure_path = export_dir / OpenStudio::Path.new(measure_dir_name)
+  index = 0
+  while File.exists?(measure_path.to_s)
+    index += 1
+    measure_path = export_dir / OpenStudio::Path.new(measure_dir_name + index.to_s)
+  end
+  
   csv_file = nil
+  measure_type = nil
   if measure["bcl_measure"].measureType == "ModelMeasure".to_MeasureType
     csv_file = model_measures_csv
+    measure_type = "RubyMeasure"
   elsif measure["bcl_measure"].measureType == "EnergyPlusMeasure".to_MeasureType
     csv_file = energyplus_measures_csv
+    measure_type = "EnergyPlusMeasure"
   elsif measure["bcl_measure"].measureType == "ReportingMeasure".to_MeasureType
     csv_file = reporting_measures_csv
+    measure_type = "ReportingMeasure"
   else
     puts "Skipping #{measure["bcl_measure"].name}, because it is of unexpected type '#{measure["bcl_measure"].measureType.valueDescription}'." 
   end
+ 
+  # copy the measure
+  FileUtils.cp_r(measure["bcl_measure"].directory.to_s, measure_path.to_s)
   
   row = []
-  row << "FALSE"
+  row << "TRUE"
   row << measure["bcl_measure"].name
-  row << OpenStudio::toString(measure["bcl_measure"].directory.stem)
-  row << "RubyMeasure"
+  row << measure_dir_name
+  row << measure_class_name
+  row << measure_type
   csv_file << row
   row = []
   measure["arguments"].each { |arg|
     row << ""
     row << "argument"
+    row << ""
     row << arg.displayName
     row << arg.name
     row << "static"
     if arg.type == "Choice".to_OSArgumentType
-      row << "String"
+      row << "Choice"
       row << ""    
       if arg.hasValue
         row << arg.valueDisplayName
@@ -223,7 +300,7 @@ measures.each { |measure|
         row << ""
       end
     else
-      row << arg.type.valueName
+      row << arg.type.valueName.gsub("Boolean", "Bool")
       row << ""    
       if arg.hasValue
         row << arg.valueAsString
@@ -251,8 +328,7 @@ model_measures_csv.close
 energyplus_measures_csv.close
 reporting_measures_csv.close
 
-csv_path = OpenStudio::Path.new(project_dir) / 
-           OpenStudio::Path.new("spreadsheet_outputs_export.csv")
+csv_path = export_dir / OpenStudio::Path.new("spreadsheet_outputs_export.csv")
 csv_file = CSV.open(csv_path.to_s,"wb")
 def add_rows_for_attribute(csv_file,measure,att,prefix)
   if att.valueType == "AttributeVector".to_AttributeValueType

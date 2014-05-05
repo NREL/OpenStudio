@@ -60,7 +60,7 @@ class OSUnsignedEdit2: public QLineEdit {
             boost::optional<BasicQuery> isAutosized=boost::none,
             boost::optional<BasicQuery> isAutocalculated=boost::none);
 
-    void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
+  void bind(model::ModelExtensibleGroup& modelExtensibleGroup,
             UnsignedGetter get,
             boost::optional<UnsignedSetter> set=boost::none,
             boost::optional<NoFailAction> reset=boost::none,

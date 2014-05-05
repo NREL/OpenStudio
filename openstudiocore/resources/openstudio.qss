@@ -88,10 +88,6 @@ QWidget#LoopNavigatorWidget {
   */
 }
 
-openstudio--systemoutliner--ZoneChooserView {
-  background: #D7DDE0;
-}
-
 QGroupBox#IGRow, QFrame#IGRow {
   background: #D7DDE0;
   border-bottom: 1px solid gray;
@@ -115,17 +111,8 @@ QHeaderView::section {
   border-bottom: 1px solid black;
  }
 
- QHeaderView::section:checked
- {
+QHeaderView::section:checked {
   background-color: darkgray;
- }
-
-openstudio--systemoutliner--AddToModelItemView {
-  border-bottom: 1px solid black;
-}
-
-openstudio--systemoutliner--AddToModelView {
-  background: palette(window);
 }
 
 QLabel#IGHeader {
@@ -184,13 +171,6 @@ QSplitter::handle::horizontal {
 
 QToolButton { 
   border: none;
-}
-
-systemoutliner--SystemFooterWidget {
-  background: white;
-  border: none;
-  padding: 0;
-  margin: 0;
 }
 
 QGraphicsView {

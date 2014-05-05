@@ -79,10 +79,12 @@ schedules.each { |schedule|
 index = 1
 puts "Saving " + components.size.to_s + " components to " + projectFilepath.to_s + "."
 components.each { |component|
+  puts "Begin saving component #{index}"
   path = projectFilepath.parent_path() / OpenStudio::Path.new("component" + index.to_s)
+  puts "Component dir = #{path}"
   OpenStudio::remove_all(path) if OpenStudio::exists(path)
   path = path / OpenStudio::Path.new("component.osc")
-  puts path
+  puts "Component path = #{path}"
   component.save(path,true)
   fileReference = OpenStudio::FileReference.new(path)
   fileReferenceRecord = OpenStudio::Project::FileReferenceRecord.new(fileReference,database)

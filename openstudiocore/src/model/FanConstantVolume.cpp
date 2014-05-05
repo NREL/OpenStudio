@@ -188,43 +188,27 @@ namespace detail {
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
   {
-    if( OptionalAirLoopHVAC airLoopHVAC = node.airLoopHVAC() )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
+      if( airLoop->supplyComponent(node.handle()) )
       {
-        if( oaSystem->component(node.handle()) )
+        std::vector<ModelObject> allFans;
+        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
+        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
+        allFans = constantFans;
+        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+
+        if( allFans.size() > 1 )
         {
           return false;
         }
+
+        if( StraightComponent_Impl::addToNode(node) ) 
+        {
+          SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
+          return true;
+        }
       }
-
-      if( ! airLoopHVAC->supplyComponent(node.handle()) )
-      {
-        return false;
-      }
-
-      std::vector<ModelObject> allFans;
-
-      std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-
-      std::vector<ModelObject> variableFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-
-      allFans = constantFans;
-      allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
-
-      if( allFans.size() > 0 )
-      {
-        return false;
-      }
-
-      bool result = StraightComponent_Impl::addToNode( node );
-
-      if( result )
-      {
-        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
-      }
-
-      return result;
     }
 
     return false;

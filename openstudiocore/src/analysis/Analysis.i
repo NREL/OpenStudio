@@ -32,6 +32,7 @@
   #include <runmanager/lib/WorkItem.hpp>
   #include <runmanager/lib/SimulationEngine.hpp>
   #include <runmanager/lib/ErrorEstimation.hpp>
+  #include <runmanager/lib/RunManagerWatcher.hpp>
 
   #include <ruleset/OSArgument.hpp>
   
@@ -125,9 +126,16 @@ SWIG_ANALYSISOBJECT(AnalysisObject);
 
 // measures
 SWIG_ANALYSISOBJECT(Measure);
-#ifdef SWIGCSHARP
+
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %template(OptionalMeasureVector) std::vector<boost::optional<openstudio::analysis::Measure> >;
 #endif
+
+#if defined(SWIGJAVA)
+%ignore openstudio::analysis::UncertaintyDescription::type;
+#endif
+
+
 SWIG_ANALYSISOBJECT(NullMeasure);
 SWIG_ANALYSISOBJECT(RubyMeasure);
 

@@ -79,12 +79,12 @@ namespace detail {
 struct ANALYSIS_API WorkflowStepJob {
   boost::optional<runmanager::Job> job; // initialized unless step evaluates to a null job or
                                         // the preliminary part of a compound measure
-  boost::optional<unsigned> mergedJobIndex;
   WorkflowStep step;
   boost::optional<Measure> measure;
   boost::optional<QVariant> value; // for variables with explicitly set values (all continuous
                                    // variables and discrete variables where an integer value
                                    // is set, rather than mapped to a measure)
+  boost::optional<unsigned> mergedJobIndex;
 
   /** Returns errors from job if not job->hasMergedJobs(). Returns errors from MergeJobResults
    *  otherwise. */

@@ -18,48 +18,86 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/CoilHeatingElectric.hpp>
+#include <model/CoilHeatingElectric_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
-#include <model/ScheduleCompact.hpp>
+#include <model/Schedule.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(CoilHeatingElectric,CoilHeatingElectric_CoilHeatingElectric)
+TEST_F(ModelFixture,CoilHeatingElectric_CoilHeatingElectric)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
+     Model m; 
+     Schedule s = m.alwaysOnDiscreteSchedule();
 
-     model::ScheduleCompact s(m);
-
-     model::CoilHeatingElectric coil(m,s); 
+     CoilHeatingElectric coil(m,s); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(CoilHeatingElectric,CoilHeatingElectric_addToNode)
-{
-  model::Model m; 
+TEST_F(ModelFixture,CoilHeatingElectric_addToNode) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
 
-  model::ScheduleCompact s(m);
-  
-  model::CoilHeatingElectric coil(m,s); 
+  CoilHeatingElectric testObject(m, s);
 
-  model::AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
 
-  model::Node supplyOutletNode = airLoop.supplyOutletNode();
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
 
-  coil.addToNode(supplyOutletNode);
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
 
-  ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  CoilHeatingElectric testObject2(m, s);
+  CoilHeatingElectric testObject3(m, s);
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
+  }
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  CoilHeatingElectric testObjectClone = testObject.clone(m).cast<CoilHeatingElectric>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }
-
-

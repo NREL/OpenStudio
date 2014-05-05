@@ -59,6 +59,7 @@ namespace openstudio{
         m_lastCompleteDataPointUUIDs(),
         m_lastDataPointJSON(),
         m_lastDownloadDataPointSuccess(false),
+        m_lastDeleteDataPointSuccess(false),
         m_errors(),
         m_warnings()
     {
@@ -66,11 +67,18 @@ namespace openstudio{
       openstudio::Application::instance().application();
 
       if (m_url.scheme().isEmpty()){
-        //LOG(Debug, "Url before: " << toString(m_url.toString()));
+        QString urlString = m_url.toString();
+        //LOG(Debug, "Url before: " << toString(urlString));
         //LOG(Debug, "Url valid: " << m_url.isValid());
         //LOG(Debug, "Url relative: " << m_url.isRelative());
+        
         //m_url.setScheme("http"); // DLM: this was not adding //
-        m_url.setUrl("http://" + m_url.toString());
+        if (urlString.startsWith("//")){
+          m_url.setUrl("http:" + urlString);
+        }else{
+          m_url.setUrl("http://" + urlString);
+        }
+
         //LOG(Debug, "Url after: " << toString(m_url.toString()));
         //LOG(Debug, "Url valid: " << m_url.isValid());
         //LOG(Debug, "Url relative: " << m_url.isRelative());
@@ -382,6 +390,22 @@ namespace openstudio{
       return m_lastDownloadDataPointSuccess;
     }
 
+    bool OSServer_Impl::deleteDataPoint(const UUID& analysisUUID,
+                                        const UUID& dataPointUUID,
+                                        int msec)
+    {
+      if (requestDeleteDataPoint(analysisUUID,dataPointUUID)) {
+        if (waitForFinished(msec)) {
+          return lastDeleteDataPointSuccess();
+        }
+      }
+      return false;
+    }
+
+    bool OSServer_Impl::lastDeleteDataPointSuccess() const {
+      return m_lastDeleteDataPointSuccess;
+    }
+
     bool OSServer_Impl::waitForFinished(int msec)
     {
       int msecPerLoop = 20;
@@ -640,7 +664,7 @@ namespace openstudio{
 
           QByteArray data(QString("--" + bound + "\r\n").toAscii());
           data += "Content-Disposition: form-data; name=\"file\"; filename=\"project.zip\"\r\n";
-          data += "Content-Type: application/x-zip-compressed\r\n\r\n";
+          data += "Content-Type: application/zip\r\n\r\n";
           data.append(file.readAll());
           data += "\r\n";
           data += QString("--" + bound + "--\r\n.").toAscii();
@@ -963,6 +987,27 @@ namespace openstudio{
       m_networkReply = m_networkAccessManager->get(request);
 
       bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDownloadDataPointComplete()));
+      OS_ASSERT(test);
+
+      return true;
+    }
+
+    bool OSServer_Impl::requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID)
+    {
+      clearErrorsAndWarnings();
+
+      m_lastDeleteDataPointSuccess = false;
+
+      if (!m_mutex->tryLock()) {
+        return false;
+      }
+
+      QString id = toQString(removeBraces(dataPointUUID));
+      QUrl url(m_url.toString().append("/data_points/").append(id));
+      QNetworkRequest request(url);
+      m_networkReply = m_networkAccessManager->deleteResource(request);
+
+      bool test = QObject::connect(m_networkReply, SIGNAL(finished()), this, SLOT(processDeleteDataPoint()));
       OS_ASSERT(test);
 
       return true;
@@ -1598,6 +1643,25 @@ namespace openstudio{
       emit requestProcessed(success);
     }
 
+    void OSServer_Impl::processDeleteDataPoint()
+    {
+      bool success = false;
+
+      logNetworkReply("processDeleteDataPoint");
+
+      if (m_networkReply->error() == QNetworkReply::NoError){
+        m_lastDeleteDataPointSuccess = true;
+        success = true;
+      }else{
+        logNetworkError(m_networkReply->error());
+      }
+
+      resetNetworkReply();
+      m_mutex->unlock();
+
+      emit requestProcessed(success);
+    }
+
     void OSServer_Impl::logUploadProgress(qint64 bytesSent, qint64 bytesTotal) {
       if (bytesTotal == -1) {
         LOG(Debug,"Unknown number of bytes in upload.");
@@ -1995,6 +2059,15 @@ namespace openstudio{
     return getImpl<detail::OSServer_Impl>()->lastDownloadDataPointSuccess();
   }
 
+  bool OSServer::deleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, int msec)
+  {
+    return getImpl<detail::OSServer_Impl>()->deleteDataPoint(analysisUUID,dataPointUUID,msec);
+  }
+
+  bool OSServer::lastDeleteDataPointSuccess() const {
+    return getImpl<detail::OSServer_Impl>()->lastDeleteDataPointSuccess();
+  }
+
   bool OSServer::waitForFinished(int msec) 
   {
     return getImpl<detail::OSServer_Impl>()->waitForFinished(msec);
@@ -2108,6 +2181,10 @@ namespace openstudio{
   bool OSServer::startDownloadDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID, const openstudio::path& downloadPath) 
   {
     return getImpl<detail::OSServer_Impl>()->startDownloadDataPoint(analysisUUID, dataPointUUID, downloadPath);
+  }
+
+  bool OSServer::requestDeleteDataPoint(const UUID& analysisUUID, const UUID& dataPointUUID) {
+    return getImpl<detail::OSServer_Impl>()->requestDeleteDataPoint(analysisUUID,dataPointUUID);
   }
 
   bool OSServer::connect(const char* signal,

@@ -81,6 +81,8 @@ class HVACToolbarView : public QWidget
 
   QPushButton * controlsViewButton;
 
+  QPushButton * gridViewButton;
+
   QPushButton * zoomInButton;
 
   QPushButton * zoomOutButton;

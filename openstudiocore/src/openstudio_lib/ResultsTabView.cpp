@@ -221,8 +221,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
         ++dir ) 
   {
     openstudio::path p = *dir;
-    if (openstudio::toString(p.filename()) == "eplusout.sql")
-    {
+    if        (openstudio::toString(p.filename()) == "eplusout.sql") {
       eplusout.push_back(p);
     } else if (openstudio::toString(p.filename()) == "radout.sql") {
       radout.push_back(p);

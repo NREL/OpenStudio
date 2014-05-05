@@ -22,29 +22,15 @@
 #include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
 #include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
 
-//using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DefaultConstructor)
@@ -63,59 +49,38 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DefaultConstructor)
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNode)
-{
-  Model model;
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
-  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
+TEST_F(ModelFixture,AirTerminalSingleDuctVAVNoReheat_addToNode) {
+  Model m; 
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctVAVNoReheat testObject(m,s);
 
-  AirLoopHVAC airLoop(model);
-
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
-
-  EXPECT_TRUE(testObject.addToNode(inletNode));
-
-  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
-  
-  EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
-}
-
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeAirLoopSupplySide)
-{
-  Model model;
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  
-  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
-
-  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());  
-}
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
-TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodePlantLoop)
-{
-  Model model;
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  PlantLoop plantLoop(model);
-  
-  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(model,schedule);
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
-  Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
 
-  EXPECT_FALSE(testObject.addToNode(demandInletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
-  Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
+  AirTerminalSingleDuctVAVNoReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctVAVNoReheat>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_FALSE(testObject.addToNode(supplyInletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+  EXPECT_FALSE(testObjectClone.addToNode(inletNode));
+  EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
+  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_AddToNodeWithThermalZone)

@@ -316,7 +316,7 @@ namespace openstudio{
     double TimeSeries_Impl::daysFromFirstReport(const unsigned& i) const 
     {
       double value = m_outOfRangeValue;
-      if ((i>=0) && (i<m_secondsFromFirstReport.size())){
+      if (i<m_secondsFromFirstReport.size()){
         value = Time(0,0,0,m_secondsFromFirstReport[i]).totalDays();
       }
       return value;
@@ -333,7 +333,7 @@ namespace openstudio{
     {
       //double value = m_outOfRangeValue; // JWD: Shouldn't the out of range value be for values only?
       long value = 0;
-      if ((i>=0) && (i<m_secondsFromFirstReport.size()))
+      if (i<m_secondsFromFirstReport.size())
       {
         value = m_secondsFromFirstReport[i];
       }
@@ -350,7 +350,10 @@ namespace openstudio{
     double TimeSeries_Impl::values(const unsigned& i) const 
     {
       double value = m_outOfRangeValue;
-      if ((i>=0) && (i<m_values.size())) value = m_values[i];
+      if (i<m_values.size()) 
+      {
+        value = m_values[i];
+      }
       return value;
     }
 

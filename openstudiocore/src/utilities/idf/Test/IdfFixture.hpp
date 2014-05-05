@@ -48,7 +48,7 @@ class IdfFixture : public ::testing::Test {
   // set up logging
   REGISTER_LOGGER("IdfFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static double tol;
   static openstudio::path outDir;
   static openstudio::IdfFile epIdfFile;

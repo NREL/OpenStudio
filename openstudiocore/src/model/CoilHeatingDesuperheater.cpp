@@ -89,7 +89,7 @@ namespace detail {
   }
 
   ModelObject CoilHeatingDesuperheater_Impl::clone(Model model) const {
-      CoilHeatingDesuperheater modelObjectClone = ModelObject_Impl::clone(model).cast<CoilHeatingDesuperheater>();
+      CoilHeatingDesuperheater modelObjectClone = StraightComponent_Impl::clone(model).cast<CoilHeatingDesuperheater>();
 
       modelObjectClone.resetHeatingSource();
 
@@ -97,18 +97,15 @@ namespace detail {
   }
 
   bool CoilHeatingDesuperheater_Impl::addToNode(Node & node) {
-    boost::optional<AirLoopHVAC> loop = node.airLoopHVAC();
-
-    if ( !loop ) return false;
-
-    if( loop->supplyComponent(node.handle()) )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      return StraightComponent_Impl::addToNode(node);
+      if( airLoop->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   boost::optional<Schedule> CoilHeatingDesuperheater_Impl::availabilitySchedule() const {

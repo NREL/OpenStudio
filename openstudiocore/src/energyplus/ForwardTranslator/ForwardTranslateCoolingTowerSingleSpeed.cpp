@@ -103,44 +103,44 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   
   if( (d = modelObject.fanPoweratDesignAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FanPoweratDesignAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignFanPower,d.get());
   }
   else if( modelObject.isFanPoweratDesignAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FanPoweratDesignAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignFanPower,"Autosize");
   }
 
   // UFactorTimesAreaValueatDesignAirFlowRate
 
   if( (d = modelObject.uFactorTimesAreaValueatDesignAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::UFactorTimesAreaValueatDesignAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignUFactorTimesAreaValue,d.get());
   }
   else if( modelObject.isUFactorTimesAreaValueatFreeConvectionAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::UFactorTimesAreaValueatDesignAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignUFactorTimesAreaValue,"Autosize");
   }
 
   // AirFlowRateinFreeConvectionRegime
 
   if( (d = modelObject.airFlowRateinFreeConvectionRegime()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::AirFlowRateinFreeConvectionRegime,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRate,d.get());
   }
   else if( modelObject.isAirFlowRateinFreeConvectionRegimeAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::AirFlowRateinFreeConvectionRegime,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRate,"Autosize");
   }
 
   // UFactorTimesAreaValueatFreeConvectionAirFlowRate
 
   if( (d = modelObject.uFactorTimesAreaValueatFreeConvectionAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::UFactorTimesAreaValueatFreeConvectionAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValue,d.get());
   }
   else if( modelObject.isUFactorTimesAreaValueatFreeConvectionAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::UFactorTimesAreaValueatFreeConvectionAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValue,"Autosize");
   }
 
   // PerformanceInputMethod

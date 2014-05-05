@@ -22,6 +22,7 @@
 #include <model/RefrigerationWalkInZoneBoundary.hpp>
 #include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
 
+#include <model/RefrigerationSystem_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -114,6 +115,9 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
+    t_model->blockSignals(true);
+
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
          it != zoneBoundaries.end();
@@ -122,6 +126,8 @@ namespace detail {
       std::vector<IdfObject> removedZoneBoundaries = it->remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
+
+    t_model->blockSignals(false);
 
     std::vector<IdfObject> removedRRefrigerationWalkIn = ModelObject_Impl::remove();
     result.insert(result.end(), removedRRefrigerationWalkIn.begin(), removedRRefrigerationWalkIn.end());
@@ -181,9 +187,17 @@ namespace detail {
          it != groups.end();
          ++it )
     {
-        if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary)->optionalCast<RefrigerationWalkInZoneBoundary>()) {
-          result.push_back( refrigerationWalkInZoneBoundary.get() );
+      if( boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
+      {
+        if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = 
+            wo->optionalCast<RefrigerationWalkInZoneBoundary>())
+        {
+          if( refrigerationWalkInZoneBoundary )
+          {
+            result.push_back( refrigerationWalkInZoneBoundary.get() );
+          }
         }
+      }
     }
 
     return result;
@@ -319,6 +333,88 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::isInsulatedFloorUValueDefaulted() const {
     return isEmpty(OS_Refrigeration_WalkInFields::InsulatedFloorUValue);
+  }
+
+  boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
+    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+      RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
+      if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
+        return refrigerationSystem;
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<ThermalZone> RefrigerationWalkIn_Impl::zoneBoundaryThermalZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->thermalZone();
+    }
+    return boost::none;    
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->totalInsulatedSurfaceAreaFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofGlassReachInDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->areaofGlassReachInDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofGlassReachInDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->heightofGlassReachInDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryAreaofStockingDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->areaofStockingDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryHeightofStockingDoorsFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->heightofStockingDoorsFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryInsulatedSurfaceUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->insulatedSurfaceUValueFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryGlassReachInDoorUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->glassReachInDoorUValueFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<double> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorUValueFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->stockingDoorUValueFacingZone();
+    }
+    return boost::none;
+  }
+
+  boost::optional<Schedule> RefrigerationWalkIn_Impl::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
+    if(boost::optional<RefrigerationWalkInZoneBoundary> t_zoneBoundary = zoneBoundary()){
+      return t_zoneBoundary->stockingDoorOpeningScheduleFacingZone();
+    }
+    return boost::none;
   }
 
   bool RefrigerationWalkIn_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -522,6 +618,95 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
   }
 
+  bool RefrigerationWalkIn_Impl::addToSystem(RefrigerationSystem & system) {
+    return system.addWalkin(this->getObject<RefrigerationWalkIn>());
+  }
+
+  void RefrigerationWalkIn_Impl::removeFromSystem() {
+    boost::optional<RefrigerationSystem> refrigerationSystem = system();
+    if(refrigerationSystem){
+      refrigerationSystem.get().removeWalkin(this->getObject<RefrigerationWalkIn>());
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setThermalZone(zoneBoundaryThermalZone);
+  }
+
+  void RefrigerationWalkIn_Impl::resetZoneBoundaryThermalZone() {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.resetThermalZone();
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setTotalInsulatedSurfaceAreaFacingZone(zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+  }
+
+  void RefrigerationWalkIn_Impl::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.setAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+  }
+
+  void RefrigerationWalkIn_Impl::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.setHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+  }
+
+  void RefrigerationWalkIn_Impl::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.setAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
+  }
+
+  void RefrigerationWalkIn_Impl::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.setHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setInsulatedSurfaceUValueFacingZone(zoneBoundaryInsulatedSurfaceUValueFacingZone);
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setGlassReachInDoorUValueFacingZone(zoneBoundaryGlassReachInDoorUValueFacingZone);
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setStockingDoorUValueFacingZone(zoneBoundaryStockingDoorUValueFacingZone);
+  }
+
+  bool RefrigerationWalkIn_Impl::setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone) {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    return zoneBoundary.setStockingDoorOpeningScheduleFacingZone(zoneBoundaryStockingDoorOpeningScheduleFacingZone);
+  }
+
+  void RefrigerationWalkIn_Impl::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone() {
+    RefrigerationWalkInZoneBoundary zoneBoundary = frontZoneBoundary();
+    zoneBoundary.resetStockingDoorOpeningScheduleFacingZone();
+  }
+  
+  RefrigerationWalkInZoneBoundary RefrigerationWalkIn_Impl::frontZoneBoundary() {
+    if(zoneBoundaries().empty()){
+      RefrigerationWalkInZoneBoundary refrigerationWalkInZoneBoundary(model());
+      bool success = addZoneBoundary(refrigerationWalkInZoneBoundary);
+      OS_ASSERT(success);
+    }
+    return zoneBoundaries().front();
+  }
+
+  boost::optional<RefrigerationWalkInZoneBoundary> RefrigerationWalkIn_Impl::zoneBoundary() const
+  {
+    if(! zoneBoundaries().empty()){
+      return zoneBoundaries().front();
+    } else {
+      return boost::none;
+    } 
+  }
+
 } // detail
 
 RefrigerationWalkIn::RefrigerationWalkIn(const Model& model, Schedule& walkinDefrostSchedule)
@@ -691,6 +876,50 @@ bool RefrigerationWalkIn::isInsulatedFloorUValueDefaulted() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->isInsulatedFloorUValueDefaulted();
 }
 
+boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
+}
+
+boost::optional<ThermalZone> RefrigerationWalkIn::zoneBoundaryThermalZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryThermalZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryTotalInsulatedSurfaceAreaFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryTotalInsulatedSurfaceAreaFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryAreaofGlassReachInDoorsFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryAreaofGlassReachInDoorsFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryHeightofGlassReachInDoorsFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryHeightofGlassReachInDoorsFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryAreaofStockingDoorsFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryAreaofStockingDoorsFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryHeightofStockingDoorsFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryHeightofStockingDoorsFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryInsulatedSurfaceUValueFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryInsulatedSurfaceUValueFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryGlassReachInDoorUValueFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryGlassReachInDoorUValueFacingZone();
+}
+
+boost::optional<double> RefrigerationWalkIn::zoneBoundaryStockingDoorUValueFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryStockingDoorUValueFacingZone();
+}
+
+boost::optional<Schedule> RefrigerationWalkIn::zoneBoundaryStockingDoorOpeningScheduleFacingZone() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->zoneBoundaryStockingDoorOpeningScheduleFacingZone();
+}
+
 bool RefrigerationWalkIn::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -821,6 +1050,62 @@ bool RefrigerationWalkIn::setInsulatedFloorUValue(double insulatedFloorUValue) {
 
 void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
+}
+
+bool RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->addToSystem(system);
+}
+
+void RefrigerationWalkIn::removeFromSystem() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->removeFromSystem();
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryThermalZone(zoneBoundaryThermalZone);
+}
+
+void RefrigerationWalkIn::resetZoneBoundaryThermalZone() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetZoneBoundaryThermalZone();
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(double zoneBoundaryTotalInsulatedSurfaceAreaFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryTotalInsulatedSurfaceAreaFacingZone(zoneBoundaryTotalInsulatedSurfaceAreaFacingZone);
+}
+
+void RefrigerationWalkIn::setZoneBoundaryAreaofGlassReachInDoorsFacingZone(double zoneBoundaryAreaofGlassReachInDoorsFacingZone) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofGlassReachInDoorsFacingZone(zoneBoundaryAreaofGlassReachInDoorsFacingZone);
+}
+
+void RefrigerationWalkIn::setZoneBoundaryHeightofGlassReachInDoorsFacingZone(double zoneBoundaryHeightofGlassReachInDoorsFacingZone) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofGlassReachInDoorsFacingZone(zoneBoundaryHeightofGlassReachInDoorsFacingZone);
+}
+
+void RefrigerationWalkIn::setZoneBoundaryAreaofStockingDoorsFacingZone(double zoneBoundaryAreaofStockingDoorsFacingZone) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryAreaofStockingDoorsFacingZone(zoneBoundaryAreaofStockingDoorsFacingZone);
+}
+
+void RefrigerationWalkIn::setZoneBoundaryHeightofStockingDoorsFacingZone(double zoneBoundaryHeightofStockingDoorsFacingZone) {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryHeightofStockingDoorsFacingZone(zoneBoundaryHeightofStockingDoorsFacingZone);
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryInsulatedSurfaceUValueFacingZone(double zoneBoundaryInsulatedSurfaceUValueFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryInsulatedSurfaceUValueFacingZone(zoneBoundaryInsulatedSurfaceUValueFacingZone);
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryGlassReachInDoorUValueFacingZone(double zoneBoundaryGlassReachInDoorUValueFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryGlassReachInDoorUValueFacingZone(zoneBoundaryGlassReachInDoorUValueFacingZone);
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryStockingDoorUValueFacingZone(double zoneBoundaryStockingDoorUValueFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryStockingDoorUValueFacingZone(zoneBoundaryStockingDoorUValueFacingZone);
+}
+
+bool RefrigerationWalkIn::setZoneBoundaryStockingDoorOpeningScheduleFacingZone(Schedule& zoneBoundaryStockingDoorOpeningScheduleFacingZone) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setZoneBoundaryStockingDoorOpeningScheduleFacingZone(zoneBoundaryStockingDoorOpeningScheduleFacingZone);
+}
+
+void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetZoneBoundaryStockingDoorOpeningScheduleFacingZone();
 }
 
 /// @cond

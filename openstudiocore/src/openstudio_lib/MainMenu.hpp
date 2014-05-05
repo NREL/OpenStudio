@@ -72,6 +72,8 @@ class MainMenu : public QMenuBar
 
   void openLibDlgClicked();
 
+  void configureProxyClicked();
+
   private:
 
   bool m_isPlugin;
@@ -91,6 +93,8 @@ class MainMenu : public QMenuBar
   QAction * m_openBclDlgAction;
 
   QAction * m_openLibDlgAction;
+
+  QAction * m_configureProxy;
 
   bool m_isIP;
 
