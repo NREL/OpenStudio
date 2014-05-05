@@ -538,7 +538,7 @@ namespace sdd {
 
             QDomElement infSchRefElement = elementByTagNameAndIndex(element,"InfSchRef",hasIndex,infIndex);
             QDomElement infModelCoefAElement = elementByTagNameAndIndex(element,"InfModelCoefA",hasIndex,infIndex); // unitless
-            QDomElement infModelCoefBElement = elementByTagNameAndIndex(element,"InfModelCoefB",hasIndex,infIndex); // 1/F
+            QDomElement infModelCoefBElement = elementByTagNameAndIndex(element,"InfModelCoefB",hasIndex,infIndex); // 1/deltaF
             QDomElement infModelCoefCElement = elementByTagNameAndIndex(element,"InfModelCoefC",hasIndex,infIndex); // hr/mile
             QDomElement infModelCoefDElement = elementByTagNameAndIndex(element,"InfModelCoefD",hasIndex,infIndex); // hr^2/mile^2
 
@@ -581,15 +581,8 @@ namespace sdd {
             }
 
             if (!infModelCoefBElement.isNull()){
-              // SDD: 1/F, OpenStudio: 1/C
-              BTUUnit ipUnit(BTUExpnt(0,0,0,-1));
-              openstudio::TemperatureUnit ipTempUnit = ipUnit.cast<openstudio::TemperatureUnit>();
-              ipTempUnit.setAsRelative();
-              openstudio::Quantity infModelCoefBIP(infModelCoefBElement.text().toDouble(), ipTempUnit);
-              OptionalQuantity infModelCoefBSI = QuantityConverter::instance().convert(infModelCoefBIP, siSys);
-              OS_ASSERT(infModelCoefBSI);
-              OS_ASSERT(infModelCoefBSI->units() == SIUnit(SIExpnt(0,0,0,-1)));
-              spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBSI->value());
+              // convert 1/deltaF to 1/detlaC
+              spaceInfiltrationDesignFlowRate.setTemperatureTermCoefficient(infModelCoefBElement.text().toDouble() * 5.0 / 9.0);
             }
 
             if (!infModelCoefCElement.isNull()){
@@ -601,7 +594,7 @@ namespace sdd {
               spaceInfiltrationDesignFlowRate.setVelocityTermCoefficient(infModelCoefCSI->value());
             }
 
-            if (!infModelCoefAElement.isNull()){
+            if (!infModelCoefDElement.isNull()){
               // SDD: hr^2/mile^2, OpenStudio: s^2/m^2
               openstudio::Quantity infModelCoefDIP(infModelCoefDElement.text().toDouble(), MPHUnit(MPHExpnt(0,-2,2)));
               OptionalQuantity infModelCoefDSI = QuantityConverter::instance().convert(infModelCoefDIP, siSys);
