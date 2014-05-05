@@ -59,16 +59,16 @@ namespace idfRegex{
   }
 
   // Match line with an object type and name
-  // matches[1], before first seperator
-  // matches[2], after first seperator and before second seperator
+  // matches[1], before first separator
+  // matches[2], after first separator and before second separator
   const boost::regex &objectTypeAndName(){
     const static boost::regex result("^([^!]*?)[,;]([^!]*?)[,;]");
     return result; 
   }
 
-  // Match line with either a ',' or a ';' that are not preceeded by '!'
-  // matches[1], before seperator
-  // matches[2], after seperator and before new line
+  // Match line with either a ',' or a ';' that are not preceded by '!'
+  // matches[1], before separator
+  // matches[2], after separator and before new line
   // matches[3], after new line
   const boost::regex &line(){
     const static boost::regex result("^([^!]*?)[,;]" + optionalNewLinestring());
@@ -87,7 +87,7 @@ namespace idfRegex{
     return result; 
   }
 
-  // Match line with '##def' preceeded only by whitespace
+  // Match line with '##def' preceded only by whitespace
   // matches[1], the imf section name
   const boost::regex &imfSection(){
     const static boost::regex result("^[\\s\\t]*##[\\s\\t]*def[\\s\\t]*(.*?)\\[(.*?)\\]");

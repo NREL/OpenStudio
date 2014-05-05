@@ -1170,6 +1170,62 @@ namespace detail {
     return wwr;
   }
 
+  double Surface_Impl::skylightToRoofRatio() const
+  {
+    double result = 0.0;
+
+    if (!istringEqual(this->surfaceType(), "RoofCeiling")){
+      return result;
+    }
+
+    double grossArea = this->grossArea();
+    
+    if (grossArea == 0){
+      return result;
+    }
+
+    double skylightArea = 0.0;
+    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+      if (istringEqual(subSurface.subSurfaceType(), "Skylight")){
+          skylightArea += subSurface.multiplier() * subSurface.netArea();
+      }
+    }
+    
+    result = skylightArea / grossArea;
+    
+    return result;
+  }
+
+  double Surface_Impl::skylightToProjectedFloorRatio() const
+  {
+    double result = 0.0;
+
+    if (!istringEqual(this->surfaceType(), "RoofCeiling")){
+      return result;
+    }
+
+    Point3dVector vertices = this->vertices();
+    Plane horizontal(Point3d(0,0,0), Vector3d(0,0,1));
+    std::vector<Point3d> projectedVertics = horizontal.project(vertices);
+
+    boost::optional<double> grossArea = getArea(projectedVertics);
+    
+    if (!grossArea || grossArea.get() == 0){
+      return result;
+    }
+
+    double skylightArea = 0.0;
+    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+      if (istringEqual(subSurface.subSurfaceType(), "Skylight")){
+          skylightArea += subSurface.multiplier() * subSurface.netArea();
+      }
+    }
+    
+    result = skylightArea / grossArea.get();
+    
+    return result;
+  }
+
   boost::optional<SubSurface> Surface_Impl::setWindowToWallRatio(double wwr)
   {
     return setWindowToWallRatio(wwr, 0.762, true);
@@ -1255,6 +1311,14 @@ namespace detail {
     bool doExteriorShading = (doViewGlass && (exteriorShadingProjectionFactor > 0));
     bool doInteriorShelf = (doDaylightGlass && (interiorShelfProjectionFactor > 0));
     bool doViewAndDaylightGlass = (doViewGlass && doDaylightGlass);
+
+    // ignore these user arguments?
+    if (!doViewGlass){
+      desiredViewGlassSillHeight = 0.0;
+    }
+    if (!doDaylightGlass){
+      desiredDaylightingGlassHeaderHeight = 0.0;
+    }
     
     // new coordinate system has z' in direction of outward normal, y' is up
     double xmin = std::numeric_limits<double>::max();
@@ -1272,7 +1336,6 @@ namespace detail {
     }
 
     double oneInch = 0.0254;
-    double oneFoot = 0.3048;
 
     // DLM: preserve a 1" gap between window and edge to keep SketchUp happy
     double minGlassToEdgeDistance = oneInch;
@@ -1524,9 +1587,10 @@ namespace detail {
       ShadingSurface shadingSurface(transformation*exteriorShadingVertices, model);
       shadingSurface.setShadingSurfaceGroup(shadingGroup);
 
-      if (interiorShelf){
-        interiorShelf->setOutsideShelf(shadingSurface);
-      }
+      // EnergyPlus expects outside shelf to be on daylight window, we prefer to shade the view window so do not add this here
+       //if (interiorShelf){
+      //  interiorShelf->setOutsideShelf(shadingSurface);
+      //}
     }
 
     return result;
@@ -2001,6 +2065,16 @@ double Surface::filmResistance() const {
 double Surface::windowToWallRatio() const
 {
   return getImpl<detail::Surface_Impl>()->windowToWallRatio();
+}
+
+double Surface::skylightToRoofRatio() const
+{
+  return getImpl<detail::Surface_Impl>()->skylightToRoofRatio();
+}
+
+double Surface::skylightToProjectedFloorRatio() const
+{
+  return getImpl<detail::Surface_Impl>()->skylightToRoofRatio();
 }
 
 boost::optional<SubSurface> Surface::setWindowToWallRatio(double wwr)

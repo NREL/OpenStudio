@@ -19,6 +19,10 @@
 
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 
@@ -200,6 +204,19 @@ namespace detail {
   void CoilHeatingWaterBaseboard_Impl::resetConvergenceTolerance() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, "");
     OS_ASSERT(result);
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
  

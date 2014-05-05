@@ -155,17 +155,7 @@ void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects)
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
 {
-  m_idfObjects.clear();
-
-  m_map.clear();
-
-  m_anyNumberScheduleTypeLimits.reset();
-
-  m_constructionHandleToReversedConstructions.clear();
-
-  m_logSink.setThreadId(QThread::currentThread());
-
-  m_logSink.resetStringStream();
+  reset();
 
   // translate Version first
   model::Version version = model.getUniqueModelObject<model::Version>();
@@ -493,6 +483,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
+    {
+      model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
+      retVal = translateAirLoopHVACUnitarySystem(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
       return retVal;
@@ -557,13 +553,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();
-      retVal = translateCoilCoolingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed :
     {
       model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
-      retVal = translateCoilCoolingDXTwoSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXTwoSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXTwoSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
@@ -603,7 +607,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed :
     {
       model::CoilHeatingDXSingleSpeed coil = modelObject.cast<CoilHeatingDXSingleSpeed>();
-      retVal = translateCoilHeatingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilHeatingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilHeatingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -1919,6 +1927,16 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
     BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
+
+      if (modelObject.optionalCast<ConstructionBase>()){
+        if (istringEqual("Interior Partition Surface Construction", workspaceObject.name().get())){
+          m_interiorPartitionSurfaceConstruction = modelObject.cast<ConstructionBase>();
+        }
+
+        if (istringEqual("Shading Surface Construction", workspaceObject.name().get())){
+          m_exteriorSurfaceConstruction = modelObject.cast<ConstructionBase>();
+        }
+      }
     }
   }
 }
@@ -1955,15 +1973,45 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
 
-      if (istringEqual("Always_On", workspaceObject.name().get())){
-        m_alwaysOnSchedule = result;
-      }
+      if ((iddObjectType == IddObjectType::OS_Schedule_Compact) ||
+          (iddObjectType == IddObjectType::OS_Schedule_Constant) ||
+          (iddObjectType == IddObjectType::OS_Schedule_Ruleset) ||
+          (iddObjectType == IddObjectType::OS_Schedule_FixedInterval) ||
+          (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)){
+        if (istringEqual("Always_On", workspaceObject.name().get())){
+          m_alwaysOnSchedule = result;
+        }
 
-      if (istringEqual("Always_Off", workspaceObject.name().get())){
-        m_alwaysOffSchedule = result;
+        if (istringEqual("Always_Off", workspaceObject.name().get())){
+          m_alwaysOffSchedule = result;
+        }
       }
     }
   }
+}
+
+void ForwardTranslator::reset()
+{
+  m_idfObjects.clear();
+
+  m_map.clear();
+
+  m_anyNumberScheduleTypeLimits.reset();
+
+  m_alwaysOnSchedule.reset();
+
+  m_alwaysOffSchedule.reset();
+
+  m_interiorPartitionSurfaceConstruction.reset();
+
+  m_exteriorSurfaceConstruction.reset();
+
+  m_constructionHandleToReversedConstructions.clear();
+
+  m_logSink.setThreadId(QThread::currentThread());
+
+  m_logSink.resetStringStream();
+
 }
 
 IdfObject ForwardTranslator::alwaysOnSchedule()
@@ -1994,6 +2042,50 @@ IdfObject ForwardTranslator::alwaysOffSchedule()
   m_idfObjects.push_back(*m_alwaysOffSchedule);
 
   return *m_alwaysOffSchedule;
+}
+
+model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(model::Model & model)
+{
+  if (m_interiorPartitionSurfaceConstruction){
+    return *m_interiorPartitionSurfaceConstruction;
+  }
+
+  StandardOpaqueMaterial material(model, "MediumSmooth", 0.0254, 0.16, 800, 1090);
+  material.setThermalAbsorptance(0.4);
+  material.setSolarAbsorptance(0.4);
+  material.setVisibleAbsorptance(0.3);
+
+  model::Construction construction(model);
+  construction.setName("Interior Partition Surface Construction");
+  construction.insertLayer(0, material);
+  m_interiorPartitionSurfaceConstruction = construction;
+
+  translateAndMapModelObject(material);
+  translateAndMapModelObject(construction);
+
+  return *m_interiorPartitionSurfaceConstruction;
+}
+
+model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Model & model)
+{
+  if (m_exteriorSurfaceConstruction){
+    return *m_exteriorSurfaceConstruction;
+  }
+
+  StandardOpaqueMaterial material(model, "MediumSmooth", 0.1524, 0.49, 512, 880);
+  material.setThermalAbsorptance(0.6);
+  material.setSolarAbsorptance(0.6);
+  material.setVisibleAbsorptance(0.5);
+
+  model::Construction construction(model);
+  construction.setName("Interior Partition Surface Construction");
+  construction.insertLayer(0, material);
+  m_exteriorSurfaceConstruction = construction;
+
+  translateAndMapModelObject(material);
+  translateAndMapModelObject(construction);
+
+  return *m_exteriorSurfaceConstruction;
 }
 
 model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction)
@@ -2410,6 +2502,26 @@ boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path)
   ss << in.readAll().toStdString();
 
   return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const
+{
+  if( hvacComponent.containingHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingZoneHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingStraightComponent() )
+  {
+    return true;
+  }    
+  else
+  {
+    return false;
+  }
 }
 
 void ForwardTranslator::createFluidPropertiesMap()

@@ -232,6 +232,10 @@ class QSqlDatabase
 class QStandardItem
 {};
 
+#if defined SWIGJAVA
+%rename(toQString) QVariant::toString;
+#endif
+
 %template(QVariantVector) std::vector<QVariant>;
 %template(QVariantVectorVector) std::vector<std::vector<QVariant> >;
 class QVariant {

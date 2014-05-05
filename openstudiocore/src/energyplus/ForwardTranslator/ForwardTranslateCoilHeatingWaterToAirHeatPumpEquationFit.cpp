@@ -117,17 +117,17 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingWaterToAirHeat
   // Rated Heating Capacity
   if( modelObject.isRatedHeatingCapacityAutosized())
   {
-    idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity,"Autosize");
+    idfObject.setString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity,"Autosize");
   }
   else if((value = modelObject.ratedHeatingCapacity()))
   {
-    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCapacity,value.get());
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity,value.get());
   }  
 
   // Heating Coefficient of Performance
   if((value = modelObject.ratedHeatingCoefficientofPerformance()))
   {
-    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCoefficientofPerformance,value.get());
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP,value.get());
   }
   
   //Heating Capacity Coefficient 1

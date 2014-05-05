@@ -28,12 +28,18 @@
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/CurveCubic.hpp>
 #include <model/CurveCubic_Impl.hpp>
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveQuadratic_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <utilities/idd/OS_Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
@@ -156,6 +162,29 @@ namespace detail{
   boost::optional<HVACComponent> CoilHeatingGas_Impl::containingHVACComponent() const
   {
     // Process all types that might contain a CoilHeatingWater object.
+
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      {
+        if( suppHeatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
 
     // AirTerminalSingleDuctVAVReheat
 
@@ -360,7 +389,7 @@ namespace detail{
 
   ModelObject CoilHeatingGas_Impl::clone(Model model) const
   {
-    CoilHeatingGas newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingGas>();
+    CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
     if( boost::optional<Curve> curve1 = partLoadFractionCorrelationCurve() )
     {
@@ -368,6 +397,19 @@ namespace detail{
     }
 
     return newCoil;
+  }
+
+  bool CoilHeatingGas_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
   }
 
 }// detail

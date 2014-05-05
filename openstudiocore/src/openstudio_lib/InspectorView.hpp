@@ -198,6 +198,26 @@ class PlenumChooserView : public QWidget
   QToolButton * newReturnPlenumButton;
 };
 
+class RefrigerationWalkinInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  RefrigerationWalkinInspectorView(QWidget * parent = 0);
+
+  virtual ~RefrigerationWalkinInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP);
+
+  private:
+
+  InspectorGadget * m_walkinInspectorGadget;
+  QWidget * m_zoneBoundaryWidget;
+  bool m_displayIP;
+  boost::optional<model::ModelObject> m_modelObject;
+};
+
 class ThermalZoneInspectorView : public BaseInspectorView
 {
   Q_OBJECT;
@@ -546,6 +566,36 @@ class ZoneHVACUnitHeaterInspectorView : public BaseInspectorView
   InspectorGadget * m_inspectorGadget;
 
   LoopChooserView * m_heatingLoopChooserView;
+
+};
+
+class AirLoopHVACUnitarySystemInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirLoopHVACUnitarySystemInspectorView(QWidget * parent = 0);
+
+  virtual ~AirLoopHVACUnitarySystemInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP );
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_heatingLoopChooserView;
+  LoopChooserView * m_coolingLoopChooserView;
+  LoopChooserView * m_secondaryLoopChooserView;
 
 };
 

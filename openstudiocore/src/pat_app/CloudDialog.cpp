@@ -284,7 +284,7 @@ void CloudDialog::on_backButton(bool checked)
     m_pageStackedWidget->setCurrentIndex(m_loginPageIdx);
     this->backButton()->setText("Continue");
   } else if(m_pageStackedWidget->currentIndex() == m_loginPageIdx) {
-      if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+    if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
       AWSSettings awsSettings;
       std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
       std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
@@ -305,9 +305,18 @@ void CloudDialog::on_backButton(bool checked)
         QMessageBox::critical(this, "Authentication Failed", error);
         return;
       }
-      m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
-      this->backButton()->setText("Back");
+    }else if( m_cloudResourceComboBox->currentText() == VAGRANT_PROVIDER){
+      VagrantSettings vagrantSettings;
+      std::string serverUsername = m_vagrantProviderWidget->m_serverUsernameLineEdit->text().toStdString();
+      std::string serverPassword = m_vagrantProviderWidget->m_serverPasswordLineEdit->text().toStdString();
+      if (serverUsername.empty() || serverPassword.empty()) {
+        QString error("The User Name and Password cannot be empty");
+        QMessageBox::critical(this, "Authentication Failed", error);
+        return;
+      }
     }
+    m_pageStackedWidget->setCurrentIndex(m_settingsPageIdx);
+    this->backButton()->setText("Back");
   }
 }
 
@@ -319,25 +328,47 @@ void CloudDialog::on_cancelButton(bool checked)
 
 void CloudDialog::on_okButton(bool checked)
 {
-  AWSSettings awsSettings;
-  std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
-  std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
-  if (accessKey.empty() || secretKey.empty()) {
-    QString error("The Access Key and Secret Key cannot be empty");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
-  }
-  bool validAccessKey = awsSettings.validAccessKey(accessKey);
-  if(!validAccessKey){
-    QString error("You have entered an invalid Access Key");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
-  }
-  bool validSecretKey = awsSettings.validSecretKey(secretKey);
-  if(!validSecretKey){
-    QString error("You have entered an invalid Secret Key");
-    QMessageBox::critical(this, "Authentication Failed", error);
-    return;
+  if( m_cloudResourceComboBox->currentText() == AMAZON_PROVIDER){
+    AWSSettings awsSettings;
+    std::string accessKey = m_amazonProviderWidget->m_accessKeyLineEdit->text().toStdString();
+    std::string secretKey = m_amazonProviderWidget->m_secretKeyLineEdit->text().toStdString();
+    if (accessKey.empty() || secretKey.empty()) {
+      QString error("The Access Key and Secret Key cannot be empty");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+    bool validAccessKey = awsSettings.validAccessKey(accessKey);
+    if(!validAccessKey){
+      QString error("You have entered an invalid Access Key");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+    bool validSecretKey = awsSettings.validSecretKey(secretKey);
+    if(!validSecretKey){
+      QString error("You have entered an invalid Secret Key");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+  }else if( m_cloudResourceComboBox->currentText() == VAGRANT_PROVIDER){
+    VagrantSettings vagrantSettings;
+
+    std::string serverUsername = m_vagrantProviderWidget->m_serverUsernameLineEdit->text().toStdString();
+    std::string serverPassword = m_vagrantProviderWidget->m_serverPasswordLineEdit->text().toStdString();
+    if (serverUsername.empty() || serverPassword.empty()) {
+      QString error("The User Name and Password cannot be empty");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
+
+    std::string serverDir = m_vagrantProviderWidget->m_serverDirLineEdit->text().toStdString();
+    std::string serverAddress = m_vagrantProviderWidget->m_serverAddressIpLineEdit->text().toStdString();
+    std::string workerDir = m_vagrantProviderWidget->m_workerDirLineEdit->text().toStdString();
+    std::string workerAddress = m_vagrantProviderWidget->m_workerAddressIpLineEdit->text().toStdString();
+    if (serverDir.empty() || serverAddress.empty() || workerDir.empty() || workerAddress.empty()) {
+      QString error("Server and Worker Directories and IP Addresses are required");
+      QMessageBox::critical(this, "Authentication Failed", error);
+      return;
+    }
   }
 
   // Save data
@@ -707,18 +738,18 @@ void VagrantProviderWidget::loadData()
   m_serverPasswordLineEdit->setText(vagrantSettings.password().c_str());
 
   url = vagrantSettings.serverUrl();
-  m_serverAddressIpLineEdit->setText(url.path());
+  m_serverAddressIpLineEdit->setText(url.host());
   m_serverPortIpLineEdit->setText(temp.setNum(url.port()));
   m_serverDirLineEdit->setText(toQString(vagrantSettings.serverPath()));
 
   url = vagrantSettings.serverUrl();
-  m_workerAddressIpLineEdit->setText(url.path());
+  m_workerAddressIpLineEdit->setText(url.host());
   m_workerPortIpLineEdit->setText(temp.setNum(url.port()));
   m_workerDirLineEdit->setText(toQString(vagrantSettings.workerPath()));
 
-  m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
+  //m_waitCheckBox->setChecked(vagrantSettings.terminationDelayEnabled());
 
-  m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
+  //m_waitLineEdit->setText(temp.setNum(vagrantSettings.terminationDelay()));
 }
 
 void VagrantProviderWidget::saveData()
@@ -733,20 +764,22 @@ void VagrantProviderWidget::saveData()
 
   Url url;
   
-  url.setPath( m_serverAddressIpLineEdit->text());
+  url.setHost( m_serverAddressIpLineEdit->text());
   url.setPort(m_serverPortIpLineEdit->text().toInt());
   vagrantSettings.setServerUrl(url);
   
   vagrantSettings.setWorkerPath(toPath(m_workerDirLineEdit->text().toStdString()));
 
-  url.setPath(m_workerAddressIpLineEdit->text());
+  url.setHost(m_workerAddressIpLineEdit->text());
   url.setPort(m_workerPortIpLineEdit->text().toInt());
   vagrantSettings.setWorkerUrl(url);
 
-  vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
+  //vagrantSettings.setTerminationDelayEnabled(m_waitCheckBox->isChecked());
 
-  unsigned wait = m_waitLineEdit->text().toUInt();
-  vagrantSettings.setTerminationDelay(wait);
+  //unsigned wait = m_waitLineEdit->text().toUInt();
+  //vagrantSettings.setTerminationDelay(wait);
+
+  vagrantSettings.saveToSettings(true);
 }
 
 //***** SLOTS *****

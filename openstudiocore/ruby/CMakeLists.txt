@@ -37,7 +37,7 @@ FOREACH( f ${RUBY_TEST_SRC} )
       IF(MSVC)
         ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
-          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
+          "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
       ELSE()
         # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
@@ -63,7 +63,7 @@ IF (WIN32 OR APPLE)
   INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "Ruby/cloud" )
 ELSE() #Linux
   INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "${RUBY_MODULE_DIR}/cloud" )
-  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio/Ruby/cloud" )
+  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/cloud" )
 ENDIF()
 FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/mongoid.yml.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
 FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/server_script.sh" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
@@ -107,7 +107,7 @@ IF (BUILD_RUBY_GEM)
     EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/lib\")
     EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/lib\")
     EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/share\")
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/share/openstudio\")
+    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/share/openstudio-${OPENSTUDIO_VERSION}\")
     EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb\" \"${GEMDIR}/lib\")
   ")
 
@@ -133,7 +133,7 @@ IF (BUILD_RUBY_GEM)
         ENDFOREACH(prereq IN LISTS prereqs)
       ENDFOREACH(lib IN LISTS ruby_libs)
 
-      execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"\${CMAKE_INSTALL_PREFIX}/share/openstudio/osversion\" \"${GEMDIR}/share/openstudio/osversion\")
+      execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"\${CMAKE_INSTALL_PREFIX}/share/openstudio-${OPENSTUDIO_VERSION}/osversion\" \"${GEMDIR}/share/openstudio/osversion\")
 
       IF( qtinstalled )
         file(WRITE \"${GEMDIR}/lib/qt.conf\" \"\")
@@ -196,10 +196,17 @@ ENDIF()
 
 # run all the unit tests
 IF( ENABLE_TEST_RUNNER_TARGETS )
-  ADD_CUSTOM_TARGET( ruby_run_tests
-    ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I. -I"${RUBY_RUBY_LIB_DIR}" "openstudio_test.rb"
-    DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
-  )
+  IF(MSVC)
+    ADD_CUSTOM_TARGET( ruby_run_tests
+      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+    )  
+  ELSE()
+    ADD_CUSTOM_TARGET( ruby_run_tests
+      ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
+      DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
+    )  
+  ENDIF()
 ENDIF()
 
 # install the files
@@ -223,7 +230,7 @@ ELSE() #Linux
     GET_FILENAME_COMPONENT(SRC_PATH ${SRC_FILE} PATH)
     #MESSAGE("install ${f} -> Ruby/${SRC_PATH}")
     INSTALL( FILES ${f} DESTINATION "${RUBY_MODULE_DIR}/${SRC_PATH}" )
-    INSTALL( FILES ${f} DESTINATION "share/openstudio/Ruby/${SRC_PATH}" )
+    INSTALL( FILES ${f} DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/${SRC_PATH}" )
   ENDFOREACH(f)
 ENDIF()
 

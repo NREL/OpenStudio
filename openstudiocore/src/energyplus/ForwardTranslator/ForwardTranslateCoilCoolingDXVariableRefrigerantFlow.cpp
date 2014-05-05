@@ -77,22 +77,22 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableRefr
 
   if( modelObject.isRatedTotalCoolingCapacityAutosized() )
   {
-    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,"Autosize");
   }
   else if( (value = modelObject.ratedTotalCoolingCapacity()) )
   {
-    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity,value.get());
+    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,value.get());
   }
 
   // RatedSensibleHeatRatio
 
   if( modelObject.isRatedSensibleHeatRatioAutosized() )
   {
-    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio,"Autosize");
+    idfObject.setString(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio,"Autosize");
   }
   else if( (value = modelObject.ratedSensibleHeatRatio()) )
   {
-    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio,value.get());
+    idfObject.setDouble(Coil_Cooling_DX_VariableRefrigerantFlowFields::GrossRatedSensibleHeatRatio,value.get());
   }
 
   // RatedAirFlowRate

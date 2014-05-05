@@ -30,10 +30,7 @@ class QCTest_Test < Test::Unit::TestCase
   # def teardown
   # end
   
-  def test_QCTest
-    epDir = OpenStudio::Path.new($OpenStudio_ResourcePath + "energyplus/Daylighting_School/") 
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/examples/QCTest.rb' '#{epDir}'"))
-  end
+  # DLM: removing tests of functionality to be deprecated
 
 end
 

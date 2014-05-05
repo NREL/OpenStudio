@@ -30,9 +30,6 @@ class CreateExampleOptimizationProblem_Test < Test::Unit::TestCase
   # def teardown
   # end
   
-  def test_CreateExampleOptimizationProblem
-    ospPath = "./ExampleOptimizationProblem.osp"
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/examples/CreateExampleOptimizationProblem.rb' '#{ospPath}' "))
-  end
+  # DLM: removing tests of functionality to be deprecated
 
 end

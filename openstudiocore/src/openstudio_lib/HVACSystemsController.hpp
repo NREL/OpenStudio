@@ -63,6 +63,8 @@ class OAResetSPMView;
 class AirLoopHVACUnitaryHeatPumpAirToAirControlView;
 class NoControlsView;
 class RefrigerationController;
+class RefrigerationGridController;
+class RefrigerationGridView;
 class VRFController;
 
 class HVACSystemsController : public QObject
@@ -73,7 +75,7 @@ class HVACSystemsController : public QObject
 
   enum SceneType {TOPOLOGY, CONTROLS};
 
-  HVACSystemsController(const model::Model & model);
+  HVACSystemsController(bool isIP, const model::Model & model);
 
   virtual ~HVACSystemsController();
 
@@ -114,6 +116,8 @@ class HVACSystemsController : public QObject
 
   void onShowControlsClicked();
 
+  void onShowGridClicked();
+
   void onObjectAdded(const WorkspaceObject&);
 
   void onObjectRemoved(const WorkspaceObject&);
@@ -121,6 +125,8 @@ class HVACSystemsController : public QObject
   void onObjectChanged();
 
   void onSystemComboBoxIndexChanged(int i);
+
+  void toggleUnits(bool displayIP);
 
   private:
 
@@ -134,6 +140,8 @@ class HVACSystemsController : public QObject
 
   boost::shared_ptr<RefrigerationController> m_refrigerationController;
 
+  boost::shared_ptr<RefrigerationGridController> m_refrigerationGridController;
+
   boost::shared_ptr<VRFController> m_vrfController;
 
   QString m_currentHandle;
@@ -141,6 +149,13 @@ class HVACSystemsController : public QObject
   bool m_dirty;
 
   model::Model m_model;
+
+  bool m_isIP;
+
+  signals:
+  
+  void toggleUnitsClicked(bool displayIP);
+
 };
 
 class HVACControlsController : public QObject
@@ -218,7 +233,7 @@ class HVACLayoutController : public QObject
 
   virtual ~HVACLayoutController();
 
-  //boost::shared_ptr<RefrigerationController> refrigerationController() const;
+  boost::shared_ptr<RefrigerationGridController> refrigerationGridController() const;
 
   HVACGraphicsView * hvacGraphicsView() const;
 
@@ -250,7 +265,7 @@ class HVACLayoutController : public QObject
 
   QPointer<HVACSystemsController> m_hvacSystemsController;
 
-  //boost::shared_ptr<RefrigerationController> m_refrigerationController;
+  boost::shared_ptr<RefrigerationGridController> m_refrigerationGridController;
 
   bool m_dirty;
 };

@@ -597,7 +597,7 @@ void SewerItem::paint( QPainter *painter,
   QTransform transform;
   transform = transform.rotate(90);
 
-  painter->drawPixmap(137.5,37.5,25,25,QPixmap(":/images/arrow.png").transformed(transform));
+  painter->drawPixmap(137,37,25,25,QPixmap(":/images/arrow.png").transformed(transform));
 }
 
 HotWaterSupplyItem::HotWaterSupplyItem(QGraphicsItem * parent)
@@ -646,7 +646,7 @@ void HotWaterSupplyItem::paint( QPainter *painter,
   QTransform transform;
   transform = transform.rotate(90);
 
-  painter->drawPixmap(37.5,37.5,25,25,QPixmap(":/images/arrow.png").transformed(transform));
+  painter->drawPixmap(37,37,25,25,QPixmap(":/images/arrow.png").transformed(transform));
 }
 
 MainsSupplyItem::MainsSupplyItem(QGraphicsItem * parent)
@@ -685,7 +685,7 @@ void MainsSupplyItem::paint( QPainter *painter,
   QTransform transform;
   transform = transform.rotate(90);
 
-  painter->drawPixmap(37.5,37.5,25,25,QPixmap(":/images/arrow.png").transformed(transform));
+  painter->drawPixmap(37,37,25,25,QPixmap(":/images/arrow.png").transformed(transform));
 }
 
 DoubleOneThreeStraightItem::DoubleOneThreeStraightItem( QGraphicsItem * parent )
@@ -703,8 +703,8 @@ void DoubleOneThreeStraightItem::paint(QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawLine( 0,33.3,100,33.3 );
-  painter->drawLine( 0,66.6,100,66.6 );
+  painter->drawLine( 0,33,100,33 );
+  painter->drawLine( 0,66,100,66 );
 }
 
 DoubleThreeFourStraightItem::DoubleThreeFourStraightItem( QGraphicsItem * parent )
@@ -722,11 +722,11 @@ void DoubleThreeFourStraightItem::paint(QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawLine( 0,33.3,66.6,33.3 );
-  painter->drawLine( 66.6,33.3,66.6,100 );
+  painter->drawLine( 0,33,66,33 );
+  painter->drawLine( 66,33,66,100 );
 
-  painter->drawLine( 0,66.6,33.3,66.6 );
-  painter->drawLine( 33.3,66.6,33.3,100 );
+  painter->drawLine( 0,66,33,66 );
+  painter->drawLine( 33,66,33,100 );
 }
 
 DoubleTwoFourStraightItem::DoubleTwoFourStraightItem( QGraphicsItem * parent )
@@ -744,8 +744,8 @@ void DoubleTwoFourStraightItem::paint(QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawLine( 33.3,0,33.3,100 );
-  painter->drawLine( 66.6,0,66.6,100 );
+  painter->drawLine( 33,0,33,100 );
+  painter->drawLine( 66,0,66,100 );
 }
 
 DoubleTwoThreeStraightItem::DoubleTwoThreeStraightItem( QGraphicsItem * parent )
@@ -763,13 +763,13 @@ void DoubleTwoThreeStraightItem::paint(QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawLine( 66.6,0,66.6,33.3 );
-  painter->drawLine( 0,33.3,16.65,33.3 );
-  painter->drawArc( 16.65,16.65,33.3,33.3,2880,-2880 );
-  painter->drawLine( 50,33.3,66.6,33.3 );
+  painter->drawLine( 66,0,66,33 );
+  painter->drawLine( 0,33,16,33 );
+  painter->drawArc( 16,16,33,33,2880,-2880 );
+  painter->drawLine( 50,33,66,33 );
 
-  painter->drawLine( 33.3,0,33.3,66.6 );
-  painter->drawLine( 0,66.6,33.3,66.6 );
+  painter->drawLine( 33,0,33,66 );
+  painter->drawLine( 0,66,33,66 );
 }
 
 HotWaterJunctionItem::HotWaterJunctionItem( QGraphicsItem * parent )
@@ -783,9 +783,9 @@ void HotWaterJunctionItem::paint(QPainter *painter,
 {
   DoubleTwoFourStraightItem::paint(painter,option,widget);
 
-  painter->drawLine( 33.3,50,50,50 );
-  painter->drawArc( 50,33.3,33.3,33.3,2880,-2880 );
-  painter->drawLine( 83.3,50,100,50 );
+  painter->drawLine( 33,50,50,50 );
+  painter->drawArc( 50,33,33,33,2880,-2880 );
+  painter->drawLine( 83,50,100,50 );
 }
 
 ColdWaterJunctionItem::ColdWaterJunctionItem( int isElbow, QGraphicsItem * parent )
@@ -807,17 +807,17 @@ void ColdWaterJunctionItem::paint(QPainter *painter,
 
   if( m_isElbow )
   {
-    painter->drawLine( 66.6,0,66.6,50 );
-    painter->drawLine( 66.6,50,100,50 );
-    painter->drawLine( 33.3,0,33.3,50 );
+    painter->drawLine( 66,0,66,50 );
+    painter->drawLine( 66,50,100,50 );
+    painter->drawLine( 33,0,33,50 );
 
-    painter->drawEllipse( 28.3,45,10,10 );
+    painter->drawEllipse( 28,45,10,10 );
   }
   else
   {
-    painter->drawLine( 66.6,0,66.6,100 );
-    painter->drawLine( 66.6,50,100,50 );
-    painter->drawLine( 33.3,0,33.3,100 );
+    painter->drawLine( 66,0,66,100 );
+    painter->drawLine( 66,50,100,50 );
+    painter->drawLine( 33,0,33,100 );
   }
 }
 
@@ -836,13 +836,13 @@ void DoubleTwoThreeFourStraightItem::paint(QPainter *painter,
   painter->setBrush(QBrush(Qt::lightGray,Qt::SolidPattern));
   painter->setPen(QPen(Qt::black,4,Qt::SolidLine, Qt::RoundCap));
 
-  painter->drawLine( 33.3,0,33.3,100 );
-  painter->drawLine( 66.6,0,66.6,100 );
+  painter->drawLine( 33,0,33,100 );
+  painter->drawLine( 66,0,66,100 );
 
-  painter->drawLine( 0,33.3,16.65,33.3 );
-  painter->drawArc( 16.65,16.65,33.3,33.3,2880,-2880 );
-  painter->drawLine( 50,33.3,66.6,33.3 );
-  painter->drawLine( 0,66.6,33.3,66.6 );
+  painter->drawLine( 0,33,16,33 );
+  painter->drawArc( 16,16,33,33,2880,-2880 );
+  painter->drawLine( 50,33,66,33 );
+  painter->drawLine( 0,66,33,66 );
 }
 
 WaterUseConnectionsItem::WaterUseConnectionsItem(QGraphicsItem * parent)
@@ -936,7 +936,7 @@ void MakeupWaterItem::paint(QPainter *painter,
   QTransform transform;
   transform = transform.rotate(90);
 
-  painter->drawPixmap(37.5,137.5,25,25,QPixmap(":/images/arrow.png").transformed(transform));
+  painter->drawPixmap(37,137,25,25,QPixmap(":/images/arrow.png").transformed(transform));
 }
 
 void MakeupWaterItem::onHotWaterSupplyButtonClicked()

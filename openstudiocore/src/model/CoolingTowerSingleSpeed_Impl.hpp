@@ -437,6 +437,8 @@ namespace detail {
 
     void resetSizingFactor();
 
+    bool addToNode(Node & node);
+
     //@}
    protected:
    private:

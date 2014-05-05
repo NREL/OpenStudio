@@ -43,6 +43,7 @@
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
@@ -753,7 +754,7 @@ openstudio::path OpenStudioApp::resourcesPath() const
   } 
   else 
   {
-    return getApplicationRunDirectory() / openstudio::toPath("../share/openstudio/OSApp");
+    return getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
   }
 }
 
@@ -835,8 +836,13 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
       QString message;
       if (versionChanged)
       {
-        message = toQString("Model updated from " + originalVersion.str() + " to " + 
-                       currentVersion.str() + ".");
+        if (originalVersion > currentVersion) {
+          message = toQString("Opening future version " + originalVersion.str() + " using " + 
+                           currentVersion.str() + ".");
+        } else {
+          message = toQString("Model updated from " + originalVersion.str() + " to " + 
+                           currentVersion.str() + ".");
+        }
       }
 
       if (removedScriptDirs)

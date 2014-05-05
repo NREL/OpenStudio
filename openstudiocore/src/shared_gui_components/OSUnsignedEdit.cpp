@@ -86,14 +86,14 @@ void OSUnsignedEdit2::bind(model::ModelObject& modelObject,
 }
 
 void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         UnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+                           UnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
@@ -110,14 +110,14 @@ void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
 }
 
 void OSUnsignedEdit2::bind(model::ModelExtensibleGroup& modelExtensibleGroup,
-                         OptionalUnsignedGetter get,
-                         boost::optional<UnsignedSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<NoFailAction> autosize,
-                         boost::optional<NoFailAction> autocalculate,
-                         boost::optional<BasicQuery> isDefaulted,
-                         boost::optional<BasicQuery> isAutosized,
-                         boost::optional<BasicQuery> isAutocalculated)
+                           OptionalUnsignedGetter get,
+                           boost::optional<UnsignedSetter> set,
+                           boost::optional<NoFailAction> reset,
+                           boost::optional<NoFailAction> autosize,
+                           boost::optional<NoFailAction> autocalculate,
+                           boost::optional<BasicQuery> isDefaulted,
+                           boost::optional<BasicQuery> isAutosized,
+                           boost::optional<BasicQuery> isAutocalculated)
 {
   m_modelExtensibleGroup = modelExtensibleGroup;
   m_modelObject = modelExtensibleGroup.getOptionalObject<model::ModelObject>();
@@ -212,10 +212,18 @@ void OSUnsignedEdit2::onEditingFinished() {
         int value = boost::lexical_cast<int>(str);
         setPrecision(str);
         if (m_set) {
-          (*m_set)(value);
+          bool result = (*m_set)(value);
+          if (!result){
+            // restore
+            refreshTextAndLabel();
+          }
         }
       }
-      catch (...) {}
+      catch (...) 
+      {
+        // restore
+        refreshTextAndLabel();
+      }
     }
   }
 }

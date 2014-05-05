@@ -26,6 +26,8 @@
 #include <model/Model.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
@@ -428,6 +430,27 @@ namespace detail {
     }
     return false;
   }
+
+  boost::optional<HVACComponent> CoilCoolingWater_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
   boost::optional<ZoneHVACComponent> CoilCoolingWater_Impl::containingZoneHVACComponent() const
   {
     // ZoneHVACFourPipeFanCoil

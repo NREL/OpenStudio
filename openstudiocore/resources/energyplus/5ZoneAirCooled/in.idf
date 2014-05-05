@@ -100,7 +100,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,8.0;
+  Version,8.1;
 
   Building,
     Building,                !- Name
@@ -2628,7 +2628,7 @@
   Fan:VariableVolume,
     Supply Fan 1,            !- Name
     FanAvailSched,           !- Availability Schedule Name
-    0.7,                     !- Fan Efficiency
+    0.7,                     !- Fan Total Efficiency
     600.0,                   !- Pressure Rise {Pa}
     autosize,                !- Maximum Flow Rate {m3/s}
     Fraction,                !- Fan Power Minimum Flow Rate Input Method
@@ -3026,7 +3026,7 @@
     1.0,                     !- Optimum Part Load Ratio
     Central Boiler Inlet Node,  !- Boiler Water Inlet Node Name
     Central Boiler Outlet Node,  !- Boiler Water Outlet Node Name
-    100.0,                    !- Water Outlet Upper Temperature Limit {C}
+    100.0,                   !- Water Outlet Upper Temperature Limit {C}
     LeavingSetpointModulated;!- Boiler Flow Mode
 
   SetpointManager:Scheduled,

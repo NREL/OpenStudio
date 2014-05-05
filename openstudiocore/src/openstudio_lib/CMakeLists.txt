@@ -222,6 +222,10 @@ SET( ${target_name}_SRC
   RefrigerationController.hpp
   RefrigerationGraphicsItems.cpp
   RefrigerationGraphicsItems.hpp
+  RefrigerationGridController.cpp
+  RefrigerationGridController.hpp
+  RefrigerationGridView.cpp
+  RefrigerationGridView.hpp
   RefrigerationScene.cpp
   RefrigerationScene.hpp
   RenderingColorWidget.cpp
@@ -395,18 +399,25 @@ SET( ${target_name}_SRC
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
   ../shared_gui_components/MeasureManager.hpp
+  ../shared_gui_components/NetworkProxyDialog.cpp
+  ../shared_gui_components/NetworkProxyDialog.hpp  
   ../shared_gui_components/OSCheckBox.cpp
   ../shared_gui_components/OSCheckBox.hpp
   ../shared_gui_components/OSCollapsibleView.cpp
   ../shared_gui_components/OSCollapsibleView.hpp
   ../shared_gui_components/OSComboBox.cpp
   ../shared_gui_components/OSComboBox.hpp
+  ../shared_gui_components/OSConcepts.hpp
   ../shared_gui_components/OSDialog.cpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.cpp
   ../shared_gui_components/OSDoubleEdit.hpp
   ../shared_gui_components/OSDragableView.cpp
   ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSGridController.cpp
+  ../shared_gui_components/OSGridController.hpp
+  ../shared_gui_components/OSGridView.cpp
+  ../shared_gui_components/OSGridView.hpp
   ../shared_gui_components/OSIntegerEdit.cpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.cpp
@@ -424,7 +435,7 @@ SET( ${target_name}_SRC
   ../shared_gui_components/OSUnsignedEdit.cpp
   ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.cpp
-  ../shared_gui_components/OSViewSwitcher.hpp
+  ../shared_gui_components/OSViewSwitcher.hpp  
   ../shared_gui_components/PageNavigator.cpp
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
@@ -435,6 +446,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WorkflowTools.cpp
+  ../shared_gui_components/WorkflowTools.hpp 
 
   #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 )
@@ -550,6 +563,8 @@ SET( ${target_name}_moc
   RadianceDialog.hpp
   RefrigerationController.hpp
   RefrigerationGraphicsItems.hpp
+  RefrigerationGridController.hpp
+  RefrigerationGridView.hpp
   RefrigerationScene.hpp
   RenderingColorWidget.hpp
   ResultsTabController.hpp
@@ -642,6 +657,8 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/OSDoubleEdit.hpp
   ../shared_gui_components/OSDragableView.hpp
+  ../shared_gui_components/OSGridController.hpp
+  ../shared_gui_components/OSGridView.hpp
   ../shared_gui_components/OSIntegerEdit.hpp
   ../shared_gui_components/OSLineEdit.hpp
   ../shared_gui_components/OSListController.hpp
@@ -655,6 +672,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/NetworkProxyDialog.hpp
 
 )
 

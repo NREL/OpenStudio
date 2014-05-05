@@ -132,7 +132,7 @@ namespace openstudio{
         /// subtract timeseries
         boost::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
 
-        /** TimeSereis * double */
+        /** TimeSeries * double */
         boost::shared_ptr<TimeSeries_Impl> operator*(double d) const;
 
       private:

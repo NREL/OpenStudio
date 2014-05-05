@@ -277,6 +277,14 @@ namespace detail {
     //@}
    signals:
     void seedChanged();
+
+    void removedDataPoint(const openstudio::UUID& dataPointUUID);
+
+    void removedAllDataPoints();
+
+    void clearedDataPointResults(const openstudio::UUID& dataPointUUID);
+
+    void clearedAllResults();
    protected:
     Problem m_problem;
     boost::optional<Algorithm> m_algorithm;

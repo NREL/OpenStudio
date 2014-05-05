@@ -60,7 +60,13 @@
 
 #include <analysis/Analysis.hpp>
 
+#include <model/Building.hpp>
+#include <model/Building_Impl.hpp>
 #include <model/Component.hpp>
+#include <model/Facility.hpp>
+#include <model/Facility_Impl.hpp>
+#include <model/LifeCycleCostParameters.hpp>
+#include <model/LifeCycleCostParameters_Impl.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
@@ -174,6 +180,12 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   modifiedOnLoad |= updateModelTempDir(m_model, modelTempDir);
 
+  // These objects used to be added to the model as you clicked through the App's tabs,
+  // resulting in a uncertain set of model changes.  With these changes, every model will
+  // always have the following objects.
+  openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
+  openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
+  openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
@@ -469,7 +481,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // HVAC Systems
 
-  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(m_model) );
+  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_hvacSystemsTabController->mainContentWidget(),
                                 HVAC_SYSTEMS,
                                 "HVAC Systems",
@@ -477,6 +489,10 @@ OSDocument::OSDocument( openstudio::model::Model library,
                                 ":images/off_hvac_tab.png" );
   connect(m_hvacSystemsTabController->mainContentWidget(),SIGNAL(tabSelected(int)),
           m_mainRightColumnController.get(),SLOT(configureForHVACSystemsSubTab(int)));
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                        m_hvacSystemsTabController.get(), SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   //******************************************************************************************************
   //
@@ -751,6 +767,12 @@ void OSDocument::runComplete()
     // copy all the simulation output to the save location
     // do not want to save the database or osm here
     saveModelTempDir(toPath(m_modelTempDir), toPath(m_savePath));
+
+    // search for E+ and Radiance results in the save directory
+    openstudio::path searchPath = toPath(m_savePath).parent_path() / toPath(m_savePath).stem() / openstudio::toPath("run");
+    if (boost::filesystem::exists(searchPath)) {
+      m_resultsTabController->searchForExistingResults(searchPath);
+    }
   }
 }
 

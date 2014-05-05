@@ -261,7 +261,7 @@ class MODEL_API Building : public ParentObject {
 
   /// Returns a suggested pattern for skylights targeting a skylight to floor ratio with desired sizes.
   /// Pattern will be in Building coordinates, on the z = 0 plane, with normal in positive z direction.
-  std::vector<std::vector<Point3d> > generateSkylightPattern(double skylightToFloorRatio, double desiredWidth, double desiredHeight) const;
+  std::vector<std::vector<Point3d> > generateSkylightPattern(double skylightToProjectedFloorRatio, double desiredWidth, double desiredHeight) const;
 
   //@}
  protected:

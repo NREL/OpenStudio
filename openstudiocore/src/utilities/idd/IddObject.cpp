@@ -210,7 +210,7 @@ namespace detail {
     }
 
     // do not pre-create extensible groups, so user can directly call 
-    // .pushExtensibleGroup, without preceeding it with a .clearExtensibleGroups.
+    // .pushExtensibleGroup, without preceding it with a .clearExtensibleGroups.
     if (result > n) {
       result = n;
     }

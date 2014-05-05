@@ -90,6 +90,20 @@ IddUnitString::IddUnitString (const std::string &s)
       }
     }
   }
+
+  if ((!m_converted.empty()) && boost::regex_search(m_converted,boost::regex("micron"))) {
+    Unit temp = parseUnitString(m_converted);
+
+    int gExp = temp.baseUnitExponent("micron");
+    if (gExp != 0) {
+      temp.setBaseUnitExponent("micron",0);
+      temp.setBaseUnitExponent("m",gExp);
+      bool ok = temp.setScale(-6 * gExp);
+      if (ok) {
+        m_converted = temp.standardString();
+      }
+    }
+  }
 }
 
 IddUnitString::~IddUnitString ()

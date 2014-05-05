@@ -71,13 +71,9 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
 {
   refrigerationSystemView = new RefrigerationSystemView();
   refrigerationSystemView->setParentItem(this);
+  refrigerationSystemView->setEnabled(false);
 
-  refrigerationSystemView->setTransform(QTransform((contentRect().width() - 20) / refrigerationSystemView->boundingRect().width(),
-                                        0,0,
-                                        (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height(),
-                                        0,0));
-
-  refrigerationSystemView->setPos(contentRect().x() + 10,contentRect().y() + 10);
+  adjustLayout();
 
   removeButtonItem = new RemoveButtonItem();
   removeButtonItem->setParentItem(this);
@@ -86,6 +82,31 @@ RefrigerationSystemMiniView::RefrigerationSystemMiniView()
   zoomInButtonItem = new ZoomInButtonItem();
   zoomInButtonItem->setParentItem(this);
   zoomInButtonItem->setPos(removeButtonItem->pos().x() - 10 - zoomInButtonItem->boundingRect().width(),headerHeight() / 2.0 - zoomInButtonItem->boundingRect().height() / 2.0);
+
+  setAcceptDrops(false);
+}
+
+void RefrigerationSystemMiniView::adjustLayout()
+{
+  double dx = (contentRect().width() - 20) / refrigerationSystemView->boundingRect().width();
+  double dy = (contentRect().height() - 20)  / refrigerationSystemView->boundingRect().height();
+
+  if( dx < dy )
+  {
+    dy = dx;
+  }
+  else
+  {
+    dx = dy;
+  }
+
+  refrigerationSystemView->setTransform(QTransform(dx,
+                                        0,0,
+                                        dy,
+                                        0,0));
+
+  refrigerationSystemView->setPos(contentRect().x() + contentRect().width() / 2.0 - refrigerationSystemView->boundingRect().width() * dx / 2.0,
+                                  contentRect().y() + contentRect().height() / 2.0 - refrigerationSystemView->boundingRect().height() * dy / 2.0);
 }
 
 QRectF RefrigerationSystemMiniView::boundingRect() const
@@ -183,10 +204,10 @@ RefrigerationSystemView::RefrigerationSystemView()
   bool bingo = connect(refrigerationCasesView->expandButton,SIGNAL(mouseClicked(bool)),this,SLOT(setCasesExpanded(bool)));
   OS_ASSERT(bingo);
 
-  //// Secondary Item
+  // Secondary Item
 
-  //refrigerationSecondaryView = new RefrigerationSecondaryView();
-  //refrigerationSecondaryView->setParentItem(this);
+  refrigerationSecondaryView = new RefrigerationSecondaryView();
+  refrigerationSecondaryView->setParentItem(this);
 
   adjustLayout();
 }
@@ -267,10 +288,10 @@ void RefrigerationSystemView::adjustLayout()
   refrigerationCasesView->setPos(centerXPos() - refrigerationCasesView->boundingRect().width() / 2, 
                                  refrigerationSHXView->y() + refrigerationSHXView->boundingRect().height() + verticalSpacing);
 
-  //// Cascade or Secondary
+  // Cascade or Secondary
 
-  //refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2, 
-  //                               refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
+  refrigerationSecondaryView->setPos(centerXPos() - refrigerationSecondaryView->boundingRect().width() / 2, 
+                                 refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
 
   if( QGraphicsScene * _scene = scene() )
   {
@@ -357,8 +378,8 @@ QRectF RefrigerationSystemView::boundingRect() const
              rightWidth +
              margin;
 
-  //return QRectF(0,0,x,refrigerationSecondaryView->y() + refrigerationSecondaryView->boundingRect().height() + verticalSpacing);
-  return QRectF(0,0,x,refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
+  return QRectF(0,0,x,refrigerationSecondaryView->y() + refrigerationSecondaryView->boundingRect().height() + verticalSpacing);
+  //return QRectF(0,0,x,refrigerationCasesView->y() + refrigerationCasesView->boundingRect().height() + verticalSpacing);
 }
 
 int RefrigerationSystemView::leftXPos() const
@@ -727,8 +748,9 @@ void RefrigerationCaseDetailView::paint( QPainter *painter,
 }
 
 RefrigerationCondenserView::RefrigerationCondenserView()
-  : m_pixmap(QPixmap(":/images/condensor.png").scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight))
 {
+  setIcon(QPixmap(":/images/air_cooled.png"));
+
   removeButtonItem = new RemoveButtonItem();
 
   removeButtonItem->setParentItem(this);
@@ -739,6 +761,12 @@ RefrigerationCondenserView::RefrigerationCondenserView()
   OS_ASSERT(bingo);
 
   setCondenserId(OSItemId());
+}
+
+void RefrigerationCondenserView::setIcon(const QPixmap & pixmap)
+{
+  m_pixmap = pixmap.scaled(RefrigerationSystemView::componentHeight,RefrigerationSystemView::componentHeight);
+  update();
 }
 
 void RefrigerationCondenserView::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -1273,6 +1301,146 @@ void RefrigerationSHXView::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
   }
 }
 
+QRectF SecondaryDropZoneView::boundingRect() const
+{
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),RefrigerationSystemView::componentHeight);
+}
+
+void SecondaryDropZoneView::paint( QPainter *painter, 
+                                   const QStyleOptionGraphicsItem *option, 
+                                   QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::black,2,Qt::DashLine, Qt::RoundCap));
+
+  painter->drawRoundedRect(boundingRect(),5,5);
+
+  painter->drawText(boundingRect(),Qt::AlignCenter | Qt::TextWordWrap,"Add Cascade or Secondary System");
+}
+
+SecondaryDetailView::SecondaryDetailView()
+  : QGraphicsObject()
+{
+  zoomInButtonItem = new ZoomInButtonItem();
+  zoomInButtonItem->setParentItem(this);
+  zoomInButtonItem->setPos(width() - RefrigerationSystemView::margin - zoomInButtonItem->boundingRect().width(),RefrigerationSystemView::margin);
+  bool bingo = connect(zoomInButtonItem,SIGNAL(mouseClicked()),this,SLOT(onZoomButtonClicked()));
+  OS_ASSERT(bingo);
+
+  removeButtonItem = new RemoveButtonItem();
+  removeButtonItem->setParentItem(this);
+  removeButtonItem->setPos(zoomInButtonItem->x() - removeButtonItem->boundingRect().width() - RefrigerationSystemView::margin,RefrigerationSystemView::margin); 
+  bingo = connect(removeButtonItem,SIGNAL(mouseClicked()),this,SLOT(onRemoveButtonClicked()));
+  OS_ASSERT(bingo);
+}
+
+double SecondaryDetailView::width()
+{
+  return RefrigerationCasesView::summaryRect().width();
+}
+
+double SecondaryDetailView::height()
+{
+  return RefrigerationSystemView::componentHeight / 2.0;
+}
+
+QRectF SecondaryDetailView::nameRect()
+{
+  return QRectF(RefrigerationSystemView::margin,RefrigerationSystemView::margin,
+                removeButtonItem->x() - RefrigerationSystemView::margin * 2.0,height() - RefrigerationSystemView::margin * 2.0); 
+}
+
+void SecondaryDetailView::onRemoveButtonClicked()
+{
+  emit removeClicked(m_handle);
+}
+
+void SecondaryDetailView::onZoomButtonClicked()
+{
+  emit zoomInOnSystemClicked(m_handle);
+}
+
+void SecondaryDetailView::setName(const QString & name)
+{
+  m_name = name;
+  update();
+}
+
+void SecondaryDetailView::setHandle(const Handle & handle)
+{
+  m_handle = handle;
+  update();
+}
+
+QRectF SecondaryDetailView::boundingRect() const
+{
+  return QRectF(0,0,width(),height());
+}
+
+void SecondaryDetailView::paint( QPainter *painter, 
+                                   const QStyleOptionGraphicsItem *option, 
+                                   QWidget *widget )
+{
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->setBrush(Qt::NoBrush);
+  painter->setPen(QPen(Qt::black,2,Qt::SolidLine, Qt::RoundCap));
+
+  painter->drawRect(boundingRect());
+  painter->drawText(nameRect(),Qt::AlignCenter,m_name);
+}
+
+RefrigerationSecondaryView::RefrigerationSecondaryView()
+  : QGraphicsObject()
+{
+  secondaryDropZoneView = new SecondaryDropZoneView();
+  secondaryDropZoneView->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::insertSecondaryDetailView(int index, QGraphicsObject * object)
+{
+  m_secondaryDetailViews.insert(m_secondaryDetailViews.begin() + index,object);
+  object->setParentItem(this);
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::removeAllSecondaryDetailViews()
+{
+  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+       it != m_secondaryDetailViews.end(); )
+  {
+    delete * it;
+    it = m_secondaryDetailViews.erase(it);
+  }
+
+  adjustLayout();
+}
+
+void RefrigerationSecondaryView::adjustLayout()
+{
+  prepareGeometryChange();
+
+  int x = 0;
+  int y = 0;
+
+  secondaryDropZoneView->setPos(0,0);
+  y = y + secondaryDropZoneView->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
+
+  for( std::vector<QGraphicsObject *>::iterator it = m_secondaryDetailViews.begin();
+       it != m_secondaryDetailViews.end();
+       ++it )
+  {
+    (*it)->setPos(x,y);
+
+    y = y + (*it)->boundingRect().height() + RefrigerationSystemView::margin / 2.0;
+  }
+
+  m_height = y; 
+}
+
 void RefrigerationSecondaryView::paint( QPainter *painter, 
                                         const QStyleOptionGraphicsItem *option, 
                                         QWidget *widget )
@@ -1280,15 +1448,11 @@ void RefrigerationSecondaryView::paint( QPainter *painter,
   painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setBrush(Qt::NoBrush);
   painter->setPen(QPen(Qt::red,2,Qt::SolidLine, Qt::RoundCap));
-
-  painter->drawRect(boundingRect());
-
-  painter->drawText(boundingRect(),Qt::AlignCenter,"Secondary System");
 }
 
 QRectF RefrigerationSecondaryView::boundingRect() const
 {
-  return QRectF(0,0,150,RefrigerationSystemView::componentHeight);
+  return QRectF(0,0,RefrigerationCasesView::summaryRect().width(),m_height);
 }
 
 QRectF RefrigerationSystemDropZoneView::boundingRect() const

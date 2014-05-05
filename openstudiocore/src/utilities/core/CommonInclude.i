@@ -54,6 +54,11 @@
 %include <utilities/core/csharp/LanguageSpecific.i>
 #endif
 
+#ifdef SWIGJAVA
+%include <utilities/core/java/LanguageSpecific.i>
+#endif
+
+
 #ifdef SWIGJAVASCRIPT
 %include <utilities/core/v8/LanguageSpecific.i>
 #endif

@@ -20,6 +20,8 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
+#include <OpenStudio.hxx>
+
 #include <QCoreApplication>
 #include <sstream>
 #include <boost/algorithm/string/case_conv.hpp>
@@ -76,6 +78,8 @@ namespace openstudio {
       openstudio::path candidate;
 #if defined(Q_OS_MAC)
       candidate = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("sharedresources");
+#elif defined(Q_OS_LINUX)
+      candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "");
 #else
       candidate = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio");
 #endif
@@ -257,8 +261,10 @@ namespace openstudio {
       return getApplicationBuildDirectory() / openstudio::toPath("ruby") / *buildname;
 #endif
     } else {
+      // DLM: do not rely on installer adding this to the ruby path
       // installer makes openstudio readily available
-      return openstudio::path();
+      //return openstudio::path();
+      return getOpenStudioRubyScriptsPath();
     }
   }
 
@@ -364,7 +370,7 @@ openstudio::path getOpenStudioRubyScriptsPath() {
     return getApplicationSourceDirectory() / openstudio::toPath("ruby");
   } else {
 #ifdef Q_OS_LINUX
-    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby");
+    return getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby");
 #elif defined(Q_OS_MAC)
     return getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby");
 #else

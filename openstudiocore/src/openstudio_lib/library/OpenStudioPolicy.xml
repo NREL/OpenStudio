@@ -95,21 +95,24 @@
     <rule IddField="Fan Placement" Access="HIDDEN"/>
     <rule IddField="Controlling Zone or Thermostat Location" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirLoopHVAC_UnitarySystem">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Recovery Water Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Supply Fan Name" Access="LOCKED"/>
+    <rule IddField="Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Cooling Coil Name" Access="LOCKED"/>
+    <rule IddField="Supplemental Heating Coil Name" Access="LOCKED"/>
+    <rule IddField="Design Specification Multispeed Heat Pump Object Name" Access="HIDDEN"/>
+    <rule IddField="Control Type" Access="HIDDEN"/>
+    <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_Pipe_Adiabatic">
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
-  <POLICY IddObjectType="OS_Coil_Heating_DX_SingleSpeed">
-    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
-    <rule IddField="Total Heating Capacity Function of Temperature Curve Name" Access="LOCKED"/>
-    <rule IddField="Total Heating Capacity Function of Flow Fraction Curve Name" Access="LOCKED"/>
-    <rule IddField="Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
-    <rule IddField="Energy Input Ratio Function of Flow Fraction Curve Name" Access="LOCKED"/>
-    <rule IddField="Part Load Fraction Correlation Curve Name" Access="LOCKED"/>
-    <rule IddField="Defrost Energy Input Ratio Function of Temperature Curve Name" Access="LOCKED"/>
-  </POLICY>
-    <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_EquationFit">
+  <POLICY IddObjectType="OS_Coil_Heating_WaterToAirHeatPump_EquationFit">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
@@ -545,6 +548,9 @@
     <rule IddField="Latent Case Credit Curve Name" Access="LOCKED"/>
     <rule IddField="Defrost Energy Correction Curve Name" Access="HIDDEN"/>
     <rule IddField="Defrost Energy Correction Curve Type" Access="LOCKED"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_Refrigeration_WalkIn">
+    <rule IddField="Walkin Zone Boundary" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_WaterHeater_Mixed">
     <rule IddField="Use Side Inlet Node Name" Access="HIDDEN"/>

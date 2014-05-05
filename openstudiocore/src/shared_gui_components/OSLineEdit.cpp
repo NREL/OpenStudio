@@ -33,7 +33,7 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
   setEnabled(false);
 }
 
-void OSLineEdit2::bind(model::ModelObject& modelObject, 
+void OSLineEdit2::bind(model::ModelObject& modelObject,
                        StringGetter get,
                        boost::optional<StringSetter> set,
                        boost::optional<NoFailAction> reset,
@@ -57,6 +57,21 @@ void OSLineEdit2::bind(model::ModelObject& modelObject,
   m_modelObject = modelObject;
   m_getOptional = get;
   m_set = set;
+  m_reset = reset;
+  m_isDefaulted = isDefaulted;
+
+  completeBind();
+}
+
+void OSLineEdit2::bind(model::ModelObject& modelObject,
+                       OptionalStringGetterBoolArg get,
+                       boost::optional<StringSetterOptionalStringReturn> set,
+                       boost::optional<NoFailAction> reset,
+                       boost::optional<BasicQuery> isDefaulted)
+{
+  m_modelObject = modelObject;
+  m_getOptionalBoolArg = get;
+  m_setOptionalStringReturn = set;
   m_reset = reset;
   m_isDefaulted = isDefaulted;
 
@@ -88,7 +103,9 @@ void OSLineEdit2::unbind()
     m_modelObject.reset();
     m_get.reset();
     m_getOptional.reset();
+    m_getOptionalBoolArg.reset();
     m_set.reset();
+    m_setOptionalStringReturn.reset();
     m_reset.reset();
     m_isDefaulted.reset();
     setEnabled(false);
@@ -97,7 +114,11 @@ void OSLineEdit2::unbind()
 
 void OSLineEdit2::onEditingFinished() {
   if(m_modelObject && m_set) {
-    (*m_set)(this->text().toStdString());   
+    bool result = (*m_set)(this->text().toStdString());
+    if (!result){
+      //restore
+      onModelObjectChange();
+    }
   }
 }
 
@@ -107,9 +128,15 @@ void OSLineEdit2::onModelObjectChange() {
     if (m_get) {
       value = (*m_get)();
     }
-    else {
-      OS_ASSERT(m_getOptional);
+    else if (m_getOptional){
       value = (*m_getOptional)();
+    }
+    else if (m_getOptionalBoolArg) {
+      value = (*m_getOptionalBoolArg)(true); // TODO may want to pass a variable
+    }
+    else{
+      // unhandled
+      OS_ASSERT(false);
     }
     std::string text;
     if (value) {

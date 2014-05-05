@@ -48,7 +48,7 @@ class DocumentFixture : public ::testing::Test {
   // set up logging
   REGISTER_LOGGER("DocumentFixture");
 
-  // Note: storage for static variables must be defined in a seperate .cpp file
+  // Note: storage for static variables must be defined in a separate .cpp file
   static openstudio::Document doc;
   static boost::optional<openstudio::FileLogSink> logFile;
 

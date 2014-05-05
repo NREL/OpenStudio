@@ -47,6 +47,8 @@
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/core/Assert.hpp>
 
+#include "../shared_gui_components/WorkflowTools.hpp"
+
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
@@ -69,11 +71,6 @@
 #include <QSysInfo>
 #include <QToolButton>
 #include <QVBoxLayout>
-
-#define ENERGYPLUS_TEXT "EnergyPlus"
-#define STD_RADIANCE_TEXT "Radiance (increases simulation time, but provides more accurate results)"
-#define WARNING_RADIANCE_TEXT "Radiance (with warnings)"
-#define ERROR_RADIANCE_TEXT "Radiance (has errors, unable to use)"
 
 namespace openstudio {
 
@@ -145,11 +142,38 @@ RunView::RunView(const model::Model & model,
 
   int buttonCount = 0;
 
-  m_energyPlusButton = new QRadioButton(ENERGYPLUS_TEXT);
+  m_energyPlusButton = new QRadioButton("EnergyPlus");
   m_radianceGroup->addButton(m_energyPlusButton,buttonCount++);
 
-  m_radianceButton = new QRadioButton(STD_RADIANCE_TEXT);
+  m_radianceButton = new QRadioButton("Radiance");
   m_radianceGroup->addButton(m_radianceButton,buttonCount++);
+
+
+  // "Radiance" Button Layout
+ 
+  QLabel *radianceLabel = new QLabel("<b>Select Daylight Simulation Engine</b>");
+
+  QWidget *radianceWidget = new QWidget();
+  radianceWidget->setObjectName("RunStatusViewRadiance");
+  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+
+  radianceWidget->setLayout(radianceInteriorLayout);
+  radianceInteriorLayout->addWidget(radianceLabel);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_energyPlusButton);
+  radianceInteriorLayout->addStretch();
+  radianceInteriorLayout->addWidget(m_radianceButton);
+
+/*
+  radianceHLayout->addSpacing(100);
+  radianceHLayout->addWidget(radianceWidget, 3);
+  radianceHLayout->addStretch(2);
+  */
+  radianceWidget->setStyleSheet("QWidget#RunStatusViewRadiance {background: #DADADA; border: 1px solid #A5A5A5;}");
+
+
+
+/*
 
   m_radianceWarningsAndErrorsButton = new QPushButton();
   m_radianceWarningsAndErrorsButton->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
@@ -170,8 +194,9 @@ RunView::RunView(const model::Model & model,
 
   QGroupBox * groupBox = new QGroupBox("For Daylighting Calculation use");
   groupBox->setLayout(radianceVLayout);
+*/
 
-  mainLayout->addWidget(groupBox, 1, 1);
+  mainLayout->addWidget(radianceWidget, 1, 1);
 
   if (usesRadianceForDaylightCalculations(t_runManager))
   {
@@ -206,9 +231,11 @@ RunView::RunView(const model::Model & model,
   updateRunManagerStats(t_runManager);
 }
 
+
 void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warnings,
                                                  std::vector<std::string> & errors)
 {
+<<<<<<< HEAD
   warnings.clear();
   errors.clear();
 
@@ -299,6 +326,11 @@ void RunView::getRadiancePreRunWarningsAndErrors(std::vector<std::string> & warn
     warnings.push_back("The OpenStudio model has no GlareSensor objects.");
   }
 
+=======
+  openstudio::runmanager::RunManager rm = runManager();
+  boost::optional<model::Model> model(m_model);
+  openstudio::getRadiancePreRunWarningsAndErrors(warnings, errors, rm, model);
+>>>>>>> develop
 }
 
 void RunView::locateEnergyPlus()
@@ -310,7 +342,7 @@ void RunView::locateEnergyPlus()
   if (major && minor){
     energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(*major,*minor)).tools().size() == 0;
   } else {
-    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,0)).tools().size() == 0;
+    energyplus_not_installed = co.getTools().getAllByName("energyplus").getAllByVersion(openstudio::runmanager::ToolVersion(8,1)).tools().size() == 0;
   }
   
   if (energyplus_not_installed){
@@ -330,23 +362,8 @@ void RunView::updateToolsWarnings()
   QString buttonText;
 
   if(m_radianceErrors.size() > 0){
-    checkBoxText = ERROR_RADIANCE_TEXT;
     m_energyPlusButton->setChecked(true);
-    buttonText = "View errors";
-    m_radianceWarningsAndErrorsButton->show();
   }
-  else if(m_radianceWarnings.size() > 0){
-    checkBoxText = WARNING_RADIANCE_TEXT;
-    buttonText = "View warnings";
-    m_radianceWarningsAndErrorsButton->show();
-  }
-  else{
-    checkBoxText = STD_RADIANCE_TEXT;
-    m_radianceWarningsAndErrorsButton->hide();
-  }
-
-  m_radianceWarningsAndErrorsButton->setText(buttonText);
-  m_radianceButton->setText(checkBoxText);
 
   locateEnergyPlus();
 }
@@ -488,37 +505,14 @@ void RunView::playButtonClicked(bool t_checked)
 
   if(osdocument->modified())
   {
-    QMessageBox * messageBox = new QMessageBox(this);
-
-    messageBox->setText("The document must be saved before the simulation can run.");
-    messageBox->setInformativeText("Do you want to save your changes?");
-    messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
-    messageBox->setDefaultButton(QMessageBox::Save);
-    messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
-    messageBox->setIcon(QMessageBox::Question);
-
-    int ret = messageBox->exec();
-
-    delete messageBox;
-
-    switch (ret)
-    {
-      case QMessageBox::Save:
-        osdocument->save();
-        // save was cancelled
-        if(osdocument->modified()) {
-          return;
-        }
-        break;
-
-      case QMessageBox::Cancel:
-        return;
-
-      default:
-        // should never be reached
-        break;
-    };
+    osdocument->save();
+    // save dialog was canceled
+    if(osdocument->modified()) {
+      return;
+    }
   }
+
+  updateToolsWarnings();
 
   if (!t_checked)
   {
@@ -532,12 +526,18 @@ void RunView::playButtonClicked(bool t_checked)
       openstudio::Application::instance().processEvents();
       runmanager::RunManager rm = runManager();
       pauseRunManager(rm);
-   } else {
+    } else {
       LOG(Debug, "Already canceling, not doing it again");
     }
   } else {
+    runmanager::ConfigOptions co(true);
+    co.findTools(true, true, false, true);
+    co.saveQSettings();
+
+    updateToolsWarnings();
+
     openstudio::runmanager::ToolVersion epver = getRequiredEnergyPlusVersion();
-    if (openstudio::runmanager::ConfigOptions(true).getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
+    if (co.getTools().getAllByName("energyplus").getAllByVersion(epver).tools().size() == 0)
     {
       QMessageBox::information(this, 
           "Missing EnergyPlus",
@@ -546,12 +546,21 @@ void RunView::playButtonClicked(bool t_checked)
       m_playButton->setChecked(false);
       return;
     }
+    
+    if (co.getTools().getAllByName("ruby").tools().size() == 0)
+    {
+      QMessageBox::information(this,
+          "Missing Ruby",
+          "Ruby could not be located, simulation aborted.",
+          QMessageBox::Ok);
+      m_playButton->setChecked(false);
+      return;
+    }
+
     // TODO call Dan's ModelToRad translator to determine if there are problems
-    std::vector<std::string> warnings;
-    std::vector<std::string> errors;
-    if(warnings.size() || errors.size()){
-      showRadianceWarningsAndErrors(warnings,errors);
-      if(errors.size()){
+    if(m_radianceButton->isChecked() && (!m_radianceWarnings.empty() || !m_radianceErrors.empty())) {
+      showRadianceWarningsAndErrors(m_radianceWarnings, m_radianceErrors);
+      if(m_radianceErrors.size()){
         return;
       }
       else{
@@ -626,7 +635,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
   QMessageBox::critical(this, "Radiance Warnings and Errors", errorsAndWarnings);
 }
 
-void RunView::on_radianceWarningsAndErrorsClicked(bool checked)
+void RunView::on_radianceWarningsAndErrorsClicked(bool /*checked*/)
 {
   showRadianceWarningsAndErrors(m_radianceWarnings,m_radianceErrors);
 }

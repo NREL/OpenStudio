@@ -82,7 +82,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingDeviceShelf)
   EXPECT_EQ(0, result[1].shadingSurfaceGroups().size());
   ASSERT_TRUE(result[1].daylightingDeviceShelf());
   EXPECT_TRUE(result[1].daylightingDeviceShelf()->insideShelf());
-  EXPECT_TRUE(result[1].daylightingDeviceShelf()->outsideShelf());
+  EXPECT_FALSE(result[1].daylightingDeviceShelf()->outsideShelf());
 
   EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
   EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceShelf>().size());
@@ -97,7 +97,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingDeviceShelf)
     ASSERT_EQ(1u, wos.size());
     EXPECT_TRUE(wos[0].getTarget(DaylightingDevice_ShelfFields::WindowName));
     EXPECT_TRUE(wos[0].getTarget(DaylightingDevice_ShelfFields::InsideShelfName));
-    EXPECT_TRUE(wos[0].getTarget(DaylightingDevice_ShelfFields::OutsideShelfName));
+    EXPECT_FALSE(wos[0].getTarget(DaylightingDevice_ShelfFields::OutsideShelfName));
 
     // interior partition surface becomes building surface detailed
     wos = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed);

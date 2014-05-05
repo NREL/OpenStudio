@@ -194,6 +194,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
+    REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -480,6 +481,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);

@@ -37,6 +37,8 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
@@ -188,43 +190,27 @@ namespace detail {
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
   {
-    if( OptionalAirLoopHVAC airLoopHVAC = node.airLoopHVAC() )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
+      if( airLoop->supplyComponent(node.handle()) )
       {
-        if( oaSystem->component(node.handle()) )
+        std::vector<ModelObject> allFans;
+        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
+        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
+        allFans = constantFans;
+        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+
+        if( allFans.size() > 1 )
         {
           return false;
         }
+
+        if( StraightComponent_Impl::addToNode(node) ) 
+        {
+          SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
+          return true;
+        }
       }
-
-      if( ! airLoopHVAC->supplyComponent(node.handle()) )
-      {
-        return false;
-      }
-
-      std::vector<ModelObject> allFans;
-
-      std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-
-      std::vector<ModelObject> variableFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-
-      allFans = constantFans;
-      allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
-
-      if( allFans.size() > 0 )
-      {
-        return false;
-      }
-
-      bool result = StraightComponent_Impl::addToNode( node );
-
-      if( result )
-      {
-        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
-      }
-
-      return result;
     }
 
     return false;
@@ -263,6 +249,22 @@ namespace detail {
   boost::optional<HVACComponent> FanConstantVolume_Impl::containingHVACComponent() const
   {
     // Process all types that might contain a CoilHeatingWater object.
+
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
 
     // AirTerminalSingleDuctParallelPIUReheat
 
