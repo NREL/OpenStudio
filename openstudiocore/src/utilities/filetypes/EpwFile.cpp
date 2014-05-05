@@ -90,21 +90,28 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   setLiquidPrecipitationQuantity(liquidPrecipitationQuantity);
 }
 
-EpwDataPoint::EpwDataPoint(std::string line)
+bool EpwDataPoint::fromEpwString(std::string line)
 {
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
-  if(list.size() != 35)
-  {
-    std::cout << "Bad input line" << std::endl;
-    return;
+  if(list.size() != 35) {
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
+    return false;
   }
   // Use the appropriate setter on each field
   setYear(list[0].toStdString());
-  setMonth(list[1].toStdString());
-  setDay(list[2].toStdString());
-  setHour(list[3].toStdString());
-  setMinute(list[4].toStdString());
+  if(!setMonth(list[1].toStdString())) {
+    return false;
+  }
+  if(!setDay(list[2].toStdString())) {
+    return false;
+  }
+  if(!setHour(list[3].toStdString())) {
+    return false;
+  }
+  if(!setMinute(list[4].toStdString())) {
+    return false;
+  }
   setDataSourceandUncertaintyFlags(list[5].toStdString());
   setDryBulbTemperature(list[6].toStdString());
   setDewPointTemperature(list[7].toStdString());
@@ -135,6 +142,7 @@ EpwDataPoint::EpwDataPoint(std::string line)
   setAlbedo(list[32].toStdString());
   setLiquidPrecipitationDepth(list[33].toStdString());
   setLiquidPrecipitationQuantity(list[34].toStdString());
+  return true;
 }
 
 std::string EpwDataPoint::unitsByName(std::string name)
@@ -529,8 +537,8 @@ int EpwDataPoint::month() const
 
 bool EpwDataPoint::setMonth(int month)
 {
-  if(1 > month || 12 < month)
-  {
+  if(1 > month || 12 < month) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
     return false;
   }
   m_month = month;
@@ -541,8 +549,11 @@ bool EpwDataPoint::setMonth(std::string month)
 {
   bool ok;
   int value = QString().fromStdString(month).toInt(&ok);
-  if(1 > value || 12 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 12 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
     return false;
   }
   m_month = value;
@@ -556,8 +567,8 @@ int EpwDataPoint::day() const
 
 bool EpwDataPoint::setDay(int day)
 {
-  if(1 > day || 31 < day)
-  {
+  if(1 > day || 31 < day) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
     return false;
   }
   m_day = day;
@@ -568,8 +579,11 @@ bool EpwDataPoint::setDay(std::string day)
 {
   bool ok;
   int value = QString().fromStdString(day).toInt(&ok);
-  if(1 > value || 31 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 31 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
     return false;
   }
   m_day = value;
@@ -583,8 +597,8 @@ int EpwDataPoint::hour() const
 
 bool EpwDataPoint::setHour(int hour)
 {
-  if(1 > hour || 24 < hour)
-  {
+  if(1 > hour || 24 < hour) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
     return false;
   }
   m_hour = hour;
@@ -595,8 +609,11 @@ bool EpwDataPoint::setHour(std::string hour)
 {
   bool ok;
   int value = QString().fromStdString(hour).toInt(&ok);
-  if(1 > value || 24 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 24 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
     return false;
   }
   m_hour = value;
@@ -610,8 +627,8 @@ int EpwDataPoint::minute() const
 
 bool EpwDataPoint::setMinute(int minute)
 {
-  if(0 > minute || 59 < minute)
-  {
+  if(0 > minute || 59 < minute) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
     return false;
   }
   m_minute = minute;
@@ -622,8 +639,11 @@ bool EpwDataPoint::setMinute(std::string minute)
 {
   bool ok;
   int value = QString().fromStdString(minute).toInt(&ok);
-  if(0 > value || 59 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
+    return false;
+  } else if(0 > value || 59 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
     return false;
   }
   m_minute = value;
@@ -1823,12 +1843,14 @@ bool EpwFile::parse(bool storeData)
   }
 
   // read rest of file
+  int lineNumber = 8;
   boost::optional<Date> startDate;
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
   while(std::getline(ifs, line)){
+    lineNumber++;
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
     boost::smatch matches;
     if (boost::regex_search(line, matches, dateRegex)){
@@ -1856,17 +1878,23 @@ bool EpwFile::parse(bool storeData)
         }
         lastDate = date;
       }catch(...){
-        LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+        LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         ifs.close();
         return false;
       }
       if(storeData)
       {
-        EpwDataPoint pt(line);
-        m_data.push_back(pt);
+        EpwDataPoint pt;
+        if(pt.fromEpwString(line)) {
+          m_data.push_back(pt);
+        } else {
+          LOG(Error,"Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
+          ifs.close();
+          return false;
+        }
       }
     }else{
-      LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+      LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
     }
@@ -1876,11 +1904,11 @@ bool EpwFile::parse(bool storeData)
   ifs.close();
 
   if (!startDate){
-    LOG(Error, "Could not find start date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");
     return false;
   }
   if (!endDate){
-    LOG(Error, "Could not find end date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find end date in data section of EPW file '" << m_path << "'");
     return false;
   }
 
@@ -1888,13 +1916,13 @@ bool EpwFile::parse(bool storeData)
       (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
       (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
       (m_endDate.dayOfMonth() != endDate->dayOfMonth())){
-    LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+    LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
     return false;
   }
 
   if (realYear){
     if (m_startDayOfWeek != startDate->dayOfWeek()){
-      LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+      LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
       return false;
     }
 
