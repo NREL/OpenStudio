@@ -59,9 +59,9 @@ private:
 
   QWidget * createNistWidget();
 
-  void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lifeCycleCostParameters);
+  void attach(openstudio::model::LifeCycleCostParameters & lifeCycleCostParameters);
 
-  void LifeCycleCostsView::detach();
+  void detach();
 
   model::Model m_model;
 
