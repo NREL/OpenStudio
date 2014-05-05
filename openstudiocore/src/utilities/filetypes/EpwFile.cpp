@@ -90,59 +90,60 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   setLiquidPrecipitationQuantity(liquidPrecipitationQuantity);
 }
 
-bool EpwDataPoint::fromEpwString(std::string line)
+boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
 {
+  boost::optional<EpwDataPoint> pt;
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
   if(list.size() != 35) {
     LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
-    return false;
+    return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
   setYear(list[0].toStdString());
-  if(!setMonth(list[1].toStdString())) {
-    return false;
+  if(!pt->setMonth(list[1].toStdString())) {
+    return boost::optional<EpwDataPoint>();
   }
-  if(!setDay(list[2].toStdString())) {
-    return false;
+  if(!pt->setDay(list[2].toStdString())) {
+    return boost::optional<EpwDataPoint>();
   }
-  if(!setHour(list[3].toStdString())) {
-    return false;
+  if(!pt->setHour(list[3].toStdString())) {
+    return boost::optional<EpwDataPoint>();
   }
-  if(!setMinute(list[4].toStdString())) {
-    return false;
+  if(!pt->setMinute(list[4].toStdString())) {
+    return boost::optional<EpwDataPoint>();
   }
-  setDataSourceandUncertaintyFlags(list[5].toStdString());
-  setDryBulbTemperature(list[6].toStdString());
-  setDewPointTemperature(list[7].toStdString());
-  setRelativeHumidity(list[8].toStdString());
-  setAtmosphericStationPressure(list[9].toStdString());
-  setExtraterrestrialHorizontalRadiation(list[10].toStdString());
-  setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
-  setHorizontalInfraredRadiationIntensity(list[12].toStdString());
-  setGlobalHorizontalRadiation(list[13].toStdString());
-  setDirectNormalRadiation(list[14].toStdString());
-  setDiffuseHorizontalRadiation(list[15].toStdString());
-  setGlobalHorizontalIlluminance(list[16].toStdString());
-  setDirectNormalIlluminance(list[17].toStdString());
-  setDiffuseHorizontalIlluminance(list[18].toStdString());
-  setZenithLuminance(list[19].toStdString());
-  setWindDirection(list[20].toStdString());
-  setWindSpeed(list[21].toStdString());
-  setTotalSkyCover(list[22].toStdString());
-  setOpaqueSkyCover(list[23].toStdString());
-  setVisibility(list[24].toStdString());
-  setCeilingHeight(list[25].toStdString());
-  setPresentWeatherObservation(list[26].toStdString());
-  setPresentWeatherCodes(list[27].toStdString());
-  setPrecipitableWater(list[28].toStdString());
-  setAerosolOpticalDepth(list[29].toStdString());
-  setSnowDepth(list[30].toStdString());
-  setDaysSinceLastSnowfall(list[31].toStdString());
-  setAlbedo(list[32].toStdString());
-  setLiquidPrecipitationDepth(list[33].toStdString());
-  setLiquidPrecipitationQuantity(list[34].toStdString());
-  return true;
+  pt->setDataSourceandUncertaintyFlags(list[5].toStdString());
+  pt->setDryBulbTemperature(list[6].toStdString());
+  pt->setDewPointTemperature(list[7].toStdString());
+  pt->setRelativeHumidity(list[8].toStdString());
+  pt->setAtmosphericStationPressure(list[9].toStdString());
+  pt->setExtraterrestrialHorizontalRadiation(list[10].toStdString());
+  pt->setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
+  pt->setHorizontalInfraredRadiationIntensity(list[12].toStdString());
+  pt->setGlobalHorizontalRadiation(list[13].toStdString());
+  pt->setDirectNormalRadiation(list[14].toStdString());
+  pt->setDiffuseHorizontalRadiation(list[15].toStdString());
+  pt->setGlobalHorizontalIlluminance(list[16].toStdString());
+  pt->setDirectNormalIlluminance(list[17].toStdString());
+  pt->setDiffuseHorizontalIlluminance(list[18].toStdString());
+  pt->setZenithLuminance(list[19].toStdString());
+  pt->setWindDirection(list[20].toStdString());
+  pt->setWindSpeed(list[21].toStdString());
+  pt->setTotalSkyCover(list[22].toStdString());
+  pt->setOpaqueSkyCover(list[23].toStdString());
+  pt->setVisibility(list[24].toStdString());
+  pt->setCeilingHeight(list[25].toStdString());
+  pt->setPresentWeatherObservation(list[26].toStdString());
+  pt->setPresentWeatherCodes(list[27].toStdString());
+  pt->setPrecipitableWater(list[28].toStdString());
+  pt->setAerosolOpticalDepth(list[29].toStdString());
+  pt->setSnowDepth(list[30].toStdString());
+  pt->setDaysSinceLastSnowfall(list[31].toStdString());
+  pt->setAlbedo(list[32].toStdString());
+  pt->setLiquidPrecipitationDepth(list[33].toStdString());
+  pt->setLiquidPrecipitationQuantity(list[34].toStdString());
+  return pt;
 }
 
 std::string EpwDataPoint::unitsByName(std::string name)
@@ -415,7 +416,7 @@ static double psat(double T)
   return exp(rhs);
 }
 
-std::string EpwDataPoint::toWthString()
+boost::optional<std::string> EpwDataPoint::toWthString()
 {
   QStringList output;
   QString date = QString("%1/%2").arg(m_month).arg(m_day);
@@ -425,25 +426,29 @@ std::string EpwDataPoint::toWthString()
   boost::optional<double> value = dryBulbTemperature();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   double drybulb = value.get()+273.15;
   output << QString("%1").arg(drybulb);
   value = atmosphericStationPressure();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   double p = value.get();
   output << m_atmosphericStationPressure;
   if(!windSpeed())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windSpeed;
   if(!windDirection())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windDirection;
   double pw;
@@ -453,7 +458,8 @@ std::string EpwDataPoint::toWthString()
     value = dewPointTemperature();
     if(!value)
     {
-      LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      LOG_FREE(Error,"openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      return boost::optional<std::string>();
     }
     double dewpoint = value.get()+273.15;
     pw = psat(dewpoint);
@@ -471,7 +477,7 @@ std::string EpwDataPoint::toWthString()
   output << "0";
   // Pass on snow and rain
   output << "0" << "0";
-  return output.join("\t").toStdString();
+  return boost::optional<std::string>(output.join("\t").toStdString());
 }
 
 Date EpwDataPoint::date() const
@@ -1773,19 +1779,21 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   firstPt.setDateTime(dateTime);
 
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
-  try
-  {
-    stream << firstPt.toWthString() << '\n';
-    for(unsigned int i=0;i<data().size();i++)
-    {
-      stream << data()[i].toWthString() << '\n';
-    }
-  }
-  catch(...)
-  {
+  boost::optional<std::string> output = firstPt.toWthString();
+  if(!output) {
     LOG(Error, "Translation to WTH has failed");
     fp.close();
     return false;
+  }
+  stream << output.get() << '\n';
+  for(unsigned int i=0;i<data().size();i++) {
+    output = data()[i].toWthString();
+    if(!output) {
+      LOG(Error, "Translation to WTH has failed");
+      fp.close();
+      return false;
+    }
+    stream << output.get() << '\n';
   }
   fp.close();
   return true;

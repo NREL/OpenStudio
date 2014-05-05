@@ -89,8 +89,8 @@ public:
   boost::optional<double> fieldByName(std::string name);
   boost::optional<double> field(EpwDataField id);
   // Conversion
-  bool fromEpwString(std::string line);
-  std::string toWthString();
+  boost::optional<EpwDataPoint> fromEpwString(std::string line);
+  boost::optional<std::string> toWthString();
   // One billion getters and setters
   Date date() const;
   void setDate(Date date);
