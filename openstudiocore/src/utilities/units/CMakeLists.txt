@@ -1,4 +1,4 @@
-SET( units_src 
+set(units_src
   units/page.hpp
   units/Scale.hpp
   units/Scale.cpp
@@ -52,7 +52,7 @@ SET( units_src
   units/OSOptionalQuantity.hpp
   units/OSOptionalQuantity.cpp
   units/OSQuantityVector.hpp
-  units/OSQuantityVector.cpp  
+  units/OSQuantityVector.cpp
   units/QuantityFactory.hpp
   units/QuantityFactory.cpp
   units/QuantityConverter.hpp

@@ -1,10 +1,10 @@
-SET( target_name openstudio_lib )
+set(target_name openstudio_lib)
 
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
-#INCLUDE_DIRECTORIES( ${RUBY_INCLUDE_DIR} )
-#INCLUDE_DIRECTORIES( ${SWIG_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+#include_directories(${RUBY_INCLUDE_DIR})
+#include_directories(${SWIG_DIR})
 #
-#ADD_CUSTOM_COMMAND(
+#add_custom_command(
 #  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.h"
 #  COMMAND "${SWIG_EXECUTABLE}"
 #          "-ruby" 
@@ -12,7 +12,7 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 #)
 
 # source files
-SET( ${target_name}_SRC
+set(${target_name}_SRC
   # TODO Deprecate these files
   #ScriptsController.cpp
   #ScriptsController.hpp
@@ -453,7 +453,7 @@ SET( ${target_name}_SRC
 )
 
 # moc files
-SET( ${target_name}_moc
+set(${target_name}_moc
 
   # TODO Deprecate these files
   #ScriptsController.hpp
@@ -672,25 +672,24 @@ SET( ${target_name}_moc
 )
 
 # resource files
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   openstudio.qrc
 )
 
 ## Qt UI generation
-qt5_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp(${target_name}_moc_src ${${target_name}_moc})
 
 # generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-ADD_LIBRARY( ${target_name}
-  SHARED
+add_library(${target_name} SHARED
   ${${target_name}_SRC}
   ${${target_name}_moc_src}
   ${${target_name}_moc}
   ${${target_name}_qrcs}
 )
 
-SET( depends
+set(depends
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
@@ -702,40 +701,38 @@ SET( depends
   #${RUBY_LIBRARY}
 )
 
-TARGET_LINK_LIBRARIES( ${target_name}  ${depends} )
+target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   test/OpenStudioLibFixture.hpp
   test/OpenStudioLibFixture.cpp
   test/IconLibrary_GTest.cpp
 )
 
-SET (${target_name}_test_depends
+set(${target_name}_test_depends
   ${${target_name}_depends} 
 )
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-IF( BUILD_TESTING )
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+if(BUILD_TESTING)
 
-  #ADD_DEPENDENCIES("${target_name}_tests" 
+  #add_dependencies("${target_name}_tests" 
   #  openstudio_lib_resources 
   #)
   
-ENDIF()
+endif()
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   OpenStudioLib.i
 )
 
-MAKE_SWIG_TARGET( OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioRunManager;OpenStudioRuleset")
-
-#MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET DEPENDS)
-
+MAKE_SWIG_TARGET(OpenStudioLib openstudiolib "${CMAKE_CURRENT_SOURCE_DIR}/OpenStudioLib.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioModelEditor;OpenStudioRunManager;OpenStudioRuleset")

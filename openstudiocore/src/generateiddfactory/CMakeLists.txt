@@ -1,7 +1,7 @@
-SET( target_name GenerateIddFactory )
+set(target_name GenerateIddFactory)
 
 # source files
-SET( ${target_name}_SRC
+set(${target_name}_SRC
   main.cpp
   GenerateIddFactoryOutFiles.hpp
   GenerateIddFactoryOutFiles.cpp
@@ -18,14 +18,14 @@ SET( ${target_name}_SRC
   ../utilities/idd/IddRegex.cpp
 )
 
-ADD_EXECUTABLE( ${target_name}
+add_executable(${target_name}
   ${${target_name}_SRC}
 )
 
-SET_TARGET_PROPERTIES( ${target_name} PROPERTIES COMPILE_DEFINITIONS OPENSTUDIO_DIRECT_INCLUDE )
+set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS OPENSTUDIO_DIRECT_INCLUDE)
 
-SET( depends
+set(depends
   ${Boost_LIBRARIES}
 )
 
-TARGET_LINK_LIBRARIES( ${target_name}  ${depends} )
+target_link_libraries(${target_name} ${depends})

@@ -1,16 +1,16 @@
 # create a library out of the utilities namespace
 
-SET( target_name openstudio_utilities)
+set(target_name openstudio_utilities)
 
-INCLUDE ( idd/CMakeLists.txt )
-INCLUDE ( idf/CMakeLists.txt )
-INCLUDE ( sql/CMakeLists.txt )
-INCLUDE ( units/CMakeLists.txt )
+include(idd/CMakeLists.txt)
+include(idf/CMakeLists.txt)
+include(sql/CMakeLists.txt)
+include(units/CMakeLists.txt)
 
-CONFIGURE_FILE( "core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx" )
-CONFIGURE_FILE( "core/GeneratorApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/GeneratorApplicationPathHelpers.cxx" )
+configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
+configure_file("core/GeneratorApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/GeneratorApplicationPathHelpers.cxx")
 
-SET( core_src
+set(core_src
   ${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx
   core/Application.hpp
   core/Application.cpp
@@ -28,7 +28,7 @@ SET( core_src
   core/Exception.hpp
   core/FileLogSink.hpp
   core/FileLogSink_Impl.hpp
-  core/FileLogSink.cpp    
+  core/FileLogSink.cpp
   core/FileReference.hpp
   core/FileReference.cpp
   core/Finder.hpp
@@ -37,10 +37,10 @@ SET( core_src
   core/Logger.hpp
   core/Logger.cpp
   core/LogMessage.hpp
-  core/LogMessage.cpp  
+  core/LogMessage.cpp
   core/LogSink.hpp
   core/LogSink_Impl.hpp
-  core/LogSink.cpp  
+  core/LogSink.cpp
   core/Macro.hpp
   core/Optional.hpp
   core/Optional.cpp
@@ -60,7 +60,7 @@ SET( core_src
   core/StringHelpers.cpp
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
-  core/StringStreamLogSink.cpp  
+  core/StringStreamLogSink.cpp
   core/TemporaryDirectory.hpp
   core/TemporaryDirectory.cpp
   core/System.hpp
@@ -78,15 +78,15 @@ SET( core_src
   core/ZipFile.cpp
 )
 
-SET( data_src
+set(data_src
   data/DataEnums.hpp
   data/Attribute.hpp
   data/Attribute_Impl.hpp
   data/Attribute.cpp
   data/CalibrationResult.hpp
-  data/CalibrationResult.cpp   
+  data/CalibrationResult.cpp
   data/EndUses.hpp
-  data/EndUses.cpp 
+  data/EndUses.cpp
   data/Matrix.hpp
   data/Matrix.cpp
   data/Tag.hpp
@@ -97,7 +97,7 @@ SET( data_src
   data/Vector.cpp
 )
 
-SET( document_src
+set(document_src
   document/Document.hpp
   document/Document.cpp
   document/DocumentEnums.hpp
@@ -128,22 +128,22 @@ SET( document_src
   document/TableElement.cpp
 )
 
-SET( filetypes_src
+set(filetypes_src
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
   filetypes/TimeDependentValuationFile.hpp
   filetypes/TimeDependentValuationFile.cpp
 )
 
-SET( geometry_src
+set(geometry_src
   geometry/BoundingBox.hpp
   geometry/BoundingBox.cpp
   geometry/EulerAngles.hpp
-  geometry/EulerAngles.cpp  
+  geometry/EulerAngles.cpp
   geometry/Geometry.hpp
-  geometry/Geometry.cpp  
+  geometry/Geometry.cpp
   geometry/Intersection.hpp
-  geometry/Intersection.cpp  
+  geometry/Intersection.cpp
   geometry/Plane.hpp
   geometry/Plane.cpp
   geometry/Point3d.hpp
@@ -155,13 +155,13 @@ SET( geometry_src
   ../polypartition/polypartition.cpp
 )
 
-SET( math_src
+set(math_src
   math/FloatCompare.hpp
   math/Permutation.hpp
   math/Primes.hpp
 )
 
-SET( plot_src
+set(plot_src
   plot/AnnotatedTimeline.hpp
   plot/AnnotatedTimeline.cpp
   plot/Chart.hpp
@@ -177,7 +177,7 @@ SET( plot_src
   plot/ProgressBar.cpp
 )
 
-SET( time_src
+set(time_src
   time/Calendar.hpp
   time/Calendar.cpp
   time/Date.hpp
@@ -188,7 +188,7 @@ SET( time_src
   time/Time.cpp
 )
 
-SET( bcl_src
+set(bcl_src
   bcl/BCL.hpp
   bcl/BCL.cpp
   bcl/BCLComponent.hpp
@@ -207,7 +207,7 @@ SET( bcl_src
   bcl/RemoteBCL.cpp
 )
 
-SET( cloud_src
+set(cloud_src
   cloud/AWSProvider.hpp
   cloud/AWSProvider_Impl.hpp
   cloud/AWSProvider.cpp
@@ -222,11 +222,11 @@ SET( cloud_src
   cloud/VagrantProvider.cpp
 )
 
-SET( documentation_src
+set(documentation_src
   mainpage.hpp
 )
 
-SET( economics_src
+set(economics_src
   economics/CostLineItem.hpp
   economics/CostLineItem.cpp
   economics/CostObject.hpp
@@ -235,7 +235,7 @@ SET( economics_src
   economics/Economics.cpp
 )
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   zkqwt
   sqlite
   litesql
@@ -247,30 +247,30 @@ SET( ${target_name}_depends
   ${QT_LIBS}
 )
 
-IF(WIN32)
-  LIST(APPEND ${target_name}_depends qtwinmigrate)
-ENDIF(WIN32)
+if(WIN32)
+  list(APPEND ${target_name}_depends qtwinmigrate)
+endif()
 
 # moc files
-SET( bcl_moc
+set(bcl_moc
   bcl/BCL.hpp
   bcl/LocalBCL.hpp
   bcl/RemoteBCL.hpp
 )
 
-SET( cloud_moc
+set(cloud_moc
   cloud/AWSProvider_Impl.hpp
   cloud/CloudProvider_Impl.hpp
   cloud/OSServer_Impl.hpp
   cloud/VagrantProvider_Impl.hpp
 )
 
-SET( core_moc
+set(core_moc
   core/PathWatcher.hpp
   core/UpdateManager.hpp
 )
 
-SET( idf_moc
+set(idf_moc
   idf/IdfObject_Impl.hpp
   idf/IdfObjectWatcher.hpp
   idf/WorkspaceObjectWatcher.hpp
@@ -279,11 +279,11 @@ SET( idf_moc
   idf/WorkspaceWatcher.hpp
 )
 
-SET( data_moc
+set(data_moc
   data/Attribute_Impl.hpp
 )
 
-SET( plot_moc
+set(plot_moc
   plot/Plot2D.hpp
   plot/FloodPlot.hpp
   plot/LinePlot.hpp
@@ -295,67 +295,67 @@ SET( plot_moc
 # generated files are generated before moc runs.
 # The following commands make sure that happens.
 # This could be done by simply touching the moc'ed files in the source tree
-# but in the spirit of keeping the source tree clean, we copy them into the 
+# but in the spirit of keeping the source tree clean, we copy them into the
 # build directory instead.
 ###############################################################################
-FOREACH( f IN LISTS idf_moc )
-  STRING( REGEX REPLACE hpp$ hxx fxx ${f} )
-  LIST( APPEND idfxx_moc ${CMAKE_CURRENT_BINARY_DIR}/${fxx} )
-  ADD_CUSTOM_COMMAND( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx} 
+foreach(f IN LISTS idf_moc)
+  string(REGEX REPLACE hpp$ hxx fxx ${f})
+  list(APPEND idfxx_moc ${CMAKE_CURRENT_BINARY_DIR}/${fxx})
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
     DEPENDS
     ${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
     ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
     ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
-    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx 
+    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx
     ${CMAKE_CURRENT_SOURCE_DIR}/${f}
   )
-ENDFOREACH()
+endforeach()
 ###############################################################################
 
 ## Qt MOC generation
-qt5_wrap_cpp( bcl_moc_src ${bcl_moc} )
-qt5_wrap_cpp( cloud_moc_src ${cloud_moc} )
-qt5_wrap_cpp( core_moc_src ${core_moc} )
-qt5_wrap_cpp( idf_moc_src ${idfxx_moc} )
-qt5_wrap_cpp( data_moc_src ${data_moc} )
-qt5_wrap_cpp( plot_moc_src ${plot_moc} )
+qt5_wrap_cpp(bcl_moc_src ${bcl_moc})
+qt5_wrap_cpp(cloud_moc_src ${cloud_moc})
+qt5_wrap_cpp(core_moc_src ${core_moc})
+qt5_wrap_cpp(idf_moc_src ${idfxx_moc})
+qt5_wrap_cpp(data_moc_src ${data_moc})
+qt5_wrap_cpp(plot_moc_src ${plot_moc})
 
 # qrc files
-SET( bcl_qrc
+set(bcl_qrc
   bcl/bcl.qrc
 )
 
 # generate rules for building source files from the resources
 qt5_add_resources(bcl_qrc_src ${bcl_qrc})
 # set up groups of source files for Visual Studio
-SOURCE_GROUP( bcl FILES ${bcl_src} )
-SOURCE_GROUP( cloud FILES ${cloud_src} )
-SOURCE_GROUP( core FILES ${core_src} )
-SOURCE_GROUP( data FILES ${data_src} )
-SOURCE_GROUP( document FILES ${document_src} )
-SOURCE_GROUP( filetypes FILES ${filetypes_src} )
-SOURCE_GROUP( idd FILES ${idd_src} )
-SOURCE_GROUP( idf FILES ${idf_src} )
-SOURCE_GROUP( sql FILES ${sql_src} )
-SOURCE_GROUP( geometry FILES ${geometry_src} )
-SOURCE_GROUP( math FILES ${math_src} )
-SOURCE_GROUP( plot FILES ${plot_src} )
-SOURCE_GROUP( time FILES ${time_src} )
-SOURCE_GROUP( units FILES ${units_src} )
-SOURCE_GROUP( documentation FILES ${documentation_src} )
-SOURCE_GROUP( economics FILES ${economics_src} )
+source_group(bcl FILES ${bcl_src})
+source_group(cloud FILES ${cloud_src})
+source_group(core FILES ${core_src})
+source_group(data FILES ${data_src})
+source_group(document FILES ${document_src})
+source_group(filetypes FILES ${filetypes_src})
+source_group(idd FILES ${idd_src})
+source_group(idf FILES ${idf_src})
+source_group(sql FILES ${sql_src})
+source_group(geometry FILES ${geometry_src})
+source_group(math FILES ${math_src})
+source_group(plot FILES ${plot_src})
+source_group(time FILES ${time_src})
+source_group(units FILES ${units_src})
+source_group(documentation FILES ${documentation_src})
+source_group(economics FILES ${economics_src})
 
 
-ADD_CUSTOM_COMMAND(
+add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
   COMMAND "${SWIG_EXECUTABLE}"
-          "-ruby" 
+          "-ruby"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
 )
 
 
-SET( ${target_name}_src
+set(${target_name}_src
   UtilitiesAPI.hpp
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
@@ -363,14 +363,14 @@ SET( ${target_name}_src
   ${bcl_qrc_src}
   ${cloud_src}
   ${cloud_moc_src}
-  ${core_src}  
+  ${core_src}
   ${core_moc_src}
-  ${data_src} 
-  ${data_moc_src} 
+  ${data_src}
+  ${data_moc_src}
   ${document_src}
-  ${documentation_src} 
+  ${documentation_src}
   ${economics_src}
-  ${filetypes_src} 
+  ${filetypes_src}
   ${idd_src}
   ${idf_src}
   ${idf_moc_src}
@@ -379,11 +379,11 @@ SET( ${target_name}_src
   ${math_src}
   ${plot_src}
   ${plot_moc_src}
-  ${time_src} 
+  ${time_src}
   ${units_src}
 )
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   ${idd_test_src}
   ${idf_test_src}
   ${idf_test_moc_src}
@@ -402,7 +402,7 @@ SET( ${target_name}_test_src
   core/test/Logger_GTest.cpp
   core/test/Optional_GTest.cpp
   core/test/Path_GTest.cpp
-  core/test/PathWatcher_GTest.cpp  
+  core/test/PathWatcher_GTest.cpp
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
@@ -424,7 +424,7 @@ SET( ${target_name}_test_src
   document/test/DocumentRegex_GTest.cpp
   document/test/SectionHeading_GTest.cpp
   document/test/Table_GTest.cpp
-  document/test/TableElement_GTest.cpp  
+  document/test/TableElement_GTest.cpp
   document/test/Text_GTest.cpp
   economics/test/Economics_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
@@ -477,7 +477,7 @@ SET( ${target_name}_test_src
   bcl/test/OnDemandGenerator_GTest.cpp
 )
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   #  Utilities.i
   ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx
   ${idd_swig_src}
@@ -545,47 +545,45 @@ include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 #include subdir for pch
 add_subdirectory(pch)
 
-ADD_LIBRARY( ${target_name} SHARED
+add_library(${target_name} SHARED
   ${${target_name}_src}
 )
 
 AddPCH(${target_name})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-TARGET_LINK_LIBRARIES(${target_name} ${${target_name}_depends})
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}"  )
+target_link_libraries(${target_name} ${${target_name}_depends})
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
-IF( BUILD_TESTING )
-  ADD_DEPENDENCIES("${target_name}_tests" openstudio_energyplus_resources openstudio_standardsinterface_resources)
-ENDIF()
+if(BUILD_TESTING)
+  add_dependencies("${target_name}_tests" openstudio_energyplus_resources openstudio_standardsinterface_resources)
+endif()
 
-CREATE_SRC_GROUPS( "${${target_name}_swig_src}" )
+CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-MAKE_SWIG_TARGET( OpenStudioUtilitiesCore utilitiescore "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCore.i" "${${target_name}_swig_src}" ${target_name} "" )
+MAKE_SWIG_TARGET(OpenStudioUtilitiesCore utilitiescore "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCore.i" "${${target_name}_swig_src}" ${target_name} "")
 
-MAKE_SWIG_TARGET( OpenStudioUtilitiesIdd utilitiesidd "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdd.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore )
+MAKE_SWIG_TARGET(OpenStudioUtilitiesIdd utilitiesidd "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdd.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 
-MAKE_SWIG_TARGET( OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdf.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdd )
+MAKE_SWIG_TARGET(OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesIdf.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdd)
 
-MAKE_SWIG_TARGET( OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesDocument utilitiesdocument "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesDocument.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesData )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesDocument )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesEconomics )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesPlot utilitiesplot "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesPlot.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesGeometry )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesSql.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesPlot )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesSql )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesTime )
-MAKE_SWIG_TARGET( OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesUnits )
+MAKE_SWIG_TARGET(OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesDocument utilitiesdocument "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesDocument.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesData)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesDocument)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesEconomics)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesPlot utilitiesplot "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesPlot.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesGeometry)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesSql.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesPlot)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesSql)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesTime)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesUnits)
 
-MAKE_SWIG_TARGET( OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesFileTypes )
-
-
-
+MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesFileTypes)

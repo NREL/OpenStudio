@@ -25,7 +25,7 @@ option(gtest_disable_pthreads "Disable uses of pthreads in gtest." OFF)
 # Defines pre_project_set_up_hermetic_build() and set_up_hermetic_build().
 include(cmake/hermetic_build.cmake OPTIONAL)
 
-if (COMMAND pre_project_set_up_hermetic_build)
+if(COMMAND pre_project_set_up_hermetic_build)
   pre_project_set_up_hermetic_build()
 endif()
 
@@ -42,7 +42,7 @@ endif()
 project(gtest CXX C)
 cmake_minimum_required(VERSION 2.6.2)
 
-if (COMMAND set_up_hermetic_build)
+if(COMMAND set_up_hermetic_build)
   set_up_hermetic_build()
 endif()
 
@@ -61,7 +61,7 @@ include_directories(
 link_directories(${gtest_BINARY_DIR}/src)
 
 
-ADD_DEFINITIONS( -DGTEST_HAS_TR1_TUPLE=0 )
+add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
 
 ########################################################################
 #
@@ -83,7 +83,7 @@ target_link_libraries(gtest_main gtest)
 # gtest_build_samples option to ON.  You can do it by running ccmake
 # or specifying the -Dbuild_gtest_samples=ON flag when running cmake.
 
-if (gtest_build_samples)
+if(gtest_build_samples)
   cxx_executable(sample1_unittest samples gtest_main samples/sample1.cc)
   cxx_executable(sample2_unittest samples gtest_main samples/sample2.cc)
   cxx_executable(sample3_unittest samples gtest_main)
@@ -107,7 +107,7 @@ endif()
 # gtest_build_tests option to ON.  You can do it by running ccmake
 # or specifying the -Dgtest_build_tests=ON flag when running cmake.
 
-if (gtest_build_tests)
+if(gtest_build_tests)
   # This must be set in the root directory for the tests to be run by
   # 'make test' or ctest.
   enable_testing()
@@ -170,7 +170,7 @@ if (gtest_build_tests)
                         PROPERTIES
                         COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
 
-  if (NOT MSVC OR NOT MSVC_VERSION EQUAL 1600)
+  if(NOT MSVC OR NOT MSVC_VERSION EQUAL 1600)
     # The C++ Standard specifies tuple_element<int, class>.
     # Yet MSVC 10's <utility> declares tuple_element<size_t, class>.
     # That declaration conflicts with our own standard-conforming
