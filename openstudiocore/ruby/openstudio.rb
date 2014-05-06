@@ -14,10 +14,10 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #####################################################################
 
-if Sketchup.version_number > 14000000
-  require 'pathname'
-else
+if defined? Sketchup && Sketchup.version_number <= 14000000
   require File.expand_path(File.dirname(__FILE__)) + '/openstudio/sketchup_plugin/stdruby/pathname'
+else
+  require 'pathname'
 end
 
 # follow symlinks so that we find the original path to the so's 
