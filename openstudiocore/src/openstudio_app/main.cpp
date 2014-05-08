@@ -74,22 +74,44 @@ int main(int argc, char *argv[])
   while(cont) {
     cont = false;
 
-
-
     std::vector<std::string> modules;
-    modules.push_back("openstudioutilitiescore");
-    modules.push_back("openstudioutilitiesbcl");
-    modules.push_back("openstudioutilitiesidd");
-    modules.push_back("openstudioutilitiesidf");
-    modules.push_back("openstudioutilities");
+    modules.push_back("openstudioanalysis");
+    modules.push_back("openstudioanalysisdriver");
+    modules.push_back("openstudiocontam");
+    modules.push_back("openstudioenergyplus");
+    modules.push_back("openstudiogbxml");
+    modules.push_back("openstudioisomodel");
+    modules.push_back("openstudiolib");
     modules.push_back("openstudiomodel");
     modules.push_back("openstudiomodelcore");
-    modules.push_back("openstudiomodelsimulation");
-    modules.push_back("openstudiomodelresources");
+    modules.push_back("openstudiomodeleditor");
     modules.push_back("openstudiomodelgeometry");
     modules.push_back("openstudiomodelhvac");
-    modules.push_back("openstudioenergyplus");
+    modules.push_back("openstudiomodelrefrigeration");
+    modules.push_back("openstudiomodelresources");
+    modules.push_back("openstudiomodelsimulation");
+    modules.push_back("openstudioosversion");
+    modules.push_back("openstudioosversion");
+    modules.push_back("openstudioproject");
+    modules.push_back("openstudioradiance");
     modules.push_back("openstudioruleset");
+    modules.push_back("openstudiorunmanager");
+    modules.push_back("openstudiosdd");
+    modules.push_back("openstudioutilities");
+    modules.push_back("openstudioutilitiesbcl");
+    modules.push_back("openstudioutilitiescloud");
+    modules.push_back("openstudioutilitiescore");
+    modules.push_back("openstudioutilitiesdata");
+    modules.push_back("openstudioutilitiesdocument");
+    modules.push_back("openstudioutilitieseconomics");
+    modules.push_back("openstudioutilitiesfiletypes");
+    modules.push_back("openstudioutilitiesgeometry");
+    modules.push_back("openstudioutilitiesidd");
+    modules.push_back("openstudioutilitiesidf");
+    modules.push_back("openstudioutilitiesplot");
+    modules.push_back("openstudioutilitiessql");
+    modules.push_back("openstudioutilitiestime");
+    modules.push_back("openstudioutilitiesunits");
 
     //try {
     // Initialize the embedded Ruby interpreter
