@@ -306,7 +306,7 @@ else()
 endif()
 
 
-find_package(SWIG 1.3.40)
+find_package(SWIG 2.0)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -512,9 +512,8 @@ if(BUILD_SWIG)
     else()
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-2.0.10.tar.gz
-        #URL http://downloads.sourceforge.net/project/swig/swig/swig-3.0.0/swig-3.0.0.tar.gz
-        URL_MD5 6d5e7ad05b4a404e5e85db9befb70c9a
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-3.0.0.tar.gz
+        URL_MD5 9c8278fad527dda4bf38edffe5acc394
 
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
@@ -526,8 +525,8 @@ if(BUILD_SWIG)
   else()
     # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
     ExternalProject_Add(SWIG
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-2.0.10.zip
-      URL_MD5 cbb7006ecc912f056a2ec7f322fe59fb
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swigwin-3.0.0.zip
+      URL_MD5 c1d85fee2421d4edac552923fc4e5bde
       CONFIGURE_COMMAND ""
       BUILD_COMMAND ""
       INSTALL_COMMAND ""
