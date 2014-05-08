@@ -92,58 +92,63 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
 
 boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
 {
-  boost::optional<EpwDataPoint> pt;
+  EpwDataPoint pt;
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
-  if(list.size() != 35) {
+  if(list.size() < 35) {
     LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
+    return boost::optional<EpwDataPoint>();
+  } else if(list.size() > 35) {
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size() << ", additional data will be ignored");
     return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
-  setYear(list[0].toStdString());
-  if(!pt->setMonth(list[1].toStdString())) {
+  if(!pt.setYear(list[0].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt->setDay(list[2].toStdString())) {
+  if(!pt.setMonth(list[1].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt->setHour(list[3].toStdString())) {
+  if(!pt.setDay(list[2].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt->setMinute(list[4].toStdString())) {
+  if(!pt.setHour(list[3].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  pt->setDataSourceandUncertaintyFlags(list[5].toStdString());
-  pt->setDryBulbTemperature(list[6].toStdString());
-  pt->setDewPointTemperature(list[7].toStdString());
-  pt->setRelativeHumidity(list[8].toStdString());
-  pt->setAtmosphericStationPressure(list[9].toStdString());
-  pt->setExtraterrestrialHorizontalRadiation(list[10].toStdString());
-  pt->setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
-  pt->setHorizontalInfraredRadiationIntensity(list[12].toStdString());
-  pt->setGlobalHorizontalRadiation(list[13].toStdString());
-  pt->setDirectNormalRadiation(list[14].toStdString());
-  pt->setDiffuseHorizontalRadiation(list[15].toStdString());
-  pt->setGlobalHorizontalIlluminance(list[16].toStdString());
-  pt->setDirectNormalIlluminance(list[17].toStdString());
-  pt->setDiffuseHorizontalIlluminance(list[18].toStdString());
-  pt->setZenithLuminance(list[19].toStdString());
-  pt->setWindDirection(list[20].toStdString());
-  pt->setWindSpeed(list[21].toStdString());
-  pt->setTotalSkyCover(list[22].toStdString());
-  pt->setOpaqueSkyCover(list[23].toStdString());
-  pt->setVisibility(list[24].toStdString());
-  pt->setCeilingHeight(list[25].toStdString());
-  pt->setPresentWeatherObservation(list[26].toStdString());
-  pt->setPresentWeatherCodes(list[27].toStdString());
-  pt->setPrecipitableWater(list[28].toStdString());
-  pt->setAerosolOpticalDepth(list[29].toStdString());
-  pt->setSnowDepth(list[30].toStdString());
-  pt->setDaysSinceLastSnowfall(list[31].toStdString());
-  pt->setAlbedo(list[32].toStdString());
-  pt->setLiquidPrecipitationDepth(list[33].toStdString());
-  pt->setLiquidPrecipitationQuantity(list[34].toStdString());
-  return pt;
+  if(!pt.setMinute(list[4].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  pt.setDataSourceandUncertaintyFlags(list[5].toStdString());
+  pt.setDryBulbTemperature(list[6].toStdString());
+  pt.setDewPointTemperature(list[7].toStdString());
+  pt.setRelativeHumidity(list[8].toStdString());
+  pt.setAtmosphericStationPressure(list[9].toStdString());
+  pt.setExtraterrestrialHorizontalRadiation(list[10].toStdString());
+  pt.setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
+  pt.setHorizontalInfraredRadiationIntensity(list[12].toStdString());
+  pt.setGlobalHorizontalRadiation(list[13].toStdString());
+  pt.setDirectNormalRadiation(list[14].toStdString());
+  pt.setDiffuseHorizontalRadiation(list[15].toStdString());
+  pt.setGlobalHorizontalIlluminance(list[16].toStdString());
+  pt.setDirectNormalIlluminance(list[17].toStdString());
+  pt.setDiffuseHorizontalIlluminance(list[18].toStdString());
+  pt.setZenithLuminance(list[19].toStdString());
+  pt.setWindDirection(list[20].toStdString());
+  pt.setWindSpeed(list[21].toStdString());
+  pt.setTotalSkyCover(list[22].toStdString());
+  pt.setOpaqueSkyCover(list[23].toStdString());
+  pt.setVisibility(list[24].toStdString());
+  pt.setCeilingHeight(list[25].toStdString());
+  pt.setPresentWeatherObservation(list[26].toStdString());
+  pt.setPresentWeatherCodes(list[27].toStdString());
+  pt.setPrecipitableWater(list[28].toStdString());
+  pt.setAerosolOpticalDepth(list[29].toStdString());
+  pt.setSnowDepth(list[30].toStdString());
+  pt.setDaysSinceLastSnowfall(list[31].toStdString());
+  pt.setAlbedo(list[32].toStdString());
+  pt.setLiquidPrecipitationDepth(list[33].toStdString());
+  pt.setLiquidPrecipitationQuantity(list[34].toStdString());
+  return boost::optional<EpwDataPoint>(pt);
 }
 
 std::string EpwDataPoint::unitsByName(std::string name)
@@ -1582,7 +1587,6 @@ boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData
   return result;
 }
 
-
 openstudio::path EpwFile::path() const
 {
   return m_path;
@@ -1892,9 +1896,9 @@ bool EpwFile::parse(bool storeData)
       }
       if(storeData)
       {
-        EpwDataPoint pt;
-        if(pt.fromEpwString(line)) {
-          m_data.push_back(pt);
+        boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwString(line);
+        if(pt) {
+          m_data.push_back(pt.get());
         } else {
           LOG(Error,"Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
           ifs.close();

@@ -72,7 +72,7 @@ OPENSTUDIO_ENUM(EpwDataField,
 class UTILITIES_API EpwDataPoint
 {
 public:
-  EpwDataPoint(int year=1,int month=1,int day=1,int hour=0,int minute=0,
+  EpwDataPoint(int year=1,int month=1,int day=1,int hour=1,int minute=0,
     std::string dataSourceandUncertaintyFlags="",double dryBulbTemperature=99.9,double dewPointTemperature=99.9,
     double relativeHumidity=999,double atmosphericStationPressure=999999,double extraterrestrialHorizontalRadiation=9999,
     double extraterrestrialDirectNormalRadiation=9999,double horizontalInfraredRadiationIntensity=9999,
@@ -89,7 +89,7 @@ public:
   boost::optional<double> fieldByName(std::string name);
   boost::optional<double> field(EpwDataField id);
   // Conversion
-  boost::optional<EpwDataPoint> fromEpwString(std::string line);
+  static boost::optional<EpwDataPoint> fromEpwString(std::string line);
   boost::optional<std::string> toWthString();
   // One billion getters and setters
   Date date() const;
