@@ -183,13 +183,14 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   addMenu(m_measureMenu);
 
   action = new QAction(tr("Apply Measure Now"),this);
+  action->setShortcut(QKeySequence(QKeySequence(tr("Ctrl+M"))));
   m_measureMenu->addAction(action);
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(applyMeasureClicked()));
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("Download Measures"),this);
   m_measureMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadMeasuresClicked()));
+  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadComponentsClicked())); // TODO
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("Download Components"),this);
