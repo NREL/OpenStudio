@@ -25,6 +25,7 @@
 #include <openstudio_lib/OSDocument.hpp>
 #include <openstudio_lib/FileOperations.hpp>
 
+#include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 
 #include <utilities/idf/IdfObject.hpp>
@@ -103,6 +104,7 @@
 #include <QFileOpenEvent>
 #include <QMessageBox>
 #include <QStringList>
+#include <QThread>
 #include <QTimer>
 #include <QWidget>
 
@@ -242,8 +244,18 @@ bool OpenStudioApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
   {
+
+    WaitDialog waitDialog("Loading Model","Loading Model");
+    QThread * thread = new QThread();
+    thread->setPriority(QThread::TimeCriticalPriority);
+    waitDialog.moveToThread(thread);
+    thread->start();
+    waitDialog.open();
+    processEvents();
+
     osversion::VersionTranslator versionTranslator;
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
+
     if (temp) {
       model::Model model = temp.get();
 
@@ -281,6 +293,9 @@ bool OpenStudioApp::openFile(const QString& fileName)
       versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
 
       this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
+
+      delete thread;
+      therad = 0;
 
       return true;
     }else{
@@ -693,6 +708,7 @@ void OpenStudioApp::onCloseClicked()
 
 void OpenStudioApp::open()
 {
+
   QWidget * parent = NULL;
 
   if( this->currentDocument() )
@@ -706,7 +722,7 @@ void OpenStudioApp::open()
                                                    tr("(*.osm)") );
 
   if (!fileName.length()) return;
-  
+
   openFile(fileName);
 }
 
