@@ -111,6 +111,11 @@ namespace detail {
 
     virtual Mixer demandMixer() = 0;
 
+  protected:
+
+    mutable std::vector<ModelObject> m_supplyComponents;
+    mutable std::vector<ModelObject> m_demandComponents;
+
   private:
 
     REGISTER_LOGGER("openstudio.model.Loop");

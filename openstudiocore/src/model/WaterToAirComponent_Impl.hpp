@@ -51,6 +51,8 @@ class MODEL_API WaterToAirComponent_Impl : public HVACComponent_Impl {
 
   virtual boost::optional<ModelObject> waterOutletModelObject();
 
+  virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+
   virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
   virtual boost::optional<PlantLoop> plantLoop() const;

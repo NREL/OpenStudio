@@ -272,6 +272,17 @@ namespace detail {
     return ModelObject_Impl::remove();
   }
 
+  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(bool isDemandLoop)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->mixedAirModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
+  }
+
   std::vector<ModelObject> AirLoopHVACOutdoorAirSystem_Impl::oaComponents() const
   {
     std::vector<ModelObject> modelObjects;

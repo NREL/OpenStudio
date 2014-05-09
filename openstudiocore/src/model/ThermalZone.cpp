@@ -273,6 +273,17 @@ namespace detail {
     return ThermalZone::iddObjectType();
   }
 
+  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandLoop)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
+  }
+
   int ThermalZone_Impl::multiplier() const {
     boost::optional<int> value = getInt(OS_ThermalZoneFields::Multiplier,true);
     OS_ASSERT(value);

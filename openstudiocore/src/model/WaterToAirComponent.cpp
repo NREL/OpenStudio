@@ -89,6 +89,52 @@ boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
   return connectedObject( waterOutletPort() );
 }
 
+std::vector<HVACComponent> WaterToAirComponent_Impl::edges(bool isDemandLoop)
+{
+  std::vector<HVACComponent> edges;
+  // boost::optional<AirLoopHVAC> airLoop = this->airLoopHVAC();
+  // boost::optional<PlantLoop> plantLoop = this->plantLoop();
+  // if( airLoop && airLoop->handle() == handle ) {
+  //   if( boost::optional<ModelObject> edgeModelObject = this->airOutletModelObject() ) {
+  //     if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  //       edges.push_back(*edgeObject);
+  //     }
+  //   }
+  // }
+  // else if( plantLoop && plantLoop->handle() == handle ) {
+  //   if( boost::optional<ModelObject> edgeModelObject = this->waterOutletModelObject() ) {
+  //     if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  //       edges.push_back(*edgeObject);
+  //     }
+  //   }
+  // }
+  if( isDemandLoop ) {
+    if( boost::optional<ModelObject> edgeModelObject = this->waterOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  } else {
+    if( boost::optional<ModelObject> edgeModelObject = this->airOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  }
+  
+  // if( boost::optional<ModelObject> edgeModelObject = this->airOutletModelObject() ) {
+  //   if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  //     edges.push_back(*edgeObject);
+  //   }
+  // }
+  // if( boost::optional<ModelObject> edgeModelObject = this->waterOutletModelObject() ) {
+  //   if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+  //     edges.push_back(*edgeObject);
+  //   }
+  // }
+  return edges;
+}
+
 boost::optional<AirLoopHVAC> WaterToAirComponent_Impl::airLoopHVAC() const
 {
   return HVACComponent_Impl::airLoopHVAC();

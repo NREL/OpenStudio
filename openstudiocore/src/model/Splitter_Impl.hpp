@@ -55,6 +55,8 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
    *  with no connected objects */
   virtual unsigned nextOutletPort() = 0;
 
+  virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+
   /** Returns the optional ModelObject connected to the inlet port.  
    *  If there is no connected object then the optional will be false. 
    */
