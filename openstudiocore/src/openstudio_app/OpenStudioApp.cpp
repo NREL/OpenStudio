@@ -295,7 +295,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
       this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
 
       delete thread;
-      therad = 0;
+      thread = 0;
 
       return true;
     }else{

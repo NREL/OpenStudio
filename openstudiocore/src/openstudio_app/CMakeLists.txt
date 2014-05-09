@@ -21,6 +21,8 @@ SET( ${target_name}_SRC
   StartupMenu.hpp
   StartupMenu.cpp
 
+  ../shared_gui_components/BusyWidget.cpp
+  ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/OSDialog.cpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/WaitDialog.cpp
@@ -37,6 +39,7 @@ SET( ${target_name}_moc
   StartupView.hpp
   StartupMenu.hpp
 
+  ../shared_gui_components/BusyWidget.hpp
   ../shared_gui_components/OSDialog.hpp
   ../shared_gui_components/WaitDialog.hpp
 )
