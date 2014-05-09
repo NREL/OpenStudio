@@ -1418,7 +1418,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       coil.setRatedInletAirTemperature(16.6);
 
-      coil.setRatedOutletWaterTemperature(54.4);
+      coil.setRatedOutletWaterTemperature(71.1);
 
       coil.setRatedOutletAirTemperature(32.2);
 
@@ -1439,23 +1439,23 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         sysElement = znSysElement;
       }
 
-      QDomElement htgDsgnSupAirTempElement = sysElement.firstChildElement("HtgDsgnSupAirTemp");
+      //QDomElement htgDsgnSupAirTempElement = sysElement.firstChildElement("HtgDsgnSupAirTemp");
 
-      value = htgDsgnSupAirTempElement.text().toDouble(&ok);
+      //value = htgDsgnSupAirTempElement.text().toDouble(&ok);
 
-      if( ok )
-      {
-        coil.setRatedOutletAirTemperature(unitToUnit(value,"F","C").get());
-      }
+      //if( ok )
+      //{
+      //  coil.setRatedOutletAirTemperature(unitToUnit(value,"F","C").get());
+      //}
 
-      if( plant )
-      {
-        model::SizingPlant sizingPlant = plant->sizingPlant();
+      //if( plant )
+      //{
+      //  model::SizingPlant sizingPlant = plant->sizingPlant();
 
-        coil.setRatedInletWaterTemperature(sizingPlant.designLoopExitTemperature());
+      //  coil.setRatedInletWaterTemperature(sizingPlant.designLoopExitTemperature());
 
-        coil.setRatedOutletWaterTemperature(sizingPlant.designLoopExitTemperature() - sizingPlant.loopDesignTemperatureDifference());
-      }
+      //  coil.setRatedOutletWaterTemperature(sizingPlant.designLoopExitTemperature() - sizingPlant.loopDesignTemperatureDifference());
+      //}
     }
 
     result = coil;
@@ -3422,6 +3422,8 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     }
     else // Not SZVAV
     {
+      terminal.resetMaximumFlowPerZoneFloorAreaDuringReheat();
+
       if( primaryAirFlowMin )
       {
         terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
