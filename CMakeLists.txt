@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudio)
 
@@ -128,8 +128,8 @@ if(MSVC)
     message(WARNING "Service Pack 1 for Visual Studio 2010 is strongly recommended")
   elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "16.00.40219.01")
     # vc100sp1
-  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_GREATER "16.00.40219.01")
-    message(WARNING "Visual Studio newer than VS2010 is not currently supported")
+  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
+    # vc120: no-op
   endif()
 
   # Build with Multiple Processes
@@ -218,6 +218,7 @@ mark_as_advanced(
   Qt5Core_DIR
   Qt5Gui_DIR
   Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
   Qt5Multimedia_DIR
   Qt5MultimediaWidgets_DIR
   Qt5Network_DIR
@@ -272,7 +273,7 @@ endif()
 
 mark_as_advanced(
   Boost_DIR
-  Boost_LIB_DIAGNOSTIC_DEFINITIONS
+  BOOST_THREAD_LIBRARY
   ProcessorCount_cmd_getconf
   ProcessorCount_cmd_sysctl
 )
@@ -280,8 +281,7 @@ mark_as_advanced(
 # Boost
 if(APPLE)
   set(Boost_USE_STATIC_LIBS ON)
-endif()
-if(WIN32)
+elseif(WIN32)
   set(Boost_USE_STATIC_LIBS ON)
 
   #uncomment all of this if we want to force dynamic libs on windows
@@ -290,16 +290,40 @@ if(WIN32)
   #  link_directories(${Boost_LIBRARY_DIRS})
   #  if(MSVC)
   #    #Ignore dll specific warnings that are out of our hands to control, coming from external projects
-  #    add_definitions("/wd4251 /wd4275")
+  #    add_definitions(/wd4251 /wd4275)
   #  endif()
 endif()
 
 # DLM: should we allow boost to be linked dynamically on Unix or should we force static for all platforms?
 
-set(Boost_ADDITIONAL_VERSIONS "1.55")
-find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log)
+find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log QUIET)
 
-if(Boost_THREAD_FOUND)
+# Check default Boost install location for Windows if Boost has not been found, and display missing components
+if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
+  if(CMAKE_CL_64)
+    set(BOOST_ARCH 64)
+  else()
+    set(BOOST_ARCH 32)
+  endif()
+  if(MSVC10)
+    set(BOOST_MSVC 10.0)
+  elseif(MSVC12)
+    set(BOOST_MSVC 12.0)
+  endif()
+  
+  if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
+    set(Boost_INCLUDE_DIR "C:/local/boost_1_55_0" CACHE PATH "Boost Include Dir" FORCE)
+    set(Boost_LIBRARY_DIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}" CACHE PATH "Boost Library Dir" FORCE)
+    find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log QUIET)
+    if(NOT Boost_FOUND)
+      message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+    endif()
+  endif()
+elseif(NOT Boost_FOUND)
+  message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
+endif()
+
+if(Boost_FOUND)
   option(BUILD_BOOST "Build Boost" OFF)
 else()
   option(BUILD_BOOST "Build Boost" ON)
@@ -324,7 +348,7 @@ find_package(Ruby)
 
 
 if(WIN32 AND MSVC AND CMAKE_CL_64)
-  message(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The Sketchup plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.")
+  message(WARNING "64bit Support on Windows is EXPERIMENTAL. Ruby 2.0.0 will be built. The SketchUp plugin will not work. Expect problems with ruby support in general. Unless you've already built Boost and Qt you probably want to let this super build do it. There are lots of warnings, so we are disabling warnings as errors.")
 endif()
 
 if(UNIX)
@@ -357,7 +381,7 @@ if(NOT BUILD_RUBY AND NOT BUILD_SWIG)
 endif()
 
 if(BUILD_WITH_MULTIPLE_PROCESSES)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+  add_definitions(/MP)
 endif()
 
 if(CMAKE_CL_64 OR (MSVC AND BUILD_QT))
@@ -565,9 +589,7 @@ if(BUILD_BOOST)
     # be trying to find it
 
     set(B2_TOOLSET "")
-    if(MSVC90)
-      set(B2_TOOLSET "toolset=msvc-9.0")
-    elseif(MSVC10)
+    if(MSVC10)
       set(B2_TOOLSET "toolset=msvc-10.0")
     elseif(MSVC12)
       set(B2_TOOLSET "toolset=msvc-12.0")
@@ -742,6 +764,8 @@ ExternalProject_Add(OpenStudioCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
+    -DBoost_INCLUDE_DIR:STRING=${Boost_INCLUDE_DIR}
+    -DBoost_LIBRARY_DIR:STRING=${Boost_LIBRARY_DIR}
     -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     -DQt5Network_DIR:STRING=${Qt5Network_DIR}

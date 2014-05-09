@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.7)
+cmake_minimum_required(VERSION 2.8.11)
 
 project(OpenStudioCore)
 
@@ -101,9 +101,6 @@ set(SHOW_VAGRANT "false" CACHE BOOL "Show vagrant option to GUI users")
 # Use PCH
 option(USE_PCH "Use precompiled headers" OFF)
 
-# Enable support for boost > 1.49 ish by forcing boost_filesystem_version 3
-add_definitions(-DBOOST_FILESYSTEM_VERSION=3)
-
 if(WIN32)
   add_definitions(-DNOMINMAX)
 endif()
@@ -180,7 +177,8 @@ if(UNIX)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
   endif()
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing --std=c99")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing -std=c11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   # effective c++
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
   # treat warnings as errors
@@ -200,27 +198,25 @@ if(MINGW)
 endif()
 if(MSVC)
   # warning level 3
-  set(CMAKE_CXX_WARNING_LEVEL 3)
+  add_definitions(/W3)
   # all warnings
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
   # create compiler processes on all effective processors
   if(BUILD_WITH_MULTIPLE_PROCESSES)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+    add_definitions(/MP)
   endif()
-  # ignore first seen as struct now using class
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4099")
   # ignore decorated name length exceeded
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4503")
+  add_definitions(/wd4503)
   # ignore needs to have dll-interface to be used by clients of class
   # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+  add_definitions(/wd4251)
   # treat warnings as errors
 
   if(NOT CMAKE_CL_64)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+    add_definitions(/WX)
   else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+    add_definitions(/bigobj)
   endif()
 
   # ignore warnings about the stl being insecure
@@ -532,20 +528,21 @@ if(WIN32)
 
   # uncomment all of this if we want to force dynamic libs on windows
   #set(Boost_USE_STATIC_LIBS OFF)
-  #add_definitions( -DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
+  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
   #link_directories(${Boost_LIBRARY_DIRS})
   #if(MSVC)
     ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
-    #add_definitions( "/wd4251 /wd4275" )
+    #add_definitions(/wd4251 /wd4275)
   #endif()
 endif()
 
-mark_as_advanced(Boost_DIR)
+mark_as_advanced(
+  Boost_DIR
+  BOOST_THREAD_LIBRARY
+)
 
-set(Boost_ADDITIONAL_VERSIONS "1.55")
 find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-mark_as_advanced(Boost_LIB_DIAGNOSTIC_DEFINITIONS) 
 
 # require these run time checks
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
@@ -582,6 +579,7 @@ mark_as_advanced(
   Qt5Core_DIR
   Qt5Gui_DIR
   Qt5Gui_EGL_LIBRARY
+  Qt5Location_DIR
   Qt5Multimedia_DIR
   Qt5MultimediaWidgets_DIR
   Qt5Network_DIR
