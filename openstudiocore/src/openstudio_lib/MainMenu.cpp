@@ -179,7 +179,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   }
 
   // Measure menu
-  m_measureMenu = new QMenu(tr("Component & Measures"),this);
+  m_measureMenu = new QMenu(tr("Components && Measures"),this);
   addMenu(m_measureMenu);
 
   action = new QAction(tr("Apply Measure Now"),this);
