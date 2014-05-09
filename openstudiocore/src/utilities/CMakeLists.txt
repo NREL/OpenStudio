@@ -314,12 +314,12 @@ endforeach()
 ###############################################################################
 
 ## Qt MOC generation
-qt5_wrap_cpp(bcl_moc_src ${bcl_moc})
-qt5_wrap_cpp(cloud_moc_src ${cloud_moc})
-qt5_wrap_cpp(core_moc_src ${core_moc})
-qt5_wrap_cpp(idf_moc_src ${idfxx_moc})
-qt5_wrap_cpp(data_moc_src ${data_moc})
-qt5_wrap_cpp(plot_moc_src ${plot_moc})
+qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
+qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
+qt5_wrap_cpp_minimally(core_moc_src ${core_moc})
+qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
+qt5_wrap_cpp_minimally(data_moc_src ${data_moc})
+qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc})
 
 # qrc files
 set(bcl_qrc

@@ -51,7 +51,7 @@ set(${target_name}_qrc
 )
 
 ## Qt UI generation
-qt5_wrap_cpp(${target_name}_moc_src ${${target_name}_moc})
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
 qt5_wrap_ui(${target_name}_UIS ${${target_name}_UI})
 

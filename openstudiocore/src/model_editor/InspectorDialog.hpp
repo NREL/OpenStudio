@@ -49,10 +49,12 @@ namespace openstudio{
   }
 }
 
+#ifndef Q_MOC_RUN
 OPENSTUDIO_ENUM( InspectorDialogClient,
   ((AllOpenStudio))
   ((SketchUpPlugin))
 );
+#endif
 
 
 class MODELEDITOR_API InspectorDialog : public QMainWindow

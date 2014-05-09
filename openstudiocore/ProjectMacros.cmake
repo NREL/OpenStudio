@@ -1,3 +1,5 @@
+include(CMakeParseArguments)
+
 if(NOT USE_PCH)
   macro(AddPCH TARGET_NAME)
   endmacro()
@@ -289,8 +291,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
   if(MSVC)
-    # if visual studio 2010
-    if(${MSVC_VERSION} EQUAL 1600)
+    # if visual studio 2010 or greater
+    if(NOT (${MSVC_VERSION} LESS 1600))
       # trouble with macro redefinition in win32.h of Ruby
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005")
     else()
@@ -868,3 +870,25 @@ macro(CONFIGURE_RESOURCES SRCS)
     #)
   endforeach()
 endmacro()
+
+# qt5_wrap_cpp_minimally(outfiles inputfile ...)
+function(QT5_WRAP_CPP_MINIMALLY outfiles)
+  get_directory_property(_inc_DIRS INCLUDE_DIRECTORIES)
+  set(_orig_DIRS ${_inc_DIRS})
+  foreach(_current ${_inc_DIRS})
+    if("${_current}" MATCHES "[Bb][Oo][Oo][Ss][Tt]")
+      list(REMOVE_ITEM _inc_DIRS "${_current}")
+    endif()
+  endforeach()
+  set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_inc_DIRS}")
+
+  set(options)
+  set(oneValueArgs TARGET)
+  set(multiValueArgs OPTIONS)
+  cmake_parse_arguments(_WRAP_CPP "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  qt5_wrap_cpp(_moc_src ${_WRAP_CPP_UNPARSED_ARGUMENTS})
+
+  set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_orig_DIRS}")
+  set(${outfiles} ${_moc_src} PARENT_SCOPE)
+endfunction()

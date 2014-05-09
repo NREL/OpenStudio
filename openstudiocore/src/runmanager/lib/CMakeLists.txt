@@ -214,8 +214,8 @@ set(runmanager_test_moc
 )
 
 ## Qt moc generation
-qt5_wrap_cpp(runmanager_moc_src ${runmanager_moc})
-qt5_wrap_cpp(runmanager_test_moc_src ${runmanager_test_moc})
+qt5_wrap_cpp_minimally(runmanager_moc_src ${runmanager_moc})
+qt5_wrap_cpp_minimally(runmanager_test_moc_src ${runmanager_test_moc})
 
 qt5_wrap_ui(runmanager_UIS ${runmanager_UI})
 
