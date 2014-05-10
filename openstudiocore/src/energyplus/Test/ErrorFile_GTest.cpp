@@ -48,7 +48,7 @@ TEST_F(EnergyPlusFixture,ErrorFile_Warnings)
 
   ErrorFile errorFile(path);
   ASSERT_EQ(static_cast<unsigned>(1), errorFile.warnings().size());
-  EXPECT_EQ("Weather file location will be used rather than entered Location object. ..Location object=USA CO-BOULDER ..Weather File Location=Denver Centennial  Golden   Nr CO USA TMY3 WMO#=724666 ..due to location differences, Latitude difference=[0.28] degrees, Longitude difference=[7.00E-002] degrees. ..Time Zone difference=[0.0] hour(s), Elevation difference=[11.93] percent, [195.00] meters.",
+  EXPECT_EQ("Weather file location will be used rather than entered Location object.\n ..Location object=USA CO-BOULDER\n ..Weather File Location=Denver Centennial  Golden   Nr CO USA TMY3 WMO#=724666\n ..due to location differences, Latitude difference=[0.28] degrees, Longitude difference=[7.00E-002] degrees.\n ..Time Zone difference=[0.0] hour(s), Elevation difference=[11.93] percent, [195.00] meters.",
             errorFile.warnings()[0]);
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.severeErrors().size());
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.fatalErrors().size());
@@ -80,7 +80,7 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndSevere)
 
   ErrorFile errorFile(path);
   ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size());
-  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions: Requested glazing exceeds available area for B6CCD5_window_1.  Reducing sill height to fit.", 
+  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.", 
             errorFile.warnings()[0]);
   EXPECT_EQ(static_cast<unsigned>(8), errorFile.severeErrors().size());
   EXPECT_EQ(static_cast<unsigned>(1), errorFile.fatalErrors().size());
@@ -94,12 +94,24 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndCrash)
 
   ErrorFile errorFile(path);
   ASSERT_EQ(static_cast<unsigned>(9), errorFile.warnings().size());
-  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning condition: Reordered Verts for ULC convention", 
+  EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning condition:\n Reordered Verts for ULC convention", 
             errorFile.warnings()[0]);
-  EXPECT_EQ("In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow. During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15 Unless there is balancing infiltration / ventilation air flow, this will result in load due to induced outdoor air being neglected in the simulation.", 
+  EXPECT_EQ("In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow.\n  During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15\n   Unless there is balancing infiltration / ventilation air flow, this will result in\n   load due to induced outdoor air being neglected in the simulation.", 
             errorFile.warnings()[8]);
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.severeErrors().size());
   EXPECT_EQ(static_cast<unsigned>(0), errorFile.fatalErrors().size());
   EXPECT_FALSE(errorFile.completed());
   EXPECT_FALSE(errorFile.completedSuccessfully());
+}
+
+TEST_F(EnergyPlusFixture,ErrorFile_RepeatingWarnings)
+{
+  openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/RepeatingWarnings.err");
+
+  ErrorFile errorFile(path);
+  EXPECT_EQ(8931u, errorFile.warnings().size());
+  EXPECT_EQ(static_cast<unsigned>(0), errorFile.severeErrors().size());
+  EXPECT_EQ(static_cast<unsigned>(0), errorFile.fatalErrors().size());
+  EXPECT_TRUE(errorFile.completed());
+  EXPECT_TRUE(errorFile.completedSuccessfully());
 }

@@ -161,6 +161,7 @@ include(ProjectMacros.cmake)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
+set(ALL_TESTING_TARGETS "") # global list
 if(BUILD_TESTING)
   enable_testing()
   include(CTest)
@@ -256,13 +257,12 @@ set(RUBY_MODULE_DIR "Ruby")
 set(RUBY_MODULE_ARCH_DIR "Ruby/openstudio")
 
 if(WIN32 AND MSVC AND CMAKE_CL_64)
-  message(WARNING "64bit Support on Windows is EXPERIMENTAL. The Sketchup plugin will not work. Expect problems with ruby support in general. There are lots of warnings, so we are disabling warnings as errors.")
+  message(WARNING "64bit Support on Windows is EXPERIMENTAL. The SketchUp plugin will not work. Expect problems with ruby support in general. There are lots of warnings, so we are disabling warnings as errors.")
 
   if(NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
     message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
   endif()
 endif()
-
 
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
@@ -272,6 +272,13 @@ if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib.
 elseif(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local" AND RUBY_SITEARCH_DIR MATCHES "^/usr/local/lib.*/.*")
   string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_ARCH_DIR ${RUBY_SITEARCH_DIR})
   string(REGEX REPLACE "^/usr/local/" "" RUBY_MODULE_DIR ${RUBY_SITELIB_DIR})
+endif()
+
+if(UNIX AND NOT APPLE)
+  set(RUBY_MODULE_SITE_DIR "${RUBY_MODULE_DIR}")
+
+  set(RUBY_MODULE_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
+  set(RUBY_MODULE_ARCH_DIR "lib/openstudio-${OPENSTUDIO_VERSION}/ruby/${RUBY_VERSION_MAJOR}.${RUBY_VERSION_MINOR}")
 endif()
 
 message(STATUS "Ruby module code installing to: ${RUBY_MODULE_DIR}")
@@ -304,7 +311,7 @@ endif()
 
 
 
-find_package(SWIG 1.3.40 REQUIRED)
+find_package(SWIG 2.0 REQUIRED)
 mark_as_advanced(
   SWIG_DIR
   SWIG_EXECUTABLE
@@ -522,8 +529,7 @@ link_directories(${GTEST_LIB_DIR})
 # Boost
 if(APPLE)
   set(Boost_USE_STATIC_LIBS ON)
-endif()
-if(WIN32)
+elseif(WIN32)
   set(Boost_USE_STATIC_LIBS ON)
 
   # uncomment all of this if we want to force dynamic libs on windows
@@ -689,14 +695,14 @@ elseif(APPLE)
   set(AWS_RUBY_EXTENSION ".tar.bz2")
 elseif(UNIX AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
   set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-x86_64)
-  set(AWS_RUBY_DESTINATION "lib/openstudio")
+  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
 
   set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-x86_64.tar.bz2)
   set(AWS_RUBY_CHECKSUM 74d3a8ab4e1e3fb44c308f2aaa8e5732)
   set(AWS_RUBY_EXTENSION ".tar.bz2")
 elseif(UNIX)
   set(AWS_RUBY_PATH ruby-2.0.0-aws-Linux-i686)
-  set(AWS_RUBY_DESTINATION "lib/openstudio")
+  set(AWS_RUBY_DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}")
 
   set(AWS_RUBY_URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0p353-aws-Linux-i686.tar.bz2)
   set(AWS_RUBY_CHECKSUM e51ce64b3e03ed3a66f1f7e0a22b5b7e)
@@ -721,6 +727,19 @@ add_dependencies(ResultsViewer ResultsViewer_resources)
 # ruby, after loading projects
 add_subdirectory(src/ruby_cpp)
 add_subdirectory(ruby)
+
+if(UNIX AND NOT APPLE)
+
+  file(RELATIVE_PATH relative "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}" "${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_DIR}")
+
+  install(CODE "
+    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}\")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio.rb\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio.rb\")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/openstudio\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/openstudio\")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink \"${relative}/cloud\" \"\$ENV{DESTDIR}/\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_SITE_DIR}/cloud\")
+  ")
+
+endif()
 
 # build epw2wea for supporting gendaymtx
 add_subdirectory(src/epw2wea)
@@ -799,40 +818,63 @@ else()
   set(QTWINMIGRATE_EXPORT "")
 endif()
 
-
-export(TARGETS openstudio_runmanager
-               openstudio_project
-               openstudio_osversion
-               openstudio_model
-               openstudio_modeleditor
-               openstudio_utilities
-               openstudio_energyplus
-               openstudio_analysisdriver
-               openstudio_ruleset
-               openstudio_analysis
-               openstudio_radiance
-               openstudio_gbxml
-               openstudio_isomodel
-               openstudio_lib
-               openstudio_sdd
-               openstudio_contam
-               ${QTWINMIGRATE_EXPORT}
-               zkexpat
-               zkqwt
-               miniziplib
-               sqlite
-               litesql
-               litesql-util
-               ${ALL_RUBY_BINDING_TARGETS}
-       FILE "${TARGETS_FILE}"
+set(all_lib_targets
+  openstudio_runmanager
+  openstudio_project
+  openstudio_osversion
+  openstudio_model
+  openstudio_modeleditor
+  openstudio_utilities
+  openstudio_energyplus
+  openstudio_analysisdriver
+  openstudio_ruleset
+  openstudio_analysis
+  openstudio_radiance
+  openstudio_gbxml
+  openstudio_isomodel
+  openstudio_lib
+  openstudio_sdd
+  openstudio_contam
+  ${QTWINMIGRATE_EXPORT}
+  zkexpat
+  zkqwt
+  miniziplib
+  sqlite
+  litesql
+  litesql-util
+  ${ALL_RUBY_BINDING_TARGETS}
 )
+
+export(TARGETS
+  ${all_lib_targets}
+  FILE "${TARGETS_FILE}"
+)
+
+set(all_exe_targets
+  epw2wea
+  GenerateIddFactory
+  ModelEditor
+  gbXMLToIdf
+  OpenStudio
+  RunManager
+  ruby_cpp
+  litesql-gen
+  ResultsViewer
+  Pat
+)
+
+if(UNIX AND NOT APPLE)
+  foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
+    set_target_properties(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+  endforeach()
+endif()
 
 configure_file("${CMAKE_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${CMAKE_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
 
 if(UNIX AND NOT APPLE)
-  set(examplesdir share/openstudio/examples)
+  set(examplesdir share/openstudio-${OPENSTUDIO_VERSION}/examples)
 else()
   set(examplesdir Examples)
 endif()
@@ -903,8 +945,8 @@ if(PACKAGE_RADIANCE_AND_ENERGYPLUS)
     install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
     install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "sharedresources" USE_SOURCE_PERMISSIONS)
   else()
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/EnergyPlus/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/Radiance/" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}" USE_SOURCE_PERMISSIONS)
   endif()
 
 endif()

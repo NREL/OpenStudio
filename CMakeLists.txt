@@ -4,7 +4,7 @@ project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
 set(CMAKE_VERSION_MINOR 3)
-set(CMAKE_VERSION_PATCH 3)
+set(CMAKE_VERSION_PATCH 4)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -46,7 +46,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 if(BUILD_DOCUMENTATION)
-  find_package(Doxygen REQUIRED )
+  find_package(Doxygen REQUIRED)
 endif()
 
 # Build CSharp bindings

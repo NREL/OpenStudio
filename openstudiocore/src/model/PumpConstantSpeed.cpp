@@ -678,14 +678,12 @@ namespace detail {
 
   bool PumpConstantSpeed_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
-    {
-      return false;
-    }
-    else
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
       return StraightComponent_Impl::addToNode(node);
     }
+
+    return false;
   }
 
 } // detail

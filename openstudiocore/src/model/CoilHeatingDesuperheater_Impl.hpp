@@ -113,6 +113,8 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const;
   };
 
 } // detail

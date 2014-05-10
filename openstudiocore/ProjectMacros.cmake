@@ -40,6 +40,10 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
   if(BUILD_TESTING)
     add_executable(${BASE_NAME}_tests ${SRC})
 
+    list(APPEND ALL_TESTING_TARGETS "${BASE_NAME}_tests")
+    set(ALL_TESTING_TARGETS "${ALL_TESTING_TARGETS}" PARENT_SCOPE)
+
+
     CREATE_SRC_GROUPS("${SRC}")
 
     get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
@@ -298,6 +302,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     else()
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj")
     endif()
+  elseif(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess")
   endif()
 
   if(CMAKE_COMPILER_IS_GNUCXX)
@@ -447,6 +453,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(MSVC)
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj")
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
+    elseif(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess")
     endif()
     target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY})
 
@@ -640,7 +648,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endforeach()
       ")
     else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio/java")
+      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/java")
     endif()
   endif()
 
@@ -772,7 +780,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endif()
       ")
     else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio/${V8_TYPE}")
+      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/${V8_TYPE}")
     endif()
   endif()
 

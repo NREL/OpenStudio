@@ -44,6 +44,9 @@ set(${target_name}_src
   AirLoopHVACUnitaryHeatPumpAirToAir.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir.cpp
+  AirLoopHVACUnitarySystem.hpp
+  AirLoopHVACUnitarySystem_Impl.hpp
+  AirLoopHVACUnitarySystem.cpp
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
@@ -1119,11 +1122,14 @@ set(${target_name}_test_src
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
+  test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctUncontrolled_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
+  test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   test/Alpha1_GTest.cpp
   test/AvailabilityManagerAssignmentList_GTest.cpp
   test/AvailabilityManagerNightCycle_GTest.cpp
@@ -1170,9 +1176,11 @@ set(${target_name}_test_src
   test/DistrictCooling_GTest.cpp
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp
+  test/FanConstantVolume_GTest.cpp
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FenestrationMaterial_GTest.cpp

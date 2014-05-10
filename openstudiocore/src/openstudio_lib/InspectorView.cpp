@@ -86,6 +86,8 @@
 #include "../model/RefrigerationWalkIn_Impl.hpp"
 #include "../model/RefrigerationWalkInZoneBoundary.hpp"
 #include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
+#include "../model/AirLoopHVACUnitarySystem.hpp"
+#include "../model/AirLoopHVACUnitarySystem_Impl.hpp"
 #include <utilities/core/Assert.hpp>
 #include <QStackedWidget>
 #include <QVBoxLayout>
@@ -199,6 +201,30 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
       connect( m_currentView, SIGNAL(addZoneClicked(model::ThermalZone &)), this,  SIGNAL(addZoneClicked(model::ThermalZone &)) );
 
       connect( m_currentView, SIGNAL(removeZoneClicked(model::ThermalZone &)), this,  SIGNAL(removeZoneClicked(model::ThermalZone &)) );
+    }
+    else if( boost::optional<model::AirLoopHVACUnitarySystem> component = 
+             modelObject->optionalCast<model::AirLoopHVACUnitarySystem>()  )
+    
+    {
+      if( m_currentView )
+      {
+        delete m_currentView;
+      }
+
+      m_currentView = new AirLoopHVACUnitarySystemInspectorView();
+      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
+      OS_ASSERT(isConnected);
+  
+      m_currentView->layoutModelObject(component.get(), readOnly, displayIP);
+
+      m_vLayout->addWidget(m_currentView);
+
+      connect( m_currentView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+      
+      connect( m_currentView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+               this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
     }
     else if( boost::optional<model::WaterToAirComponent> component = modelObject->optionalCast<model::WaterToAirComponent>()  )
     {
@@ -1990,6 +2016,129 @@ void ZoneHVACUnitHeaterInspectorView::layoutModelObject( model::ModelObject & mo
     boost::optional<model::ModelObject> moHeat;
 
     m_heatingLoopChooserView->layoutModelObject(moHeat);
+  }
+}
+
+AirLoopHVACUnitarySystemInspectorView::AirLoopHVACUnitarySystemInspectorView( QWidget * parent )
+  : BaseInspectorView(parent)
+{
+  m_inspectorGadget = new InspectorGadget();
+
+  bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+                             m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+
+  m_heatingLoopChooserView = new LoopChooserView();
+  m_coolingLoopChooserView = new LoopChooserView();
+  m_secondaryLoopChooserView = new LoopChooserView();
+
+  m_libraryTabWidget->addTab( m_inspectorGadget,
+                              ":images/properties_icon_on.png",
+                              ":images/properties_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_heatingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_coolingLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->addTab( m_secondaryLoopChooserView,
+                              ":images/link_icon_on.png",
+                              ":images/link_icon_off.png" );
+
+  m_libraryTabWidget->setCurrentIndex(0);
+
+  connect( m_heatingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  connect( m_heatingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+  connect( m_coolingLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  connect( m_coolingLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+
+  connect( m_secondaryLoopChooserView, SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+  connect( m_secondaryLoopChooserView, SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)), 
+           this,  SIGNAL(removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &)) );
+}
+
+void AirLoopHVACUnitarySystemInspectorView::layoutModelObject( model::ModelObject & modelObject, bool readOnly, bool displayIP )
+{
+  m_modelObject = modelObject;
+
+  bool force=false;
+  bool recursive=true;
+  bool locked=readOnly;
+  bool hideChildren=false;
+  if( displayIP )
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::IP);
+  }
+  else
+  {
+    m_inspectorGadget->setUnitSystem(InspectorGadget::SI);
+  }
+  m_inspectorGadget->layoutModelObj(modelObject, force, recursive, locked, hideChildren);
+
+  bool waterHeatingCoil = false;
+  bool waterCoolingCoil = false;
+  bool waterSecondaryCoil = false;
+
+  
+  if( boost::optional<model::AirLoopHVACUnitarySystem> unitary = 
+        modelObject.optionalCast<model::AirLoopHVACUnitarySystem>() )
+  {
+    if( boost::optional<model::HVACComponent> coil = unitary->heatingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> mo = waterToAirCoil.get();
+        m_heatingLoopChooserView->layoutModelObject(mo);
+        waterHeatingCoil = true;
+      }
+    }
+
+    if( boost::optional<model::HVACComponent> coil = unitary->coolingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> mo = waterToAirCoil.get();
+        m_coolingLoopChooserView->layoutModelObject(mo);
+        waterCoolingCoil = true;
+      }
+    }
+
+    if( boost::optional<model::HVACComponent> coil = unitary->supplementalHeatingCoil() )
+    {
+      if( boost::optional<model::WaterToAirComponent> waterToAirCoil = coil->optionalCast<model::WaterToAirComponent>() )
+      {
+        boost::optional<model::ModelObject> mo = waterToAirCoil.get();
+        m_secondaryLoopChooserView->layoutModelObject(mo);
+        waterSecondaryCoil = true;
+      }
+    }
+  }
+
+  if( ! waterHeatingCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+    m_heatingLoopChooserView->layoutModelObject(mo);
+  }
+
+  if( ! waterCoolingCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+    m_coolingLoopChooserView->layoutModelObject(mo);
+  }
+
+  if( ! waterSecondaryCoil )
+  {
+    boost::optional<model::ModelObject> mo;
+    m_secondaryLoopChooserView->layoutModelObject(mo);
   }
 }
 

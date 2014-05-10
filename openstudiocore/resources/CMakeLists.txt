@@ -294,6 +294,9 @@ set(osversion_resources_src
   osversion/1_3_2/OpenStudio.idd
   osversion/1_3_2/example.osm
   osversion/1_3_2/example.osc
+  osversion/1_3_3/OpenStudio.idd
+  osversion/1_3_3/example.osm
+  osversion/1_3_3/example.osc
   osversion/unknown.osc
 )
 
@@ -316,6 +319,13 @@ if(APPLE)
   )
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
           DESTINATION sharedresources
+  )
+elseif(UNIX)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
+          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
+  )
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/web_assets
+          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}
   )
 else()
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/resources/osversion
@@ -486,6 +496,7 @@ set(energyplus_resources_src
   energyplus/ErrorFiles/Warnings.err
   energyplus/ErrorFiles/WarningsAndCrash.err
   energyplus/ErrorFiles/WarningsAndSevere.err
+  energyplus/ErrorFiles/RepeatingWarnings.err
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
