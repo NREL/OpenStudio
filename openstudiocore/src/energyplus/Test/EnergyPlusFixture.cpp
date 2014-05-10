@@ -34,7 +34,7 @@ void EnergyPlusFixture::TearDown() {}
 void EnergyPlusFixture::SetUpTestCase() {
   // set up logging
   logFile = FileLogSink(toPath("./EnergyPlusFixture.log"));
-  logFile->setLogLevel(Debug);
+  logFile->setLogLevel(Trace);
   openstudio::Logger::instance().standardOutLogger().disable();
 
   // initialize component paths

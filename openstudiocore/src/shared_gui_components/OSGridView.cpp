@@ -88,9 +88,8 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
-  QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
-    button = new QPushButton(categories.at(i));
+    QPushButton * button = new QPushButton(categories.at(i));
 #ifdef Q_OS_MAC
     button->setFixedSize(WIDTH,HEIGHT);
 #else
@@ -255,10 +254,8 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 {
   OS_ASSERT(m_gridLayout);
 
-  QLabel * label = 0;
   int column = 0;
   Q_FOREACH(QString name, names){
-    label = new QLabel(name);
     m_gridLayout->addWidget(new QLabel(name),0,column++);
   }
 }

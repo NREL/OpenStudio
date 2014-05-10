@@ -414,13 +414,13 @@ namespace detail {
       currentType = parent()->cast<Analysis>().seed().fileType();
     }
     WorkflowStepVector workflow = this->workflow();
-    bool foundChild(false), inCompoundMeasure(false), prevInCompoundMeasure(false);
+    bool foundChild(false), inCompoundMeasure(false);
     for (unsigned i = 0, n = workflow.size(); i < n; ++i) {
       // if true, previous and this are in a compound measure together
       // -------- ?
       //  p   c | n
       // --------
-      prevInCompoundMeasure = inCompoundMeasure;
+      bool prevInCompoundMeasure = inCompoundMeasure;
       WorkflowStep step = workflow[i];
       OptionalWorkflowStep nextStep;
       if (i+1 < n) {

@@ -18,9 +18,7 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/CoilWaterHeatingDesuperheater.hpp>
 #include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
 #include <model/RefrigerationCondenserAirCooled.hpp>
@@ -32,11 +30,10 @@
 #include <model/CurveBiquadratic.hpp>
 #include <model/CurveBiquadratic_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
 #include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -105,15 +102,33 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     EXPECT_FALSE(heatRejection.demandOutletModelObject());
 }
 
-TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_AddToNode_AirLoop)
-{
-    Model model;
-    ScheduleCompact schedule = ScheduleCompact(model);
-    CoilWaterHeatingDesuperheater desuperheater(model, schedule);
-    AirLoopHVAC airLoop = AirLoopHVAC(model);
-    Node node = airLoop.supplyOutletNode();
 
-    EXPECT_FALSE(desuperheater.addToNode(node));
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_addToNode)
+{
+  Model m;
+  ScheduleCompact s(m);
+  CoilWaterHeatingDesuperheater testObject(m, s);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_AddBranchForHVACComponent_AirLoop)
@@ -124,17 +139,6 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_AddBranchForHVACComponent_Air
     AirLoopHVAC airLoop = AirLoopHVAC(model);
 
     EXPECT_FALSE(airLoop.addBranchForHVACComponent(desuperheater));
-}
-
-TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_AddToNode_PlantLoop)
-{
-    Model model;
-    ScheduleCompact schedule = ScheduleCompact(model);
-    CoilWaterHeatingDesuperheater desuperheater(model, schedule);
-    PlantLoop plantLoop = PlantLoop(model);
-    Node node = plantLoop.supplyOutletNode();
-
-    EXPECT_FALSE(desuperheater.addToNode(node));
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_AddDemandBranchForComponent_PlantLoop)

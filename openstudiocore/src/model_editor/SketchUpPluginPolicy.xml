@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by Daniel Macumber (NREL) -->
 <ROOT>
+	<POLICY IddObjectType="OS_Building">
+		<rule IddField="Building Sector Type" Access="HIDDEN"/>
+	</POLICY>
 	<POLICY IddObjectType="OS_ShadingControl">
 	    <rule IddField="Shading Type" Access="LOCKED"/>
 		<rule IddField="Construction with Shading Name" Access="LOCKED"/>

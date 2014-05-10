@@ -127,7 +127,7 @@ namespace detail {
       }
     }
     else if (options.algorithmType() == ParameterStudyAlgorithmType::centered_parameter_study) {
-      if (!options.stepVector().empty() && !options.stepVector().empty()) {
+      if (!options.stepVector().empty()) {
         ss << "          step_vector = ";
         std::vector<double> stepVector = options.stepVector();
         for (std::vector<double>::iterator i = stepVector.begin(); i != stepVector.end(); ++i) {

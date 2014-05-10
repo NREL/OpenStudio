@@ -276,18 +276,12 @@ namespace detail {
 
     QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
     Q_FOREACH(QString template_name, templates.uniqueKeys()){
-      std::string t = toString(template_name);
-
       QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
       Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
 
-        std::string c = toString(climate_set_name);
-        
         QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
         Q_FOREACH(QString building_type_name, building_types.uniqueKeys()){
           
-          std::string b = toString(building_type_name);
-
           result.push_back(toString(building_type_name));
 
         }
@@ -375,18 +369,12 @@ namespace detail {
 
       QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
       Q_FOREACH(QString template_name, templates.uniqueKeys()){
-        std::string t = toString(template_name);
-
         QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
         Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
 
-          std::string c = toString(climate_set_name);
-          
           QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
           QMap<QString, QVariant> specific_types = building_types[toQString(*standardsBuildingType)].toMap();
           Q_FOREACH(QString specific_type_name, specific_types.uniqueKeys()){
-            std::string s = toString(specific_type_name);
-
             result.push_back(toString(specific_type_name));
 
           }

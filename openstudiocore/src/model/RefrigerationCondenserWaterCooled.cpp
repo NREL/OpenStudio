@@ -24,6 +24,7 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
+#include <model/Node.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_WaterCooled_FieldEnums.hxx>
@@ -91,6 +92,19 @@ namespace detail {
       result.push_back(ScheduleTypeKey("RefrigerationCondenserWaterCooled","Water Outlet Temperature"));
     }
     return result;
+  }
+
+  bool RefrigerationCondenserWaterCooled_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
   boost::optional<double> RefrigerationCondenserWaterCooled_Impl::ratedEffectiveTotalHeatRejectionRate() const {

@@ -627,9 +627,8 @@ void RefrigerationCaseGridController::onComboBoxIndexChanged(int index)
 {
   // Note: find the correct system color on RACK change,
   // but currently unable to know which row changed.
-  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
   for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
-  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
       // Code below commented out due to a very infrequent crash in the bowels of Qt appears to be exasperated by this refresh.
@@ -1096,9 +1095,8 @@ void RefrigerationWalkInGridController::onComboBoxIndexChanged(int index)
 {
   // Note: find the correct system color on RACK change,
   // but currently unable to know which row changed.
-  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
   for(unsigned index = 0; index < m_horizontalHeader.size(); index++){
-  horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
+  HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
     if(horizontalHeaderWidget->m_label->text() == RACK){
       // NOTE required due to a race condition
       // Code below commented out due to a very infrequent crash in the bowels of Qt appears to be exasperated by this refresh.

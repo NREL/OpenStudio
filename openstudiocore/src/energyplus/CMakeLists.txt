@@ -1,12 +1,12 @@
-SET( target_name openstudio_energyplus )
+set(target_name openstudio_energyplus)
 
-SET( ${target_name}_src
+set(${target_name}_src
   EnergyPlusAPI.hpp
   mainpage.hpp
   ErrorFile.hpp
   ErrorFile.cpp
   GeometryTranslator.hpp
-  GeometryTranslator.cpp 
+  GeometryTranslator.cpp
   MapFields.hpp
   MapFields.cpp
 
@@ -19,6 +19,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateAirLoopHVACReturnPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACSupplyPlenum.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACUnitaryHeatPumpAirToAir.cpp
+  ForwardTranslator/ForwardTranslateAirLoopHVACUnitarySystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneMixer.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACZoneSplitter.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
@@ -191,15 +192,15 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
-  ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp    
+  ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTemperatureRadiantElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantConstFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACLowTempRadiantVarFlow.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACPackagedTerminalAirConditioner.cpp
-  ForwardTranslator/ForwardTranslateZoneHVACTerminalUnitVariableRefrigerantFlow.cpp 
-  ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp 
+  ForwardTranslator/ForwardTranslateZoneHVACTerminalUnitVariableRefrigerantFlow.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneHVACUnitHeater.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
@@ -244,7 +245,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateEvaporativeFluidCoolerSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateExteriorLights.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
-  ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp 
+  ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGroundHeatExchangerVertical.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
@@ -301,7 +302,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
-  ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp 
+  ReverseTranslator/ReverseTranslateZoneHVACEquipmentList.cpp
   ReverseTranslator/ReverseTranslateZoneHVACIdealLoadsAirSystem.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
@@ -309,7 +310,7 @@ SET( ${target_name}_src
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
 )
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   Test/EnergyPlusFixture.hpp
   Test/EnergyPlusFixture.cpp
 
@@ -318,7 +319,7 @@ SET( ${target_name}_test_src
   Test/GeometryTranslator_GTest.cpp
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
-  
+
   Test/AirWallMaterial_GTest.cpp
   Test/Building_GTest.cpp
   Test/Construction_GTest.cpp
@@ -352,45 +353,47 @@ SET( ${target_name}_test_src
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
 )
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   EnergyPlus.i
 )
 
 ## resource files
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   EnergyPlus.qrc
 )
 
 # generate rules for building source files from the resources
-qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_model
 )
 
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} ${${target_name}_qrcs} )
-TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
+add_library(${target_name} SHARED ${${target_name}_src} ${${target_name}_qrcs})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 AddPCH(${target_name})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name} 
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-CREATE_SRC_GROUPS( "${${target_name}_src}" )
-#CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-#CREATE_SRC_GROUPS( "${${target_name}_swig_src}" )
+CREATE_SRC_GROUPS("${${target_name}_src}")
+#CREATE_SRC_GROUPS("${${target_name}_test_src}")
+#CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-IF(BUILD_TESTING)
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+if(BUILD_TESTING)
 
-  ADD_DEPENDENCIES(${target_name}_tests 
+  add_dependencies(${target_name}_tests
     ResultsViewer_resources
-    openstudio_energyplus_resources)
-    
-ENDIF()
+    openstudio_energyplus_resources
+  )
 
-MAKE_SWIG_TARGET( OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel )
+endif()
+
+MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)

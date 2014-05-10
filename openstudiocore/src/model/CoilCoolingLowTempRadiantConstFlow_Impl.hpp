@@ -66,6 +66,8 @@ namespace detail {
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const;
 
+    virtual bool addToNode(Node & node);
+
 
     //@}
     /** @name Getters */

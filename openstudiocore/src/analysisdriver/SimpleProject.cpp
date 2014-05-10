@@ -2442,12 +2442,11 @@ boost::optional<SimpleProject> openPATProject(const openstudio::path& projectDir
   OptionalSimpleProject result = SimpleProject::open(projectDir,options);
   if (result) {
     bool save(false);
-    bool ok(true);
 
     // check for swap variable, try to add if not present
     if (!result->getAlternativeModelVariable()) {
       LOG_FREE(Info, "openPATProject", "PAT Project doesn't contain alternative model variable");
-      ok = result->insertAlternativeModelVariable();
+      bool ok = result->insertAlternativeModelVariable();
       if (!ok) {
         LOG_FREE(Error, "openPATProject", "Unable to insert alternative model variable");
         result.reset();

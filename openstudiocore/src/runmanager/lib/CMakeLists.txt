@@ -1,12 +1,12 @@
 # create a library out of the runmanager tools
 
-SET( target_name openstudio_runmanager )
+set(target_name openstudio_runmanager)
 
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 MAKE_LITE_SQL_TARGET(RunManager.xml runmanagerdatabase)
 
-SET( runmanager_src
+set(runmanager_src
   RunManagerAPI.hpp
   FileInfo.hpp
   FileInfo.cpp
@@ -113,7 +113,7 @@ SET( runmanager_src
   ModelToRadPreProcessJob.hpp
   ModelToRadPreProcessJob.cpp
   DakotaJob.hpp
-  DakotaJob.cpp  
+  DakotaJob.cpp
   WorkItem.hpp
   WorkItem.cpp
   ParallelEnergyPlus/ParallelEnergyPlus.hpp
@@ -142,22 +142,22 @@ SET( runmanager_src
   JSONWorkflowOptions.hpp
 )
 
-IF( BUILD_TESTING OR BUILD_PACKAGE )
-  CONFIGURE_FILE("Test/ToolBin.hxx.in" "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx")
-ENDIF( BUILD_TESTING OR BUILD_PACKAGE )
+if(BUILD_TESTING OR BUILD_PACKAGE)
+  configure_file("Test/ToolBin.hxx.in" "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx")
+endif()
 
-SET( runmanager_depends
+set(runmanager_depends
   openstudio_radiance
   openstudio_model
   openstudio_energyplus
   openstudio_ruleset
 )
 
-SET( runmanager_documentation_src
+set(runmanager_documentation_src
   mainpage.hpp
 )
 
-SET( runmanager_UI
+set(runmanager_UI
   Configuration.ui
   JobOutputCleanup.ui
   JobErrorsDisplay.ui
@@ -168,7 +168,7 @@ SET( runmanager_UI
 )
 
 # moc files
-SET( runmanager_moc
+set(runmanager_moc
   Job_Impl.hpp
   RunManager_Impl.hpp
   EnergyPlusJob.hpp
@@ -209,36 +209,36 @@ SET( runmanager_moc
   RunManagerWatcher.hpp
 )
 
-SET( runmanager_test_moc
+set(runmanager_test_moc
   Test/SignalListener.hpp
 )
 
 ## Qt moc generation
-qt5_wrap_cpp( runmanager_moc_src ${runmanager_moc} )
-qt5_wrap_cpp( runmanager_test_moc_src ${runmanager_test_moc} )
+qt5_wrap_cpp_minimally(runmanager_moc_src ${runmanager_moc})
+qt5_wrap_cpp_minimally(runmanager_test_moc_src ${runmanager_test_moc})
 
-qt5_wrap_ui( runmanager_UIS ${runmanager_UI} )
+qt5_wrap_ui(runmanager_UIS ${runmanager_UI})
 
 # resource files
-SET( runmanager_qrc
+set(runmanager_qrc
   RunManager.qrc
 )
 
 # generate rules for building source files from the resources
-qt5_add_resources(runmanager_qrcs ${runmanager_qrc} )
+qt5_add_resources(runmanager_qrcs ${runmanager_qrc})
 
 
-SOURCE_GROUP( runmanager FILES ${runmanager_src} ${runmanager_moc_src} )
-SOURCE_GROUP( runmanager_documentation FILES ${rmkt_documentation_src} )
+source_group(runmanager FILES ${runmanager_src} ${runmanager_moc_src})
+source_group(runmanager_documentation FILES ${rmkt_documentation_src})
 
-SET( runmanager_src
+set(runmanager_src
   ${runmanager_src}
   ${runmanager_moc_src}
   ${runmanager_UIS}
   ${runmanager_documentation}
 )
 
-SET( runmanager_test_src
+set(runmanager_test_src
   Test/RunManagerTestFixture.cpp
   Test/RunManagerTestFixture.hpp
   Test/Job_GTest.cpp
@@ -267,59 +267,60 @@ SET( runmanager_test_src
   "${CMAKE_BINARY_DIR}/src/runmanager/Test/ToolBin.hxx"
 )
 
-ADD_LIBRARY( openstudio_runmanager SHARED
+add_library(openstudio_runmanager SHARED
   ${runmanager_src}
-  ${runmanager_qrcs} 
+  ${runmanager_qrcs}
 )
 
 AddPCH(openstudio_runmanager)
 
 
 
-#ADD_DEPENDENCIES( openstudio_runmanager openstudio_energyplus openstudio_model )
+#add_dependencies(openstudio_runmanager openstudio_energyplus openstudio_model)
 
-#IF( OPENSSL_FOUND AND BUILD_WITH_OPENSSL )
-#  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel ${OPENSSL_LIBRARIES}) 
+#if(OPENSSL_FOUND AND BUILD_WITH_OPENSSL)
+#  target_link_libraries(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel ${OPENSSL_LIBRARIES})
 #
-#  IF(MSVC)
-#    TARGET_LINK_LIBRARIES(${target_name} delayimp ws2_32)
+#  if(MSVC)
+#    target_link_libraries(${target_name} delayimp ws2_32)
 #
-#    SET_TARGET_PROPERTIES(${target_name} PROPERTIES LINK_FLAGS "/DELAYLOAD:libeay32.dll")
-#  ENDIF()
+#    set_target_properties(${target_name} PROPERTIES LINK_FLAGS "/DELAYLOAD:libeay32.dll")
+#  endif()
 #
-#  ADD_DEFINITIONS(-DRUNMANAGER_HAVE_OPENSSL)
-#ELSE()
-  TARGET_LINK_LIBRARIES(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel)
-#ENDIF()
+#  add_definitions(-DRUNMANAGER_HAVE_OPENSSL)
+#else()
+  target_link_libraries(${target_name} openstudio_energyplus openstudio_model openstudio_radiance openstudio_ruleset openstudio_isomodel)
+#endif()
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-IF(BUILD_TESTING)
-  ADD_LIBRARY( openstudio_runmanager_lib_test STATIC
+if(BUILD_TESTING)
+  add_library(openstudio_runmanager_lib_test STATIC
     ${runmanager_test_moc_src}
   )
-  SET(runmanager_test_depends
+  set(runmanager_test_depends
     ${runmanager_depends}
     openstudio_runmanager_lib_test
-    )
-ELSE()
-  SET(runmanager_test_depends
+  )
+else()
+  set(runmanager_test_depends
     ${runmanager_depends}
-    )
-ENDIF()
+  )
+endif()
 
-CREATE_SRC_GROUPS( "${runmanager_test_src}" )
-CREATE_TEST_TARGETS( "openstudio_runmanager" "${runmanager_test_src}" "${runmanager_test_depends}" )
+CREATE_SRC_GROUPS("${runmanager_test_src}")
+CREATE_TEST_TARGETS("openstudio_runmanager" "${runmanager_test_src}" "${runmanager_test_depends}")
 
 
-SET( runmanager_swig_src
+set(runmanager_swig_src
   RunManager.i
 )
 
 
-CREATE_SRC_GROUPS( "${runmanager_swig_src}" )
-MAKE_SWIG_TARGET( OpenStudioRunManager runmanager "${CMAKE_CURRENT_SOURCE_DIR}/RunManager.i" "${runmanager_swig_src}" openstudio_runmanager "OpenStudioRadiance;OpenStudioEnergyPlus;OpenStudioRuleset")
+CREATE_SRC_GROUPS("${runmanager_swig_src}")
+MAKE_SWIG_TARGET(OpenStudioRunManager runmanager "${CMAKE_CURRENT_SOURCE_DIR}/RunManager.i" "${runmanager_swig_src}" openstudio_runmanager "OpenStudioRadiance;OpenStudioEnergyPlus;OpenStudioRuleset")

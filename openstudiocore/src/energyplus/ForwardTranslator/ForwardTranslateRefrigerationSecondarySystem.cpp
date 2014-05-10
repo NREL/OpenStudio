@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 
     for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
        it != airChillers.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
 

@@ -287,7 +287,7 @@ class DataPointJobContentView : public QWidget
 
   void addInfoMessage(const std::string& message);
 
-  void addWarningMessage(const std::string& message);
+  void addWarningMessage(const std::string& message, int count = 1);
 
   void addErrorMessage(const std::string& message);
 
@@ -325,6 +325,7 @@ public slots:
   void requestUpdate();
 
 private:
+  static std::vector<std::pair<std::string, int> > collateMessages(const std::vector<std::string> &t_messages);
 
   analysis::WorkflowStepJob m_workflowStepJob;
 

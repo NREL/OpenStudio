@@ -665,8 +665,6 @@ namespace openstudio{
 
   boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
-    std::vector<Point3d> resultPolygon;
-
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
     

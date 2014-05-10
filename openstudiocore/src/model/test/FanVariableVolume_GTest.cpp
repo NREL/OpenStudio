@@ -19,44 +19,82 @@
 
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
 #include <model/FanVariableVolume.hpp>
+#include <model/FanVariableVolume_Impl.hpp>
 #include <model/Schedule.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, FanVariableVolume_FanVariableVolume)
+TEST_F(ModelFixture,FanVariableVolume_FanVariableVolume)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     Model m;
-     Schedule s = m.alwaysOnDiscreteSchedule();
-     FanVariableVolume fan(m,s);
+    Model m;
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanVariableVolume testObject(m,s);
 
-     exit(0); 
+    exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture, FanVariableVolume_addToNode)
-{
+TEST_F(ModelFixture,FanVariableVolume_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanVariableVolume fan(m,s);
-  FanVariableVolume fan2(m,s);
-  FanVariableVolume fan3(m,s);
+  FanVariableVolume testObject(m,s);
 
   AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
 
-  EXPECT_TRUE(fan.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
-  EXPECT_TRUE(fan2.addToNode(supplyOutletNode));
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-  EXPECT_FALSE(fan3.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_FALSE(testObject.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.oaComponents().size() );
+  }
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  FanVariableVolume testObjectClone = testObject.clone(m).cast<FanVariableVolume>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
+
+  FanVariableVolume fan2(m,s);
+  EXPECT_FALSE(fan2.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<!-- based on https://svn.boost.org/trac/boost/wiki/DebuggerVisualizers -->
+<!--Copyright William Buklis 2007. Use, modification and distribution are subject to-->
+<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
+<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
+<!--@author   Bill Buklis-->
+<!--@email    bill at pbjzone dot com-->
+<Type Name="boost::ptr_array&lt;*,*&gt;">
+    <AlternativeType Name="boost::ptr_array&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={(size_t) $T2} }}</DisplayString>
+    <Expand>
+        <ArrayItems>
+            <Size>$T2</Size>
+            <ValuePointer>($T1**)c_.elems</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::void_ptr_iterator&lt;void**,*&gt;">
+    <DisplayString>{($T1*)(*iter_)}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">($T1*)(*iter_)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_vector&lt;*,*&gt;">
+    <AlternativeType Name="boost::ptr_vector&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mylast - c_._Myfirst} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">c_._Mylast - c_._Myfirst</Item>
+        <Item Name="[capacity]" ExcludeView="simple">c_._Myend - c_._Myfirst</Item>
+        <ArrayItems>
+            <Size>c_._Mylast - c_._Myfirst</Size>
+            <ValuePointer>($T1**)c_._Myfirst</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::void_ptr_iterator&lt;std::_Vector_iterator&lt;*&gt;,*&gt;">
+    <AlternativeType Name="boost::void_ptr_iterator&lt;std::_Vector_const_iterator&lt;*&gt;,*&gt;" />
+    <DisplayString>{($T2*)(*iter_._Ptr)}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">($T2*)(*iter_._Ptr)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_map&lt;*,*&gt;">
+    <AlternativeType Name="boost::ptr_multimap&lt;*,*&gt;" />
+    <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
+    <Expand>
+        <TreeItems>
+            <Size>c_._Mysize</Size>
+            <HeadPointer>c_._Myhead-&gt;_Parent</HeadPointer>
+            <LeftPointer>_Left</LeftPointer>
+            <RightPointer>_Right</RightPointer>
+            <ValueNode Condition="_Isnil == 0">*(std::pair&lt;$T1,$T2 *&gt;*)&amp;(_Myval)</ValueNode>
+        </TreeItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_map_iterator&lt;*,*,*&gt;">
+    <DisplayString>{m_iterator._Ptr-&gt;_Myval.first}, {($T3)m_iterator._Ptr-&gt;_Myval.second}</DisplayString>
+    <Expand>
+        <Item Name="first">m_iterator._Ptr-&gt;_Myval.first</Item>
+        <Item Name="second">($T3)m_iterator._Ptr-&gt;_Myval.second</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_set&lt;*&gt;">
+    <AlternativeType Name="boost::ptr_multiset&lt;*&gt;" />
+    <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
+    <Expand>
+        <TreeItems>
+            <Size>c_._Mysize</Size>
+            <HeadPointer>c_._Myhead-&gt;_Parent</HeadPointer>
+            <LeftPointer>_Left</LeftPointer>
+            <RightPointer>_Right</RightPointer>
+            <ValueNode Condition="_Isnil == 0">($T1*)_Myval</ValueNode>
+        </TreeItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::void_ptr_iterator&lt;std::_Tree_iterator&lt;*&gt;,*&gt;">
+    <AlternativeType Name="boost::void_ptr_iterator&lt;std::_Tree_const_iterator&lt;*&gt;,*&gt;" />
+    <DisplayString>{($T2*)(iter_._Ptr-&gt;_Myval)}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">($T2*)(iter_._Ptr-&gt;_Myval)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_list&lt;*&gt;">
+    <AlternativeType Name="boost::ptr_list&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>c_._Mysize</Size>
+            <HeadPointer>c_._Myhead-&gt;_Next</HeadPointer>
+            <NextPointer>_Next</NextPointer>
+            <ValueNode>($T1*)_Myval</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::void_ptr_iterator&lt;std::_List_iterator&lt;*&gt;,*&gt;">
+    <AlternativeType Name="boost::void_ptr_iterator&lt;std::_List_const_iterator&lt;*&gt;,*&gt;" />
+    <DisplayString>{($T2*)(iter_._Ptr-&gt;_Myval)}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">($T2*)(iter_._Ptr-&gt;_Myval)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_deque&lt;*&gt;">
+    <AlternativeType Name="boost::ptr_deque&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
+    <Expand>
+        <IndexListItems>
+            <Size>c_._Mysize</Size>
+            <ValueNode>($T1*)c_._Map[(($i + c_._Myoff) / c_._EEN_DS) % c_._Mapsize][($i + c_._Myoff) % c_._EEN_DS]</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::void_ptr_iterator&lt;std::_Deque_iterator&lt;*&gt;,*&gt;">
+    <AlternativeType Name="boost::void_ptr_iterator&lt;std::_Deque_const_iterator&lt;*&gt;,*&gt;" />
+    <DisplayString Condition="iter_._Myoff &lt; (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Myoff + (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mysize">{($T2*)(($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Map[(iter_._Myoff / iter_._EEN_DS) % (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mapsize][iter_._Myoff % iter_._EEN_DS]}</DisplayString>
+    <DisplayString Condition="iter_._Myoff &gt;= (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Myoff + (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mysize">end</DisplayString>
+    <Expand>
+        <Item Condition="iter_._Myoff &lt; (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Myoff + (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mysize" Name="[index]">iter_._Myoff - (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Myoff</Item>
+        <Item Condition="iter_._Myoff &lt; (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Myoff + (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mysize" Name="[ptr]">($T2*)(($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Map[(iter_._Myoff / iter_._EEN_DS) % (($T1 *)iter_._Myproxy-&gt;_Mycont)-&gt;_Mapsize][iter_._Myoff % iter_._EEN_DS]</Item>
+    </Expand>
+</Type>
+</AutoVisualizer>

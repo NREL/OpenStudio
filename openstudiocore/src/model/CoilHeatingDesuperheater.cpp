@@ -28,6 +28,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -89,7 +91,7 @@ namespace detail {
   }
 
   ModelObject CoilHeatingDesuperheater_Impl::clone(Model model) const {
-      CoilHeatingDesuperheater modelObjectClone = ModelObject_Impl::clone(model).cast<CoilHeatingDesuperheater>();
+      CoilHeatingDesuperheater modelObjectClone = StraightComponent_Impl::clone(model).cast<CoilHeatingDesuperheater>();
 
       modelObjectClone.resetHeatingSource();
 
@@ -97,18 +99,15 @@ namespace detail {
   }
 
   bool CoilHeatingDesuperheater_Impl::addToNode(Node & node) {
-    boost::optional<AirLoopHVAC> loop = node.airLoopHVAC();
-
-    if ( !loop ) return false;
-
-    if( loop->supplyComponent(node.handle()) )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      return StraightComponent_Impl::addToNode(node);
+      if( airLoop->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   boost::optional<Schedule> CoilHeatingDesuperheater_Impl::availabilitySchedule() const {
@@ -199,6 +198,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<HVACComponent> CoilHeatingDesuperheater_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      {
+        if( suppHeatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
 } // detail
 
 CoilHeatingDesuperheater::CoilHeatingDesuperheater(const Model& model)
@@ -206,8 +232,7 @@ CoilHeatingDesuperheater::CoilHeatingDesuperheater(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDesuperheater_Impl>());
 
-  bool ok = true;
-  ok = setHeatReclaimRecoveryEfficiency(0.8);
+  bool ok = setHeatReclaimRecoveryEfficiency(0.8);
   OS_ASSERT(ok);
   ok = setParasiticElectricLoad(0.0);
   OS_ASSERT(ok);

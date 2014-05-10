@@ -23,10 +23,12 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
 #include <model/PlantLoop.hpp>
 #include <model/PlantLoop_Impl.hpp>
 #include <model/Splitter.hpp>
 #include <model/Splitter_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 #include <model/CoilCoolingCooledBeam.hpp>
 #include <model/CoilCoolingCooledBeam_Impl.hpp>
@@ -140,6 +142,16 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
   EXPECT_EQ(*testLeavingPipeInsideDiameter, 0.0145);
   
   // test inlet and outlet ports
+
+  AirLoopHVAC airLoop(model);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_FALSE(coilCoolingCooledBeam.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  EXPECT_FALSE(coilCoolingCooledBeam.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
   
   // make a plant loop
   PlantLoop hotWaterPlant(model);
@@ -149,6 +161,17 @@ TEST_F(ModelFixture,CoilCoolingCooledBeam_Test) {
 
   // add the coil
   EXPECT_TRUE(coilCoolingCooledBeam.addToNode(node));
+  EXPECT_EQ( (unsigned)7, hotWaterPlant.demandComponents().size() );
+
+  supplyOutletNode = hotWaterPlant.supplyOutletNode();
+  EXPECT_FALSE(coilCoolingCooledBeam.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, hotWaterPlant.supplyComponents().size() );
+
+  CoilCoolingCooledBeam testObjectClone = coilCoolingCooledBeam.clone(model).cast<CoilCoolingCooledBeam>();
+  node = hotWaterPlant.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(node));
+  EXPECT_EQ( (unsigned)9, hotWaterPlant.demandComponents().size() );
    
   // disconnect the coil and check if it works
   coilCoolingCooledBeam.disconnect();

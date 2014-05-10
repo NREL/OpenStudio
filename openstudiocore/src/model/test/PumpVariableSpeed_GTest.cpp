@@ -18,38 +18,38 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include <model/test/ModelFixture.hpp>
 #include <model/PumpVariableSpeed.hpp>
 #include <model/PumpVariableSpeed_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(PumpVariableSpeed,PumpVariableSpeed_PumpVariableSpeed)
+TEST_F(ModelFixture,PumpVariableSpeed_PumpVariableSpeed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
-
-     model::PumpVariableSpeed pump(m); 
+     Model m; 
+     PumpVariableSpeed pump(m); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(PumpVariableSpeed,PumpVariableSpeed_connections)
+TEST_F(ModelFixture,PumpVariableSpeed_connections)
 {
-  model::Model m; 
-  
-  model::PumpVariableSpeed pump(m); 
+  Model m; 
+  PumpVariableSpeed pump(m); 
 
-  model::Node inletNode(m);
-
-  model::Node outletNode(m);
+  Node inletNode(m);
+  Node outletNode(m);
 
   m.connect(inletNode,inletNode.outletPort(),pump,pump.inletPort());
   m.connect(pump,pump.outletPort(),outletNode,outletNode.inletPort());
@@ -61,3 +61,44 @@ TEST(PumpVariableSpeed,PumpVariableSpeed_connections)
   EXPECT_EQ( outletNode.handle(), pump.outletModelObject()->handle() );
 }
 
+TEST_F(ModelFixture,PumpVariableSpeed_addToNode) {
+  Model m;
+  PumpVariableSpeed testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  PumpVariableSpeed testObject2(m);
+
+  EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  PlantLoop plantLoop2(m);
+  demandOutletNode = plantLoop2.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop2.demandComponents().size() );
+
+  PumpVariableSpeed testObjectClone = testObject.clone(m).cast<PumpVariableSpeed>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+}

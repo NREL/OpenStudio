@@ -49,8 +49,6 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLoopHVAC & airLoopHVAC )
 {
-  std::string s;
-
   IdfObject returnPathIdf(openstudio::IddObjectType::AirLoopHVAC_ReturnPath);
   m_idfObjects.push_back(returnPathIdf);
 
@@ -62,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLo
   std::vector<ModelObject> returnPlenums = airLoopHVAC.demandComponents(AirLoopHVACReturnPlenum::iddObjectType());
   for( std::vector<ModelObject>::iterator it = returnPlenums.begin();
        it != returnPlenums.end();
-       it++ )
+       ++it )
   {
     IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
     boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(*it);

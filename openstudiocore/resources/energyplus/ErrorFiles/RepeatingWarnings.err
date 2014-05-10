@@ -1,0 +1,253 @@
+Program Version,EnergyPlus-Windows-64 8.0.0.008, YMD=2014.04.22 16:59,IDD_Version 8.0.0.008
+   ** Warning ** IP: Note -- Some missing fields have been filled with defaults. See the audit output file for details.
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** GetSurfaces: Surfaces with interface to Ground found but no "Ground Temperatures" were input.
+   **   ~~~   ** Found first in surface=SURFACE 21
+   **   ~~~   ** Defaults, constant throughout the year of (18.0) will be used.
+   ** Warning ** CheckUsedConstructions: There are 274 nominally unused constructions in input.
+   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;
+   ************* Beginning System Sizing Calculations
+   ** Warning ** Output:Meter: invalid Name="DISTRICTCOOLING:FACILITY" - not found.
+   ** Warning ** Output:Meter: invalid Name="DISTRICTHEATING:FACILITY" - not found.
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 3" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.80
+   **   ~~~   **  ... Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 3" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -5.50 C.
+   **   ~~~   **  ...Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 14.237 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 12" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.80
+   **   ~~~   **  ... Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 12" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -6.15 C.
+   **   ~~~   **  ...Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 13.694 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 6" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -3.80
+   **   ~~~   **  ... Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 6" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -6.15 C.
+   **   ~~~   **  ...Occurrence info = AUSTIN MUELLER MUNICIPAL AP ANN HTG 99.6% CONDNS DB, 01/21 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 13.694 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at AUSTIN MUELLER MUNICIPAL AP ANN HUM_N 99.6% CONDNS DP=>MCDB, 01/21 21:20 - 21:25
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings;   to show more details on each max iteration exceeded.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 8" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -0.20 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 01:00 - 01:10
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 14.500 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 7" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -0.20 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 01:00 - 01:10
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 14.490 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 4" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -3.80 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 14.233 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 1" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.22 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 16.570 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 2" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -1.94 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 16.995 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 10" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -2.21 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 16.589 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 9" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -1.94 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/01 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 16.994 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 5" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = -0.65 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/02 12:00 - 12:10
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 17.666 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 11" - Full load outlet air dry-bulb temperature < 2C. This indicates the possibility of coil frost/freeze. Outlet temperature = 1.94 C.
+   **   ~~~   **  ...Occurrence info = RUN PERIOD 1, 01/03 21:10 - 21:12
+   **   ~~~   ** ... Possible reasons for low outlet air dry-bulb temperatures are: This DX coil
+   **   ~~~   **    1) may have a low inlet air dry-bulb temperature. Inlet air temperature = 19.067 C.
+   **   ~~~   **    2) may have a low air flow rate per watt of cooling capacity. Check inputs.
+   **   ~~~   **    3) is used as part of a HX assisted cooling coil which uses a high sensible effectiveness. Check inputs.
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 01/04 21:20 - 21:25
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 01/15 00:50 - 01:00
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 01/17 17:10 - 17:15
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed "COIL COOLING DX SINGLE SPEED 11" - Air-cooled condenser inlet dry-bulb temperature below 0 C. Outdoor dry-bulb temperature = -1.70
+   **   ~~~   **  ... Occurrence info = RUN PERIOD 1, 01/18 21:10 - 21:12
+   **   ~~~   ** ... Operation at low ambient temperatures may require special performance curves.
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 01/19 17:10 - 17:15
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 01/30 21:10 - 21:12
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 02/06 04:00 - 04:10
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 02/15 08:07 - 08:10
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 02/16 21:20 - 21:25
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 02/26 13:50 - 14:00
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 03/23 06:30 - 06:40
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 05/15 06:03 - 06:05
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 06/14 06:03 - 06:05
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ** Warning ** SimHVAC: Maximum iterations (20) exceeded for all HVAC loops, at RUN PERIOD 1, 06/18 06:05 - 06:10
+   **   ~~~   ** The solution for one or more of the Air Loop HVAC systems did not appear to converge
+   ************* Simulation Error Summary *************
+   ************* There are 2 unused schedules in input.
+   ************* There are 10 unused week schedules in input.
+   ************* There are 16 unused day schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 3" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 1 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-3.8 [C]  Min=-3.8 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 3" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 1004 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.995317  Min=-6.848818
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 12" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 3 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.966667 [C]  Min=-3.8 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 12" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 958 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.997448  Min=-8.176312
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 6" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 3 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.966667 [C]  Min=-3.8 [C]
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 6" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 960 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.999316  Min=-8.176313
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 8" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 1049 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.999345  Min=-7.659129
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 7" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 1037 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.998988  Min=-7.690756
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 4" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 412 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.998325  Min=-7.030051
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 1" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 668 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.997752  Min=-8.003444
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 2" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 856 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.999758  Min=-7.483051
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 10" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 678 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.999708  Min=-7.974934
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 9" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 858 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.999803  Min=-7.483387
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 5" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 348 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.994493  Min=-4.09939
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 11" - Full load outlet temperature indicates a possibility of frost/freeze error continues. Outlet air temperature statistics follow:
+   *************  **   ~~~   **   This error occurred 59 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=1.99197  Min=-2.362496
+   *************
+   *************  ** Warning ** CalcDoe2DXCoil: Coil:Cooling:DX:SingleSpeed="COIL COOLING DX SINGLE SPEED 11" - Low condenser dry-bulb temperature error continues...
+   *************  **   ~~~   **   This error occurred 3 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-0.6 [C]  Min=-1.7 [C]
+   *************
+   *************  ** Warning ** SimHVAC: Exceeding Maximum iterations for all HVAC loops, during RUN PERIOD 1 continues
+   *************  **   ~~~   **   This error occurred 15 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************
+   *************
+   ************* ===== Final Error Summary =====
+   ************* The following error categories occurred.  Consider correcting or noting.
+   ************* Nominally Unused Constructions
+   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause
+   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm
+   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 2 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 8931 Warning; 0 Severe Errors; Elapsed Time=00hr 02min 46.65sec

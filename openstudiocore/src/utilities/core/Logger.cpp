@@ -32,9 +32,9 @@
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/attributes/function.hpp>
 #include <boost/log/support/regex.hpp>
-#include <boost/log/utility/empty_deleter.hpp>
 
 #include <boost/foreach.hpp>
+#include <boost/utility/empty_deleter.hpp>
 
 #include <sstream>
 #include <stdio.h>
@@ -88,13 +88,13 @@ namespace openstudio{
     boost::log::core::get()->add_global_attribute("QThread", boost::log::attributes::make_function(&QThread::currentThread));
 
     // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::log::empty_deleter());
+    boost::shared_ptr<std::ostream> stdOut(&std::cout, boost::empty_deleter());
     m_standardOutLogger.setStream(stdOut);
     m_standardOutLogger.setLogLevel(Warn);
     this->addSink(m_standardOutLogger.sink());
 
     // We have to provide an empty deleter to avoid destroying the global stream
-    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::log::empty_deleter());
+    boost::shared_ptr<std::ostream> stdErr(&std::cerr, boost::empty_deleter());
     m_standardErrLogger.setStream(stdErr);
     m_standardErrLogger.setLogLevel(Warn);
     //this->addSink(m_standardErrLogger.sink());

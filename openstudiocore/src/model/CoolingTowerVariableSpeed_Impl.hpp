@@ -238,6 +238,8 @@ namespace detail {
 
     std::vector<ModelObject> children() const;
 
+    bool addToNode(Node & node);
+
    private:
 
     REGISTER_LOGGER("openstudio.model.CoolingTowerVariableSpeed");

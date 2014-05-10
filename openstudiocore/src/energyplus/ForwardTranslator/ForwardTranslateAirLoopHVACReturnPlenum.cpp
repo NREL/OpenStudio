@@ -82,7 +82,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
   std::vector<ModelObject> inletModelObjects = modelObject.inletModelObjects();
   for( std::vector<ModelObject>::iterator it = inletModelObjects.begin();
        it < inletModelObjects.end();
-       it++ )
+       ++it )
   {
     IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
     eg.setString(AirLoopHVAC_ReturnPlenumExtensibleFields::InletNodeName,it->name().get());

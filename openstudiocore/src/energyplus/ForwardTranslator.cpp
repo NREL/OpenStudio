@@ -483,6 +483,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
+    {
+      model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
+      retVal = translateAirLoopHVACUnitarySystem(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
       return retVal;
@@ -547,13 +553,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();
-      retVal = translateCoilCoolingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed :
     {
       model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
-      retVal = translateCoilCoolingDXTwoSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXTwoSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXTwoSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
@@ -593,7 +607,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed :
     {
       model::CoilHeatingDXSingleSpeed coil = modelObject.cast<CoilHeatingDXSingleSpeed>();
-      retVal = translateCoilHeatingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilHeatingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilHeatingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -2484,6 +2502,26 @@ boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path)
   ss << in.readAll().toStdString();
 
   return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const
+{
+  if( hvacComponent.containingHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingZoneHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingStraightComponent() )
+  {
+    return true;
+  }    
+  else
+  {
+    return false;
+  }
 }
 
 void ForwardTranslator::createFluidPropertiesMap()

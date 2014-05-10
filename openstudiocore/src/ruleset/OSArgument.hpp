@@ -415,10 +415,10 @@ class RULESET_API OSArgument {
 #endif
 
 #if _MSC_VER >= 1800
-  friend class std::pair<const std::string, OSArgument>;
+  friend struct std::pair<const std::string, OSArgument>;
 #elif _MSC_VER >= 1600
-  friend class std::pair<const std::string, OSArgument>;
-  friend class std::_Pair_base<std::string, OSArgument>;
+  friend struct std::pair<const std::string, OSArgument>;
+  friend struct std::_Pair_base<std::string, OSArgument>;
 #endif
 
   OSArgument();

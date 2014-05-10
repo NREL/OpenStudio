@@ -541,10 +541,9 @@ RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(const Model& 
 {
   OS_ASSERT(getImpl<detail::RefrigerationTranscriticalSystem_Impl>());
 
-  bool ok = true;
   ModelObjectList mediumTemperatureCaseAndWalkinList = ModelObjectList(model);
   mediumTemperatureCaseAndWalkinList.setName(this->name().get() + " Medium Temperature Case and Walkin List");
-  ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(mediumTemperatureCaseAndWalkinList);
+  bool ok = getImpl<detail::RefrigerationTranscriticalSystem_Impl>()->setMediumTemperatureRefrigeratedCaseAndWalkInList(mediumTemperatureCaseAndWalkinList);
   OS_ASSERT(ok);
   ModelObjectList lowTemperatureCaseAndWalkinList = ModelObjectList(model);
   lowTemperatureCaseAndWalkinList.setName(this->name().get() + " Low Temperature Case and Walkin List");

@@ -203,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
        it < supplyComponents.end();
-       it++ )
+       ++it )
   {
     boost::optional<ControllerWaterCoil> controller;
 
@@ -244,7 +244,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
     for( std::vector<ModelObject>::iterator it = controllers.begin();
          it < controllers.end();
-         it++ )
+         ++it )
     {
       boost::optional<IdfObject> _controller = translateAndMapModelObject(*it);
 
@@ -380,7 +380,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   ModelObjectVector::iterator branchCompIt;
   for( branchCompIt = branchComponents.begin();
        branchCompIt != branchComponents.end();
-       branchCompIt++ )
+       ++branchCompIt )
   {
     boost::optional<IdfObject> branchIdfObject = translateAndMapModelObject(*branchCompIt);
     if( branchIdfObject )
@@ -514,7 +514,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
   for( std::vector<ModelObject>::iterator it = demandComponents.begin();
        it < demandComponents.end();
-       it++ )
+       ++it )
   {
     translateAndMapModelObject(*it);
   }

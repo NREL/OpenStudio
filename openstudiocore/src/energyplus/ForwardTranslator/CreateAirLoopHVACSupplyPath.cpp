@@ -44,8 +44,6 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLoopHVAC & airLoopHVAC )
 {
-  std::string s;
-
   IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
   m_idfObjects.push_back(supplyPathIdf);
 
@@ -65,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLo
   std::vector<ModelObject> supplyPlenums = airLoopHVAC.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType());
   for( std::vector<ModelObject>::iterator it = supplyPlenums.begin();
        it != supplyPlenums.end();
-       it++ )
+       ++it )
   {
     eg = supplyPathIdf.pushExtensibleGroup();
     boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(*it);

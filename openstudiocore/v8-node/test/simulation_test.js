@@ -3,6 +3,7 @@ var openstudio = require('../OpenStudio.js').openstudio;
 
 model = openstudio.model.exampleModel();
 
+openstudio.model.getBuilding(model).setName("My Building Name");
 
 var epw_path = openstudio.getSharedResourcesPath().append(new openstudio.path("runmanager")).append(new openstudio.path("USA_CO_Golden-NREL.724666_TMY3.epw"));
 

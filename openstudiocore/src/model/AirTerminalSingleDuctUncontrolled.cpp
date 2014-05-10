@@ -35,9 +35,7 @@
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {

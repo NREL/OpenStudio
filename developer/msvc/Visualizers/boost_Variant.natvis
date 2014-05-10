@@ -1,0 +1,573 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<!-- boost::detail::variant::recursive_flag not completly supported because -->
+<!-- cannot detect when boost::variant use boost::recursive_wrapper -->
+
+<!-- based on https://svn.boost.org/trac/boost/wiki/DebuggerVisualizers -->
+<!--Copyright (c) 2009 Dmitry Vinogradov-->
+<!--Copyright (c) 2009 Steven Watanabe-->
+<!--Distributed under the Boost Software License, Version 1.0. (See-->
+<!--accomapnying file LICENSE_1_0.txt or copy at-->
+<!--http://www.boost.org/LICENSE_1_0.txt)-->
+
+<Type Name="boost::variant&lt;boost::detail::variant::over_sequence&lt;*&gt;,*&gt;">
+    <Expand>
+        <Item Name="which_">which_</Item>
+        <Item Name="storage_">storage_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;boost::detail::variant::over_sequence&lt;*&gt;&gt;&gt;">
+    <Expand>
+        <Item Name="which_">which_</Item>
+        <Item Name="storage_">storage_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 15) || (which_ == -16)">{*($T16 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 15) || (which_ == -16)">*($T16 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 15) || (which_ == -16)">{*($T16 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 16) || (which_ == -17)">{*($T17 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 15) || (which_ == -16)">*($T16 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 16) || (which_ == -17)">*($T17 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 15) || (which_ == -16)">{*($T16 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 16) || (which_ == -17)">{*($T17 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 17) || (which_ == -18)">{*($T18 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 15) || (which_ == -16)">*($T16 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 16) || (which_ == -17)">*($T17 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 17) || (which_ == -18)">*($T18 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 15) || (which_ == -16)">{*($T16 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 16) || (which_ == -17)">{*($T17 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 17) || (which_ == -18)">{*($T18 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 18) || (which_ == -19)">{*($T19 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 15) || (which_ == -16)">*($T16 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 16) || (which_ == -17)">*($T17 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 17) || (which_ == -18)">*($T18 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 18) || (which_ == -19)">*($T19 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::variant&lt;*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;">
+    <AlternativeType Name="boost::variant&lt;boost::detail::variant::recursive_flag&lt;*&gt;,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString Condition="(which_ ==  0) || (which_ ==  -1)">{*($T1  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  1) || (which_ ==  -2)">{*($T2  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  2) || (which_ ==  -3)">{*($T3  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  3) || (which_ ==  -4)">{*($T4  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  4) || (which_ ==  -5)">{*($T5  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  5) || (which_ ==  -6)">{*($T6  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  6) || (which_ ==  -7)">{*($T7  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  7) || (which_ ==  -8)">{*($T8  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  8) || (which_ ==  -9)">{*($T9  *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ ==  9) || (which_ == -10)">{*($T10 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 10) || (which_ == -11)">{*($T11 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 11) || (which_ == -12)">{*($T12 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 12) || (which_ == -13)">{*($T13 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 13) || (which_ == -14)">{*($T14 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 14) || (which_ == -15)">{*($T15 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 15) || (which_ == -16)">{*($T16 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 16) || (which_ == -17)">{*($T17 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 17) || (which_ == -18)">{*($T18 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 18) || (which_ == -19)">{*($T19 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <DisplayString Condition="(which_ == 19) || (which_ == -20)">{*($T20 *)&amp;(storage_.data_.buf)}</DisplayString>
+    <Expand>
+        <Item Name="storage" Condition="(which_ ==  0) || (which_ ==  -1)">*($T1  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  1) || (which_ ==  -2)">*($T2  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  2) || (which_ ==  -3)">*($T3  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  3) || (which_ ==  -4)">*($T4  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  4) || (which_ ==  -5)">*($T5  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  5) || (which_ ==  -6)">*($T6  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  6) || (which_ ==  -7)">*($T7  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  7) || (which_ ==  -8)">*($T8  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  8) || (which_ ==  -9)">*($T9  *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ ==  9) || (which_ == -10)">*($T10 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 10) || (which_ == -11)">*($T11 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 11) || (which_ == -12)">*($T12 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 12) || (which_ == -13)">*($T13 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 13) || (which_ == -14)">*($T14 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 14) || (which_ == -15)">*($T15 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 15) || (which_ == -16)">*($T16 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 16) || (which_ == -17)">*($T17 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 17) || (which_ == -18)">*($T18 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 18) || (which_ == -19)">*($T19 *)&amp;(storage_.data_.buf)</Item>
+        <Item Name="storage" Condition="(which_ == 19) || (which_ == -20)">*($T20 *)&amp;(storage_.data_.buf)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::recursive_wrapper&lt;*&gt;">
+    <DisplayString>{*p_}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">p_</Item>
+    </Expand>
+</Type>
+</AutoVisualizer>
