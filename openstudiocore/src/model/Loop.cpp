@@ -70,7 +70,7 @@ namespace detail {
 
     for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
          it != outletModelObjects.end();
-         it++ )
+         ++it )
     {
       thisBranchModelObjects.clear();
       nextModelObject = OptionalModelObject(*it);
@@ -259,7 +259,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -277,7 +277,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -295,7 +295,7 @@ namespace detail {
     ModelObjectVector::iterator it;
     for( it = allComponents.begin();
          it != allComponents.end();
-         it++ )
+         ++it )
     {
       if( it->handle() == handle )
       {
@@ -389,7 +389,7 @@ namespace detail {
 
       for(std::vector<ModelObject>::iterator it = outletModelObjects.begin();
           it != outletModelObjects.end();
-          it++)
+          ++it)
       {
         result.push_back(*it);
       }
@@ -442,7 +442,7 @@ namespace detail {
 
     for(std::vector<ModelObject>::iterator it = nodes.begin();
         it != nodes.end();
-        it++)
+        ++it)
     {
       // if it node has already been visited then continue
       if( std::find(visited.begin(),visited.end(),*it) != visited.end() )
@@ -461,7 +461,7 @@ namespace detail {
         {
           for( std::vector<ModelObject>::iterator visitedit = visited.begin();
                visitedit != visited.end();
-               visitedit++ )
+               ++visitedit )
           {
             if( std::find(paths.begin(),paths.end(),*visitedit) == paths.end() )
             {
@@ -475,7 +475,7 @@ namespace detail {
 
     for(std::vector<ModelObject>::iterator it = nodes.begin();
         it != nodes.end();
-        it++)
+        ++it)
     {
       // if it node has already been visited or node is sink then continue
       if( std::find(visited.begin(),visited.end(),*it) != visited.end() ||
@@ -511,7 +511,7 @@ namespace detail {
 
     for(std::vector<ModelObject>::iterator it = allPaths.begin();
         it != allPaths.end();
-        it++)
+        ++it)
     {
       if(((type == IddObjectType::Catchall) || 
          (it->iddObject().type() == type)) &&
@@ -685,7 +685,7 @@ namespace detail {
 
         for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
              it != outletModelObjects.end();
-             it++ )
+             ++it )
         {
           thisBranchModelObjects.clear();
           OptionalModelObject branchObject = OptionalModelObject(*it);
@@ -812,7 +812,7 @@ namespace detail {
 
       for(it = modelObjects.begin();
           it != modelObjects.end();
-          it++)
+          ++it)
       {
         if(it->iddObject().type() == type)
         {

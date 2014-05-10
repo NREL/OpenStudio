@@ -372,8 +372,6 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(const Model& mo
 {
   OS_ASSERT(getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>());
 
-  bool ok = true;
-
   CurveLinear heatRejectionCurve = CurveLinear(model);
   heatRejectionCurve.setName("Refrigeration Gas Cooler Air Cooled HR Curve");
   heatRejectionCurve.setCoefficient1Constant(0.0);
@@ -381,7 +379,7 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(const Model& mo
   heatRejectionCurve.setMinimumValueofx(3.0);
   heatRejectionCurve.setMaximumValueofx(22.2);
 
-  ok = setRatedTotalHeatRejectionRateCurve(heatRejectionCurve);
+  bool ok = setRatedTotalHeatRejectionRateCurve(heatRejectionCurve);
   OS_ASSERT(ok);
   ok = setGasCoolerFanSpeedControlType("VariableSpeed");
   OS_ASSERT(ok);

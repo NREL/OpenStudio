@@ -514,14 +514,14 @@ namespace detail {
 
     for( std::vector<ModelObject>::iterator it = modelObjects.begin();
          it < modelObjects.end();
-         it++ )
+         ++it )
     {
       it->cast<HVACComponent>().disconnect();
     }
 
     for( std::vector<ModelObject>::reverse_iterator it = modelObjects.rbegin();
          it < modelObjects.rend();
-         it++ )
+         ++it )
     {
       if( ! it->optionalCast<ThermalZone>() )
       {

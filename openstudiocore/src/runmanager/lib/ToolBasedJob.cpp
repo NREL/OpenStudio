@@ -81,10 +81,6 @@ namespace detail {
       boost::optional<LogMessage> initialCondition;
       boost::optional<LogMessage> finalCondition;
 
-      std::vector<LogMessage> errors;
-      std::vector<LogMessage> warnings;
-      std::vector<LogMessage> info;
-
 
       openstudio::ruleset::OSResultValue value = openstudio::ruleset::OSResultValue::NA;
 

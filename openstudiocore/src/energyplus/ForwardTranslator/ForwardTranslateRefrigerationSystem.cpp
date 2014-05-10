@@ -107,7 +107,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
        it != airChillers.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
 
@@ -318,7 +318,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     for( std::vector<RefrigerationCompressor>::iterator it = highStageCompressors.begin();
        it != highStageCompressors.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _highStageCompressor = translateAndMapModelObject(*it);
 

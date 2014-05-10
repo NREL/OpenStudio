@@ -408,7 +408,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   std::vector<ModelObject> uncontrolledComponents;
   std::vector<SetpointComponentInfo> setpointComponents;
 
-  // These will be used later, but only if resonable sizing values have not already been provided.
+  // These will be used later, but only if reasonable sizing values have not already been provided.
   bool sizeAsCondenserSystem = false;
   bool sizeAsHotWaterSystem = false;
   bool sizeAsChilledWaterSystem = false;

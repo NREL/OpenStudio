@@ -511,9 +511,8 @@ CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(const Model& model,
 {
   OS_ASSERT(getImpl<detail::CoilWaterHeatingDesuperheater_Impl>());
 
-  bool ok = true;
   Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
   OS_ASSERT(ok);
   ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
   OS_ASSERT(ok);

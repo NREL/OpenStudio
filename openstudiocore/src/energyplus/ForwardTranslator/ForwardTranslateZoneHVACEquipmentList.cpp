@@ -56,7 +56,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
   for( std::vector<ModelObject>::iterator it = objects.begin();
        it != objects.end();
-       it++ )
+       ++it )
   {
     if (boost::optional<RefrigerationAirChiller> airChiller = it->optionalCast<RefrigerationAirChiller>())
     {
@@ -74,7 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   int airChillerOffset = -1;
   for( std::vector<ModelObject>::iterator it = coolingVector.begin();
        it != coolingVector.end();
-       it++ )
+       ++it )
   {
     if (airChillers.size() > 0 && (airChiller = it->optionalCast<RefrigerationAirChiller>()) )
     {
@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   airChillerOffset = -1;
   for( std::vector<ModelObject>::iterator it = heatingVector.begin();
        it != heatingVector.end();
-       it++ )
+       ++it )
   {
     if (airChillers.size() > 0 && (airChiller= it->optionalCast<RefrigerationAirChiller>()) )
     {
@@ -185,7 +185,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     // AirChiller (extensible)
       for( std::vector<ModelObject>::iterator it = airChillers.begin();
          it != airChillers.end();
-         it++ )
+         ++it )
       {
         boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
 

@@ -137,7 +137,7 @@ namespace detail {
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
-         it++ )
+         ++it )
     {
       std::vector<ModelObject> equipment = it->equipment();
 
@@ -671,8 +671,7 @@ RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& d
 {
   OS_ASSERT(getImpl<detail::RefrigerationAirChiller_Impl>());
 
-  bool ok = true;
-  ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
+  bool ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
   OS_ASSERT(ok);
   setRatedUnitLoadFactor(15000.0);
   ok = setRatedCoolingSourceTemperature(-30.0);

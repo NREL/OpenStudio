@@ -50,7 +50,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
   IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::Fan_ZoneExhaust,modelObject);
   
   // Model Name (A2)
-  std::string baseName = modelObject.name().get();
+  //std::string baseName = modelObject.name().get();
 
   // A3, Field Availability Schedule Name
   boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();

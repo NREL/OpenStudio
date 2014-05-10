@@ -206,8 +206,7 @@ CoilHeatingDesuperheater::CoilHeatingDesuperheater(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilHeatingDesuperheater_Impl>());
 
-  bool ok = true;
-  ok = setHeatReclaimRecoveryEfficiency(0.8);
+  bool ok = setHeatReclaimRecoveryEfficiency(0.8);
   OS_ASSERT(ok);
   ok = setParasiticElectricLoad(0.0);
   OS_ASSERT(ok);

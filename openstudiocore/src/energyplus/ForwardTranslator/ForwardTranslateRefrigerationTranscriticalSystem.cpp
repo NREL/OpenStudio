@@ -70,7 +70,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
   	for( std::vector<RefrigerationCase>::iterator it = mediumTemperatureCases.begin();
   	   it != mediumTemperatureCases.end();
-  	   it++ )
+  	   ++it )
   	{
   		boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
 
@@ -84,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
   	for( std::vector<RefrigerationWalkIn>::iterator it = mediumTemperatureWalkins.begin();
   	   it != mediumTemperatureWalkins.end();
-  	   it++ )
+  	   ++it )
   	{
   		boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
 
@@ -115,7 +115,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     for( std::vector<RefrigerationCase>::iterator it = lowTemperatureCases.begin();
        it != lowTemperatureCases.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
 
@@ -129,7 +129,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     for( std::vector<RefrigerationWalkIn>::iterator it = lowTemperatureWalkins.begin();
        it != lowTemperatureWalkins.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
 
@@ -179,7 +179,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     for( std::vector<RefrigerationCompressor>::iterator it = highPressureCompressors.begin();
        it != highPressureCompressors.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 
@@ -209,7 +209,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     for( std::vector<RefrigerationCompressor>::iterator it = lowPressureCompressors.begin();
        it != lowPressureCompressors.end();
-       it++ )
+       ++it )
     {
       boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
 

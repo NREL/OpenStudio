@@ -1708,7 +1708,7 @@ namespace detail {
 
           for( std::vector<ModelObject>::iterator it = supplyNodes.begin();
                it != supplyNodes.end();
-               it++ )
+               ++it )
           {
             if( boost::optional<SetpointManagerSingleZoneReheat> spm = it->cast<Node>().getSetpointManagerSingleZoneReheat() )
             {
@@ -1831,7 +1831,7 @@ namespace detail {
 
     for(std::vector<AirLoopHVACSupplyPlenum>::iterator it = plenums.begin();
         it != plenums.end();
-        it++)
+        ++it)
     {
       if( boost::optional<ThermalZone> tz = it->thermalZone() )
       {
@@ -1854,14 +1854,13 @@ namespace detail {
 
     for(std::vector<AirLoopHVACReturnPlenum>::iterator it = plenums.begin();
         it != plenums.end();
-        it++)
+        ++it)
     {
       if( boost::optional<ThermalZone> tz = it->thermalZone() )
       {
         if( tz->handle() == handle() )
         {
           return *it;
-          break;
         }
       }
     }

@@ -79,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACSupplyPlenum( 
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
   for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
        it < outletModelObjects.end();
-       it++ )
+       ++it )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
         it->optionalCast<AirTerminalSingleDuctUncontrolled>() )

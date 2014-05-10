@@ -485,21 +485,6 @@ void InspectorView::layoutModelObject(openstudio::model::OptionalModelObject & m
 
       m_vLayout->addWidget(m_currentView);
     }
-    else if( modelObject->optionalCast<model::ConnectorSplitter>() || 
-             modelObject->optionalCast<model::ConnectorMixer>()  )
-    {
-      if( m_currentView )
-      {
-        delete m_currentView;
-      }
-
-      m_currentView = new GenericInspectorView();
-      isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                            m_currentView, SIGNAL(toggleUnitsClicked(bool)));
-      OS_ASSERT(isConnected);
-
-      m_vLayout->addWidget(m_currentView);
-    }
     else
     {
       if( m_currentView )
