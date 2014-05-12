@@ -120,12 +120,12 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   boost::optional<double> evaporativeCondenserEffectiveness()const;
 
   /** Returns the value of the EvaporativeCondenserAirFlowRate field.
-      optional == flase means "autosize"
+      optional == false means "autosize"
   **/
   boost::optional<double> evaporativeCondenserAirFlowRate()const;
 
   /** Returns the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
-      optional == flase means "autosize"
+      optional == false means "autosize"
   **/
   boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption()const;
 

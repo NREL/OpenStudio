@@ -224,12 +224,12 @@ class UTILITIES_API IdfObject {
   bool setQuantity (unsigned index, const Quantity q);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-   *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
    *  of bounds per IddField.properties()). */
   bool setUnsigned(unsigned index, unsigned value);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-   *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+   *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
    *  of bounds per IddField.properties()). */
   bool setInt(unsigned index, int value);
 
@@ -327,7 +327,7 @@ class UTILITIES_API IdfObject {
    *  Prerequisite: iddObject()s must be equal. */
   bool objectListFieldsNonConflicting(const IdfObject& other) const;
 
-  /** Equality comparitor for IdfObjects. Objects must be exactly equal, that is, they must 
+  /** Equality comparator for IdfObjects. Objects must be exactly equal, that is, they must 
    *  share data for the operator to return true. */
   bool operator==(const IdfObject& other) const;
 
@@ -351,8 +351,8 @@ class UTILITIES_API IdfObject {
   /** Serialize this object to os as Idf text. */
   std::ostream& print(std::ostream& os) const;
 
-  /** Serialize just the preceding comments and name of this IdfObject in the formmat used by 
-   *  full object print. If hasFields, the name is follwed by a ','. Otherwise, the name is 
+  /** Serialize just the preceding comments and name of this IdfObject in the format used by 
+   *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is 
    *  followed by a ';'. */
   std::ostream& printName(std::ostream& os, bool hasFields=true) const;
 
@@ -365,9 +365,9 @@ class UTILITIES_API IdfObject {
   //@{
 
   // ETH@20101015 Why is this public?!
-  //LER@20101028 so that impls can call (someModel.getImpl<yomama_Impl>())
-  //impls do NOT inheret from the object tree, so its either freind every single
-  //freaking model class or make it public.
+  //LER@20101028 so that impls can call (someModel.getImpl<some_Impl>())
+  //impls do NOT inherit from the object tree, so it's either friend every single
+  //model class or make it public.
   // get the impl
   template<typename T>
     boost::shared_ptr<T> getImpl() const
@@ -407,7 +407,7 @@ class UTILITIES_API IdfObject {
   friend class WorkspaceObject;              // for WorkspaceObject::idfObject()
   friend class Workspace;                    // for toIdfFile completion (constructs IdfObject from impl)
 
-  /** Protected contructor from impl. */
+  /** Protected constructor from impl. */
   IdfObject(boost::shared_ptr<detail::IdfObject_Impl> impl);
 
  private:

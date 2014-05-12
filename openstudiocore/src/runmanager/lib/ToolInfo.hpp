@@ -65,7 +65,7 @@ namespace runmanager {
       /// \returns true if the object matches the requirements
       bool matches(const ToolVersion &requirements) const;
 
-      /// Return a string reprentation of the version object
+      /// Return a string representation of the version object
       std::string toString() const;
 
       static ToolVersion fromString(const std::string &);
@@ -145,7 +145,7 @@ namespace runmanager {
     {
     }
 
-    /// Simplist ToolInfo constructor, useful only for locally executing jobs
+    /// Simplest ToolInfo constructor, useful only for locally executing jobs
     /// \param[in] t_localBinPath Binary location for running locally
     ToolInfo(const openstudio::path &t_localBinPath)
       : localBinPath(t_localBinPath)

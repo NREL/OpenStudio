@@ -85,7 +85,7 @@ typedef OSArgumentType UserScriptArgumentType;
 /** OSArgument is an argument to a UserScript or a Ruleset. **/
 class RULESET_API OSArgument {
  public:
-  /** @name Construtors and Destructors */
+  /** @name Constructors and Destructors */
   //@{
 
   // ETH@20121211 - Consider adding a constructor or otherwise tweaking the code to fix
