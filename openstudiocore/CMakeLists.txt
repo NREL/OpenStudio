@@ -176,7 +176,6 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
   endif()
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing -std=c11")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   # effective c++
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
   # treat warnings as errors
