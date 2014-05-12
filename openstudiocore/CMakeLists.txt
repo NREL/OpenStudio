@@ -179,6 +179,7 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
   endif()
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing -std=c11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   # effective c++
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
   # treat warnings as errors
@@ -553,6 +554,8 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
+
+add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
 
 # use chrono as a header only library
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY)

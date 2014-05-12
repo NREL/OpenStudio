@@ -20,10 +20,9 @@
 #include <utilities/data/Vector.hpp>
 
 #include <algorithm>
+#include <random>
 
 // this should all be moved to a utilities/core/Random.h
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
@@ -177,13 +176,13 @@ namespace openstudio{
   Vector randVector(double a, double b, unsigned N)
   {
     // seed random number generator
-    static minstd_rand generator(42u);
+    static std::minstd_rand generator(42u);
     
     // define distribution
     uniform_real<> dist(a,b);
 
     // create a generator
-    variate_generator<minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
+    variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
     Vector result(N);
     for (unsigned n = 0; n < N; ++n){
