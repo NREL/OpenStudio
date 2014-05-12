@@ -486,7 +486,9 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
     puts "GOOGS: allValues[index].size = #{allValues[index].size.to_s}"
     puts "GOOGS: t_mapping is #{t_mapping}"
     allValues[index].size().times do |row|
+      values[row] = [] if values[row].nil?
       8760.times do |hour|
+        values[row][hour] = 0 if values[row][hour].nil?
         if t_mapping.call(index, hour)
           # does this index and hour match the mapping function? that is, should this index
           # of data be used with this hour?
@@ -646,7 +648,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
     simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
 
     # set window mapping to always be 'true, use this one'
-    windowMapping = lambda { |index, hour| true }
+    windowMapping = lambda { |index, hour| return 0 }
   end
 
   rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
