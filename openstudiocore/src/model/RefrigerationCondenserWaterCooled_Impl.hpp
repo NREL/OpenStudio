@@ -64,6 +64,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual bool addToNode(Node & node);
+
     //@}
     /** @name Getters */
     //@{

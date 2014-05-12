@@ -321,8 +321,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<CurveCubic> AirConditionerVariableRefrigerantFlow_Impl::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<CurveCubic>(OS_AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforLengthinHeatingModeCurve);
+  boost::optional<CurveBiquadratic> AirConditionerVariableRefrigerantFlow_Impl::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<CurveBiquadratic>(OS_AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforLengthinHeatingModeCurve);
   }
 
   double AirConditionerVariableRefrigerantFlow_Impl::pipingCorrectionFactorforHeightinHeatingModeCoefficient() const {
@@ -1034,7 +1034,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool AirConditionerVariableRefrigerantFlow_Impl::setPipingCorrectionFactorforLengthinHeatingModeCurve(const boost::optional<CurveCubic>& curve) {
+  bool AirConditionerVariableRefrigerantFlow_Impl::setPipingCorrectionFactorforLengthinHeatingModeCurve(const boost::optional<CurveBiquadratic>& curve) {
     bool result(false);
     if (curve) {
       result = setPointer(OS_AirConditioner_VariableRefrigerantFlowFields::PipingCorrectionFactorforLengthinHeatingModeCurve, curve.get().handle());
@@ -1496,6 +1496,36 @@ namespace detail {
       result.push_back(curve.get());
     }
 
+    curve = pipingCorrectionFactorforLengthinHeatingModeCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryCoolingCapacityModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryCoolingEnergyModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryHeatingCapacityModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+    
+    curve = heatRecoveryHeatingEnergyModifierCurve();
+    if( curve )
+    {
+      result.push_back(curve.get());
+    }
+
     return result;
   }
 
@@ -1634,6 +1664,36 @@ namespace detail {
     {
       airConditionerClone.setPipingCorrectionFactorforLengthinCoolingModeCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
     }
+    
+    curveBiquadratic = pipingCorrectionFactorforLengthinHeatingModeCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setPipingCorrectionFactorforLengthinHeatingModeCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryCoolingCapacityModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryCoolingEnergyModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryHeatingCapacityModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      airConditionerClone.setHeatRecoveryHeatingEnergyModifierCurve(curveBiquadratic->clone(model).cast<CurveBiquadratic>());
+    }
 
     return airConditionerClone;
   }
@@ -1766,6 +1826,36 @@ namespace detail {
     }
     
     curveBiquadratic = pipingCorrectionFactorforLengthinCoolingModeCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = pipingCorrectionFactorforLengthinCoolingModeCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryCoolingEnergyModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingCapacityModifierCurve();
+    if( curveBiquadratic )
+    {
+      curveBiquadratic->remove();
+    }
+    
+    curveBiquadratic = heatRecoveryHeatingEnergyModifierCurve();
     if( curveBiquadratic )
     {
       curveBiquadratic->remove();
@@ -2321,7 +2411,7 @@ double AirConditionerVariableRefrigerantFlow::equivalentPipingLengthusedforPipin
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode();
 }
 
-boost::optional<CurveCubic> AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
+boost::optional<CurveBiquadratic> AirConditionerVariableRefrigerantFlow::pipingCorrectionFactorforLengthinHeatingModeCurve() const {
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->pipingCorrectionFactorforLengthinHeatingModeCurve();
 }
 
@@ -2737,7 +2827,7 @@ void AirConditionerVariableRefrigerantFlow::setEquivalentPipingLengthusedforPipi
   getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setEquivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode(equivalentPipingLengthusedforPipingCorrectionFactorinHeatingMode);
 }
 
-bool AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinHeatingModeCurve(const CurveCubic& curve) {
+bool AirConditionerVariableRefrigerantFlow::setPipingCorrectionFactorforLengthinHeatingModeCurve(const CurveBiquadratic& curve) {
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setPipingCorrectionFactorforLengthinHeatingModeCurve(curve);
 }
 

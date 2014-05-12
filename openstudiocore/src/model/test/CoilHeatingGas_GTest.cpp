@@ -18,16 +18,19 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingGas_Impl.hpp>
 #include <model/ScheduleConstant.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include <model/Schedule.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,CoilHeatingGas) {
@@ -53,3 +56,54 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   EXPECT_EQ(coilHeatingGas.availableSchedule(),schedule2);
 }
 
+TEST_F(ModelFixture,CoilHeatingGas_addToNode) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+
+  CoilHeatingGas testObject(m, s);
+
+  AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  CoilHeatingGas testObject2(m, s);
+  CoilHeatingGas testObject3(m, s);
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
+  }
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  CoilHeatingGas testObjectClone = testObject.clone(m).cast<CoilHeatingGas>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
+}

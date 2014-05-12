@@ -395,27 +395,14 @@ namespace detail {
   // addToNode
   bool GroundHeatExchangerVertical_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
-      return false;
-    }
-    else
-    {
-      if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
+      if( plant->supplyComponent(node.handle()) )
       {
-        if( plantLoop->demandComponent(node.handle()) )
+        if( StraightComponent_Impl::addToNode(node) )
         {
-          return false;
-        }
-        else
-        {
-          bool result = StraightComponent_Impl::addToNode(node);
-
-          if( result )
-          {
-            plantLoop->setFluidType("Water");  
-          }
-          return result;
+          plant->setFluidType("Water");
+          return true;
         }
       }
     }

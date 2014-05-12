@@ -37,6 +37,10 @@
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/Model.hpp>
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
@@ -74,7 +78,7 @@ namespace detail{
 
   ModelObject CoilCoolingDXSingleSpeed_Impl::clone(Model model) const
   {
-    CoilCoolingDXSingleSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
+    CoilCoolingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeed>();
 
     Curve ccfot = totalCoolingCapacityFunctionOfTemperatureCurve();
     newCoil.setTotalCoolingCapacityFunctionOfTemperatureCurve(ccfot.clone(model).cast<Curve>());
@@ -510,6 +514,22 @@ namespace detail{
 
   boost::optional<HVACComponent> CoilCoolingDXSingleSpeed_Impl::containingHVACComponent() const
   {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
     // AirLoopHVACUnitaryHeatPumpAirToAir
 
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
@@ -772,6 +792,19 @@ namespace detail{
   void CoilCoolingDXSingleSpeed_Impl::autosizeRatedAirFlowRate() {
     bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, "autosize");
     OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXSingleSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
+    return false;
   }
 
 }// detail

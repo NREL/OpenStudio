@@ -14,7 +14,7 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
 
-#ifdef SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %import <model/Model.i>
 #else
 %import(module="openstudiomodel") <model/Model.hpp>

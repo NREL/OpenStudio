@@ -63,7 +63,7 @@
 // include the headers into the swig interface directly
 %include <utilities/idd/IddEnums.hxx>
 
-#ifdef SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %include <utilities/idd/IddFieldEnums.ixx>
 #endif
 

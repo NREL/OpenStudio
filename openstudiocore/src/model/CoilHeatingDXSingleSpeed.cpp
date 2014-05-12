@@ -33,10 +33,16 @@
 #include <model/CurveQuadratic_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVAC_Impl.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/core/Assert.hpp>
@@ -608,7 +614,7 @@ namespace detail {
 
   ModelObject CoilHeatingDXSingleSpeed_Impl::clone(Model model) const
   {
-    CoilHeatingDXSingleSpeed newCoil = ModelObject_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
+    CoilHeatingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
 
     Curve curve1 = totalHeatingCapacityFunctionofTemperatureCurve();
     newCoil.setTotalHeatingCapacityFunctionofTemperatureCurve(curve1.clone(model).cast<Curve>());
@@ -630,6 +636,22 @@ namespace detail {
 
   boost::optional<HVACComponent> CoilHeatingDXSingleSpeed_Impl::containingHVACComponent() const
   {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
     // AirLoopHVACUnitaryHeatPumpAirToAir
 
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
@@ -702,6 +724,19 @@ namespace detail {
         return setAvailabilitySchedule(schedule);
       }
     }
+    return false;
+  }
+
+  bool CoilHeatingDXSingleSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode( node );
+      }
+    }
+
     return false;
   }
 

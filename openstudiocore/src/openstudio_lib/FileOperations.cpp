@@ -51,6 +51,7 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/Assert.hpp>
+#include <OpenStudio.hxx>
 
 #include <QDir>
 #include <QMessageBox>
@@ -567,7 +568,7 @@ namespace openstudio {
         if (applicationIsRunningFromBuildDirectory()){
           resourcesPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
         } else {
-          resourcesPath = getApplicationRunDirectory() / openstudio::toPath("../share/openstudio/OSApp");
+          resourcesPath = getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
         }
 
         // find reporting measures

@@ -371,11 +371,11 @@ SET(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 
 if (APPLE)  
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
-           DESTINATION Pat.app/Contents/share/openstudio/pat
+           DESTINATION Pat.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
          )
 else()
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
-           DESTINATION share/openstudio/pat
+           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/pat
          ) 
 endif()
 

@@ -21,6 +21,10 @@
 #include <model/CoolingTowerSingleSpeed_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_CoolingTower_SingleSpeed_FieldEnums.hxx>
 #include <utilities/units/Unit.hpp>
@@ -1120,6 +1124,19 @@ namespace detail {
       resetBlowdownMakeupWaterUsageSchedule();
     }
     return true;
+  }
+
+  bool CoolingTowerSingleSpeed_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
 } // detail

@@ -18,7 +18,7 @@
 %ignore openstudio::model::detail;
 %ignore openstudio::energyplus::detail;
 
-#ifdef SWIGCSHARP
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
 %import <model/Model.i>
 #else
 %import(module="openstudiomodel") <model/Model.hpp>

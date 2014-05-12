@@ -233,6 +233,8 @@ namespace detail {
 
     void autosizeRatedAirFlowRate();
 
+    bool addToNode(Node & node);
+
     //@}
    private:
 

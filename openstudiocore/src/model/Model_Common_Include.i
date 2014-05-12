@@ -48,6 +48,7 @@
 %define MODELOBJECT_TEMPLATES(_name)
   %ignore std::vector<openstudio::model::_name>::vector(size_type);
   %ignore std::vector<openstudio::model::_name>::resize(size_type);
+
   %template(_name##Vector) std::vector<openstudio::model::_name>;
   %template(Optional##_name) boost::optional<openstudio::model::_name>;
 %enddef
@@ -162,6 +163,11 @@
 
 %define SWIG_MODELOBJECT(_name)
 
+  #if defined SWIGJAVA
+    %ignore openstudio::model::_name::iddObjectType();
+  #endif
+
+
   #if defined SWIGCSHARP
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
     MODELOBJECT_EXTENSION(_name)
@@ -207,6 +213,10 @@
 %enddef
  
 %define SWIG_UNIQUEMODELOBJECT(_name)
+  #if defined SWIGJAVA
+    %ignore openstudio::model::_name::iddObjectType();
+  #endif
+
 
   #if defined SWIGCSHARP
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
