@@ -14,9 +14,6 @@ set(OPENSTUDIO_LONG_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMA
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION "8.1" CACHE INTERNAL "EnergyPlus Version")
 
-# Dakota version
-set(DAKOTA_VERSION "5.3.1")
-
 # configure file with version information
 configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
 
@@ -367,19 +364,7 @@ if(REQUIRE_DAKOTA)
   find_package(Dakota "${DAKOTA_VERSION}" REQUIRED)
   mark_as_advanced(DAKOTA_EXE)
 else()
-  # If DAKOTA_FOUND not yet set, and DAKOTA_FOUND comes back false, emit a message
-  set(EMIT_DAKOTA_WARNING false)
-  if(NOT DEFINED DAKOTA_FOUND)
-    set(EMIT_DAKOTA_WARNING true)
-  endif()
-  find_package(Dakota "${DAKOTA_VERSION}")
-  if(DAKOTA_FOUND)
-    mark_as_advanced(DAKOTA_EXE)
-  else()
-    if(EMIT_DAKOTA_WARNING)
-      message(STATUS "DAKOTA was not found on your system. openstudio_analysisdriver_tests that depend on Dakota will not be built.")
-    endif()
-  endif()
+  set(DAKOTA_FOUND false)
 endif()
 set(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dakota was found.")
 
@@ -853,7 +838,6 @@ export(TARGETS
 set(all_exe_targets
   epw2wea
   GenerateIddFactory
-  ModelEditor
   gbXMLToIdf
   OpenStudio
   RunManager
