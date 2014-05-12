@@ -66,7 +66,12 @@ class ParseOptions
     options.verbose = ''
 
     opts = OptionParser.new do |opts|
-      opts.banner = "\nUsage: DaylightCalculations.rb [ARGV[0] ARGV[1] (ARGV[2]) [options]]\n\nARGV[0] - Path to OpenStudio Model\nARGV[1] - Path to radiance installation to use\nARGV[1] - Optional path to EnergyPlus SQLite output, if not given will run EnergyPlus."
+      opts.banner = "\nUsage: DaylightCalculations.rb \
+      [ARGV[0] ARGV[1] (ARGV[2]) [options]]\n\n\
+      ARGV[0] - Path to OpenStudio Model\n\
+      ARGV[1] - Path to radiance installation to use\n\
+      ARGV[2] - Optional path to EnergyPlus SQLite output, \
+      if not given will run EnergyPlus."
       opts.separator ""
       opts.separator "Optional variables:"        
       opts.on("-v", "--verbose", "Verbose (debug) mode") do |verbose|
@@ -99,9 +104,9 @@ def exec_statement(s)
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     s = s.gsub("/", "\\")
   end
-  puts "#{Time.now.getutc}: '#{s}'"
+  puts "#{Time.now.getutc}: running '#{s}'"
   result = system(s)
-  puts "#{Time.now.getutc}: completed '#{s}'"
+  puts "#{Time.now.getutc}: completed."
   return result
 end
 
@@ -117,7 +122,8 @@ if ARGV[0]
 end
 
 if modelPath.empty?
-  puts "No OpenStudio model provided, quitting. Try 'DaylightCalculations.rb -h' for options."
+  puts "No OpenStudio model provided, quitting. \
+  Try 'DaylightCalculations.rb -h' for options."
   exit false
 end
 
@@ -127,9 +133,9 @@ if ARGV[1]
   radiancePath = ARGV[1]
 end
 
-
 if radiancePath.empty?
-  puts "No radiance path provided, quitting."
+  puts "No radiance path provided, quitting. \
+  Try 'DaylightCalculations.rb -h' for options."
   exit false
 end
 
@@ -157,15 +163,14 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   end
   puts "Adding path for local perl: " + perlpath.to_s
   ENV["PATH"] = ENV["PATH"] + ";" + path + ";" + perlpath.to_s
-  ENV["RAYPATH"] = path + ";" + raypath
+  ENV["RAYPATH"] = path + ";" + raypath + ";."
 else
   ENV["PATH"] = ENV["PATH"] + ":" + path
-  ENV["RAYPATH"] = path + ":" + raypath
+  ENV["RAYPATH"] = path + ":" + raypath + ":."
 end
 
-
-puts "Setting RAYPATH: " + raypath + " " + path
-puts "Appending PATH: " + path
+puts "Setting RAYPATH: " + raypath + ", " + path + ", '.'"
+puts "Appending PATH: " + path + ", '.'"
 
 dirname = File.dirname(__FILE__)
 
@@ -202,15 +207,14 @@ File.open("#{outPath}/options/daylightsim.opt", "r") do |file|
   daylightsimOpts = tempIO
 end	  
 
-
-# execute DaylightSim to create daylighting coefficients
+# execute DaylightSim to create daylighting coefficients (--dc option)
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc #{daylightsimOpts}")
 if not result
   puts "failed to run DaylightSim for daylight coefficients"
   exit false
 end
 
-# execute DaylightSim to run annual simulation
+# execute DaylightSim to run annual simulation (--dcts option)
 result = exec_statement("ruby #{load_paths} '#{dirname}/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts #{daylightsimOpts}")
 if not result
   puts "failed to run DaylightSim for annual daylight simulation"

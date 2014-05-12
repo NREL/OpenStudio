@@ -1085,7 +1085,7 @@ namespace radiance {
               //double nTs = 0.0; // transmitted specularity
 
               if (tVis >= 0.6) {
-                LOG( Warn, "dubious glazing material defined for "+space_name+"; Tvis ="+formatString(tVis, 4)+", yet diffuse? Suspect!");  
+                LOG( Warn, "dubious glazing material definition in "+space_name+"; Tvis ="+formatString(tVis, 4)+", yet diffuse? Suspect.");  
               }
               
             } else {
