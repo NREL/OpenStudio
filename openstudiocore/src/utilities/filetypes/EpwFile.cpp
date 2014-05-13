@@ -96,6 +96,7 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
   if(list.size() < 35) {
+    // JWD: Should this just use the entries that are there and fill in the rest as unavailable?
     LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
     return boost::optional<EpwDataPoint>();
   } else if(list.size() > 35) {
@@ -1934,21 +1935,21 @@ bool EpwFile::parse(bool storeData)
 
   if (realYear){
     if (m_startDayOfWeek != startDate->dayOfWeek()){
-      LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
-      return false;
-    }
+      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "', data will be treated as typical");
+      // The flag needs to be changed so we can do the wrapAround check below
+      realYear = false;
+    } else {
+      // set dates with years
+      m_startDate = startDate.get();
+      m_startDateActualYear = startDate->year();
 
-    // set dates with years
-    m_startDate = startDate.get();
-    m_startDateActualYear = startDate->year();
-
-    m_endDate = endDate.get();
-    m_endDateActualYear = endDate->year();
-  }else{
-    if (wrapAround){
-      LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
-      return false;
+      m_endDate = endDate.get();
+      m_endDateActualYear = endDate->year();
     }
+  }
+  if(!realYear && wrapAround) {
+    LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
+    return false;
   }
 
   return result;
