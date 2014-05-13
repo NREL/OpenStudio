@@ -28,6 +28,8 @@
 #include <model/Model_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 
+#include <boost/foreach.hpp>
+
 #include <iostream>
 
 namespace openstudio {

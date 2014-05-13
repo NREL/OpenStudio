@@ -50,8 +50,6 @@
 
 #include <utilities/data/Attribute.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 

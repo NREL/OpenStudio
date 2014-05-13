@@ -29,8 +29,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -109,7 +107,7 @@ namespace detail {
     }
     UrlVector workerUrls;
     StringVector workerIds;
-    BOOST_FOREACH(const UrlRecord& wur,workerUrlRecords()) {
+    for (const UrlRecord& wur : workerUrlRecords()) {
       workerUrls.push_back(wur.url());
       workerIds.push_back(wur.name());
     }

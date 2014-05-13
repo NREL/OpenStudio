@@ -38,8 +38,6 @@
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/FileReference.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -88,7 +86,7 @@ namespace detail {
   void OptimizationDataPointRecord_Impl::clearResults() {
     ProjectDatabase database = projectDatabase();
     DataPointValueRecordVector ovrs = objectiveValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& ovr,ovrs) {
+    for (DataPointValueRecord& ovr : ovrs) {
       database.removeRecord(ovr);
     }
     DataPointRecord_Impl::clearResults();
@@ -101,7 +99,7 @@ namespace detail {
     ProjectDatabase database = projectDatabase();
     FunctionRecordVector objectives =
         this->problemRecord().cast<OptimizationProblemRecord>().objectiveRecords();
-    BOOST_FOREACH(const FunctionRecord& function,objectives) {
+    for (const FunctionRecord& function : objectives) {
       QSqlQuery query(*(database.qSqlDatabase()));
       query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
           " WHERE dataPointRecordId=:dataPointRecordId AND functionRecordId=:functionRecordId "));
@@ -118,7 +116,7 @@ namespace detail {
   std::vector<double> OptimizationDataPointRecord_Impl::objectiveValues() const {
     DoubleVector result;
     DataPointValueRecordVector valueRecords = objectiveValueRecords();
-    BOOST_FOREACH(const DataPointValueRecord& valueRecord,valueRecords) {
+    for (const DataPointValueRecord& valueRecord : valueRecords) {
       result.push_back(valueRecord.dataPointValue());
     }
     return result;
@@ -200,9 +198,9 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
 
   OptimizationDataPointRecord copyOfThis(getImpl<detail::OptimizationDataPointRecord_Impl>());
   ProjectDatabase database = copyOfThis.projectDatabase();
-  // remove old objetive function values
+  // remove old objective function values
   DataPointValueRecordVector valueRecords = copyOfThis.objectiveValueRecords();
-  BOOST_FOREACH(DataPointValueRecord& valueRecord,valueRecords) {
+  for (DataPointValueRecord& valueRecord : valueRecords) {
     database.removeRecord(valueRecord);
   }
   // save current objective function values

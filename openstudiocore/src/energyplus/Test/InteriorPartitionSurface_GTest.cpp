@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
 
   unsigned n = 0;
-  BOOST_FOREACH(Surface surface, space1->surfaces()){
+  for (Surface surface : space1->surfaces()){
     EXPECT_EQ(1.0, surface.grossArea());
     if (surface.adjacentSurface()){
       ++n;

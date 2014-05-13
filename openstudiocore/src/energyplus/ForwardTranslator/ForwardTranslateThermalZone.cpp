@@ -146,7 +146,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Zone,
                                                        modelObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 
@@ -210,84 +210,84 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     // translate shading groups
     ShadingSurfaceGroupVector shadingSurfaceGroups = spaces[0].shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       translateAndMapModelObject(shadingSurfaceGroup);
     }
 
     // translate interior surface partition groups
     InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = spaces[0].interiorPartitionSurfaceGroups();
     std::sort(interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup, interiorPartitionSurfaceGroups){
+    for (InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : interiorPartitionSurfaceGroups){
       translateAndMapModelObject(interiorPartitionSurfaceGroup);
     }
 
     // translate surfaces
     SurfaceVector surfaces = spaces[0].surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Surface& surface, surfaces){
+    for (Surface& surface : surfaces){
       translateAndMapModelObject(surface);
     }
     
     // translate internal mass
     InternalMassVector internalMasses = spaces[0].internalMass();
     std::sort(internalMasses.begin(), internalMasses.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(InternalMass& internalMass, internalMasses){
+    for (InternalMass& internalMass : internalMasses){
       translateAndMapModelObject(internalMass);
     }
 
     // translate lights
     LightsVector lights = spaces[0].lights();
     std::sort(lights.begin(), lights.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Lights& light, lights){
+    for (Lights& light : lights){
       translateAndMapModelObject(light);
     }
 
     // translate luminaires
     LuminaireVector luminaires = spaces[0].luminaires();
     std::sort(luminaires.begin(), luminaires.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(Luminaire& luminaire, luminaires){
+    for (Luminaire& luminaire : luminaires){
       translateAndMapModelObject(luminaire);
     }
 
     // translate people
     PeopleVector people = spaces[0].people();
     std::sort(people.begin(), people.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(People& person, people){
+    for (People& person : people){
       translateAndMapModelObject(person);
     }
 
     // translate electric equipment
     ElectricEquipmentVector electricEquipment = spaces[0].electricEquipment();
     std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(ElectricEquipment& equipment, electricEquipment){
+    for (ElectricEquipment& equipment : electricEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate gas equipment
     GasEquipmentVector gasEquipment = spaces[0].gasEquipment();
     std::sort(gasEquipment.begin(), gasEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(GasEquipment& equipment, gasEquipment){
+    for (GasEquipment& equipment : gasEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate hot water equipment
     HotWaterEquipmentVector hotWaterEquipment = spaces[0].hotWaterEquipment();
     std::sort(hotWaterEquipment.begin(), hotWaterEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(HotWaterEquipment& equipment, hotWaterEquipment){
+    for (HotWaterEquipment& equipment : hotWaterEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate steam equipment
     SteamEquipmentVector steamEquipment = spaces[0].steamEquipment();
     std::sort(steamEquipment.begin(), steamEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SteamEquipment& equipment, steamEquipment){
+    for (SteamEquipment& equipment : steamEquipment){
       translateAndMapModelObject(equipment);
     }
 
     // translate other equipment
     OtherEquipmentVector otherEquipment = spaces[0].otherEquipment();
     std::sort(otherEquipment.begin(), otherEquipment.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(OtherEquipment& equipment, otherEquipment){
+    for (OtherEquipment& equipment : otherEquipment){
       translateAndMapModelObject(equipment);
     }
 
@@ -485,14 +485,14 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     // translate SpaceInfiltration_DesignFlowRate
     SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = spaces[0].spaceInfiltrationDesignFlowRates();
     std::sort(spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, spaceInfiltrationDesignFlowRates){
+    for (SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceInfiltrationDesignFlowRates){
       translateAndMapModelObject(spaceInfiltrationDesignFlowRate);
     }
 
     // translate SpaceInfiltration_EffectiveLeakageArea
     SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = spaces[0].spaceInfiltrationEffectiveLeakageAreas();
     std::sort(spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end(), WorkspaceObjectNameLess());
-    BOOST_FOREACH(SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, spaceInfiltrationEffectiveLeakageAreas){
+    for (SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceInfiltrationEffectiveLeakageAreas){
       translateAndMapModelObject(spaceInfiltrationEffectiveLeakageArea);
     }
   }
@@ -696,17 +696,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             // todo: improve this?
             // find first people schedule
             std::vector<People> allPeople;
-            BOOST_FOREACH(People people, spaces[0].people()){
+            for (People people : spaces[0].people()){
               allPeople.push_back(people);
             }
             if (spaces[0].spaceType()){
-              BOOST_FOREACH(People people, spaces[0].spaceType()->people()){
+              for (People people : spaces[0].spaceType()->people()){
                 allPeople.push_back(people);
               }
             }
 
             boost::optional<Schedule> peopleSchedule;
-            BOOST_FOREACH(People people, allPeople){
+            for (People people : allPeople){
               peopleSchedule = people.numberofPeopleSchedule();
               if (peopleSchedule){
                 break;

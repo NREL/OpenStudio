@@ -24,7 +24,6 @@
 #include <utilities/core/Containers.hpp>
 
 #include <iostream>
-#include <boost/foreach.hpp>
 
 OPENSTUDIO_ENUM(TestEnum4, ((first)) ((second)) ((third)) );
 

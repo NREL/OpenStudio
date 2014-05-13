@@ -32,7 +32,6 @@
 #include <boost/filesystem/fstream.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/archive/archive_exception.hpp>
 
 BOOST_CLASS_EXPORT(openstudio::SectionHeading);
@@ -63,7 +62,7 @@ Document::Document(const std::string& title,
 
 Document Document::clone() const {
   Document result(m_title,m_authors,m_format,m_header,m_footer);
-  BOOST_FOREACH(const SectionElement& element,m_contents) {
+  for (const SectionElement& element : m_contents) {
     result.append(element.clone().cast<SectionElement>());
   }
   return result;
@@ -97,7 +96,7 @@ std::vector<SectionElement> Document::contents() const {
 
 std::vector<Section> Document::sections() const {
   SectionVector result;
-  BOOST_FOREACH(const SectionElement& element,m_contents) {
+  for (const SectionElement& element : m_contents) {
     OptionalSection oSection = element.optionalCast<Section>();
     if (oSection) { result.push_back(*oSection); }
   }
@@ -212,7 +211,7 @@ void Document::setTopHeadingLevel(unsigned level) {
 
 void Document::makeHeadingLevelsConsistent() {
   SectionVector sections = this->sections();
-  BOOST_FOREACH(Section& section,sections) {
+  for (Section& section : sections) {
     section.heading().setLevel(m_topHeadingLevel);
     section.makeHeadingLevelsConsistent();
   }
@@ -254,7 +253,7 @@ std::string Document::print() const {
 
 std::ostream& Document::printToStream(std::ostream& os) const {
   m_printHeader(os);
-  BOOST_FOREACH(const SectionElement& element,m_contents) {
+  for (const SectionElement& element : m_contents) {
     element.printToStream(os,m_format);
   }
   m_printFooter(os);

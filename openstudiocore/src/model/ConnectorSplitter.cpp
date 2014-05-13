@@ -26,7 +26,6 @@
 #include <utilities/idd/OS_Connector_Splitter_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 

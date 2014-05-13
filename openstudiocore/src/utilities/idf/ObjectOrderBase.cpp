@@ -23,7 +23,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 

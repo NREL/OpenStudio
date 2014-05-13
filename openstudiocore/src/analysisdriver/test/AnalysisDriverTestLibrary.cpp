@@ -32,7 +32,6 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <QDir>
 #include <QFile>
@@ -75,7 +74,7 @@ void AnalysisDriverTestLibrarySingleton::initialize(const openstudio::path& outp
   // loop through files in baselineModelDirectory (non-recursive) and save .osm paths
   QDir srcDir(toQString(baselineModelDirectory));
 
-  Q_FOREACH(const QFileInfo& info, srcDir.entryInfoList(QDir::Files)) {
+  for (const QFileInfo& info : srcDir.entryInfoList(QDir::Files)) {
     if ((info.suffix() == "osm") || (info.suffix() == "idf")) {
       m_baselineModels.push_back(baselineModelDirectory / toPath(info.fileName()));
     }
@@ -89,7 +88,7 @@ openstudio::path AnalysisDriverTestLibrarySingleton::outputDataDirectory() const
                 
 std::vector<std::string> AnalysisDriverTestLibrarySingleton::baselineModelNames() const {
   StringVector modelNames;
-  BOOST_FOREACH(const openstudio::path& modelPath,m_baselineModels) {
+  for (const openstudio::path& modelPath : m_baselineModels) {
     modelNames.push_back(toString(modelPath.stem()));
   }
   return modelNames;

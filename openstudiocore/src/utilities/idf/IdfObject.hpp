@@ -28,7 +28,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <string>
@@ -451,7 +450,7 @@ template<typename T>
 std::vector<Handle> getHandles(const std::vector<T>& objects)
 {
   HandleVector result;
-  BOOST_FOREACH (const T& object, objects) { result.push_back(object.handle()); }
+  for (const T& object : objects) { result.push_back(object.handle()); }
   return result;
 }
 

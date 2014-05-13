@@ -14,7 +14,6 @@
 #include <boost/serialization/vector.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/iter_find.hpp>
 
 #include <utilities/idf/IdfFile.hpp>

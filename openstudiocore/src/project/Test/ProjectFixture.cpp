@@ -24,8 +24,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using openstudio::Logger;
 using openstudio::FileLogSink;
 using openstudio::toPath;
@@ -88,7 +86,7 @@ openstudio::project::ProjectDatabase ProjectFixture::getDatabase(
 }
 
 void ProjectFixture::removeAllDatabases() {
-  BOOST_FOREACH(const openstudio::path& dbDir,databaseDirs) {
+  for (const openstudio::path& dbDir : databaseDirs) {
     if (boost::filesystem::exists(dbDir)) {
       boost::filesystem::remove_all(dbDir);
     }

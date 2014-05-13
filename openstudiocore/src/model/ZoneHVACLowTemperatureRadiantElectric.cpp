@@ -163,10 +163,10 @@ namespace detail {
     if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
 
       //loop through all the spaces in this zone
-      BOOST_FOREACH(const Space& space, thermalZone->spaces()){
+      for (const Space& space : thermalZone->spaces()){
     
         //loop through all the surfaces in this space
-        BOOST_FOREACH(const Surface& surface, space.surfaces()){
+        for (const Surface& surface : space.surfaces()){
 
           //skip surfaces whose construction is not internal source
           if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){

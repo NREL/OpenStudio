@@ -1434,7 +1434,7 @@ void DefaultConstructionSetInspectorView::configDropZones()
 {
   //int padding = 7;
 
-  BOOST_FOREACH(openstudio::OSDropZone * dropZone,m_dropZones){
+  for (openstudio::OSDropZone * dropZone : m_dropZones){
     //dropZone->setContentsMargins(padding,0,padding,padding);
     dropZone->setMinItems(0);
     dropZone->setMaxItems(1);
@@ -1616,7 +1616,7 @@ void DefaultConstructionSetInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  BOOST_FOREACH(ModelObjectVectorController * vc, m_vectorControllers){
+  for (ModelObjectVectorController * vc : m_vectorControllers){
     vc->detach();
     vc->reportItems();
   }

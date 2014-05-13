@@ -27,8 +27,6 @@
 #include <model/HotWaterEquipmentDefinition.hpp>
 #include <model/HotWaterEquipmentDefinition_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

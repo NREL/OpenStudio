@@ -32,8 +32,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <sstream>
 
 #include <QSqlQuery>
@@ -386,7 +384,7 @@ namespace detail{
     OS_ASSERT(m_attributeValueType == AttributeValueType::AttributeVector);
 
     std::vector<Attribute> result;
-    BOOST_FOREACH(const Record& child, this->children()){
+    for (const Record& child : this->children()){
       boost::optional<AttributeRecord> childAttribute = child.optionalCast<AttributeRecord>();
       if (childAttribute){
         result.push_back(childAttribute->attribute());
@@ -814,7 +812,7 @@ void AttributeRecord::constructRelatedRecords(const Attribute& attribute) {
   if (attribute.valueType() == AttributeValueType::AttributeVector) {
     AttributeRecord copyOfThis(getImpl<detail::AttributeRecord_Impl>());
     int index(0);
-    BOOST_FOREACH(const Attribute& childAttribute, attribute.valueAsAttributeVector()) {
+    for (const Attribute& childAttribute : attribute.valueAsAttributeVector()) {
       AttributeRecord childRecord(childAttribute, copyOfThis,index);
       ++index;
     }

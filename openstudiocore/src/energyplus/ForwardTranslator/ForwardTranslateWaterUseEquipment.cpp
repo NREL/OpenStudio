@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
   IdfObject idfObject(IddObjectType::WaterUse_Equipment);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

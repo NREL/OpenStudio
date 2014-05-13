@@ -47,7 +47,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {

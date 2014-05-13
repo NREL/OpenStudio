@@ -25,8 +25,6 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using std::string;

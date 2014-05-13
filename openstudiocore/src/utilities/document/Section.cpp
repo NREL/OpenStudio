@@ -22,8 +22,6 @@
 
 #include <utilities/document/SectionHeading_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 namespace detail {
@@ -35,7 +33,7 @@ namespace detail {
 
   DocumentElement Section_Impl::clone() const {
     Section myClone(m_heading.clone().cast<SectionHeading>());
-    BOOST_FOREACH(const SectionElement& element,m_contents) {
+    for (const SectionElement& element : m_contents) {
       myClone.append(element.clone().cast<SectionElement>());
     }
     return myClone.cast<DocumentElement>();
@@ -59,7 +57,7 @@ namespace detail {
 
   std::vector<Section> Section_Impl::subsections() const {
     SectionVector result;
-    BOOST_FOREACH(const SectionElement& element,m_contents) {
+    for (const SectionElement& element : m_contents) {
       OptionalSection oSection = element.optionalCast<Section>();
       if (oSection) { result.push_back(*oSection); }
     }
@@ -145,7 +143,7 @@ namespace detail {
   void Section_Impl::makeHeadingLevelsConsistent() {
     unsigned nextLevel = m_heading.level() + 1;
     SectionVector subsections = this->subsections();
-    BOOST_FOREACH(Section& subsection,subsections) {
+    for (Section& subsection : subsections) {
       subsection.heading().setLevel(nextLevel);
       subsection.makeHeadingLevelsConsistent();
     }
@@ -162,7 +160,7 @@ namespace detail {
   std::string Section_Impl::print(DocumentFormat fmt) const {
     std::stringstream ss;
     ss << m_heading.print(fmt);
-    BOOST_FOREACH(const SectionElement& element,m_contents) {
+    for (const SectionElement& element : m_contents) {
       ss << element.print(fmt);
     }
     return ss.str();
@@ -170,7 +168,7 @@ namespace detail {
 
   std::ostream& Section_Impl::printToStream(std::ostream& os, DocumentFormat fmt) const {
     m_heading.printToStream(os,fmt);
-    BOOST_FOREACH(const SectionElement& element,m_contents) {
+    for (const SectionElement& element : m_contents) {
       element.printToStream(os,fmt);
     }
     return os;

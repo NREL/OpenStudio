@@ -33,8 +33,6 @@
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <sstream>
 
 #include <QSqlQuery>
@@ -103,7 +101,7 @@ namespace detail{
 
   analysis::MeasureGroup MeasureGroupRecord_Impl::measureGroup() const {
     analysis::MeasureVector measures;
-    BOOST_FOREACH(const MeasureRecord& measureRecord,measureRecords(false)) {
+    for (const MeasureRecord& measureRecord : measureRecords(false)) {
       measures.push_back(measureRecord.measure());
     }
     return analysis::MeasureGroup(handle(),
@@ -147,7 +145,7 @@ namespace detail{
     std::vector<int> result;
 
     MeasureRecordVector dprs = measureRecords(selectedMeasuresOnly);
-    BOOST_FOREACH(const MeasureRecord& dpr,dprs) {
+    for (const MeasureRecord& dpr : dprs) {
       result.push_back(dpr.id());
     }
 
@@ -220,7 +218,7 @@ namespace detail{
         (candidate->measureVectorIndex().get() != measureVectorIndex))
     {
       // get all and look for index by hand
-      BOOST_FOREACH(const MeasureRecord& dpr,measureRecords(false)) {
+      for (const MeasureRecord& dpr : measureRecords(false)) {
         if (dpr.measureVectorIndex() && (dpr.measureVectorIndex().get() == measureVectorIndex)) {
           return dpr;
         }
@@ -401,7 +399,7 @@ void MeasureGroupRecord::constructMeasureRecords(const analysis::MeasureGroup& m
 
   int i = 0;
   std::vector<UUID> measureUUIDs;
-  BOOST_FOREACH(const Measure& measure,measureGroup.measures(false)) {
+  for (const Measure& measure : measureGroup.measures(false)) {
     measureUUIDs.push_back(measure.uuid());
     if (measure.isDirty() || isNew) {
       MeasureRecord newMeasureRecord =
@@ -422,7 +420,7 @@ void MeasureGroupRecord::removeMeasureRecords(const std::vector<UUID>& uuidsToKe
   ss << "SELECT * FROM " + MeasureRecord::databaseTableName() +
         " WHERE (variableRecordId=:variableRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

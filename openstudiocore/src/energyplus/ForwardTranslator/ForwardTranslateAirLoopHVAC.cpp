@@ -174,7 +174,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   IdfObject idfObject(IddObjectType::AirLoopHVAC);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, airLoopHVAC.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : airLoopHVAC.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

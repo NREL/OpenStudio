@@ -36,7 +36,6 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <sstream>
@@ -181,7 +180,7 @@ namespace detail {
     FileReferenceRecord fileReferenceRecord = this->fileReferenceRecord();
     OSArgumentRecordVector argumentRecords = this->osArgumentRecords();
     ruleset::OSArgumentVector arguments;
-    BOOST_FOREACH(const OSArgumentRecord& argumentRecord,argumentRecords) {
+    for (const OSArgumentRecord& argumentRecord : argumentRecords) {
       arguments.push_back(argumentRecord.osArgument());
     }
 
@@ -463,7 +462,7 @@ void RubyMeasureRecord::constructRelatedRecords(const analysis::RubyMeasure& rub
   // Save child OSArguments
   OSArgumentVector arguments = rubyMeasure.arguments();
   std::vector<UUID> argumentUUIDs;
-  BOOST_FOREACH(const OSArgument& argument,arguments) {
+  for (const OSArgument& argument : arguments) {
     // no dirty flag, so construct them all
     argumentUUIDs.push_back(argument.uuid());
     OSArgumentRecord newArgumentRecord = OSArgumentRecord(argument, copyOfThis);
@@ -483,7 +482,7 @@ void RubyMeasureRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsTo
   ss << "SELECT * FROM " + OSArgumentRecord::databaseTableName() +
         " WHERE (rubyPerturbationRecordId=:rubyPerturbationRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

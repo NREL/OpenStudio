@@ -31,8 +31,6 @@
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 OSQuantityVector::OSQuantityVector(const Unit& units)
@@ -97,7 +95,7 @@ const Scale& OSQuantityVector::scale() const {
 
 std::vector<Quantity> OSQuantityVector::quantities() const {
   QuantityVector result;
-  BOOST_FOREACH(double value,values()) {
+  for (double value : values()) {
     result.push_back(Quantity(value,units()));
   }
   return result;

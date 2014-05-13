@@ -32,8 +32,6 @@
 #include <utilities/geometry/Transformation.hpp>
 #include <utilities/geometry/Geometry.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

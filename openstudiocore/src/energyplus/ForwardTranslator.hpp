@@ -288,7 +288,7 @@ class ENERGYPLUS_API ForwardTranslator {
    *  not only the direct model object passed into it, but also related model objects under its purview.  Related objects
    *  are often identified by an object list reference pointing to them, but this rule is not absolute.  For example,
    *  AirLoopHVAC is connected to other components via node connections and the translate function for AirLoopHVAC
-   *  is responsbile for translating the components associated with the loop.  The method translateAndMapModelObject()
+   *  is responsible for translating the components associated with the loop.  The method translateAndMapModelObject()
    *  uses an internal map to determine if a model object has already been translated, therefore there is no
    *  concern of translating a model object twice, provided that model objects are always translated using the 
    *  translateAndMapModelObject() interface as opposed to the type specific translators.
@@ -736,7 +736,7 @@ class ENERGYPLUS_API ForwardTranslator {
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
 
-  /** Determines whether or not the HVACComponent is part of a unitary sytem or on an
+  /** Determines whether or not the HVACComponent is part of a unitary system or on an
    *  AirLoopHVAC */
   bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
 
@@ -752,7 +752,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> createFluidProperties(const std::string& fluidType);
 
   /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
-   *  glycolType adn glycolConcentration. Returns an uninitialized object if unsuccessful for any reason. 
+   *  glycolType and glycolConcentration. Returns an uninitialized object if unsuccessful for any reason. 
    *  If successful, returns the FluidProperties:Name IdfObject with a FluidName of 
    *  glycolType + "_" + glycolConcentration ie. PropyleneGlycol_30. If the fluidType already 
    *  exists in m_idfObjects, it will not add new IdfObjects and will return the existing 

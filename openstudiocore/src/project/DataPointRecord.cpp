@@ -154,7 +154,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
-      Q_FOREACH(const QString& path, value.toString().split(QString(pathSep), QString::SkipEmptyParts)){
+      for (const QString& path : value.toString().split(QString(pathSep), QString::SkipEmptyParts)) {
         m_dakotaParametersFiles.push_back(toPath(path));
       }
     }
@@ -298,7 +298,7 @@ namespace detail {
     query.clear();    
     
     // order them
-    BOOST_FOREACH(const InputVariableRecord& ivr,ivrs) {
+    for (const InputVariableRecord& ivr : ivrs) {
       if (ivr.optionalCast<MeasureGroupRecord>()) {
         MeasureRecordVector::iterator it = std::find_if(
             measureRecords.begin(),
@@ -351,7 +351,7 @@ namespace detail {
     query.clear();
 
     // order them
-    BOOST_FOREACH(const MeasureGroupRecord& mgr,mgrs) {
+    for (const MeasureGroupRecord& mgr : mgrs) {
       MeasureRecordVector::iterator it = std::find_if(
           temp.begin(),
           temp.end(),
@@ -388,7 +388,7 @@ namespace detail {
     query.clear();
 
     // order them
-    BOOST_FOREACH(const ContinuousVariableRecord& cvr,cvrs) {
+    for (const ContinuousVariableRecord& cvr : cvrs) {
       DataPointValueRecordVector::iterator it = std::find_if(
           temp.begin(),
           temp.end(),
@@ -406,7 +406,7 @@ namespace detail {
     DataPointValueRecordVector result;
     ProjectDatabase database = projectDatabase();
     FunctionRecordVector responses = problemRecord().responseRecords();
-    BOOST_FOREACH(const FunctionRecord& response,responses) {
+    for (const FunctionRecord& response : responses) {
       QSqlQuery query(*(database.qSqlDatabase()));
       query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
           " WHERE dataPointRecordId=:dataPointRecordId AND functionRecordId=:functionRecordId "));
@@ -423,7 +423,7 @@ namespace detail {
   std::vector<double> DataPointRecord_Impl::responseValues() const {
     DoubleVector result;
     DataPointValueRecordVector valueRecords = responseValueRecords();
-    BOOST_FOREACH(const DataPointValueRecord& valueRecord,valueRecords) {
+    for (const DataPointValueRecord& valueRecord : valueRecords) {
       result.push_back(valueRecord.dataPointValue());
     }
     return result;
@@ -497,7 +497,7 @@ namespace detail {
 
   std::vector<AttributeRecord> DataPointRecord_Impl::attributeRecords() const {
     AttributeRecordVector result;
-    Q_FOREACH(const FileReferenceRecord& fr,xmlOutputDataRecords()) {
+    for (const FileReferenceRecord& fr : xmlOutputDataRecords()) {
       AttributeRecordVector additions = fr.attributeRecords();
       result.insert(result.end(),additions.begin(),additions.end());
     }
@@ -529,19 +529,19 @@ namespace detail {
       oSqlOutputData = ofrr->fileReference();
     }
     FileReferenceRecordVector frrs = xmlOutputDataRecords();
-    Q_FOREACH(const FileReferenceRecord& frr,frrs) {
+    for (const FileReferenceRecord& frr : frrs) {
       if (frr.name() != "fake.xml") {
         xmlOutputData.push_back(frr.fileReference());
       }
     }
     AttributeRecordVector ars = attributeRecords();
-    Q_FOREACH(const AttributeRecord& ar,ars) {
+    for (const AttributeRecord& ar : ars) {
       attributes.push_back(ar.attribute());
     }
 
     TagRecordVector tagRecords = this->tagRecords();
     TagVector tags;
-    BOOST_FOREACH(const TagRecord& tagRecord,tagRecords) {
+    for (const TagRecord& tagRecord : tagRecords) {
       tags.push_back(tagRecord.tag());
     }
 
@@ -603,11 +603,11 @@ namespace detail {
       database.removeRecord(*ofrr);
     }
     FileReferenceRecordVector frrs = xmlOutputDataRecords();
-    BOOST_FOREACH(FileReferenceRecord& frr,frrs) {
+    for (FileReferenceRecord& frr : frrs) {
       database.removeRecord(frr);
     }
     DataPointValueRecordVector rvrs = responseValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& rvr,rvrs) {
+    for (DataPointValueRecord& rvr : rvrs) {
       database.removeRecord(rvr);
     }
     m_topLevelJobUUID.reset();
@@ -695,7 +695,7 @@ namespace detail {
     }
     if (!m_dakotaParametersFiles.empty()){
       QStringList dakotaParametersFiles;
-      BOOST_FOREACH(const openstudio::path& path, m_dakotaParametersFiles) {
+      for (const openstudio::path& path : m_dakotaParametersFiles) {
         dakotaParametersFiles << toQString(path);
       }
       query.bindValue(DataPointRecordColumns::dakotaParametersFiles, dakotaParametersFiles.join(QString(pathSep)));
@@ -778,7 +778,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
-      Q_FOREACH(const QString& path, value.toString().split(QString(pathSep), QString::SkipEmptyParts)){
+      for (const QString& path : value.toString().split(QString(pathSep), QString::SkipEmptyParts)) {
         m_lastDakotaParametersFiles.push_back(toPath(path));
       }
     }else{
@@ -859,7 +859,7 @@ namespace detail {
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
       QStringList dakotaParametersFiles;
-      BOOST_FOREACH(const openstudio::path& path, m_dakotaParametersFiles) {
+      for (const openstudio::path& path : m_dakotaParametersFiles) {
         dakotaParametersFiles << toQString(path);
       }
       result = result && (value.toString() == dakotaParametersFiles.join(QString(pathSep)));
@@ -1006,7 +1006,7 @@ void DataPointRecord::updatePathData(ProjectDatabase database,
                                      const openstudio::path& newBase)
 {
   DataPointRecordVector records = getDataPointRecords(database);
-  BOOST_FOREACH(DataPointRecord& record,records) {
+  for (DataPointRecord& record : records) {
     record.getImpl<detail::DataPointRecord_Impl>()->updatePathData(originalBase,newBase);
   }
 }
@@ -1223,10 +1223,10 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     if (n < variableValues.size()) {
       // variables have been added
       // remove all old records
-      BOOST_FOREACH(JoinRecord& jr,jrs) {
+      for (JoinRecord& jr : jrs) {
         database.removeRecord(jr);
       }
-      BOOST_FOREACH(DataPointValueRecord& cvvr,cvvrs) {
+      for (DataPointValueRecord& cvvr : cvvrs) {
         database.removeRecord(cvvr);
       }
       // add new records
@@ -1304,7 +1304,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
   // Remove old response function values
   if (!isNew) {
     DataPointValueRecordVector oldResponseValueRecords = responseValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& oldRecord,oldResponseValueRecords) {
+    for (DataPointValueRecord& oldRecord : oldResponseValueRecords) {
       database.removeRecord(oldRecord);
     }
   }
@@ -1322,12 +1322,12 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
 
   // Create tag records
   TagVector tags = dataPoint.tags();
-  BOOST_FOREACH(const Tag& tag,tags) {
+  for (const Tag& tag : tags) {
     TagRecord newTagRecord(tag,copyOfThis);
   }
 
   // Delete obsolete tag records
-  BOOST_FOREACH(const TagRecord& tagRecord,tagRecords()) {
+  for (const TagRecord& tagRecord : tagRecords()) {
     if (std::find_if(tags.begin(),tags.end(),boost::bind(uuidEquals<Tag,UUID>,_1,tagRecord.handle())) == tags.end()) {
       Record record = tagRecord.cast<Record>();
       analysisRecord.projectDatabase().removeRecord(record);
@@ -1404,7 +1404,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
   }
 
   FileReferenceRecordVector result;
-  Q_FOREACH(const FileReference& childFileReference, childFileReferences) {
+  for (const FileReference& childFileReference : childFileReferences) {
     bool save(true);
     if (!isNew) {
       // see if there is already a record
@@ -1420,7 +1420,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
         else {
           // will save. clear out AttributeRecords associated with the old one.
           AttributeRecordVector oldAttributes = it->attributeRecords();
-          BOOST_FOREACH(AttributeRecord& oldAttribute, oldAttributes) {
+          for (AttributeRecord& oldAttribute : oldAttributes) {
             database.removeRecord(oldAttribute);
           }
         }
@@ -1443,7 +1443,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
           attsToSave = wrapperAttribute->valueAsAttributeVector();
         }
       }
-      Q_FOREACH(const Attribute& attribute,attsToSave) {
+      for (const Attribute& attribute : attsToSave) {
         AttributeRecord attributeRecord(attribute,result.back());
         Q_UNUSED(attributeRecord);
       }
@@ -1452,7 +1452,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
 
   // remove remaining oldFileReferenceRecords
   if (!isNew) {
-    BOOST_FOREACH(FileReferenceRecord& oldFileReferenceRecord,oldFileReferenceRecords) {
+    for (FileReferenceRecord& oldFileReferenceRecord : oldFileReferenceRecords) {
       database.removeRecord(oldFileReferenceRecord);
     }
   }

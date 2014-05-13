@@ -84,7 +84,6 @@
 #include <sstream>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/bind.hpp>
 
@@ -431,7 +430,7 @@ namespace detail {
     ProjectDatabase other(this->shared_from_this());
 
     // save children
-    BOOST_FOREACH(ObjectRecord childRecord, record.children()){
+    for (ObjectRecord childRecord : record.children()){
       this->saveRecord(childRecord, false);
     }
 
@@ -533,7 +532,7 @@ namespace detail {
       result = RemoveUndo(it->first, removeSource);
 
       // remove children
-      BOOST_FOREACH(ObjectRecord objectRecord, it->second.children()){
+      for (ObjectRecord objectRecord : it->second.children()){
         boost::optional<RemoveUndo> childRemoveUndo = removeRecord(objectRecord, false);
         if (childRemoveUndo){
           result->concat(*childRemoveUndo);
@@ -541,7 +540,7 @@ namespace detail {
       }
 
       // remove joins
-      BOOST_FOREACH(JoinRecord joinRecord, it->second.joinRecords()){
+      for (JoinRecord joinRecord : it->second.joinRecords()){
         boost::optional<RemoveUndo> joinRemoveUndo = removeRecord(joinRecord, false);
         if (joinRemoveUndo){
           result->concat(*joinRemoveUndo);
@@ -923,7 +922,7 @@ namespace detail {
   void ProjectDatabase_Impl::commitRemove(const RemoveUndo& removeUndo)
   {
     typedef std::pair<UUID, RemoveUndo::RemoveSource> RemovedObjectType;
-    BOOST_FOREACH(RemovedObjectType removedObject, removeUndo.removedObjects()){
+    for (RemovedObjectType removedObject : removeUndo.removedObjects()){
       // delete removed object
       std::map<UUID, Record>::iterator it = m_handleRemovedRecordMap.find(removedObject.first);
       if(it != m_handleRemovedRecordMap.end()){
@@ -1213,7 +1212,7 @@ namespace detail {
          itEnd = algorithmOptions.end(); it != itEnd; ++it)
     {
       AlgorithmRecord algRec = AlgorithmRecord::getAlgorithmRecord(it->first,database).get();
-      BOOST_FOREACH(const Attribute& att, it->second) {
+      for (const Attribute& att : it->second) {
         AttributeRecord algOpt(att,algRec);
       }
     }

@@ -21,8 +21,6 @@
 #include <utilities/geometry/Intersection.hpp>
 #include <utilities/geometry/Test/GeometryFixture.hpp>
 
-#include <boost/foreach.hpp>
-
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -60,7 +58,7 @@ std::string printPolygon(const BoostPolygon& polygon)
     }
   }
 
-  BOOST_FOREACH(const BoostRing& inner, polygon.inners()){
+  for (const BoostRing& inner : polygon.inners()){
     if (!inner.empty()){
       ss << "], [";
       // inner loop already in reverse order
@@ -127,7 +125,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 
   int i = 0;
   std::cout << "yellow - blue:" << std::endl;
-  BOOST_FOREACH(BoostPolygon const& p, output)
+  for (BoostPolygon const& p : output)
   {
     std::cout << i++ << ": " << printPolygon(p) << std::endl;
   }
@@ -138,7 +136,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 
   i = 0;
   std::cout << "blue - yellow:" << std::endl;
-  BOOST_FOREACH(BoostPolygon const& p, output)
+  for (BoostPolygon const& p : output)
   {
     std::cout << i++ << ": " << printPolygon(p) << std::endl;
   }

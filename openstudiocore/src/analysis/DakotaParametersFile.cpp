@@ -29,7 +29,6 @@
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 
 using namespace boost;
 
@@ -702,13 +701,13 @@ std::vector<QVariant> getUncertainVariableValues(const DakotaParametersFile& par
   UncertaintyDescriptionTypeVector discreteTypes = UncertaintyDescription::validTypes(VariableValueType::Discrete);
   if (std::find(discreteTypes.begin(),discreteTypes.end(),type) != discreteTypes.end()) {
     IntVector values = getDiscreteUncertainVariableValues(params,type);
-    BOOST_FOREACH(int value,values) {
+    for (int value : values) {
       result.push_back(QVariant(value));
     }
   }
   else {
     DoubleVector values = getContinuousUncertainVariableValues(params,type);
-    BOOST_FOREACH(double value,values) {
+    for (double value : values) {
       result.push_back(QVariant(value));
     }
   }

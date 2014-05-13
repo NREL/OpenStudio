@@ -60,8 +60,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -135,7 +133,7 @@ namespace detail {
     // some SkyTemperatures are children (those that do not explicitly point to something else)
     SkyTemperatureVector skyTemperatures = model().getModelObjects<SkyTemperature>();
     ParentObject siteAsParent = getObject<ParentObject>();
-    BOOST_FOREACH(const SkyTemperature& st,skyTemperatures) {
+    for (const SkyTemperature& st : skyTemperatures) {
       OptionalParentObject opo = st.parent();
       if (opo && (opo.get() == siteAsParent)) { result.push_back(st.cast<ModelObject>()); }
     }
@@ -303,7 +301,7 @@ namespace detail {
   ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    BOOST_FOREACH(ShadingSurfaceGroup shadingGroup, this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Site")){
         result.push_back(shadingGroup);
       }

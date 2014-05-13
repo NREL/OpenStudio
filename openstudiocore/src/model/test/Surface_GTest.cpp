@@ -82,7 +82,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/math/constants/constants.hpp>
 
@@ -94,7 +93,7 @@ using boost::to_upper_copy;
 double triangulatedArea(const std::vector<std::vector<Point3d> >& triangulation)
 {
   double result = 0;
-  BOOST_FOREACH(const std::vector<Point3d>& triangle, triangulation){
+  for (const std::vector<Point3d>& triangle : triangulation){
     if(3u == triangle.size()){
       boost::optional<double> area = getArea(triangle);
       if (area){
@@ -154,7 +153,7 @@ TEST_F(ModelFixture, Surface_SetVertices)
     EXPECT_EQ(points[i], testPoints[i]);
   }
 
-  // u shape (concave) with 5 unit area, includes colinear points
+  // u shape (concave) with 5 unit area, includes collinear points
   points.clear();
   points.push_back(Point3d(0, 0, 2));
   points.push_back(Point3d(0, 0, 1));
@@ -269,7 +268,7 @@ TEST_F(ModelFixture, Surface_Area)
   EXPECT_EQ(1.0, surface.netArea());
   EXPECT_EQ(1.0, triangulatedArea(surface.triangulation()));
 
-  // u shape (concave) with 5 unit area, includes colinear points
+  // u shape (concave) with 5 unit area, includes collinear points
   points.clear();
   points.push_back(Point3d(0, 0, 2));
   points.push_back(Point3d(0, 0, 1));
@@ -313,7 +312,7 @@ TEST_F(ModelFixture, Surface_Area_In_File)
   SurfaceVector surfaces = model.getModelObjects<Surface>();
   EXPECT_TRUE(surfaces.size() > 0);
 
-  BOOST_FOREACH(const Surface& surface, surfaces){
+  for (const Surface& surface : surfaces){
     OptionalString name = surface.name();
     ASSERT_TRUE(name);
 
@@ -406,7 +405,7 @@ TEST_F(ModelFixture, Surface_BuildingComponentLibraryRoofConstruction)
   ASSERT_TRUE(ocb);
   ConstructionBase roofComponentPrimaryObject = *ocb;
   unsigned numReplaced = 0;
-  BOOST_FOREACH(Surface& surface,surfaces) {
+  for (Surface& surface : surfaces) {
     OptionalSurfaceType oType = surface.surfaceType();
     if (oType && (*oType == SurfaceType::Roof)) {
       EXPECT_TRUE(surface.setConstruction(roofComponentPrimaryObject));
@@ -1621,7 +1620,7 @@ TEST_F(ModelFixture, Surface_Intersect_CompletelyContained){
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface1.grossArea());
   
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       bool test = false;
 
@@ -1715,7 +1714,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
   points.push_back(Point3d(7,  10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       points.clear();
       points.push_back(Point3d(0, 0,  0));
@@ -1735,7 +1734,7 @@ TEST_F(ModelFixture, Surface_Intersect_SameHeight_PartialOverlap){
   points.push_back(Point3d(7,  0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  BOOST_FOREACH(const Surface& surface, space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()){
     if (surface.handle() != surface2.handle()){
       points.clear();
       points.push_back(Point3d(10, 10, 0));
@@ -1797,7 +1796,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
   points.push_back(Point3d(7,  10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       points.clear();
       points.push_back(Point3d(0, 0,  0));
@@ -1817,7 +1816,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_PartialOverlap){
   points.push_back(Point3d(7,  0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  BOOST_FOREACH(const Surface& surface, space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()){
     if (surface.handle() != surface2.handle()){
       points.clear();
       points.push_back(Point3d(7,  12, 0));
@@ -1883,7 +1882,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   points.push_back(Point3d(7,  10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       points.clear();
       points.push_back(Point3d(0, 0,  0));
@@ -1903,7 +1902,7 @@ TEST_F(ModelFixture, Surface_Intersect_DifferentHeight_ShareOneEdge_PartialOverl
   points.push_back(Point3d(7,  0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  BOOST_FOREACH(const Surface& surface, space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()){
     if (surface.handle() != surface2.handle()){
       points.clear();
       points.push_back(Point3d(7,  12, 0));
@@ -2090,7 +2089,7 @@ TEST_F(ModelFixture, Surface_Intersect_CutIntoTwo){
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
   EXPECT_DOUBLE_EQ(surface2Area, surface1.grossArea());
 
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       bool test = false;
 
@@ -2369,7 +2368,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   points.push_back(Point3d(5, 10, 0));
   EXPECT_TRUE(circularEqual(surface1.vertices(), points));
 
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     if (surface.handle() != surface1.handle()){
       bool test = false;
 
@@ -2409,7 +2408,7 @@ TEST_F(ModelFixture, Surface_Intersect_Complex){
   points.push_back(Point3d(5,  0, 0));
   EXPECT_TRUE(circularEqual(surface2.vertices(), points));
 
-  BOOST_FOREACH(const Surface& surface, space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()){
     if (surface.handle() != surface2.handle()){
       bool test = false;
 
@@ -2486,7 +2485,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   EXPECT_EQ(3u, space2.surfaces().size());
   EXPECT_EQ(4u, surface2.vertices().size());
 
-  BOOST_FOREACH(const Surface& surface, space1.surfaces()){
+  for (const Surface& surface : space1.surfaces()){
     bool test = false;
 
     Point3dVector points;
@@ -2522,7 +2521,7 @@ TEST_F(ModelFixture, Surface_Intersect_UShape){
   }
 
   
-  BOOST_FOREACH(const Surface& surface, space2.surfaces()){
+  for (const Surface& surface : space2.surfaces()){
     bool test = false;
 
     Point3dVector points;

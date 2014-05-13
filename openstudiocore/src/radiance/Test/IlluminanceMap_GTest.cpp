@@ -27,7 +27,6 @@
 #include <resources.h>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;

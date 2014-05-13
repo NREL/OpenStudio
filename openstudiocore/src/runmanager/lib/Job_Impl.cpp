@@ -30,8 +30,6 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <QDir>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -1531,7 +1529,7 @@ namespace detail {
   {
     boost::optional<JobErrors> temp;
     if (hasMergedJobs()) {
-      BOOST_FOREACH(const MergedJobResults& mergedJob,mergedJobResults()) {
+      for (const MergedJobResults& mergedJob : mergedJobResults()) {
         if (temp) {
           temp = temp.get() + mergedJob.errors;
         }

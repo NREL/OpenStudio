@@ -28,8 +28,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -67,7 +65,7 @@ namespace detail {
       serverUrl = sur->url();
     }
     UrlVector workerUrls;
-    BOOST_FOREACH(const UrlRecord& wur,workerUrlRecords()) {
+    for (const UrlRecord& wur : workerUrlRecords()) {
       workerUrls.push_back(wur.url());
     }
     return VagrantSession(handle(),

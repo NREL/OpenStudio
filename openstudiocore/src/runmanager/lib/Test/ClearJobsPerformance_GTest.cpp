@@ -71,7 +71,7 @@ TEST_F(RunManagerTestFixture, ClearJobsPerformanceTest)
 
     boost::timer t;
 
-    BOOST_FOREACH(openstudio::runmanager::Job job, rm.getJobs()) {
+    for (openstudio::runmanager::Job job : rm.getJobs()) {
       rm.remove(job);
     }
 

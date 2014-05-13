@@ -99,7 +99,7 @@ void ScheduleDialog::createLayout()
     hLayout->addStretch();
 
     std::vector<std::string> classNames = model::ScheduleTypeRegistry::instance().classNames();
-    BOOST_FOREACH(std::string className, classNames){
+    for (std::string className : classNames){
       m_className->addItem(className.c_str());
     }
     hLayout->addWidget(m_className);
@@ -297,7 +297,7 @@ void ScheduleDialog::on_classNameComboBox(const QString & text)
 
   m_scheduleType->clear();
 
-  BOOST_FOREACH(model::ScheduleType scheduletype, m_scheduleTypes){
+  for (model::ScheduleType scheduletype : m_scheduleTypes){
     m_scheduleType->addItem(scheduletype.scheduleDisplayName.c_str());
   }
 }

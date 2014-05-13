@@ -33,8 +33,6 @@
 
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 
@@ -55,7 +53,7 @@ TEST_F(ModelFixture, ResourceObject_Daylighting_School_1)
   ASSERT_FALSE(resources.empty());
   LOG(Info,"List of ResourceObjects in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const ResourceObject& resource,resources) {
+  for (const ResourceObject& resource : resources) {
     unsigned absCount = resource.directUseCount();
     unsigned mainCount = resource.nonResourceObjectUseCount();
     OptionalString oName = resource.name();
@@ -74,7 +72,7 @@ TEST_F(ModelFixture, ResourceObject_Daylighting_School_1)
   ResourceObjectVector reducedResources = model.getModelObjects<ResourceObject>();
   ASSERT_TRUE(reducedResources.size() <= resources.size());
   EXPECT_TRUE(removedObjects.size() >= resources.size() - reducedResources.size());
-  BOOST_FOREACH(const ResourceObject& resource,reducedResources) {
+  for (const ResourceObject& resource : reducedResources) {
     unsigned absCount = resource.directUseCount();
     unsigned mainCount = resource.nonResourceObjectUseCount();
     EXPECT_TRUE(absCount > 0);

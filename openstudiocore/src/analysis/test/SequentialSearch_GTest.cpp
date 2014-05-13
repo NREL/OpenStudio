@@ -190,7 +190,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
       EXPECT_EQ(3u,nextIteration.size());
     }
     EXPECT_EQ(static_cast<size_t>(n),completeDataPoints.size() + nextIteration.size());
-    BOOST_FOREACH(const OptimizationDataPoint& point,nextIteration) {
+    for (const OptimizationDataPoint& point : nextIteration) {
       std::vector<QVariant> values = point.variableValues();
       DoubleVector objectiveValues = getObjectiveValues(values);
       for (int i = 0; i < 5; ++i) {
@@ -264,7 +264,7 @@ TEST_F(AnalysisFixture, SequentialSearch) {
   values = minimumCurve[5].objectiveValues();
   EXPECT_DOUBLE_EQ(20.0,values[0]); EXPECT_DOUBLE_EQ(12.0,values[1]);
   OptimizationDataPointVector paretoFront = algorithm.getParetoFront(analysis);
-  BOOST_FOREACH(const OptimizationDataPoint& paretoPoint,paretoFront) {
+  for (const OptimizationDataPoint& paretoPoint : paretoFront) {
     EXPECT_FALSE(std::find(minimumCurve.begin(),minimumCurve.end(),paretoPoint) == minimumCurve.end());
   }
   ASSERT_EQ(4u,paretoFront.size());

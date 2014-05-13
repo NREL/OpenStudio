@@ -32,8 +32,6 @@
 #include <model/ShadingSurfaceGroup.hpp>
 #include <model/ShadingSurfaceGroup_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 

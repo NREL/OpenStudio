@@ -57,7 +57,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/units/QuantityConverter.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -194,12 +193,12 @@ namespace detail {
     Model tempModel;
     SpaceType tempSpaceType(tempModel);
     std::vector<std::string> tempSuggestions = tempSpaceType.suggestedStandardsBuildingTypes();
-    BOOST_FOREACH(const std::string& suggestion, tempSuggestions){
+    for (const std::string& suggestion : tempSuggestions){
       result.push_back(suggestion);
     }
 
     // include values from model
-    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
       boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
       if (otherBuildingType){
         result.push_back(*otherBuildingType);
@@ -337,7 +336,7 @@ namespace detail {
   {
     MeterVector result;
     MeterVector meters = this->model().getModelObjects<Meter>();
-    BOOST_FOREACH(const Meter& meter, meters){
+    for (const Meter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())){
         result.push_back(meter);
       }
@@ -359,7 +358,7 @@ namespace detail {
   ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    BOOST_FOREACH(ShadingSurfaceGroup shadingGroup, this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")){
         result.push_back(shadingGroup);
       }
@@ -376,7 +375,7 @@ namespace detail {
   std::vector<Surface> Building_Impl::exteriorWalls() const {
     SurfaceVector result;
     SurfaceVector candidates = model().getModelObjects<Surface>();
-    BOOST_FOREACH(const Surface& candidate,candidates) {
+    for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
       if (openstudio::istringEqual(surfaceType, "Wall") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
@@ -389,7 +388,7 @@ namespace detail {
   std::vector<Surface> Building_Impl::roofs() const {
     SurfaceVector result;
     SurfaceVector candidates = model().getModelObjects<Surface>();
-    BOOST_FOREACH(const Surface& candidate,candidates) {
+    for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
       if (openstudio::istringEqual(surfaceType, "RoofCeiling") && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
@@ -402,7 +401,7 @@ namespace detail {
   double Building_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       bool partofTotalFloorArea = space.partofTotalFloorArea();
       if (partofTotalFloorArea) {
         result += space.multiplier() * space.floorArea();
@@ -415,7 +414,7 @@ namespace detail {
   {
     boost::optional<double> result;
 
-    BOOST_FOREACH(const ThermalZone& thermalZone, thermalZones()){
+    for (const ThermalZone& thermalZone : thermalZones()){
       boost::optional<std::string> isConditioned = thermalZone.isConditioned();
 
       if (isConditioned) {
@@ -425,7 +424,7 @@ namespace detail {
         }
 
         if (istringEqual("Yes", *isConditioned)){
-          BOOST_FOREACH(const Space& space, thermalZone.spaces()){
+          for (const Space& space : thermalZone.spaces()){
             bool partofTotalFloorArea = space.partofTotalFloorArea();
             if (partofTotalFloorArea) {
               result = *result + space.multiplier() * space.floorArea();
@@ -440,7 +439,7 @@ namespace detail {
 
   double Building_Impl::exteriorSurfaceArea() const {
     double result(0.0);
-    BOOST_FOREACH(const Surface& surface,model().getModelObjects<Surface>()) {
+    for (const Surface& surface : model().getModelObjects<Surface>()) {
       OptionalSpace space = surface.space();
       std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
       if (space && openstudio::istringEqual(outsideBoundaryCondition, "Outdoors")) {
@@ -452,7 +451,7 @@ namespace detail {
 
   double Building_Impl::exteriorWallArea() const {
     double result(0.0);
-    BOOST_FOREACH(const Surface& exteriorWall,exteriorWalls()) {
+    for (const Surface& exteriorWall : exteriorWalls()) {
       if (OptionalSpace space = exteriorWall.space()) {
         result += exteriorWall.grossArea() * space->multiplier();
       }
@@ -462,7 +461,7 @@ namespace detail {
 
   double Building_Impl::airVolume() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()) {
+    for (const Space& space : spaces()) {
       result += space.volume() * space.multiplier();
     }
     return result;
@@ -470,7 +469,7 @@ namespace detail {
 
   double Building_Impl::numberOfPeople() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()) {
+    for (const Space& space : spaces()) {
       result += space.numberOfPeople() * space.multiplier();
     }
     return result;
@@ -502,7 +501,7 @@ namespace detail {
   
   double Building_Impl::lightingPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.multiplier() * space.lightingPower();
     }
     return result;
@@ -540,7 +539,7 @@ namespace detail {
 
   double Building_Impl::electricEquipmentPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.multiplier() * space.electricEquipmentPower();
     }
     return result;
@@ -578,7 +577,7 @@ namespace detail {
 
   double Building_Impl::gasEquipmentPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.multiplier() * space.gasEquipmentPower();
     }
     return result;
@@ -616,7 +615,7 @@ namespace detail {
 
   double Building_Impl::infiltrationDesignFlowRate() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.multiplier() * space.infiltrationDesignFlowRate();
     }
     return result;

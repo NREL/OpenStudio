@@ -55,8 +55,6 @@
 #include <utilities/idd/OS_WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 /*
@@ -76,7 +74,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Daylighting_School_1)
   std::sort(fenestrationMaterials.begin(),fenestrationMaterials.end(),comparator);
   LOG(Info,"List of FenestrationMaterials in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const FenestrationMaterial& material,fenestrationMaterials) {
+  for (const FenestrationMaterial& material : fenestrationMaterials) {
     unsigned absCount = material.directUseCount();
     unsigned mainCount = material.nonResourceObjectUseCount();
     std::string name = material.name().get();

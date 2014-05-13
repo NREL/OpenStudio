@@ -50,7 +50,6 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 using namespace openstudio;
@@ -92,7 +91,7 @@ TEST_F(AnalysisDriverFixture, PSUADEDace_Continuous) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -135,7 +134,7 @@ TEST_F(AnalysisDriverFixture, PSUADEDace_MixedOsmIdf) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }

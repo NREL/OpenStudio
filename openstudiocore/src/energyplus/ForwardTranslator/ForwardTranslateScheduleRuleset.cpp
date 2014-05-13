@@ -158,7 +158,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
     // iterate over the schedule for each day of the year
     std::vector<ScheduleDay> daySchedules = modelObject.getDaySchedules(jan1, dec31);
-    BOOST_FOREACH(ScheduleDay& daySchedule, daySchedules){
+    for (ScheduleDay& daySchedule : daySchedules){
 
       // translate the day schedule
       translateAndMapModelObject(daySchedule);
@@ -360,7 +360,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
   translateAndMapModelObject(winterDesignDaySchedule);
 
   // translate schedule rules, these are returned in order
-  BOOST_FOREACH(ScheduleRule scheduleRule, modelObject.scheduleRules()){
+  for (ScheduleRule scheduleRule : modelObject.scheduleRules()){
     ScheduleDay daySchedule = scheduleRule.daySchedule();
     translateAndMapModelObject(daySchedule);
   }

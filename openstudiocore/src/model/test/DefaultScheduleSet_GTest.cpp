@@ -32,8 +32,6 @@
 
 #include <utilities/idd/OS_DefaultScheduleSet_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

@@ -264,7 +264,7 @@ void BuildingComponentDialogCentralWidget::setTid(const std::string& filterType,
 
 void BuildingComponentDialogCentralWidget::upperPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()) {
     if (component->checkBox()->isEnabled()){
       component->checkBox()->setChecked(true);
     }
@@ -273,7 +273,7 @@ void BuildingComponentDialogCentralWidget::upperPushButtonClicked()
 
 void BuildingComponentDialogCentralWidget::lowerPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()) {
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
       
       RemoteBCL* remoteBCL = new RemoteBCL();
@@ -357,7 +357,7 @@ void BuildingComponentDialogCentralWidget::componentDownloadComplete(const std::
   }else{
     // error downloading component
     // find component in list by uid and re-enable
-    Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+    for (Component* component : m_collapsibleComponentList->components()) {
       if (component->uid() == uid){
         component->checkBox()->setEnabled(true);
         break;
@@ -393,7 +393,7 @@ void BuildingComponentDialogCentralWidget::measureDownloadComplete(const std::st
   }else{
     // error downloading measure
     // find measure in list by uid and re-enable
-    Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+    for (Component* component : m_collapsibleComponentList->components()) {
       if (component->uid() == uid){
         component->checkBox()->setEnabled(true);
         break;

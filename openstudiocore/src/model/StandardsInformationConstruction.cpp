@@ -146,7 +146,7 @@ namespace detail {
 
 	// include values from model
 
-    BOOST_FOREACH(const StandardsInformationConstruction& other, this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
+    for (const StandardsInformationConstruction& other : this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
       if (other.handle() == this->handle()){
         continue;
       }
@@ -359,7 +359,7 @@ std::vector<std::string> StandardsInformationConstruction::standardPerturbableLa
   StringVector result;
   StringVector candidates = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                                            OS_StandardsInformation_ConstructionFields::PerturbableLayerType);
-  BOOST_FOREACH(const std::string& candidate,candidates) {
+  for (const std::string& candidate : candidates) {
     if ((candidate == "Not Applicable") || (candidate == "Other")) { continue; }
     result.push_back(candidate);
   }

@@ -108,7 +108,7 @@ namespace detail {
   analysis::OptimizationProblem OptimizationProblemRecord_Impl::optimizationProblem() const {
     analysis::Problem prelim = ProblemRecord_Impl::problem();
     analysis::FunctionVector objectives;
-    BOOST_FOREACH(const FunctionRecord& functionRecord, objectiveRecords()) {
+    for (const FunctionRecord& functionRecord : objectiveRecords()) {
       objectives.push_back(functionRecord.function());
     }
     return analysis::OptimizationProblem(prelim.uuid(),
@@ -169,7 +169,7 @@ OptimizationProblemRecord::OptimizationProblemRecord(
   // Save child objective functions
   int i = 0;
   std::vector<UUID> objectiveUUIDs;
-  BOOST_FOREACH(const analysis::Function& objective, optimizationProblem.objectives()) {
+  for (const analysis::Function& objective : optimizationProblem.objectives()) {
     objectiveUUIDs.push_back(objective.uuid());
     if (objective.isDirty() || isNew) {
       FunctionRecord newFunctionRecord = FunctionRecord::factoryFromFunction(
@@ -272,7 +272,7 @@ void OptimizationProblemRecord::removeObjectiveRecords(const std::vector<UUID>& 
   ss << "(problemRecordId=:problemRecordId) AND (functionType=:functionType) AND ";
   ss << "(handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

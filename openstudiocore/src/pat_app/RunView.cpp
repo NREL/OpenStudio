@@ -503,7 +503,7 @@ void RunStatusView::on_selectAllDataPoints(bool checked)
     }
 
     std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+    for (analysis::DataPoint dataPoint : dataPoints) {
 
       // Ignore signal if dataPoint has data
       bool isComplete = dataPoint.complete();
@@ -530,7 +530,7 @@ void RunStatusView::on_clearSelectionDataPoints(bool checked)
     }
 
     std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+    for (analysis::DataPoint dataPoint : dataPoints) {
 
       // Ignore signal if dataPoint has data
       bool isComplete = dataPoint.complete();
@@ -547,7 +547,7 @@ void RunStatusView::on_selectAllDownloads(bool checked)
   boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project();
   if (project){
     std::vector<analysis::DataPoint> dataPoints = project->analysis().dataPoints();
-    Q_FOREACH(analysis::DataPoint dataPoint, dataPoints){
+    for (analysis::DataPoint dataPoint : dataPoints) {
       if(checked){
         dataPoint.setRunType(analysis::DataPointRunType::CloudSlim);
       } else {
@@ -573,7 +573,7 @@ void RunStatusView::on_selectAllClears(bool checked)
         analysis::Analysis analysis = project->analysis();
         analysisdriver::AnalysisDriver driver = project->analysisDriver();
         std::vector<analysis::DataPoint> dataPoints = analysis.dataPoints();
-        Q_FOREACH(analysis::DataPoint dataPoint, dataPoints) {
+        for (analysis::DataPoint dataPoint : dataPoints) {
           analysisdriver::clearResults(analysis,dataPoint,driver);
           emit dataPointResultsCleared(dataPoint.uuid());
         }
@@ -1277,18 +1277,18 @@ void DataPointJobItemView::update()
   dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  Q_FOREACH(const std::string& initialCondition, initialConditions){
+  for (const std::string& initialCondition : initialConditions) {
     dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  Q_FOREACH(const std::string& finalCondition, finalConditions){
+  for (const std::string& finalCondition : finalConditions) {
     dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   dataPointJobHeaderView->setNumErrors(errors.size());
-  Q_FOREACH(const std::string& errorMessage, errors){
+  for (const std::string& errorMessage : errors) {
     dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -1313,12 +1313,12 @@ void DataPointJobItemView::update()
 
   dataPointJobHeaderView->setNumWarnings(warnings.size());
   typedef std::pair<std::string, int> Msg;
-  Q_FOREACH(const Msg& warningMessage, collatedWarnings){
+  for (const Msg& warningMessage : collatedWarnings) {
     dataPointJobContentView->addWarningMessage(warningMessage.first, warningMessage.second);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  Q_FOREACH(const std::string& infoMessage, infos){
+  for (const std::string& infoMessage : infos) {
     dataPointJobContentView->addInfoMessage(infoMessage);
   }
 

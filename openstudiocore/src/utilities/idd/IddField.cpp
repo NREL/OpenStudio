@@ -37,7 +37,6 @@
 #include <utilities/core/Containers.hpp>
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -157,7 +156,7 @@ namespace detail {
   OptionalIddKey IddField_Impl::getKey(const std::string& keyName) const
   {
     OptionalIddKey result;
-    BOOST_FOREACH(const IddKey& key, m_keys){
+    for (const IddKey& key : m_keys){
       if (boost::iequals(key.name(),keyName)){
         result = key;
         break;
@@ -738,7 +737,7 @@ bool referencesEqual(const IddField& field1, const IddField& field2) {
     unsigned start = 0;        // start index for refs2
     
     // look for refs1 in turn
-    BOOST_FOREACH(const std::string& ref1,refs1) {
+    for (const std::string& ref1 : refs1) {
       for (unsigned i = start; i < n; ++i) {
         if (!found[i]) {
           // refs2[i] not found yet--see if there is a match

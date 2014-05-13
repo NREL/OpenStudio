@@ -22,7 +22,6 @@
 
 #include <utilities/core/Checksum.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 #include <sstream>
@@ -72,7 +71,7 @@ GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
     iddFactoryCxx("IddFactory.cxx",outPath,outFileHeader),
     m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
 {
-  BOOST_FOREACH(const IddFileFactoryData& iddFile,iddFiles) {
+  for (const IddFileFactoryData& iddFile : iddFiles) {
     boost::shared_ptr<IddFactoryOutFile> cxxFile(new 
         IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx",
                           outPath,
@@ -89,7 +88,7 @@ void GenerateIddFactoryOutFiles::finalize() {
   finalizeIddFactoryOutFile(iddFieldEnumsIxx);
   finalizeIddFactoryOutFile(iddFactoryHxx);
   finalizeIddFactoryOutFile(iddFactoryCxx);
-  BOOST_FOREACH(boost::shared_ptr<IddFactoryOutFile>& cxxFile,iddFactoryIddFileCxxs) {
+  for (boost::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
     finalizeIddFactoryOutFile(*cxxFile);
   }
 

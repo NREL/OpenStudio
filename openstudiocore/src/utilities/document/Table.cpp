@@ -32,7 +32,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/archive/archive_exception.hpp>
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
@@ -138,7 +137,7 @@ namespace detail {
     // add columns to existing rows, if necessary
     if (row.size() > m_nCols) {
       m_nCols = row.size();
-      BOOST_FOREACH(TableRow& row, m_table) {
+      for (TableRow& row : m_table) {
         if (row.size() < m_nCols) { row.resize(m_nCols); }
       }
     }
@@ -163,7 +162,7 @@ namespace detail {
                              const TableLoadOptions& options)
   {
     TableElementVector teRow;
-    BOOST_FOREACH(const std::string& element,row) {
+    for (const std::string& element : row) {
       teRow.push_back(TableElement(element,options));
     }
 
@@ -172,7 +171,7 @@ namespace detail {
 
   void Table_Impl::appendRow(const std::vector<double>& row) {
     TableElementVector teRow;
-    BOOST_FOREACH(double element,row) {
+    for (double element : row) {
       teRow.push_back(TableElement(element));
     }
 
@@ -181,7 +180,7 @@ namespace detail {
 
   void Table_Impl::appendRow(const std::vector<int>& row) {
     TableElementVector teRow;
-    BOOST_FOREACH(int element,row) {
+    for (int element : row) {
       teRow.push_back(TableElement(element));
     }
 
@@ -190,7 +189,7 @@ namespace detail {
 
   void Table_Impl::appendRow(const std::vector<bool>& row) {
     TableElementVector teRow;
-    BOOST_FOREACH(bool element,row) {
+    for (bool element : row) {
       teRow.push_back(TableElement(element));
     }
 
@@ -230,7 +229,7 @@ namespace detail {
     if (edge == Table::L) {
       num = nEmptyCols(Table::L);
       if (num > 0) {
-        BOOST_FOREACH(TableRow& row, m_table) {
+        for (TableRow& row : m_table) {
           TableRow::iterator itEraseEnd = row.begin();
           for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
           row.erase(row.begin(),itEraseEnd);
@@ -243,7 +242,7 @@ namespace detail {
     if (edge == Table::R) {
       num = nEmptyCols(Table::R);
       if (num > 0) {
-        BOOST_FOREACH(TableRow& row, m_table) {
+        for (TableRow& row : m_table) {
           row.resize(m_nCols - num);
         }
         m_nCols -= num;
@@ -430,7 +429,7 @@ namespace detail {
     OS_ASSERT(index < m_table.size());
 
     bool allEmpty = true;
-    BOOST_FOREACH(const TableElement& e, m_table[index]) {
+    for (const TableElement& e : m_table[index]) {
       allEmpty = allEmpty && e.empty();
       if (!allEmpty) { break; }
     }
@@ -442,7 +441,7 @@ namespace detail {
     if (index >= m_nCols) { return false; }
 
     bool allEmpty = true;
-    BOOST_FOREACH(const TableRow& row, m_table) {
+    for (const TableRow& row : m_table) {
       OS_ASSERT(index < row.size());
       allEmpty = allEmpty && row[index].empty();
       if (!allEmpty) {
@@ -643,7 +642,7 @@ namespace detail {
         elements.push_back(element(index,j));
       }
     }
-    BOOST_FOREACH(const TableElement& e, elements) {
+    for (const TableElement& e : elements) {
       std::stringstream ss;
       ss << e;
       std::string text = ss.str();
@@ -695,8 +694,8 @@ namespace detail {
 
     // get quantities to be converted and convert them
     DoubleVector originalValues;
-    BOOST_FOREACH(unsigned i, is) {
-      BOOST_FOREACH(unsigned j, js) {
+    for (unsigned i : is) {
+      for (unsigned j : js) {
         openstudio::TableElement e = element(i, j);
         OptionalDouble d;
         if (e.isDouble() || e.isInt()) {
@@ -742,8 +741,8 @@ namespace detail {
     // set values
     unsigned vecIndex = 0;
     DoubleVector newValues = newQuantities.values();
-    BOOST_FOREACH(unsigned i, is) {
-      BOOST_FOREACH(unsigned j, js) {
+    for (unsigned i : is) {
+      for (unsigned j : js) {
         (*this)[i][j] = newValues[vecIndex];
         ++vecIndex;
       }
@@ -790,7 +789,7 @@ namespace detail {
     ss << "\\begin{center}" << std::endl
        << "\\begin{tabular}{" << columnFormatsLaTeX() << "}" << std::endl;
 
-    BOOST_FOREACH(const TableRow& row,m_table) {
+    for (const TableRow& row : m_table) {
       std::string sep;
       for (unsigned i = 0; i < m_nCols; ++i) {
         if (row[i].isString()) {
@@ -834,7 +833,7 @@ namespace detail {
     std::string elemStartTag("  <th>");
     std::string elemEndTag("</th>");
     ss << std::boolalpha;
-    BOOST_FOREACH(const TableRow& row,m_table) {
+    for (const TableRow& row : m_table) {
       if (static_cast<int>(i) == static_cast<int>(m_nHead) - 1) {
         elemStartTag = "  <th class=\"lastHeaderRow\">";
       }
@@ -862,7 +861,7 @@ namespace detail {
 
   std::string Table_Impl::printCSV() const {
     std::stringstream ss;
-    BOOST_FOREACH(const TableRow& row,m_table) {
+    for (const TableRow& row : m_table) {
       std::string sep;
       for (unsigned i = 0; i < m_nCols; ++i) {
         std::stringstream tempSS;

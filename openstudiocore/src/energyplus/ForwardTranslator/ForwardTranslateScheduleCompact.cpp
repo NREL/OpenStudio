@@ -32,8 +32,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -60,7 +58,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleCompact( Schedule
     }
   }
 
-  BOOST_FOREACH(const IdfExtensibleGroup& eg,modelObject.extensibleGroups()) {
+  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

@@ -27,8 +27,6 @@
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace analysis {
 

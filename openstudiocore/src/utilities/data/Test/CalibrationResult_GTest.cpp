@@ -23,8 +23,6 @@
 #include <utilities/data/CalibrationResult.hpp>
 #include <utilities/time/Date.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 
 

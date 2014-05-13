@@ -31,7 +31,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -195,7 +194,7 @@ namespace detail {
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
-    BOOST_FOREACH(const ModelObject& object,m_componentObjects) {
+    for (const ModelObject& object : m_componentObjects) {
       m_componentData.getImpl<ComponentData_Impl>()->registerObject(object);
     }
 

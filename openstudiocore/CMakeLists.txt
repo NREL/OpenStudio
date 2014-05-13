@@ -196,7 +196,7 @@ if(MINGW)
 endif()
 if(MSVC)
   # warning level 3
-  add_definitions(/W3)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
   # all warnings
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
   # create compiler processes on all effective processors
@@ -260,6 +260,12 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
     message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
   endif()
 endif()
+
+# Adding math.h definitions to avoid "inconsistent dll linkage" from Ruby 1.8 and VS2013
+if(${MSVC_VERSION} EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
+  add_definitions(-DHAVE_ACOSH -DHAVE_ERF)
+endif()
+
 
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
@@ -540,7 +546,9 @@ add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 
-add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+if(UNIX AND NOT APPLE)
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
 
 # use chrono as a header only library
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY)

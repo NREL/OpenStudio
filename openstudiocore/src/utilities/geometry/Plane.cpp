@@ -27,8 +27,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <iomanip>
 
 namespace openstudio{
@@ -323,7 +321,7 @@ namespace openstudio{
   {
     std::vector<Point3d> result;
     result.reserve(points.size());
-    BOOST_FOREACH(const Point3d& point, points){
+    for (const Point3d& point : points){
       result.push_back(this->project(point));
     }
     return result;

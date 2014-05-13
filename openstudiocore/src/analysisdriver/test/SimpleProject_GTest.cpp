@@ -75,8 +75,6 @@
 #include <OpenStudio.hxx>
 #include <resources.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::ruleset;
@@ -272,7 +270,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
   EXPECT_TRUE(rp.hasIncompleteArguments());
-  BOOST_FOREACH(const OSArgument& arg,args) {
+  for (const OSArgument& arg : args) {
     if (arg.name() == "wwr") {
       OSArgument temp = arg.clone();
       temp.setValue(0.6);
@@ -363,7 +361,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     ASSERT_TRUE(index);
     MeasureGroup dv("Idf Measure",MeasureVector(1u,NullMeasure()));
     problem.insert(*index,dv);
-    BOOST_FOREACH(const BCLMeasure& bclMeasure,BCLMeasure::patApplicationMeasures()) {
+    for (const BCLMeasure& bclMeasure : BCLMeasure::patApplicationMeasures()) {
       if (bclMeasure.inputFileType() == FileReferenceType::IDF) {
         RubyMeasure rubyMeasure(bclMeasure);
         dv.push(rubyMeasure);
@@ -377,7 +375,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = project.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
   }
@@ -402,7 +400,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = project.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
   }
@@ -415,7 +413,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = database.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
 

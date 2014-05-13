@@ -95,7 +95,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
   }
 
   idfObject.clearExtensibleGroups();
-  BOOST_FOREACH(const Point3d& point, modelObject.vertices()){
+  for (const Point3d& point : modelObject.vertices()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     if (group.empty()) {
       LOG(Error,"Currently unable to translate " << modelObject.briefDescription() 

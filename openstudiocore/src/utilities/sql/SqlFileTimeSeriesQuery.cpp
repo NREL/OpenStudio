@@ -24,8 +24,6 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 // ENVIRONMENT IDENTIFIER
@@ -219,7 +217,7 @@ std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query) {
 
 StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
-  BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
+  for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) { return StringSet(); }
     OS_ASSERT(q.environment().get().name());
     result.insert(*(q.environment().get().name()));
@@ -229,7 +227,7 @@ StringSet environmentPeriods(const SqlFileTimeSeriesQueryVector& queries) {
 
 ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& queries) {
   ReportingFrequencySet result;
-  BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
+  for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) { return ReportingFrequencySet(); }
     OS_ASSERT(q.reportingFrequency());
     result.insert(*(q.reportingFrequency()));
@@ -239,7 +237,7 @@ ReportingFrequencySet reportingFrequencies(const SqlFileTimeSeriesQueryVector& q
 
 StringSet timeSeriesNames(const SqlFileTimeSeriesQueryVector& queries) {
   StringSet result;
-  BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,queries) {
+  for (const SqlFileTimeSeriesQuery& q : queries) {
     if (!q.vetted()) { return StringSet(); }
     OS_ASSERT(q.timeSeries().get().name());
     result.insert(*(q.timeSeries().get().name()));

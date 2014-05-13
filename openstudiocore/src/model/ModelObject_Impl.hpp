@@ -31,8 +31,6 @@
 #include <QVariant>
 #include <QStringList>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 class Attribute;

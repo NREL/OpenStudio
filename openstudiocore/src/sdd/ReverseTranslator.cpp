@@ -153,7 +153,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -166,7 +166,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -551,7 +551,7 @@ namespace sdd {
 
       // request output meters for TDV calculations
       std::set<int> fuelTypes = FuelType::getValues();
-      BOOST_FOREACH(int fuelType, fuelTypes){
+      for (int fuelType : fuelTypes){
 
         if (fuelType == FuelType::Gasoline ||
             fuelType == FuelType::Diesel ||
@@ -572,7 +572,7 @@ namespace sdd {
         meter.setReportingFrequency("Hourly");
 
         std::set<int> endUseTypes = EndUseType::getValues();
-        BOOST_FOREACH(int endUseType, endUseTypes){
+        for (int endUseType : endUseTypes){
 
           if (endUseType == EndUseType::HeatingCoils ||
               endUseType == EndUseType::CoolingCoils ||

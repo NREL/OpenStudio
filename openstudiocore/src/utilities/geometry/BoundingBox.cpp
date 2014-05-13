@@ -21,8 +21,6 @@
 
 #include <utilities/geometry/Point3d.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio{
 
   BoundingBox::BoundingBox()
@@ -57,7 +55,7 @@ namespace openstudio{
 
   void BoundingBox::addPoints(const std::vector<Point3d>& points)
   {
-    BOOST_FOREACH(const Point3d& point, points){
+    for (const Point3d& point : points){
       addPoint(point);
     }
   }

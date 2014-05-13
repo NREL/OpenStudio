@@ -44,8 +44,6 @@
 
 //#include <utilities/idd/IddFieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 
@@ -97,7 +95,7 @@ TEST_F(ModelFixture, ParentChildObject_Daylighting_School_1)
 
   // check that building children includes buildingShades
   bool found = false;
-  BOOST_FOREACH(ModelObject obj, building.children()){
+  for (ModelObject obj : building.children()){
     OptionalParentObject parent = obj.optionalCast<ParentObject>();
     if (parent){
       if (parent->handle() == buildingShades[0].handle()){
@@ -194,7 +192,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  BOOST_FOREACH(IddObjectType iddObjectType, allowableChildTypes){
+  for (IddObjectType iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 
@@ -230,7 +228,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  BOOST_FOREACH(IddObjectType iddObjectType, allowableChildTypes){
+  for (IddObjectType iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 

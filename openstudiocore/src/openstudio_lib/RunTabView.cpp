@@ -50,7 +50,6 @@
 #include "../shared_gui_components/WorkflowTools.hpp"
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <energyplus/ForwardTranslator.hpp>
 
@@ -522,7 +521,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
   
   if(warnings.size()){
     errorsAndWarnings += "WARNINGS:\n";
-    BOOST_FOREACH(std::string warning, warnings){
+    for (std::string warning : warnings){
       text = warning.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';
@@ -532,7 +531,7 @@ void RunView::showRadianceWarningsAndErrors(const std::vector<std::string> & war
 
   if(errors.size()){
     errorsAndWarnings += "ERRORS:\n";
-    BOOST_FOREACH(std::string error, errors){
+    for (std::string error : errors){
       text = error.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';

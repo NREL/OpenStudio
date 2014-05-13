@@ -36,8 +36,6 @@
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 /*
@@ -57,7 +55,7 @@ TEST_F(ModelFixture, OpaqueMaterial_Daylighting_School_1)
   std::sort(opaqueMaterials.begin(),opaqueMaterials.end(),comparator);
   LOG(Info,"List of OpaqueMaterials in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const OpaqueMaterial& material,opaqueMaterials) {
+  for (const OpaqueMaterial& material : opaqueMaterials) {
     unsigned absCount = material.directUseCount();
     unsigned mainCount = material.nonResourceObjectUseCount();
     std::string name = material.name().get();

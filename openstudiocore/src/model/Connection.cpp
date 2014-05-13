@@ -27,8 +27,6 @@
 #include <utilities/core/UUID.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>

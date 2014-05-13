@@ -23,8 +23,6 @@
 
 #include <utilities/document/Table.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio{
 
 SqlFile::SqlFile()
@@ -1722,7 +1720,7 @@ Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,
   row1.push_back(TableElement("",loadString));
   row2.push_back(TableElement("",loadString));
   int numMonths = 0;
-  BOOST_FOREACH(int month,months) {
+  for (int month : months) {
     row1.push_back(TableElement(MonthOfYear(month).valueName(),loadString));
     row2.push_back(TableElement("(J)",loadString));
     ++numMonths;
@@ -1740,11 +1738,11 @@ Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,
   // populate data rows
   bool allNull(true);
   std::set<int> endUses = EndUseCategoryType::getValues();
-  BOOST_FOREACH(int endUse,endUses) {
+  for (int endUse : endUses) {
     EndUseCategoryType category(endUse);
     row1.push_back(TableElement(category.valueDescription(),loadString));
     numMonths = 0;
-    BOOST_FOREACH(int month,months) {
+    for (int month : months) {
       OptionalDouble value = sqlFile.energyConsumptionByMonth(fuelType,category,MonthOfYear(month));
       if (!value) {
         row1.push_back(TableElement(0.0));

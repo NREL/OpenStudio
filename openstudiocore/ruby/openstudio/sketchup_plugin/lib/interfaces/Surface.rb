@@ -361,7 +361,7 @@ module OpenStudio
     end
 
     # Returns the polygon of the SketchUp Face in SketchUp coordinates.
-    # Purpose is to remove colinear points and vertices of sub surfaces (overridden in Surface)
+    # Purpose is to remove collinear points and vertices of sub surfaces (overridden in Surface)
     def face_polygon
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
@@ -386,7 +386,7 @@ module OpenStudio
         
         #puts "child_faces = #{child_faces}"
 
-        reduced_polygon = Geom::Polygon.new(@entity.full_polygon.outer_loop.reduce)  # Removes colinear points
+        reduced_polygon = Geom::Polygon.new(@entity.full_polygon.outer_loop.reduce)  # Removes collinear points
         new_points = []
         for point in reduced_polygon.points
 

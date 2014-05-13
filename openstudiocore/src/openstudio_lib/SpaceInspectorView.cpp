@@ -467,7 +467,7 @@ void SpaceDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -489,14 +489,14 @@ std::vector<OSItemId> SpaceSpaceInfiltrationDesignFlowRateVectorController::make
 
     // inherited
     if (space.spaceType()){
-      BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, space.spaceType()->spaceInfiltrationDesignFlowRates()){
+      for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : space.spaceType()->spaceInfiltrationDesignFlowRates()){
         OSItemId itemId = modelObjectToItemId(spaceInfiltrationDesignFlowRate, true);
         result.push_back(itemId);
       }
     }
 
     // direct
-    BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, space.spaceInfiltrationDesignFlowRates()){
+    for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : space.spaceInfiltrationDesignFlowRates()){
       OSItemId itemId = modelObjectToItemId(spaceInfiltrationDesignFlowRate, false);
       result.push_back(itemId);
     }
@@ -561,7 +561,7 @@ void SpaceSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }
@@ -583,14 +583,14 @@ std::vector<OSItemId> SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController
 
     // inherited
     if (space.spaceType()){
-      BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, space.spaceType()->spaceInfiltrationEffectiveLeakageAreas()){
+      for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : space.spaceType()->spaceInfiltrationEffectiveLeakageAreas()){
         OSItemId itemId = modelObjectToItemId(spaceInfiltrationEffectiveLeakageArea, true);
         result.push_back(itemId);
       }
     }
 
     // direct
-    BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, space.spaceInfiltrationEffectiveLeakageAreas()){
+    for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : space.spaceInfiltrationEffectiveLeakageAreas()){
       OSItemId itemId = modelObjectToItemId(spaceInfiltrationEffectiveLeakageArea, false);
       result.push_back(itemId);
     }

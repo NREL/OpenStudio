@@ -154,7 +154,7 @@ boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Mode
 
   // find thermostat
   boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  BOOST_FOREACH(openstudio::model::ThermostatSetpointDualSetpoint t,
+  for (openstudio::model::ThermostatSetpointDualSetpoint t :
     model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>())
   {
     thermostat = t;
@@ -202,7 +202,7 @@ boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Mode
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  BOOST_FOREACH(openstudio::model::SetpointManagerSingleZoneReheat t, 
+  for (openstudio::model::SetpointManagerSingleZoneReheat t : 
     model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>())
   {
     setpointManager = t;
@@ -252,7 +252,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(6,prjModel->zones().size());
   int systemZoneCount=0;
   int interiorZoneCount=0;
-  BOOST_FOREACH(const contam::Zone zone, prjModel->zones())
+  for (const contam::Zone& zone : prjModel->zones())
   {
     if(zone.system())
     {
@@ -273,7 +273,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   int outsideAirPathCount=0;
   int recirculationPathCount=0;
   int plainPathCount=0;
-  BOOST_FOREACH(contam::AirflowPath afp, prjModel->airflowPaths())
+  for (contam::AirflowPath afp : prjModel->airflowPaths())
   {
     if(afp.system())
     {
@@ -322,7 +322,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   std::vector<std::vector<int> > exteriorFlowPaths = prjModel->zoneExteriorFlowPaths();
   EXPECT_EQ(6,exteriorFlowPaths.size());
 
-  BOOST_FOREACH(model::ThermalZone thermalZone, model.getConcreteModelObjects<model::ThermalZone>())
+  for (const model::ThermalZone& thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
   {
     ASSERT_TRUE(zoneNames.contains(thermalZone.name().get()));
     unsigned zoneNumber = zoneMap[thermalZone.handle()];

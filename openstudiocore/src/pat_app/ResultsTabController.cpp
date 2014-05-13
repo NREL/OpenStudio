@@ -577,7 +577,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  for (const analysis::DataPoint& dataPoint : m_analysis.dataPoints()) {
     if (dataPoint.uuid() != baselineDataPoint.uuid()){
       result.push_back(dataPoint);
     }
@@ -622,7 +622,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController:
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  for (const analysis::DataPoint& dataPoint : m_analysis.dataPoints()) {
     result.push_back(dataPoint);
   }
 

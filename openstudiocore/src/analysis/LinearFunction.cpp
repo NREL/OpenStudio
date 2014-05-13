@@ -30,7 +30,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -69,7 +68,7 @@ namespace detail {
     boost::shared_ptr<LinearFunction_Impl> impl(new LinearFunction_Impl(*this));
     LinearFunction result(impl);
     VariableVector variables = result.variables();
-    BOOST_FOREACH(Variable& variable,variables) {
+    for (Variable& variable : variables) {
       if (!doNotParent(variable)) {
         variable.setParent(result);
       }
@@ -84,7 +83,7 @@ namespace detail {
   double LinearFunction_Impl::getValue(const DataPoint& dataPoint) const {
     VariableVector variables = this->variables();
     DoubleVector variableValues, coefficients;
-    BOOST_FOREACH(const Variable& variable, variables) {
+    for (const Variable& variable : variables) {
       variableValues.push_back(variable.getValue(dataPoint));
     }
     OptionalDouble result;
@@ -116,7 +115,7 @@ namespace detail {
     QVariantList variablesList;
     DoubleVector coeffs = coefficients();
     int index(0), coeffsN(coeffs.size());
-    Q_FOREACH(const Variable& var,variables()) {
+    for (const Variable& var : variables()) {
       QVariantMap varMap = var.toVariant().toMap();
       varMap["variable_index"] = index;
       if (index < coeffsN) {
@@ -167,7 +166,7 @@ LinearFunction::LinearFunction(const std::string& name,
                  new detail::LinearFunction_Impl(name,variables,coefficients)))
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
-  BOOST_FOREACH(const Variable& variable,variables) {
+  for (const Variable& variable : variables) {
     if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
       variable.setParent(copyOfThis);
     }
@@ -191,7 +190,7 @@ LinearFunction::LinearFunction(const UUID& uuid,
                                                  coefficients)))
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
-  BOOST_FOREACH(const Variable& variable,variables) {
+  for (const Variable& variable : variables) {
     if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
       variable.setParent(copyOfThis);
     }

@@ -82,7 +82,7 @@ namespace detail {
       OS_ASSERT(test);
     }
 
-    BOOST_FOREACH(ScheduleRule scheduleRule, scheduleRules()) {
+    for (ScheduleRule scheduleRule : scheduleRules()) {
       ModelObject newScheduleRule = scheduleRule.clone(model);
       test = newScheduleRule.setParent(newScheduleRuleset);
       OS_ASSERT(test);
@@ -132,7 +132,7 @@ namespace detail {
       result.push_back(this->winterDesignDaySchedule());
     }
 
-    BOOST_FOREACH(ScheduleRule scheduleRule, this->scheduleRules()){
+    for (ScheduleRule scheduleRule : this->scheduleRules()){
       result.push_back(scheduleRule);
     }
 
@@ -179,7 +179,7 @@ namespace detail {
         OS_ASSERT(result);
       }
       ScheduleRuleVector rules = scheduleRules();
-      BOOST_FOREACH(const ScheduleRule& rule, rules) {
+      for (const ScheduleRule& rule : rules) {
         result = rule.daySchedule().setScheduleTypeLimits(scheduleTypeLimits);
         OS_ASSERT(result);
       }
@@ -203,7 +203,7 @@ namespace detail {
         OS_ASSERT(result);
       }
       ScheduleRuleVector rules = scheduleRules();
-      BOOST_FOREACH(ScheduleRule& rule, rules) {
+      for (ScheduleRule& rule : rules) {
         result = rule.daySchedule().resetScheduleTypeLimits();
         OS_ASSERT(result);
       }
@@ -453,7 +453,7 @@ namespace detail {
     ScheduleDay defaultDaySchedule = this->defaultDaySchedule();
     std::vector<ScheduleRule> scheduleRules = this->scheduleRules();
     std::vector<int> activeRuleIndices = this->getActiveRuleIndices(startDate, endDate);
-    BOOST_FOREACH(int i, activeRuleIndices){
+    for (int i : activeRuleIndices){
       if (i == -1){
         result.push_back(defaultDaySchedule);
       }else{
@@ -472,7 +472,7 @@ namespace detail {
 
   void ScheduleRuleset_Impl::ensureNoLeapDays()
   {
-    BOOST_FOREACH(ScheduleRule scheduleRule, this->scheduleRules()){
+    for (ScheduleRule scheduleRule : this->scheduleRules()){
       scheduleRule.ensureNoLeapDays();
     }
   }

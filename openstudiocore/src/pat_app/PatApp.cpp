@@ -735,7 +735,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
       m_project->seedIdf(processEventsProgressBar);
       
       // update any duplicate measures of different versions
-      Q_FOREACH(const BCLMeasure& measure, result.second) {
+      for (const BCLMeasure& measure : result.second) {
         measureManager().updateMeasure(*m_project,measure);
       }
 

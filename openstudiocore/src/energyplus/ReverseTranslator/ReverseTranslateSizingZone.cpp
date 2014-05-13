@@ -63,7 +63,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
     }else if (target->iddObject().type() == IddObjectType::ZoneList){
 
       // get all thermal zones in zone list
-      BOOST_FOREACH(const IdfExtensibleGroup& idfGroup, target->extensibleGroups()){
+      for (const IdfExtensibleGroup& idfGroup : target->extensibleGroups()){
         WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
         OptionalWorkspaceObject owo = workspaceGroup.getTarget(0);
         if (owo){
@@ -91,7 +91,7 @@ OptionalModelObject ReverseTranslator::translateSizingZone( const WorkspaceObjec
   }
 
   boost::optional<ModelObject> result;
-  BOOST_FOREACH(ThermalZone thermalZone, thermalZones){
+  for (ThermalZone thermalZone : thermalZones){
 
     // sizing zone is constructed in thermal zone ctor
     openstudio::model::SizingZone sizingZone = thermalZone.sizingZone(); 

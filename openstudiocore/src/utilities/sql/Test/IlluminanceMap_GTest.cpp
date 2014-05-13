@@ -27,7 +27,6 @@
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;

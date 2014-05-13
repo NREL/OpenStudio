@@ -28,8 +28,6 @@
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -58,7 +56,7 @@ OptionalModelObject ReverseTranslator::translateScheduleCompact( const Workspace
     scheduleCompact.setName(*os);
   }
 
-  BOOST_FOREACH(const IdfExtensibleGroup& eg, workspaceObject.extensibleGroups()) {
+  for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

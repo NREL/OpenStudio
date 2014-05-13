@@ -25,8 +25,6 @@
 #include <iostream>
 #include <set>
 
-#include <boost/foreach.hpp>
-
 #include <QVariant>
 
 using std::cout;

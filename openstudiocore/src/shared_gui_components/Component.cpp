@@ -269,7 +269,7 @@ void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
   m_tags = bclSearchResult.tags();
 
   std::string componentVersion;
-  Q_FOREACH(const BCLFile & file, m_files){
+  for (const BCLFile & file : m_files) {
     if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
       componentVersion = file.identifier();
       break;
@@ -301,7 +301,7 @@ void Component::createAbridgedLayout()
   label = new QLabel(string);
   leftLayout->addWidget(label);
 
-  Q_FOREACH(const Attribute & attribute, m_attributes){
+  for (const Attribute & attribute : m_attributes) {
     string = attribute.name().c_str();
     if(m_componentType == "component"){
       if(string.toStdString() == OPENSTUDIO_TYPE){
@@ -385,7 +385,7 @@ void Component::createCompleteLayout()
 
   mainLayout->addWidget(tableWidget);
 
-  Q_FOREACH(const Attribute & attribute, m_attributes){
+  for (const Attribute & attribute : m_attributes) {
     tableWidget->insertRow(tableWidget->rowCount());
 
     QTableWidgetItem * item = new QTableWidgetItem(attribute.name().c_str());
@@ -441,7 +441,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Files");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const BCLFile & file, m_files){
+  for (const BCLFile & file : m_files) {
     label = new QLabel(file.filename().c_str());
     mainLayout->addWidget(label);
 
@@ -462,7 +462,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Sources");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const BCLProvenance & provenance, m_provenances){
+  for (const BCLProvenance & provenance : m_provenances) {
     string = "Author: ";
     string += provenance.author().c_str();
     label = new QLabel(string);
@@ -491,7 +491,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Tags");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const std::string & tag, m_tags){
+  for (const std::string & tag : m_tags) {
     label = new QLabel(tag.c_str());
     mainLayout->addWidget(label);
 

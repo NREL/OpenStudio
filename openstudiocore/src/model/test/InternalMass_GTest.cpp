@@ -27,8 +27,6 @@
 #include <model/InternalMassDefinition.hpp>
 #include <model/InternalMassDefinition_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

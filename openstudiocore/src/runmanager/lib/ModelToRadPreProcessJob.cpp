@@ -223,10 +223,10 @@ namespace detail {
             adjacentSurface->setOutsideBoundaryCondition("Adiabatic");
 
             // remove interior windows
-            BOOST_FOREACH(openstudio::model::SubSurface subSurface, surf_it->subSurfaces()){
+            for (openstudio::model::SubSurface subSurface : surf_it->subSurfaces()){
               subSurface.remove();
             }
-            BOOST_FOREACH(openstudio::model::SubSurface subSurface, adjacentSurface->subSurfaces()){
+            for (openstudio::model::SubSurface subSurface : adjacentSurface->subSurfaces()){
               subSurface.remove();
             }
           }

@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSite( Site & modelObject 
   // translate shading groups
   ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
   std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
     translateAndMapModelObject(shadingSurfaceGroup);
   }
 

@@ -51,7 +51,6 @@
 #include <QDateTime>
 #include <QThread>
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/regex.hpp>
@@ -141,7 +140,7 @@ namespace radiance {
 
     // preprocess the model here
     unsigned numSpacesToSimulate = 0;
-    BOOST_FOREACH(openstudio::model::Space space, model.getModelObjects<openstudio::model::Space>()){
+    for (openstudio::model::Space space : model.getModelObjects<openstudio::model::Space>()){
       
       // remove any space's not associated with a thermal zone
       boost::optional<openstudio::model::ThermalZone> thermalZone = space.thermalZone();
@@ -152,7 +151,7 @@ namespace radiance {
       }
 
       // only allow primary and secondary daylighting control points (as defined in thermal zone) through
-      BOOST_FOREACH(openstudio::model::DaylightingControl daylightingControl, space.daylightingControls()){
+      for (openstudio::model::DaylightingControl daylightingControl : space.daylightingControls()){
         if (daylightingControl.isPrimaryDaylightingControl()){
           // ok
         }else if (daylightingControl.isSecondaryDaylightingControl()){
@@ -164,7 +163,7 @@ namespace radiance {
       }
 
       // only allow illuminance maps referenced by thermal zone through
-      BOOST_FOREACH(openstudio::model::IlluminanceMap illuminanceMap, space.illuminanceMaps()){
+      for (openstudio::model::IlluminanceMap illuminanceMap : space.illuminanceMaps()){
         boost::optional<openstudio::model::IlluminanceMap> thermalZoneIlluminanceMap = thermalZone->illuminanceMap();
         if (thermalZoneIlluminanceMap && (thermalZoneIlluminanceMap->handle() == illuminanceMap.handle())){
           // ok
@@ -356,7 +355,7 @@ namespace radiance {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -369,7 +368,7 @@ namespace radiance {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -403,17 +402,17 @@ namespace radiance {
     // subtract sub surface polygons from surface polygon
     //jgs20100615 added
     QPolygonF outer;
-    BOOST_FOREACH(const Point3d& point, surfaceFaceVertices){
+    for (const Point3d& point : surfaceFaceVertices){
       if (abs(point.z()) > 0.001){
         LOG(Warn, "Surface point z not on plane, z =" << point.z());
       }
       outer << QPointF(point.x(),point.y());
     }
 
-    BOOST_FOREACH(const SubSurface& subSurface, surface.subSurfaces()){
+    for (const SubSurface& subSurface : surface.subSurfaces()){
       Point3dVector subsurfaceFaceVertices = alignFace.inverse()*subSurface.vertices();
       QPolygonF inner;
-      BOOST_FOREACH(const Point3d& point, subsurfaceFaceVertices){
+      for (const Point3d& point : subsurfaceFaceVertices){
         if (abs(point.z()) > 0.001){
           LOG(Warn, "Subsurface point z not on plane, z =" << point.z());
         }
@@ -423,7 +422,7 @@ namespace radiance {
 
     }
 
-    BOOST_FOREACH(const QPointF& point, outer){
+    for (const QPointF& point : outer){
       result.push_back(openstudio::Point3d(point.x(),point.y(), 0));
     }
 
@@ -1268,7 +1267,7 @@ namespace radiance {
         openstudio::Point3d sensor_point = openstudio::radiance::ForwardTranslator::getReferencePoint(*sensor);
         // openstudio::Vector3dVector sensor_viewVector = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
         openstudio::Vector3dVector viewVectors = openstudio::radiance::ForwardTranslator::getViewVectors(*sensor);
-        BOOST_FOREACH(const Vector3d& viewVector, viewVectors){        
+        for (const Vector3d& viewVector : viewVectors){        
         m_radGlareSensors[space_name] += formatString(sensor_point.x()) + " " + formatString(sensor_point.y()) + " " + formatString(sensor_point.z()) + " " + formatString(viewVector.x()) + " " + formatString(viewVector.y()) + " " + formatString(viewVector.z()) + "\n";
         }
         // write glare sensor

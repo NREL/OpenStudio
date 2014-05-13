@@ -100,7 +100,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::Inte
   }else{
 
     // create InternalMass object for each zone
-    BOOST_FOREACH(Space space, spaces){
+    for (Space space : spaces){
 
       IdfObject idfObject(openstudio::IddObjectType::InternalMass);
 

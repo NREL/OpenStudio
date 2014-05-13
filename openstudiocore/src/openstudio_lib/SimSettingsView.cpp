@@ -71,8 +71,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QDate>
@@ -515,7 +513,7 @@ QWidget * SimSettingsView::createSimulationControlWidget()
   addField(gridLayout,row,col,"Solar Distribution",m_solarDistribution);
   
   std::vector<std::string>  validSolarDistributionValues = model::SimulationControl::validSolarDistributionValues();
-  BOOST_FOREACH(std::string validSolarDistributionValue, validSolarDistributionValues){
+  for (std::string validSolarDistributionValue : validSolarDistributionValues){
     m_solarDistribution->addItem(validSolarDistributionValue.c_str());
   }
 
@@ -949,7 +947,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   addField(gridLayout,row,col,m_skyDiscretizationResolutionLbl,"Sky Discretization Resolution: ",m_skyDiscretizationResolution);
 
   std::vector<std::string>  skyDiscretizationResolutionValues = model::RadianceParameters::skyDiscretizationResolutionValues();
-  BOOST_FOREACH(std::string skyDiscretizationResolutionValue, skyDiscretizationResolutionValues){
+  for (std::string skyDiscretizationResolutionValue : skyDiscretizationResolutionValues){
     m_skyDiscretizationResolution->addItem(skyDiscretizationResolutionValue.c_str());
   }
 

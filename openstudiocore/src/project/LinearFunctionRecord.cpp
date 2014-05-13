@@ -75,7 +75,7 @@ namespace detail {
     VariableRecordVector variableRecords = this->variableRecords();
     analysis::VariableVector variables;
     DoubleVector coefficients;
-    BOOST_FOREACH(const VariableRecord& variableRecord, variableRecords) {
+    for (const VariableRecord& variableRecord : variableRecords) {
       variables.push_back(variableRecord.variable());
       OptionalDouble coefficient = variableRecord.functionCoefficient();
       if (coefficient) {
@@ -244,7 +244,7 @@ void LinearFunctionRecord::removeVariableRecords(const std::vector<UUID>& uuidsT
   ss << "SELECT * FROM " + VariableRecord::databaseTableName() +
         " WHERE (functionRecordId=:functionRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

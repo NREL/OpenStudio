@@ -27,7 +27,6 @@
 #include <runmanager/lib/JobErrors.hpp>
 
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 
 using namespace openstudio::analysis;
 
@@ -188,7 +187,7 @@ namespace detail {
   }
 
   void CurrentAnalysis_Impl::addNextBatchOSDataPoints(const std::vector<analysis::DataPoint>& nextBatchJobs) {
-    BOOST_FOREACH(const analysis::DataPoint& nextJob,nextBatchJobs) {
+    for (const analysis::DataPoint& nextJob : nextBatchJobs) {
       m_queuedOSDataPoints.push_back(nextJob);
     }
   }
@@ -243,7 +242,7 @@ namespace detail {
   // maybe a treeChildren() or allChildren() method?
   void recursivelyAddJobAndChildren(std::vector<runmanager::Job>& jobs, const runmanager::Job& job){
     jobs.push_back(job);
-    BOOST_FOREACH(const runmanager::Job& child, job.children()){
+    for (const runmanager::Job& child : job.children()) {
       recursivelyAddJobAndChildren(jobs, child);
     }
   }
@@ -253,15 +252,15 @@ namespace detail {
   void cancelAllJobs(std::vector<runmanager::Job>& jobs){
 
     // cancel jobs asynchronously
-    BOOST_FOREACH(runmanager::Job& job, jobs) {
+    for (runmanager::Job& job : jobs) {
       job.setCanceled(true);
     }
     // wait for all jobs to stop
-    BOOST_FOREACH(runmanager::Job& job, jobs) {
+    for (runmanager::Job& job : jobs) {
       job.requestStop();
     }
     // wait for all jobs to stop
-    BOOST_FOREACH(runmanager::Job& job, jobs) {
+    for (runmanager::Job& job : jobs) {
       job.waitForFinished();
     }
   }
@@ -271,7 +270,7 @@ namespace detail {
     // get all jobs in the queued analysis, including child jobs
     analysis::DataPointVector queuedOSDataPoints = m_queuedOSDataPoints;
     std::vector<runmanager::Job> jobs;
-    BOOST_FOREACH(const analysis::DataPoint& queuedOSDataPoint, queuedOSDataPoints) {
+    for (const analysis::DataPoint& queuedOSDataPoint : queuedOSDataPoints) {
       boost::optional<runmanager::Job> job = queuedOSDataPoint.topLevelJob();
       if (job){
         recursivelyAddJobAndChildren(jobs, *job);
@@ -280,7 +279,7 @@ namespace detail {
     m_queuedOSDataPoints.clear();
 
     analysis::DataPointVector queuedDakotaDataPoints = m_queuedDakotaDataPoints;
-    BOOST_FOREACH(const analysis::DataPoint& queuedDakotaDataPoint, queuedDakotaDataPoints) {
+    for (const analysis::DataPoint& queuedDakotaDataPoint : queuedDakotaDataPoints) {
       boost::optional<runmanager::Job> job = queuedDakotaDataPoint.topLevelJob();
       if (job){
         recursivelyAddJobAndChildren(jobs, *job);
@@ -291,7 +290,7 @@ namespace detail {
     cancelAllJobs(jobs);
 
     if (m_dakotaJob) {
-      // DLM: does this job have children that need to be cancelled too?
+      // DLM: does this job have children that need to be canceled too?
       runmanager::Job dakotaJob = runManager.getJob(*m_dakotaJob);
       dakotaJob.setCanceled(true);
       dakotaJob.requestStop();

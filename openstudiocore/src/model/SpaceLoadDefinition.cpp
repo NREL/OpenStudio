@@ -27,8 +27,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -54,7 +52,7 @@ namespace detail {
   {
     std::vector<openstudio::IdfObject> temp1;
     std::vector<SpaceLoadInstance> instances = this->instances();
-    BOOST_FOREACH(SpaceLoadInstance instance, instances){
+    for (SpaceLoadInstance instance : instances){
       std::vector<openstudio::IdfObject> temp2 = instance.remove();
       temp1.insert(temp1.end(), temp2.begin(), temp2.end());
     }
@@ -73,7 +71,7 @@ namespace detail {
   double SpaceLoadDefinition_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const SpaceLoadInstance& instance, this->instances()){
+    for (const SpaceLoadInstance& instance : this->instances()){
       result += instance.floorArea();
     }
     return result;
@@ -82,7 +80,7 @@ namespace detail {
   int SpaceLoadDefinition_Impl::quantity() const
   {
     int result = 0;
-    BOOST_FOREACH(const SpaceLoadInstance& instance, this->instances()){
+    for (const SpaceLoadInstance& instance : this->instances()){
       result += instance.quantity();
     }
     return result;

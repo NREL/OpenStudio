@@ -278,12 +278,12 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
         std::vector<openstudio::path> reports;
-        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+        for (const openstudio::runmanager::FileInfo& file : t_files) {
           reports.push_back(file.fullPath);
         }
         f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
         t_files = f.files();
-        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+        for (const openstudio::runmanager::FileInfo& file : t_files) {
           reports.push_back(file.fullPath);
         }
         populateComboBox(reports);
@@ -309,7 +309,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   openstudio::path path;
 
   m_comboBox->clear();
-  Q_FOREACH(openstudio::path report, reports){
+  for (const openstudio::path& report : reports) {
 
     fullPathString = toQString(report.string());
     QFile file(fullPathString);

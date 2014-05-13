@@ -27,7 +27,6 @@
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;
@@ -39,7 +38,7 @@ TEST_F(IdfFixture, ImfFile)
   StringVector sectionNames = imfFile.sectionNames();
   unsigned i = 1;
   LOG(Info,"Sections in the IdfFixture ImfFile:");
-  BOOST_FOREACH(const std::string& name, sectionNames) {
+  for (const std::string& name : sectionNames) {
     LOG(Info,"  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
     ++i;
   }

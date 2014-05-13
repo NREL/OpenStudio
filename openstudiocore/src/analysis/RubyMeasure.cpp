@@ -40,8 +40,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <OpenStudio.hxx>
 
 using namespace openstudio::ruleset;
@@ -129,7 +127,7 @@ namespace detail {
     if (other.m_perturbationScript) {
       m_perturbationScript = other.m_perturbationScript->clone();
     }
-    BOOST_FOREACH(const ruleset::OSArgument& arg,other.arguments()) {
+    for (const ruleset::OSArgument& arg : other.arguments()) {
       m_arguments.push_back(arg.clone());
     }
   }
@@ -177,7 +175,7 @@ namespace detail {
       }
       else {
         rubyJobBuilder.setScriptFile(perturbationScript().path());
-        BOOST_FOREACH(const ruleset::OSArgument& argument,arguments()) {
+        for (const ruleset::OSArgument& argument : arguments()) {
           std::string argumentValue = argument.printValue(true);
           if (!argumentValue.empty()) {
             rubyJobBuilder.addScriptParameter(argument.name(),argumentValue);
@@ -280,7 +278,7 @@ namespace detail {
 
   std::vector<ruleset::OSArgument> RubyMeasure_Impl::incompleteArguments() const {
     OSArgumentVector result;
-    BOOST_FOREACH(const OSArgument& arg,arguments()) {
+    for (const OSArgument& arg : arguments()) {
       if (arg.required() && !(arg.hasValue() || arg.hasDefaultValue())) {
         result.push_back(arg);
       }
@@ -330,7 +328,7 @@ namespace detail {
     // otherwise, prefer newArguments definitions and order
     OSArgumentVector argsToSet;
     OSArgumentVector currentArgs = arguments();
-    BOOST_FOREACH(const OSArgument& newArg,newArguments) {
+    for (const OSArgument& newArg : newArguments) {
       OSArgument newArgClone = newArg.clone();
       // look for current value
       NameFinder<OSArgument> finder(newArgClone.name(),true);
@@ -437,7 +435,7 @@ namespace detail {
 
   void RubyMeasure_Impl::setArguments(const std::vector<ruleset::OSArgument>& arguments) {
     m_arguments.clear();
-    BOOST_FOREACH(const ruleset::OSArgument& arg,arguments) {
+    for (const ruleset::OSArgument& arg : arguments) {
       m_arguments.push_back(arg.clone());
     }
     onChange(AnalysisObject_Impl::InvalidatesResults);
@@ -480,7 +478,7 @@ namespace detail {
     if (!arguments().empty()) {
       QVariantList argumentsList;
       int index(0);
-      Q_FOREACH(const OSArgument& arg,arguments()) {
+      for (const OSArgument& arg : arguments()) {
         QVariantMap argMap = ruleset::detail::toVariant(arg).toMap();
         argMap["argument_index"] = index;
         argumentsList.push_back(QVariant(argMap));
@@ -558,7 +556,7 @@ namespace detail {
     }
 
     // Path Argument Values
-    BOOST_FOREACH(OSArgument& arg,m_arguments) {
+    for (OSArgument& arg : m_arguments) {
       if ((arg.type() == OSArgumentType::Path) && arg.hasValue()) {
         temp = relocatePath(arg.valueAsPath(),originalBase,newBase);
         if (!temp.empty()) {

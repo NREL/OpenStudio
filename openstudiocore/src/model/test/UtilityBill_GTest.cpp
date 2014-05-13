@@ -230,7 +230,7 @@ TEST_F(ModelFixture, UtilityBill_Electricity_Issue765) {
 TEST_F(ModelFixture, UtilityBill_Coverage) {
   Model model;
 
-  BOOST_FOREACH(FuelType fuelType, FuelType::getValues()){
+  for (FuelType fuelType : FuelType::getValues()){
 
     UtilityBill utilityBill(fuelType, model);
     EXPECT_EQ(fuelType, utilityBill.fuelType().value());
@@ -244,7 +244,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
     EXPECT_FALSE(utilityBill.consumptionUnitValues().empty());
-    BOOST_FOREACH(const std::string& consumptionUnit, utilityBill.consumptionUnitValues()){
+    for (const std::string& consumptionUnit : utilityBill.consumptionUnitValues()){
 
       Meter meter = utilityBill.consumptionMeter();
 
@@ -253,7 +253,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
       EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
       EXPECT_TRUE(utilityBill.consumptionUnitDescription());
 
-      BOOST_FOREACH(const std::string& peakDemandUnit, utilityBill.peakDemandUnitValues()){
+      for (const std::string& peakDemandUnit : utilityBill.peakDemandUnitValues()){
 
         boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
 
@@ -268,7 +268,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
   }
 
 
-  BOOST_FOREACH(const std::string& calibrationGuideline, UtilityBill::calibrationGuidelines()){
+  for (const std::string& calibrationGuideline : UtilityBill::calibrationGuidelines()){
     // results tabs in OS app and PAT require these return values for each calibrationGuideline
     EXPECT_TRUE(UtilityBill::maxNMBE(calibrationGuideline)) << "maxNMBE " << calibrationGuideline;
     EXPECT_TRUE(UtilityBill::maxCVRMSE(calibrationGuideline)) << "maxCVRMSE " << calibrationGuideline;

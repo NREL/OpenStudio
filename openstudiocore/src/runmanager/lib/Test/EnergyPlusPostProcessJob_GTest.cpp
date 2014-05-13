@@ -62,7 +62,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJob)
 
   boost::optional<IdfFile> idfFile = IdfFile::load(originalfile);
   ASSERT_TRUE(idfFile);
-  BOOST_FOREACH(IdfObject idfObject, idfFile->getObjectsByType(IddObjectType::RunPeriod)){
+  for (IdfObject idfObject : idfFile->getObjectsByType(IddObjectType::RunPeriod)){
     idfObject.setInt(1, 1);
     idfObject.setInt(2, 1);
     idfObject.setInt(3, 1);
@@ -126,7 +126,7 @@ TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJobRerun)
 
   boost::optional<IdfFile> idfFile = IdfFile::load(originalfile);
   ASSERT_TRUE(idfFile);
-  BOOST_FOREACH(IdfObject idfObject, idfFile->getObjectsByType(IddObjectType::RunPeriod)){
+  for (IdfObject idfObject : idfFile->getObjectsByType(IddObjectType::RunPeriod)){
     idfObject.setInt(1, 1);
     idfObject.setInt(2, 1);
     idfObject.setInt(3, 1);

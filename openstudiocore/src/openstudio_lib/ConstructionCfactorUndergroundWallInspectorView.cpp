@@ -216,8 +216,8 @@ void ConstructionCfactorUndergroundWallInspectorView::populateStandardsConstruct
   if (m_standardsInformation){
     m_standardsConstructionType->addItem("");
     std::vector<std::string> suggestedStandardsConstructionTypes = m_standardsInformation->suggestedStandardsConstructionTypes();
-    Q_FOREACH(const std::string& standardsConstructionType, suggestedStandardsConstructionTypes){
-        m_standardsConstructionType->addItem(toQString(standardsConstructionType));
+    for (const std::string& standardsConstructionType : suggestedStandardsConstructionTypes) {
+      m_standardsConstructionType->addItem(toQString(standardsConstructionType));
     }
     boost::optional<std::string> standardsConstructionType = m_standardsInformation->standardsConstructionType();
     if (standardsConstructionType){

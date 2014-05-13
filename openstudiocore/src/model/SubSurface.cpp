@@ -673,7 +673,7 @@ namespace detail {
     bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
     OS_ASSERT(test);
 
-    BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_SubSurface)){
+    for (WorkspaceObject wo : this->getSources(IddObjectType::OS_SubSurface)){
       test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
       OS_ASSERT(test);
     }
@@ -699,12 +699,12 @@ namespace detail {
         result = "Skylight";
       }else{
         double surfaceMinZ = std::numeric_limits<double>::max();
-        BOOST_FOREACH(const Point3d& point, surface->vertices()){
+        for (const Point3d& point : surface->vertices()){
           surfaceMinZ = std::min(surfaceMinZ, point.z());
         }
 
         double thisMinZ = std::numeric_limits<double>::max();
-        BOOST_FOREACH(const Point3d& point, this->vertices()){
+        for (const Point3d& point : this->vertices()){
           thisMinZ = std::min(thisMinZ, point.z());
         }
 
@@ -758,7 +758,7 @@ namespace detail {
       double xmax = std::numeric_limits<double>::min();
       double ymin = std::numeric_limits<double>::max();
       double ymax = std::numeric_limits<double>::min();
-      BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+      for (const Point3d& faceVertex : faceVertices){
         xmin = std::min(xmin, faceVertex.x());
         xmax = std::max(xmax, faceVertex.x());
         ymin = std::min(ymin, faceVertex.y());
@@ -810,7 +810,7 @@ namespace detail {
       double xmax = std::numeric_limits<double>::min();
       double ymin = std::numeric_limits<double>::max();
       double ymax = std::numeric_limits<double>::min();
-      BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+      for (const Point3d& faceVertex : faceVertices){
         xmin = std::min(xmin, faceVertex.x());
         xmax = std::max(xmax, faceVertex.x());
         ymin = std::min(ymin, faceVertex.y());
@@ -1127,7 +1127,7 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
   std::vector<SubSurface> result;
 
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
 
     if (space.isPlenum()){
       LOG_FREE(Warn, "OpenStudio.applySkylightPattern", "Cannot apply skylights to plenum space");
@@ -1139,11 +1139,11 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
     std::vector<std::vector<Point3d> > spacePattern;
     spacePattern.reserve(pattern.size());
-    BOOST_FOREACH(const std::vector<Point3d>& face, pattern){
+    for (const std::vector<Point3d>& face : pattern){
       spacePattern.push_back(inverseTransformation*face);
     }
 
-    BOOST_FOREACH(Surface surface, space.surfaces()){
+    for (Surface surface : space.surfaces()){
       if (istringEqual("RoofCeiling", surface.surfaceType()) &&
           istringEqual("Outdoors", surface.outsideBoundaryCondition())){
 
@@ -1151,7 +1151,7 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
         std::vector<std::vector<Point3d> > surfacePattern;
         spacePattern.reserve(pattern.size());
-        BOOST_FOREACH(const std::vector<Point3d>& spaceFace, spacePattern){
+        for (const std::vector<Point3d>& spaceFace : spacePattern){
           surfacePattern.push_back(surfacePlane.project(spaceFace));
         }
 

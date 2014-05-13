@@ -51,8 +51,6 @@
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

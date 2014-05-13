@@ -99,7 +99,7 @@ std::vector<Component *> ComponentList::components()
 {
   std::vector<Component *> result;
 
-  Q_FOREACH(QAbstractButton * button, m_componentGroup->buttons().toVector().toStdVector()){
+  for (QAbstractButton * button : m_componentGroup->buttons().toVector().toStdVector()) {
     result.push_back(qobject_cast<Component *>(button));
   }
 
@@ -134,7 +134,7 @@ void ComponentList::paintEvent( QPaintEvent * event )
 
 void ComponentList::setComponents(const std::vector<Component *> & components)
 {
-  Q_FOREACH(Component * component, components)
+  for (Component * component : components)
   {
     addComponent(component);
   }

@@ -52,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & mode
   IdfObject idfObject(IddObjectType::Building);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
   
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & mode
   // translate shading groups
   ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
   std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
     translateAndMapModelObject(shadingSurfaceGroup);
   }
 

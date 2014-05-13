@@ -52,7 +52,6 @@
 
 #include <QMetaProperty>
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
 using openstudio::Handle;
@@ -99,7 +98,7 @@ namespace detail {
   {
     std::vector<IdfObject> removedCosts;
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
-    BOOST_FOREACH(LifeCycleCost& lifeCycleCost, lifeCycleCosts){
+    for (LifeCycleCost& lifeCycleCost : lifeCycleCosts){
       std::vector<IdfObject> tmp = lifeCycleCost.remove();
       removedCosts.insert(removedCosts.end(), tmp.begin(), tmp.end());
     }
@@ -501,7 +500,7 @@ namespace detail {
     OptionalParentObject opo = parent();
     std::set<Handle> uniqueResourceHandles;
     ResourceObjectVector result;
-    BOOST_FOREACH(const ResourceObject& resourceObject, resourceObjects){
+    for (const ResourceObject& resourceObject : resourceObjects){
 
       Handle handle = resourceObject.handle();
       if (opo && (opo->handle() == handle)){
@@ -527,7 +526,7 @@ namespace detail {
     std::vector<std::string> variableNames = this->outputVariableNames();
     OptionalString name = this->name();
 
-    BOOST_FOREACH(const OutputVariable& variable, this->model().getModelObjects<OutputVariable>()){
+    for (const OutputVariable& variable : this->model().getModelObjects<OutputVariable>()){
       std::string keyValue = variable.keyValue();
       std::string variableName = variable.variableName();
 
@@ -630,7 +629,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getSourceModelObject())
   //    {
@@ -657,7 +656,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getSourceModelObject())
   //    {
@@ -679,7 +678,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getTargetModelObject())
   //    {
@@ -706,7 +705,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getTargetModelObject())
   //    {
@@ -835,7 +834,7 @@ namespace detail {
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
     toAdd.insert(toAdd.end(), lifeCycleCosts.begin(), lifeCycleCosts.end());
 
-    // If same model, non-recursive insert of resources should be sufficienct.
+    // If same model, non-recursive insert of resources should be sufficient.
     Model m = this->model();
     if (model == m) {
       ResourceObjectVector resources = this->resources();
@@ -845,7 +844,7 @@ namespace detail {
       OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
       // inserting resources better have worked
       unsigned i = 1 + lifeCycleCosts.size();
-      BOOST_FOREACH(const ResourceObject& resource,resources) {
+      for (const ResourceObject& resource : resources) {
         OS_ASSERT(result[i] == resource);
         ++i;
       }
@@ -951,7 +950,7 @@ namespace detail {
       ModelObject me = getObject<ModelObject>();
 
       ScheduleVector schedules = me.getModelObjectTargets<Schedule>();
-      BOOST_FOREACH(const Schedule& schedule,schedules) {
+      for (const Schedule& schedule : schedules) {
         std::vector<ScheduleTypeKey> keys = getScheduleTypeKeys(schedule);
         for (int i = 0, n = keys.size(); i < n; ++i) {
           OptionalScheduleTypeLimits limits = schedule.scheduleTypeLimits();

@@ -53,7 +53,6 @@
 
 #include <QThread>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
@@ -212,7 +211,7 @@ VersionString VersionTranslator::originalVersion() const {
 
 std::vector<LogMessage> VersionTranslator::warnings() const {
   std::vector<LogMessage> result;
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() == Warn){
       result.push_back(logMessage);
     }
@@ -222,7 +221,7 @@ std::vector<LogMessage> VersionTranslator::warnings() const {
 
 std::vector<LogMessage> VersionTranslator::errors() const {
   std::vector<LogMessage> result;
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() > Warn){
       result.push_back(logMessage);
     }
@@ -272,7 +271,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
     progressBar->setMinimum(0);
     progressBar->setMaximum(m_startVersions.size());
   }
-  BOOST_FOREACH(const VersionString& startVersion,m_startVersions) {
+  for (const VersionString& startVersion : m_startVersions) {
     if (progressBar){
       progressBar->setWindowTitle("Upgrading from " + startVersion.str());
       progressBar->setValue(progressBar->value()+1);
@@ -470,7 +469,7 @@ std::string VersionTranslator::defaultUpdate(const IdfFile& idf,
   ss << targetIdf.versionObject().get();
 
   // all other objects
-  BOOST_FOREACH(const IdfObject& object,idf.objects()) {
+  for (const IdfObject& object : idf.objects()) {
     ss << object;
   }
 
@@ -488,7 +487,7 @@ std::string VersionTranslator::update_0_7_1_to_0_7_2(const IdfFile& idf_0_7_1, c
   ss << targetIdf.versionObject().get();
 
   // all other objects
-  BOOST_FOREACH(const IdfObject& object,idf_0_7_1.objects()) {
+  for (const IdfObject& object : idf_0_7_1.objects()) {
     IdfObject toPrint = object;
     if (object.iddObject().name() == "OS:WeatherFile") {
       toPrint = updateUrlField_0_7_1_to_0_7_2(object,9);
@@ -538,7 +537,7 @@ std::string VersionTranslator::update_0_7_2_to_0_7_3(const IdfFile& idf_0_7_2, c
   ss << targetIdf.versionObject().get();
 
   // all other objects
-  BOOST_FOREACH(const IdfObject& object,idf_0_7_2.objects()) {
+  for (const IdfObject& object : idf_0_7_2.objects()) {
     if (istringEqual(object.iddObject().name(),"OS:PlantLoop")) {
       // ETH@20120514 Kyle - Please refine/completely rework this as appropriate.
       LOG(Warn,"This model contains an out-of-date " << object.iddObject().name() << " object. "
@@ -563,7 +562,7 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
   ss << targetIdf.versionObject().get();
 
   // all other objects
-  BOOST_FOREACH(IdfObject object, idf_0_7_3.objects()) {
+  for (IdfObject object : idf_0_7_3.objects()) {
     if (istringEqual(object.iddObject().name(),"OS:ComponentData:Tags")) {
       m_deprecated.push_back(object);
       continue;
@@ -614,7 +613,7 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
       // version timestamp - leave blank because unknown
       // object list
       StringVector handleForContents(1u);
-      BOOST_FOREACH(const IdfExtensibleGroup& eg,object.extensibleGroups()) {
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
         std::string typeStr = eg.getString(0).get();
         typeStr = boost::regex_replace(typeStr,boost::regex("_"),":");
         std::string nameStr = eg.getString(1).get();
@@ -790,7 +789,7 @@ void VersionTranslator::fixInterobjectIssuesStage2(
 {
   OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
 
-  BOOST_FOREACH(boost::shared_ptr<InterobjectIssueInformation>& info,stage1Information) {
+  for (boost::shared_ptr<InterobjectIssueInformation>& info : stage1Information) {
     if (info->endVersion == VersionString("0.8.4")) {
       fixInterobjectIssuesStage2_0_8_3_to_0_8_4(model,info);
     }
@@ -807,14 +806,14 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
   model::ComponentDataVector allComponentData = model.getModelObjects<model::ComponentData>();
   std::vector<IdfObject> allIdfComponentData; // make sure idf versions share data
   std::vector<model::ModelObjectVector> allComponentDataObjects;
-  BOOST_FOREACH(const model::ComponentData& cd,allComponentData) {
+  for (const model::ComponentData& cd : allComponentData) {
     allComponentDataObjects.push_back(cd.componentObjects());
     allIdfComponentData.push_back(cd.idfObject());
   }
   std::set<int> found;
   // loop through all schedules
   model::ScheduleVector schedules = model.getModelObjects<model::Schedule>();
-  BOOST_FOREACH(model::Schedule& schedule, schedules) {
+  for (model::Schedule& schedule : schedules) {
     // get users
     model::ModelObjectVector users = schedule.getModelObjectSources<model::ModelObject>();
     if (!users.empty()) {
@@ -832,7 +831,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
             found.insert(i);
           }
         }
-        BOOST_FOREACH(IdfObject& cd,thisSchedulesComponentData) {
+        for (IdfObject& cd : thisSchedulesComponentData) {
           model::ModelObjectVector::iterator it = std::find_if(result->users.back().begin(),
                                                                result->users.back().end(),
                                                                boost::bind(handleEquals<IdfObject,Handle>,_1,cd.handle()));
@@ -859,7 +858,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
           }
 
           OS_ASSERT(thisUsersIndices.size() == thisUsersKeys.size());
-          BOOST_FOREACH(unsigned index,thisUsersIndices) {
+          for (unsigned index : thisUsersIndices) {
             it->setString(index,""); // clear for now--only change to be made at none strictness
           }
           thisSchedulesIndices.push_back(thisUsersIndices);
@@ -879,7 +878,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
   }
 
   // remove component data objects from model--replace in Stage 2
-  BOOST_FOREACH(int index,found) {
+  for (int index : found) {
     m_untranslated.push_back(allIdfComponentData[index]);
     if (allComponentData[index].initialized()) {
       allComponentData[index].remove();
@@ -898,7 +897,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
 
   // make sure ScheduleDays are owned by their ScheduleRules and ScheduleRulesets
   model::ScheduleDayVector daySchedules = model.getModelObjects<model::ScheduleDay>();
-  BOOST_FOREACH(model::ScheduleDay& daySchedule,daySchedules) {
+  for (model::ScheduleDay& daySchedule : daySchedules) {
     model::ScheduleRulesetVector rulesetUsers = daySchedule.getModelObjectSources<model::ScheduleRuleset>();
     model::ScheduleRuleVector ruleUsers = daySchedule.getModelObjectSources<model::ScheduleRule>();
     if (rulesetUsers.size() + ruleUsers.size() > 1u) {
@@ -973,7 +972,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
           okToModifySchedule = false;
         }
         else {
-          BOOST_FOREACH(model::Schedule& candidate,candidates) {
+          for (model::Schedule& candidate : candidates) {
             if (model::OptionalScheduleTypeLimits limits = candidate.scheduleTypeLimits()) {
               if (isCompatible(keys[k].first,keys[k].second,*limits)) {
                 user.setPointer(indices[k],candidate.handle());
@@ -1029,7 +1028,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     }
     // start to fix-up component data--add objects
     std::set<model::ModelObject> usersSet(schedulesToFixup->users[i].begin(),schedulesToFixup->users[i].end());
-    BOOST_FOREACH(IdfObject& cd,schedulesToFixup->componentDataObjects[i]) {
+    for (IdfObject& cd : schedulesToFixup->componentDataObjects[i]) {
       LOG(Debug,"Adding ScheduleTypeLimits '" << scheduleLimits->name().get() << "' to component data list.");
       cd.pushExtensibleGroup(StringVector(1u,toString(scheduleLimits->handle())));
       for (unsigned j = 0, n = candidates.size(); j < n; ++j) {
@@ -1055,13 +1054,13 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
 
   // clean up component data
   std::set<IdfObject,IdfObjectImplLess> uniqueComponentData;
-  BOOST_FOREACH(const std::vector<IdfObject>& scheduleCD,schedulesToFixup->componentDataObjects) {
-    BOOST_FOREACH(const IdfObject& cd,scheduleCD) {
+  for (const std::vector<IdfObject>& scheduleCD : schedulesToFixup->componentDataObjects) {
+    for (const IdfObject& cd : scheduleCD) {
       uniqueComponentData.insert(cd);
     }
   }
   IdfObjectVector uniqueComponentDataVector(uniqueComponentData.begin(),uniqueComponentData.end());
-  BOOST_FOREACH(IdfObject& cd,uniqueComponentDataVector) {
+  for (IdfObject& cd : uniqueComponentDataVector) {
     // remove duplicates and objects not in model
     model::ModelObjectVector componentObjects;
     unsigned i = 0;
@@ -1156,7 +1155,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
 
   // populate m_refactored
   model::ModelObjectVector refactoredUsersVector(schedulesToFixup->refactoredUsers.begin(),schedulesToFixup->refactoredUsers.end());
-  BOOST_FOREACH(model::ModelObject& user,refactoredUsersVector) {
+  for (model::ModelObject& user : refactoredUsersVector) {
     IdfObjectVector::const_iterator it = std::find_if(schedulesToFixup->originalUsers.begin(),
                                                       schedulesToFixup->originalUsers.end(),
                                                       boost::bind(handleEquals<IdfObject,Handle>,_1,user.handle()));
@@ -1178,7 +1177,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
   ss << targetIdf.versionObject().get();
 
   // Fixup all thermal zone objects
-  BOOST_FOREACH(const IdfObject& object,idf_0_9_1.objects()) {
+  for (const IdfObject& object : idf_0_9_1.objects()) {
     if( object.iddObject().name() == "OS:ThermalZone" )
     {
       boost::optional<std::string> s;
@@ -1387,7 +1386,7 @@ std::string VersionTranslator::update_0_9_1_to_0_9_2(const IdfFile& idf_0_9_1, c
     }
   }
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_9_1.objects()) {
+  for (const IdfObject& object : idf_0_9_1.objects()) {
     if( object.iddObject().name() != "OS:ThermalZone" )
     {
       ss << object;
@@ -1402,7 +1401,7 @@ std::string VersionTranslator::update_0_9_5_to_0_9_6(const IdfFile& idf_0_9_5, c
   // if multiple OS:RunPeriod objects remove them all
   bool skipRunPeriods = false;
   unsigned numRunPeriods = 0;
-  BOOST_FOREACH(const IdfObject& object,idf_0_9_5.objects()) 
+  for (const IdfObject& object : idf_0_9_5.objects()) 
   {
     if( object.iddObject().name() == "OS:RunPeriod" )
     {
@@ -1426,7 +1425,7 @@ std::string VersionTranslator::update_0_9_5_to_0_9_6(const IdfFile& idf_0_9_5, c
   IdfFile targetIdf(idd_0_9_6.iddFile());
   ss << targetIdf.versionObject().get();
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_9_5.objects()) {
+  for (const IdfObject& object : idf_0_9_5.objects()) {
     if( object.iddObject().name() == "OS:PlantLoop" )
     {
       IdfObject newSizingPlant(idd_0_9_6.getObject("OS:Sizing:Plant").get());
@@ -1493,7 +1492,7 @@ std::stringstream ss;
   IdfFile targetIdf(idd_0_10_0.iddFile());
   ss << targetIdf.versionObject().get();
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_9_6.objects()) {
+  for (const IdfObject& object : idf_0_9_6.objects()) {
 
     if( object.iddObject().name() == "OS:RadianceParameters" ) {
       boost::optional<std::string> value = object.getString(14);
@@ -1532,7 +1531,7 @@ std::string VersionTranslator::update_0_11_0_to_0_11_1(const IdfFile& idf_0_11_0
   std::vector<IdfObject> componentDataObjects;
   std::vector<std::string> removedComponentCostLineItemHandles;
 
-  BOOST_FOREACH(const IdfObject& object, idf_0_11_0.objects()) {
+  for (const IdfObject& object : idf_0_11_0.objects()) {
     if( object.iddObject().name() == "OS:ComponentCost:LineItem" )
     {
       removedComponentCostLineItemHandles.push_back(toString(object.handle()));
@@ -1554,7 +1553,7 @@ std::string VersionTranslator::update_0_11_0_to_0_11_1(const IdfFile& idf_0_11_0
 
   // remove these handles from any component data objects
   // DLM: this is probably a standard thing we want to do in every version translation function
-  BOOST_FOREACH(const IdfObject& componentDataObject, componentDataObjects) {
+  for (const IdfObject& componentDataObject : componentDataObjects) {
 
     // if object was primary component remove the component data completely
     boost::optional<std::string> primaryObjectHandle = componentDataObject.getString(6);
@@ -1629,7 +1628,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
   {
     // Add an always on discrete schedule if one does not already exist
 
-    BOOST_FOREACH(const IdfObject& object,idf_0_11_1.objects()) {
+    for (const IdfObject& object : idf_0_11_1.objects()) {
       if( object.iddObject().name() == "OS:Schedule:Constant" )
       {
         if( boost::optional<std::string> name = object.getString(1) )
@@ -1686,7 +1685,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
     }
   }
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_11_1.objects()) {
+  for (const IdfObject& object : idf_0_11_1.objects()) {
     // There are no official components with HVAC at this version.
     // We don't do this translation because it breaks tests related to OS:ComponentData when new objects are added.
     // Future version will do something better.
@@ -1818,7 +1817,7 @@ std::string VersionTranslator::update_0_11_1_to_0_11_2(const IdfFile& idf_0_11_1
 
   // remove these handles from any component data objects
   // DLM: this is probably a standard thing we want to do in every version translation function
-  BOOST_FOREACH(const IdfObject& componentDataObject, componentDataObjects) {
+  for (const IdfObject& componentDataObject : componentDataObjects) {
 
     // if object was primary component remove the component data completely
     boost::optional<std::string> primaryObjectHandle = componentDataObject.getString(6);
@@ -1885,7 +1884,7 @@ std::string VersionTranslator::update_0_11_4_to_0_11_5(const IdfFile& idf_0_11_4
   unsigned numLifeCycleNonRecurringCostRemoved = 0;
   unsigned numLifeCycleRecurringCostRemoved = 0;
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_11_4.objects()) {
+  for (const IdfObject& object : idf_0_11_4.objects()) {
 
     if( object.iddObject().name() == "OS:ComponentCost:LineItem" )
     {
@@ -1928,7 +1927,7 @@ std::string VersionTranslator::update_0_11_4_to_0_11_5(const IdfFile& idf_0_11_4
 
   // remove these handles from any component data objects
   // DLM: this is probably a standard thing we want to do in every version translation function
-  BOOST_FOREACH(const IdfObject& componentDataObject, componentDataObjects) {
+  for (const IdfObject& componentDataObject : componentDataObjects) {
 
     // if object was primary component remove the component data completely
     boost::optional<std::string> primaryObjectHandle = componentDataObject.getString(6);
@@ -1986,14 +1985,14 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
   IdfFile targetIdf(idd_0_11_6.iddFile());
   ss << targetIdf.versionObject().get();
 
-  BOOST_FOREACH(const IdfObject& object,idf_0_11_5.objects()) {
+  for (const IdfObject& object : idf_0_11_5.objects()) {
 
     if( object.iddObject().name() == "OS:ThermalZone" ) {
 
       boost::optional<std::string> inletPortListString = object.getString(9);
       boost::optional<std::string> exhaustPortListString = object.getString(10);
 
-      BOOST_FOREACH(const IdfObject& object2,idf_0_11_5.objects()) {
+      for (const IdfObject& object2 : idf_0_11_5.objects()) {
 
         if( object2.iddObject().name() == "OS:PortList" ) {
 
@@ -2067,7 +2066,7 @@ std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, c
   IdfFile targetIdf(idd_1_0_2.iddFile());
   ss << targetIdf.versionObject().get();
 
-  BOOST_FOREACH(const IdfObject& object,idf_1_0_1.objects()) {
+  for (const IdfObject& object : idf_1_0_1.objects()) {
 
     if( object.iddObject().name() == "OS:Boiler:HotWater" ) {
 
@@ -2127,7 +2126,7 @@ std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, c
   IdfFile targetIdf(idd_1_0_3.iddFile());
   ss << targetIdf.versionObject().get();
 
-  BOOST_FOREACH(const IdfObject& object,idf_1_0_2.objects()) {
+  for (const IdfObject& object : idf_1_0_2.objects()) {
 
     if( object.iddObject().name() == "OS:RadianceParameters" ) {
       boost::optional<std::string> value = object.getString(14);
@@ -2172,7 +2171,7 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
   boost::optional<std::string> buildingTypeValue;
   boost::optional<IdfObject> buildingObject;
 
-  BOOST_FOREACH(const IdfObject& object,idf_1_2_2.objects()) {
+  for (const IdfObject& object : idf_1_2_2.objects()) {
 
     if( object.iddObject().name() == "OS:StandardsInformation:Construction" ) {
       boost::optional<std::string> value = object.getString(2); // Intended Surface Type

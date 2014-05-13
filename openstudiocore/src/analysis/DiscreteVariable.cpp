@@ -83,7 +83,7 @@ namespace detail {
     IntVector selectedValues = validValues(true);
     if (selectedValues.size() < allValues.size()) {
       QVariantList selectedList;
-      Q_FOREACH(int val,selectedValues) {
+      for (int val : selectedValues) {
         selectedList.push_back(QVariant(val));
       }
       map["selected_values"] = selectedList;

@@ -736,7 +736,7 @@ void SpaceLoadInstancesWidget::detach()
     model::Building building = m_model->getUniqueModelObject<model::Building>();
     this->disconnect(building.getImpl<openstudio::model::detail::Model_Impl>().get());
 
-    BOOST_FOREACH(model::SpaceType spaceType, m_model->getModelObjects<model::SpaceType>()){
+    for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
       this->disconnect(spaceType.getImpl<openstudio::model::detail::Model_Impl>().get());
     }
 
@@ -777,7 +777,7 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  BOOST_FOREACH(model::SpaceType spaceType, m_model->getModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
@@ -824,7 +824,7 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  BOOST_FOREACH(model::SpaceType spaceType, m_model->getModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
@@ -1024,7 +1024,7 @@ void SpaceLoadInstancesWidget::addSpaceLoads(const model::Space& space)
   std::sort(internalMass.begin(), internalMass.end(), WorkspaceObjectNameLess());
   spaceLoads.insert(spaceLoads.end(), internalMass.begin(), internalMass.end());
 
-  BOOST_FOREACH(const model::ModelObject& modelObject, spaceLoads){
+  for (const model::ModelObject& modelObject : spaceLoads){
     if (!modelObject.handle().isNull()){
       if (modelObject.optionalCast<model::SpaceLoadInstance>()){
 
@@ -1078,7 +1078,7 @@ void SpaceLoadInstancesWidget::addSpaceTypeLoads(const model::SpaceType& spaceTy
   std::sort(internalMass.begin(), internalMass.end(), WorkspaceObjectNameLess());
   spaceLoads.insert(spaceLoads.end(), internalMass.begin(), internalMass.end());
 
-  BOOST_FOREACH(const model::ModelObject& modelObject, spaceLoads){
+  for (const model::ModelObject& modelObject : spaceLoads){
     if (!modelObject.handle().isNull()){
       if (modelObject.optionalCast<model::SpaceLoadInstance>()){
 

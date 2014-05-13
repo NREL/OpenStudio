@@ -615,7 +615,7 @@ void UtilityBillsInspectorView::addBillingPeriodWidgets()
 
 void UtilityBillsInspectorView::deleteBillingPeriodWidgets()
 {
-  Q_FOREACH(BillingPeriodWidget * billingPeriodWidget, m_billingPeriodWidgets){
+  for (BillingPeriodWidget * billingPeriodWidget : m_billingPeriodWidgets) {
     billingPeriodWidget->detach();
     delete billingPeriodWidget;
     billingPeriodWidget = 0;

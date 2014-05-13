@@ -773,7 +773,7 @@ ScheduleSetInspectorView::ScheduleSetInspectorView(const model::Model& model,
 
 void ScheduleSetInspectorView::configDropZones()
 {
-  BOOST_FOREACH(openstudio::OSDropZone * dropZone,m_dropZones){
+  for (openstudio::OSDropZone * dropZone : m_dropZones){
     dropZone->setMinItems(0);
     dropZone->setMaxItems(1);
     dropZone->setItemsAcceptDrops(true);
@@ -798,7 +798,7 @@ void ScheduleSetInspectorView::onUpdate()
 
 void ScheduleSetInspectorView::attach(openstudio::model::DefaultScheduleSet& defaultScheduleSet)
 {
-  BOOST_FOREACH(ModelObjectVectorController * vc, m_vectorControllers){
+  for (ModelObjectVectorController * vc : m_vectorControllers){
     vc->attach(defaultScheduleSet);
     vc->reportItems();
   }
@@ -814,7 +814,7 @@ void ScheduleSetInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  BOOST_FOREACH(ModelObjectVectorController * vc, m_vectorControllers){
+  for (ModelObjectVectorController * vc : m_vectorControllers){
     vc->detach();
     vc->reportItems();
   }

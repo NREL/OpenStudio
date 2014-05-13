@@ -102,7 +102,7 @@ namespace detail {
 
     YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
 
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(this->extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(this->extensibleGroups()))
     {
       OptionalUnsigned month = group.getUnsigned(0, true);
       OptionalUnsigned day = group.getUnsigned(1, true);
@@ -121,7 +121,7 @@ namespace detail {
   {
     std::vector<ScheduleWeek> result;
 
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(this->extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(this->extensibleGroups()))
     {
       OptionalWorkspaceObject object = group.getTarget(2);
       if (object){
@@ -257,7 +257,7 @@ namespace detail {
 
   void ScheduleYear_Impl::ensureNoLeapDays()
   {
-    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+    for (IdfExtensibleGroup group : this->extensibleGroups()){
       boost::optional<int> month;
       boost::optional<int> day;
 

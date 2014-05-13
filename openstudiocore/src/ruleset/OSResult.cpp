@@ -22,7 +22,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <QFile>
 #include <QDomDocument>
@@ -293,7 +292,7 @@ QDomDocument OSResult::toXml() const {
 
   if (!m_attributes.empty()) {
     childElement = doc.createElement(QString("Attributes"));
-    BOOST_FOREACH(const Attribute& attribute,m_attributes) {
+    for (const Attribute& attribute : m_attributes) {
       childElement.appendChild(attribute.toXml().documentElement());
     }
     element.appendChild(childElement);
@@ -310,7 +309,7 @@ void OSResult::logMessagesToXml(QDomDocument& doc,
   QDomElement childElement, grandchildElement;
   QDomText text;
 
-  BOOST_FOREACH(const LogMessage& msg,logMessages) {
+  for (const LogMessage& msg : logMessages) {
     childElement = doc.createElement(QString("LogMessage"));
 
     grandchildElement = doc.createElement(QString("Channel"));

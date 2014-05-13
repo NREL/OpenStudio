@@ -53,7 +53,6 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 #include <QFileInfo>
@@ -99,7 +98,7 @@ TEST_F(AnalysisDriverFixture, DDACE_CentralComposite_Continuous) {
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
   EXPECT_EQ(DDACEAlgorithmOptions::samplesForCentralComposite(problem),int(summary.nRows()-1));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -157,7 +156,7 @@ TEST_F(AnalysisDriverFixture, DDACE_BoxBehnken_Continuous) {
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
   EXPECT_EQ(DDACEAlgorithmOptions::samplesForBoxBehnken(problem),int(summary.nRows()-1));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -233,7 +232,7 @@ TEST_F(AnalysisDriverFixture, DDACE_OrthogonalArray_Continuous) {
     EXPECT_EQ(10u,summary.nRows()); // 9 points
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -266,7 +265,7 @@ TEST_F(AnalysisDriverFixture, DDACE_OrthogonalArray_Continuous) {
     EXPECT_EQ(9u,summary.nRows());
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
     }
@@ -310,7 +309,7 @@ TEST_F(AnalysisDriverFixture, DDACE_OrthogonalArray_MixedOsmIdf) {
   // EXPECT_EQ(10u,summary.nRows()); // 9 points
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }
@@ -374,7 +373,7 @@ TEST_F(AnalysisDriverFixture, DDACE_Grid_Continuous) {
     EXPECT_EQ(10u,summary.nRows()); // 9 points
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -401,7 +400,7 @@ TEST_F(AnalysisDriverFixture, DDACE_Grid_Continuous) {
     EXPECT_EQ(5u,summary.nRows()); // 4 points
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -479,7 +478,7 @@ TEST_F(AnalysisDriverFixture, DDACE_MonteCarlo_Continuous) {
     EXPECT_EQ(7u,summary.nRows()); // 6 points
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -525,7 +524,7 @@ TEST_F(AnalysisDriverFixture, DDACE_MonteCarlo_MixedOsmIdf_ProjectDatabaseOpen) 
     EXPECT_EQ(5u,summary.nRows()); // 4 points
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
     }
@@ -589,7 +588,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_Continuous) {
     EXPECT_EQ(5u,summary.nRows());
     summary.save(project.projectDir() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -696,7 +695,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDataba
     summary.save(project.projectDir() / toPath("summary.csv"));
 
     EXPECT_EQ(4u,analysis.dataPoints().size());
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       EXPECT_TRUE(dataPoint.workspace()); // should be able to load data from disk
@@ -727,7 +726,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDataba
   Analysis analysis = project.analysis();
   EXPECT_TRUE(project.analysisIsLoaded());
   EXPECT_EQ(4u,analysis.dataPoints().size());
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     LOG(Debug,"Attempting to load workspace for data point at '" << dataPoint.directory() << "'.");
@@ -760,7 +759,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_MixedOsmIdf_MoveProjectDataba
   EXPECT_EQ(5u,summary.nRows()); // 4 points (all combinations)
   summary.save(project.projectDir() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     EXPECT_TRUE(dataPoint.workspace()); // should be able to load data from disk
@@ -800,7 +799,7 @@ TEST_F(AnalysisDriverFixture, DDACE_LatinHypercube_UserScriptContinuous) {
   EXPECT_EQ(11u,summary.nRows());
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }
@@ -858,7 +857,7 @@ TEST_F(AnalysisDriverFixture, DDACE_OALHS_Continuous) {
     EXPECT_EQ(10u,summary.nRows()); // ups to 9 samples
     summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-    BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+    for (const DataPoint& dataPoint : analysis.dataPoints()) {
       EXPECT_TRUE(dataPoint.isComplete());
       EXPECT_FALSE(dataPoint.failed());
       // EXPECT_FALSE(dataPoint.responseValues().empty());
@@ -899,7 +898,7 @@ TEST_F(AnalysisDriverFixture, DDACE_OALHS_MixedOsmIdf) {
   EXPECT_EQ(5u,summary.nRows()); // 4 points (all combinations)
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }

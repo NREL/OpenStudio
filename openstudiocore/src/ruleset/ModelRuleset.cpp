@@ -22,7 +22,6 @@
 #include <ruleset/ModelRule.hpp>
 #include <ruleset/ModelRule_Impl.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <QDomDocument>
@@ -99,7 +98,7 @@ namespace detail {
     QDomText text;
 
     childElement = doc.createElement(QString::fromStdString("Rules"));
-    BOOST_FOREACH(const ModelRule& modelRule, m_rules){
+    for (const ModelRule& modelRule : m_rules){
       childElement.appendChild(modelRule.toXml().documentElement());
     }
     element.appendChild(childElement);
@@ -114,7 +113,7 @@ namespace detail {
   bool ModelRuleset_Impl::apply(openstudio::model::Model& model)
   {
     bool result = true;
-    BOOST_FOREACH(const ModelRule& rule, m_rules){
+    for (const ModelRule& rule : m_rules){
       result = result && rule.apply(model);
     }
     return result;

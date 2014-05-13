@@ -27,8 +27,6 @@
 #include <model/OtherEquipmentDefinition.hpp>
 #include <model/OtherEquipmentDefinition_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

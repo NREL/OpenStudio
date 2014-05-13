@@ -164,7 +164,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
     //make a variable flow radiant unit
     ScheduleConstant availabilitySched(model);
     ScheduleConstant coolingControlTemperatureSchedule(model);
@@ -212,10 +212,10 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
 
     //get the radiant zone equipment
-    BOOST_FOREACH(const ModelObject& equipment, thermalZone.equipment()){
+    for (const ModelObject& equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()){
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
         EXPECT_EQ(4,testRad.surfaces().size());

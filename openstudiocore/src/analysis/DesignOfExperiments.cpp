@@ -33,8 +33,6 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -117,7 +115,7 @@ namespace detail {
 
     // determine all combinations
     std::vector< std::vector<QVariant> > variableValues;
-    BOOST_FOREACH(const Variable variable, analysis.problem().variables()) {
+    for (const Variable& variable : analysis.problem().variables()) {
       // variable must be DiscreteVariable, otherwise !isCompatibleProblemType(analysis.problem())
       DiscreteVariable discreteVariable = variable.cast<DiscreteVariable>();
       IntVector dvValues = discreteVariable.validValues(true);
@@ -130,7 +128,7 @@ namespace detail {
           variableValues.push_back(std::vector<QVariant>(1u,QVariant(*it)));
         }
         else {
-          BOOST_FOREACH(std::vector<QVariant>& point,nextSet) {
+          for (std::vector<QVariant>& point : nextSet) {
             point.push_back(QVariant(*it));
           }
           if (it == dvValues.begin()) {
@@ -144,7 +142,7 @@ namespace detail {
     }
 
     // create data points and add to analysis
-    BOOST_FOREACH(const std::vector<QVariant>& value,variableValues) {
+    for (const std::vector<QVariant>& value : variableValues) {
       DataPoint dataPoint = analysis.problem().createDataPoint(value).get();
       dataPoint.addTag("DOE");
       bool added = analysis.addDataPoint(dataPoint);

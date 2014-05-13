@@ -49,8 +49,6 @@
 #include <utilities/economics/Economics.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
-#include <boost/foreach.hpp>
-
 using openstudio::Handle;
 using openstudio::OptionalHandle;
 using openstudio::HandleVector;
@@ -140,7 +138,7 @@ namespace detail {
   {
     MeterVector result;
     MeterVector meters = this->model().getModelObjects<Meter>();
-    BOOST_FOREACH(const Meter& meter, meters){
+    for (const Meter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())){
         result.push_back(meter);
       }
@@ -155,7 +153,7 @@ namespace detail {
     const boost::optional<std::string>& specificEndUse) const
   {
     OptionalMeter result;
-    BOOST_FOREACH(const Meter& meter,this->meters()) {
+    for (const Meter& meter : this->meters()) {
       if (meter.fuelType() && (meter.fuelType() == fuelType)) {
         if (istringEqual(meter.reportingFrequency(),reportingFrequency)) {
           OptionalEndUseType meterEndUseType = meter.endUseType();
@@ -340,7 +338,7 @@ namespace detail {
     if (oTDV) {
       TimeDependentValuation tdv = *oTDV;
       FuelTypeVector fts = Facility::fossilFuels();
-      BOOST_FOREACH(const FuelType& ft,fts) {
+      for (const FuelType& ft : fts) {
         OptionalDouble candidate = tdv.getEnergyTimeDependentValuation(ft);
         if (candidate) {
           if (result) { result = (*result + *candidate); }
@@ -357,7 +355,7 @@ namespace detail {
     if (oTDV) {
       TimeDependentValuation tdv = *oTDV;
       FuelTypeVector fts = Facility::fossilFuels();
-      BOOST_FOREACH(const FuelType& ft,fts) {
+      for (const FuelType& ft : fts) {
         OptionalDouble candidate = tdv.getCostTimeDependentValuation(ft);
         if (candidate) {
           if (result) { result = (*result + *candidate); }
@@ -472,7 +470,7 @@ namespace detail {
     double netArea;
     std::string constructionName;
     ComponentCostLineItemVector componentCostLineItems = this->model().getModelObjects<ComponentCostLineItem>();
-    BOOST_FOREACH(ComponentCostLineItem componentCostLineItem, componentCostLineItems){
+    for (ComponentCostLineItem componentCostLineItem : componentCostLineItems){
 
       ModelObject item = componentCostLineItem.item();
 
@@ -484,7 +482,7 @@ namespace detail {
         std::vector<PlanarSurface> surfaces = construction.getModelObjectSources<PlanarSurface>();
 
         netArea = 0;
-        BOOST_FOREACH(PlanarSurface surface, surfaces){
+        for (PlanarSurface surface : surfaces){
           netArea += surface.netArea();
         }
 
@@ -1553,7 +1551,7 @@ namespace detail {
     if (mySqlFile && mySqlFile->connectionOpen())
     {
       result = CalibrationResult();
-      BOOST_FOREACH(const model::UtilityBill& utilityBill, this->model().getModelObjects<model::UtilityBill>()){
+      for (const model::UtilityBill& utilityBill : this->model().getModelObjects<model::UtilityBill>()){
         CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
           utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
           utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),
@@ -1561,7 +1559,7 @@ namespace detail {
           utilityBill.timestepsInPeakDemandWindow(), utilityBill.minutesInPeakDemandWindow(), utilityBill.numberBillingPeriodsInCalculations(),
           utilityBill.CVRMSE(), utilityBill.NMBE());
 
-        BOOST_FOREACH(const model::BillingPeriod& billingPeriod, utilityBill.billingPeriods()){
+        for (const model::BillingPeriod& billingPeriod : utilityBill.billingPeriods()){
           CalibrationBillingPeriod calibrationBillingPeriod(billingPeriod.startDate(), billingPeriod.numberOfDays(),
              utilityBill.consumptionUnit(), utilityBill.peakDemandUnit(),
              billingPeriod.consumption(), billingPeriod.peakDemand(), billingPeriod.totalCost(),

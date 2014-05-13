@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     ElectricEquipmentDefinition electricEquipmentDefinition = this->electricEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, electricEquipmentDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : electricEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

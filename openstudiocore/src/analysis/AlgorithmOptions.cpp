@@ -25,8 +25,6 @@
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -41,7 +39,7 @@ namespace detail {
 
   AlgorithmOptions_Impl::AlgorithmOptions_Impl(const AlgorithmOptions_Impl& other)
   {
-    BOOST_FOREACH(const Attribute& option,other.m_options) {
+    for (const Attribute& option : other.m_options) {
       Attribute optionClone = option.clone();
       m_options.push_back(optionClone);
     }
@@ -148,7 +146,7 @@ namespace detail {
     QVariantMap map;
 
     QVariantList attributesList;
-    Q_FOREACH(const Attribute& option,options()) {
+    for (const Attribute& option : options()) {
       attributesList.push_back(openstudio::detail::toVariant(option));
     }
     map["attributes"] = attributesList;

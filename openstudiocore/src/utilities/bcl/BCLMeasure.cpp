@@ -271,7 +271,7 @@ namespace openstudio{
 
     QString result;
     QStringList parts = str.split(' ', QString::SkipEmptyParts);
-    Q_FOREACH(QString part, parts){
+    for (const QString& part : parts) {
       part[0].toUpper();
       result.append(part);
     }
@@ -557,7 +557,7 @@ namespace openstudio{
 
     std::vector<BCLFileReference> filesToRemove;
     std::vector<BCLFileReference> filesToAdd;
-    Q_FOREACH(BCLFileReference file, m_bclXML.files()){
+    for (BCLFileReference file : m_bclXML.files()) {
       if (!exists(file.path())){
         result = true;
         filesToRemove.push_back(file);
@@ -569,7 +569,7 @@ namespace openstudio{
 
     // look for new files and add them
     openstudio::path srcDir = m_directory / "tests";
-    Q_FOREACH(const QFileInfo &info, QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
       if (!m_bclXML.hasFile(srcItemPath)){
@@ -581,7 +581,7 @@ namespace openstudio{
     }
 
     srcDir = m_directory / "resources";
-    Q_FOREACH(const QFileInfo &info, QDir(toQString(srcDir)).entryInfoList(QDir::Files))
+    for (const QFileInfo &info : QDir(toQString(srcDir)).entryInfoList(QDir::Files))
     {
       openstudio::path srcItemPath = srcDir / toPath(info.fileName());
       if (!m_bclXML.hasFile(srcItemPath)){
@@ -592,11 +592,11 @@ namespace openstudio{
       }
     }
 
-    Q_FOREACH(BCLFileReference file, filesToRemove){
+    for (const BCLFileReference& file : filesToRemove) {
       m_bclXML.removeFile(file.path());
     }
 
-    Q_FOREACH(BCLFileReference file, filesToAdd){
+    for (const BCLFileReference& file : filesToAdd) {
       m_bclXML.addFile(file);
     }
 

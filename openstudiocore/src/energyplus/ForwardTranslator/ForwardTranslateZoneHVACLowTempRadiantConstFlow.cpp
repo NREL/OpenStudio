@@ -114,12 +114,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   double totalAreaOfSurfaces = 0;
 
   //loop through all surfaces, adding up their area
-  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+  for (const Surface& surface : modelObject.surfaces()){
     totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
   }
 
   //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
-  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+  for (const Surface& surface : modelObject.surfaces()){
     IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 2);
     group.setString(0, surface.name().get());        

@@ -52,7 +52,6 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/time/DateTime.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <QThread>
@@ -92,7 +91,7 @@ namespace detail {
       const Analysis& analysis) const
   {
     OptionalCurrentAnalysis result;
-    BOOST_FOREACH(const CurrentAnalysis& currentAnalysis,m_currentAnalyses) {
+    for (const CurrentAnalysis& currentAnalysis : m_currentAnalyses) {
       if (currentAnalysis.analysis().uuid() == analysis.uuid()) {
         result = currentAnalysis;
         break;
@@ -422,7 +421,7 @@ namespace detail {
         else {
           paramFiles = dataPoint->dakotaParametersFiles();
         }
-        BOOST_FOREACH(const openstudio::path& infile,paramFiles) {
+        for (const openstudio::path& infile : paramFiles) {
           writeDakotaResultsFile(*dataPoint,infile);
         }
       }
@@ -512,7 +511,7 @@ namespace detail {
     AnalysisDriver copyOfThis = getAnalysisDriver();
 
     DataPointVector incompletePoints = analysis.dataPointsToQueue();
-    BOOST_FOREACH(DataPoint& incompletePoint,incompletePoints) {
+    for (DataPoint& incompletePoint : incompletePoints) {
       if (incompletePoint.topLevelJob()) {
         clearResults(analysis,incompletePoint,copyOfThis);
       }
@@ -604,7 +603,7 @@ namespace detail {
       OptionalInt queueSize = runOptions.queueSize();
 
       // Loop through DataPoints and queue jobs.
-      BOOST_FOREACH(DataPoint& dataPoint, dataPoints) {
+      for (DataPoint& dataPoint : dataPoints) {
 
         if (queueSize && (currentAnalysis->numQueuedJobs() + int(nextBatch.size()) >= *queueSize)) {
           break;
@@ -674,7 +673,7 @@ namespace detail {
     }
 
     // Emit queued signals
-    BOOST_FOREACH(DataPoint& dataPoint, dataPoints) {
+    for (DataPoint& dataPoint : dataPoints) {
       emit dataPointQueued(analysis.uuid(),dataPoint.uuid());
     }
   }
@@ -1122,7 +1121,7 @@ bool removeAllDataPoints(analysis::Analysis& analysis,AnalysisDriver& analysisDr
     analysisDriver.stop(*currentAnalysis);
   }
   runmanager::RunManager runManager = analysisDriver.database().runManager();
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     callAnalysisMethod = true;
     if (boost::optional<runmanager::Job> job = dataPoint.topLevelJob()) {
       runManager.remove(*job);
@@ -1199,7 +1198,7 @@ bool clearAllResults(analysis::Analysis& analysis,AnalysisDriver& analysisDriver
     analysisDriver.stop(*currentAnalysis);
   }
   runmanager::RunManager runManager = analysisDriver.database().runManager();
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     if (boost::optional<runmanager::Job> job = dataPoint.topLevelJob()) {
       callAnalysisMethod = true;
       runManager.remove(*job);

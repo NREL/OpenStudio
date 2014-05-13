@@ -100,7 +100,7 @@ template <typename T>
 std::vector<T> getSubsetOfRecursiveResources(const ModelObject& object) {
   std::vector<ResourceObject> allResources = getRecursiveResources(object);
   std::vector<T> result;
-  BOOST_FOREACH(const ResourceObject& resource,allResources) {
+  for (const ResourceObject& resource : allResources) {
     boost::optional<T> candidate = resource.optionalCast<T>();
     if (candidate) { result.push_back(*candidate); }
   }
@@ -111,7 +111,7 @@ std::vector<T> getSubsetOfRecursiveResources(const ModelObject& object) {
  *  by alternately calling ModelObject::resources() and getRecursiveChilden. Each element of the 
  *  returned vector is a vector headed by a ResourceObject and followed by that ResourceObject's 
  *  children. ComponentCost_LineItem objects are not technically children but may be included 
- *  by setting the optional secondard argument to true.*/
+ *  by setting the optional second argument to true.*/
 MODEL_API std::vector< std::vector<ModelObject> > getRecursiveResourceSubTrees(
     const ModelObject& object, bool includeComponentCostLineItems = false);
 

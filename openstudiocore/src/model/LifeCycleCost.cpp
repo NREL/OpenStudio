@@ -434,7 +434,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 
   }else if (modelObject.optionalCast<Building>()){
     result = 0;
-    BOOST_FOREACH(const ThermalZone& thermalZone, this->model().getModelObjects<ThermalZone>()){
+    for (const ThermalZone& thermalZone : this->model().getModelObjects<ThermalZone>()){
       result = result.get() + thermalZone.multiplier();
     }
 
@@ -446,7 +446,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 
   }else if (modelObject.optionalCast<AirLoopHVAC>()){
     result = 0;
-    BOOST_FOREACH(const ThermalZone& thermalZone, modelObject.cast<AirLoopHVAC>().thermalZones()){
+    for (const ThermalZone& thermalZone : modelObject.cast<AirLoopHVAC>().thermalZones()){
       result = result.get() + thermalZone.multiplier();
     }
 

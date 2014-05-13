@@ -29,7 +29,6 @@
 #include <QThread>
 #include <QAbstractEventDispatcher>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>

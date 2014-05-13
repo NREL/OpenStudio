@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLights( Lights & modelObj
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights,
                                                        modelObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

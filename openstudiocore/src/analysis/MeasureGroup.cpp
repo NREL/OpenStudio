@@ -36,7 +36,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -84,7 +83,7 @@ namespace detail {
                     "', because at least one measure changes the file type between input and " <<
                     "output, and there is also a NullMeasure (which cannot change the file type).");
     }
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       measure.onChange();
       connectChild(measure,false);
     }
@@ -101,7 +100,7 @@ namespace detail {
     : DiscreteVariable_Impl(uuid,versionUUID,name,displayName,description,udesc),
       m_measures(measures)
   {
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       connectChild(measure,false);
     }
   }
@@ -109,7 +108,7 @@ namespace detail {
   MeasureGroup_Impl::MeasureGroup_Impl(const MeasureGroup_Impl &other)
     : DiscreteVariable_Impl(other)
   {
-    BOOST_FOREACH(const Measure& pert,other.measures(false)) {
+    for (const Measure& pert : other.measures(false)) {
       m_measures.push_back(pert.clone().cast<Measure>());
       connectChild(m_measures.back(),false);
     }
@@ -119,7 +118,7 @@ namespace detail {
     boost::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
     MeasureGroup result(impl);
     MeasureVector measures = result.measures(false);
-    BOOST_FOREACH(Measure& measure,measures) {
+    for (Measure& measure : measures) {
       measure.setParent(result);
     }
     return result;
@@ -174,7 +173,7 @@ namespace detail {
 
     if (selectedOnly) {
       int index(0);
-      Q_FOREACH(const Measure& measure, measures(false)) {
+      for (const Measure& measure : measures(false)) {
         if (measure.isSelected()) {
           result.push_back(index);
         }
@@ -195,7 +194,7 @@ namespace detail {
   {
     if (selectedMeasuresOnly) {
       MeasureVector result;
-      BOOST_FOREACH(const Measure& measure,m_measures) {
+      for (const Measure& measure : m_measures) {
         if (measure.isSelected()) {
           result.push_back(measure);
         }
@@ -342,11 +341,11 @@ namespace detail {
       return false;
     }
 
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       disconnectChild(measure);
     }
     m_measures = measures;
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       measure.onChange();
       connectChild(measure,true);
     }
@@ -355,7 +354,7 @@ namespace detail {
   }
 
   void MeasureGroup_Impl::clearMeasures() {
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       disconnectChild(measure);
     }
     m_measures.clear();
@@ -450,7 +449,7 @@ namespace detail {
 
     int index(0);
     QVariantList measuresList;
-    Q_FOREACH(const Measure& measure, measures(false)) {
+    for (const Measure& measure : measures(false)) {
       QVariantMap measureData = measure.toVariant().toMap();
       measureData["measure_group_index"] = index;
       measuresList.push_back(measureData);
@@ -482,7 +481,7 @@ namespace detail {
                                               const openstudio::path& newBase)
   {
     MeasureVector measures = this->measures(false);
-    BOOST_FOREACH(Measure& measure,measures) {
+    for (Measure& measure : measures) {
       measure.getImpl<detail::Measure_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
@@ -491,7 +490,7 @@ namespace detail {
       const std::vector<Measure>& measures)
   {
     std::pair<bool,OptionalFileReferenceType> result(true,boost::none);
-    BOOST_FOREACH(const Measure& measure,measures) {
+    for (const Measure& measure : measures) {
       OptionalFileReferenceType temp = measure.inputFileType();
       if (temp) {
         if (result.second && (*temp != *(result.second))) {
@@ -508,7 +507,7 @@ namespace detail {
       const std::vector<Measure>& measures)
   {
     std::pair<bool,OptionalFileReferenceType> result(true,boost::none);
-    BOOST_FOREACH(const Measure& measure,measures) {
+    for (const Measure& measure : measures) {
       OptionalFileReferenceType temp = measure.outputFileType();
       if (temp) {
         if (result.second && (*temp != *(result.second))) {
@@ -529,7 +528,7 @@ MeasureGroup::MeasureGroup(const std::string& name,
         new detail::MeasureGroup_Impl(name,measures)))
 {
   MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
-  BOOST_FOREACH(const Measure& measure,measures) {
+  for (const Measure& measure : measures) {
     measure.setParent(copyOfThis);
   }
 }
@@ -551,7 +550,7 @@ MeasureGroup::MeasureGroup(const UUID& uuid,
                                       measures)))
 {
   MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
-  BOOST_FOREACH(const Measure& measure,measures) {
+  for (const Measure& measure : measures) {
     measure.setParent(copyOfThis);
   }
 }

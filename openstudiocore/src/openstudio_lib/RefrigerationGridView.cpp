@@ -289,7 +289,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
 
   m_baseConcepts.clear();
 
-  Q_FOREACH(QString field, fields){
+  for (const QString& field : fields) {
     if(field == RATEDAMBIENTTEMPERATURE){
       addQuantityEditColumn(QString(RATEDAMBIENTTEMPERATURE),
                             QString("C"),
@@ -743,7 +743,7 @@ void RefrigerationWalkInGridController::addColumns(std::vector<QString> & fields
 
   m_baseConcepts.clear();
 
-  Q_FOREACH(QString field, fields){
+  for (const QString& field : fields) {
     if(field == DEFROSTTYPE){
       addComboBoxColumn<std::string,model::RefrigerationWalkIn>(
             QString(DEFROSTTYPE),

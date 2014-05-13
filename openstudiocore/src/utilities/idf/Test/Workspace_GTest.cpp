@@ -60,7 +60,6 @@
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 
@@ -221,7 +220,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
   // forward (e.g. lights -> zone)
   WorkspaceObjectVector lights = workspace.getObjectsByType(IddObjectType::Lights);
   EXPECT_EQ(static_cast<size_t>(5), lights.size());
-  BOOST_FOREACH(const WorkspaceObject& light, lights){
+  for (const WorkspaceObject& light : lights){
 
     // check the light
     EXPECT_TRUE(light.canBeSource());
@@ -246,7 +245,7 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
   // backward (e.g. zone -> lights)
   WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
-  BOOST_FOREACH(const WorkspaceObject& zone, zones){
+  for (const WorkspaceObject& zone : zones){
 
     // check the zone
     //EXPECT_TRUE(zone.canBeTarget());
@@ -341,7 +340,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
 
   // for each zone
-  BOOST_FOREACH(const WorkspaceObject& zone, zones){
+  for (const WorkspaceObject& zone : zones){
 
     // check zone name
     OptionalString zoneName = zone.getString(ZoneFields::Name);
@@ -1691,7 +1690,7 @@ std::string text = "\
             workspace1.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
 
   std::vector<IdfObject> idfObjects;
-  BOOST_FOREACH(WorkspaceObject workspaceObject, workspace1.objects()){
+  for (WorkspaceObject workspaceObject : workspace1.objects()){
     idfObjects.push_back(workspaceObject.idfObject());
   }
 

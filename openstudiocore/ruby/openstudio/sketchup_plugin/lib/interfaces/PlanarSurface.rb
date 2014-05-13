@@ -96,7 +96,7 @@ module OpenStudio
         end
 
         # Check that vertices are all in the same plane
-        #plane = Geom.fit_plane_to_points(points[0..2]) # these may be colinear in which case the method fails
+        #plane = Geom.fit_plane_to_points(points[0..2]) # these may be collinear in which case the method fails
         plane = Geom.fit_plane_to_points(points)
         new_points = []
         points.each { |point|
@@ -119,7 +119,7 @@ module OpenStudio
         # Check that no crossing lines are formed (wrong order of vertices)
         
         polygon = Geom::Polygon.new(new_points)
-        polygon.reduce!  # Remove duplicate and colinear vertices
+        polygon.reduce!  # Remove duplicate and collinear vertices
 
         watcher_enabled = @watcher.disable if @watcher
         self.model_object_polygon = polygon
@@ -293,7 +293,7 @@ module OpenStudio
         # Fix near-shared vertices so that they are coincident.
 
         # Check to see if there was an extra face accidentally created
-        # This can happen if there is an extra colinear vertex on the base face (because of other bordering faces)
+        # This can happen if there is an extra collinear vertex on the base face (because of other bordering faces)
         # that overlaps with the polygon of the new face.
 
         return(true)
@@ -949,12 +949,12 @@ module OpenStudio
 
 
     # Returns the polygon of the SketchUp Face in SketchUp coordinates.
-    # Purpose is to remove colinear points and vertices of sub surfaces (overridden in Surface)
+    # Purpose is to remove collinear points and vertices of sub surfaces (overridden in Surface)
     def face_polygon  
       Plugin.log(OpenStudio::Trace, "#{current_method_name}")
       
       # can this just call @entity.outer_polygon?
-      points = @entity.full_polygon.outer_loop.reduce  # removes colinear points
+      points = @entity.full_polygon.outer_loop.reduce  # removes collinear points
       
       #Plugin.log(OpenStudio::Info, "face_polygon, face_polygon = #{points}")
       

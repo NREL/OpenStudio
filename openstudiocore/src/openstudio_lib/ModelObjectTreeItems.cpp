@@ -295,15 +295,15 @@ void ModelObjectTreeItem::refresh()
   std::vector<QTreeWidgetItem*> childrenToRemove;
 
   std::set<std::string> nonModelObjectChildrenSet;
-  BOOST_FOREACH(const std::string& child, nonModelObjectChildren){
+  for (const std::string& child : nonModelObjectChildren){
     nonModelObjectChildrenSet.insert(child);
   }
 
   std::set<openstudio::Handle> allModelObjectChildrenHandleSet;
-  BOOST_FOREACH(const model::ModelObject& child, defaultedModelObjectChildren){
+  for (const model::ModelObject& child : defaultedModelObjectChildren){
     allModelObjectChildrenHandleSet.insert(child.handle());
   }
-  BOOST_FOREACH(const model::ModelObject& child, modelObjectChildren){
+  for (const model::ModelObject& child : modelObjectChildren){
     allModelObjectChildrenHandleSet.insert(child.handle());
   }
 
@@ -343,28 +343,28 @@ void ModelObjectTreeItem::refresh()
     }
   }
 
-  BOOST_FOREACH(QTreeWidgetItem* child, childrenToRemove){
+  for (QTreeWidgetItem* child : childrenToRemove){
     this->removeChild(child);
     delete child;
   }
 
   // todo: insert in correct order
 
-  BOOST_FOREACH(const std::string& child, nonModelObjectChildren){
+  for (const std::string& child : nonModelObjectChildren){
     // still need this object
     if (nonModelObjectChildrenSet.find(child) != nonModelObjectChildrenSet.end()){
       nonModelObjectChildrenSet.erase(child);
       this->addNonModelObjectChild(child);
     }
   }
-  BOOST_FOREACH(const model::ModelObject& child, defaultedModelObjectChildren){
+  for (const model::ModelObject& child : defaultedModelObjectChildren){
     // still need this object
     if (allModelObjectChildrenHandleSet.find(child.handle()) != allModelObjectChildrenHandleSet.end()){
       allModelObjectChildrenHandleSet.erase(child.handle());
       this->addModelObjectChild(child, true);
     }
   }
-  BOOST_FOREACH(const model::ModelObject& child, modelObjectChildren){
+  for (const model::ModelObject& child : modelObjectChildren){
     // still need this object
     if (allModelObjectChildrenHandleSet.find(child.handle()) != allModelObjectChildrenHandleSet.end()){
       allModelObjectChildrenHandleSet.erase(child.handle());
@@ -549,13 +549,13 @@ void ModelObjectTreeItem::changeRelationship(int index, Handle newHandle, Handle
 
 void ModelObjectTreeItem::makeChildren()
 {
-  BOOST_FOREACH(const std::string& child, this->nonModelObjectChildren()){
+  for (const std::string& child : this->nonModelObjectChildren()){
     this->addNonModelObjectChild(child);
   }
-  BOOST_FOREACH(const model::ModelObject& child, this->defaultedModelObjectChildren()){
+  for (const model::ModelObject& child : this->defaultedModelObjectChildren()){
     this->addModelObjectChild(child, true);
   }
-  BOOST_FOREACH(const model::ModelObject& child, this->modelObjectChildren()){
+  for (const model::ModelObject& child : this->modelObjectChildren()){
     this->addModelObjectChild(child, false);
   }
 
@@ -622,7 +622,7 @@ std::string SiteShadingTreeItem::itemName()
 std::vector<model::ModelObject> SiteShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Site", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -775,7 +775,7 @@ std::string BuildingShadingTreeItem::itemName()
 std::vector<model::ModelObject> BuildingShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Building", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -841,7 +841,7 @@ std::vector<model::ModelObject> NoBuildingStoryTreeItem::modelObjectChildren() c
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getModelObjects<model::Space>()){
     if (!space.buildingStory()){
       result.push_back(space);
     }
@@ -922,7 +922,7 @@ std::vector<model::ModelObject> NoThermalZoneTreeItem::modelObjectChildren() con
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getModelObjects<model::Space>()){
     if (!space.thermalZone()){
       result.push_back(space);
     }
@@ -983,7 +983,7 @@ std::vector<model::ModelObject> SpaceTypeTreeItem::defaultedModelObjectChildren(
   model::SpaceType spaceType = modelObject->cast<model::SpaceType>();
   
   // get spaces that inherit this space type as default
-  BOOST_FOREACH(const model::Space& space, spaceType.spaces()){
+  for (const model::Space& space : spaceType.spaces()){
     if (space.isSpaceTypeDefaulted()){
       result.push_back(space);
     }
@@ -1021,7 +1021,7 @@ std::vector<model::ModelObject> NoSpaceTypeTreeItem::modelObjectChildren() const
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getModelObjects<model::Space>()){
     if (!space.spaceType()){
       result.push_back(space);
     }
@@ -1123,7 +1123,7 @@ std::string RoofsTreeItem::itemName()
 std::vector<model::ModelObject> RoofsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("RoofCeiling", surface.surfaceType())){
       result.push_back(surface);
     }
@@ -1158,7 +1158,7 @@ std::string WallsTreeItem::itemName()
 std::vector<model::ModelObject> WallsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("Wall", surface.surfaceType())){
       result.push_back(surface);
     }
@@ -1193,7 +1193,7 @@ std::string FloorsTreeItem::itemName()
 std::vector<model::ModelObject> FloorsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("Floor", surface.surfaceType())){
       result.push_back(surface);
     }

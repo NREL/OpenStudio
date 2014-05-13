@@ -28,8 +28,6 @@
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 #include <vector>
 #include <map>
 

@@ -47,7 +47,7 @@ TEST_F(BCLFixture, BCLMeasure)
   EXPECT_EQ("Envelope.Fenestration", measure->taxonomyTag());
 
   EXPECT_EQ(6u, measure->files().size());
-  Q_FOREACH(BCLFileReference file, measure->files()){
+  for (BCLFileReference file : measure->files()) {
     EXPECT_TRUE(exists(file.path()));
     EXPECT_FALSE(file.checkForUpdate());
   }

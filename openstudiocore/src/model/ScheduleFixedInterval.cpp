@@ -89,7 +89,7 @@ namespace detail {
 
     Vector values(this->numExtensibleGroups());
     unsigned i = 0;
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalDouble x = group.getDouble(0);
       OS_ASSERT(x);

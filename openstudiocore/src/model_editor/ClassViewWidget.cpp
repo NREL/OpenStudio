@@ -32,8 +32,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace modeleditor
 {
 
@@ -265,7 +263,7 @@ void ClassViewWidget::copyObjects()
   mIdfObjectsToPaste.clear();
   QModelIndexList rowList;
   if(mTableView->getSelectedRows(rowList)){
-    BOOST_FOREACH(const QModelIndex& row, rowList){
+    for (const QModelIndex& row : rowList){
       mIdfObjectsToPaste.push_back(*(mTableModel->objectAtIndex(row)));
     }
   }

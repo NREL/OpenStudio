@@ -242,7 +242,7 @@ namespace detail {
     YearDescription yd = this->model().getUniqueModelObject<model::YearDescription>();
 
     std::vector<openstudio::Date> result;
-    BOOST_FOREACH(const ModelExtensibleGroup& group,castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalInt month = group.getInt(0);
       OS_ASSERT(month);
@@ -428,7 +428,7 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+    for (IdfExtensibleGroup group : this->extensibleGroups()){
       boost::optional<int> month;
       boost::optional<int> day;
 
@@ -462,7 +462,7 @@ namespace detail {
       }
     }else{
       std::vector<openstudio::Date> specificDates = this->specificDates();
-      BOOST_FOREACH(const openstudio::Date& specificDate, specificDates){
+      for (const openstudio::Date& specificDate : specificDates){
         if (specificDate == date){
           result = true;
           break;
@@ -526,7 +526,7 @@ namespace detail {
     }else{
       std::vector<openstudio::Date> specificDates = this->specificDates();
       for (unsigned i = 0; i < N; ++i){
-        BOOST_FOREACH(const openstudio::Date& specificDate, specificDates){
+        for (const openstudio::Date& specificDate : specificDates){
           if (specificDate == dates[i]){
             result[i] = true;
             break;

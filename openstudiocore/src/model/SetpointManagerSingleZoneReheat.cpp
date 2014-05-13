@@ -31,7 +31,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
-#include <boost/foreach.hpp>
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

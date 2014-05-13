@@ -41,8 +41,6 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::analysis;
 
 namespace openstudio {
@@ -266,11 +264,11 @@ namespace detail {
     // called during AnalysisRecord construction (and because they are super-tangled here).
 
     // TODO: Have this work for Problems with ContinuousVariables. Perhaps need eps bound on
-    // actual value of continous variables.
+    // actual value of continuous variables.
 
     InputVariableRecordVector ivrs = problemRecord().inputVariableRecords();
     IntVector variableVectorIndices;
-    Q_FOREACH(const InputVariableRecord& ivr, ivrs) {
+    for (const InputVariableRecord& ivr : ivrs) {
       variableVectorIndices.push_back(ivr.variableVectorIndex());
     }
     if (variableValues.size() > variableVectorIndices.size()) {
@@ -391,7 +389,7 @@ namespace detail {
     }
 
     analysis::DataPointVector dataPoints;
-    BOOST_FOREACH(const DataPointRecord& dataPointRecord,dataPointRecords()) {
+    for (const DataPointRecord& dataPointRecord : dataPointRecords()) {
       dataPoints.push_back(dataPointRecord.dataPoint());
     }
 
@@ -694,7 +692,7 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
   DataPointVector dataPoints = analysis.dataPoints();
   std::vector<UUID> dataPointUUIDs;
   OptionalProblemRecord problemRecord;
-  BOOST_FOREACH(const DataPoint& dataPoint,dataPoints) {
+  for (const DataPoint& dataPoint : dataPoints) {
     dataPointUUIDs.push_back(dataPoint.uuid());
     if (dataPoint.isDirty() || isNew) {
       if (!problemRecord) {
@@ -922,7 +920,7 @@ void AnalysisRecord::removeDataPointRecords(const std::vector<UUID>& uuidsToKeep
   ss << "SELECT * FROM " + DataPointRecord::databaseTableName() +
         " WHERE (analysisRecordId=:analysisRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

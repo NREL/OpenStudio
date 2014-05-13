@@ -48,7 +48,6 @@
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
 
 using openstudio::detail::WorkspaceObject_Impl;
 

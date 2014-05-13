@@ -94,7 +94,7 @@ boost::optional<double> getNMBE(const FuelType& fuelType, const analysis::DataPo
   if(attribute){
     boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
     if (calibrationResult){
-      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+      for (const CalibrationUtilityBill& bill : calibrationResult->utilityBills()) {
         if (bill.fuelType() == fuelType){
           return bill.NMBE();
         }
@@ -109,7 +109,7 @@ boost::optional<double> getCVRMSE(const FuelType& fuelType, const analysis::Data
   if(attribute){
     boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
     if (calibrationResult){
-      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+      for (const CalibrationUtilityBill& bill : calibrationResult->utilityBills()) {
         if (bill.fuelType() == fuelType){
           return bill.CVRMSE();
         }
@@ -120,7 +120,7 @@ boost::optional<double> getCVRMSE(const FuelType& fuelType, const analysis::Data
 }
 
 bool hasCalibrationResults(const analysis::DataPoint& dataPoint){
-  Q_FOREACH(int i, FuelType::getValues()){
+  for (int i : FuelType::getValues()) {
     FuelType fuelType(i);
     if (getNMBE(fuelType, dataPoint) || getCVRMSE(fuelType, dataPoint)){
       return true;
@@ -230,7 +230,7 @@ ResultsView::ResultsView()
   hLayout = new QHBoxLayout();
 
   QComboBox* calibrationComboBox = new QComboBox();
-  Q_FOREACH(const std::string& calibrationGuideline, model::UtilityBill::calibrationGuidelines()){
+  for (const std::string& calibrationGuideline : model::UtilityBill::calibrationGuidelines()) {
     calibrationComboBox->addItem(toQString(calibrationGuideline));
   }
   calibrationComboBox->setCurrentIndex(-1); // needed so change to index 0 emits signal
@@ -537,7 +537,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
   // mirrors ResultsView::populateComboBox
   if (!reports.empty()){
     unsigned num = 0;
-    Q_FOREACH(openstudio::path report, reports){
+    for (openstudio::path report : reports) {
 
       QString fullPathString = toQString(report.string());
       QFile file(fullPathString);
@@ -1004,7 +1004,7 @@ void DataPointResultsView::update()
       openstudio::analysis::Problem problem = project->analysis().problem();
       std::vector<QVariant> variableValues = m_dataPoint.variableValues();
       std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
-      Q_FOREACH(boost::optional<analysis::Measure> measure, measures){
+      for (boost::optional<analysis::Measure> measure : measures) {
         if (measure){
           if (!measure->optionalCast<analysis::NullMeasure>()){
             listOfMeasures += measure->name().c_str();
@@ -1261,7 +1261,7 @@ boost::optional<double> DataPointResultsView::getValue(const std::string& attrib
     if(optionalUnit){
       currentUnit = optionalUnit.get();
     
-      if(attribute == "Net Site Energy Use Intentsity"){
+      if(attribute == "Net Site Energy Use Intensity"){
         desiredUnit = createUnit("kBtu/ft^2").get();
       }
       else if(attribute == "Instantaneous Peak Electricity Demand"){
@@ -1403,7 +1403,7 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
 
     analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
 
-    Q_FOREACH(int i, FuelType::getValues()){
+    for (int i : FuelType::getValues()) {
       FuelType fuelType(i);
       if (getNMBE(fuelType, baselineDataPoint) || getCVRMSE(fuelType, baselineDataPoint)){
         QLabel* label = new QLabel();
@@ -1474,7 +1474,7 @@ void DataPointCalibrationView::update()
   space->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  Q_FOREACH(int i, FuelType::getValues()){
+  for (int i : FuelType::getValues()) {
     FuelType fuelType(i);
     if (getNMBE(fuelType, m_baselineDataPoint) || getCVRMSE(fuelType, m_baselineDataPoint)){
       boost::optional<double> nmbe = getNMBE(fuelType, m_dataPoint);

@@ -537,7 +537,7 @@ LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, BaseApp *t_app):
   m_app(t_app)
 {
   std::string componentVersion;
-  Q_FOREACH(const BCLFileReference & file, bclMeasure.files()){
+  for (const BCLFileReference & file : bclMeasure.files()) {
     if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
       componentVersion = file.softwareProgramVersion();
       break;

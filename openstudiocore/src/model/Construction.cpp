@@ -34,8 +34,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -88,7 +86,7 @@ namespace detail {
     std::reverse(reverseLayers.begin(), reverseLayers.end());
 
     Model model = this->model();
-    BOOST_FOREACH(const Construction& other, model.getModelObjects<Construction>()) {
+    for (const Construction& other : model.getModelObjects<Construction>()) {
       
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){

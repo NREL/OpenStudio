@@ -41,7 +41,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -117,7 +116,7 @@ namespace model {
       if (!m_cachedVertices){
         Point3dVector result;
 
-        BOOST_FOREACH(const ModelExtensibleGroup& group,castVector<ModelExtensibleGroup>(extensibleGroups()))
+        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
         {
           OptionalDouble x = group.getDouble(0);
           OptionalDouble y = group.getDouble(1);
@@ -255,7 +254,7 @@ namespace model {
       double result = this->grossArea();
 
       // subtract net area of child planar surfaces
-      BOOST_FOREACH(const ModelObject& child, this->children()){
+      for (const ModelObject& child : this->children()){
         OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
         if (surface){
           if (surface->subtractFromGrossArea()){
@@ -518,7 +517,7 @@ namespace model {
         std::vector<Point3d> faceVertices = faceTransformationInverse*this->vertices();
 
         std::vector<std::vector<Point3d> > faceHoles;
-        BOOST_FOREACH(const ModelObject& child, this->children()){
+        for (const ModelObject& child : this->children()){
           OptionalPlanarSurface surface = child.optionalCast<PlanarSurface>();
           if (surface){
             if (surface->subtractFromGrossArea()){
@@ -529,7 +528,7 @@ namespace model {
 
         std::vector<std::vector<Point3d> > faceTriangulation = computeTriangulation(faceVertices, faceHoles);
 
-        BOOST_FOREACH(const std::vector<Point3d>& faceTriangle, faceTriangulation){
+        for (const std::vector<Point3d>& faceTriangle : faceTriangulation){
           m_cachedTriangulation.push_back(faceTransformation*faceTriangle);
         }
       }
@@ -803,7 +802,7 @@ std::vector<PlanarSurface> PlanarSurface::findPlanarSurfaces(const std::vector<P
   Vector3d north(0.0,1.0,0.0);
 
   // inputs ok, loop over surfaces
-  BOOST_FOREACH(const PlanarSurface& planarSurface, planarSurfaces){
+  for (const PlanarSurface& planarSurface : planarSurfaces){
 
     // find the transformation to site coordinates
     Transformation siteTransformation;

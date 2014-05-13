@@ -26,9 +26,6 @@
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
 
-using namespace std;
-using namespace boost;
-
 namespace openstudio{
 
   Vector createVector(const std::vector<double>& values) {
@@ -179,10 +176,10 @@ namespace openstudio{
     static std::minstd_rand generator(42u);
     
     // define distribution
-    uniform_real<> dist(a,b);
+    boost::uniform_real<> dist(a,b);
 
     // create a generator
-    variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
+    boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
     Vector result(N);
     for (unsigned n = 0; n < N; ++n){

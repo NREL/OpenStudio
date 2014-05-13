@@ -47,8 +47,7 @@
 
 #include <boost/filesystem/fstream.hpp> 
 #include <boost/lexical_cast.hpp>
-#include <boost/numeric/conversion/cast.hpp>  
-#include <boost/foreach.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/bind.hpp>
 
 #include <iostream>
@@ -932,7 +931,7 @@ namespace detail {
         while (!rollbackValues.empty()) {
           IdfExtensibleGroup pushed = pushExtensibleGroup(rollbackValues.back(),false);
           unsigned fieldIndex = 0;
-          BOOST_FOREACH(const std::string& cmnt,rollbackComments.back()) {
+          for (const std::string& cmnt : rollbackComments.back()) {
             pushed.setFieldComment(fieldIndex,cmnt);
             ++fieldIndex;
           }
@@ -1082,7 +1081,7 @@ namespace detail {
     OptionalUnsigned iName = iddObject().nameFieldIndex();
 
     // iddObject() same, field indices same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       bool compareStrings = true;
       OptionalIddField oIddField = iddObject().getField(i);
 
@@ -1144,7 +1143,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same, field indices same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
       OptionalString oOtherStringValue = other.getString(i);
@@ -1164,7 +1163,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
       OS_ASSERT(oMyStringValue);
@@ -1333,7 +1332,7 @@ namespace detail {
     bool nameChange = false;
     bool dataChange = false;
 
-    BOOST_FOREACH(const IdfObjectDiff& diff, m_diffs){
+    for (const IdfObjectDiff& diff : m_diffs){
 
       if (diff.isNull()){
         continue;
@@ -1584,12 +1583,12 @@ namespace detail {
     return true;
   }
 
-  UnsignedVector IdfObject_Impl::trimFieldIndices(const UnsignedVector& indicies) const {
+  UnsignedVector IdfObject_Impl::trimFieldIndices(const UnsignedVector& indices) const {
     unsigned n = m_fields.size(); // number of fields
-    UnsignedVector result = indicies;
+    UnsignedVector result = indices;
     // quick check to see if action is necessary
     if (!result.empty() && (result.back() >= n)) {
-      // assume indicies are in order and find first that is out of range
+      // assume indices are in order and find first that is out of range
       for (UnsignedVector::iterator it = result.begin(), 
            itEnd = result.end(); it != itEnd; ++it) {
         if (*it >= n) {
@@ -1602,11 +1601,11 @@ namespace detail {
   }
 
   UnsignedVector IdfObject_Impl::repeatExtensibleIndices(
-      const UnsignedVector& indicies) const {
+      const UnsignedVector& indices) const {
 
-    // assume indicies is in order, and any extensible field indices are from the first
+    // assume indices is in order, and any extensible field indices are from the first
     // extensible group
-    UnsignedVector result = indicies; 
+    UnsignedVector result = indices; 
 
     // nothing to do if not extensible
     if (!m_iddObject.properties().extensible) { return result; }
@@ -1614,9 +1613,9 @@ namespace detail {
     // nothing to do if last index is not in extensible group
     if (!result.empty() && !m_iddObject.isExtensibleField(result.back())) { return result; }
 
-    // otherwise, find group indices of extensible field indieces in result
+    // otherwise, find group indices of extensible field indices in result
     UnsignedVector groupIndices;
-    BOOST_FOREACH(unsigned index,result) {
+    for (unsigned index : result) {
       if (m_iddObject.isExtensibleField(index)) {
         groupIndices.push_back(m_iddObject.extensibleIndex(index).field);
       }
@@ -1626,7 +1625,7 @@ namespace detail {
     unsigned nn = m_iddObject.numFields(), ne = m_iddObject.properties().numExtensible;
     unsigned groupIndex = 1;
     while (nn + groupIndex*ne < n) {
-      BOOST_FOREACH(unsigned gi,groupIndices) {
+      for (unsigned gi : groupIndices) {
         unsigned index = nn + groupIndex*ne + gi; 
         if (index < n) { result.push_back(index); }
       }
@@ -1643,7 +1642,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     // field-level errors
     for (unsigned index = 0; index < m_fields.size(); ++index) { 
       DataErrorVector fieldErrors = fieldDataIsValid(index,report.level());
-      BOOST_FOREACH(const DataError& error,fieldErrors) {
+      for (const DataError& error : fieldErrors) {
         report.insertError(error);
       }
     }

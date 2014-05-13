@@ -128,7 +128,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
     }
     OS_ASSERT(usePriceEscalationFile);
 
-    BOOST_FOREACH(IdfObject object, usePriceEscalationFile->objects()){
+    for (IdfObject object : usePriceEscalationFile->objects()){
       std::string name = object.name().get();
       if ((name.find(*region) == 0) &&
           (name.find(*sector) != string::npos)){

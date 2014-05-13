@@ -27,7 +27,6 @@
 #include <utilities/core/String.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
 #include <boost/iostreams/filter/newline.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 
@@ -54,7 +53,7 @@ IddFileType ImfFile::iddFileType() const {
 
 StringVector ImfFile::sectionNames() const {
   StringVector result;
-  BOOST_FOREACH(const SectionMapType::value_type& pair, m_sectionMap){
+  for (const SectionMapType::value_type& pair : m_sectionMap){
     result.push_back(pair.first);
   }
   return result;
@@ -125,12 +124,12 @@ OptionalImfFile ImfFile::load(const openstudio::path& p, const IddFile& iddFile)
 
 std::ostream& ImfFile::print(std::ostream& os) const
 {
-  BOOST_FOREACH(const SectionMapType::value_type& pair, m_sectionMap){
+  for (const SectionMapType::value_type& pair : m_sectionMap){
     os << "##def " << pair.first << "[]" << std::endl;
-    BOOST_FOREACH(const IdfObject& object, pair.second) {
+    for (const IdfObject& object : pair.second) {
       os << object;
     }
-    os << "##endef " << pair.first << std::endl << std::endl;
+    os << "##enddef " << pair.first << std::endl << std::endl;
   }
   return os;
 }

@@ -51,7 +51,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOtherEquipment(
   IdfObject idfObject(openstudio::IddObjectType::OtherEquipment);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

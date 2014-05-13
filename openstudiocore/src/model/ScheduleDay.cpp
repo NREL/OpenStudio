@@ -130,7 +130,7 @@ namespace detail {
   boost::optional<ScheduleTypeLimits> ScheduleDay_Impl::scheduleTypeLimits() const {
     OptionalScheduleTypeLimits result = getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_DayFields::ScheduleTypeLimitsName);
     if (!result) {
-      BOOST_FOREACH(const Schedule& schedule,getObject<ScheduleDay>().getModelObjectSources<Schedule>()) {
+      for (const Schedule& schedule : getObject<ScheduleDay>().getModelObjectSources<Schedule>()) {
         result = schedule.scheduleTypeLimits();
         if (result) {
           return result;
@@ -159,7 +159,7 @@ namespace detail {
 
       std::vector<openstudio::Time> result;
 
-      BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : extensibleGroups()) {
         OptionalInt hour = group.getInt(OS_Schedule_DayExtensibleFields::Hour, true);
         OptionalInt minute = group.getInt(OS_Schedule_DayExtensibleFields::Minute, true);
 
@@ -186,7 +186,7 @@ namespace detail {
 
       std::vector<double> result;
 
-      BOOST_FOREACH(const IdfExtensibleGroup& group, extensibleGroups()) {
+      for (const IdfExtensibleGroup& group : extensibleGroups()) {
         OptionalDouble value = group.getDouble(OS_Schedule_DayExtensibleFields::ValueUntilTime, true);
 
         if (value){
@@ -292,7 +292,7 @@ namespace detail {
     // use set to determine whether to overwrite or insert, and where
     std::set<openstudio::Time> times;
     std::pair<std::set<openstudio::Time>::const_iterator,bool> insertResult;
-    BOOST_FOREACH(const openstudio::Time& time,this->times()) {
+    for (const openstudio::Time& time : this->times()) {
       insertResult = times.insert(time);
       OS_ASSERT(insertResult.second);
     }
@@ -378,7 +378,7 @@ namespace detail {
   bool ScheduleDay_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {
     // currently only check ScheduleDay against Schedules
     ScheduleVector users = getObject<ScheduleDay>().getModelObjectSources<Schedule>();
-    BOOST_FOREACH(const Schedule& user,users) {
+    for (const Schedule& user : users) {
       if (OptionalScheduleTypeLimits userLimits = user.scheduleTypeLimits()) {
         if (!isCompatible(*userLimits,candidate)) {
           return false;
@@ -389,7 +389,7 @@ namespace detail {
   }
 
   bool ScheduleDay_Impl::okToResetScheduleTypeLimits() const {
-    BOOST_FOREACH(const ModelObject& user, getObject<ScheduleDay>().getModelObjectSources<ModelObject>()) {
+    for (const ModelObject& user : getObject<ScheduleDay>().getModelObjectSources<ModelObject>()) {
       // schedules using this ScheduleDay need to also have no limits
       if (user.optionalCast<Schedule>() && user.cast<Schedule>().scheduleTypeLimits()) {
         return false;

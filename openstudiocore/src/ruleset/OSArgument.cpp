@@ -30,7 +30,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Json.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
 #include <boost/functional/value_factory.hpp>
@@ -371,7 +370,7 @@ std::vector<bool> OSArgument::domainAsBool() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   BoolVector result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     if ("true" == value.toString()) {
       result.push_back(true);
     }
@@ -385,7 +384,7 @@ std::vector<double> OSArgument::domainAsDouble() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   DoubleVector result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     result.push_back(value.toDouble());
   }
   return result;
@@ -396,7 +395,7 @@ std::vector<Quantity> OSArgument::domainAsQuantity() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   QuantityVector result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     result.push_back(value.value<openstudio::Quantity>());
   }
   return result;
@@ -407,7 +406,7 @@ std::vector<int> OSArgument::domainAsInteger() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   IntVector result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     result.push_back(value.toInt());
   }
   return result;
@@ -418,7 +417,7 @@ std::vector<std::string> OSArgument::domainAsString() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   StringVector result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     result.push_back(printQVariant(value));
   }
   return result;
@@ -429,7 +428,7 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
     LOG_AND_THROW("No domain set for OSArgument '" << name() << "'.");
   }
   std::vector<openstudio::path> result;
-  BOOST_FOREACH(const QVariant& value,m_domain) {
+  for (const QVariant& value : m_domain) {
     result.push_back(toPath(value.toString()));
   }
   return result;
@@ -680,7 +679,7 @@ bool OSArgument::setDomain(const std::vector<bool>& domain) {
     OS_ASSERT(m_domainType == OSDomainType::Enumeration);
     // could check for uniqueness, but pass on that for now
     m_domain.clear();
-    BOOST_FOREACH(bool value,domain) {
+    for (bool value : domain) {
       if (value) {
         m_domain.push_back(QVariant(QString("true")));
       }
@@ -700,7 +699,7 @@ bool OSArgument::setDomain(const std::vector<double>& domain) {
     if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
       // could check for uniqueness, min < max, but pass on that for now
       m_domain.clear();
-      BOOST_FOREACH(double value, domain) {
+      for (double value : domain) {
         m_domain.push_back(QVariant(value));
       }
       onChange();
@@ -716,7 +715,7 @@ bool OSArgument::setDomain(const std::vector<Quantity>& domain) {
     if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
       // could check for uniqueness, min < max, but pass on that for now
       m_domain.clear();
-      BOOST_FOREACH(const Quantity& value, domain) {
+      for (const Quantity& value : domain) {
         m_domain.push_back(QVariant::fromValue<openstudio::Quantity>(value));
       }
       onChange();
@@ -732,7 +731,7 @@ bool OSArgument::setDomain(const std::vector<int>& domain) {
     if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
       // could check for uniqueness, min < max, but pass on that for now
       m_domain.clear();
-      BOOST_FOREACH(int value, domain) {
+      for (int value : domain) {
         m_domain.push_back(QVariant(value));
       }
       onChange();
@@ -747,7 +746,7 @@ bool OSArgument::setDomain(const std::vector<std::string>& domain) {
   if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
     std::vector<QVariant> originalDomain = m_domain;
     m_domain.clear();
-    BOOST_FOREACH(const std::string& value, domain) {
+    for (const std::string& value : domain) {
       QVariant newValue;
       result = setStringInternal(newValue,value);
       if (!result) {
@@ -769,7 +768,7 @@ bool OSArgument::setDomain(const std::vector<openstudio::path>& domain) {
     OS_ASSERT(m_domainType == OSDomainType::Enumeration);
     // could check for uniqueness, but pass on that for now
     m_domain.clear();
-    BOOST_FOREACH(const openstudio::path& value, domain) {
+    for (const openstudio::path& value : domain) {
       m_domain.push_back(QVariant(toQString(value)));
     }
     onChange();
@@ -832,7 +831,7 @@ std::string OSArgument::print() const {
     }
     else {
       ss << std::endl;
-      BOOST_FOREACH(const QVariant& value, m_domain) {
+      for (const QVariant& value : m_domain) {
         ss << "  " << printQVariant(value) << std::endl;
       }
     }
@@ -998,7 +997,7 @@ OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name,
   std::vector< std::pair<std::string, std::string> > intermediate;
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(iddObjectType);
-  BOOST_FOREACH(const WorkspaceObject& object, objects){
+  for (const WorkspaceObject& object : objects){
     std::string objectName;
     if (object.name()) {
       objectName = object.name().get();
@@ -1035,7 +1034,7 @@ OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name,
   std::vector< std::pair<std::string, std::string> > intermediate;
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByReference(referenceName);
-  BOOST_FOREACH(const WorkspaceObject& object, objects){
+  for (const WorkspaceObject& object : objects){
     intermediate.push_back(std::pair<std::string,std::string>(toString(object.handle()),
                                                               object.name().get()));
   }
@@ -1060,7 +1059,7 @@ OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name,
 std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<OSArgument>& arguments)
 {
   std::map<std::string, OSArgument> argMap;
-  BOOST_FOREACH(const OSArgument& arg,arguments) {
+  for (const OSArgument& arg : arguments) {
     argMap.insert(std::make_pair(arg.name(), arg.clone()));
   }
   return argMap;
@@ -1106,7 +1105,7 @@ namespace detail {
     if (argument.hasDomain()) {
       QVariantList domainList;
       int index(0);
-      Q_FOREACH(const QVariant& dval,argument.domainAsQVariant()) {
+      for (const QVariant& dval : argument.domainAsQVariant()) {
         QVariantMap domainValueMap;
         domainValueMap["domain_value_index"] = index;
         if (type == OSArgumentType::Quantity) {
@@ -1126,7 +1125,7 @@ namespace detail {
       QVariantList choicesList;
       StringVector displayNames = argument.choiceValueDisplayNames();
       int index(0), displayNamesN(displayNames.size());
-      Q_FOREACH(const std::string& choice,argument.choiceValues()) {
+      for (const std::string& choice : argument.choiceValues()) {
         QVariantMap choiceMap;
         choiceMap["choice_index"] = index;
         choiceMap["value"] = toQString(choice);

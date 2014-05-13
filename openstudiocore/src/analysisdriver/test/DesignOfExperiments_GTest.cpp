@@ -55,8 +55,6 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::ruleset;
@@ -98,7 +96,7 @@ TEST_F(AnalysisDriverFixture, DesignOfExperiments_MeshAnalysis) {
   AnalysisRecord analysisRecord = project.analysisRecord();
   EXPECT_EQ(4,analysisRecord.problemRecord().combinatorialSize(true).get());
   EXPECT_EQ(4u, analysisRecord.dataPointRecords().size());
-  BOOST_FOREACH(const DataPointRecord& dataPointRecord, analysisRecord.dataPointRecords()) {
+  for (const DataPointRecord& dataPointRecord : analysisRecord.dataPointRecords()) {
     EXPECT_TRUE(dataPointRecord.isComplete());
     EXPECT_FALSE(dataPointRecord.failed());
   }

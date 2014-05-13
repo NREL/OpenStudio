@@ -56,8 +56,6 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
-
 #include <stdlib.h>
 
 using namespace openstudio;
@@ -115,7 +113,7 @@ std::vector<openstudio::path> ProjectVersioningFixture::copyProjectDatabases(
   openstudio::path testFolder = paths[0].parent_path().parent_path() / toPath(folderName);
   boost::filesystem::create_directory(testFolder);
   std::vector<openstudio::path> testPaths;
-  BOOST_FOREACH(const openstudio::path& p, paths) {
+  for (const openstudio::path& p : paths) {
     testPaths.push_back(testFolder/p.filename());
     boost::filesystem::copy_file(p,testPaths.back(),
                                  boost::filesystem::copy_option::overwrite_if_exists);
@@ -131,7 +129,7 @@ void ProjectVersioningFixture::createTestCaseDatabases() {
   std::vector<openstudio::path> paths = projectDatabasePaths(resourcesPath()/toPath("project/version"));
   openstudio::path folder = toPath("ProjectVersioningFixtureData") / toPath(toString(uuid));
   boost::filesystem::create_directory(folder);
-  BOOST_FOREACH(const openstudio::path& p, paths) {
+  for (const openstudio::path& p : paths) {
     boost::filesystem::copy_file(p,folder/p.filename());
     boost::filesystem::copy_file(setFileExtension(p,"db",true,false),
                                  setFileExtension(folder/p.filename(),"db",true,false));

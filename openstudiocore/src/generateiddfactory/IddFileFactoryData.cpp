@@ -21,7 +21,6 @@
 
 #include <utilities/idd/IddRegex.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -241,7 +240,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
 
           if (!fieldNames.empty()) {
             tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "Fields," << std::endl;
-            BOOST_FOREACH(const std::string& name,fieldNames) {
+            for (const std::string& name : fieldNames) {
               tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
             }
             tempSS << ");";
@@ -266,7 +265,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
         
           if (!extensibleFieldNames.empty()) {
             tempSS << "OPENSTUDIO_ENUM( " << objectName.first << "ExtensibleFields," << std::endl;
-            BOOST_FOREACH(const std::string& name,extensibleFieldNames) {
+            for (const std::string& name : extensibleFieldNames) {
               tempSS << "  ((" << m_convertName(name) << ")(" << name << "))" << std::endl;
             }
             tempSS << ");";
@@ -351,7 +350,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
   std::cout << "Parsed Idd file " << m_fileName << " located at " << m_filePath.string() << "," << std::endl
             << "which contains " << m_objectNames.size() << " objects." << std::endl << std::endl;
   if (!m_includedFiles.empty()) {
-    BOOST_FOREACH(const FileNameRemovedObjectsPair& p,m_includedFiles) {
+    for (const FileNameRemovedObjectsPair& p : m_includedFiles) {
       std::cout << "Idd file '" << m_fileName << "' includes all but " << p.second.size() 
                 << " objects of Idd file '" << p.first << "'." << std::endl << std::endl;
     }
@@ -360,7 +359,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
   // register objects with CallbackMap
   cxxFile->tempFile
     << "void IddFactorySingleton::register" << fileName() << "ObjectsInCallbackMap() {" << std::endl;
-  BOOST_FOREACH(const StringPair& objectName, objectNames()) {
+  for (const StringPair& objectName : objectNames()) {
     cxxFile->tempFile
       << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::" 
       << objectName.first << ",create" << objectName.first << "IddObject));" << std::endl;

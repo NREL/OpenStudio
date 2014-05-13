@@ -136,7 +136,7 @@ namespace detail {
 
   bool ScheduleBase_Impl::okToResetScheduleTypeLimits() const {
     // can only reset if not used by object with keys
-    BOOST_FOREACH(const ModelObject& user, getObject<ScheduleBase>().getModelObjectSources<ModelObject>()) {
+    for (const ModelObject& user : getObject<ScheduleBase>().getModelObjectSources<ModelObject>()) {
       if (!user.optionalCast<ScheduleBase>()) {
         return false;
       }
@@ -149,7 +149,7 @@ namespace detail {
       OptionalDouble minBound = scheduleTypeLimits->lowerLimitValue();
       OptionalDouble maxBound = scheduleTypeLimits->upperLimitValue();
       if (minBound || maxBound) {
-        BOOST_FOREACH(double value,values()) {
+        for (double value : values()) {
           if (minBound && (value < *minBound)) {
             return false;
           }

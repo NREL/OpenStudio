@@ -30,7 +30,6 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <QDir>
@@ -1026,7 +1025,7 @@ void RubyJobBuilder::setAsUserScriptRubyJob(const openstudio::path& t_userScript
   addRequiredFile(userScriptPath,toPath("user_script.rb"), t_relativeTo, true);
 
   // add arguments in -n, -v, name, value pairs
-  BOOST_FOREACH(const ruleset::OSArgument& argument,t_args) {
+  for (const ruleset::OSArgument& argument : t_args) {
     std::string argumentValue = argument.printValue(true);
 
     if (argument.type() == openstudio::ruleset::OSArgumentType::Path
@@ -1091,7 +1090,7 @@ runmanager::ScriptInfo RubyJobBuilder::updateArgumentsFromDb(runmanager::ScriptI
         LOG(Debug, "Unpacking user script arguments");
         ruleset::OSArgumentVector args = runmanager::RubyJobBuilder::toOSArguments(workflows[0].params(), t_info.scriptPath.parent_path().parent_path());
         LOG(Debug, "User script arguments found: " << args.size());
-        BOOST_FOREACH(const ruleset::OSArgument& arg,args) {
+        for (const ruleset::OSArgument& arg : args) {
           LOG(Debug, "Loading user script argument: " << arg.name());
           t_info.arguments[arg.name()] = arg;
           if ((!arg.hasValue()) &&

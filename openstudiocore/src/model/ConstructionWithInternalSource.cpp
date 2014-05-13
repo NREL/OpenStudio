@@ -29,8 +29,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -192,7 +190,7 @@ namespace detail {
     double tubeSpacing = this->tubeSpacing();
 
     Model model = this->model();
-    BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getModelObjects<ConstructionWithInternalSource>()) {
+    for (const ConstructionWithInternalSource& other : model.getModelObjects<ConstructionWithInternalSource>()) {
       
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;

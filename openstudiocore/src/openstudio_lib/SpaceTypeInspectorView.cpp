@@ -231,7 +231,7 @@ void SpaceTypeDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -250,7 +250,7 @@ std::vector<OSItemId> SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::
   std::vector<OSItemId> result;
   if (m_modelObject){
     model::SpaceType spaceType = m_modelObject->cast<model::SpaceType>();
-    BOOST_FOREACH(const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate, spaceType.spaceInfiltrationDesignFlowRates()){
+    for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : spaceType.spaceInfiltrationDesignFlowRates()){
       result.push_back(modelObjectToItemId(spaceInfiltrationDesignFlowRate, false));
     }
   }
@@ -313,7 +313,7 @@ void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }
@@ -332,7 +332,7 @@ std::vector<OSItemId> SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorContro
   std::vector<OSItemId> result;
   if (m_modelObject){
     model::SpaceType spaceType = m_modelObject->cast<model::SpaceType>();
-    BOOST_FOREACH(const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea, spaceType.spaceInfiltrationEffectiveLeakageAreas()){
+    for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : spaceType.spaceInfiltrationEffectiveLeakageAreas()){
       result.push_back(modelObjectToItemId(spaceInfiltrationEffectiveLeakageArea, false));
     }
   }
@@ -395,7 +395,7 @@ void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::onMakeNewIt
 void SpaceTypeSpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::Space& space, modelObject.model().getModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -405,7 +405,7 @@ std::vector<OSItemId> SpaceTypeSpacesVectorController::makeVector()
   std::vector<OSItemId> result;
   if (m_modelObject){
     model::SpaceType spaceType = m_modelObject->cast<model::SpaceType>();
-    BOOST_FOREACH(const model::Space& space, spaceType.spaces()){
+    for (const model::Space& space : spaceType.spaces()){
       bool isDefaulted = space.isSpaceTypeDefaulted();
       OSItemId itemId = modelObjectToItemId(space, isDefaulted);
       result.push_back(itemId);
@@ -474,7 +474,7 @@ void SpaceTypeSpacesVectorController::onDrop(const OSItemId& itemId)
 void SpaceTypeUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -491,7 +491,7 @@ void SpaceTypeUnassignedSpacesVectorController::onChangeRelationship(const model
 std::vector<OSItemId> SpaceTypeUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  BOOST_FOREACH(const model::Space& space, m_model->getModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (space.isSpaceTypeDefaulted()){
         result.push_back(modelObjectToItemId(space, false));
@@ -915,7 +915,7 @@ void SpaceTypeInspectorView::populateStandardsBuildingTypes()
   if (m_spaceType){
     m_standardsBuildingTypeComboBox->addItem("");
     std::vector<std::string> suggestedStandardsBuildingTypes = m_spaceType->suggestedStandardsBuildingTypes();
-    Q_FOREACH(const std::string& standardsBuildingType, suggestedStandardsBuildingTypes){
+    for (const std::string& standardsBuildingType : suggestedStandardsBuildingTypes) {
       m_standardsBuildingTypeComboBox->addItem(toQString(standardsBuildingType));
     }
     boost::optional<std::string> standardsBuildingType = m_spaceType->standardsBuildingType();
@@ -942,8 +942,8 @@ void SpaceTypeInspectorView::populateStandardsSpaceTypes()
   if (m_spaceType){
     m_standardsSpaceTypeComboBox->addItem("");
     std::vector<std::string> suggestedStandardsSpaceTypes = m_spaceType->suggestedStandardsSpaceTypes();
-    Q_FOREACH(const std::string& standardsSpaceType, suggestedStandardsSpaceTypes){
-        m_standardsSpaceTypeComboBox->addItem(toQString(standardsSpaceType));
+    for (const std::string& standardsSpaceType : suggestedStandardsSpaceTypes) {
+      m_standardsSpaceTypeComboBox->addItem(toQString(standardsSpaceType));
     }
     boost::optional<std::string> standardsSpaceType = m_spaceType->standardsSpaceType();
     if (standardsSpaceType){

@@ -27,8 +27,6 @@
 #include <model/ShadingSurface.hpp>
 #include <model/ShadingSurface_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 

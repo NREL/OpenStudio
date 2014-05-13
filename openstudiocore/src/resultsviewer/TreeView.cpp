@@ -59,7 +59,7 @@ void TreeView::performResultsViewerPlotDataDrag()
 {
   std::vector<resultsviewer::ResultsViewerPlotData> rvPlotDataVec;
 
-  foreach (QTreeWidgetItem *item, selectedItems())
+  for (QTreeWidgetItem *item : selectedItems())
   {
     resultsviewer::ResultsViewerPlotData plot2DData = resultsViewerPlotDataFromTreeItem(item);
     rvPlotDataVec.push_back(plot2DData);
@@ -155,7 +155,7 @@ std::vector<resultsviewer::ResultsViewerPlotData> TreeView::generateResultsViewe
   std::vector<resultsviewer::ResultsViewerPlotData> resultsViewerPlotDataVec;
   if (selectedItems().count() > 0)
   {
-    foreach (QTreeWidgetItem *item, selectedItems())
+    for (QTreeWidgetItem *item : selectedItems())
     {
       resultsviewer::ResultsViewerPlotData resultsViewerPlotData = resultsViewerPlotDataFromTreeItem(item);
       resultsViewerPlotDataVec.push_back(resultsViewerPlotData);

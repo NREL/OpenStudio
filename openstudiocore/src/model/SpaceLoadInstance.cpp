@@ -29,8 +29,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -98,7 +96,7 @@ namespace detail {
     if (space){
       result = this->multiplier()*space->multiplier();
     }else if (spaceType){
-      BOOST_FOREACH(const Space& space, spaceType->spaces()){
+      for (const Space& space : spaceType->spaces()){
         result += this->multiplier()*space.multiplier();
       }
     }

@@ -50,7 +50,6 @@
 
 #include <utilities/core/FileReference.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -127,7 +126,7 @@ TEST_F(AnalysisDriverFixture,RuntimeBehavior_StopCustomAnalysis) {
   // check conditions afterward
   RunManager runManager = analysisDriver.database().runManager();
   EXPECT_FALSE(runManager.workPending());
-  BOOST_FOREACH(const Job& job,runManager.getJobs()) {
+  for (const Job& job : runManager.getJobs()) {
     EXPECT_FALSE(job.running());
     EXPECT_FALSE(job.treeRunning());
   }

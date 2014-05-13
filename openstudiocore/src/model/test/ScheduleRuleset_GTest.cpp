@@ -90,10 +90,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all defaulted
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     EXPECT_EQ(-1, i);
   }
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     EXPECT_EQ(schedule.defaultDaySchedule().handle(), daySchedule.handle());
   }
 
@@ -115,10 +115,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all using the first rule
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     EXPECT_EQ(0, i);
   }
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     EXPECT_EQ(scheduleRules[0].daySchedule().handle(), daySchedule.handle());
   }
 
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   unsigned doy = 1;
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
       EXPECT_EQ(0, i); // weekend rule
@@ -156,7 +156,7 @@ TEST_F(ModelFixture, ScheduleRuleset)
     ++doy;
   }
   doy = 1;
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
       EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle()); // weekend rule
@@ -585,7 +585,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   Workspace workspace2 = model.clone();
 
   IdfObjectVector idfObjects1;
-  BOOST_FOREACH(const WorkspaceObject& object, workspace1.objects()){
+  for (const WorkspaceObject& object : workspace1.objects()){
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 
@@ -593,7 +593,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   }
 
   IdfObjectVector idfObjects2;
-  BOOST_FOREACH(const WorkspaceObject& object, workspace2.objects()){
+  for (const WorkspaceObject& object : workspace2.objects()){
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 
