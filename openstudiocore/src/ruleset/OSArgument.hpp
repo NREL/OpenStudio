@@ -85,13 +85,16 @@ typedef OSArgumentType UserScriptArgumentType;
 /** OSArgument is an argument to a UserScript or a Ruleset. **/
 class RULESET_API OSArgument {
  public:
-  /** @name Construtors and Destructors */
+  /** @name Constructors and Destructors */
   //@{
 
   // ETH@20121211 - Consider adding a constructor or otherwise tweaking the code to fix
   // the issue of having to explicitly call clone (at least in Ruby) in order to setValue.
   // It would be incorrect to always clone on copy since these objects go back and forth
   // to ProjectDatabase.
+
+  OSArgument();
+  OSArgument(const std::string& name, const OSArgumentType& type, bool required);
 
   /** Constructor provided for deserialization; not for general use. */
   OSArgument(const UUID& uuid,
@@ -420,9 +423,6 @@ class RULESET_API OSArgument {
   friend struct std::pair<const std::string, OSArgument>;
   friend struct std::_Pair_base<std::string, OSArgument>;
 #endif
-
-  OSArgument();
-  OSArgument(const std::string& name, const OSArgumentType& type, bool required);
 
   bool setStringInternal(QVariant& variant, const std::string& value);
 

@@ -41,13 +41,13 @@ string toUpper(string s) {
 string capitalize(const string& s) {
     if (s.size() == 0)
         return s;
-    char buf[2] = {toupper(s[0]), 0};
+    char buf[2] = {static_cast<char>(toupper(s[0])), 0};
     return string(buf) + s.substr(1, s.size());
 }
 string decapitalize(const string& s) {
     if (s.size() == 0)
         return s;
-    char buf[2] = {tolower(s[0]), 0};
+    char buf[2] = {static_cast<char>(tolower(s[0])), 0};
     return string(buf) + s.substr(1, s.size());
 }
 

@@ -19,18 +19,14 @@
 
 #include <utilities/data/Matrix.hpp>
 
+#include <utilities/core/Optional.hpp>
 #include <utilities/math/FloatCompare.hpp>
 
-#include <utilities/core/Optional.hpp>
+#include <random>
 
 // this should all be moved to a utilities/core/Random.h
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-
-using namespace std;
-using namespace boost;
 
 namespace openstudio{
 
@@ -268,13 +264,13 @@ namespace openstudio{
     // ETH@20100120. What library does this come from? The user should be able to seed the
     // generator independently of this function.
     // seed random number generator
-    static minstd_rand generator(42u);
+    static std::minstd_rand generator(42u);
 
     // define distribution
-    uniform_real<> dist(a,b);
+    boost::uniform_real<> dist(a,b);
 
     // create a generator
-    variate_generator<minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
+    boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
     // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hangining on Windows 7,
     // with BoostPro installer.

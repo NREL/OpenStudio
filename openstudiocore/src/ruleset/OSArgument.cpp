@@ -1061,7 +1061,7 @@ std::map<std::string,OSArgument> convertOSArgumentVectorToMap(const std::vector<
 {
   std::map<std::string, OSArgument> argMap;
   BOOST_FOREACH(const OSArgument& arg,arguments) {
-    argMap[arg.name()] = arg.clone();
+    argMap.insert(std::make_pair(arg.name(), arg.clone()));
   }
   return argMap;
 }

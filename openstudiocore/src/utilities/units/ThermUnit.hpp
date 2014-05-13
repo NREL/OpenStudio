@@ -34,7 +34,7 @@ namespace detail {
 struct UTILITIES_API ThermExpnt {
  public:
   ThermExpnt(int therm=0,
-             int in=0,
+             int t_in=0,
              int yr=0,
              int R=0,
              int A=0,
@@ -45,7 +45,7 @@ struct UTILITIES_API ThermExpnt {
              int people=0,
              int cycle=0)
   : m_therm(therm),
-    m_in(in),
+    m_in(t_in),
     m_yr(yr),
     m_R(R),
     m_A(A),
