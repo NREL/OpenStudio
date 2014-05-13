@@ -114,12 +114,11 @@ void OSAppBase::updateSelectedMeasureState()
       }else{
         mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
       }
-    }
 
-    if( document->m_applyMeasureNowDialog ) {
-      //TODO
+      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+        document->m_applyMeasureNowDialog->displayMeasure();
+      }
     }
-
   }
 }
 
@@ -184,7 +183,6 @@ void OSAppBase::openBclDlg()
     document->openMeasuresBclDlg();
   }
 }
-
 
 void OSAppBase::chooseHorizontalEditTab()
 {

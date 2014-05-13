@@ -42,6 +42,9 @@ public:
   virtual ~ApplyMeasureNowDialog();
 
   QSize sizeHint() const;
+
+  void displayMeasure();  
+  
   QSharedPointer<EditController> m_editController;
 
 protected slots:
@@ -50,15 +53,20 @@ protected slots:
 
   virtual void on_okButton(bool checked);
 
-
 protected:
 
   void closeEvent(QCloseEvent * event);
+  
+private slots:
+
+  void disableOkButton(bool disable);
 
 private:
 
   void createWidgets();
 
+  void runMeasure();
+  
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
   QStackedWidget * m_mainPaneStackedWidget;
