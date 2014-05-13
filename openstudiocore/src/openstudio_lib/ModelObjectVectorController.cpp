@@ -101,7 +101,7 @@ void ModelObjectVectorController::attachModel(const model::Model& model)
 void ModelObjectVectorController::attachOtherModelObject(const model::ModelObject& modelObject)
 {
   // check not already connected
-  BOOST_FOREACH(const model::ModelObject& currentModelObject, m_otherModelObjects){
+  for (const model::ModelObject& currentModelObject : m_otherModelObjects){
     if (modelObject.handle() == currentModelObject.handle()){
       return;
     }
@@ -149,7 +149,7 @@ void ModelObjectVectorController::detachOtherModelObject(const model::ModelObjec
 
 void ModelObjectVectorController::detachOtherModelObjects()
 {
-  BOOST_FOREACH(const model::ModelObject& modelObject, m_otherModelObjects){
+  for (const model::ModelObject& modelObject : m_otherModelObjects){
     disconnect(modelObject.getImpl<model::detail::ModelObject_Impl>().get());
   }
   m_otherModelObjects.clear();

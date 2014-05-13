@@ -97,7 +97,7 @@ namespace gbxml {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -110,7 +110,7 @@ namespace gbxml {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -156,7 +156,7 @@ namespace gbxml {
     }
   /*
     // do constructions
-    BOOST_FOREACH(const model::ConstructionBase& constructionBase, model.getModelObjects<model::ConstructionBase>()){
+    for (const model::ConstructionBase& constructionBase : model.getModelObjects<model::ConstructionBase>()){
       boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
       if (constructionElement){
         projectElement.appendChild(*constructionElement);
@@ -164,7 +164,7 @@ namespace gbxml {
     }
 
     // do materials
-    BOOST_FOREACH(const model::Material& material, model.getModelObjects<model::Material>()){
+    for (const model::Material& material : model.getModelObjects<model::Material>()){
       boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
       if (materialElement){
         projectElement.appendChild(*materialElement);
@@ -180,7 +180,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ThermalZone& thermalZone, thermalZones){
+    for (const model::ThermalZone& thermalZone : thermalZones){
       boost::optional<QDomElement> zoneElement = translateThermalZone(thermalZone, doc);
       if (zoneElement){
         gbXMLElement.appendChild(*zoneElement);
@@ -224,7 +224,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::Surface& surface, surfaces){
+    for (const model::Surface& surface : surfaces){
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
@@ -274,7 +274,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
@@ -489,7 +489,7 @@ namespace gbxml {
 
     QDomElement polyLoopElement = doc.createElement("PolyLoop");
     planarGeometryElement.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -507,7 +507,7 @@ namespace gbxml {
     }
 
     // translate sub surfaces
-    BOOST_FOREACH(const model::SubSurface& subSurface, surface.subSurfaces()){
+    for (const model::SubSurface& subSurface : surface.subSurfaces()){
       boost::optional<QDomElement> openingElement = translateSubSurface(subSurface, transformation, doc);
       if (openingElement){
         result.appendChild(*openingElement);
@@ -649,7 +649,7 @@ namespace gbxml {
     // translate vertices
     QDomElement polyLoopElement = doc.createElement("PolyLoop");
     planarGeometryElement.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       polyLoopElement.appendChild(cartesianPointElement);
 

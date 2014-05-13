@@ -30,8 +30,6 @@
 #include <model/GasEquipmentDefinition_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

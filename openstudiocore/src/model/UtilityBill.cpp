@@ -708,7 +708,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+    for (const Meter& meter : this->model().getModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Daily", meter.reportingFrequency()))){
         return meter;
@@ -754,7 +754,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+    for (const Meter& meter : this->model().getModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Timestep", meter.reportingFrequency()))){
         return meter;
@@ -782,7 +782,7 @@ namespace detail {
   {
     IdfExtensibleGroupVector egs = extensibleGroups();
     std::vector<BillingPeriod> result;
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       result.push_back(eg.cast<BillingPeriod>());
     }
     return result;
@@ -841,7 +841,7 @@ namespace detail {
   unsigned UtilityBill_Impl::numberBillingPeriodsInCalculations() const
   {
     unsigned n = 0;
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         boost::optional<double> modelConsumption = p.modelConsumption();
@@ -861,7 +861,7 @@ namespace detail {
     double squaredError = 0;
     unsigned n = 0;
     double conv = this->consumptionUnitConversionFactor();
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         double convertedConsumption = conv * consumption.get();
@@ -889,7 +889,7 @@ namespace detail {
     double sumError = 0;
     unsigned n = 0;
     double conv = this->consumptionUnitConversionFactor();
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         double convertedConsumption = conv * consumption.get();

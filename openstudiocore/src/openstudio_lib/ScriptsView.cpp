@@ -48,8 +48,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include <boost/foreach.hpp>
-
 #include <iomanip>
 
 namespace openstudio {
@@ -264,7 +262,7 @@ namespace openstudio {
   }
 
   void ScriptsInspectorView::clearArgumentWidgets() {
-    BOOST_FOREACH(ArgumentEdit& argEdit,m_argumentEdits) {
+    for (ArgumentEdit& argEdit : m_argumentEdits) {
       m_argumentEditsLayout->removeWidget(argEdit.first);
       delete argEdit.first;
       m_argumentEditsLayout->removeWidget(argEdit.second);
@@ -283,7 +281,7 @@ namespace openstudio {
         m_refreshOSArgumentsButton->setEnabled(true);
         OSArgumentPathEdit* lastImfFile;
         ruleset::OSArgumentVector args = m_scriptItem->osArguments();
-        BOOST_FOREACH(ruleset::OSArgument& arg,args) {
+        for (ruleset::OSArgument& arg : args) {
 //          LOG(Debug, "Populating argument: " << arg.name << " " << arg.displayName << " " << arg.type().
           std::string name = arg.displayName();
           if (name.empty()) { name = arg.name(); }
@@ -699,7 +697,7 @@ void OSArgumentChoiceEdit::refreshChoices() {
       currentValue = m_arg.valueAsString();
     }
   }
-  BOOST_FOREACH(const std::string& choice, m_choices) {
+  for (const std::string& choice : m_choices) {
     addItem(QString::fromStdString(choice));
   }
   if (currentValue) {

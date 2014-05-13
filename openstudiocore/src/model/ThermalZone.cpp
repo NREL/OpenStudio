@@ -661,7 +661,7 @@ namespace detail {
 
   double ThermalZone_Impl::floorArea() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space,spaces()) {
+    for (const Space& space : spaces()) {
       result += space.floorArea();
     }
     return result;
@@ -669,7 +669,7 @@ namespace detail {
 
   double ThermalZone_Impl::exteriorSurfaceArea() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space,spaces()) {
+    for (const Space& space : spaces()) {
       result += space.exteriorArea();
     }
     return result;
@@ -677,7 +677,7 @@ namespace detail {
 
   double ThermalZone_Impl::exteriorWallArea() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space,spaces()) {
+    for (const Space& space : spaces()) {
       result += space.exteriorWallArea();
     }
     return result;
@@ -685,7 +685,7 @@ namespace detail {
 
   double ThermalZone_Impl::airVolume() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()) {
+    for (const Space& space : spaces()) {
       result += space.volume();
     }
     return result;
@@ -693,7 +693,7 @@ namespace detail {
 
   double ThermalZone_Impl::numberOfPeople() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()) {
+    for (const Space& space : spaces()) {
       result += space.numberOfPeople();
     }
     return result;
@@ -728,7 +728,7 @@ namespace detail {
   
   double ThermalZone_Impl::lightingPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.lightingPower();
     }
     return result;
@@ -766,7 +766,7 @@ namespace detail {
 
   double ThermalZone_Impl::electricEquipmentPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.electricEquipmentPower();
     }
     return result;
@@ -804,7 +804,7 @@ namespace detail {
 
   double ThermalZone_Impl::gasEquipmentPower() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()){
+    for (const Space& space : spaces()){
       result += space.gasEquipmentPower();
     }
     return result;
@@ -842,7 +842,7 @@ namespace detail {
 
   double ThermalZone_Impl::infiltrationDesignFlowRate() const {
     double result(0.0);
-    BOOST_FOREACH(const Space& space, spaces()) {
+    for (const Space& space : spaces()) {
       result += space.infiltrationDesignFlowRate();
     }
     return result;
@@ -1014,7 +1014,7 @@ namespace detail {
     double sumOutdoorAirForVolume = 0.0;
 
     // Quick check to see what kind of ventilation methods are used
-    BOOST_FOREACH(Space space, spaces){
+    for (Space space : spaces){
       if (boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir = space.designSpecificationOutdoorAir()) {
         if (istringEqual("Maximum", designSpecificationOutdoorAir->outdoorAirMethod())){
           anyMaxOutdoorAirMethod = true;
@@ -1025,7 +1025,7 @@ namespace detail {
     }
 
     // find common variables for the new space
-    BOOST_FOREACH(Space space, spaces){
+    for (Space space : spaces){
 
       // if all spaces are on the same building story use that, otherwise clear it
       if (space.buildingStory()){
@@ -1173,7 +1173,7 @@ namespace detail {
     Transformation newTransformation = newSpace.transformation();
 
     // set common variables for the new space
-    BOOST_FOREACH(Space space, spaces){
+    for (Space space : spaces){
 
       // shift the geometry 
       space.changeTransformation(newTransformation);
@@ -1189,7 +1189,7 @@ namespace detail {
 
       // first hard size any space loads, do this before removing surfaces as 
       // hard sizing may require space geometry
-      BOOST_FOREACH(ModelObject child, children){
+      for (ModelObject child : children){
         if (child.optionalCast<SpaceLoad>()){
           child.cast<SpaceLoad>().hardSize();
           child.cast<SpaceLoad>().hardApplySchedules();
@@ -1197,7 +1197,7 @@ namespace detail {
       }
 
       // now move costs over to the new space
-      BOOST_FOREACH(LifeCycleCost cost, space.lifeCycleCosts()){
+      for (LifeCycleCost cost : space.lifeCycleCosts()){
         // new costs are in absolute units as space area is changing in the merge
         LifeCycleCost newCost(newSpace);
         newCost.setName(cost.name().get());
@@ -1219,7 +1219,7 @@ namespace detail {
       }
 
       // now move everything over to the new space
-      BOOST_FOREACH(ModelObject child, children){
+      for (ModelObject child : children){
         child.setParent(newSpace);
       }
 
@@ -1235,7 +1235,7 @@ namespace detail {
     std::vector<Surface> surfaces = newSpace.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(Surface surface, surfaces){
+    for (Surface surface : surfaces){
 
       std::set<Surface>::iterator it = mergedSurfaces.find(surface);
       if (it != mergedSurfaces.end()){
@@ -1267,7 +1267,7 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(Surface mergedSurface, mergedSurfaces){
+    for (Surface mergedSurface : mergedSurfaces){
       mergedSurface.remove();
     }
 

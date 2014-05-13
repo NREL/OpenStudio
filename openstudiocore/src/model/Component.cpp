@@ -185,7 +185,7 @@ Component::Component(const openstudio::IdfFile& idfFile)
   if (OptionalIdfObject vo = idfFile.versionObject()) {
     objectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(*vo,true));
   }
-  BOOST_FOREACH(const IdfObject& idfObject,idfFile.objects()) {
+  for (const IdfObject& idfObject : idfFile.objects()) {
     objectImplPtrs.push_back(getImpl<detail::Component_Impl>()->createObject(idfObject,true));
   }
   // add Object_ImplPtrs to Workspace_Impl
@@ -287,7 +287,7 @@ Component::Component(const std::vector<ModelObject>& contents)
   openstudio::detail::WorkspaceObject_ImplPtrVector newObjectImplPtrs;
   HandleMap oldNewHandleMap;
   Model model = contents[0].model();
-  BOOST_FOREACH(const ModelObject& mo,contents) {
+  for (const ModelObject& mo : contents) {
     OS_ASSERT(mo.model() == model);
     newObjectImplPtrs.push_back(getImpl<ImplType>()->createObject(
         mo.getImpl<detail::ModelObject_Impl>(),false) );
@@ -300,7 +300,7 @@ Component::Component(const std::vector<ModelObject>& contents)
 
   // populate ComponentData
   componentData.clearExtensibleGroups();
-  BOOST_FOREACH(WorkspaceObject& newObject,newObjects) {
+  for (WorkspaceObject& newObject : newObjects) {
     ModelObject mo = newObject.cast<ModelObject>();
     bool ok = componentData.getImpl<detail::ComponentData_Impl>()->registerObject(mo);
     OS_ASSERT(ok);

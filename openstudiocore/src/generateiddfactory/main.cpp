@@ -23,7 +23,6 @@
 #include <utilities/core/GeneratorApplicationPathHelpers.hpp>
 
 #include <boost/program_options.hpp>
-#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <iostream>
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
 
     // parse input files and write pieces of output files that require object text
     int i(0);
-    BOOST_FOREACH(openstudio::IddFileFactoryData& idd,iddFiles) {
+    for (openstudio::IddFileFactoryData& idd : iddFiles) {
       idd.parseFile(outPath,fileHeader.str(),outFiles,i);
       ++i;
     }

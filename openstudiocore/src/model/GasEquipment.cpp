@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, gasEquipmentDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

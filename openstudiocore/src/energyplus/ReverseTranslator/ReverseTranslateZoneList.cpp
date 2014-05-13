@@ -49,7 +49,7 @@ OptionalModelObject ReverseTranslator::translateZoneList( const WorkspaceObject 
     spaceType.setName(*s);
   }
 
-  BOOST_FOREACH(const IdfExtensibleGroup& idfGroup, workspaceObject.extensibleGroups()){
+  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
     WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
     
     OptionalWorkspaceObject target = workspaceGroup.getTarget(0);

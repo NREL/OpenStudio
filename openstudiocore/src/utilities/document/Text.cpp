@@ -23,7 +23,6 @@
 
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/archive/archive_exception.hpp>
 
@@ -130,7 +129,7 @@ namespace detail {
 
   std::string Text_Impl::mf_printCOUT() const {
     std::stringstream ss;
-    BOOST_FOREACH(const std::string& str,m_paragraphs) {
+    for (const std::string& str : m_paragraphs) {
       ss << std::endl 
          << str << std::endl;
     }
@@ -139,7 +138,7 @@ namespace detail {
 
   std::string Text_Impl::mf_printLaTeX() const {
     std::stringstream ss;
-    BOOST_FOREACH(const std::string& str,m_paragraphs) {
+    for (const std::string& str : m_paragraphs) {
       ss << std::endl << formatText(str,DocumentFormat(DocumentFormat::LaTeX)) << std::endl;
     }
     return ss.str();
@@ -147,7 +146,7 @@ namespace detail {
 
   std::string Text_Impl::mf_printXHTML() const {
     std::stringstream ss;
-    BOOST_FOREACH(const std::string& str,m_paragraphs) {
+    for (const std::string& str : m_paragraphs) {
       ss << std::endl 
          << "<p>" << std::endl 
          << formatText(str,DocumentFormat(DocumentFormat::XHTML)) << std::endl 

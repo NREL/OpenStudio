@@ -833,7 +833,7 @@ namespace resultsviewer{
 
   void MainWindow::onTreeViewSelectionChanged()
   {
-    foreach (QTreeWidgetItem *item, m_treeView->selectedItems())
+    for (QTreeWidgetItem *item : m_treeView->selectedItems())
     {
       if ( item->type() != ddtKeyValue )
       {
@@ -1385,7 +1385,7 @@ namespace resultsviewer{
   {
     if (!fileList.isEmpty())
     {
-      foreach(QString file, fileList)
+      for (QString file : fileList)
       {
         if (!QFile::exists(file)) {
           QMessageBox::information(this, tr("File Open"), tr("File not found:\n" + file.toUtf8()));

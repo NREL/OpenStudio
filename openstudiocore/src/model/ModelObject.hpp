@@ -192,7 +192,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectSources() const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = sources();
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       boost::optional<T> oSource = wo.optionalCast<T>();
       if (oSource) { result.push_back(*oSource); }
     }
@@ -210,7 +210,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = getSources(iddObjectType);
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       // assume iddObjectType is valid for T
       result.push_back(wo.cast<T>());
     }
@@ -232,7 +232,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectTargets() const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = targets();
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       boost::optional<T> oTarget = wo.optionalCast<T>();
       if (oTarget) { result.push_back(*oTarget); }
     }

@@ -74,7 +74,7 @@ namespace openstudio {
     if (dir.exists(dirName)) {
       bool test = true;
 
-      Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
+      for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
       {
         if (info.isDir()) {
           test = removeDir(info.absoluteFilePath());
@@ -119,7 +119,7 @@ namespace openstudio {
     QDir dstDir(dstPath);
 
     // remove all files in dst as well as any directories in dst that are not in src
-    Q_FOREACH(const QFileInfo &dstItemInfo, dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    for (const QFileInfo &dstItemInfo : dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
     {
       QString srcItemPath = srcPath + "/" + dstItemInfo.fileName();
       QString dstItemPath = dstPath + "/" + dstItemInfo.fileName();
@@ -197,7 +197,7 @@ namespace openstudio {
     }
     
     // copy all files in src to dst
-    Q_FOREACH(const QFileInfo &srcItemInfo, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    for (const QFileInfo &srcItemInfo : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
     {
       QString srcItemPath = srcPath + "/" + srcItemInfo.fileName();
       QString dstItemPath = dstPath + "/" + srcItemInfo.fileName();

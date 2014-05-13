@@ -173,7 +173,7 @@ DataPoint_Measure_JoinRecord::getMeasureRecords(
     measureRecordIds.push_back(value.toInt());
   }
 
-  BOOST_FOREACH(int id, measureRecordIds) {
+  for (int id : measureRecordIds) {
     boost::optional<MeasureRecord> measureRecord =
         MeasureRecord::getMeasureRecord(id,database);
     OS_ASSERT(measureRecord);
@@ -203,7 +203,7 @@ std::vector<DataPointRecord> DataPoint_Measure_JoinRecord::getDataPointRecords(
     dataPointRecordIds.push_back(value.toInt());
   }
 
-  BOOST_FOREACH(int id, dataPointRecordIds) {
+  for (int id : dataPointRecordIds) {
     boost::optional<DataPointRecord> dataPointRecord = 
         DataPointRecord::getDataPointRecord(id,database);
     OS_ASSERT(dataPointRecord);

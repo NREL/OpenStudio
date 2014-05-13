@@ -30,8 +30,6 @@
 
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 
 TEST_F(UnitsFixture,OSQuantityVector_Constructors) {
@@ -210,7 +208,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_QuantityVectorBaseCa
     DoubleVector vals = toStandardVector(randVector(0.0,1.0,8760u));
     Unit u = createSIForce();
     QuantityVector result;
-    BOOST_FOREACH(double val,vals) {
+    for (double val : vals) {
       result.push_back(Quantity(val,u));
     }
   }

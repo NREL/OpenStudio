@@ -224,7 +224,7 @@ class Geom::PolygonLoop
 
 
   def reduce
-    # Returns a loop with all consecutive colinear and coincident points deleted
+    # Returns a loop with all consecutive collinear and coincident points deleted
     
     if (@points.empty?)
       return(@points)
@@ -267,7 +267,7 @@ class Geom::PolygonLoop
 
 
 
-    # Eliminate consecutive colinear points
+    # Eliminate consecutive collinear points
     reduced_points = []
     if (non_coinc_points.length < 3)
       reduced_points = non_coinc_points
@@ -284,11 +284,11 @@ class Geom::PolygonLoop
 
         this_vector = next_point - this_point
 
-        # Check to make sure this point is not colinear with the next point
+        # Check to make sure this point is not collinear with the next point
         if (not this_vector.samedirection?(prev_vector))
           reduced_points << this_point
         else
-          #puts "colinear point skipped"
+          #puts "collinear point skipped"
         end
         prev_vector = this_vector
       end

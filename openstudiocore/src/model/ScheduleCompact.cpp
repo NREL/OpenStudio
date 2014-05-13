@@ -30,8 +30,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 using openstudio::Handle;
 using openstudio::OptionalHandle;
 using openstudio::HandleVector;
@@ -94,7 +92,7 @@ namespace detail {
 
   std::vector<double> ScheduleCompact_Impl::values() const {
     DoubleVector result;
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,extensibleGroups()) {
+    for (const IdfExtensibleGroup& eg : extensibleGroups()) {
       std::string str = eg.getString(0,true).get();
       boost::trim(str);
       if (!str.empty()) {

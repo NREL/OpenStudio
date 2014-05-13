@@ -28,7 +28,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
@@ -120,7 +119,7 @@ namespace detail {
     OptionalIddField result;
   
     // look in fields
-    BOOST_FOREACH(const IddField& field, m_fields){
+    for (const IddField& field : m_fields){
       if (boost::iequals(field.name(), fieldName)){
         result = field;
         break;
@@ -128,7 +127,7 @@ namespace detail {
     }
     // look in extensible fields
     if(!result){
-      BOOST_FOREACH(const IddField& field, m_extensibleFields){
+      for (const IddField& field : m_extensibleFields){
         if (boost::iequals(field.name(), fieldName)){
           result = field;
           break;
@@ -144,7 +143,7 @@ namespace detail {
     int index = 0;
 
     // look in fields
-    BOOST_FOREACH(const IddField& field, m_fields) {
+    for (const IddField& field : m_fields) {
       if (boost::iequals(field.name(), fieldName)) {
         result = index;
         break;
@@ -154,7 +153,7 @@ namespace detail {
 
     // look in extensible fields
     if(!result){
-      BOOST_FOREACH(const IddField& field, m_extensibleFields){
+      for (const IddField& field : m_extensibleFields){
         if (boost::iequals(field.name(), fieldName)){
           result = index;
           break;
@@ -312,10 +311,10 @@ namespace detail {
   std::set<std::string> IddObject_Impl::objectLists() const
   {
     std::set<std::string> result;
-    BOOST_FOREACH(const IddField& field, m_fields){
+    for (const IddField& field : m_fields){
       result.insert(field.properties().objectLists.begin(),field.properties().objectLists.end());
     }
-    BOOST_FOREACH(const IddField& field, m_extensibleFields){
+    for (const IddField& field : m_extensibleFields){
       result.insert(field.properties().objectLists.begin(),field.properties().objectLists.end());
     }
     return result;
@@ -528,7 +527,7 @@ namespace detail {
 
     // replace names of extensible fields so they do not contain numbers
     // e.g. "Vertex 1 X-coordinate" -> "Vertex X-coordinate"
-    BOOST_FOREACH(IddField& extensibleField, m_extensibleFields){
+    for (IddField& extensibleField : m_extensibleFields){
       std::string extensibleFieldName = extensibleField.name();
       extensibleFieldName = regex_replace(extensibleFieldName, find, replace); 
       trim(extensibleFieldName);
@@ -837,7 +836,7 @@ std::ostream& operator<<(std::ostream& os, const IddObject& iddObject){
 
 IddObjectTypeVector getIddObjectTypeVector(const IddObjectVector& objects) {
   IddObjectTypeVector result;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     result.push_back(object.type());
   }
   return result;
@@ -845,7 +844,7 @@ IddObjectTypeVector getIddObjectTypeVector(const IddObjectVector& objects) {
 
 IddObjectTypeSet getIddObjectTypeSet(const IddObjectVector& objects) {
   IddObjectTypeSet result;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     result.insert(object.type());
   }
   return result;
@@ -857,7 +856,7 @@ std::vector<std::string> getIddKeyNames(const IddObject& object,unsigned index) 
   if (!oIddField) { return result; }
   IddField iddField = *oIddField;
   IddKeyVector keys = iddField.keys();
-  BOOST_FOREACH(const IddKey& key,keys) {
+  for (const IddKey& key : keys) {
     result.push_back(key.name());
   }
   return result;

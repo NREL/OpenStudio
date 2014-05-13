@@ -104,7 +104,7 @@ std::vector<CollapsibleComponent *> CollapsibleComponentList::collapsibleCompone
 {
   std::vector<CollapsibleComponent *> result;
 
-  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  for (QAbstractButton * button : m_collapsibleComponentGroup->buttons().toVector().toStdVector()) {
     result.push_back(qobject_cast<CollapsibleComponent *>(button));
   }
 
@@ -116,9 +116,9 @@ std::vector<Component *> CollapsibleComponentList::components()
   std::vector<Component *> result;
   std::vector<Component *> components;
 
-  Q_FOREACH(QAbstractButton * button, m_collapsibleComponentGroup->buttons().toVector().toStdVector()){
+  for (QAbstractButton * button : m_collapsibleComponentGroup->buttons().toVector().toStdVector()) {
     components = qobject_cast<CollapsibleComponent *>(button)->componentList()->components();
-    Q_FOREACH(Component * component, components){
+    for (Component * component : components) {
       result.push_back(component);
     }
     components.clear();
@@ -190,7 +190,7 @@ void CollapsibleComponentList::paintEvent(QPaintEvent * event)
 
 void CollapsibleComponentList::setCollapsibleComponents(const std::vector<CollapsibleComponent *> & collapsibleComponents)
 {
-  Q_FOREACH(CollapsibleComponent * collapsibleComponent, collapsibleComponents)
+  for (CollapsibleComponent * collapsibleComponent : collapsibleComponents)
   {
     addCollapsibleComponent(collapsibleComponent);
   }

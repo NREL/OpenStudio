@@ -60,7 +60,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
 
     //make an electric radiant unit
     ScheduleConstant availabilitySched(model);
@@ -100,13 +100,13 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
 
     //get the radiant zone equipment
-    BOOST_FOREACH(ModelObject equipment, thermalZone.equipment()){
+    for (ModelObject equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()){
         ZoneHVACLowTemperatureRadiantElectric testRad = equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>().get();
-        BOOST_FOREACH(IdfExtensibleGroup extGrp, testRad.extensibleGroups()){
+        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
           EXPECT_EQ(0.25,extGrp.getDouble(1,false));
         }
       }

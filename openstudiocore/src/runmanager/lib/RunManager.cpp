@@ -544,7 +544,7 @@ namespace runmanager {
 
     bool unknownDay = false;
 
-    BOOST_FOREACH(model::DesignDay designDay, t_model.getModelObjects<model::DesignDay>()) {
+    for (model::DesignDay designDay : t_model.getModelObjects<model::DesignDay>()) {
       boost::optional<std::string> name;
       name = designDay.name();
 
@@ -575,7 +575,7 @@ namespace runmanager {
         }
         else
         {
-          LOG(Info, "Unkown day found: " << *name);
+          LOG(Info, "Unknown day found: " << *name);
           unknownDay = true;
         }
       }
@@ -588,7 +588,7 @@ namespace runmanager {
       if( days99_6.size() > 0 )
       {
         LOG(Debug, "removing 99% days: " << days99.size());
-        BOOST_FOREACH(model::DesignDay designDay, days99) {
+        for (model::DesignDay designDay : days99) {
           designDay.remove();
         }
       }
@@ -596,18 +596,18 @@ namespace runmanager {
       if( days0_4.size() > 0 )
       {
         LOG(Debug, "removing 1% days: " << days1.size());
-        BOOST_FOREACH(model::DesignDay designDay, days1) {
+        for (model::DesignDay designDay : days1) {
           designDay.remove();
         }
         LOG(Debug, "removing 2% days: " << days2.size());
-        BOOST_FOREACH(model::DesignDay designDay, days2) {
+        for (model::DesignDay designDay : days2) {
           designDay.remove();
         }
       }
       else if( days1.size() > 0 )
       {
         LOG(Debug, "removing 2% days: " << days2.size());
-        BOOST_FOREACH(model::DesignDay designDay, days2) {
+        for (model::DesignDay designDay : days2) {
           designDay.remove();
         }
       }

@@ -38,7 +38,7 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateSpace( model::Space & modelObject )
 {
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

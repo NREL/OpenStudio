@@ -42,7 +42,6 @@
 #include <QTimer>
 
 #include <boost/numeric/conversion/cast.hpp>  
-#include <boost/foreach.hpp>  
 
 #include <model/Model.hpp>
 #include <model/ParentObject.hpp>
@@ -812,8 +811,8 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
     Workspace workspace = m_workspaceObj->workspace();
     std::vector<std::string> names;
 
-    BOOST_FOREACH(const std::string& objectList, prop.objectLists){
-      BOOST_FOREACH(const WorkspaceObject& workspaceObject, workspace.getObjectsByReference(objectList)){
+    for (const std::string& objectList : prop.objectLists){
+      for (const WorkspaceObject& workspaceObject : workspace.getObjectsByReference(objectList)){
         names.push_back(workspaceObject.name().get());
       }
     }
@@ -826,7 +825,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
     }else{
       combo->addItem("");
     }*/
-    BOOST_FOREACH(const std::string& name, names){
+    for (const std::string& name : names){
       combo->addItem(name.c_str());   
     }
   }
@@ -838,7 +837,7 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
     }else{
       combo->addItem("");
     }*/
-    BOOST_FOREACH(IddKey key, field.keys()){
+    for (IddKey key : field.keys()){
       combo->addItem(key.name().c_str());
     }
   }

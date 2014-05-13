@@ -155,7 +155,7 @@ void WorkspaceWatcher::processAddedObjects()
   std::swap(m_addedObjects, addedObjects);
   OS_ASSERT(m_addedObjects.empty());
 
-  BOOST_FOREACH(const WorkspaceObject& addedObject, addedObjects){
+  for (const WorkspaceObject& addedObject : addedObjects){
     // check for the case where object has been removed before the add was processed
     if (!addedObject.handle().isNull()){
       this->onObjectAdd(addedObject);

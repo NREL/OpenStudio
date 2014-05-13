@@ -27,7 +27,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 
@@ -279,7 +278,7 @@ UnsignedVector IdfExtensibleGroup::mf_subsetAndToFieldIndices(UnsignedVector ind
   UnsignedVector result;
   OS_ASSERT(!empty());
   // downselect and convert to only this ExtensibleGroup
-  BOOST_FOREACH(unsigned index,indices) {
+  for (unsigned index : indices) {
     if (index >= m_index) {
       unsigned fieldIndex = index - m_index;
       if (isValid(fieldIndex)) { result.push_back(fieldIndex); }

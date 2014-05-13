@@ -19,13 +19,11 @@
 
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
   StringVector eraseEmptyElements(const StringVector& sv) {
     StringVector result;
-    BOOST_FOREACH(const std::string& str,sv) {
+    for (const std::string& str : sv) {
       if (!str.empty()) {
         result.push_back(str);
       }

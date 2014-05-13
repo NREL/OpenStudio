@@ -90,7 +90,7 @@ namespace detail {
       result.push_back(*dst);
     }
 
-    BOOST_FOREACH(RunPeriodControlSpecialDays day, model.getModelObjects<RunPeriodControlSpecialDays>()){
+    for (RunPeriodControlSpecialDays day : model.getModelObjects<RunPeriodControlSpecialDays>()){
       result.push_back(day);
     }
 
@@ -299,31 +299,31 @@ namespace detail {
 
     model::Model model = this->model();
     if (wasLeapYear && !isLeapYear){
-      BOOST_FOREACH(RunPeriod runPeriod, model.getModelObjects<RunPeriod>()){
+      for (RunPeriod runPeriod : model.getModelObjects<RunPeriod>()){
         runPeriod.ensureNoLeapDays();
       }
 
-      BOOST_FOREACH(RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime, model.getModelObjects<RunPeriodControlDaylightSavingTime>()){
+      for (RunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime : model.getModelObjects<RunPeriodControlDaylightSavingTime>()){
         runPeriodControlDaylightSavingTime.ensureNoLeapDays();
       }
 
-      BOOST_FOREACH(RunPeriodControlSpecialDays runPeriodControlSpecialDays, model.getModelObjects<RunPeriodControlSpecialDays>()){
+      for (RunPeriodControlSpecialDays runPeriodControlSpecialDays : model.getModelObjects<RunPeriodControlSpecialDays>()){
         runPeriodControlSpecialDays.ensureNoLeapDays();
       }
 
-      BOOST_FOREACH(SizingPeriod sizingPeriod, model.getModelObjects<SizingPeriod>()){
+      for (SizingPeriod sizingPeriod : model.getModelObjects<SizingPeriod>()){
         sizingPeriod.ensureNoLeapDays();
       }
 
-      BOOST_FOREACH(ScheduleBase scheduleBase, model.getModelObjects<ScheduleBase>()){
+      for (ScheduleBase scheduleBase : model.getModelObjects<ScheduleBase>()){
         scheduleBase.ensureNoLeapDays();
       } 
 
-      BOOST_FOREACH(ScheduleRule scheduleRule, model.getModelObjects<ScheduleRule>()){
+      for (ScheduleRule scheduleRule : model.getModelObjects<ScheduleRule>()){
         scheduleRule.ensureNoLeapDays();
       }
 
-      BOOST_FOREACH(LightingDesignDay lightingDesignDay, model.getModelObjects<LightingDesignDay>()){
+      for (LightingDesignDay lightingDesignDay : model.getModelObjects<LightingDesignDay>()){
         lightingDesignDay.ensureNoLeapDays();
       }
     }

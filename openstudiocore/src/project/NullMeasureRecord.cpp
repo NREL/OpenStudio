@@ -30,8 +30,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <sstream>
 
 #include <QSqlQuery>

@@ -39,7 +39,6 @@
 
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -347,7 +346,7 @@ namespace detail {
 
         // DLM: this does not seem to work on the top level input OSM, we may need to make the call to compute these required files
         // before this code is run
-        BOOST_FOREACH(const RequiredFileType& requiredFile, osm.requiredFiles){
+        for (const RequiredFileType& requiredFile : osm.requiredFiles){
           if (istringEqual(".epw", toString(requiredFile.second.extension()))){
             lastEpwFilePath = requiredFile.second;
             LOG(Info, "Found last EpwFile '" << toString(lastEpwFilePath->filename()) << "' attached to last OpenStudio Model");
@@ -362,7 +361,7 @@ namespace detail {
         addParameter("ruby", lastEnergyPlusWorkspacePathArgument);
 
         // DLM: assume that an EPW file attached to last idf is more recent that EPW file attached to last osm
-        BOOST_FOREACH(const RequiredFileType& requiredFile, idf.requiredFiles){
+        for (const RequiredFileType& requiredFile : idf.requiredFiles){
           if (istringEqual(".epw", toString(requiredFile.second.extension()))){
             lastEpwFilePath = requiredFile.second;
             LOG(Info, "Found last EpwFile '" << toString(lastEpwFilePath->filename()) << "' attached to last EnergyPlus Workspace");

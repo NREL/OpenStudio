@@ -285,7 +285,7 @@ TEST_F(AnalysisFixture, Analysis_ClearAllResults) {
   // add data points
   std::stringstream ss;
   int i = 1;
-  BOOST_FOREACH(double point,points) {
+  for (double point : points) {
     ss << "dataPoint" << i;
     DataPoint dataPoint(createUUID(),
                         createUUID(),

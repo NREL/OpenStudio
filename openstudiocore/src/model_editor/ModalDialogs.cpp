@@ -73,8 +73,6 @@
 #include <QHBoxLayout>
 #include <QIcon>
 
-#include <boost/foreach.hpp>
-
 #include <algorithm>
 
 using namespace openstudio;
@@ -282,7 +280,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   std::vector<WorkspaceObject> workspaceObjects;
 
   // get all objects
-  BOOST_FOREACH(IddObjectType iddObjectType, m_typesToDisplay){
+  for (IddObjectType iddObjectType : m_typesToDisplay){
     std::vector<WorkspaceObject> temp = m_model.getObjectsByType(iddObjectType);
     workspaceObjects.insert(workspaceObjects.end(), temp.begin(), temp.end());
   }
@@ -291,7 +289,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), nameSorter);
 
   // add to combo box
-  BOOST_FOREACH(WorkspaceObject workspaceObject, workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     OS_ASSERT(workspaceObject.name());
     std::string objectName = workspaceObject.name().get();
     m_comboBox->addItem(toQString(objectName), workspaceObject.handle().toString());

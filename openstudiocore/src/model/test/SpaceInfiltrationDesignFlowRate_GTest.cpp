@@ -25,8 +25,6 @@
 #include <model/SpaceInfiltrationDesignFlowRate.hpp>
 #include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

@@ -29,8 +29,6 @@
 
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <sstream>
 
 using namespace openstudio::model;
@@ -40,7 +38,7 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_ClassNames) {
   StringVector classesWithSchedules = ScheduleTypeRegistry::instance().classNames();
   EXPECT_FALSE(classesWithSchedules.empty());
   std::stringstream ss;
-  BOOST_FOREACH(const std::string& className,classesWithSchedules) {
+  for (const std::string& className : classesWithSchedules) {
     EXPECT_FALSE(ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className).empty());
     ss << "  " << className << std::endl;
   }

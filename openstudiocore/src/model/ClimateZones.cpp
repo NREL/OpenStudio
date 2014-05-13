@@ -29,8 +29,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/String.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -63,7 +61,7 @@ namespace detail {
   std::vector<ClimateZone> ClimateZones_Impl::climateZones() const {
     IdfExtensibleGroupVector egs = extensibleGroups();
     ClimateZoneVector result;
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       result.push_back(eg.cast<ClimateZone>());
     }
     return result;
@@ -82,7 +80,7 @@ namespace detail {
     boost::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
     ClimateZoneVector czs = climateZones();
-    BOOST_FOREACH(const ClimateZone& cz,czs) {
+    for (const ClimateZone& cz : czs) {
       if ( istringEqual(cz.institution(),institution) && (cz.year() == year) ) 
       {
         result = cz;
@@ -95,7 +93,7 @@ namespace detail {
   std::vector<ClimateZone> ClimateZones_Impl::getClimateZones(const std::string& institution) const {
     ClimateZoneVector result;
     ClimateZoneVector czs = climateZones();
-    BOOST_FOREACH(const ClimateZone& cz,czs) {
+    for (const ClimateZone& cz : czs) {
       if ( istringEqual(cz.institution(),institution) ) {
         result.push_back(cz);
       }

@@ -330,7 +330,7 @@ std::string DesignAltListController::suggestDesignAltName(const boost::optional<
 
   std::set<std::string> allNames;
   if( boost::optional<analysisdriver::SimpleProject> project = PatApp::instance()->project() ){
-    Q_FOREACH(const analysis::DataPoint& dataPoint, project->analysis().dataPoints()){
+    for (const analysis::DataPoint& dataPoint : project->analysis().dataPoints()) {
       allNames.insert(dataPoint.name());
       allNames.insert(dataPoint.displayName());
     }

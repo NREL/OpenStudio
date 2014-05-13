@@ -245,7 +245,7 @@ void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
   OS_ASSERT(m_gridLayout);
 
   int column = 0;
-  Q_FOREACH(QWidget * widget, widgets){
+  for (QWidget * widget : widgets) {
     m_gridLayout->addWidget(widget,0,column++);
   }
 }
@@ -255,7 +255,7 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
   OS_ASSERT(m_gridLayout);
 
   int column = 0;
-  Q_FOREACH(QString name, names){
+  for (const QString& name : names) {
     m_gridLayout->addWidget(new QLabel(name),0,column++);
   }
 }

@@ -100,7 +100,7 @@ namespace detail {
     this->makeUnique();
 
     LuminaireDefinition definition = this->luminaireDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       // DLM: is this appropriate for a luminaire?
       cost.convertToCostPerEach();
     }

@@ -329,7 +329,7 @@ namespace openstudio{
     searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator UID", generator.uid()));
     searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator VID", generator.versionId()));
 
-    Q_FOREACH(const OnDemandGeneratorArgument& argument, generator.activeArguments()){
+    for (const OnDemandGeneratorArgument& argument : generator.activeArguments()) {
 
       // can't handle other types for now
       if (argument.dataType() != OnDemandGeneratorArgumentType::String){
@@ -484,7 +484,7 @@ namespace openstudio{
           return false;
       if (!component.attributes().empty())
       {
-        Q_FOREACH(const Attribute& attribute, component.attributes())
+        for (const Attribute& attribute : component.attributes())
         {
           std::string dataValue, dataType;
           if (attribute.valueType().value() == AttributeValueType::Boolean) {
@@ -570,7 +570,7 @@ namespace openstudio{
           return false;
       if (!measure.files().empty())
       {
-        Q_FOREACH(const BCLFileReference& file, measure.files())
+        for (const BCLFileReference& file : measure.files())
         {
           if (!query.exec(QString("INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) "
             "VALUES('%1', '%2', '%3', '%4', '%5', '%6')").arg(escape(measure.uid()), escape(measure.versionId()),
@@ -585,7 +585,7 @@ namespace openstudio{
           return false;
       if (!measure.attributes().empty())
       {
-        Q_FOREACH(const Attribute& attribute, measure.attributes())
+        for (const Attribute& attribute : measure.attributes())
         {
           std::string dataValue, dataType;
           if (attribute.valueType().value() == AttributeValueType::Boolean) {

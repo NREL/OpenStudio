@@ -29,7 +29,6 @@
 #include <utilities/units/QuantityFactory.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
@@ -827,7 +826,7 @@ namespace detail{
       childElement.appendChild(text);
       break;
     case AttributeValueType::AttributeVector:
-      BOOST_FOREACH(const Attribute& Attribute, this->valueAsAttributeVector()){
+      for (const Attribute& Attribute : this->valueAsAttributeVector()){
         childElement.appendChild(Attribute.toXml().documentElement());
       }
       break;
@@ -1469,7 +1468,7 @@ std::ostream& operator<<(std::ostream& os, const Attribute& attribute)
 
 Attribute createAttributeFromVector(const std::string& name, std::vector<int> value) {
   AttributeVector valueAsAttributes;
-  BOOST_FOREACH(int v,value) {
+  for (int v : value) {
     Attribute attribute(std::string(),v);
     valueAsAttributes.push_back(attribute);
   }
@@ -1478,7 +1477,7 @@ Attribute createAttributeFromVector(const std::string& name, std::vector<int> va
 
 Attribute createAttributeFromVector(const std::string& name, std::vector<double> value) {
   AttributeVector valueAsAttributes;
-  BOOST_FOREACH(double v,value) {
+  for (double v : value) {
     Attribute attribute(std::string(),v);
     valueAsAttributes.push_back(attribute);
   }
@@ -1491,7 +1490,7 @@ std::vector<int> getIntVectorFromAttribute(const Attribute& attribute) {
     LOG_FREE_AND_THROW("openstudio.Attribute","Attribute must be of type AttributeVector for this function to be applicable.");
   }
   AttributeVector attributes = attribute.valueAsAttributeVector();
-  BOOST_FOREACH(const Attribute& a, attributes) {
+  for (const Attribute& a : attributes) {
     result.push_back(a.valueAsInteger());
   }
   return result;
@@ -1503,7 +1502,7 @@ std::vector<double> getDoubleVectorFromAttribute(const Attribute& attribute) {
     LOG_FREE_AND_THROW("openstudio.Attribute","Attribute must be of type AttributeVector for this function to be applicable.");
   }
   AttributeVector attributes = attribute.valueAsAttributeVector();
-  BOOST_FOREACH(const Attribute& a, attributes) {
+  for (const Attribute& a : attributes) {
     result.push_back(a.valueAsDouble());
   }
   return result;
@@ -1587,7 +1586,7 @@ namespace detail {
     }
     else if (valueType == AttributeValueType::AttributeVector) {
       QVariantList childAttributesList;
-      Q_FOREACH(const Attribute& child,attribute.valueAsAttributeVector()) {
+      for (const Attribute& child : attribute.valueAsAttributeVector()) {
         childAttributesList.push_back(toVariant(child));
       }
       attributeData["value"] = QVariant(childAttributesList);
@@ -1698,7 +1697,7 @@ namespace detail {
     QVariantMap map;
     std::set<std::string> attributeNames;
 
-    BOOST_FOREACH(const Attribute& attribute,attributes) {
+    for (const Attribute& attribute : attributes) {
       std::pair<std::set<std::string>::iterator,bool> insertResult = attributeNames.insert(attribute.name());
       if (!insertResult.second) {
         LOG_FREE_AND_THROW("openstudio.Attribute","Asked to create a flat json serialization "
@@ -1761,7 +1760,7 @@ namespace detail {
     std::set<std::string> processedAttributeNames; // serialization ensures uniqueness of names
 
     int itemCount(0);
-    Q_FOREACH(const QString& key,map.keys()) {
+    for (const QString& key : map.keys()) {
       // determine attribute name
       std::string attributeName;
       std::string keyString = toString(key);

@@ -29,7 +29,6 @@
 #include <utilities/core/Containers.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#include <boost/foreach.hpp> 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -60,7 +59,7 @@ namespace detail {
 
   std::vector<std::string> IddFile_Impl::groups() const {
     StringSet result;
-    BOOST_FOREACH(const IddObject& object,objects()) {
+    for (const IddObject& object : objects()) {
       result.insert(object.group());
     }
     return StringVector(result.begin(),result.end());
@@ -68,7 +67,7 @@ namespace detail {
 
   std::vector<IddObject> IddFile_Impl::getObjectsInGroup(const std::string& group) const {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(istringEqual(object.group(), group)){
         result.push_back(object);
       }
@@ -79,7 +78,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::getObjects(const boost::regex &objectRegex) const {
     IddObjectVector result;
 
-    BOOST_FOREACH(const IddObject& object, m_objects) {
+    for (const IddObject& object : m_objects) {
       if (boost::regex_match(object.name(),objectRegex)) {
         result.push_back(object);
       }
@@ -105,7 +104,7 @@ namespace detail {
   boost::optional<IddObject> IddFile_Impl::getObject(const std::string& objectName) const
   {
     OptionalIddObject result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(istringEqual(object.name(), objectName)){
         result = object;
         break;
@@ -126,7 +125,7 @@ namespace detail {
       return result;
     }
 
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if (object.type() == objectType) {
         result = object;
         break;
@@ -139,7 +138,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::requiredObjects() const
   {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(object.properties().required){
         result.push_back(object);
       }
@@ -150,7 +149,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::uniqueObjects() const
   {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(object.properties().unique){
         result.push_back(object);
       }
@@ -195,7 +194,7 @@ namespace detail {
   {
     os << m_header << std::endl;
     std::string groupName;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if (object.group() != groupName) {
         groupName = object.group();
         os << "\\group " << groupName << std::endl << std::endl;

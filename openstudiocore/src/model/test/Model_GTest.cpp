@@ -72,7 +72,6 @@
 #include <utilities/idf/WorkspaceObject.hpp>
 #include <utilities/idf/ValidityReport.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio::model;
@@ -102,12 +101,12 @@ void checkObject(ModelObject object){
   if (name) { ss << " and named '" << *name << "'"; }
 
   // loop over all possible output variables the user could request
-  BOOST_FOREACH(const std::string& variableName, object.outputVariableNames()){
+  for (const std::string& variableName : object.outputVariableNames()){
     EXPECT_FALSE(variableName.empty());
   }
 
   // loop over all output variables the user has already requested
-  BOOST_FOREACH(const OutputVariable& variable, object.outputVariables()){
+  for (const OutputVariable& variable : object.outputVariables()){
     OptionalString variableName = variable.getString(Output_VariableFields::VariableName);
     ASSERT_TRUE(variableName);
 
@@ -137,7 +136,7 @@ void checkObject(ModelObject object){
 
   if (parentObject){
     // loop through each child
-    BOOST_FOREACH(ModelObject child, parentObject->children()){
+    for (ModelObject child : parentObject->children()){
       OptionalParentObject parent = child.parent();
       if (!parent){
         std::cout << "Child " << child << " does not have a parent" << std::endl;
@@ -252,8 +251,7 @@ TEST_F(ModelFixture, UniqueModelObjects)
 
   EXPECT_EQ(modelObjects.size(),uniqueWorkspaceObjectNames.size());
 
-  std::string name;
-  BOOST_FOREACH(name, uniqueWorkspaceObjectNames)
+  for (const std::string& name : uniqueWorkspaceObjectNames)
   {
     EXPECT_NE(name,"");
   }
@@ -417,7 +415,7 @@ TEST_F(ModelFixture, ExampleModel)
   ASSERT_EQ(1u, defaultScheduleSets.size());
   EXPECT_EQ(4u, spaces.size());
 
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     boost::optional<SpaceType> testSpaceType = space.spaceType();
     ASSERT_TRUE(testSpaceType);
     EXPECT_EQ(spaceTypes[0].handle(), testSpaceType->handle());

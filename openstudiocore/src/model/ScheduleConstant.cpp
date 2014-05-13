@@ -30,8 +30,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 using openstudio::Handle;
 using openstudio::OptionalHandle;
 using openstudio::HandleVector;

@@ -42,8 +42,6 @@
 
 #include <utilities/geometry/Point3d.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

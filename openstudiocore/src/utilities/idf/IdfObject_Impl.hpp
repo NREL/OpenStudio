@@ -446,10 +446,10 @@ namespace detail {
     bool setIddObject(const IddObject& iddObject);
 
     // remove any indices that are outside m_fields' range
-    UnsignedVector trimFieldIndices(const UnsignedVector& indicies) const;
+    UnsignedVector trimFieldIndices(const UnsignedVector& indices) const;
 
-    // repeat indicies as many times as necessary to fill out extensible groups in m_fields
-    UnsignedVector repeatExtensibleIndices(const UnsignedVector& indicies) const;
+    // repeat indices as many times as necessary to fill out extensible groups in m_fields
+    UnsignedVector repeatExtensibleIndices(const UnsignedVector& indices) const;
 
     // QUERY HELPERS
 

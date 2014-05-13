@@ -21,7 +21,6 @@
 #include <model/test/ModelFixture.hpp>
 #include <model/Model.hpp>
 #include <model/ControllerMechanicalVentilation.hpp>
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;

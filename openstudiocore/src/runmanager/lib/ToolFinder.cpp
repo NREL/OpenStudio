@@ -285,7 +285,7 @@ namespace runmanager {
     // For Windows, maintain drive order while searching the deepest paths first
     std::vector<openstudio::path> newSearchPaths, temp;
     char drive = 'Z';
-    Q_FOREACH(openstudio::path path, searchPaths) {
+    for (const openstudio::path& path : searchPaths) {
       if (drive != path.string()[0]) {
         drive = path.string()[0];
         newSearchPaths.insert(newSearchPaths.end(), temp.rbegin(), temp.rend());

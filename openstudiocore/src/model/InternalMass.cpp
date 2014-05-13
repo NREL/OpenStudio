@@ -77,7 +77,7 @@ namespace detail {
     this->makeUnique();
 
     InternalMassDefinition internalMassDefinition = this->internalMassDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, internalMassDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : internalMassDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

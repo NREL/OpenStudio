@@ -28,8 +28,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -354,7 +352,7 @@ void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagra
     if (!isNew) {
       // remove any existing UrlRecords that have this object as its parent
       ObjectRecordVector childUrls = children();
-      BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+      for (ObjectRecord& childUrl : childUrls) {
         database.removeRecord(childUrl);
       }
     }

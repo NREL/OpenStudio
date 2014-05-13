@@ -23,8 +23,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 // CONSTRUCTORS

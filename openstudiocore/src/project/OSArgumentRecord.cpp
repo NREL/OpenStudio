@@ -30,8 +30,6 @@
 #include <utilities/core/Containers.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -571,7 +569,7 @@ namespace detail {
     OS_ASSERT(table.nRows() < 2);
     if (table.nRows() == 1) {
       TableRow row = table[0];
-      BOOST_FOREACH(const TableElement& e,row) {
+      for (const TableElement& e : row) {
         result.push_back(e.toString());
       }
     }
@@ -683,7 +681,7 @@ void OSArgumentRecord::updatePathData(ProjectDatabase database,
                                       const openstudio::path& newBase)
 {
   OSArgumentRecordVector records = getOSArgumentRecords(database);
-  BOOST_FOREACH(OSArgumentRecord& record,records) {
+  for (OSArgumentRecord& record : records) {
     record.getImpl<detail::OSArgumentRecord_Impl>()->updatePathData(originalBase,newBase);
   }
 }

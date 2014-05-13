@@ -25,7 +25,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -307,7 +306,7 @@ namespace detail {
   {
     WorkspaceObjectVector objects;
     // loop through handles and try to find objects
-    BOOST_FOREACH(const Handle& handle,handles) {
+    for (const Handle& handle : handles) {
       OS_ASSERT(m_objectGetter);
       OptionalWorkspaceObject object = m_objectGetter(handle);
       if (object) { objects.push_back(*object); }
@@ -316,7 +315,7 @@ namespace detail {
   }
 
   // ETH@20100409 boost::bind seems to need non-overloaded functions
-  // These are (ugly) wrappers to accomodate.
+  // These are (ugly) wrappers to accommodate.
   bool WorkspaceObjectOrder_Impl::less_Handle(const Handle& left, const Handle& right) const {
     return less(left,right);
   }

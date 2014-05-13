@@ -28,7 +28,6 @@
 #include <resources.hxx>
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 
 #include <iostream>
 #include <sstream>

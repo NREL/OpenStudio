@@ -32,8 +32,6 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/math/FloatCompare.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

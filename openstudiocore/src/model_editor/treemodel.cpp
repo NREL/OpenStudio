@@ -49,7 +49,6 @@
 #include <QMimeData>
 #include <QModelIndex>
 
-#include <boost/foreach.hpp>
 #include <model/Lights.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -91,10 +90,10 @@ TreeModel::TreeModel(openstudio::model::Model& model, TreeViewWidget * parent)
   rootData << "Model Objects";
   //model.addObject(openstudio::IdfObject(openstudio::IddObjectType::Version));
   openstudio::model::SimulationControl simulation = model.getUniqueModelObject<openstudio::model::SimulationControl>();
-  // rootItem deleated in destructor
+  // rootItem deleted in destructor
   rootItem = new TreeItem(simulation,rootData);
 
-  BOOST_FOREACH(ModelObject object, model.modelObjects()){
+  for (ModelObject object : model.modelObjects()){
     if (!object.parent()){
       setupModelData(object, rootItem);
     }
@@ -127,10 +126,10 @@ void TreeModel::loadModel(openstudio::model::Model& model)
   rootData << "Model Objects";
   //model.addObject(openstudio::IdfObject(openstudio::IddObjectType::Version));
   openstudio::model::SimulationControl simulation = model.getUniqueModelObject<openstudio::model::SimulationControl>();
-  // rootItem deleated in destructor
+  // rootItem deleted in destructor
   rootItem = new TreeItem(simulation, rootData);
 
-  BOOST_FOREACH(ModelObject object, model.modelObjects()){
+  for (ModelObject object : model.modelObjects()){
     if (!object.parent()){
       setupModelData(object, rootItem);
     }
@@ -374,7 +373,7 @@ bool TreeModel::removeRows(const QModelIndexList rowList, std::vector<openstudio
     objects = object.remove();
     if(!objects.empty()){
       success = true;
-      BOOST_FOREACH(const openstudio::IdfObject& object,objects)
+      for (const openstudio::IdfObject& object : objects)
       {
         handles.push_back(object.handle());
       }
@@ -480,7 +479,7 @@ void TreeModel::setupModelData(const openstudio::model::ModelObject& object, Tre
   // and parent it with the newly created TreeItem
   if( OptionalParentObject p = object.optionalCast<ParentObject>())
   {
-    BOOST_FOREACH(const ModelObject& child, p->children())
+    for (const ModelObject& child : p->children())
     {
       setupModelData(child, newTreeItem);
     }

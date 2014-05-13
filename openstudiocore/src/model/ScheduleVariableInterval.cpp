@@ -157,7 +157,7 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(IdfExtensibleGroup group, this->extensibleGroups()){
+    for (IdfExtensibleGroup group : this->extensibleGroups()){
       month = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Month);
       if (month && (month.get() == 2)){
         day = group.getInt(OS_Schedule_VariableIntervalExtensibleFields::Day);
@@ -178,7 +178,7 @@ namespace detail {
     DateTimeVector dateTimes;
     Vector values(numExtensibleGroups);
     unsigned i = 0;
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalInt month = group.getInt(0);
       OptionalInt day = group.getInt(1);

@@ -39,7 +39,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/UnzipFile.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
@@ -166,13 +165,13 @@ namespace detail {
     if (other.sqlOutputData()) {
       m_sqlOutputData = other.sqlOutputData().get().clone();
     }
-    BOOST_FOREACH(const FileReference& fref, other.xmlOutputData()) {
+    for (const FileReference& fref : other.xmlOutputData()) {
       m_xmlOutputData.push_back(fref.clone());
     }
-    Q_FOREACH(const Tag& tag, other.tags()) {
+    for (const Tag& tag : other.tags()) {
       m_tags.push_back(tag.clone());
     }
-    Q_FOREACH(const Attribute& attribute, other.outputAttributes()) {
+    for (const Attribute& attribute : other.outputAttributes()) {
       m_outputAttributes.push_back(attribute.clone());
     }
     // DLM: TODO should we clone topLevelJob? for now do nothing.
@@ -325,7 +324,7 @@ namespace detail {
     if (!m_outputAttributes.empty()) {
       return m_outputAttributes;
     }
-    BOOST_FOREACH(const FileReference& attributeFile,m_xmlOutputData) {
+    for (const FileReference& attributeFile : m_xmlOutputData) {
       OptionalAttribute wrapperAttribute = Attribute::loadFromXml(attributeFile.path());
       if (wrapperAttribute &&
           (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
@@ -344,7 +343,7 @@ namespace detail {
       const std::string& attributeName) const
   {
     AttributeVector myAttributes = outputAttributes();
-    BOOST_FOREACH(const Attribute& attribute,myAttributes) {
+    for (const Attribute& attribute : myAttributes) {
       if (istringEqual(attribute.name(),attributeName)) {
         return attribute;
       }
@@ -592,7 +591,7 @@ namespace detail {
     catch (...) {}
     try {
       FileReferenceVector xmlOutputData;
-      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+      for (const runmanager::FileInfo& file : allFiles.getAllByExtension("xml").files()) {
         if (!boost::filesystem::exists(file.fullPath)) {
           LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
               << "with the directory information, RunManager is reporting '" 
@@ -677,7 +676,7 @@ namespace detail {
   }
 
   void DataPoint_Impl::setXmlOutputData(const std::vector<FileReference>& files) {
-    BOOST_FOREACH(const FileReference& fref,files) {
+    for (const FileReference& fref : files) {
       OS_ASSERT(fref.fileType() == FileReferenceType::XML);
     }
     m_xmlOutputData = files;
@@ -721,7 +720,7 @@ namespace detail {
 
     QVariantList variableValuesList;
     int index(0);
-    Q_FOREACH(const QVariant& value, variableValues()) {
+    for (const QVariant& value : variableValues()) {
       QVariantMap valueMap;
       valueMap["variable_value_index"] = QVariant(index);
       valueMap["value_type"] = value.typeName();
@@ -734,7 +733,7 @@ namespace detail {
     if (!responseValues().empty()) {
       QVariantList responseValuesList;
       index = 0;
-      Q_FOREACH(double value,responseValues()) {
+      for (double value : responseValues()) {
         QVariantMap responseMap;
         responseMap["response_value_index"] = QVariant(index);
         responseMap["value"] = QVariant(value);
@@ -759,7 +758,7 @@ namespace detail {
     }
     if (!xmlOutputData().empty()) {
       QVariantList xmlOutputDataList;
-      Q_FOREACH(const FileReference& fref,xmlOutputData()) {
+      for (const FileReference& fref : xmlOutputData()) {
         xmlOutputDataList.push_back(openstudio::detail::toVariant(fref));
       }
       dataPointData["xml_output_data"] = xmlOutputDataList;
@@ -771,7 +770,7 @@ namespace detail {
 
     if (!dakotaParametersFiles().empty()) {
       QVariantList dakotaParametersFilesList;
-      Q_FOREACH(const openstudio::path& p,dakotaParametersFiles()) {
+      for (const openstudio::path& p : dakotaParametersFiles()) {
         dakotaParametersFilesList.push_back(toQString(p));
       }
       dataPointData["dakota_parameters_files"] = QVariant(dakotaParametersFilesList);
@@ -779,7 +778,7 @@ namespace detail {
 
     if (!tags().empty()) {
       QVariantList tagsList;
-      Q_FOREACH(const Tag& tag,tags()) {
+      for (const Tag& tag : tags()) {
         tagsList.push_back(openstudio::detail::toVariant(tag));
       }
       dataPointData["tags"] = QVariant(tagsList);
@@ -787,7 +786,7 @@ namespace detail {
 
     if (!outputAttributes().empty()) {
       QVariantList outputAttributesList;
-      Q_FOREACH(const Attribute& attribute,outputAttributes()) {
+      for (const Attribute& attribute : outputAttributes()) {
         outputAttributesList.push_back(openstudio::detail::toVariant(attribute));
       }
       dataPointData["output_attributes"] = QVariant(outputAttributesList);
@@ -848,7 +847,7 @@ namespace detail {
     QVariantList variableValuesList = map["variable_values"].toList();
     unsigned n = variableValuesList.size();
     std::vector<QVariant> variableValues(n,QVariant());
-    Q_FOREACH(const QVariant& variableValue,variableValuesList) {
+    for (const QVariant& variableValue : variableValuesList) {
       QVariantMap vvMap = variableValue.toMap();
       QVariant val;
       if (vvMap["value_type"] == QVariant(double(0.0)).typeName()) {
@@ -1370,7 +1369,7 @@ namespace detail {
   {
     QVariantList list;
     unsigned i(0);
-    BOOST_FOREACH(const DataPoint& dataPoint, dataPoints) {
+    for (const DataPoint& dataPoint : dataPoints) {
       QVariantMap dpm = dataPoint.toVariant().toMap();
       dpm["data_point_batch_index"] = i;
       list.push_back(dpm);

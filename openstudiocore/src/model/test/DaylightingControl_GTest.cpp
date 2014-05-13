@@ -29,8 +29,6 @@
 #include <model/GlareSensor.hpp>
 #include <model/GlareSensor_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

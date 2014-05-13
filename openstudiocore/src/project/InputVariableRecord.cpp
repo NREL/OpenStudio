@@ -150,7 +150,7 @@ namespace detail {
     analysis::OptionalUncertaintyDescription result;
     if (m_uncertaintyDescriptionType) {
       AttributeVector attributes;
-      BOOST_FOREACH(const AttributeRecord& attributeRecord, attributeRecords()) {
+      for (const AttributeRecord& attributeRecord : attributeRecords()) {
         attributes.push_back(attributeRecord.attribute());
       }
       result = analysis::GenericUncertaintyDescription(*m_uncertaintyDescriptionType,attributes);
@@ -405,7 +405,7 @@ void InputVariableRecord::constructRelatedRecords(const analysis::InputVariable&
     attributes = udesc->cast<analysis::GenericUncertaintyDescription>().attributes();
   }
 
-  BOOST_FOREACH(const Attribute& attribute, attributes) {
+  for (const Attribute& attribute : attributes) {
     // find in dbOptions
     std::vector<Attribute>::iterator dbIt = std::find_if(dbAttributes.begin(),dbAttributes.end(),
                                                          boost::bind(uuidsEqual<Attribute,Attribute>,_1,attribute));
@@ -422,7 +422,7 @@ void InputVariableRecord::constructRelatedRecords(const analysis::InputVariable&
 
   // any attributes left in dbAttributes should be removed from the database
   ProjectDatabase database = projectDatabase();
-  BOOST_FOREACH(const Attribute& toRemove,dbAttributes) {
+  for (const Attribute& toRemove : dbAttributes) {
     AttributeRecord dbUDescAttributeRecord = database.getObjectRecordByHandle<AttributeRecord>(toRemove.uuid()).get();
     database.removeRecord(dbUDescAttributeRecord);
   }

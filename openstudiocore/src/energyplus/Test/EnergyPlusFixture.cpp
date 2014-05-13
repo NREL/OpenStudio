@@ -19,7 +19,6 @@
 
 #include <energyplus/Test/EnergyPlusFixture.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 #include <resources.hxx>
@@ -52,7 +51,7 @@ void EnergyPlusFixture::SetUpTestCase() {
   idfComponents.push_back(std::pair<openstudio::path,std::string>(basePath/openstudio::toPath("idf_designday_5"),"designday"));
 
   // delete translated components
-  BOOST_FOREACH(const ComponentDirectoryAndType& idfComponent,idfComponents) {
+  for (const ComponentDirectoryAndType& idfComponent : idfComponents) {
     // delete any *.osc and oscomponent.xml files in the directory
     for (boost::filesystem::directory_iterator it(idfComponent.first), itEnd; it != itEnd; ++it) {
       if (boost::filesystem::is_regular_file(it->status())) {

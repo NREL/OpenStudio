@@ -192,7 +192,7 @@ namespace detail {
     if (!objectiveValues().empty()) {
       QVariantList objectiveValuesList;
       int index(0);
-      Q_FOREACH(double value,objectiveValues()) {
+      for (double value : objectiveValues()) {
         QVariantMap objectiveMap;
         objectiveMap["objective_value_index"] = QVariant(index);
         objectiveMap["value"] = QVariant(value);

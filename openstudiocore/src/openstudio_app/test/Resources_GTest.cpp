@@ -31,8 +31,6 @@
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QDir>
 #include <QFileInfo>
 
@@ -50,7 +48,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
   filters << QString("*.osm");
   QFileInfoList files = resourcesDir.entryInfoList(filters, QDir::Files, QDir::NoSort);
   EXPECT_FALSE(files.empty());
-  Q_FOREACH(QFileInfo file, files){
+  for (const QFileInfo& file : files) {
     openstudio::path path = toPath(file.absoluteFilePath());
     EXPECT_TRUE(boost::filesystem::exists(path));
 
@@ -60,7 +58,7 @@ TEST_F(OpenStudioAppFixture, Resources_Templates)
 
     // check that each space load has a parent space type
     std::vector<model::SpaceLoad> spaceLoads;
-    BOOST_FOREACH(const model::SpaceLoad& spaceLoad, spaceLoads){
+    for (const model::SpaceLoad& spaceLoad : spaceLoads){
       EXPECT_TRUE(spaceLoad.spaceType());
     }
 

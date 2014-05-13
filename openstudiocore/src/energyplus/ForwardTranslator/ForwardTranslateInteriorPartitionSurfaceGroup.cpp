@@ -39,7 +39,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurfaceG
 {
   InteriorPartitionSurfaceVector interiorPartitionSurfaces = modelObject.interiorPartitionSurfaces();
   std::sort(interiorPartitionSurfaces.begin(), interiorPartitionSurfaces.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(InteriorPartitionSurface& interiorPartitionSurface, interiorPartitionSurfaces){
+  for (InteriorPartitionSurface& interiorPartitionSurface : interiorPartitionSurfaces){
     translateAndMapModelObject(interiorPartitionSurface);
   }
 

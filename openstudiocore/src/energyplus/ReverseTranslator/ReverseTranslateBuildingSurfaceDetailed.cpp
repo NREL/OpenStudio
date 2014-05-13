@@ -117,7 +117,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
           m_workspaceToModelMap.insert(std::make_pair(workspaceObject.handle(), surface.get()));
 
           // need to translate all sub surfaces here so they will be in adjacent space
-          BOOST_FOREACH(const WorkspaceObject& workspaceSubSurface, workspaceObject.getSources(IddObjectType::FenestrationSurface_Detailed)){
+          for (const WorkspaceObject& workspaceSubSurface : workspaceObject.getSources(IddObjectType::FenestrationSurface_Detailed)){
             translateAndMapWorkspaceObject(workspaceSubSurface);
           }
 

@@ -25,7 +25,6 @@
 #include <utilities/idd/IddFieldProperties.hpp>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 
 using boost::shared_ptr;
 using boost::dynamic_pointer_cast;

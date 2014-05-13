@@ -30,8 +30,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 using openstudio::Handle;
 using openstudio::OptionalHandle;
 using openstudio::HandleVector;
@@ -64,13 +62,13 @@ namespace detail {
   bool Schedule_Impl::candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const {
     ModelObjectVector users = getObject<Schedule>().getModelObjectSources<ModelObject>();
     Schedule copyOfThis = getObject<Schedule>();
-    BOOST_FOREACH(const ModelObject& user,users) {
+    for (const ModelObject& user : users) {
       std::vector<ScheduleTypeKey> keys = user.getScheduleTypeKeys(copyOfThis);
       // ETH@20120806 - Ideally would make the following OS_ASSERT, but is too
       // strict for now. (Too easy for a user to trigger this first, before a unit
       // test or app tester catches it.)
       // OS_ASSERT(!keys.empty());
-      BOOST_FOREACH(const ScheduleTypeKey& key,keys) {
+      for (const ScheduleTypeKey& key : keys) {
         if (!isCompatible(key.first,key.second,candidate)) {
           return false;
         }
@@ -82,7 +80,7 @@ namespace detail {
   bool Schedule_Impl::okToResetScheduleTypeLimits() const {
     // ok to zero out if all users are schedules
     Schedule copyOfThis = getObject<Schedule>();
-    BOOST_FOREACH(const ModelObject& user, getObject<Schedule>().getModelObjectSources<ModelObject>()) {
+    for (const ModelObject& user : getObject<Schedule>().getModelObjectSources<ModelObject>()) {
       if (!user.getScheduleTypeKeys(copyOfThis).empty()) {
         return false;
       }

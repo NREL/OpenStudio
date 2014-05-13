@@ -1735,7 +1735,7 @@ namespace openstudio{
 
       std::vector<UUID> result;
 
-      Q_FOREACH(QJsonValue val, array){
+      for (const QJsonValue& val : array) {
         if (val.toObject().contains("_id")){
           QString id = val.toObject()["_id"].toString();
           UUID uuid(id);

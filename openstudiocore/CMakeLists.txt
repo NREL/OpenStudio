@@ -199,7 +199,7 @@ if(MINGW)
 endif()
 if(MSVC)
   # warning level 3
-  add_definitions(/W3)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
   # all warnings
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
   # create compiler processes on all effective processors
@@ -561,7 +561,9 @@ add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
 add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
 add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
 
-add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+if(UNIX AND NOT APPLE)
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
 
 # use chrono as a header only library
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY)

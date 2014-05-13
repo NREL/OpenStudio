@@ -24,8 +24,6 @@
 #include <utilities/idd/IddFieldProperties.hpp>
 #include <utilities/idd/IddKey.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace std;
 using namespace boost;
 using namespace openstudio;

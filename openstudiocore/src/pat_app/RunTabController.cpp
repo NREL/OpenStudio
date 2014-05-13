@@ -213,7 +213,7 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
   
   if(warnings.size()){
     errorsAndWarnings += "WARNINGS:\n";
-    BOOST_FOREACH(std::string warning, warnings){
+    for (std::string warning : warnings){
       text = warning.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';
@@ -223,7 +223,7 @@ void RunTabController::showRadianceWarningsAndErrors(const std::vector<std::stri
 
   if(errors.size()){
     errorsAndWarnings += "ERRORS:\n";
-    BOOST_FOREACH(std::string error, errors){
+    for (std::string error : errors){
       text = error.c_str();
       errorsAndWarnings += text;
       errorsAndWarnings += '\n';
@@ -382,7 +382,7 @@ void RunTabController::onPlayButtonClicked()
           // does the user want to select all?
           QMessageBox::StandardButton test = QMessageBox::question(runView, "Select All", "No simulations are selected to run, do you want to select all?", QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
           if (test == QMessageBox::Yes){
-            BOOST_FOREACH(analysis::DataPoint dataPoint, analysis.dataPoints()){
+            for (analysis::DataPoint dataPoint : analysis.dataPoints()){
               dataPoint.setSelected(true);
             }
             project->save();

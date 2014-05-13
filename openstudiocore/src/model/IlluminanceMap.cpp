@@ -278,8 +278,8 @@ namespace detail {
   {
     std::vector<Point3d> result;
 
-    BOOST_FOREACH(double y, linspace(0, this->yLength(), this->numberofYGridPoints())){
-      BOOST_FOREACH(double x, linspace(0, this->xLength(), this->numberofXGridPoints())){
+    for (double y : linspace(0, this->yLength(), this->numberofYGridPoints())){
+      for (double x : linspace(0, this->xLength(), this->numberofXGridPoints())){
         result.push_back(Point3d(x, y, 0));
       }
     }

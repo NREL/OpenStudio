@@ -22,7 +22,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>

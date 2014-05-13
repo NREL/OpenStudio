@@ -70,7 +70,7 @@ void ModelObjectListController::objectAdded(boost::shared_ptr<openstudio::detail
     std::vector<OSItemId> ids = this->makeVector();
     emit itemIds(ids);
 
-    BOOST_FOREACH(const OSItemId& id, ids){
+    for (const OSItemId& id : ids){
       if (id.itemId() == impl->handle().toString()){
         emit selectedItemId(id);
         break;
@@ -115,7 +115,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
   // sort by name
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
 
-  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
       if(boost::optional<model::HVACComponent> hvacComponent = modelObject.optionalCast<model::HVACComponent>()) {

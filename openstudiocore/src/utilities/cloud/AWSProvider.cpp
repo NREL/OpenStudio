@@ -562,7 +562,7 @@ namespace openstudio{
       static std::vector<std::string> instanceTypes;
       if (!instanceTypes.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           instanceTypes.push_back(awsComputerInformation.instanceType);
         }
       }
@@ -577,7 +577,7 @@ namespace openstudio{
       static std::vector<std::string> instanceTypes;
       if (!instanceTypes.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           instanceTypes.push_back(awsComputerInformation.instanceType);
         }
       }
@@ -592,7 +592,7 @@ namespace openstudio{
       static std::vector<unsigned> processorCounts;
       if (!processorCounts.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           processorCounts.push_back(awsComputerInformation.processorCount);
         }
       }
@@ -603,7 +603,7 @@ namespace openstudio{
       static std::vector<unsigned> processorCounts;
       if (!processorCounts.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           processorCounts.push_back(awsComputerInformation.processorCount);
         }
       }
@@ -614,7 +614,7 @@ namespace openstudio{
       static std::vector<std::string> prettyNames;
       if (!prettyNames.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           prettyNames.push_back(awsComputerInformation.prettyName);
         }
       }
@@ -625,7 +625,7 @@ namespace openstudio{
       static std::vector<std::string> prettyNames;
       if (!prettyNames.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           prettyNames.push_back(awsComputerInformation.prettyName);
         }
       }
@@ -1642,7 +1642,7 @@ namespace openstudio{
       
       QJsonObject options;
       QStringList workerIds;
-      Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
+      for (const std::string& workerId : m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
       options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
@@ -1668,7 +1668,7 @@ namespace openstudio{
       
       QJsonObject options;
       QStringList workerIds;
-      Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
+      for (const std::string& workerId : m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
       options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
@@ -1825,7 +1825,7 @@ namespace openstudio{
       if (!err.error) {
         if (!json.object().contains("error")) {
           unsigned numWorkerProcessors = 0;
-          Q_FOREACH(QJsonValue worker, json.object()["workers"].toArray()) {
+          for (const QJsonValue& worker : json.object()["workers"].toArray()) {
             m_awsSession.addWorkerUrl(Url(worker.toObject()["ip"].toString()));
             m_awsSession.addWorkerId(worker.toObject()["id"].toString().toStdString());
             if (numWorkerProcessors == 0) numWorkerProcessors = worker.toObject()["procs"].toInt();
@@ -1884,7 +1884,7 @@ namespace openstudio{
         if (!json.object().contains("error")) {
           std::vector<std::string> running;
           std::vector<std::string> notRunning;
-          Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
+          for (const std::string& workerId : m_awsSession.workerIds()) {
             std::string status = json.object()[toQString(workerId)].toString().toStdString();
             if (status == "running") {
               running.push_back(workerId);

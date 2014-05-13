@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
 
   ScheduleVector schedules = model.getModelObjects<Schedule>();
   ComponentVector components;
-  BOOST_FOREACH(const Schedule& schedule, schedules) {
+  for (const Schedule& schedule : schedules) {
     Component newComponent = schedule.createComponent();
     bool ok = newComponent.componentData().setName(schedule.name().get());
     EXPECT_TRUE(ok);
@@ -322,7 +322,7 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
   }
 
   int index(1);
-  BOOST_FOREACH(Component& component,components) {
+  for (Component& component : components) {
     std::stringstream ss;
     ss << "./component" << index;
     openstudio::path p = toPath(ss.str());

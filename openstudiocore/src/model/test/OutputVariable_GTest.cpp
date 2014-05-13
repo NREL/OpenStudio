@@ -35,8 +35,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
@@ -50,7 +48,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  BOOST_FOREACH(const ThermalZone& zone, building.thermalZones()) {
+  for (const ThermalZone& zone : building.thermalZones()) {
 
     // all possible variables
     std::vector<std::string> variableNames = zone.outputVariableNames();
@@ -95,14 +93,14 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
   std::map<std::string, boost::optional<OutputVariable> > outputVariableMap;
 
   // get list of all variable names
-  BOOST_FOREACH(const ModelObject& modelObject, model.getModelObjects<ModelObject>()){
-    BOOST_FOREACH(const std::string& variableName, modelObject.outputVariableNames()){
+  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()){
+    for (const std::string& variableName : modelObject.outputVariableNames()){
       outputVariableMap[variableName] = boost::none;
     }
   }
 
   // add all variables to map, allow only one variable per variable name in this application 
-  BOOST_FOREACH(OutputVariable outputVariable, model.getModelObjects<OutputVariable>()){
+  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()){
     if (outputVariableMap[outputVariable.variableName()]){
       // already have output variable for this name, then remove this object
       outputVariable.remove();
@@ -117,7 +115,7 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
 
   // now make an output variable for each variable name
   typedef std::pair<std::string, boost::optional<OutputVariable> > MapType;
-  BOOST_FOREACH(MapType mapVal, outputVariableMap){
+  for (MapType mapVal : outputVariableMap){
     if (!mapVal.second){
       OutputVariable outputVariable(mapVal.first, model);
       outputVariable.setReportingFrequency("Hourly");

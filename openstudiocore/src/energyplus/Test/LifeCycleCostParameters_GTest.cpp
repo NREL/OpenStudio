@@ -58,8 +58,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCostParameters)
 
   EXPECT_TRUE(lifeCycleCostParameters.setUseNISTFuelEscalationRates(true));
 
-  BOOST_FOREACH(const std::string& region, regions){
-    BOOST_FOREACH(const std::string& sector, sectors){
+  for (const std::string& region : regions){
+    for (const std::string& sector : sectors){
       EXPECT_TRUE(lifeCycleCostParameters.setNISTRegion(region));
       EXPECT_TRUE(lifeCycleCostParameters.setNISTSector(sector));
 

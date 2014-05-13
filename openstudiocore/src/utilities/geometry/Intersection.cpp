@@ -23,8 +23,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/foreach.hpp>
-
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -323,7 +321,7 @@ namespace openstudio{
   std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
-    BOOST_FOREACH(const BoostPolygon& polygon, polygons){
+    for (const BoostPolygon& polygon : polygons){
       result.push_back(removeSpikes(polygon));
     }
     return result;
@@ -351,7 +349,7 @@ namespace openstudio{
     polys.push_back(outerPoly);
 
     std::vector<BoostRing> inners = boostPolygon.inners();
-    BOOST_FOREACH(const BoostRing& inner, inners){
+    for (const BoostRing& inner : inners){
       TPPLPoly innerPoly; // must be clockwise
       innerPoly.Init(inner.size() - 1);
       innerPoly.SetHole(true);
@@ -400,7 +398,7 @@ namespace openstudio{
   std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
-    BOOST_FOREACH(const BoostPolygon polygon, polygons){
+    for (const BoostPolygon polygon : polygons){
       if (polygon.inners().empty()){
         // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);
@@ -434,7 +432,7 @@ namespace openstudio{
     }
 
     BoostPolygon polygon;
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
 
       // should all have zero z coordinate now
       double z = vertex.z();
@@ -485,7 +483,7 @@ namespace openstudio{
     }
 
     BoostRing ring;
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
 
       // should all have zero z coordinate now
       double z = vertex.z();
@@ -554,7 +552,7 @@ namespace openstudio{
 
     OS_ASSERT(polygon.inners().empty());
 
-    result = removeColinear(result);
+    result = removeCollinear(result);
 
     // don't keep repeated vertices
     if (result.front() == result.back()){
@@ -721,7 +719,7 @@ namespace openstudio{
     };
 
     unionVertices = reorderULC(unionVertices);
-    unionVertices = removeColinear(unionVertices);
+    unionVertices = removeCollinear(unionVertices);
 
     return unionVertices;
   }
@@ -750,9 +748,9 @@ namespace openstudio{
     
 
     std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
-    BOOST_FOREACH(const std::vector<unsigned>& component, connectedComponents){
+    for (const std::vector<unsigned>& component : connectedComponents){
       std::vector<Point3d> points;
-      BOOST_FOREACH(unsigned i, component){
+      for (unsigned i : component){
         if (points.empty()){
           points = polygons[i];
         }else{

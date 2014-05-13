@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     HotWaterEquipmentDefinition hotWaterEquipmentDefinition = this->hotWaterEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, hotWaterEquipmentDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : hotWaterEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

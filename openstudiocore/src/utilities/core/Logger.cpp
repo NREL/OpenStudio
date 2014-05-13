@@ -33,7 +33,6 @@
 #include <boost/log/attributes/function.hpp>
 #include <boost/log/support/regex.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/utility/empty_deleter.hpp>
 
 #include <sstream>

@@ -50,7 +50,6 @@
 #include <resources.hxx>
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 using namespace openstudio;
@@ -93,7 +92,7 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleUQ) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }
@@ -132,7 +131,7 @@ TEST_F(AnalysisDriverFixture, Sampling_MixedContinuousAndDiscreteUQ) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }
@@ -171,7 +170,7 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleLognormalUQ) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }
@@ -210,7 +209,7 @@ TEST_F(AnalysisDriverFixture, Sampling_SimpleHistogramBinUQ) {
   Table summary = currentAnalysis.analysis().summaryTable();
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
   }

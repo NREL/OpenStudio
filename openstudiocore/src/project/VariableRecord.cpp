@@ -35,7 +35,6 @@
 #include <utilities/math/FloatCompare.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <sstream>

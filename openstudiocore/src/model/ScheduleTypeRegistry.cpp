@@ -29,8 +29,6 @@
 
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -60,7 +58,7 @@ OSOptionalQuantity ScheduleType::getUpperLimitValue(bool returnIP) const {
 
 std::vector<std::string> ScheduleTypeRegistrySingleton::classNames() const {
   StringVector result;
-  BOOST_FOREACH(const ClassNameToScheduleTypesMap::value_type& p,m_classNameToScheduleTypesMap) {
+  for (const ClassNameToScheduleTypesMap::value_type& p : m_classNameToScheduleTypesMap) {
     result.push_back(p.first);
   }
   return result;
@@ -81,7 +79,7 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
                                                             const std::string &scheduleDisplayName) const
 {
   ScheduleTypeVector scheduleTypes = getScheduleTypesByClassName(className);
-  BOOST_FOREACH(const ScheduleType& scheduleType,scheduleTypes) {
+  for (const ScheduleType& scheduleType : scheduleTypes) {
     if (scheduleType.scheduleDisplayName == scheduleDisplayName) {
       return scheduleType;
     }
@@ -97,7 +95,7 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
   // if fully specified, try to retrieve
   if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
     ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(getDefaultName(scheduleType));
-    BOOST_FOREACH(const ScheduleTypeLimits& candidate, candidates) {
+    for (const ScheduleTypeLimits& candidate : candidates) {
       if (isCompatible(scheduleType,candidate)) {
         return candidate;
       }
@@ -410,7 +408,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleTypeLimitsVector result;
   ScheduleTypeLimitsVector candidates = model.getModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
-  BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
+  for (const ScheduleTypeLimits& candidate : candidates) {
     if (isCompatible(scheduleType,candidate)) {
       result.push_back(candidate);
     }
@@ -425,7 +423,7 @@ std::vector<Schedule> getCompatibleSchedules(const Model& model,
   ScheduleVector result;
   ScheduleVector candidates = model.getModelObjects<Schedule>();
   ScheduleTypeLimitsVector okTypes = getCompatibleScheduleTypeLimits(model,className,scheduleDisplayName);
-  BOOST_FOREACH(const Schedule& candidate,candidates) {
+  for (const Schedule& candidate : candidates) {
     if (OptionalScheduleTypeLimits candidateType = candidate.scheduleTypeLimits()) {
       if (std::find(okTypes.begin(),okTypes.end(),*candidateType) != okTypes.end()) {
         result.push_back(candidate);

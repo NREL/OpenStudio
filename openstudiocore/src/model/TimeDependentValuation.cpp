@@ -147,7 +147,7 @@ namespace detail {
   std::vector<FuelType> TimeDependentValuation_Impl::availableFuelTypes() const {
     FuelTypeVector result;
     IdfExtensibleGroupVector egs = extensibleGroups();
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       OptionalString os = eg.getString(OS_TimeDependentValuationExtensibleFields::AvailableFuelType,true);
       OS_ASSERT(os);
       FuelType candidate(*os); // can throw if keys and enum get out of sync.
@@ -506,7 +506,7 @@ namespace detail {
     DoubleVector result;
     OS_ASSERT(tdvFile.system() == UnitSystem::SI);
     IdfExtensibleGroupVector egs = extensibleGroups();
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       OptionalString os = eg.getString(OS_TimeDependentValuationExtensibleFields::AvailableFuelType,true);
       OS_ASSERT(os);
       FuelType candidate(*os); // can throw if keys and enum get out of sync.

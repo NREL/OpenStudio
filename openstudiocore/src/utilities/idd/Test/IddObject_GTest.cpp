@@ -27,8 +27,6 @@
 #include <sstream>
 #include <string>
 
-#include <boost/foreach.hpp>
-
 #include <QVariant>
 
 using namespace openstudio;
@@ -105,7 +103,7 @@ TEST_F(IddFixture,IddObjectVector_GetTypes) {
   IddObjectTypeVector typeVector = getIddObjectTypeVector(objects);
   EXPECT_EQ(objects.size(),typeVector.size());
   IddObjectVector roundtripObjects;
-  BOOST_FOREACH(const IddObjectType& type,typeVector) {
+  for (const IddObjectType& type : typeVector) {
     roundtripObjects.push_back(IddFactory::instance().getObject(type).get());
   }
   EXPECT_TRUE(roundtripObjects == objects);

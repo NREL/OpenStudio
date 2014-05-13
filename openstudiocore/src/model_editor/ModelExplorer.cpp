@@ -33,7 +33,6 @@
 #include <QToolBar>
 
 #include <resources.hxx>
-#include <boost/foreach.hpp>
 #include <energyplus/ReverseTranslator.hpp>
 #include <model/Model.hpp>
 #include <model_editor/ClassViewWidget.hpp>
@@ -315,7 +314,7 @@ namespace modeleditor
         // START DEBUG CODE
         openstudio::WorkspaceObjectVector wsObjects = workspace.objects();
         openstudio::WorkspaceObjectOrder order = workspace.order();
-        BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
+        for (const openstudio::WorkspaceObject wso : wsObjects){
           OS_ASSERT(order.inOrder(wso.handle()));
         }
         // END DEBUG CODE
@@ -326,7 +325,7 @@ namespace modeleditor
         if(optionalModel){
           order = optionalModel->order();
           wsObjects = optionalModel->objects();
-          BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
+          for (const openstudio::WorkspaceObject wso : wsObjects){
             OS_ASSERT(order.inOrder(wso.handle()));
           }
         }

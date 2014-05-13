@@ -41,7 +41,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/optional/optional.hpp>
-#include <boost/foreach.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -269,7 +268,7 @@ namespace detail {
         OS_ASSERT(temp == wIndex); // saved index into workflow should match expected value
         OS_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
         std::vector<runmanager::WorkItem> workItems = workflowRecords[wrIndex].workflow().toWorkItems();
-        BOOST_FOREACH(const runmanager::WorkItem& workItem,workItems) {
+        for (const runmanager::WorkItem& workItem : workItems) {
           if (fixupPaths && (workItem.type == runmanager::JobType::UserScript || workItem.type == runmanager::JobType::Ruby)) {
             LOG(Debug, "Updating paths for ruby / userscript job. Keyname: " + workItem.jobkeyname);
             // hoping that this resets the location of UserScriptAdapter.rb
@@ -295,7 +294,7 @@ namespace detail {
 
     analysis::FunctionVector responses;
     FunctionRecordVector responseRecords = this->responseRecords();
-    BOOST_FOREACH(const FunctionRecord responseRecord,responseRecords) {
+    for (const FunctionRecord responseRecord : responseRecords) {
       responses.push_back(responseRecord.function());
     }
 
@@ -311,7 +310,7 @@ namespace detail {
   boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
     int result(1);
     InputVariableRecordVector inputVariableRecords = this->inputVariableRecords();
-    BOOST_FOREACH(const InputVariableRecord& inputVariableRecord, inputVariableRecords) {
+    for (const InputVariableRecord& inputVariableRecord : inputVariableRecords) {
       OptionalMeasureGroupRecord omgr = inputVariableRecord.optionalCast<MeasureGroupRecord>();
       if (!omgr) {
         return boost::none;
@@ -534,7 +533,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   // Workflows do not have consistent UUIDs, so always remove
   if (!isNew) {
     WorkflowRecordVector oldWorkflowRecords = workflowRecords();
-    BOOST_FOREACH(WorkflowRecord& oldRecord,oldWorkflowRecords) {
+    for (WorkflowRecord& oldRecord : oldWorkflowRecords) {
       database.removeRecord(oldRecord);
     }
   }
@@ -543,7 +542,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   std::vector<UUID> inputVariableUUIDs;
   std::vector<runmanager::WorkItem> workflow;
   OptionalInt workflowIndex;
-  BOOST_FOREACH(const analysis::WorkflowStep& step,problem.workflow()) {
+  for (const analysis::WorkflowStep& step : problem.workflow()) {
     if (step.isInputVariable()) {
       if (workflowIndex) {
         runmanager::Workflow rmWorkflow(workflow);
@@ -586,7 +585,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   // Save child response functions
   i = 0;
   std::vector<UUID> responseUUIDs;
-  BOOST_FOREACH(const analysis::Function& response, problem.responses()) {
+  for (const analysis::Function& response : problem.responses()) {
     responseUUIDs.push_back(response.uuid());
     if (response.isDirty() || isNew) {
       FunctionRecord newFunctionRecord = FunctionRecord::factoryFromFunction(
@@ -629,7 +628,7 @@ void ProblemRecord::removeInputVariableRecords(const std::vector<UUID>& uuidsToK
         " WHERE (problemRecordId=:problemRecordId) AND (variableRecordType=:variableRecordType) " +
         "AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }
@@ -655,7 +654,7 @@ void ProblemRecord::removeResponseRecords(const std::vector<UUID>& uuidsToKeep,
   ss << "(problemRecordId=:problemRecordId) AND (functionType=:functionType) AND ";
   ss << "(handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

@@ -22,8 +22,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace model {
 
@@ -54,7 +52,7 @@ namespace detail {
     unsigned result = 0;
 
     WorkspaceObjectVector sources = this->sources();
-    BOOST_FOREACH(const WorkspaceObject& source,sources) {
+    for (const WorkspaceObject& source : sources) {
       OptionalResourceObject oro = source.optionalCast<ResourceObject>();
       if (oro) {
         // another ResourceObject, pass the request through
@@ -100,7 +98,7 @@ std::vector<ResourceObject> getRecursiveResources(const ModelObject& object) {
   while (objectQueue.size() > 0) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    BOOST_FOREACH(const ResourceObject resource, currentObject.resources()) {
+    for (const ResourceObject resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         result.push_back(resource);
@@ -123,7 +121,7 @@ std::vector< std::vector<ModelObject> > getRecursiveResourceSubTrees(const Model
   while (objectQueue.size() > 0) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    BOOST_FOREACH(const ResourceObject resource, currentObject.resources()) {
+    for (const ResourceObject resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         std::vector<ModelObject> subTree = getRecursiveChildren(resource, includeComponentCostLineItems);

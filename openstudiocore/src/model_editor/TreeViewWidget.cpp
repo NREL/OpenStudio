@@ -22,8 +22,6 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <boost/foreach.hpp>
-
 #include <model/ParentObject_Impl.hpp>
 #include <model_editor/InspectorGadget.hpp>
 #include <model_editor/ModelExplorer.hpp>
@@ -236,7 +234,7 @@ void TreeViewWidget::copyObjects()
   QModelIndexList rowList;
   if(mTreeView->getSelectedRows(rowList)){
     TreeModel * model = static_cast<TreeModel *>(mTreeView->model());
-    BOOST_FOREACH(const QModelIndex& row, rowList){
+    for (const QModelIndex& row : rowList){
       mModelObjectsToPaste.push_back(*(model->modelAtIndex(row)));
     }
   }

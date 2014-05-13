@@ -143,7 +143,7 @@ void ScriptsListView::updateData() {
 
 std::vector<ruleset::UserScriptInfo> ScriptsListView::userScripts() {
   std::vector<ruleset::UserScriptInfo> result;
-  BOOST_FOREACH(OSItem* item,items()) {
+  for (OSItem* item : items()) {
     ScriptItem* scriptItem = qobject_cast<ScriptItem*>(item);
     if (boost::optional<ruleset::UserScriptInfo> info = scriptItem->userScriptInfo()) {
       result.push_back(*info);

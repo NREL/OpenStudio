@@ -72,13 +72,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
   Workspace workspace = forwardTranslator.translateModel(model);
 
   std::string errors;
-  BOOST_FOREACH(LogMessage error, forwardTranslator.errors()){
+  for (const LogMessage& error : forwardTranslator.errors()){
     errors += error.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.errors().size()) << errors;
 
   std::string warnings;
-  BOOST_FOREACH(LogMessage warning, forwardTranslator.warnings()){
+  for (const LogMessage& warning : forwardTranslator.warnings()){
     warnings += warning.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.warnings().size()) << warnings;
@@ -374,7 +374,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
   ThermalZone thermalZone = model.getModelObjects<ThermalZone>()[0];
 
   EXPECT_EQ(4u, model.getModelObjects<Space>().size());
-  BOOST_FOREACH(const Space& space, model.getModelObjects<Space>()){
+  for (const Space& space : model.getModelObjects<Space>()){
     ASSERT_TRUE(space.spaceType());
     EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
     ASSERT_TRUE(space.thermalZone());

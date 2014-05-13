@@ -37,7 +37,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -173,7 +172,7 @@ namespace detail {
         std::stringstream ss;
         ss << "iter" << m_iter;
         std::string iterTag(ss.str()); ss.str("");
-        BOOST_FOREACH(const std::vector<QVariant>& candidate, candidateVariableValues) {
+        for (const std::vector<QVariant>& candidate : candidateVariableValues) {
           DataPoint newDataPoint = analysis.problem().createDataPoint(candidate).get();
           OS_ASSERT(newDataPoint.optionalCast<OptimizationDataPoint>());
           newDataPoint.addTag("ss");
@@ -298,7 +297,7 @@ namespace detail {
     }
 
     // remove outdated tags
-    BOOST_FOREACH(OptimizationDataPoint& point,lastCurve) {
+    for (OptimizationDataPoint& point : lastCurve) {
       OptimizationDataPointVector::const_iterator it = std::find(result.begin(),result.end(),point);
       if (it == result.end()) {
         point.deleteTag(curveTag);
@@ -385,7 +384,7 @@ namespace detail {
     }
 
     // remove outdated tags
-    BOOST_FOREACH(OptimizationDataPoint& point,lastParetoFront) {
+    for (OptimizationDataPoint& point : lastParetoFront) {
       OptimizationDataPointVector::const_iterator it = std::find(result.begin(),result.end(),point);
       if (it == result.end()) {
         point.deleteTag("pareto");
@@ -453,10 +452,10 @@ namespace detail {
     boost::smatch m;
 
     OptimizationDataPointVector dataPoints = castVector<OptimizationDataPoint>(analysis.dataPoints());
-    BOOST_FOREACH(const OptimizationDataPoint& dataPoint,dataPoints) {
+    for (const OptimizationDataPoint& dataPoint : dataPoints) {
       TagVector tags = dataPoint.tags();
       TagInfo tagInfo;
-      BOOST_FOREACH(const Tag& tag,tags) {
+      for (const Tag& tag : tags) {
         std::string tagName = tag.name();
         if (tagName == "current") {
           tagInfo.current = true;
@@ -514,7 +513,7 @@ namespace detail {
       else {
         row.push_back(TableElement(std::string("")));
       }
-      BOOST_FOREACH(const QVariant& value, dataPoint.variableValues()) {
+      for (const QVariant& value : dataPoint.variableValues()) {
         row.push_back(TableElement(value.toInt()));
       }
       DoubleVector values = dataPoint.objectiveValues();
@@ -555,7 +554,7 @@ namespace detail {
       DiscreteVariable variable = problem.getVariable(i).cast<DiscreteVariable>();
       // only use selected items
       int currentValue = currentValues[i].toInt();
-      BOOST_FOREACH(int j, variable.validValues(true)) {
+      for (int j : variable.validValues(true)) {
         if (currentValue != j) {
           std::vector<QVariant> newValues = currentValues;
           newValues[i] = j;

@@ -49,7 +49,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/pointer_cast.hpp>
-#include <boost/foreach.hpp>
 
 #include <map>
 #include <vector>
@@ -288,7 +287,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
   if (lookupPair != standardStringMapEnd) {
 
     // unitString is registered
-    BOOST_FOREACH(const std::string& standardString, lookupPair->second) {
+    for (const std::string& standardString : lookupPair->second) {
 
       // instantiate the standardString
       CallbackMapMap::const_iterator callbackMap;
@@ -313,7 +312,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
 
         // try all other maps
         if (!temp) {
-          BOOST_FOREACH(int sysValue, UnitSystem::getValues()) {
+          for (int sysValue : UnitSystem::getValues()) {
             UnitSystem tempSystem(sysValue);
             if ((tempSystem == UnitSystem::Mixed) || (tempSystem == system)) {
               continue;
@@ -342,7 +341,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         break;
       }
 
-    } // BOOST_FOREACH
+    } // foreach
 
   } // if
 
@@ -663,7 +662,7 @@ bool containsRegisteredBaseUnit(const std::string& unitString) {
   if (isUnitString(unitString)) {
     Unit u = createUnit(unitString).get();
     StringVector bus = u.baseUnits();
-    BOOST_FOREACH(const std::string& bu,bus) {
+    for (const std::string& bu : bus) {
       if (getSystem(bu) != UnitSystem::Mixed) {
         return true;
       }

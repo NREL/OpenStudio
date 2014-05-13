@@ -27,7 +27,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <QDomDocument>
@@ -143,7 +142,7 @@ namespace detail {
 
   bool Rule_Impl::add(const std::vector<FilterClause>& filters) {
     bool result(true);
-    BOOST_FOREACH(const FilterClause& filter,filters) {
+    for (const FilterClause& filter : filters) {
       result = result && this->add(filter);
     }
     return result;
@@ -184,7 +183,7 @@ namespace detail {
 
   unsigned Rule_Impl::clearFilters() {
     FilterClauseVector filters = this->filters();
-    BOOST_FOREACH(const FilterClause& filter,filters) {
+    for (const FilterClause& filter : filters) {
       remove(filter);
     }
     return filters.size();
@@ -192,7 +191,7 @@ namespace detail {
 
   unsigned Rule_Impl::clearActions() {
     ActionClauseVector actions = this->actions();
-    BOOST_FOREACH(const ActionClause& action,actions) {
+    for (const ActionClause& action : actions) {
       remove(action);
     }
     return actions.size();
@@ -247,13 +246,13 @@ namespace detail {
     element.appendChild(childElement);
 
     childElement = doc.createElement(QString::fromStdString("Filters"));
-    BOOST_FOREACH(const FilterClause& filter, m_filters){
+    for (const FilterClause& filter : m_filters){
       childElement.appendChild(filter.toXml().documentElement());
     }
     element.appendChild(childElement);
 
     childElement = doc.createElement(QString::fromStdString("Actions"));
-    BOOST_FOREACH(const ActionClause& action, m_actions){
+    for (const ActionClause& action : m_actions){
       childElement.appendChild(action.toXml().documentElement());
     }
     element.appendChild(childElement);
@@ -273,7 +272,7 @@ namespace detail {
     if ((numFilters() == rule->numFilters()) && (numActions() == rule->numActions()))
     {
       FilterClauseVector otherFilters = rule->filters();
-      BOOST_FOREACH(const FilterClause& filter,m_filters) {
+      for (const FilterClause& filter : m_filters) {
         FilterClauseVector::const_iterator it = std::find_if(otherFilters.begin(),
             otherFilters.end(),boost::bind(&FilterClause::equivalentData,&filter,_1));
         if (it == otherFilters.end()) { 
@@ -282,7 +281,7 @@ namespace detail {
       }
 
       ActionClauseVector otherActions = rule->actions();
-      BOOST_FOREACH(const ActionClause& action,m_actions) {
+      for (const ActionClause& action : m_actions) {
         ActionClauseVector::const_iterator it = std::find_if(otherActions.begin(),
             otherActions.end(),boost::bind(&ActionClause::equivalentData,&action,_1));
         if (it == otherActions.end()) { 

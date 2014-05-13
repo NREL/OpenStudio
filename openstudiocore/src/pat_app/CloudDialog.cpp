@@ -1055,7 +1055,7 @@ void AmazonProviderWidget::loadData()
   m_cloudDialog->m_iAcceptCheckBox->setChecked(awsSettings.userAgreementSigned()); 
 
   if (!m_regionComboBox->count()) {
-    Q_FOREACH(const std::string & region, AWSProvider::availableRegions()){
+    for (const std::string & region : AWSProvider::availableRegions()) {
       m_regionComboBox->addItem(region.c_str());
     }
   }
@@ -1068,7 +1068,7 @@ void AmazonProviderWidget::loadData()
 
 
   if (!m_serverInstanceTypeComboBox->count()) {
-    Q_FOREACH(const std::string & serverInstanceType, AWSProvider::serverInstanceTypes()){
+    for (const std::string & serverInstanceType : AWSProvider::serverInstanceTypes()) {
       m_serverInstanceTypeComboBox->addItem(serverInstanceType.c_str());
     }
   }
@@ -1080,7 +1080,7 @@ void AmazonProviderWidget::loadData()
   m_serverInstanceTypeComboBox->setCurrentIndex(index);
 
   if (!m_workerInstanceTypeComboBox->count()) {
-    Q_FOREACH(const std::string & workerInstanceType, AWSProvider::workerInstanceTypes()){
+    for (const std::string & workerInstanceType : AWSProvider::workerInstanceTypes()) {
       m_workerInstanceTypeComboBox->addItem(workerInstanceType.c_str());
     }
   }

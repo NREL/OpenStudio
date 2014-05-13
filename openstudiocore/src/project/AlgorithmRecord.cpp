@@ -37,7 +37,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -141,7 +140,7 @@ namespace detail {
 
   std::vector<Attribute> AlgorithmRecord_Impl::options() const {
     AttributeVector result;
-    BOOST_FOREACH(const ObjectRecord& child, children()) {
+    for (const ObjectRecord& child : children()) {
       if (OptionalAttributeRecord attributeRecord = child.optionalCast<AttributeRecord>()) {
         result.push_back(attributeRecord->attribute());
       }
@@ -254,7 +253,7 @@ void AlgorithmRecord::constructRelatedRecords(const analysis::Algorithm& algorit
   AttributeVector options = algorithm.options().options();
   AttributeVector dbOptions = getImpl<detail::AlgorithmRecord_Impl>()->options();
   AlgorithmRecord copyOfThis(getImpl<detail::AlgorithmRecord_Impl>());
-  BOOST_FOREACH(const Attribute& option,options) {
+  for (const Attribute& option : options) {
     // find in dbOptions
     std::vector<Attribute>::iterator dbIt = std::find_if(dbOptions.begin(),dbOptions.end(),
                                                          boost::bind(uuidsEqual<Attribute,Attribute>,_1,option));
@@ -271,7 +270,7 @@ void AlgorithmRecord::constructRelatedRecords(const analysis::Algorithm& algorit
 
   // any attributes left in dbOptions should be removed from the database
   ProjectDatabase database = projectDatabase();
-  BOOST_FOREACH(const Attribute& toRemove,dbOptions) {
+  for (const Attribute& toRemove : dbOptions) {
     AttributeRecord dbOptionRecord = database.getObjectRecordByHandle<AttributeRecord>(toRemove.uuid()).get();
     database.removeRecord(dbOptionRecord);
   }

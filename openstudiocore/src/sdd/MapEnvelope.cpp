@@ -455,7 +455,7 @@ namespace sdd {
       // check if any layer has not been translated, constructions using simple glazing material will
       // be skipped here because the simple glazing material is not recorded as mapped
       std::vector<model::Material> layers = construction.layers();
-      BOOST_FOREACH(const model::Material& material, layers){
+      for (const model::Material& material : layers){
         if (m_translatedObjects.find(material.handle()) ==  m_translatedObjects.end()){
           return boost::none;
         }
@@ -561,7 +561,7 @@ namespace sdd {
         }
       }
 
-      BOOST_FOREACH(const model::Material& material, layers){
+      for (const model::Material& material : layers){
 
         // materialReference
         std::string materialName = material.name().get();

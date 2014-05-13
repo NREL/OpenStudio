@@ -500,7 +500,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
   // log translator errors rather than having the exceptions propagate out of ForwardTranslator.)
   Workspace ws;
   IddObjectVector iddObjects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
-  BOOST_FOREACH(const IddObject& iddObject,iddObjects) {
+  for (const IddObject& iddObject : iddObjects) {
     ws.addObject(IdfObject(iddObject));
   }
   Model model(ws);

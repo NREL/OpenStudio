@@ -61,7 +61,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
 {
   unsigned n = list.size();
   std::vector<T> result(n,T());
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
     T value = typeConverter(&listItemMap[toQString(valueKey)]);
@@ -77,7 +77,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
 {
   unsigned n = list.size();
   std::vector<T> result(n,T());
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
     QVariant listItemVariant(listItemMap);
@@ -96,7 +96,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         boost::function<T (const QVariant&)> typeConverter)
 {
   std::vector<std::pair<int,T> > data;
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
     T value = typeConverter(listItemMap[toQString(valueKey)]);
@@ -118,7 +118,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         boost::function<T (const QVariant&)> typeConverter)
 {
   std::vector<std::pair<int,T> > data;
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     QVariantMap listItemMap = listItem.toMap();
     int index = listItemMap[toQString(indexKey)].toInt();
     T value = typeConverter(listItemMap);
@@ -137,7 +137,7 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
                                           boost::function<T (QVariant*)> typeConverter)
 {
   std::vector<T> result;
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     QVariant listItemCopy(listItem);
     T value = typeConverter(&listItemCopy);
     result.push_back(value);
@@ -150,7 +150,7 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
                                           boost::function<T (const QVariant&)> typeConverter)
 {
   std::vector<T> result;
-  Q_FOREACH(const QVariant& listItem,list) {
+  for (const QVariant& listItem : list) {
     T value = typeConverter(listItem);
     result.push_back(value);
   }

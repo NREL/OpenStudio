@@ -236,7 +236,7 @@ namespace openstudio{
   {
     m_componentsWithUpdates.clear();
 
-    Q_FOREACH(BCLComponent component, LocalBCL::instance().components()){
+    for (const BCLComponent& component : LocalBCL::instance().components()) {
       // can't start another search until the last one is done
       if (!m_mutex->tryLock()){
         return 0;
@@ -280,7 +280,7 @@ namespace openstudio{
   {
     m_measuresWithUpdates.clear();
 
-    Q_FOREACH(BCLMeasure measure, LocalBCL::instance().measures()){
+    for (const BCLMeasure& measure : LocalBCL::instance().measures()) {
       // can't start another search until the last one is done
       if (!m_mutex->tryLock()){
         return 0;
@@ -336,7 +336,7 @@ namespace openstudio{
       checkForComponentUpdates();
     }
 
-    Q_FOREACH(BCLSearchResult component, m_componentsWithUpdates){
+    for (const BCLSearchResult& component : m_componentsWithUpdates) {
       downloadMeasure(component.uid());
       boost::optional<BCLComponent> newComponent = waitForComponentDownload();
 
@@ -355,7 +355,7 @@ namespace openstudio{
       checkForMeasureUpdates();
     }
 
-    Q_FOREACH(BCLSearchResult measure, m_measuresWithUpdates){
+    for (const BCLSearchResult& measure : m_measuresWithUpdates) {
       downloadMeasure(measure.uid());
       boost::optional<BCLMeasure> newMeasure = waitForMeasureDownload();
 
@@ -1172,7 +1172,7 @@ namespace openstudio{
         // search for component.xml or measure.xml file
         boost::optional<openstudio::path> xmlPath;
         
-        Q_FOREACH(const openstudio::path& path, createdFiles){
+        for (const openstudio::path& path : createdFiles) {
           if (path.filename() == toPath("component.xml")) {
             componentType = "component";
             m_lastComponentDownload.reset();
@@ -1318,7 +1318,7 @@ namespace openstudio{
 
   void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
   {
-    /*Q_FOREACH(QSslError error, errorList) {
+    /*for (const QSslError& error : errorList) {
       std::cout << error.errorString().toStdString() << std::endl;
     }*/
   }

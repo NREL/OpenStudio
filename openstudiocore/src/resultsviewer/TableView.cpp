@@ -77,7 +77,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())
+      for (QTableWidgetItem *item : selectedItems())
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -222,7 +222,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())  
+      for (QTableWidgetItem *item : selectedItems())  
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -239,7 +239,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())  
+      for (QTableWidgetItem *item : selectedItems())  
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -258,7 +258,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
 
 
-    foreach (QTableWidgetItem *item, selectedItems())
+    for (QTableWidgetItem *item : selectedItems())
     {
       int row = item->row();
       if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )

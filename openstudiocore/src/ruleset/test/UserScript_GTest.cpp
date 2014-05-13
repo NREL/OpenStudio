@@ -38,8 +38,6 @@
 
 #include <utilities/units/QuantityConverter.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <vector>
 #include <map>
 
@@ -77,7 +75,7 @@ class TestModelUserScript1 : public ModelUserScript {
 
     // remove old spaces
     int count(0);
-    BOOST_FOREACH(openstudio::model::Space space, model.getModelObjects<openstudio::model::Space>()) {
+    for (openstudio::model::Space space : model.getModelObjects<openstudio::model::Space>()) {
       space.remove();
       ++count;
     }

@@ -97,7 +97,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   }
 
   idfObject.clearExtensibleGroups();
-  BOOST_FOREACH(const Point3d& point, modelObject.vertices()){
+  for (const Point3d& point : modelObject.vertices()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 3);
     group.setDouble(0, point.x());
@@ -108,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   // translate subsurfaces
   SubSurfaceVector subSurfaces = modelObject.subSurfaces();
   std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(SubSurface& subSurface, subSurfaces){
+  for (SubSurface& subSurface : subSurfaces){
     translateAndMapModelObject(subSurface);
   }
 

@@ -420,7 +420,7 @@ namespace detail {
   boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
     std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
     RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
       RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
       if ( !refrigerationCases.empty() && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end() ) {
         return refrigerationSystem;

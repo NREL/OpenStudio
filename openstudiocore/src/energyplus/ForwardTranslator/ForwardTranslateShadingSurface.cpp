@@ -87,11 +87,11 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
         double minDistance = std::numeric_limits<double>::max();
 
         // at this point zone has one space and internal surfaces have already been combined
-        BOOST_FOREACH(const Surface& surface, space->surfaces()){
+        for (const Surface& surface : space->surfaces()){
           if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")){
             Point3dVector surfaceVertices = surface.vertices();
-            BOOST_FOREACH(const Point3d& point, points){
-              BOOST_FOREACH(const Point3d& surfaceVertex, surfaceVertices){
+            for (const Point3d& point : points){
+              for (const Point3d& surfaceVertex : surfaceVertices){
                 double distance = getDistance(point, surfaceVertex);
                 if (distance < minDistance){
                   baseSurface = surface;
@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
   idfObject->clearExtensibleGroups();
 
-  BOOST_FOREACH(const Point3d& point, points){
+  for (const Point3d& point : points){
     IdfExtensibleGroup group = idfObject->pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 3);
     group.setDouble(0, point.x());

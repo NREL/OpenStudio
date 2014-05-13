@@ -127,7 +127,7 @@ LocationView::LocationView(const model::Model & model,
 
   m_ashraeClimateZone->addItem("");
   std::vector<std::string> ashraeClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::ashraeInstitutionName(), model::ClimateZones::ashraeDefaultYear());
-  BOOST_FOREACH(const std::string& climateZone, ashraeClimateZoneValues){
+  for (const std::string& climateZone : ashraeClimateZoneValues){
     m_ashraeClimateZone->addItem(toQString(climateZone));
   }
 
@@ -160,7 +160,7 @@ LocationView::LocationView(const model::Model & model,
 
   m_cecClimateZone->addItem("");
   std::vector<std::string> cecClimateZoneValues = model::ClimateZones::validClimateZoneValues(model::ClimateZones::cecInstitutionName(), model::ClimateZones::cecDefaultYear());
-  BOOST_FOREACH(const std::string& climateZone, cecClimateZoneValues){
+  for (const std::string& climateZone : cecClimateZoneValues){
     m_cecClimateZone->addItem(toQString(climateZone));
   }
 
@@ -490,7 +490,7 @@ void LocationView::onDesignDayBtnClicked()
     if(ddyIdfFile){
 
       openstudio::Workspace ddyWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
-      BOOST_FOREACH(IdfObject idfObject, ddyIdfFile->objects()){
+      for (IdfObject idfObject : ddyIdfFile->objects()){
         IddObjectType iddObjectType = idfObject.iddObject().type();
         if((iddObjectType == IddObjectType::SizingPeriod_DesignDay) ||
            (iddObjectType == IddObjectType::SizingPeriod_WeatherFileDays) ||
@@ -515,7 +515,7 @@ void LocationView::onDesignDayBtnClicked()
 
         bool unknownDay = false;
 
-        BOOST_FOREACH(model::DesignDay designDay, ddyModel.getModelObjects<model::DesignDay>()) {
+        for (model::DesignDay designDay : ddyModel.getModelObjects<model::DesignDay>()) {
           boost::optional<std::string> name;
           name = designDay.name();
 
@@ -556,29 +556,29 @@ void LocationView::onDesignDayBtnClicked()
         {
           if( days99_6.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days99) {
+            for (model::DesignDay designDay : days99) {
               designDay.remove();
             }
           }
 
           if( days0_4.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days1) {
+            for (model::DesignDay designDay : days1) {
               designDay.remove();
             }
-            BOOST_FOREACH(model::DesignDay designDay, days2) {
+            for (model::DesignDay designDay : days2) {
               designDay.remove();
             }
           }
           else if( days1.size() > 0 )
           {
-            BOOST_FOREACH(model::DesignDay designDay, days2) {
+            for (model::DesignDay designDay : days2) {
               designDay.remove();
             }
           }
         }
 
-        BOOST_FOREACH(model::SizingPeriod sizingPeriod, m_model.getModelObjects<model::SizingPeriod>()){
+        for (model::SizingPeriod sizingPeriod : m_model.getModelObjects<model::SizingPeriod>()){
           sizingPeriod.remove();
         }
 

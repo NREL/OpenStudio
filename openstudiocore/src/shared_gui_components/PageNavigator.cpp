@@ -113,7 +113,7 @@ void PageNavigator::createLayout()
 
 void PageNavigator::makeNumberedButtons()
 {
-  Q_FOREACH(QAbstractButton * button, m_buttonGroup->buttons().toVector().toStdVector()){
+  for (QAbstractButton * button : m_buttonGroup->buttons().toVector().toStdVector()) {
     m_buttonGroup->removeButton(button);
     if(button){
       delete button;

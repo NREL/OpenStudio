@@ -37,7 +37,6 @@
 #include <utilities/core/StringHelpers.hpp>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 #include <iostream>
@@ -95,7 +94,7 @@ namespace detail {
     bool ptrsAsHandles = iddObject().hasHandleField();
     // loop through object list fields
     UnsignedVector fields = objectListFields();
-    BOOST_FOREACH(unsigned index, fields) {
+    for (unsigned index : fields) {
       // determine if field should be managed
       OptionalIddField iddField = iddObject().getField(index);
       OS_ASSERT(iddField);
@@ -142,7 +141,7 @@ namespace detail {
     OS_ASSERT(m_workspace);
     if (m_sourceData) {
       SourceData::pointer_set mappedPointers;
-      BOOST_FOREACH(const ForwardPointer& fp,m_sourceData->pointers) {
+      for (const ForwardPointer& fp : m_sourceData->pointers) {
         Handle th = openstudio::applyHandleMap(fp.targetHandle,oldNewHandleMap);
         if (th.isNull() && !fp.targetHandle.isNull() && !oldNewHandleMap.empty()) {
           // if cloned object is also in this workspace, and fp.targetHandle not in
@@ -163,7 +162,7 @@ namespace detail {
     }
     if (m_targetData) {
       TargetData::pointer_set mappedPointers;
-      BOOST_FOREACH(const ReversePointer& rp,m_targetData->reversePointers) {
+      for (const ReversePointer& rp : m_targetData->reversePointers) {
         Handle sh = openstudio::applyHandleMap(rp.sourceHandle,oldNewHandleMap);
         if (!sh.isNull()) {
           mappedPointers.insert(ReversePointer(sh,rp.fieldIndex));
@@ -239,7 +238,7 @@ namespace detail {
     WorkspaceObjectVector result;
     if (!initialized()) { return result; }
     if (m_sourceData) {
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           OptionalWorkspaceObject owo = this->workspace().getObject(ptr.targetHandle);
           OS_ASSERT(owo);
@@ -253,7 +252,7 @@ namespace detail {
   std::vector<unsigned> WorkspaceObject_Impl::getSourceIndices(const Handle& targetHandle) const {
     UnsignedVector result;
     if (m_sourceData) {
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (ptr.targetHandle == targetHandle) {
           result.push_back(ptr.fieldIndex);
         }
@@ -266,7 +265,7 @@ namespace detail {
     WorkspaceObjectVector result;
     if (!initialized()) { return result; }
     if (m_targetData) {
-      BOOST_FOREACH(const ReversePointer& ptr,m_targetData->reversePointers) {
+      for (const ReversePointer& ptr : m_targetData->reversePointers) {
         OS_ASSERT(!ptr.sourceHandle.isNull());
         OptionalWorkspaceObject owo = this->workspace().getObject(ptr.sourceHandle);
         OS_ASSERT(owo);
@@ -280,7 +279,7 @@ namespace detail {
     WorkspaceObjectVector result;
     if (!initialized()) { return result; }
     if (m_targetData) {
-      BOOST_FOREACH(const ReversePointer& ptr,m_targetData->reversePointers) {
+      for (const ReversePointer& ptr : m_targetData->reversePointers) {
         OS_ASSERT(!ptr.sourceHandle.isNull());
         OptionalWorkspaceObject owo = this->workspace().getObject(ptr.sourceHandle);
         OS_ASSERT(owo);
@@ -669,12 +668,12 @@ namespace detail {
     if (m_sourceData && !result.empty()) {
       unsigned n = numFields();
       UnsignedVector outOfRangePtrs;
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (ptr.fieldIndex >= n) {
           outOfRangePtrs.push_back(ptr.fieldIndex);
         }
       }
-      BOOST_FOREACH(unsigned index,outOfRangePtrs) {
+      for (unsigned index : outOfRangePtrs) {
         nullifyPointer(index);
         SourceData::pointer_set::iterator fpIt =
             getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
@@ -701,7 +700,7 @@ namespace detail {
   bool WorkspaceObject_Impl::isSource() const {
     if (!initialized()){ return false; }
     if (m_sourceData) {
-      BOOST_FOREACH(const ForwardPointer& fPtr,m_sourceData->pointers) {
+      for (const ForwardPointer& fPtr : m_sourceData->pointers) {
         if (!fPtr.targetHandle.isNull()) { return true; }
       }
     }
@@ -765,7 +764,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same, field indices same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       OptionalWorkspaceObject oMyTarget = getTarget(i);
       OptionalWorkspaceObject oOtherTarget = other.getTarget(i);
       if (oMyTarget || oOtherTarget) {
@@ -795,7 +794,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       OptionalWorkspaceObject oMyTarget = getTarget(i);
       // always ok if I am not pointing to anyone
       if (!oMyTarget) { continue; }
@@ -833,7 +832,7 @@ namespace detail {
     // add name references based on WorkspaceObject's pointer data
     if (m_sourceData) {
       bool serializeHandle = m_iddObject.hasHandleField();
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           if (serializeHandle) {
             result->setString(ptr.fieldIndex,toString(ptr.targetHandle));
@@ -871,7 +870,7 @@ namespace detail {
     // add name references based on WorkspaceObject's pointer data
     if (m_sourceData) {
       bool serializeHandle = m_iddObject.hasHandleField();
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           if (serializeHandle) {
             result->setString(ptr.fieldIndex,toString(ptr.targetHandle));
@@ -908,7 +907,7 @@ namespace detail {
     bool nameChange = false;
     bool dataChange = false;
 
-    BOOST_FOREACH(const IdfObjectDiff& diff, m_diffs){
+    for (const IdfObjectDiff& diff : m_diffs){
 
       if (diff.isNull()){
         continue;
@@ -1019,7 +1018,7 @@ namespace detail {
   void WorkspaceObject_Impl::restorePointers() {
     OS_ASSERT(!m_handle.isNull());
     if (m_sourceData) {
-      BOOST_FOREACH(const ForwardPointer& ptr,m_sourceData->pointers) {
+      for (const ForwardPointer& ptr : m_sourceData->pointers) {
         if (!ptr.targetHandle.isNull()) {
           OptionalWorkspaceObject target = m_workspace->getObject(ptr.targetHandle);
           if (target) {
@@ -1033,7 +1032,7 @@ namespace detail {
       }
     }
     if (m_targetData) {
-      BOOST_FOREACH(const ReversePointer& ptr,m_targetData->reversePointers) {
+      for (const ReversePointer& ptr : m_targetData->reversePointers) {
         OptionalWorkspaceObject source = m_workspace->getObject(ptr.sourceHandle);
         if (source) {
           OptionalWorkspaceObject oTarget = source->getTarget(ptr.fieldIndex);
@@ -1103,7 +1102,7 @@ namespace detail {
     if (candidates.size() == 1) { return candidates[0].handle(); }
 
     // multiple. choose first in appropriate reference list.
-    BOOST_FOREACH(const WorkspaceObject& candidate,candidates) {
+    for (const WorkspaceObject& candidate : candidates) {
       if (m_workspace->canBeTarget(candidate.handle(),referenceLists)) {
         return candidate.handle();
       }
@@ -1190,7 +1189,7 @@ namespace detail {
       return true;
     }
     WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
-    BOOST_FOREACH(const WorkspaceObject& candidate,candidates) {
+    for (const WorkspaceObject& candidate : candidates) {
       OS_ASSERT(candidate.name());
       if ((istringEqual(*oName,*(candidate.name())) &&
           (!initialized() || (getObject<WorkspaceObject>() != candidate))))

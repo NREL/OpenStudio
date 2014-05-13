@@ -37,8 +37,6 @@
 #include <utilities/units/SIUnit.hpp>
 #include <utilities/units/BTUUnit.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 

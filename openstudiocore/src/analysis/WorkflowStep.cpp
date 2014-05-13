@@ -34,8 +34,6 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -252,7 +250,7 @@ namespace detail {
         m_workItem = rjb.toWorkItem();
       }
       else {
-        BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
+        for (runmanager::FileInfo& info : m_workItem->files.files()) {
           // update fullPath
           openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
           if (!temp.empty()) {

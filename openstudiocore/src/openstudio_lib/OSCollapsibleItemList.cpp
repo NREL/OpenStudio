@@ -25,8 +25,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QHBoxLayout>
 #include <QPainter>
 #include <QPushButton>
@@ -96,7 +94,7 @@ bool OSCollapsibleItemList::itemsDraggable() const
 void OSCollapsibleItemList::setItemsDraggable(bool itemsDraggable)
 {
   m_itemsDraggable = itemsDraggable;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsDraggable(itemsDraggable);
   }
 }
@@ -109,7 +107,7 @@ bool OSCollapsibleItemList::itemsRemoveable() const
 void OSCollapsibleItemList::setItemsRemoveable(bool itemsRemoveable)
 {
   m_itemsRemoveable = itemsRemoveable;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsRemoveable(itemsRemoveable);
   }
 }
@@ -122,7 +120,7 @@ OSItem::Type OSCollapsibleItemList::itemsType() const
 void OSCollapsibleItemList::setItemsType(OSItem::Type type)
 {
   m_itemsType = type;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsType(type);
   }
 }
@@ -135,7 +133,7 @@ bool OSCollapsibleItemList::showFilterLayout() const
 void OSCollapsibleItemList::setShowFilterLayout(const bool showFilterLayout)
 {
   m_showFilterLayout = showFilterLayout;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setShowFilterLayout(showFilterLayout);
   }
 }

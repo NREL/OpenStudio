@@ -26,7 +26,6 @@
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 namespace openstudio {
@@ -66,7 +65,7 @@ namespace detail {
   std::vector<Attribute> UncertaintyDescription_Impl::attributes(bool clones) const {
     if (clones) {
       AttributeVector result;
-      BOOST_FOREACH(const Attribute& attribute,m_attributes) {
+      for (const Attribute& attribute : m_attributes) {
         result.push_back(attribute.clone());
       }            
       return result;
@@ -106,7 +105,7 @@ namespace detail {
   }
 
   bool UncertaintyDescription_Impl::isComplete() const {
-    BOOST_FOREACH(const AttributeDescription& desc,attributeDescriptions()) {
+    for (const AttributeDescription& desc : attributeDescriptions()) {
       if (desc.required && !isSet(desc.name)) {
         return false;
       }
@@ -623,7 +622,7 @@ namespace detail {
     udescMap["type"] = toQString(generic.actualType().valueName());
     if (!generic.attributes().empty()) {
       QVariantList attributesList;
-      Q_FOREACH(const Attribute& attribute,generic.attributes()) {
+      for (const Attribute& attribute : generic.attributes()) {
         attributesList.push_back(openstudio::detail::toVariant(attribute));
       }
       udescMap["attributes"] = QVariant(attributesList);

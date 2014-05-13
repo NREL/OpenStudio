@@ -31,7 +31,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <boost/foreach.hpp>
 
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;
@@ -1249,9 +1248,9 @@ namespace openstudio{
     {
       EndUses result;
 
-      BOOST_FOREACH(EndUseFuelType fuelType, result.fuelTypes()){
+      for (EndUseFuelType fuelType : result.fuelTypes()){
         std::string units = result.getUnitsForFuelType(fuelType);
-        BOOST_FOREACH(EndUseCategoryType category, result.categories()){
+        for (EndUseCategoryType category : result.categories()){
 
           std::string query = "SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='" + \
                                fuelType.valueDescription() + "') and (RowName ='" + category.valueDescription() + "') and (Units = '" + units + "')";
@@ -2437,26 +2436,26 @@ namespace openstudio{
       temp1 = expandEnvironment(query);
 
       // build up temp2
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp1) {
+      for (const SqlFileTimeSeriesQuery& q : temp1) {
         SqlFileTimeSeriesQueryVector temp3 = expandReportingFrequency(q);
         temp2.insert(temp2.end(),temp3.begin(),temp3.end());
       }
 
       // build up temp1
       temp1.clear();
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp2) {
+      for (const SqlFileTimeSeriesQuery& q : temp2) {
         SqlFileTimeSeriesQueryVector temp3 = expandTimeSeries(q);
         temp1.insert(temp1.end(),temp3.begin(),temp3.end());
       }
 
       // build up result
-      BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,temp1) {
+      for (const SqlFileTimeSeriesQuery& q : temp1) {
         SqlFileTimeSeriesQueryVector temp3 = expandKeyValues(q);
         result.insert(result.end(),temp3.begin(),temp3.end());
       }
 
       // mark each query as vetted
-      BOOST_FOREACH(SqlFileTimeSeriesQuery& resultQuery,result) {
+      for (SqlFileTimeSeriesQuery& resultQuery : result) {
         resultQuery.m_vetted = true;
       }
 
@@ -2474,7 +2473,7 @@ namespace openstudio{
         if (envId.type()) {
           EnvironmentType envType = envId.type().get();
           // specified by type--get all matching environment names
-          BOOST_FOREACH(const std::string& envName,envNames) {
+          for (const std::string& envName : envNames) {
             OptionalEnvironmentType oEnvType = environmentType(envName);
             if (oEnvType && (*oEnvType == envType)) { keepers.push_back(envName); }
           }
@@ -2494,7 +2493,7 @@ namespace openstudio{
 
       // initialize result queries
       SqlFileTimeSeriesQuery wQuery(query);
-      BOOST_FOREACH(const std::string& envName,keepers) {
+      for (const std::string& envName : keepers) {
         envId = EnvironmentIdentifier(envName);
         wQuery.setEnvironment(envId);
         result.push_back(wQuery);
@@ -2524,7 +2523,7 @@ namespace openstudio{
           else {
             OS_ASSERT(envId.type());
             EnvironmentType envType = envId.type().get();
-            BOOST_FOREACH(const std::string& envName,availableEnvPeriods()) {
+            for (const std::string& envName : availableEnvPeriods()) {
               OptionalEnvironmentType oEnvType = environmentType(envName);
               if (oEnvType && (*oEnvType == envType)) { envNames.push_back(envName); }
             }
@@ -2534,13 +2533,13 @@ namespace openstudio{
           envNames = availableEnvPeriods();
         }
         // get reporting frequencies
-        BOOST_FOREACH(const std::string& envName,envNames) {
+        for (const std::string& envName : envNames) {
           ReportingFrequencySet tempSet = availableReportingFrequencySet(*this,envName);
           rfSet.insert(tempSet.begin(),tempSet.end());
         }
 
         // make one query per rf
-        BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+        for (const ReportingFrequency& rf : rfSet) {
           SqlFileTimeSeriesQuery wQuery(query);
           wQuery.setReportingFrequency(rf);
           result.push_back(wQuery);
@@ -2587,7 +2586,7 @@ namespace openstudio{
       }
 
       // make one query per time series name
-      BOOST_FOREACH(const std::string& tsName,tsNames) {
+      for (const std::string& tsName : tsNames) {
         SqlFileTimeSeriesQuery wQuery(query);
         TimeSeriesIdentifier tsId(tsName);
         wQuery.setTimeSeries(tsId);
@@ -2679,7 +2678,7 @@ namespace openstudio{
       ReportingFrequency rf = *(wquery.reportingFrequency());
       std::string tsName = *(wquery.timeSeries().get().name());
       if (wquery.keyValues()) {
-        BOOST_FOREACH(const std::string kvName,wquery.keyValues().get().names()) {
+        for (const std::string kvName : wquery.keyValues().get().names()) {
           OptionalTimeSeries ots = timeSeries(envPeriod,rf.valueDescription(),tsName,kvName);
           if (ots) { result.push_back(*ots); }
         }
@@ -3471,7 +3470,7 @@ namespace openstudio{
           }
           else {
             rfSet = availableReportingFrequencySet(*this,*envName);
-            BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+            for (const ReportingFrequency& rf : rfSet) {
               temp = availableVariableNames(*envName,rf.valueDescription());
               tsSet.insert(temp.begin(),temp.end());
             }
@@ -3479,7 +3478,7 @@ namespace openstudio{
         }
         else if (rf && tsName) {
           envNames = availableEnvPeriods();
-          BOOST_FOREACH(const std::string& envName,envNames) {
+          for (const std::string& envName : envNames) {
             temp = availableVariableNames(envName,rf->valueDescription());
             tsSet.insert(temp.begin(),temp.end());
           }
@@ -3504,7 +3503,7 @@ namespace openstudio{
           keyValueNames = queryIt->keyValues()->names();
           if (envName && rf) {
             kvAvail = availableKeyValues(*envName,rf->valueDescription(),*tsName);
-            BOOST_FOREACH(const std::string& kv,keyValueNames) {
+            for (const std::string& kv : keyValueNames) {
               StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
                   boost::bind(istringEqual,kv,_1));
               if (it != kvAvail.end()) { keepers.insert(*it); }
@@ -3512,9 +3511,9 @@ namespace openstudio{
           }
           else if (envName) {
             OS_ASSERT(!rfSet.empty());
-            BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+            for (const ReportingFrequency& rf : rfSet) {
               kvAvail = availableKeyValues(*envName,rf.valueDescription(),*tsName);
-              BOOST_FOREACH(const std::string& kv,keyValueNames) {
+              for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
                     boost::bind(istringEqual,kv,_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
@@ -3523,9 +3522,9 @@ namespace openstudio{
           }
           else if (rf) {
             OS_ASSERT(!envNames.empty());
-            BOOST_FOREACH(const std::string& envName,envNames) {
+            for (const std::string& envName : envNames) {
               kvAvail = availableKeyValues(envName,rf->valueDescription(),*tsName);
-              BOOST_FOREACH(const std::string& kv,keyValueNames) {
+              for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
                     boost::bind(istringEqual,kv,_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
@@ -3534,11 +3533,11 @@ namespace openstudio{
           }
           else {
             envNames = availableEnvPeriods();
-            BOOST_FOREACH(const std::string& envName,envNames) {
+            for (const std::string& envName : envNames) {
               rfSet = availableReportingFrequencySet(*this,envName);
-              BOOST_FOREACH(const ReportingFrequency& rf,rfSet) {
+              for (const ReportingFrequency& rf : rfSet) {
                 kvAvail = availableKeyValues(envName,rf.valueDescription(),*tsName);
-                BOOST_FOREACH(const std::string& kv,keyValueNames) {
+                for (const std::string& kv : keyValueNames) {
                   StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
                       boost::bind(istringEqual,kv,_1));
                   if (it != kvAvail.end()) { 
@@ -3571,7 +3570,7 @@ namespace openstudio{
     ReportingFrequencySet availableReportingFrequencySet(SqlFile_Impl& sqlFileImpl, const std::string& envPeriod) {
       ReportingFrequencySet rfSet;
       StringVector rfStrs = sqlFileImpl.availableReportingFrequencies(envPeriod);
-      BOOST_FOREACH(const std::string& rfStr,rfStrs) {
+      for (const std::string& rfStr : rfStrs) {
         OptionalReportingFrequency orf = sqlFileImpl.reportingFrequencyFromDB(rfStr);
         if (orf) { rfSet.insert(*orf); }
       }

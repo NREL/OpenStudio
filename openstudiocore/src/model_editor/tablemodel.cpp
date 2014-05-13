@@ -44,7 +44,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 #include <model_editor/ClassViewWidget.hpp>
 #include <model_editor/TableView.hpp>
@@ -449,7 +448,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
 void TableModel::setupModelData(openstudio::WorkspaceObjectVector& objects)
 {
   // loop through each object
-  BOOST_FOREACH(const openstudio::WorkspaceObject& object, objects){
+  for (const openstudio::WorkspaceObject& object : objects){
     // get the idd object type
     openstudio::IddObject iddObject = object.iddObject();
     QString iddName(iddObject.name().c_str());

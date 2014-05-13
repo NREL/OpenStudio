@@ -94,7 +94,7 @@ namespace detail {
     makeUnique();
 
     SteamEquipmentDefinition definition = steamEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

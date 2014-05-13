@@ -36,8 +36,6 @@
 #include <QTextStream>
 #include <QToolBar>
 
-#include <boost/foreach.hpp>
-
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/Model.hpp>
 #include <model_editor/AboutBox.hpp>
@@ -110,7 +108,7 @@ EditorFrame::EditorFrame(QWidget * parent)
   openstudio::model::Model model = mModelExplorer->getModel();
   openstudio::WorkspaceObjectVector objects = model.objects();
   QStringList strings;
-  BOOST_FOREACH(const openstudio::WorkspaceObject& object, objects){
+  for (const openstudio::WorkspaceObject& object : objects){
     strings << object.iddObject().name().c_str();
   }
   mCompleter = new QCompleter(strings,this);

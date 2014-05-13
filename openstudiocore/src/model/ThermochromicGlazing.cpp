@@ -62,13 +62,13 @@ namespace detail {
     double result = 0.0;         // running average
     unsigned n = 0;
     bool warned = false;
-    BOOST_FOREACH(const Glazing& glazing,glazings) {
+    for (const Glazing& glazing : glazings) {
       double glazingThickness = glazing.thickness();
       if (n == 0) {
         result = glazingThickness;
       }
       else {
-        // keep runnning average
+        // keep running average
         if (!warned && ! equal(glazingThickness,result)) {
           LOG(Warn,"Thermochromic group '" << name().get() << "' contains glazings of different "
               << "thicknesses.");
@@ -212,7 +212,7 @@ namespace detail {
 
   std::vector<Glazing> ThermochromicGlazing_Impl::mf_glazings() const {
     GlazingVector result;
-    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+    for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       OptionalWorkspaceObject owo = group.getTarget(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::WindowMaterialGlazingName);
       if (owo) {

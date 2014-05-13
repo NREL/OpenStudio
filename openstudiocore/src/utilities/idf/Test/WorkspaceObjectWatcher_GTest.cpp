@@ -29,8 +29,6 @@
 
 #include <resources.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace std;
 using namespace boost;
 using namespace openstudio;

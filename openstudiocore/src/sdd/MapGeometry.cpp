@@ -192,14 +192,14 @@ namespace sdd {
     }
 
     // remove unused CFactor constructions
-    BOOST_FOREACH(model::CFactorUndergroundWallConstruction cFactorConstruction, model.getModelObjects<model::CFactorUndergroundWallConstruction>()){
+    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getModelObjects<model::CFactorUndergroundWallConstruction>()){
       if (cFactorConstruction.directUseCount() == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
-    BOOST_FOREACH(model::FFactorGroundFloorConstruction fFactorConstruction, model.getModelObjects<model::FFactorGroundFloorConstruction>()){
+    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getModelObjects<model::FFactorGroundFloorConstruction>()){
       if (fFactorConstruction.directUseCount() == 0){
         fFactorConstruction.remove();
       }
@@ -1492,7 +1492,7 @@ namespace sdd {
     /*
     // aboveGradeStoryCount
     unsigned numAboveGroundStories = 0;
-    BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
+    for (const model::BuildingStory& buildingStory : buildingStories){
       boost::optional<double> nominalZCoordinate = buildingStory.nominalZCoordinate();
       if (nominalZCoordinate && *nominalZCoordinate >= 0){
         numAboveGroundStories += 1;
@@ -1515,12 +1515,12 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Building")){
 
         Transformation transformation = shadingSurfaceGroup.siteTransformation();
 
-        BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+        for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
           boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
           if (shadingSurfaceElement){
             result.appendChild(*shadingSurfaceElement);
@@ -1534,7 +1534,7 @@ namespace sdd {
     }
 
     // translate building story
-    BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
+    for (const model::BuildingStory& buildingStory : buildingStories){
 
       boost::optional<QDomElement> buildingStoryElement = translateBuildingStory(buildingStory, doc);
       if (buildingStoryElement){
@@ -1550,7 +1550,7 @@ namespace sdd {
     std::vector<model::Space> spaces = building.model().getModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       if (!space.buildingStory()){
         LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated.");
         break;
@@ -1568,7 +1568,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ThermalZone& thermalZone, thermalZones){
+    for (const model::ThermalZone& thermalZone : thermalZones){
 
       boost::optional<QDomElement> thermalZoneElement = translateThermalZone(thermalZone, doc);
       if (thermalZoneElement){
@@ -1598,7 +1598,7 @@ namespace sdd {
     std::vector<model::Space> spaces = buildingStory.spaces();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
@@ -1648,7 +1648,7 @@ namespace sdd {
     Point3dVector vertices = transformation*space.floorPrint();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -1678,10 +1678,10 @@ namespace sdd {
     std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = space.shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       Transformation shadingTransformation = shadingSurfaceGroup.siteTransformation();
 
-      BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+      for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
         boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, shadingTransformation, doc);
         if (shadingSurfaceElement){
           result.appendChild(*shadingSurfaceElement);
@@ -1693,7 +1693,7 @@ namespace sdd {
     std::vector<model::Surface> surfaces = space.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Surface& surface, surfaces){
+    for (const model::Surface& surface : surfaces){
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, transformation, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
@@ -1841,7 +1841,7 @@ namespace sdd {
     Point3dVector vertices = transformation*surface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -1893,7 +1893,7 @@ namespace sdd {
     std::vector<model::SubSurface> subSurfaces = surface.subSurfaces();
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::SubSurface& subSurface, subSurfaces){
+    for (const model::SubSurface& subSurface : subSurfaces){
       boost::optional<QDomElement> subSurfaceElement = translateSubSurface(subSurface, transformation, doc);
       if (subSurfaceElement){
         result->appendChild(*subSurfaceElement);
@@ -1963,7 +1963,7 @@ namespace sdd {
     Point3dVector vertices = transformation*subSurface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -2110,7 +2110,7 @@ namespace sdd {
     Point3dVector vertices = transformation*shadingSurface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 

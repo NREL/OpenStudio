@@ -35,21 +35,20 @@
 #include <utilities/geometry/Point3d.hpp>
 #include <utilities/geometry/Vector3d.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 void removeSubSurfaces(Surface& surface){
-  BOOST_FOREACH(SubSurface s, surface.subSurfaces()){
+  for (SubSurface s : surface.subSurfaces()){
     s.remove();
   }
   EXPECT_EQ(0, surface.subSurfaces().size());
 }
 
 void removeSubSurfaces(Model& model){
-  BOOST_FOREACH(SubSurface s, model.getModelObjects<SubSurface>()){
+  for (SubSurface s : model.getModelObjects<SubSurface>()){
     s.remove();
   }
   EXPECT_EQ(0, model.getModelObjects<SubSurface>().size());
@@ -72,7 +71,7 @@ TEST_F(ModelFixture, SubSurface_In_File)
   SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
   EXPECT_TRUE(subSurfaces.size() > 0);
 
-  BOOST_FOREACH(const SubSurface& subSurface, subSurfaces){
+  for (const SubSurface& subSurface : subSurfaces){
     OptionalString name = subSurface.name();
     ASSERT_TRUE(name);
 
@@ -638,7 +637,7 @@ void checkExpectedSkylightRatios(const Model& model, double expectedRoofArea, do
 {
   double totalGrossRoofArea = 0.0;
   double totalSkylightArea = 0.0;
-  BOOST_FOREACH(Surface surface, model.getModelObjects<Surface>()){
+  for (Surface surface : model.getModelObjects<Surface>()){
     boost::optional<Space> space = surface.space();
     ASSERT_TRUE(space);
     double multiplier = space->multiplier();

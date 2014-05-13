@@ -32,7 +32,6 @@
 #include <model/InteriorPartitionSurface.hpp>
 
 #include <utilities/geometry/Point3d.hpp>
-#include <boost/foreach.hpp>
 
 using namespace openstudio::model;
 using namespace openstudio;

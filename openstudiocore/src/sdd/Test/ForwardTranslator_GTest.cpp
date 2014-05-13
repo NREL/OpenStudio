@@ -64,7 +64,7 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel)
   Construction doorConstruction(model);
   doorConstruction.setLayers(doorLayers);
 
-  BOOST_FOREACH(SubSurface subSurface, model.getModelObjects<SubSurface>()){
+  for (SubSurface subSurface : model.getModelObjects<SubSurface>()){
     if ((subSurface.subSurfaceType() == "FixedWindow") || (subSurface.subSurfaceType() == "OperableWindow")){
       subSurface.setConstruction(windowConstruction);
     }else if ((subSurface.subSurfaceType() == "Door") || (subSurface.subSurfaceType() == "OverheadDoor")){

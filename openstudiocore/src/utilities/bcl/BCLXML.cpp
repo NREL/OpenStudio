@@ -259,7 +259,7 @@ namespace openstudio{
   std::vector<BCLFileReference> BCLXML::files(const std::string& filetype) const
   {
     std::vector<BCLFileReference> matches;
-    Q_FOREACH(const BCLFileReference& file, m_files){
+    for (const BCLFileReference& file : m_files) {
       if (file.fileType() == filetype){
         matches.push_back(file);
       }
@@ -274,7 +274,7 @@ namespace openstudio{
 
   boost::optional<Attribute> BCLXML::getAttribute(const std::string& name) const
   {
-    Q_FOREACH(const Attribute& attribute, m_attributes){
+    for (const Attribute& attribute : m_attributes) {
       if (attribute.name() == name){
         return attribute;
       }
@@ -329,7 +329,7 @@ namespace openstudio{
 
     openstudio::path test = boost::filesystem::system_complete(path);
 
-    Q_FOREACH(const BCLFileReference& file, m_files){
+    for (const BCLFileReference& file : m_files) {
       if (file.path() == test){
         result = true;
         break;
@@ -346,7 +346,7 @@ namespace openstudio{
     openstudio::path test = boost::filesystem::system_complete(path);
 
     std::vector<BCLFileReference> newFiles;
-    Q_FOREACH(const BCLFileReference& file, m_files){
+    for (const BCLFileReference& file : m_files) {
       if (file.path() == test){
         result = true;
       }else{
@@ -381,7 +381,7 @@ namespace openstudio{
     bool result = false;
 
     std::vector<Attribute> newAttributes;
-    Q_FOREACH(const Attribute& attribute, m_attributes){
+    for (const Attribute& attribute : m_attributes) {
       if (attribute.name() == name){
         result = true;
       }else{
@@ -477,7 +477,7 @@ namespace openstudio{
 
     // write tags
     element = doc.createElement("tags");
-    Q_FOREACH(const std::string& tag, m_tags){
+    for (const std::string& tag : m_tags) {
       QDomElement tagElement = doc.createElement("tag");
       element.appendChild(tagElement);
       tagElement.appendChild(doc.createTextNode(toQString(tag)));
@@ -486,7 +486,7 @@ namespace openstudio{
 
     // write attributes
     element = doc.createElement("attributes");
-    Q_FOREACH(const Attribute& attribute, m_attributes){
+    for (const Attribute& attribute : m_attributes) {
 
       std::string value;
       std::string dataType;
@@ -558,7 +558,7 @@ namespace openstudio{
 
     // write files
     element = doc.createElement("files");
-    Q_FOREACH(const BCLFileReference& file, m_files){
+    for (const BCLFileReference& file : m_files) {
 
       QDomElement fileElement = doc.createElement("file");
       element.appendChild(fileElement);

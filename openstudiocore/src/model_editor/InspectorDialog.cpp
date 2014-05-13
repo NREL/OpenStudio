@@ -51,8 +51,6 @@
 #include <QCloseEvent>
 #include <QSettings>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -175,7 +173,7 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
   }
 
   // check if selection is ok
-  BOOST_FOREACH(Handle handle, selectedObjectHandles){
+  for (Handle handle : selectedObjectHandles){
     boost::optional<WorkspaceObject> object = m_model.getObject(handle);
     if (!object || (object->iddObject().type() != m_iddObjectType)){
       return false;
@@ -379,7 +377,7 @@ void InspectorDialog::onPushButtonCopy(bool)
 void InspectorDialog::onPushButtonDelete(bool)
 {
   std::vector<Handle> handles = m_selectedObjectHandles;
-  BOOST_FOREACH(Handle handle, handles){
+  for (Handle handle : handles){
     boost::optional<WorkspaceObject> object = m_model.getObject(handle);
     if (object){
       // calls model object remove
@@ -524,7 +522,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 
       // everything is allowable
-      BOOST_FOREACH(IddObject iddObject, m_iddFile.objects()){
+      for (IddObject iddObject : m_iddFile.objects()){
         m_typesToDisplay.insert(iddObject.type());
       }
 
@@ -1045,11 +1043,11 @@ void InspectorDialog::loadListWidgetData()
   QBrush itemAlternateBackground(QColor(238,238,238));
 
   QListWidgetItem* listItem;
-  BOOST_FOREACH(const std::string& group, m_iddFile.groups()){
+  for (const std::string& group : m_iddFile.groups()){
 
     // quick check if group is empty
     bool empty = true;
-    BOOST_FOREACH(const IddObject& iddObject, m_iddFile.getObjectsInGroup(group)){
+    for (const IddObject& iddObject : m_iddFile.getObjectsInGroup(group)){
       if (m_typesToDisplay.find(iddObject.type()) != m_typesToDisplay.end()){
         empty = false;
         break;
@@ -1071,7 +1069,7 @@ void InspectorDialog::loadListWidgetData()
 
     // add each object
     bool alternate = false;
-    BOOST_FOREACH(const IddObject& iddObject, m_iddFile.getObjectsInGroup(group)){
+    for (const IddObject& iddObject : m_iddFile.getObjectsInGroup(group)){
 
       IddObjectType type = iddObject.type();
       if (m_typesToDisplay.find(type) == m_typesToDisplay.end()){
@@ -1146,7 +1144,7 @@ void InspectorDialog::loadTableWidgetData()
 
   std::vector<WorkspaceObject> objects = m_model.getObjectsByType(m_iddObjectType);
 
-  BOOST_FOREACH(WorkspaceObject object, objects){
+  for (WorkspaceObject object : objects){
 
     m_objectHandles.push_back(object.handle());
 

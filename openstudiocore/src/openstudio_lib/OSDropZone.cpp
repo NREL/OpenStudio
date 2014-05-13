@@ -336,7 +336,7 @@ void OSDropZone2::setItemIds(const std::vector<OSItemId>& itemIds)
     type = OSItem::DROPZONE_RECTANGLE;
   }
 
-  BOOST_FOREACH(const OSItemId& itemId, itemIds){
+  for (const OSItemId& itemId : itemIds){
 
     OSItem* item = OSItem::makeItem(itemId, type);
     if (!item){
@@ -682,7 +682,7 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
     type = OSItem::DROPZONE_RECTANGLE;
   }
 
-  BOOST_FOREACH(const OSItemId& itemId, itemIds){
+  for (const OSItemId& itemId : itemIds){
 
     OSItem* item = OSItem::makeItem(itemId, type);
     if (!item){

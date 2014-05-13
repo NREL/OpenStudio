@@ -89,7 +89,7 @@ namespace detail {
   {
     std::vector<Space> result;
     
-    BOOST_FOREACH(const ModelExtensibleGroup& group,castVector<ModelExtensibleGroup>(extensibleGroups())) 
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) 
     {        
       boost::optional<Space> space = group.getModelObjectTarget<Space>(0);
       OS_ASSERT(space);

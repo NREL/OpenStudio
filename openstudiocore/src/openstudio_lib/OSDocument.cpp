@@ -1099,7 +1099,7 @@ boost::optional<IddObjectType> OSDocument::getIddObjectType(const OSItemId& item
   if (fromBCL(itemId)){
     boost::optional<BCLComponent> component = LocalBCL::instance().getComponent(itemId.itemId().toStdString());
     if (component){
-      BOOST_FOREACH(const Attribute& attribute, component->attributes()){
+      for (const Attribute& attribute : component->attributes()){
         if (istringEqual("OpenStudio Type", attribute.name())){
           try{
             IddObjectType iddObjectType(attribute.valueAsString());

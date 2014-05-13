@@ -300,7 +300,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   IdfObject idfObject(IddObjectType::PlantLoop);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, plantLoop.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : plantLoop.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

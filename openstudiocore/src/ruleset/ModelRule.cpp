@@ -29,7 +29,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <QDomDocument>
@@ -81,11 +80,11 @@ namespace detail {
     std::vector<ModelObjectActionClause> modelObjectActions = this->getActions<ModelObjectActionClause>();
 
     // loop over each object
-    BOOST_FOREACH(openstudio::model::ModelObject modelObject, model.modelObjects()){
+    for (openstudio::model::ModelObject modelObject : model.modelObjects()){
 
       bool passedAllFilters = true;
 
-      BOOST_FOREACH(ModelObjectFilterClause modelObjectFilter, modelObjectFilters){
+      for (ModelObjectFilterClause modelObjectFilter : modelObjectFilters){
         if (!modelObjectFilter.check(modelObject)){
           passedAllFilters = false;
           break;
@@ -98,7 +97,7 @@ namespace detail {
 
       anyPassedAllFilters = true;
 
-      BOOST_FOREACH(ModelObjectActionClause modelObjectAction, modelObjectActions){
+      for (ModelObjectActionClause modelObjectAction : modelObjectActions){
         allActionsSuccessful = allActionsSuccessful && modelObjectAction.apply(modelObject);
       }
 

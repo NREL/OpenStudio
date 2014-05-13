@@ -25,7 +25,6 @@
 #include <utilities/core/Assert.hpp>
 
 #include <boost/optional/optional.hpp>
-#include <boost/foreach.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>

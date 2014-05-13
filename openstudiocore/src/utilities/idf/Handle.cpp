@@ -19,8 +19,6 @@
 
 #include <utilities/idf/Handle.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 
 Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
@@ -34,7 +32,7 @@ Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
 
 HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap) {
   HandleVector result;
-  BOOST_FOREACH(const Handle& oh,original) {
+  for (const Handle& oh : original) {
     HandleMap::const_iterator it = handleMap.find(oh);
     if (it != handleMap.end()) {
       result.push_back(it->second);

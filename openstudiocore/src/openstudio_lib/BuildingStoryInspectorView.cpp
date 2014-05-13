@@ -157,7 +157,7 @@ void BuildingStoryDefaultScheduleSetVectorController::onDrop(const OSItemId& ite
 void BuildingStorySpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::Space& space, modelObject.model().getModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -167,7 +167,7 @@ std::vector<OSItemId> BuildingStorySpacesVectorController::makeVector()
   std::vector<OSItemId> result;
   if (m_modelObject){
     model::BuildingStory buildingStory = m_modelObject->cast<model::BuildingStory>();
-    BOOST_FOREACH(const model::Space& space, buildingStory.spaces()){
+    for (const model::Space& space : buildingStory.spaces()){
       result.push_back(modelObjectToItemId(space, false));
     }
   }
@@ -229,7 +229,7 @@ void BuildingStorySpacesVectorController::onDrop(const OSItemId& itemId)
 void BuildingStoryUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -246,7 +246,7 @@ void BuildingStoryUnassignedSpacesVectorController::onChangeRelationship(const m
 std::vector<OSItemId> BuildingStoryUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  BOOST_FOREACH(const model::Space& space, m_model->getModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (!space.buildingStory()){
         result.push_back(modelObjectToItemId(space, false));

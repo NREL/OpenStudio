@@ -94,7 +94,7 @@ namespace detail {
     makeUnique();
 
     OtherEquipmentDefinition definition = otherEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

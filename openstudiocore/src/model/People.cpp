@@ -120,7 +120,7 @@ namespace detail {
     this->makeUnique();
 
     PeopleDefinition peopleDefinition = this->peopleDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, peopleDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : peopleDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

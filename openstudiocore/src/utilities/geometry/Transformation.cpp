@@ -26,7 +26,6 @@
 #include <utilities/geometry/Geometry.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 
 #include <algorithm>
@@ -214,7 +213,7 @@ namespace openstudio{
     double minY = alignedVertices[0].y();
     double minZ = alignedVertices[0].z();
 
-    BOOST_FOREACH(const Point3d& vertex, alignedVertices){
+    for (const Point3d& vertex : alignedVertices){
       minX = min(minX, vertex.x());
       minY = min(minY, vertex.y());
       minZ = min(minZ, vertex.z());

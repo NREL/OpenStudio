@@ -233,7 +233,7 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
   EXPECT_EQ(2u,summary.nRows());
   summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
-  BOOST_FOREACH(const DataPoint& dataPoint,analysis.dataPoints()) {
+  for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());
     EXPECT_FALSE(dataPoint.failed());
     EXPECT_EQ(problem.responses().size(),dataPoint.responseValues().size());

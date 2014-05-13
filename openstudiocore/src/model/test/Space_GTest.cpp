@@ -61,8 +61,6 @@
 #include <utilities/idf/WorkspaceObjectWatcher.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <iostream>
 
 using namespace openstudio;

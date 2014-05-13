@@ -39,7 +39,6 @@
 #include <QVariant>
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <sstream>
@@ -73,7 +72,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
   ASSERT_TRUE(outFile);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
-  BOOST_FOREACH(const IddObject& iddObject,iddObjects) {
+  for (const IddObject& iddObject : iddObjects) {
     IdfObject defaultObject(iddObject.type());
     defaultObject.print(outFile);
   }

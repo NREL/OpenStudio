@@ -36,7 +36,6 @@
 #include <utilities/geometry/EulerAngles.hpp>
 #include <utilities/geometry/Transformation.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 
 using namespace openstudio;

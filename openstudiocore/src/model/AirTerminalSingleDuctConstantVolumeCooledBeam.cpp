@@ -48,7 +48,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {

@@ -32,7 +32,6 @@
 
 #include <resources.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -64,11 +63,11 @@ TEST_F(IddFixture, IddFile)
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType
     IddObjectTypeSet epIddObjectTypes, loadedIddObjectTypes, diff;
-    BOOST_FOREACH(const IddObject& iddObject,epIddFile.objects()) {
+    for (const IddObject& iddObject : epIddFile.objects()) {
       EXPECT_TRUE(iddObject.type() != IddObjectType::UserCustom);
       epIddObjectTypes.insert(iddObject.type());
     }
-    BOOST_FOREACH(const IddObject& iddObject,loadedIddFile->objects()) {
+    for (const IddObject& iddObject : loadedIddFile->objects()) {
       if (iddObject.type() == IddObjectType::UserCustom) {
         try {
           IddObjectType iddObjectType(iddObject.name());
@@ -87,7 +86,7 @@ TEST_F(IddFixture, IddFile)
                         loadedIddObjectTypes.begin(),loadedIddObjectTypes.end(),
                         std::inserter(diff,diff.begin()));
     std::stringstream ss;
-    BOOST_FOREACH(const IddObjectType& iddType,diff) {
+    for (const IddObjectType& iddType : diff) {
       ss << "  " << iddType << std::endl;
     }
     diff.clear();
@@ -97,7 +96,7 @@ TEST_F(IddFixture, IddFile)
     std::set_difference(loadedIddObjectTypes.begin(),loadedIddObjectTypes.end(),
                         epIddObjectTypes.begin(),epIddObjectTypes.end(),
                         std::inserter(diff,diff.begin()));
-    BOOST_FOREACH(const IddObjectType& iddType,diff) {
+    for (const IddObjectType& iddType : diff) {
       ss << "  " << iddType << std::endl;
     }
     LOG(Debug,"The following object types are in loadedIddFile, but are not in epIddFile: "
@@ -233,7 +232,7 @@ void testIddFile(const IddFile& iddFile)
 
 TEST_F(IddFixture, IddFile_EpAllReferencesHaveNames)
 {
-  BOOST_FOREACH(const IddObject& object, epIddFile.objects()){
+  for (const IddObject& object : epIddFile.objects()){
     if (!object.references().empty()){
       if (object.nonextensibleFields().size() == 0) {
         LOG(Debug,"IddObject " << object.name() << " has references, but no fields.");
@@ -252,7 +251,7 @@ TEST_F(IddFixture, IddFile_EpAllReferencesHaveNames)
 }
 
 TEST_F(IddFixture, IddFile_EpMinFields) {
-  BOOST_FOREACH(const IddObject& object, epIddFile.objects()) {
+  for (const IddObject& object : epIddFile.objects()) {
     if (object.properties().minFields == 0) {
       IddFieldVector fields = object.nonextensibleFields();
       unsigned setTo = 0;
@@ -264,7 +263,7 @@ TEST_F(IddFixture, IddFile_EpMinFields) {
               << "required field is " << fields[setTo].name() << ".");
       }
       fields = object.extensibleGroup();
-      BOOST_FOREACH(const IddField& field, fields) {
+      for (const IddField& field : fields) {
         if (field.properties().required) {
           LOG(Debug,"IddObject " << object.name() << " has a required extensible field.");
         }

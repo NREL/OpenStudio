@@ -161,7 +161,7 @@ bool OSItemList::itemsDraggable() const
 void OSItemList::setItemsDraggable(bool itemsDraggable)
 {
   m_itemsDraggable = itemsDraggable;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setDraggable(itemsDraggable);
   }
 }
@@ -174,7 +174,7 @@ bool OSItemList::itemsRemoveable() const
 void OSItemList::setItemsRemoveable(bool itemsRemoveable)
 {
   m_itemsRemoveable = itemsRemoveable;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setRemoveable(itemsRemoveable);
   }
 }
@@ -210,7 +210,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
 
   m_selectedItem = NULL;
   
-  BOOST_FOREACH(const OSItemId& itemId, itemIds){
+  for (const OSItemId& itemId : itemIds){
     OSItem* item = OSItem::makeItem(itemId, OSItem::LIST_ITEM);
     if (item){
       addItem(item, false);
@@ -355,7 +355,7 @@ OSItem::Type OSItemList::itemsType() const
 void OSItemList::setItemsType(OSItem::Type type)
 {
   m_type = type;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setType(type);
   }
 }

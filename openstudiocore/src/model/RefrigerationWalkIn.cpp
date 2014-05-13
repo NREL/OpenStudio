@@ -338,7 +338,7 @@ namespace detail {
   boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
     std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
     RefrigerationWalkIn refrigerationWalkIn = this->getObject<RefrigerationWalkIn>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
       RefrigerationWalkInVector refrigerationWalkIns = refrigerationSystem.walkins();
       if ( !refrigerationWalkIns.empty() && std::find(refrigerationWalkIns.begin(), refrigerationWalkIns.end(), refrigerationWalkIn) != refrigerationWalkIns.end() ) {
         return refrigerationSystem;

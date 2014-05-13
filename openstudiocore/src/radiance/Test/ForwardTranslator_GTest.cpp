@@ -43,8 +43,6 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::radiance;
@@ -68,7 +66,7 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_EQ(vertices.size(), polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 
@@ -92,7 +90,7 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_EQ(vertices.size(), polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 
@@ -124,7 +122,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_TRUE(vertices.size() < polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 
@@ -156,7 +154,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   Point3dVector polygon = ForwardTranslator::getPolygon(surface);
   EXPECT_TRUE(vertices.size() < polygon.size());
 
-  BOOST_FOREACH(const Point3d& vertex, polygon){
+  for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
 
@@ -182,7 +180,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(IlluminanceMap illuminanceMap, model.getModelObjects<IlluminanceMap>()){
+  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()){
     illuminanceMap.remove();
   } 
   
@@ -201,7 +199,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(DaylightingControl daylightingControl, model.getModelObjects<DaylightingControl>()){
+  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()){
     daylightingControl.remove();
   } 
   
@@ -220,7 +218,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(GlareSensor glareSensor, model.getModelObjects<GlareSensor>()){
+  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()){
     glareSensor.remove();
   } 
   
@@ -239,7 +237,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
 {
   Model model = exampleModel();
 
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();

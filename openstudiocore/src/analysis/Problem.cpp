@@ -68,7 +68,6 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/URLHelpers.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <sstream>
@@ -91,7 +90,7 @@ namespace detail {
       LOG_AND_THROW("Could not construct Problem because of inconsistency in chain of "
                     << "energy model types induced by workflow.");
     }
-    BOOST_FOREACH(WorkflowStep& step, m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       step.onChange();
       connectChild(step,false);
     }
@@ -109,11 +108,11 @@ namespace detail {
       LOG_AND_THROW("Could not construct Problem because of inconsistency in chain of "
                     << "energy model types induced by workflow.");
     }
-    BOOST_FOREACH(WorkflowStep& step, m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       step.onChange();
       connectChild(step,false);
     }
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       response.onChange();
       connectChild(response,false);
     }
@@ -132,7 +131,7 @@ namespace detail {
       LOG_AND_THROW("Could not construct Problem because of inconsistency in chain of "
                     << "energy model types induced by workflow.");
     }
-    BOOST_FOREACH(WorkflowStep& step, m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       step.onChange();
       connectChild(step,false);
       if (step.isInputVariable()) {
@@ -140,7 +139,7 @@ namespace detail {
         OS_ASSERT(step.inputVariable().parent().get() == step);
       }
     }
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       response.onChange();
       connectChild(response,false);
     }
@@ -157,7 +156,7 @@ namespace detail {
       LOG_AND_THROW("Could not construct Problem because of inconsistency in chain of "
                     << "energy model types induced by workflow.");
     }
-    BOOST_FOREACH(WorkflowStep& step, m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       step.onChange();
       connectChild(step,false);
       if (step.isInputVariable()) {
@@ -178,10 +177,10 @@ namespace detail {
       m_workflow(workflow),
       m_responses(responses)
   {
-    BOOST_FOREACH(WorkflowStep& step, m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       connectChild(step,false);
     }
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       connectChild(response,false);
     }
   }
@@ -189,11 +188,11 @@ namespace detail {
   Problem_Impl::Problem_Impl(const Problem_Impl &other)
     : AnalysisObject_Impl(other)
   {
-    BOOST_FOREACH(const WorkflowStep& step,other.workflow()) {
+    for (const WorkflowStep& step : other.workflow()) {
       m_workflow.push_back(step.clone().cast<WorkflowStep>());
       connectChild(m_workflow.back(),false);
     }
-    BOOST_FOREACH(const Function& response,other.responses()) {
+    for (const Function& response : other.responses()) {
       m_responses.push_back(response.clone().cast<Function>());
       connectChild(m_responses.back(),false);
     }
@@ -203,11 +202,11 @@ namespace detail {
     boost::shared_ptr<Problem_Impl> impl(new Problem_Impl(*this));
     Problem result(impl);
     WorkflowStepVector workflow = result.workflow();
-    BOOST_FOREACH(WorkflowStep& step,workflow) {
+    for (WorkflowStep& step : workflow) {
       step.setParent(result);
     }
     FunctionVector responses = result.responses();
-    BOOST_FOREACH(Function& response,responses) {
+    for (Function& response : responses) {
       response.setParent(result);
     }
     return result;
@@ -222,7 +221,7 @@ namespace detail {
   {
     OptionalInt result;
     int index = 0;
-    BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+    for (const WorkflowStep& step : workflow()) {
       if (step.isWorkItem() && (step.workItemType() == jobType)) {
         result = index;
         break;
@@ -240,7 +239,7 @@ namespace detail {
     InputVariableVector result;
     Problem copyOfThis = getPublicObject<Problem>(); // for debug asserts below
     int i = 0;
-    BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+    for (const WorkflowStep& step : workflow()) {
       if (step.isInputVariable()) {
         result.push_back(step.inputVariable());
         // debug asserts
@@ -261,7 +260,7 @@ namespace detail {
   boost::optional<int> Problem_Impl::getVariableIndexByUUID(const UUID& uuid) const {
     OptionalInt result;
     int index = 0;
-    BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+    for (const WorkflowStep& step : workflow()) {
       if (step.isInputVariable()) {
         if (step.inputVariable().uuid() == uuid) {
           result = index;
@@ -275,7 +274,7 @@ namespace detail {
 
   boost::optional<InputVariable> Problem_Impl::getVariableByUUID(const UUID& uuid) const {
     OptionalInputVariable result;
-    BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+    for (const WorkflowStep& step : workflow()) {
       if (step.isInputVariable()) {
         InputVariable variable = step.inputVariable();
         if (variable.uuid() == uuid) {
@@ -308,7 +307,7 @@ namespace detail {
     DiscreteVariableVector dvars = subsetCastVector<DiscreteVariable>(vars);
 
     int result(0);
-    BOOST_FOREACH(const DiscreteVariable& dvar,dvars) {
+    for (const DiscreteVariable& dvar : dvars) {
       if (dvar.numValidValues(true) < 2) {
         ++result;
       }
@@ -322,7 +321,7 @@ namespace detail {
   }
 
   bool Problem_Impl::allVariablesAreContinuousOrStaticTransformations() const {
-    BOOST_FOREACH(const InputVariable& variable,variables()) {
+    for (const InputVariable& variable : variables()) {
       if (OptionalDiscreteVariable oDiscrete = variable.optionalCast<DiscreteVariable>()) {
         if (oDiscrete->numValidValues(true) > 1) {
           return false;
@@ -333,7 +332,7 @@ namespace detail {
   }
 
   bool Problem_Impl::allVariablesAreDiscrete() const {
-    BOOST_FOREACH(const InputVariable& variable,variables()) {
+    for (const InputVariable& variable : variables()) {
       OptionalDiscreteVariable oDiscrete = variable.optionalCast<DiscreteVariable>();
       if (!oDiscrete) { return false; }
     }
@@ -346,7 +345,7 @@ namespace detail {
 
   boost::optional<Function> Problem_Impl::getResponseByUUID(const UUID& uuid) const {
     OptionalFunction result;
-    BOOST_FOREACH(const Function& response, responses()) {
+    for (const Function& response : responses()) {
       if (response.uuid() == uuid) {
         result = response;
         break;
@@ -361,7 +360,7 @@ namespace detail {
 
   boost::optional<FileReferenceType> Problem_Impl::inputFileType() const {
     OptionalFileReferenceType result;
-    BOOST_FOREACH(const WorkflowStep& step, workflow()) {
+    for (const WorkflowStep& step : workflow()) {
       result = step.inputFileType();
       if (result) {
         break;
@@ -391,7 +390,7 @@ namespace detail {
     }
 
     unsigned i = 0;
-    BOOST_FOREACH(const InputVariable& myVariable, myVariables) {
+    for (const InputVariable& myVariable : myVariables) {
       if (!myVariable.isValid(variableValues[i])) {
         LOG(Warn,"DataPoint is not valid for Problem '" << name() << "', because the value "
             << variableValues[i].toString().toStdString() << " is not valid for Variable '"
@@ -618,7 +617,7 @@ namespace detail {
     OptionalInt result;
     int intermediate(0);
     InputVariableVector variables = this->variables();
-    BOOST_FOREACH(const InputVariable& variable, variables) {
+    for (const InputVariable& variable : variables) {
       OptionalDiscreteVariable discreteVariable = variable.optionalCast<DiscreteVariable>();
       if (!discreteVariable) {
         return result;
@@ -678,7 +677,7 @@ namespace detail {
     }
 
     m_workflow = candidates;
-    // mark variables with changed indicies as dirty
+    // mark variables with changed indices as dirty
     for (int i = index, n = int(m_workflow.size()); i < n; ++i) {
       m_workflow[i].onChange();
     }
@@ -767,11 +766,11 @@ namespace detail {
     }
 
     int pNumVars = numVariables();
-    BOOST_FOREACH(WorkflowStep& step,m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       disconnectChild(step);
     }
     m_workflow = workflow;
-    BOOST_FOREACH(WorkflowStep& step,m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       step.onChange();
       connectChild(step,true);
     }
@@ -787,7 +786,7 @@ namespace detail {
 
   void Problem_Impl::clearWorkflow() {
     int pNumVars = numVariables();
-    BOOST_FOREACH(WorkflowStep& step,m_workflow) {
+    for (WorkflowStep& step : m_workflow) {
       disconnectChild(step);
     }
     m_workflow.clear();
@@ -863,11 +862,11 @@ namespace detail {
   }
 
   void Problem_Impl::setResponseFunctions(const std::vector<Function>& responses) {
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       disconnectChild(response);
     }
     m_responses = responses;
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       response.onChange();
       connectChild(response,true);
     }
@@ -875,7 +874,7 @@ namespace detail {
   }
 
   void Problem_Impl::clearResponseFunctions() {
-    BOOST_FOREACH(Function& response,m_responses) {
+    for (Function& response : m_responses) {
       disconnectChild(response);
     }
     m_responses.clear();
@@ -891,7 +890,7 @@ namespace detail {
     WorkflowStepVector steps = workflow();
     OptionalRubyMeasure compoundRubyMeasure;
     std::vector<RubyContinuousVariable> compoundVariables;
-    BOOST_FOREACH(WorkflowStep& step, steps) {
+    for (WorkflowStep& step : steps) {
       // see if should clear compound variable
       if (compoundRubyMeasure) {
         // see if should clear
@@ -922,7 +921,7 @@ namespace detail {
         }
         else if (OptionalMeasureGroup mg = variable.optionalCast<MeasureGroup>()) {
           MeasureVector dps = mg->measures(false);
-          BOOST_FOREACH(Measure& dp,dps) {
+          for (Measure& dp : dps) {
             if (OptionalRubyMeasure rm = dp.optionalCast<RubyMeasure>()) {
               if (rm->usesBCLMeasure() && (rm->measureUUID() == measureUUID)) {
                 bool ok(true);
@@ -1075,7 +1074,7 @@ namespace detail {
       for (int i = 0; i < n_ddvs; ++i) {
         DiscreteVariable dvar = vars[ddvs[i]].cast<DiscreteVariable>();
         ss << "           ";
-        BOOST_FOREACH(int j, dvar.validValues(true)) {
+        for (int j : dvar.validValues(true)) {
           ss << " " << j;
         }
         ss << std::endl;
@@ -1136,13 +1135,13 @@ namespace detail {
           }
         }
         ss << "          " << string1 << std::endl << "           ";
-        BOOST_FOREACH(const OptionalAttribute& value, values1) {
+        for (const OptionalAttribute& value : values1) {
           if (value){
             ss << " " << value->toString();
           }
         }
         ss << std::endl << "          " << string2 << std::endl << "           ";
-        BOOST_FOREACH(const OptionalAttribute& value, values2) {
+        for (const OptionalAttribute& value : values2) {
           if (value){
             ss << " " << value->toString();
           }
@@ -1150,7 +1149,7 @@ namespace detail {
         ss << std::endl;
         if (anyLower) {
           ss << "          lower_bounds" << std::endl << "           ";
-          BOOST_FOREACH(const OptionalAttribute& value, lowerBounds) {
+          for (const OptionalAttribute& value : lowerBounds) {
             if (value){
               ss << " " << value->toString();
             }
@@ -1162,7 +1161,7 @@ namespace detail {
         }
         if (anyUpper) {
           ss << "          upper_bounds" << std::endl << "           ";
-          BOOST_FOREACH(const OptionalAttribute& value, upperBounds) {
+          for (const OptionalAttribute& value : upperBounds) {
             if (value){
               ss << " " << value->toString();
             }
@@ -1198,14 +1197,14 @@ namespace detail {
           }
         }
         ss << "          abscissas" << std::endl << "           ";
-        BOOST_FOREACH(const OptionalAttribute& value, abscissas) {
+        for (const OptionalAttribute& value : abscissas) {
           std::vector<double> attVector = getDoubleVectorFromAttribute(value.get());
           for (std::vector<double>::iterator i = attVector.begin(); i != attVector.end(); ++i) {
             ss << *i << " ";
           }
         }
         ss << std::endl << "          " << string1 << std::endl << "           ";
-        BOOST_FOREACH(const OptionalAttribute& value, values1) {
+        for (const OptionalAttribute& value : values1) {
           std::vector<double> attVector = getDoubleVectorFromAttribute(value.get());
           for (std::vector<double>::iterator i = attVector.begin(); i != attVector.end(); ++i) {
             ss << *i << " ";
@@ -1214,7 +1213,7 @@ namespace detail {
         ss << std::endl;
         if (!numPairs.empty()) {
            ss << "          num_pairs" << std::endl << "           ";
-          BOOST_FOREACH(const OptionalAttribute& value, numPairs) {
+          for (const OptionalAttribute& value : numPairs) {
             if (value){
               ss << " " << value->toString();
             }
@@ -1223,7 +1222,7 @@ namespace detail {
         }
       }
       else {
-        BOOST_FOREACH(const AttributeDescription& attDesc, udescs[0].attributeDescriptions()) {
+        for (const AttributeDescription& attDesc : udescs[0].attributeDescriptions()) {
           std::vector<OptionalAttribute> values(n_uvs,OptionalAttribute());
           bool atLeastOne = false;
           for (int i = 0; i < n_uvs; ++i) {
@@ -1234,7 +1233,7 @@ namespace detail {
           }
           if (atLeastOne) {
             ss << "          " << attDesc.name << std::endl << "           ";
-            BOOST_FOREACH(const OptionalAttribute& value, values) {
+            for (const OptionalAttribute& value : values) {
               if (value) {
                 if (value.get().valueType() == AttributeValueType::AttributeVector) {
                   ss << " ";
@@ -1408,7 +1407,7 @@ namespace detail {
     OptionalRubyMeasure compoundRubyMeasure;
     OptionalRubyMeasure originalCompoundRubyMeasure;
     unsigned i = 0;
-    BOOST_FOREACH(const WorkflowStep& step, workflow()) {
+    for (const WorkflowStep& step : workflow()) {
 
       if (compoundRubyMeasure) {
 
@@ -1481,7 +1480,7 @@ namespace detail {
 
     typedef std::pair<runmanager::ErrorType, std::string> Err;
 
-    BOOST_FOREACH(const Err& error, jobErrors.allErrors) {
+    for (const Err& error : jobErrors.allErrors) {
       if (error.first == runmanager::ErrorType::Error)
       {
         LOG(Error, error.first.valueName() << ": " << error.second);
@@ -1524,7 +1523,7 @@ namespace detail {
 
     try {
       FileReferenceVector xmlOutputData;
-      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+      for (const runmanager::FileInfo& file : allFiles.getAllByExtension("xml").files()) {
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       dataPoint.setXmlOutputData(xmlOutputData);
@@ -1534,7 +1533,7 @@ namespace detail {
     // Determine response function values
     try {
       DoubleVector responseValues;
-      BOOST_FOREACH(const Function& response,responses()) {
+      for (const Function& response : responses()) {
         responseValues.push_back(response.getValue(dataPoint));
       }
       dataPoint.setResponseValues(responseValues);
@@ -1727,7 +1726,7 @@ namespace detail {
     std::stringstream ss;
     if (numResponses() > 0) {
       int fnn = 1;
-      BOOST_FOREACH(double value,dataPoint.responseValues()) {
+      for (double value : dataPoint.responseValues()) {
         ss << toString(value) << " response_fn_" << fnn << std::endl;
         ++fnn;
       }
@@ -1830,7 +1829,7 @@ namespace detail {
     QVariantList variablesList;
 
     // create workflow list
-    BOOST_FOREACH(const WorkflowStep& step, workflow()) {
+    for (const WorkflowStep& step : workflow()) {
 
       if (compoundRubyMeasure) {
         // see if chain is still going
@@ -1890,7 +1889,7 @@ namespace detail {
     if (!responses().empty()) {
       QVariantList responsesList;
       index = 0;
-      Q_FOREACH(const Function& response,responses()) {
+      for (const Function& response : responses()) {
         QVariantMap responseMap = response.toVariant().toMap();
         responseMap["response_index"] = QVariant(index);
         responsesList.push_back(responseMap);
@@ -1925,7 +1924,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
 
     std::vector<std::pair<int,WorkflowStep> > workflowIntermediate;
-    Q_FOREACH(const QVariant& workflowListItem, map["workflow"].toList()) {
+    for (const QVariant& workflowListItem : map["workflow"].toList()) {
       QVariantMap stepMap = workflowListItem.toMap();
       std::string workflowStepType = stepMap["workflow_step_type"].toString().toStdString();
 
@@ -1937,7 +1936,7 @@ namespace detail {
               stepMap["variables"].toList(),
               "variable_index",
               boost::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
-        Q_FOREACH(const InputVariable var,vars) {
+        for (const InputVariable& var : vars) {
           workflowIntermediate.push_back(std::make_pair(index,WorkflowStep(var,boost::optional<runmanager::WorkItem>())));
           ++index;
         }
@@ -1981,7 +1980,7 @@ namespace detail {
   {
     // workflow steps
     WorkflowStepVector steps = workflow();
-    BOOST_FOREACH(WorkflowStep& step,steps) {
+    for (WorkflowStep& step : steps) {
       step.getImpl<detail::WorkflowStep_Impl>()->updateInputPathData(originalBase,newBase);
     }
 
@@ -1991,7 +1990,7 @@ namespace detail {
     // input variables, and any of those used by a response should also be in workflow().
     //
     FunctionVector functions = responses();
-    BOOST_FOREACH(Function& func,functions) {
+    for (Function& func : functions) {
       func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
@@ -2021,7 +2020,7 @@ namespace detail {
       const runmanager::Workflow& simulationWorkflow) const
   {
     WorkflowStepVector workflow;
-    BOOST_FOREACH(const Variable& variable,variables) {
+    for (const Variable& variable : variables) {
       OptionalInputVariable oiv = variable.optionalCast<InputVariable>();
       if (!oiv) {
         LOG_AND_THROW("The primary variable chain must consist entirely of InputVariables.");
@@ -2046,7 +2045,7 @@ namespace detail {
     }
 
     OptionalRubyMeasure compoundRubyMeasure;
-    BOOST_FOREACH(const WorkflowStep& step, workflow) {
+    for (const WorkflowStep& step : workflow) {
 
       if (compoundRubyMeasure) {
         // see if chain is still going
@@ -2166,7 +2165,7 @@ namespace detail {
       // trim newArguments down to those not called out by variables
       OSArgumentVector argsSubsetForMeasure = newArguments;
       int index(0);
-      BOOST_FOREACH(const RubyContinuousVariable& var,variables) {
+      for (const RubyContinuousVariable& var : variables) {
         NameFinder<OSArgument> finder(var.argument().name(),true);
         OSArgumentVector::iterator it = std::find_if(argsSubsetForMeasure.begin(),
                                                      argsSubsetForMeasure.end(),
@@ -2278,7 +2277,7 @@ Problem::Problem(const std::string& name,
         new detail::Problem_Impl(name,workflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
-  BOOST_FOREACH(const WorkflowStep& step, workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
 }
@@ -2290,10 +2289,10 @@ Problem::Problem(const std::string& name,
         new detail::Problem_Impl(name,workflow,responses)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
-  BOOST_FOREACH(const WorkflowStep& step, workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }
@@ -2306,10 +2305,10 @@ Problem::Problem(const std::string& name,
         new detail::Problem_Impl(name,variables,responses,simulationWorkflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
-  BOOST_FOREACH(const WorkflowStep& step, workflow()) {
+  for (const WorkflowStep& step : workflow()) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }
@@ -2321,7 +2320,7 @@ Problem::Problem(const std::string& name,
         new detail::Problem_Impl(name,variables,simulationWorkflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
-  BOOST_FOREACH(const WorkflowStep& step, workflow()) {
+  for (const WorkflowStep& step : workflow()) {
     step.setParent(copyOfThis);
   }
 }
@@ -2343,10 +2342,10 @@ Problem::Problem(const UUID& uuid,
                                  responses)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
-  BOOST_FOREACH(const WorkflowStep& step, workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }

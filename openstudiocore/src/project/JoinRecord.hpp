@@ -29,7 +29,6 @@
 #include <utilities/core/UUID.hpp>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/foreach.hpp>
 
 class QSqlQuery;
 
@@ -169,7 +168,7 @@ class PROJECT_API JoinRecord : public Record{
       toRemove.push_back(object);
     }
 
-    BOOST_FOREACH(T object, toRemove){
+    for (T object : toRemove){
       result = projectDatabase.removeRecord(object);
     }
 
@@ -193,7 +192,7 @@ class PROJECT_API JoinRecord : public Record{
       toRemove.push_back(object);
     }
 
-    BOOST_FOREACH(T object, toRemove){
+    for (T object : toRemove){
       result = projectDatabase.removeRecord(object);
     }
 

@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     LightsDefinition lightsDefinition = this->lightsDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, lightsDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : lightsDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 

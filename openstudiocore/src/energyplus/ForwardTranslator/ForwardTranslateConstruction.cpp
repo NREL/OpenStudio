@@ -44,7 +44,7 @@ boost::optional<IdfObject> ForwardTranslator::translateConstruction( Constructio
   IdfObject construction( openstudio::IddObjectType::Construction );
   m_idfObjects.push_back(construction);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

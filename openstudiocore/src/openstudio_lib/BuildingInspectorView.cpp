@@ -491,7 +491,7 @@ void BuildingInspectorView::populateStandardsBuildingTypes()
   if (m_building){
     m_standardsBuildingTypeComboBox->addItem("");
     std::vector<std::string> suggestedStandardsBuildingTypes = m_building->suggestedStandardsBuildingTypes();
-    Q_FOREACH(const std::string& standardsBuildingType, suggestedStandardsBuildingTypes){
+    for (const std::string& standardsBuildingType : suggestedStandardsBuildingTypes) {
       m_standardsBuildingTypeComboBox->addItem(toQString(standardsBuildingType));
     }
     boost::optional<std::string> standardsBuildingType = m_building->standardsBuildingType();

@@ -504,7 +504,7 @@ namespace detail{
     if (oSqlFile && runSimulationforSizingPeriods()) {
       SizingPeriodVector sizingPeriods = model().getModelObjects<SizingPeriod>();
       StringVector environmentPeriods = oSqlFile->availableEnvPeriods();
-      BOOST_FOREACH(const SizingPeriod& sp, sizingPeriods) {
+      for (const SizingPeriod& sp : sizingPeriods) {
         std::string spName = sp.name().get();
         if (std::find(environmentPeriods.begin(),environmentPeriods.end(),spName) !=
             environmentPeriods.end())
@@ -525,7 +525,7 @@ namespace detail{
     if (oSqlFile && runSimulationforWeatherFileRunPeriods()) {
       RunPeriodVector runPeriods = this->runPeriods();
       StringVector environmentPeriods = oSqlFile->availableEnvPeriods();
-      BOOST_FOREACH(const RunPeriod& runPeriod,runPeriods) {
+      for (const RunPeriod& runPeriod : runPeriods) {
         if (runPeriod.isAnnual() && !runPeriod.isRepeated()) {
           std::string rpName = runPeriod.name().get();
           StringVector::const_iterator it = std::find_if(environmentPeriods.begin(),environmentPeriods.end(),boost::bind(istringEqual,rpName,_1));
@@ -558,7 +558,7 @@ namespace detail{
     if (oSqlFile && runSimulationforWeatherFileRunPeriods()) {
       RunPeriodVector runPeriods = this->runPeriods();
       StringVector environmentPeriods = oSqlFile->availableEnvPeriods();
-      BOOST_FOREACH(const RunPeriod& runPeriod,runPeriods) {
+      for (const RunPeriod& runPeriod : runPeriods) {
         if (runPeriod.isPartialYear()) {
           std::string rpName = runPeriod.name().get();
           StringVector::const_iterator it = std::find(environmentPeriods.begin(),environmentPeriods.end(),rpName);
@@ -577,7 +577,7 @@ namespace detail{
     if (oSqlFile && runSimulationforWeatherFileRunPeriods()) {
       RunPeriodVector runPeriods = this->runPeriods();
       StringVector environmentPeriods = oSqlFile->availableEnvPeriods();
-      BOOST_FOREACH(const RunPeriod& runPeriod,runPeriods) {
+      for (const RunPeriod& runPeriod : runPeriods) {
         if (runPeriod.isRepeated()) {
           std::string rpName = runPeriod.name().get();
           StringVector::const_iterator it = std::find(environmentPeriods.begin(),environmentPeriods.end(),rpName);

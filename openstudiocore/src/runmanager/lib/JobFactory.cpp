@@ -458,7 +458,7 @@ namespace runmanager {
     if (!scriptPath.empty())
     {
       openstudio::runmanager::FileInfo fi(scriptPath,"rb");
-      BOOST_FOREACH(const PathPair& reqFile,t_builder.requiredFiles()) {
+      for (const PathPair& reqFile : t_builder.requiredFiles()) {
         fi.addRequiredFile(reqFile.first,reqFile.second);
       }
       files.append(fi);

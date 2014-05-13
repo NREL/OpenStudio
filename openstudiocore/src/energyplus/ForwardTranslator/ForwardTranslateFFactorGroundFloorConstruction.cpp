@@ -38,7 +38,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFFactorGroundFloorConstru
   IdfObject idfObject( openstudio::IddObjectType::Construction_FfactorGroundFloor);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

@@ -75,7 +75,7 @@ void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio
         std::vector<OSItemId> ids = this->makeVector();
         emit itemIds(ids);
 
-        BOOST_FOREACH(const OSItemId& id, ids){
+        for (const OSItemId& id : ids){
           if (id.itemId() == impl->handle().toString()){
             emit selectedItemId(id);
             break;
@@ -110,13 +110,13 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
   // sort by name
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
 
-  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
       if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()){
         if(utilityBill.get().fuelType() == m_fuelType){
           result.push_back(modelObjectToItemId(modelObject, false));
-          // becasue there is no more than 1 utility bill per fuel type...
+          // because there is no more than 1 utility bill per fuel type...
           // TODO break;
         }
       }

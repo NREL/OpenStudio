@@ -29,8 +29,6 @@
 
 #include <resources.hxx>
 
-#include <boost/foreach.hpp>
-
 using openstudio::SqlFile;
 using openstudio::SqlFileTimeSeriesQuery;
 using openstudio::SqlFileTimeSeriesQueryVector;
@@ -52,17 +50,17 @@ void environmentPeriodGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVe
 void reportingFrequencyGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& allQueries) {
   // list of reporting frequencies from file should match .valueDescriptions() from vector
   StringSet rfStrs;
-  BOOST_FOREACH(const std::string& envPeriod,file.availableEnvPeriods()) {
+  for (const std::string& envPeriod : file.availableEnvPeriods()) {
     StringVector rfStrsForEnv = file.availableReportingFrequencies(envPeriod);
     rfStrs.insert(rfStrsForEnv.begin(),rfStrsForEnv.end());
   }
   ReportingFrequencySet rfSetFromVector = reportingFrequencies(allQueries);
   StringSet rfStrsFromVector;
-  BOOST_FOREACH(const ReportingFrequency& rf,rfSetFromVector) {
+  for (const ReportingFrequency& rf : rfSetFromVector) {
     rfStrsFromVector.insert(rf.valueDescription());
   }
   EXPECT_TRUE(rfStrs.size() >= rfStrsFromVector.size());
-  BOOST_FOREACH(const std::string& rfStr,rfStrsFromVector) {
+  for (const std::string& rfStr : rfStrsFromVector) {
     EXPECT_TRUE(rfStrs.find(rfStr) != rfStrs.end());
   }
 }
@@ -77,7 +75,7 @@ void timeSeriesGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& a
 
 void keyValuesGeneralTests(SqlFile& file, const SqlFileTimeSeriesQueryVector& allQueries) {
   // key value request should not be explicit in any of allQueries
-  BOOST_FOREACH(const SqlFileTimeSeriesQuery& q,allQueries) {
+  for (const SqlFileTimeSeriesQuery& q : allQueries) {
     EXPECT_FALSE(q.keyValues());
   }
 } 

@@ -32,8 +32,6 @@
 #include <model/Construction.hpp>
 #include <model/Construction_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 using namespace openstudio;
 

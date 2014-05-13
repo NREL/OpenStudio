@@ -39,8 +39,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 using std::vector;
 
 namespace openstudio {
@@ -83,7 +81,7 @@ namespace detail {
     std::set<Handle> adjacentPlanarSurfacesToSkip;
 
     double result = 0.0;
-    BOOST_FOREACH(const PlanarSurface& planarSurface, model().getModelObjects<PlanarSurface>()){
+    for (const PlanarSurface& planarSurface : model().getModelObjects<PlanarSurface>()){
 
       // if we have already processed this surface as an adjacent surface
       if (std::find(adjacentPlanarSurfacesToSkip.begin(), adjacentPlanarSurfacesToSkip.end(), planarSurface.handle()) != adjacentPlanarSurfacesToSkip.end()){

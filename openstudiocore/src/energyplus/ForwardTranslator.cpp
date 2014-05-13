@@ -115,7 +115,7 @@ std::vector<LogMessage> ForwardTranslator::warnings() const
 {
   std::vector<LogMessage> result;
 
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() == Warn){
       result.push_back(logMessage);
     }
@@ -128,7 +128,7 @@ std::vector<LogMessage> ForwardTranslator::errors() const
 {
   std::vector<LogMessage> result;
 
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() > Warn){
       result.push_back(logMessage);
     }
@@ -167,7 +167,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   resolveMatchedSubSurfaceConstructionConflicts(model);
 
   // check for spaces not in a thermal zone
-  BOOST_FOREACH(Space space, model.getModelObjects<Space>()){
+  for (Space space : model.getModelObjects<Space>()){
     if (!space.thermalZone()){
       LOG(Warn, "Space " << space.name().get() << " is not associated with a ThermalZone, it will not be translated.");
       space.remove();
@@ -176,13 +176,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
     thermalZone.combineSpaces();
   }
 
   // remove unused space types
   std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  BOOST_FOREACH(SpaceType spaceType, spaceTypes){
+  for (SpaceType spaceType : spaceTypes){
     std::vector<Space> spaces = spaceType.spaces();
     if (spaces.empty()){
       LOG(Info, "SpaceType " << spaceType.name().get() << " is not referenced by any space, it will not be translated.");
@@ -199,12 +199,12 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   //a new instance of them for every space that that spacetype points to then delete the one
   //that pointed to a spacetype
   std::vector<OtherEquipment> otherEquipments = model.getModelObjects<OtherEquipment>();
-  BOOST_FOREACH(OtherEquipment otherEquipment, otherEquipments){
+  for (OtherEquipment otherEquipment : otherEquipments){
     boost::optional<SpaceType> spaceTypeOfOtherEquipment = otherEquipment.spaceType();
     if (spaceTypeOfOtherEquipment){
       //loop through the spaces in this space type and make a new instance for each one
       std::vector<Space> spaces = spaceTypeOfOtherEquipment.get().spaces();      
-      BOOST_FOREACH(Space space, spaces){      
+      for (Space space : spaces){      
         OtherEquipment otherEquipmentForSpace = otherEquipment.clone().cast<OtherEquipment>();
         otherEquipmentForSpace.setSpace(space);
         //make a nice name for the thing
@@ -221,7 +221,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
     // we will not warn users because these objects are not exposed in the GUI
-    BOOST_FOREACH(model::RunPeriodControlSpecialDays holiday, model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
+    for (model::RunPeriodControlSpecialDays holiday : model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
       holiday.remove();
     }
   }
@@ -288,7 +288,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
     // create meters for utility bill objects
     std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
-    BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
+    for (UtilityBill utilityBill : utilityBills){
       // these meters and variables will be translated later
       Meter consumptionMeter = utilityBill.consumptionMeter();
       boost::optional<Meter> peakDemandMeter = utilityBill.peakDemandMeter();
@@ -301,32 +301,32 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // get air loops in sorted order
   std::vector<AirLoopHVAC> airLoops = model.getModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(AirLoopHVAC airLoop, airLoops){
+  for (AirLoopHVAC airLoop : airLoops){
     translateAndMapModelObject(airLoop);
   }
 
   // get AirConditionerVariableRefrigerantFlow objects in sorted order
   std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
   std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(AirConditionerVariableRefrigerantFlow vrf, vrfs){
+  for (AirConditionerVariableRefrigerantFlow vrf : vrfs){
     translateAndMapModelObject(vrf);
   }
 
   // get plant loops in sorted order
   std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(PlantLoop plantLoop, plantLoops){
+  for (PlantLoop plantLoop : plantLoops){
     translateAndMapModelObject(plantLoop);
   }
 
   // now loop over all objects
-  BOOST_FOREACH(const IddObjectType& iddObjectType, iddObjectsToTranslate()){
+  for (const IddObjectType& iddObjectType : iddObjectsToTranslate()){
 
     // get objects by type in sorted order
     std::vector<WorkspaceObject> objects = model.getObjectsByType(iddObjectType);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
+    for (const WorkspaceObject& workspaceObject : objects){
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       translateAndMapModelObject(modelObject);
     }
@@ -1918,13 +1918,13 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
-  BOOST_FOREACH(const IddObjectType& iddObjectType, iddObjectTypes){
+  for (const IddObjectType& iddObjectType : iddObjectTypes){
     
     // get objects by type in sorted order
     std::vector<WorkspaceObject> objects = model.getObjectsByType(iddObjectType);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
+    for (const WorkspaceObject& workspaceObject : objects){
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
 
@@ -1947,7 +1947,7 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
   // loop over schedule type limits
   std::vector<WorkspaceObject> objects = model.getObjectsByType(IddObjectType::OS_ScheduleTypeLimits);
   std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
+  for (const WorkspaceObject& workspaceObject : objects){
     model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
     translateAndMapModelObject(modelObject);
   }
@@ -1963,13 +1963,13 @@ void ForwardTranslator::translateSchedules(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_FixedInterval);
   iddObjectTypes.push_back(IddObjectType::OS_Schedule_VariableInterval);
 
-  BOOST_FOREACH(const IddObjectType& iddObjectType, iddObjectTypes){
+  for (const IddObjectType& iddObjectType : iddObjectTypes){
     
     // get objects by type in sorted order
     objects = model.getObjectsByType(iddObjectType);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject, objects){
+    for (const WorkspaceObject& workspaceObject : objects){
       model::ModelObject modelObject = workspaceObject.cast<ModelObject>();
       boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
 
@@ -2141,7 +2141,7 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
   std::set<Handle> processedSurfaces;
 
   model::SurfaceVector surfaces = model.getModelObjects<model::Surface>();
-  BOOST_FOREACH(model::Surface surface, surfaces){
+  for (model::Surface surface : surfaces){
 
     if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()){
       continue;
@@ -2288,7 +2288,7 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
   std::set<Handle> processedSubSurfaces;
 
   model::SubSurfaceVector subSurfaces = model.getModelObjects<model::SubSurface>();
-  BOOST_FOREACH(model::SubSurface subSurface, subSurfaces){
+  for (model::SubSurface subSurface : subSurfaces){
 
     if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()){
       continue;
@@ -2453,7 +2453,7 @@ void ForwardTranslator::createStandardOutputRequests()
 
   // ensure at least one life cycle cost exists to prevent crash in E+ 8
   unsigned numCosts = 0;
-  BOOST_FOREACH(const IdfObject& object, m_idfObjects){
+  for (const IdfObject& object : m_idfObjects){
     if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost){
       numCosts += 1;
     }else if (object.iddObject().type() == openstudio::IddObjectType::LifeCycleCost_RecurringCosts){

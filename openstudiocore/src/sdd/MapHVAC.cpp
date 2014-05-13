@@ -2810,7 +2810,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
     BoundingBox pointBox;
     pointBox.addPoint(Point3d(x,y,z));
-    BOOST_FOREACH(model::Space space, spaces){
+    for (model::Space space : spaces){
       BoundingBox boundingBox = space.boundingBox();
       if (boundingBox.intersects(pointBox)){
         daylightingControl1->setSpace(space);
@@ -2891,7 +2891,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
       BoundingBox pointBox;
       pointBox.addPoint(Point3d(x,y,z));
-      BOOST_FOREACH(model::Space space, spaces){
+      for (model::Space space : spaces){
         BoundingBox boundingBox = space.boundingBox();
         if (boundingBox.intersects(pointBox)){
           daylightingControl2->setSpace(space);

@@ -29,8 +29,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace ruleset {
 
@@ -250,7 +248,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   bool result(true);
   std::stringstream ss;
   AttributeVector argumentValueAttributes;
-  BOOST_FOREACH(const OSArgument& script_argument,script_arguments) {
+  for (const OSArgument& script_argument : script_arguments) {
     OSArgumentMap::const_iterator it = user_arguments.find(script_argument.name());
     if (it == user_arguments.end()) {
       // script_argument is not in user_arguments
@@ -386,7 +384,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   }
 
   if (result) {
-    BOOST_FOREACH(const Attribute& attribute,argumentValueAttributes) {
+    for (const Attribute& attribute : argumentValueAttributes) {
       registerAttribute(attribute);
     }
   }

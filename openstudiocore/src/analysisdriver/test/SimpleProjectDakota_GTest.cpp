@@ -68,8 +68,6 @@
 #include <OpenStudio.hxx>
 #include <resources.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::ruleset;

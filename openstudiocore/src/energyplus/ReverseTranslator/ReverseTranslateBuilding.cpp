@@ -29,8 +29,6 @@
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -45,11 +43,11 @@ OptionalModelObject ReverseTranslator::translateBuilding( const WorkspaceObject 
   }
 
   // ensure that site and simulation control have been mapped
-  BOOST_FOREACH(const WorkspaceObject& siteObject, m_workspace.getObjectsByType(IddObjectType::Site_Location)){
+  for (const WorkspaceObject& siteObject : m_workspace.getObjectsByType(IddObjectType::Site_Location)){
     translateAndMapWorkspaceObject(siteObject);
   }
 
-  BOOST_FOREACH(const WorkspaceObject& simControlObject, m_workspace.getObjectsByType(IddObjectType::SimulationControl)){
+  for (const WorkspaceObject& simControlObject : m_workspace.getObjectsByType(IddObjectType::SimulationControl)){
     translateAndMapWorkspaceObject(simControlObject);
   }
 

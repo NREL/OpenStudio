@@ -26,7 +26,6 @@
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/bind.hpp>
 
 #include <QDomDocument>

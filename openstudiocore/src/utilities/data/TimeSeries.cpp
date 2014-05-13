@@ -23,8 +23,6 @@
 #include <exception>
 #include <set>
 
-#include <boost/foreach.hpp>
-
 using namespace std;
 using namespace boost;
 
@@ -567,7 +565,7 @@ namespace openstudio{
         // compute value at each date time
         Vector values(dateTimesSet.size());
         unsigned valueIndex = 0;
-        BOOST_FOREACH(const DateTime& dt, dateTimes){
+        for (const DateTime& dt : dateTimes){
           values[valueIndex] = value(dt) + other.value(dt);
 
           LOG(Debug, "At '" << dt << "' " << value(dt) << " + " << other.value(dt) << " = " << values[valueIndex]);
@@ -607,7 +605,7 @@ namespace openstudio{
         // compute value at each date time
         Vector values(dateTimesSet.size());
         unsigned valueIndex = 0;
-        BOOST_FOREACH(const DateTime& dt, dateTimes){
+        for (const DateTime& dt : dateTimes){
           values[valueIndex] = value(dt) - other.value(dt);
 
           LOG(Debug, "At '" << dt << "' " << value(dt) << " - " << other.value(dt) << " = " << values[valueIndex]);
@@ -804,7 +802,7 @@ namespace openstudio{
   TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector) {
     TimeSeries result;
     bool first = true;
-    BOOST_FOREACH(const TimeSeries& ts,timeSeriesVector) {
+    for (const TimeSeries& ts : timeSeriesVector) {
       if (first) { result = ts; }
       else { result = result + ts; }
       if (result.values().empty()) { 

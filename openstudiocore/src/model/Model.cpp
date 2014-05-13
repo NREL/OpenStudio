@@ -49,7 +49,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 using openstudio::IddObjectType;
@@ -167,7 +166,7 @@ namespace detail {
       OS_ASSERT(m_componentWatchers.size() == componentDataObjects.size());
       return;
     }
-    BOOST_FOREACH(ComponentData& object,componentDataObjects) {
+    for (ComponentData& object : componentDataObjects) {
       mf_createComponentWatcher(object);
     }
   }
@@ -963,7 +962,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   boost::optional<ComponentData> Model_Impl::insertComponent(const Component& component) {
     ComponentData newComponentData = component.componentData();
-    BOOST_FOREACH(const ComponentWatcher& cw,m_componentWatchers) {
+    for (const ComponentWatcher& cw : m_componentWatchers) {
       ComponentData candidate = cw.componentData();
       if (candidate.uuid() == newComponentData.uuid())
       {
@@ -979,7 +978,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
     if (resultingObjects.empty()) { return boost::none; }
     OS_ASSERT(resultingObjects.size() == component.numObjects());
-    BOOST_FOREACH(const WorkspaceObject& wo,resultingObjects) {
+    for (const WorkspaceObject& wo : resultingObjects) {
       OptionalComponentData ocd = wo.optionalCast<ComponentData>();
       if (ocd) {
         ComponentData componentDataObject = *ocd;
@@ -994,7 +993,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   std::vector<openstudio::IdfObject> Model_Impl::purgeUnusedResourceObjects() {
     ResourceObjectVector resources = model().getModelObjects<ResourceObject>();
     IdfObjectVector removedObjects;
-    BOOST_FOREACH(ResourceObject& resource,resources) {
+    for (ResourceObject& resource : resources) {
       // test for initialized first in case earlier .remove() got this one already
       if ((resource.initialized()) && (resource.nonResourceObjectUseCount() == 0)) {
         IdfObjectVector thisCallRemoved = resource.remove();
@@ -1006,7 +1005,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   std::vector<openstudio::IdfObject> Model_Impl::purgeUnusedResourceObjects(IddObjectType iddObjectType) {
     IdfObjectVector removedObjects;
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject, getObjectsByType(iddObjectType)) {
+    for (const WorkspaceObject& workspaceObject : getObjectsByType(iddObjectType)) {
       boost::optional<ResourceObject> resource = workspaceObject.optionalCast<ResourceObject>();
       if (resource){
         // test for initialized first in case earlier .remove() got this one already
@@ -1154,7 +1153,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   void Model_Impl::reportInitialModelObjects()
   {
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject,this->objects()) {
+    for (const WorkspaceObject& workspaceObject : this->objects()) {
       emit initialModelObject(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
     }
     emit initialReportComplete();
@@ -1217,7 +1216,7 @@ Model::Model(const openstudio::IdfFile& idfFile)
   if (OptionalIdfObject vo = idfFile.versionObject()) {
     objectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(*vo,true));
   }
-  BOOST_FOREACH(const IdfObject& idfObject,idfFile.objects()) {
+  for (const IdfObject& idfObject : idfFile.objects()) {
     objectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(idfObject,true));
     LOG(Trace,"idfObject: " << toString(idfObject.handle()));
     LOG(Trace,"objectImplPtr: " << toString(objectImplPtrs.back()->handle()));
@@ -1239,7 +1238,7 @@ Model::Model(const openstudio::Workspace& workspace)
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
         vo->getImpl<openstudio::detail::WorkspaceObject_Impl>(),true));
   }
-  BOOST_FOREACH(const WorkspaceObject& object,
+  for (const WorkspaceObject& object :
                 workspace.getImpl<openstudio::detail::Workspace_Impl>()->objects())
   {
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
@@ -1326,7 +1325,7 @@ std::vector<ModelObject> Model::modelObjects(bool sorted) const
 {
   // can't use resize because ModelObject has no default ctor
   std::vector<ModelObject> result;
-  BOOST_FOREACH(WorkspaceObject object, this->objects(sorted)){
+  for (WorkspaceObject object : this->objects(sorted)){
     result.push_back(object.cast<ModelObject>());
   }
   return result;
@@ -1816,7 +1815,7 @@ void addExampleModelObjects(Model& model)
 
   // add some example variables
   int i = 1;
-  BOOST_FOREACH(const std::string& variableName, thermalZone.outputVariableNames()){
+  for (const std::string& variableName : thermalZone.outputVariableNames()){
     OutputVariable(variableName, model);
     if (++i > 2){
       break;
@@ -1825,8 +1824,8 @@ void addExampleModelObjects(Model& model)
 
   // add some example variables
   i = 1;
-  BOOST_FOREACH(const Surface& surface, model.getModelObjects<Surface>()){
-    BOOST_FOREACH(const std::string& variableName, surface.outputVariableNames()){
+  for (const Surface& surface : model.getModelObjects<Surface>()){
+    for (const std::string& variableName : surface.outputVariableNames()){
       OutputVariable(variableName, model);
       if (++i > 2){
         break;

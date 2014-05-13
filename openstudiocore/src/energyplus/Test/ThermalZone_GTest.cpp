@@ -604,7 +604,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedul
 
   EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
 
-  BOOST_FOREACH(const Lights& light, model.getModelObjects<Lights>()){
+  for (const Lights& light : model.getModelObjects<Lights>()){
     EXPECT_TRUE(light.schedule());
   }
 
@@ -615,7 +615,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedul
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
   EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
 
-  BOOST_FOREACH(const WorkspaceObject& workspaceObject, workspace.getObjectsByType(IddObjectType::Lights)){
+  for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)){
     EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName));
   }
 }
@@ -680,7 +680,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSche
 
   EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
 
-  BOOST_FOREACH(const Lights& light, model.getModelObjects<Lights>()){
+  for (const Lights& light : model.getModelObjects<Lights>()){
     EXPECT_TRUE(light.schedule());
   }
 
@@ -691,7 +691,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSche
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
   EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
 
-  BOOST_FOREACH(const WorkspaceObject& workspaceObject, workspace.getObjectsByType(IddObjectType::Lights)){
+  for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)){
     EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
   }
 }

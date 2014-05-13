@@ -159,7 +159,7 @@ void OSGridController::setHorizontalHeader()
   QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
   OS_ASSERT(buttons.size() == 0);
 
-  Q_FOREACH(QString field, m_currentFields){
+  for (const QString& field : m_currentFields) {
     HorizontalHeaderWidget * horizontalHeaderWidget = new HorizontalHeaderWidget(field);
     m_horizontalHeaderBtnGrp->addButton(horizontalHeaderWidget->m_checkBox,m_horizontalHeaderBtnGrp->buttons().size());
     m_horizontalHeader.push_back(horizontalHeaderWidget);

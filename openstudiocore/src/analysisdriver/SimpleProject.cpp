@@ -77,7 +77,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 using namespace openstudio;
@@ -218,7 +217,7 @@ namespace detail {
         toRemove.push_back(it->second);
       }
     }
-    BOOST_FOREACH(BCLMeasure& gone,toRemove) {
+    for (const BCLMeasure& gone : toRemove) {
       std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
       OS_ASSERT(it1 != m_measures.end());
       m_measures.erase(it1);
@@ -248,7 +247,7 @@ namespace detail {
           ++it;
         }
       }
-      BOOST_FOREACH(const std::string& newDir,candidateDirs) {
+      for (const std::string& newDir : candidateDirs) {
         if (OptionalBCLMeasure newMeasure = BCLMeasure::load(dir / toPath(newDir))) {
           UUID newUUID = newMeasure->uuid();
           std::map<UUID,BCLMeasure>::iterator it = m_measures.find(newUUID);
@@ -409,7 +408,7 @@ namespace detail {
     if (requiresVersionTranslation(analysis().seed().path())) {
       return true;
     }
-    BOOST_FOREACH(const openstudio::path& p, alternateModelPaths()) {
+    for (const openstudio::path& p : alternateModelPaths()) {
       if (requiresVersionTranslation(p)) {
         return true;
       }
@@ -435,9 +434,9 @@ namespace detail {
       ++numReportWorkItems;
     }
 
-    BOOST_FOREACH(const InputVariable& variable,problem.variables()) {
+    for (const InputVariable& variable : problem.variables()) {
       if (OptionalMeasureGroup dv = variable.optionalCast<MeasureGroup>()) {
-        BOOST_FOREACH(const Measure& measure,dv->measures(false)) {
+        for (const Measure& measure : dv->measures(false)) {
           if (!measure.optionalCast<NullMeasure>() &&
               !measure.optionalCast<RubyMeasure>())
           {
@@ -463,7 +462,7 @@ namespace detail {
     bool inputVariableOk = true; // model measures ok
     boost::optional<JobType> nextWorkItemType = JobType(JobType::ModelToIdf);
     unsigned reportCount = 0u;
-    BOOST_FOREACH(const WorkflowStep& step,problem.workflow()) {
+    for (const WorkflowStep& step : problem.workflow()) {
       if (!inputVariableOk && step.isInputVariable()) {
         return false;
       }
@@ -532,7 +531,7 @@ namespace detail {
   boost::optional<MeasureGroup> SimpleProject_Impl::getAlternativeModelVariable() const {
     OptionalMeasureGroup result;
     Problem problem = analysis().problem();
-    BOOST_FOREACH(const InputVariable& ivar,problem.variables()) {
+    for (const InputVariable& ivar : problem.variables()) {
       if (OptionalMeasureGroup dvar = ivar.optionalCast<MeasureGroup>()) {
         // must have correct name
         if (dvar->name() != "Alternative Model") {
@@ -541,7 +540,7 @@ namespace detail {
         // must have correct measures
         bool first(true);
         bool found(true);
-        BOOST_FOREACH(const Measure& pert,dvar->measures(false)) {
+        for (const Measure& pert : dvar->measures(false)) {
           if (first) {
             if (!pert.optionalCast<NullMeasure>()) {
               found = false;
@@ -815,7 +814,7 @@ namespace detail {
       // problem.
       result = result && setAnalysisWeatherFile();
     }
-    BOOST_FOREACH(const openstudio::path& p, alternateModelPaths()) {
+    for (const openstudio::path& p : alternateModelPaths()) {
       if (requiresVersionTranslation(p)) {
         result = result && upgradeModel(p);
       }
@@ -841,10 +840,10 @@ namespace detail {
     openstudio::path scriptsDir = this->scriptsDir();
     std::map<UUID,openstudio::path> toUpdate;
     InputVariableVector vars = analysis().problem().variables();
-    BOOST_FOREACH(InputVariable& var,vars) {
+    for (InputVariable& var : vars) {
       if (OptionalMeasureGroup dv = var.optionalCast<MeasureGroup>()) {
         MeasureVector dps = dv->measures(false);
-        BOOST_FOREACH(Measure& dp,dps) {
+        for (Measure& dp : dps) {
           if (OptionalRubyMeasure rp = dp.optionalCast<RubyMeasure>()) {
             if (rp->usesBCLMeasure() &&
                 (rp->measureDirectory().parent_path() != scriptsDir))
@@ -903,7 +902,7 @@ namespace detail {
   void SimpleProject_Impl::stop() {
     // the following should be enough to kill any running jobs
     std::vector<analysisdriver::CurrentAnalysis> currentAnalyses = analysisDriver().currentAnalyses();
-    BOOST_FOREACH(analysisdriver::CurrentAnalysis currentAnalysis, currentAnalyses){
+    for (analysisdriver::CurrentAnalysis currentAnalysis : currentAnalyses){
       analysisDriver().stop(currentAnalysis);
     }
   }
@@ -922,7 +921,7 @@ namespace detail {
       bool didStartTransaction = database.startTransaction();
       AnalysisRecord analysisRecord = this->analysisRecord();
       DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      BOOST_FOREACH(DataPointRecord& dataPointRecord,dataPointRecords) {
+      for (DataPointRecord& dataPointRecord : dataPointRecords) {
         boost::optional<UUID> jobUUID = dataPointRecord.topLevelJobUUID();
         if (jobUUID) {
           try {
@@ -989,7 +988,7 @@ namespace detail {
       bool didStartTransaction = database.startTransaction();
       AnalysisRecord analysisRecord = this->analysisRecord();
       DataPointRecordVector dataPointRecords = analysisRecord.dataPointRecords();
-      BOOST_FOREACH(DataPointRecord& dataPointRecord,dataPointRecords) {
+      for (DataPointRecord& dataPointRecord : dataPointRecords) {
         boost::optional<UUID> jobUUID = dataPointRecord.topLevelJobUUID();
         if (jobUUID) {
           try {
@@ -1139,7 +1138,7 @@ namespace detail {
       if (!boost::filesystem::exists(tempFile)) {
         boost::filesystem::create_directory(tempFile);
       }
-      Q_FOREACH(const openstudio::path& alternate,alternates) {
+      for (const openstudio::path& alternate : alternates) {
         copyModel(alternate,tempFile,true);
       }
       zipFile.addDirectory(tempFile,toPath("alternatives"));
@@ -1154,13 +1153,13 @@ namespace detail {
     analysis::Problem problem = analysis.problem();
 
     std::vector<analysis::Measure> baselineMeasures;
-    BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
+    for (const analysis::InputVariable& inputVariable : problem.variables()){
       boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
       if (measureGroup){
         bool found(false);
         std::vector<Measure> measures = measureGroup->measures(false);
 
-        BOOST_FOREACH(const analysis::Measure& measure, measures){
+        for (const analysis::Measure& measure : measures){
           if (measure.optionalCast<analysis::NullMeasure>()){
             baselineMeasures.push_back(measure);
             found = true;
@@ -1238,7 +1237,7 @@ namespace detail {
     Analysis analysis = this->analysis();
     Problem problem = analysis.problem();
     std::vector<QVariant> variableValues;
-    BOOST_FOREACH(const InputVariable& ivar,problem.variables()) {
+    for (const InputVariable& ivar : problem.variables()) {
       if (ivar == amvar) {
         variableValues.push_back(QVariant(pIndex));
       }
@@ -1306,7 +1305,7 @@ namespace detail {
       Analysis temp = analysis();
       DataPointVector tempPoints = temp.dataPoints();
       DataPointVector dataPoints;
-      BOOST_FOREACH(const DataPoint& tempPoint,tempPoints) {
+      for (const DataPoint& tempPoint : tempPoints) {
         std::vector<QVariant> variableValues = tempPoint.variableValues();
         variableValues.insert(variableValues.begin(),QVariant(0));
         if (tempPoint.optionalCast<OptimizationDataPoint>()) {
@@ -1537,10 +1536,10 @@ namespace detail {
 
           bool didStartTransaction = database.startTransaction();
           if (!didStartTransaction) {
-            LOG(Debug,"Unable to start transation.");
+            LOG(Debug,"Unable to start transaction.");
           }
 
-          BOOST_FOREACH(ObjectRecord& nextToRemove,toRemove) {
+          for (ObjectRecord& nextToRemove : toRemove) {
             database.removeRecord(nextToRemove);
           }
 
@@ -1559,7 +1558,7 @@ namespace detail {
 
         bool didStartTransaction = database.startTransaction();
         if (!didStartTransaction) {
-          LOG(Debug,"Unable to start transation.");
+          LOG(Debug,"Unable to start transaction.");
         }
 
         if (m_cloudSession) {
@@ -1866,7 +1865,7 @@ namespace detail {
         }
 
         // loop through seed model workflow
-        BOOST_FOREACH(const WorkflowStep& seedModelStep,sp->analysis().problem().workflow()) {
+        for (const WorkflowStep& seedModelStep : sp->analysis().problem().workflow()) {
 
           if (isPATFixedMeasure(seedModelStep)) {
             // seedModelStep needs to be imported as a fixed measure

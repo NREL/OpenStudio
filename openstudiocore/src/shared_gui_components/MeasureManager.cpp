@@ -219,7 +219,7 @@ std::string MeasureManager::suggestMeasureGroupName(const BCLMeasure &t_measure)
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    for (const analysis::InputVariable& variable : problem.variables()) {
       allNames.insert(variable.name());
       allNames.insert(variable.displayName());
     }
@@ -248,10 +248,10 @@ std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure, bool
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() ){
     analysis::Analysis analysis = project->analysis();
     analysis::Problem problem = analysis.problem();
-    Q_FOREACH(const analysis::InputVariable& variable, problem.variables()){
+    for (const analysis::InputVariable& variable : problem.variables()) {
       boost::optional<analysis::MeasureGroup> discreteVariable = variable.optionalCast<analysis::MeasureGroup>();
       if (discreteVariable){
-        Q_FOREACH(const analysis::Measure& measure, discreteVariable->measures(false)){
+        for (const analysis::Measure& measure : discreteVariable->measures(false)) {
           allNames.insert(measure.name());
           allNames.insert(measure.displayName());
         }
@@ -313,7 +313,7 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
       }
       ss << " failed";
       QString errors;
-      Q_FOREACH(const std::string& failMessage,failMessages) {
+      for (const std::string& failMessage : failMessages) {
         errors.append(QString::fromStdString(failMessage));
         errors.append("\n\n");
       }
@@ -382,7 +382,7 @@ void MeasureManager::downloadBCLMeasures()
   }else{
     std::vector<BCLSearchResult> updates = remoteBCL->measuresWithUpdates();
     QStringList measureNames;
-    Q_FOREACH(BCLSearchResult update, updates){
+    for (const BCLSearchResult& update : updates) {
       measureNames.push_back(QString(0x2022) + " " + toQString(update.name()));
     }
     remoteBCL->updateMeasures();

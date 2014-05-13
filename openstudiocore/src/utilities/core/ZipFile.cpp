@@ -88,7 +88,7 @@ namespace openstudio {
     // following conventions in openstudio::copyDirectory
     QDir srcDir(toQString(localDir));
 
-    Q_FOREACH(const QFileInfo& info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
+    for (const QFileInfo& info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
       QString srcItemPath = toQString(localDir) + "/" + info.fileName();
       QString dstItemPath = toQString(destinationDir) + "/" + info.fileName();
       if (info.isDir()) {

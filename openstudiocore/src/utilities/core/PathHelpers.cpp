@@ -262,7 +262,7 @@ bool removeDirectory(const path& dirName) {
 
   if (dir.exists()) 
   {
-    Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
+    for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
     {
       if (info.isDir()) 
       {
@@ -293,7 +293,7 @@ bool copyDirectory(const path& source, const path& destination) {
 
   QDir srcDir(toQString(source));
 
-  Q_FOREACH(const QFileInfo &info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+  for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
   {
     QString srcItemPath = toQString(source) + "/" + info.fileName();
     QString dstItemPath = toQString(destination) + "/" + info.fileName();

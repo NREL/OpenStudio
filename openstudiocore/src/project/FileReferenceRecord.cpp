@@ -35,8 +35,6 @@
 #include <utilities/core/UUID.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -496,7 +494,7 @@ void FileReferenceRecord::updatePathData(ProjectDatabase database,
                                          const openstudio::path& newBase)
 {
   FileReferenceRecordVector records = getFileReferenceRecords(database);
-  BOOST_FOREACH(FileReferenceRecord& record,records) {
+  for (FileReferenceRecord& record : records) {
     record.getImpl<detail::FileReferenceRecord_Impl>()->updatePathData(originalBase,newBase);
   }
 }
@@ -579,7 +577,7 @@ boost::optional<FileReferenceRecord> FileReferenceRecord::getFileReferenceRecord
 
   // if that fails, get all and check for equivalents
   FileReferenceRecordVector allFileReferences = getFileReferenceRecords(database);
-  BOOST_FOREACH(const FileReferenceRecord& record,allFileReferences) {
+  for (const FileReferenceRecord& record : allFileReferences) {
     if (boost::filesystem::equivalent(record.path(),path)) {
       result = record;
       break;

@@ -31,7 +31,6 @@
 #include <utilities/core/StringHelpers.hpp>
 
 #include <boost/regex.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 
@@ -175,7 +174,7 @@ std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnInde
   std::string unitString = units(columnIndex);
   DoubleVector vals = values(columnIndex);
   QuantityVector result;
-  BOOST_FOREACH(double val,vals) {
+  for (double val : vals) {
     Quantity q;
     if (result.empty()) {
       q = createQuantity(val,unitString).get();

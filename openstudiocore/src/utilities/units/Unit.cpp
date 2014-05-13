@@ -29,7 +29,6 @@
 #include <utilities/core/Containers.hpp>
 
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 
 #include <algorithm>
 #include <sstream>
@@ -349,7 +348,7 @@ namespace detail {
     allBaseUnits.insert(baseUnits.begin(),baseUnits.end());
 
     // loop through and see if exponents are equal
-    BOOST_FOREACH(const std::string& baseUnit,allBaseUnits) {
+    for (const std::string& baseUnit : allBaseUnits) {
       if (baseUnitExponent(baseUnit) != rUnit.baseUnitExponent(baseUnit)) {
         return false;
       }

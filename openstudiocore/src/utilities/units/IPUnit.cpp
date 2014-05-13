@@ -22,8 +22,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 namespace openstudio {
 namespace detail {
 
@@ -92,7 +90,7 @@ namespace detail {
       temp->lbfToLbm();
 
       // loop through and check each exponent
-      BOOST_FOREACH(const std::string& baseUnit,wLUnit.baseUnits()) {
+      for (const std::string& baseUnit : wLUnit.baseUnits()) {
         if (wLUnit.baseUnitExponent(baseUnit) != wRUnit.baseUnitExponent(baseUnit)) {
           return false;
         }

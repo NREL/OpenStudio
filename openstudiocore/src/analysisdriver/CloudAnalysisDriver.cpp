@@ -39,8 +39,6 @@
 #include <utilities/data/Tag.hpp>
 #include <utilities/idf/URLSearchPath.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <QTimer>
 
 using namespace openstudio::analysis;
@@ -138,7 +136,7 @@ namespace detail {
 
   unsigned CloudAnalysisDriver_Impl::numFailedDataPoints() const {
     unsigned result=0;
-    BOOST_FOREACH(const DataPoint& dataPoint,m_iteration) {
+    for (const DataPoint& dataPoint : m_iteration) {
       if (dataPoint.complete() && dataPoint.failed()) {
         ++result;
       }
@@ -253,7 +251,7 @@ namespace detail {
     }
 
     // make sure run type is a cloud run type
-    BOOST_FOREACH(DataPoint& dataPoint,m_iteration) {
+    for (DataPoint& dataPoint : m_iteration) {
       if (dataPoint.runType() == DataPointRunType::Local) {
         dataPoint.setRunType(DataPointRunType::CloudSlim);
       }
@@ -693,7 +691,7 @@ namespace detail {
       UUIDVector allUUIDs = m_requestRun->lastDataPointUUIDs();
       UUIDVector completeUUIDs = m_requestRun->lastCompleteDataPointUUIDs();
 
-      BOOST_FOREACH(const DataPoint& missingPoint, m_iteration) {
+      for (const DataPoint& missingPoint : m_iteration) {
         if (std::find(allUUIDs.begin(),allUUIDs.end(),missingPoint.uuid()) == allUUIDs.end()) {
           // missingPoint is not on the server. add it to the ...
           // post queue -- need to be run and are not in allUUIDs
@@ -711,9 +709,9 @@ namespace detail {
         }
       }
 
-      BOOST_FOREACH(const DataPoint& missingDetails, project().analysis().dataPointsNeedingDetails()) {
+      for (const DataPoint& missingDetails : project().analysis().dataPointsNeedingDetails()) {
         if (std::find(completeUUIDs.begin(),completeUUIDs.end(),missingDetails.uuid()) != completeUUIDs.end()) {
-          // details queue -- are complete, but details were reqeusted and have not yet been downloaded
+          // details queue -- are complete, but details were requested and have not yet been downloaded
           if (!inIteration(missingDetails)) {
             m_iteration.push_back(missingDetails);
           }
@@ -797,7 +795,7 @@ namespace detail {
         DataPointVector batch(batchStart,m_waitingQueue.end());
         OS_ASSERT(batch.size() == m_batchSize);
 
-        BOOST_FOREACH(DataPoint& queued,batch) {
+        for (DataPoint& queued : batch) {
           boost::optional<Job> topLevelJob = queued.topLevelJob();
           OS_ASSERT(topLevelJob);
           topLevelJob->setStatus(AdvancedStatusEnum(AdvancedStatusEnum::WaitingInQueue));
@@ -1652,7 +1650,7 @@ namespace detail {
 
     if (result) {
 
-      BOOST_FOREACH(DataPoint& toQueue,batch) {
+      for (DataPoint& toQueue : batch) {
 
         // here we are going to create a dummy job to attach to the datapoint for saving job state
         runmanager::Workflow workflow = project().analysis().problem().createWorkflow(toQueue,openstudio::path());
@@ -1697,7 +1695,7 @@ namespace detail {
         }catch (const std::out_of_range &) {
           std::cout << "UUID is " << toString(job.uuid()) << std::endl;
           std::cout << "DB has " << std::endl;
-          BOOST_FOREACH(runmanager::Job j, project().runManager().getJobs()){
+          for (runmanager::Job j : project().runManager().getJobs()){
             std::cout << "  " << toString(j.uuid()) << std::endl;
           }
           OS_ASSERT(false);
@@ -2101,7 +2099,7 @@ namespace detail {
   void CloudAnalysisDriver_Impl::clearSessionTags(DataPoint& dataPoint) const {
     TagVector tags = dataPoint.tags();
     boost::regex re("CloudSession_.*");
-    BOOST_FOREACH(const Tag& tag,tags) {
+    for (const Tag& tag : tags) {
       if (boost::regex_match(tag.name(),re)) {
         dataPoint.deleteTag(tag.name());
       }

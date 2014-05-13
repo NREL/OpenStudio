@@ -38,8 +38,6 @@
 
 #include <utilities/idd/OS_Lights_Definition_FieldEnums.hxx>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -218,7 +216,7 @@ TEST_F(ModelFixture, Lights_ExampleModel)
   std::vector<Lights> lights = model.getModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
-  BOOST_FOREACH(Lights light, lights){
+  for (Lights light : lights){
     EXPECT_TRUE(light.schedule());
   } 
 

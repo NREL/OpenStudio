@@ -29,8 +29,6 @@
 
 #include <cmath>
 
-#include <boost/foreach.hpp>
-
 using openstudio::ScaleFactory;
 using openstudio::UnitFactory;
 using openstudio::Logger;
@@ -57,7 +55,7 @@ void UnitsFixture::SetUpTestCase()
 
   openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0,1000.0,8760u));
   openstudio::Unit u = openstudio::createSIPower();
-  BOOST_FOREACH(double val,vals) {
+  for (double val : vals) {
     testQuantityVector.push_back(openstudio::Quantity(val,u));
   }
   testOSQuantityVector = openstudio::OSQuantityVector(u,vals);

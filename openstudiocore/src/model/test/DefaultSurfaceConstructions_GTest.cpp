@@ -30,8 +30,6 @@
 #include <model/Material.hpp>
 #include <model/Material_Impl.hpp>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -71,9 +69,9 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
   
   unsigned numConstructions(0);
   unsigned numMaterials(0);
-  BOOST_FOREACH(const DefaultSurfaceConstructions& object, exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {
+  for (const DefaultSurfaceConstructions& object : exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {
     object.clone(model);
-    BOOST_FOREACH(const ResourceObject& construction, object.resources()) {
+    for (const ResourceObject& construction : object.resources()) {
       EXPECT_TRUE(construction.optionalCast<ConstructionBase>());
       ++numConstructions;
       numMaterials += construction.resources().size();

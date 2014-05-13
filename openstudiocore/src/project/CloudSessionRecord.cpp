@@ -410,7 +410,7 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
   if (isNew || (getImpl<detail::CloudSessionRecord_Impl>()->lastUuidLast() != cloudSession.versionUUID())) {
     // remove any existing UrlRecords that have this object as its parent
     ObjectRecordVector childUrls = children();
-    BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+    for (ObjectRecord& childUrl : childUrls) {
       database.removeRecord(childUrl);
     }
     // create new UrlRecords 
@@ -427,7 +427,7 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
       workerIds = awsSession->workerIds();
     }
     unsigned index(0);
-    BOOST_FOREACH(const Url& workerUrl, cloudSession.workerUrls()) {
+    for (const Url& workerUrl : cloudSession.workerUrls()) {
       UrlRecord workerRecord(workerUrl,copyOfThis);
       if (index < workerIds.size()) {
         workerRecord.setName(workerIds[index]);
