@@ -22,14 +22,12 @@ check_function_exists(strtof  HAVE_STRTOF)
 check_function_exists(localtime_r HAVE_LOCALTIME_R)
 
 if(MSVC)
-  # remove all warnings
-  string(REGEX REPLACE "\\/Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  # remove treat warnings as errors
-  string(REGEX REPLACE "\\/WX" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  # remove set warning level 3
-  string(REGEX REPLACE "\\/W3" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
   # disable warnings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /w")
+  if(CMAKE_CXX_FLAGS MATCHES "/W3")
+    string(REGEX REPLACE "/W3" "/W0" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  elseif(CMAKE_CXX_FLAGS MATCHES "/W4")
+    string(REGEX REPLACE "/W4" "/W0" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  endif()
 endif()
 
 # create config.h
