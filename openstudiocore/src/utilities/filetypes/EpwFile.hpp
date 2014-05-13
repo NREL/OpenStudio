@@ -290,6 +290,9 @@ public:
   /// get the time step
   Time timeStep() const;
 
+  /// get the records per hour
+  int recordsPerHour() const;
+
   /// get the start day of the week
   DayOfWeek startDayOfWeek() const;
 
@@ -335,7 +338,7 @@ private:
   double m_longitude;
   double m_timeZone;
   double m_elevation;
-  Time m_timeStep;
+  int m_recordsPerHour;
   DayOfWeek m_startDayOfWeek;
   Date m_startDate;
   Date m_endDate;

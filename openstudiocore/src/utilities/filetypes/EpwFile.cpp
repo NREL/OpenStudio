@@ -116,9 +116,7 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
   if(!pt.setHour(list[3].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setMinute(list[4].toStdString())) {
-    return boost::optional<EpwDataPoint>();
-  }
+  // The minute field is not set here - it is set based upon the header data
   pt.setDataSourceandUncertaintyFlags(list[5].toStdString());
   pt.setDryBulbTemperature(list[6].toStdString());
   pt.setDewPointTemperature(list[7].toStdString());
@@ -1645,7 +1643,12 @@ double EpwFile::elevation() const
 
 Time EpwFile::timeStep() const
 {
-  return m_timeStep;
+  return Time(0,0,60/m_recordsPerHour);
+}
+
+int EpwFile::recordsPerHour() const
+{
+  return m_recordsPerHour;
 }
 
 DayOfWeek EpwFile::startDayOfWeek() const
@@ -1862,6 +1865,8 @@ bool EpwFile::parse(bool storeData)
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
+  int minutesPerRecord = 60/m_recordsPerHour;
+  int currentMinute = 0;
   while(std::getline(ifs, line)){
     lineNumber++;
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
@@ -1898,6 +1903,14 @@ bool EpwFile::parse(bool storeData)
       if(storeData)
       {
         boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwString(line);
+        if(m_recordsPerHour!=1)
+        {
+          currentMinute += minutesPerRecord;
+          if(currentMinute >= 60) { // This could really be ==, but >= is used for safety
+            currentMinute = 0;
+          }
+          pt->setMinute(currentMinute);
+        }
         if(pt) {
           m_data.push_back(pt.get());
         } else {
@@ -2033,7 +2046,11 @@ bool EpwFile::parseDataPeriod(const std::string& line)
       result = false;
     }
     try{
-      m_timeStep = Time(boost::lexical_cast<double>(timeStep) / 24.0);
+      m_recordsPerHour = boost::lexical_cast<int>(timeStep);
+      if(60 % m_recordsPerHour != 0) {
+        LOG(Error, "Number of records per hour does not result in integral mintes between records in EPW file '" << m_path<<"'");
+        return false;
+      }
     }catch(...){
       result = false;
     }
