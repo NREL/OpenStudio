@@ -295,11 +295,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
   if(MSVC)
-    # Adding math.h definitions to avoid "inconsistent dll linkage" from Ruby 1.8 and VS2013
-    if(${MSVC_VERSION} EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
-      add_definitions(-DHAVE_ACOSH -DHAVE_ERF)
-    endif()
-
     # if visual studio 2010 or greater
     if(NOT (${MSVC_VERSION} LESS 1600))
       # trouble with macro redefinition in win32.h of Ruby

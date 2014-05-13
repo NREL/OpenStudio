@@ -264,6 +264,12 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
   endif()
 endif()
 
+# Adding math.h definitions to avoid "inconsistent dll linkage" from Ruby 1.8 and VS2013
+if(${MSVC_VERSION} EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
+  add_definitions(-DHAVE_ACOSH -DHAVE_ERF)
+endif()
+
+
 #We want to use the site_ruby folder if this is intended for /usr/local install
 #If it is intended for /usr install, we want to use the main ruby module folder
 if(${CMAKE_INSTALL_PREFIX} STREQUAL "/usr" AND RUBY_ARCH_DIR MATCHES "^/usr/lib.*/.*")
