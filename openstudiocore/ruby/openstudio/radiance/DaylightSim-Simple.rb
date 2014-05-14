@@ -481,10 +481,7 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   # Saying for that hour of the day, window1 and window3 blinds were open, but window2 blinds were closed.
   #
   # The result is the summation of each window's vLambda contributions.
-  puts "GOOGS: allValues.size = #{allValues.size.to_s}"
   allValues.size().times do |index|
-    puts "GOOGS: allValues[index].size = #{allValues[index].size.to_s}"
-    puts "GOOGS: t_mapping is #{t_mapping}"
     allValues[index].size().times do |row|
       values[row] = [] if values[row].nil?
       8760.times do |hour|
@@ -512,8 +509,6 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
       space = []
       illum = []
       glaresensors = nil
-
-      puts "GOOGS: values.size = #{values.size.to_s}, space_name = #{space_name}"
 
       if values.size > 0
         subspace = values.slice(index, space_size)
