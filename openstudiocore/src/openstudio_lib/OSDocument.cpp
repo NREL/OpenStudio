@@ -1286,12 +1286,7 @@ void OSDocument::openMeasuresDlg()
 {
   // open modal dialog
   m_applyMeasureNowDialog = QSharedPointer<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-
-  if(m_applyMeasureNowDialog->exec()){ // TODO
-
-  }else{
-
-  }
+  m_applyMeasureNowDialog->exec();
 }
 
 void OSDocument::openChangeMeasuresDirDlg()
@@ -1308,7 +1303,6 @@ void OSDocument::openChangeMeasuresDirDlg()
       OSAppBase::instance()->measureManager().updateMeasuresLists();
     }
   }
-
 }
 
 void OSDocument::changeBclLogin()
@@ -1363,7 +1357,6 @@ void OSDocument::openBclDlg()
     m_onlineBclDialog->setGeometry(m_mainWindow->geometry());
     m_onlineBclDialog->show();
   }
-
 }
 
 void OSDocument::on_closeBclDlg()
@@ -1390,7 +1383,6 @@ boost::shared_ptr<MainRightColumnController> OSDocument::mainRightColumnControll
 {
   return m_mainRightColumnController;
 }
-
 
 void OSDocument::openMeasuresBclDlg()
 {
@@ -1448,7 +1440,5 @@ void OSDocument::on_closeMeasuresBclDlg()
     m_onlineMeasuresBclDialog->setShowNewComponents(false);
   }
 }
-
-
 
 } // openstudio

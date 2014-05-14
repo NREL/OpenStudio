@@ -27,9 +27,7 @@
 #include <shared_gui_components/MeasureManager.hpp>
 #include <shared_gui_components/OSViewSwitcher.hpp>
 #include <shared_gui_components/VariableList.hpp>
-//#include <shared_gui_components/WorkflowTools.hpp>
 
-//#include <openstudio_lib/MainRightColumnController.hpp>
 #include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/OSDocument.hpp>
 #include <openstudio_lib/OSItem.hpp>
@@ -37,21 +35,26 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
-//#include <analysis/Analysis.hpp>
-//#include <analysis/DataPoint.hpp>
 #include <analysis/NullMeasure.hpp>
-//#include <analysis/Problem.hpp>
 
 #include <analysisdriver/SimpleProject.hpp>
 
 #include <utilities/core/RubyException.hpp>
 
+#include <runmanager/lib/Job.hpp>
+#include <runmanager/lib/RunManager.hpp>
+#include <runmanager/lib/Workflow.hpp>
+#include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/WorkItem.hpp>
+
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPainter>
 #include <QPointer>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSharedPointer>
 #include <QStackedWidget>
 #include <QTextEdit>
@@ -109,8 +112,6 @@ void ApplyMeasureNowDialog::createWidgets()
   viewSwitcher->setView(m_editController->editView);
   m_argumentsOkPageIdx = m_rightPaneStackedWidget->addWidget(viewSwitcher);
 
-  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
-
   layout = new QHBoxLayout();
   layout->addWidget(m_localLibraryController->localLibraryView);
   layout->addWidget(m_rightPaneStackedWidget);
@@ -118,6 +119,8 @@ void ApplyMeasureNowDialog::createWidgets()
   widget = new QWidget();
   widget->setLayout(layout);
   m_inputPageIdx = m_mainPaneStackedWidget->addWidget(widget);
+
+  // TODO Should at least indicate if Radiance is being used?
 
   // RUNNING
 
@@ -139,8 +142,6 @@ void ApplyMeasureNowDialog::createWidgets()
   widget->setLayout(layout);
   m_runningPageIdx = m_mainPaneStackedWidget->addWidget(widget);
 
-  m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
-
   // OUTPUT
 
   label = new QLabel("Measure Output");
@@ -155,7 +156,6 @@ void ApplyMeasureNowDialog::createWidgets()
 
   widget = new QWidget();
   widget->setLayout(layout);
-  m_outputPageIdx = m_mainPaneStackedWidget->addWidget(widget);
 
   // BUTTONS
 
@@ -169,47 +169,7 @@ void ApplyMeasureNowDialog::createWidgets()
   #elif defined(Q_OS_WIN32)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
-
 }
-
-//***** SLOTS *****
-
-void ApplyMeasureNowDialog::on_cancelButton(bool checked)
-{
-  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
-    // N/A
-  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
-    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
-    m_timer->stop();
-    this->okButton()->show();
-    return;
-  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
-    // N/A
-  }
-  
-  OSDialog::on_cancelButton(checked);
-}
-
-void ApplyMeasureNowDialog::on_okButton(bool checked)
-{
-  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
-    m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
-    m_timer->start(50);
-    this->okButton()->hide();
-    runMeasure();
-  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
-    // N/A
-    m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx); // TODO remove
-  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
-    // N/A
-    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx); // TODO remove
-  }
-}
-
-  //m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
-  //m_timer->stop(); // TODO
-  //this->okButton()->setText(ACCEPT_CHANGES);
-  //this->okButton()->show();
 
 void ApplyMeasureNowDialog::displayMeasure()
 {
@@ -230,6 +190,10 @@ void ApplyMeasureNowDialog::displayMeasure()
     // Make a new variable
     boost::optional<BCLMeasure> bclMeasure = app->measureManager().getMeasure(id);
     OS_ASSERT(bclMeasure);
+    m_bclMeasure = bclMeasure;
+
+    // Use this?
+    //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
     // prep discrete variable
     std::string name = app->measureManager().suggestMeasureGroupName(*bclMeasure);
@@ -237,9 +201,10 @@ void ApplyMeasureNowDialog::displayMeasure()
     dv.setDisplayName(name);
    
     // measure
-    analysis::RubyMeasure measure(*bclMeasure);
+    analysis::RubyMeasure rubyMeasure(*bclMeasure);
+    m_rubyMeasure = rubyMeasure;
     try{
-      measure.setArguments(app->measureManager().getArguments(*project, *bclMeasure));
+      rubyMeasure.setArguments(app->measureManager().getArguments(*project, *bclMeasure));
     } catch (const RubyException & e) {
       QString errorMessage("Failed to compute arguments for measure: \n\n");
       errorMessage += QString::fromStdString(e.what());
@@ -249,19 +214,19 @@ void ApplyMeasureNowDialog::displayMeasure()
       return;
     }
 
-    // TODO Should this be "fixed"
+    // TODO Should this be "fixed" ?
     // null measure
     analysis::NullMeasure nullPert;
     dv.push(nullPert);
 
     // the new measure
-    name = app->measureManager().suggestMeasureName(*bclMeasure, true); // TODO is this "fixed"
-    measure.setName(name);
-    measure.setDisplayName(name);
-    measure.setDescription(bclMeasure->description());
-    dv.push(measure);
+    name = app->measureManager().suggestMeasureName(*bclMeasure, true); // TODO is this "fixed" ?
+    rubyMeasure.setName(name);
+    rubyMeasure.setDisplayName(name);
+    rubyMeasure.setDescription(bclMeasure->description());
+    dv.push(rubyMeasure);
 
-    QSharedPointer<measuretab::MeasureItem> item = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(measure, app));
+    QSharedPointer<measuretab::MeasureItem> item = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
     bool isConnected = false;
     isConnected = connect(item.data(),SIGNAL(argumentsChanged(bool)),
@@ -281,27 +246,79 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_rightPaneStackedWidget->setCurrentIndex(m_argumentsFailedPageIdx);
     return;
   }
-
-
-  // TODO use when ready to run
-  // clone model
-  boost::optional<model::Model> model = app->currentModel();
-  OS_ASSERT(model);
-  model::Model modelCopy = model->clone().cast<model::Model>();
-
 }
 
 void ApplyMeasureNowDialog::runMeasure()
 {
-  // TODO
+  runmanager::ConfigOptions co(true);
+
+  if (co.getTools().getAllByName("energyplus").tools().size() == 0)
+  {
+    QMessageBox::information(this,
+        "Missing EnergyPlus",
+        "EnergyPlus could not be located, simulation aborted.",
+        QMessageBox::Ok);
+
+    return;
+  }
+      
+  if (co.getTools().getAllByName("ruby").tools().size() == 0)
+  {
+    QMessageBox::information(this,
+        "Missing Ruby",
+        "Ruby could not be located, simulation aborted.",
+        QMessageBox::Ok);
+
+    return;
+  }
+
+  openstudio::BaseApp * app = OSAppBase::instance();
+
+  // clone model
+  boost::optional<model::Model> model = app->currentModel();
+  OS_ASSERT(model);
+  model::Model modelClone = model->clone().cast<model::Model>();
+
+  openstudio::path outDir = openstudio::tempDir() / openstudio::toPath("ApplyMeasureNow");
+
+  openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
+
+  // save cloned model to temp directory
+  Workspace(modelClone).save(modelPath,true); 
+
+  openstudio::runmanager::Workflow wf;
+ 
+  runmanager::RubyJobBuilder rjb(*m_bclMeasure,m_rubyMeasure->arguments());
+  rjb.addToWorkflow(wf);
+
+  wf.add(co.getTools());
+
+  openstudio::runmanager::Job j = wf.create(outDir, modelPath);
+
+  openstudio::runmanager::RunManager rm;
+  rm.enqueue(j, true);
+
+  j.waitForFinished();
+  rm.waitForFinished();
+
+  j.errors();
+
+  openstudio::runmanager::JobErrors jobErrors = j.errors();
+}
+
+void ApplyMeasureNowDialog::displayResults()
+{
+  m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
+  m_timer->stop();
+  this->okButton()->setText(ACCEPT_CHANGES);
+  this->okButton()->show();
+  this->okButton()->setEnabled(true);
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 {
   e->accept(); // TODO
 }
-
-//***** SLOTS *****
 
 void ApplyMeasureNowDialog::disableOkButton(bool disable)
 {

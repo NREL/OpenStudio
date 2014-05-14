@@ -22,6 +22,11 @@
 
 #include <shared_gui_components/OSDialog.hpp>
 
+#include <analysis/Problem.hpp>
+#include <analysis/RubyMeasure.hpp>
+
+#include <utilities/bcl/BCLMeasure.hpp>
+
 class QStackedWidget;
 class QTextEdit;
 class QTimer;
@@ -66,7 +71,15 @@ private:
   void createWidgets();
 
   void runMeasure();
-  
+
+  void displayResults();
+
+  void searchForExistingResults(const openstudio::path &t_runDir);
+
+  boost::optional<BCLMeasure> m_bclMeasure;
+
+  boost::optional<analysis::RubyMeasure> m_rubyMeasure;
+
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
   QStackedWidget * m_mainPaneStackedWidget;
