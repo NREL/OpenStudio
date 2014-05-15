@@ -97,7 +97,7 @@ void Object_Impl::incrementFromThis(){
 TEST(SharedFromThis, Destructor)
 {
   boost::shared_ptr<int> counter(new int(0));
-  ASSERT_TRUE(counter);
+  ASSERT_TRUE(counter.get());
   EXPECT_EQ(0, *counter);
 
   {

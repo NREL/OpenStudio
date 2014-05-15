@@ -1815,7 +1815,7 @@ TEST_F(IdfFixture, Workspace_Signals)
 
   openstudio::Application::instance().processEvents();
 
-  ASSERT_TRUE(reciever->m_objectImpl);
+  ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
   ASSERT_TRUE(reciever->m_handle);
@@ -1835,7 +1835,7 @@ TEST_F(IdfFixture, Workspace_Signals)
 
   Application::instance().processEvents();
 
-  ASSERT_TRUE(reciever->m_objectImpl);
+  ASSERT_TRUE(reciever->m_objectImpl.get());
   ASSERT_TRUE(reciever->m_iddObjectType);
   EXPECT_EQ(IddObjectType::Zone, reciever->m_iddObjectType->value());
   ASSERT_TRUE(reciever->m_handle);

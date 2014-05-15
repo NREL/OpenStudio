@@ -262,7 +262,7 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
 endif()
 
 # Adding math.h definitions to avoid "inconsistent dll linkage" from Ruby 1.8 and VS2013
-if(MSVC_VERSION EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
+if(${MSVC} AND ${MSVC_VERSION} EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
   add_definitions(-DHAVE_ACOSH -DHAVE_ERF)
 endif()
 
@@ -365,14 +365,6 @@ if(BUILD_PYTHON_BINDINGS)
   include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDING_TARGETS "") # global list
 endif()
-
-if(REQUIRE_DAKOTA)
-  find_package(Dakota "${DAKOTA_VERSION}" REQUIRED)
-  mark_as_advanced(DAKOTA_EXE)
-else()
-  set(DAKOTA_FOUND false)
-endif()
-set(DAKOTA_FOUND ${DAKOTA_FOUND} CACHE INTERNAL "Boolean indicating whether Dakota was found.")
 
 # Doxygen
 if(BUILD_DOCUMENTATION)

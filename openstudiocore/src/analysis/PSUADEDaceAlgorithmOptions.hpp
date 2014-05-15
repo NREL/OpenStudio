@@ -52,7 +52,7 @@ class ANALYSIS_API PSUADEDaceAlgorithmOptions : public DakotaAlgorithmOptions {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the explict pseudo-random number generator seed if it exists, evaluates to false 
+  /** Returns the explicit pseudo-random number generator seed if it exists, evaluates to false 
    *  otherwise. */
   boost::optional<int> seed() const;
 
