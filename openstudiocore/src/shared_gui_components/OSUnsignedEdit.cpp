@@ -212,10 +212,18 @@ void OSUnsignedEdit2::onEditingFinished() {
         int value = boost::lexical_cast<int>(str);
         setPrecision(str);
         if (m_set) {
-          (*m_set)(value);
+          bool result = (*m_set)(value);
+          if (!result){
+            // restore
+            refreshTextAndLabel();
+          }
         }
       }
-      catch (...) {}
+      catch (...) 
+      {
+        // restore
+        refreshTextAndLabel();
+      }
     }
   }
 }

@@ -372,8 +372,6 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                 AirTerminalSingleDuctVAVNoReheat mo = this->getObject<AirTerminalSingleDuctVAVNoReheat>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true; 

@@ -23,6 +23,10 @@
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
 #include <model/StraightComponent.hpp>
 #include <model/StraightComponent_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -112,6 +116,19 @@ namespace detail {
       }
     }
     return boost::none;
+  }
+
+  bool CoilCoolingCooledBeam_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
   
   double CoilCoolingCooledBeam_Impl::coilSurfaceAreaperCoilLength() const 

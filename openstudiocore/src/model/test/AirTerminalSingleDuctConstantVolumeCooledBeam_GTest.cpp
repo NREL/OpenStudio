@@ -18,34 +18,16 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/AirLoopHVAC.hpp>
-
 #include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-
 #include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-
-// TEST
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-//
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -78,33 +60,42 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construct
   CoilCoolingCooledBeam coilCoolingCooledBeam1(model);
   cooledBeam.setCoolingCoil(coilCoolingCooledBeam1);
   EXPECT_EQ(cooledBeam.coilCoolingCooledBeam(),coilCoolingCooledBeam1);
-  
   }
- 
- TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_AddandRemove) {
- 
-  Model model;
-  ScheduleConstant schedule(model);
-  schedule.setValue(1.0); // Always on
-  CoilCoolingCooledBeam coilCoolingCooledBeam(model);
-  CoilHeatingWater coil(model,schedule);
-  AirTerminalSingleDuctConstantVolumeCooledBeam cooledBeam(model,schedule,coilCoolingCooledBeam);
-  AirTerminalSingleDuctVAVReheat VAVreheat(model,schedule,coil);
-  AirLoopHVAC airLoop(model);
-  
-  // Test addToNode
-  //Attach to outlet node
-  //Node outletNode = airLoop.supplyOutletNode();
-  //cooledBeam.addToNode(outletNode);
-  //ASSERT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
-  
-  //ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-  //Node outletNode = airLoop.supplyOutletNode();
-  //VAVreheat.addToNode(outletNode);
-  //ASSERT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-  
-  
- } 
+
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_addToNode) {
+  Model m;
+  ScheduleConstant s(m);
+  CoilCoolingCooledBeam coil(m);
+  AirTerminalSingleDuctConstantVolumeCooledBeam testObject(m,s,coil);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_TRUE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  AirTerminalSingleDuctConstantVolumeCooledBeam testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObjectClone.addToNode(inletNode));
+  EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
+  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
+}
  
  TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Fields) {
   

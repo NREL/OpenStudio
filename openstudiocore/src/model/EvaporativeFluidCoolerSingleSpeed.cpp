@@ -104,50 +104,14 @@ namespace detail {
 
   bool EvaporativeFluidCoolerSingleSpeed_Impl::addToNode(Node& node)
   {
-    Model _model = node.model();
-
-    if( boost::optional<PlantLoop> _plantLoop = node.plantLoop() )
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
-      PlantLoop plantLoop = _plantLoop.get();
-      if( plantLoop.supplyComponent(node.handle()) )
+      if( plant->supplyComponent(node.handle()) )
       {
-        if( boost::optional<ModelObject> outlet = node.outletModelObject() )
-        {
-          if( outlet->optionalCast<ConnectorMixer>() )
-          {
-            if( boost::optional<ModelObject> inlet = node.inletModelObject() )
-            {
-              if( boost::optional<ConnectorSplitter> splitter = inlet->optionalCast<ConnectorSplitter>() )
-              {
-                boost::optional<ModelObject> sourceModelObject = inlet;
-                boost::optional<unsigned> sourcePort = node.connectedObjectPort(node.inletPort());
-
-                if( sourcePort && sourceModelObject )
-                {
-                  Node inletNode(_model);
-
-                  _model.connect( sourceModelObject.get(),
-                                  sourcePort.get(),
-                                  inletNode,
-                                  inletNode.inletPort() );
-                  
-                  _model.connect( inletNode,
-                                  inletNode.outletPort(),
-                                  this->getObject<ModelObject>(),
-                                  this->inletPort() );
-
-                  _model.connect( this->getObject<ModelObject>(),
-                                  outletPort(),
-                                  node,
-                                  node.inletPort() );
-                  return true; 
-                }
-              }
-            }
-          }
-        }
+        return StraightComponent_Impl::addToNode(node);
       }
     }
+
     return false;
   }
 

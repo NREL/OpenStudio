@@ -749,14 +749,12 @@ namespace detail {
 
   bool PumpVariableSpeed_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
-    {
-      return false;
-    }
-    else
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
       return StraightComponent_Impl::addToNode(node);
     }
+
+    return false;
   }
 
   openstudio::OSOptionalQuantity PumpVariableSpeed_Impl::ratedFlowRate_SI() const {
