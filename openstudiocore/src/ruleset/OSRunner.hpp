@@ -128,8 +128,9 @@ class RULESET_API OSRunner {
   /** Sets the result final condition to message. */
   virtual void registerFinalCondition(const std::string& message);
 
-  /** Saves attribute as an output result of the measure currently being run. */
-  virtual void registerAttribute(const Attribute& attribute);
+  /** Saves attribute as an output result of the measure currently being 
+   *  run, and sets the attribute's source accordingly. */
+  virtual void registerAttribute(Attribute& attribute);
 
   /** \overload Shortcut method for registering boolean attribute. */
   virtual void registerValue(const std::string& name, bool value);

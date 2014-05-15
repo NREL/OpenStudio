@@ -30,6 +30,8 @@
 #include <runmanager/lib/JSON.hpp>
 #include <runmanager/lib/RunManager.hpp>
 
+#include <ruleset/OSResult.hpp>
+
 #include <utilities/math/FloatCompare.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -76,7 +78,6 @@ namespace detail {
                                  const boost::optional<FileReference>& osmInputData,
                                  const boost::optional<FileReference>& idfInputData,
                                  const boost::optional<FileReference>& sqlOutputData,
-                                 const std::vector<FileReference>& xmlOutputData,
                                  const boost::optional<runmanager::Job>& topLevelJob,
                                  const std::vector<openstudio::path>& dakotaParametersFiles,
                                  const std::vector<Tag>& tags,
@@ -94,7 +95,6 @@ namespace detail {
       m_osmInputData(osmInputData),
       m_idfInputData(idfInputData),
       m_sqlOutputData(sqlOutputData),
-      m_xmlOutputData(xmlOutputData),
       m_topLevelJob(topLevelJob),
       m_dakotaParametersFiles(dakotaParametersFiles),
       m_tags(tags),
@@ -118,7 +118,6 @@ namespace detail {
                                  const boost::optional<FileReference>& osmInputData,
                                  const boost::optional<FileReference>& idfInputData,
                                  const boost::optional<FileReference>& sqlOutputData,
-                                 const std::vector<FileReference>& xmlOutputData,
                                  const boost::optional<runmanager::Job>& topLevelJob,
                                  const std::vector<openstudio::path>& dakotaParametersFiles,
                                  const std::vector<Tag>& tags,
@@ -136,7 +135,6 @@ namespace detail {
       m_osmInputData(osmInputData),
       m_idfInputData(idfInputData),
       m_sqlOutputData(sqlOutputData),
-      m_xmlOutputData(xmlOutputData),
       m_topLevelJob(topLevelJob),
       m_dakotaParametersFiles(dakotaParametersFiles),
       m_tags(tags),
@@ -265,6 +263,24 @@ namespace detail {
   }
 
   std::vector<FileReference> DataPoint_Impl::xmlOutputData() const {
+    // no longer serializing this. gather and cache this data as needed.
+    if (m_xmlOutputData.empty() && topLevelJob()) {
+      runmanager::Files allFiles = topLevelJob()->treeAllFiles();
+      FileReferenceVector xmlOutputData;
+      try {
+        Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("ossr").files()) {
+          xmlOutputData.push_back(FileReference(file.fullPath));
+        }
+      }
+      catch (...) {}
+      try {
+        Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
+          xmlOutputData.push_back(FileReference(file.fullPath));
+        }
+      }
+      catch (...) {}
+      m_xmlOutputData = xmlOutputData;
+    }
     return m_xmlOutputData;
   }
 
@@ -322,19 +338,30 @@ namespace detail {
   }
 
   std::vector<Attribute> DataPoint_Impl::outputAttributes() const {
-    if (!m_outputAttributes.empty()) {
-      return m_outputAttributes;
-    }
-    BOOST_FOREACH(const FileReference& attributeFile,m_xmlOutputData) {
-      OptionalAttribute wrapperAttribute = Attribute::loadFromXml(attributeFile.path());
-      if (wrapperAttribute &&
-          (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
-      {
-        AttributeVector toAdd = wrapperAttribute->valueAsAttributeVector();
-        m_outputAttributes.insert(m_outputAttributes.end(),toAdd.begin(),toAdd.end());
-      }
-      else {
-        LOG(Warn,"Unable to load attribute xml from " << toString(attributeFile.path()));
+    if (m_outputAttributes.empty()) {
+      BOOST_FOREACH(const FileReference& xmlFile,xmlOutputData()) {
+        AttributeVector toAdd;
+        if (xmlFile.fileType() == FileReferenceType::XML) {
+          OptionalAttribute wrapperAttribute = Attribute::loadFromXml(xmlFile.path());
+          if (wrapperAttribute && (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
+          {
+            toAdd = wrapperAttribute->valueAsAttributeVector();
+            m_outputAttributes.insert(m_outputAttributes.end(),toAdd.begin(),toAdd.end());
+          }
+          else {
+            LOG(Warn,"Unable to load attribute xml from " << toString(xmlFile.path()));
+          }
+        }
+        else if (xmlFile.fileType() == FileReferenceType::OSSR) {
+          ruleset::OptionalOSResult result = ruleset::OSResult::load(xmlFile.path());
+          if (result) {
+            toAdd = result->attributes();
+            m_outputAttributes.insert(m_outputAttributes.end(),toAdd.begin(),toAdd.end());
+          }
+          else {
+            LOG(Warn,"Unable to load result xml from " << toString(xmlFile.path()));
+          }
+        }
       }
     }
     return m_outputAttributes;
@@ -590,20 +617,7 @@ namespace detail {
       setSqlOutputData(FileReference(sqlOutputDataPath));
     }
     catch (...) {}
-    try {
-      FileReferenceVector xmlOutputData;
-      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
-        if (!boost::filesystem::exists(file.fullPath)) {
-          LOG(Debug,"After unzipping the DataPoint's details and updating its topLevelJob "
-              << "with the directory information, RunManager is reporting '" 
-              << toString(file.fullPath) << "' as an XML file path, even though that "
-              << "location does not exist.");
-        }
-        xmlOutputData.push_back(FileReference(file.fullPath));
-      }
-      setXmlOutputData(xmlOutputData);
-    }
-    catch (...) {}
+    // lazy load xml file references
 
     onChange(AnalysisObject_Impl::Benign);
 
@@ -614,6 +628,7 @@ namespace detail {
     m_model = boost::none;
     m_workspace = boost::none;
     m_sqlFile = boost::none;
+    m_xmlOutputData.clear();
   }
 
   void DataPoint_Impl::clearAllDataFromCache() const {
@@ -629,7 +644,6 @@ namespace detail {
     m_osmInputData.reset();
     m_idfInputData.reset();
     m_sqlOutputData.reset();
-    m_xmlOutputData.clear();
     m_topLevelJob.reset(); // this should happen here because if results are cleared want to run with a new job
     m_dakotaParametersFiles.clear(); // DLM: should this really happen here?
     clearAllDataFromCache();
@@ -756,13 +770,6 @@ namespace detail {
     }
     if (sqlOutputData()) {
       dataPointData["sql_output_data"] = openstudio::detail::toVariant(sqlOutputData().get());
-    }
-    if (!xmlOutputData().empty()) {
-      QVariantList xmlOutputDataList;
-      Q_FOREACH(const FileReference& fref,xmlOutputData()) {
-        xmlOutputDataList.push_back(openstudio::detail::toVariant(fref));
-      }
-      dataPointData["xml_output_data"] = xmlOutputDataList;
     }
 
     if (topLevelJob()) {
@@ -896,17 +903,7 @@ namespace detail {
             boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
     }
 
-    FileReferenceVector xmlOutputData;
-    if (map.contains("xml_output_data")) {
-      if (version < VersionString("1.0.4")) {
-        xmlOutputData = FileReferenceVector(1u,openstudio::detail::toFileReference(map["xml_output_data"],version));
-      }
-      else {
-        xmlOutputData = deserializeUnorderedVector<FileReference>(
-              map["xml_output_data"].toList(),
-              boost::function<FileReference (const QVariant&)>(boost::bind(openstudio::detail::toFileReference,_1,version)));
-      }
-    }
+    // drop xml_output_data
 
     // dakota parameters files
     std::vector<openstudio::path> dakotaParametersFiles;
@@ -934,7 +931,6 @@ namespace detail {
                      map.contains("osm_input_data") ? openstudio::detail::toFileReference(map["osm_input_data"],version) : OptionalFileReference(),
                      map.contains("idf_input_data") ? openstudio::detail::toFileReference(map["idf_input_data"],version) : OptionalFileReference(),
                      map.contains("sql_output_data") ? openstudio::detail::toFileReference(map["sql_output_data"],version) : OptionalFileReference(),
-                     xmlOutputData,
                      map.contains("top_level_job") ? runmanager::detail::JSON::toJob(map["top_level_job"],version, true) : boost::optional<runmanager::Job>(),
                      dakotaParametersFiles,
                      tags,
@@ -965,7 +961,6 @@ DataPoint::DataPoint(const UUID& uuid,
                      const boost::optional<FileReference>& osmInputData,
                      const boost::optional<FileReference>& idfInputData,
                      const boost::optional<FileReference>& sqlOutputData,
-                     const std::vector<FileReference>& xmlOutputData,
                      const boost::optional<runmanager::Job>& topLevelJob,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
@@ -987,7 +982,6 @@ DataPoint::DataPoint(const UUID& uuid,
                                    osmInputData,
                                    idfInputData,
                                    sqlOutputData,
-                                   xmlOutputData,
                                    topLevelJob,
                                    dakotaParametersFiles,
                                    tags,
@@ -1011,7 +1005,6 @@ DataPoint::DataPoint(const UUID& uuid,
                      const boost::optional<FileReference>& osmInputData,
                      const boost::optional<FileReference>& idfInputData,
                      const boost::optional<FileReference>& sqlOutputData,
-                     const std::vector<FileReference>& xmlOutputData,
                      const boost::optional<runmanager::Job>& topLevelJob,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
@@ -1034,7 +1027,6 @@ DataPoint::DataPoint(const UUID& uuid,
                                    osmInputData,
                                    idfInputData,
                                    sqlOutputData,
-                                   xmlOutputData,
                                    topLevelJob,
                                    dakotaParametersFiles,
                                    tags,

@@ -152,7 +152,7 @@ void OSRunner::registerFinalCondition(const std::string& message) {
   m_result.setFinalCondition(m_channel, message);
 }
 
-void OSRunner::registerAttribute(const Attribute& attribute) {
+void OSRunner::registerAttribute(Attribute& attribute) {
   attribute.setSource(m_measureName);
   m_result.appendAttribute(attribute);
 }
@@ -388,7 +388,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   }
 
   if (result) {
-    BOOST_FOREACH(const Attribute& attribute,argumentValueAttributes) {
+    BOOST_FOREACH(Attribute& attribute,argumentValueAttributes) {
       registerAttribute(attribute);
     }
   }

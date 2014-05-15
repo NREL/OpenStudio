@@ -57,6 +57,7 @@ OPENSTUDIO_ENUM( FileReferenceType,
     ((IDF)(idf))
     ((OSC)(osc))
     ((OSM)(osm))
+    ((OSSR)(ossr))
     ((RB)(rb))
     ((SQL)(sql))
     ((XML)(xml)) );

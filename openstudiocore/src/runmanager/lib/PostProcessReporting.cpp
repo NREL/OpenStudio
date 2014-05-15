@@ -21,66 +21,61 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <boost/foreach.hpp>
+
 #include "PostProcessReporting.hpp"
 
 namespace openstudio {
 namespace runmanager {
 namespace detail {
-
-
-  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile, const std::string& jobType)
+ 
+  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile, 
+                                                  const std::string& jobType)
   {
     std::vector<Attribute> attributes;
     boost::optional<double> val;
     std::string query;
 
-   //Total Site Energy (GJ)
-   val = t_sqlFile.totalSiteEnergy();
+    //Total Site Energy (GJ)
+    val = t_sqlFile.totalSiteEnergy();
     if (val){
       attributes.push_back(Attribute("Total Site Energy", *val, "GJ"));
-      attributes.back().setSource(jobType);
     }
 
     //Net Site Energy (GJ)
     val = t_sqlFile.netSiteEnergy();
     if (val){
       attributes.push_back(Attribute("Net Site Energy", *val, "GJ"));
-      attributes.back().setSource(jobType);
     }
 
     //Total Source Energy (GJ)
     val = t_sqlFile.totalSourceEnergy();
     if (val){
       attributes.push_back(Attribute("Total Source Energy", *val, "GJ"));
-      attributes.back().setSource(jobType);
     }
 
     //Net Source Energy (GJ)
     val = t_sqlFile.totalSourceEnergy();
     if (val){
       attributes.push_back(Attribute("Net Source Energy", *val, "GJ"));
-      attributes.back().setSource(jobType);
     }
 
     //Annual Total Utility Cost ($)
     val = t_sqlFile.annualTotalUtilityCost();
     if (val){
       attributes.push_back(Attribute("Annual Total Utility Cost", *val, "$"));
-      attributes.back().setSource(jobType);
     }
 
     //Annual Electrict Total Cost ($)
     val = t_sqlFile.annualTotalCost(FuelType::Electricity);
     if (val){
       attributes.push_back(Attribute("Annual Electric Total Cost", *val, "$"));
-      attributes.back().setSource(jobType);
     }
 
     //Annual Gas Total Cost ($)
     val = t_sqlFile.annualTotalCost(FuelType::Gas);
     if (val){
       attributes.push_back(Attribute("Annual Gas Total Cost", *val, "$"));
-      // HERE
     }
 
     //Annual District Cooling Total Cost ($)
@@ -239,6 +234,10 @@ namespace detail {
     {
       LOG(Warn, "No attributes loaded for report");
     }
+
+	  BOOST_FOREACH(Attribute& attribute,attributes) {
+      attribute.setSource(jobType);
+	  }
 
     return attributes;
   }
