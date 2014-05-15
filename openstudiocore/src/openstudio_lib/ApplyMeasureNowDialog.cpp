@@ -147,15 +147,28 @@ void ApplyMeasureNowDialog::createWidgets()
   label = new QLabel("Measure Output");
   label->setObjectName("H1");
 
-  m_outputWindow = new QTextEdit("Results go here");
-  m_outputWindow->setReadOnly(true);
+  DataPointJobItemView * m_jobItemView = new DataPointJobItemView();
 
   layout = new QVBoxLayout();
   layout->addWidget(label);
-  layout->addWidget(m_outputWindow);
+  layout->addWidget(m_jobItemView,0,Qt::AlignTop);
+
+  layout->addStretch();
 
   widget = new QWidget();
   widget->setLayout(layout);
+
+  QScrollArea * scrollArea = new QScrollArea();
+  scrollArea->setWidgetResizable(true);
+  scrollArea->setWidget(widget);
+
+  m_outputPageIdx = m_mainPaneStackedWidget->addWidget(scrollArea);
+
+  // SET CURRENT INDEXES
+
+  m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
+
+  m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
 
   // BUTTONS
 
@@ -313,6 +326,285 @@ void ApplyMeasureNowDialog::displayResults()
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
   this->okButton()->setEnabled(true);
+}
+
+DataPointJobHeaderView::DataPointJobHeaderView()
+  : OSHeader(new HeaderToggleButton())
+{
+  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  mainHLayout->setContentsMargins(15,5,5,5);
+  mainHLayout->setSpacing(5);
+  mainHLayout->setAlignment(Qt::AlignLeft);
+  setLayout(mainHLayout);
+
+  mainHLayout->addWidget(toggleButton);
+
+  m_name = new QLabel();
+  
+  mainHLayout->addWidget(m_name);
+  mainHLayout->addStretch();
+
+  m_lastRunTime = new QLabel();
+  m_lastRunTime->setFixedWidth(150);
+  mainHLayout->addWidget(m_lastRunTime);
+
+  m_status = new QLabel();
+  m_status->setFixedWidth(75);
+  mainHLayout->addWidget(m_status);
+
+  m_na = new QLabel();
+  m_na->setFixedWidth(50);
+  mainHLayout->addWidget(m_na);
+
+  m_warnings = new QLabel();
+  m_warnings->setFixedWidth(75);
+  mainHLayout->addWidget(m_warnings);
+
+  m_errors = new QLabel();
+  m_errors->setFixedWidth(75);
+  mainHLayout->addWidget(m_errors);
+}
+
+void DataPointJobHeaderView::setName(const std::string& name)
+{
+  m_name->setText(toQString(name));
+}
+
+void DataPointJobHeaderView::setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime)
+{
+  if (lastRunTime){
+    std::string s = lastRunTime->toString();
+    m_lastRunTime->setText(toQString(s));
+  }else{
+    m_lastRunTime->setText("Not Started");
+  }
+}
+
+void DataPointJobHeaderView::setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled)
+{
+  if (!isCanceled)
+  {
+    std::string s = status.toString();
+    m_status->setText(toQString(s));
+  } else {
+    m_status->setText("Canceled");
+  }
+}
+
+void DataPointJobHeaderView::setNA(bool na)
+{
+  QString text;
+  QString naStyle;
+  if (na){
+    text = "   NA";
+    naStyle = "QLabel { color : #C47B06; }";
+  }
+  m_na->setText(text);
+  m_na->setStyleSheet(naStyle);
+}
+
+void DataPointJobHeaderView::setNumWarnings(unsigned numWarnings)
+{
+  QString warningsStyle;
+  if (numWarnings > 0){
+    warningsStyle = "QLabel { color : #C47B06; }";
+  }
+  m_warnings->setText(QString::number(numWarnings) + QString(numWarnings == 1 ? " Warning" : " Warnings"));
+  m_warnings->setStyleSheet(warningsStyle);
+}
+
+void DataPointJobHeaderView::setNumErrors(unsigned numErrors)
+{
+  QString errorsStyle;
+  if (numErrors > 0){
+    errorsStyle = "QLabel { color : red; }";
+  }
+  m_errors->setText(QString::number(numErrors) + QString(numErrors == 1 ? " Error" : " Errors"));
+  m_errors->setStyleSheet(errorsStyle);
+}
+
+DataPointJobContentView::DataPointJobContentView()
+  : QWidget()
+{
+  QHBoxLayout* mainHLayout = new QHBoxLayout();
+  mainHLayout->setContentsMargins(15,5,5,5);
+  mainHLayout->setSpacing(0);
+  mainHLayout->setAlignment(Qt::AlignLeft);
+  setLayout(mainHLayout);
+
+  m_textEdit = new QLabel();
+  m_textEdit->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  m_textEdit->setWordWrap(true);
+
+  mainHLayout->addWidget(m_textEdit);
+}
+
+void DataPointJobContentView::clear()
+{
+  m_textEdit->setText("");
+}
+
+QString DataPointJobContentView::formatMessageForHTML(const std::string &t_message)
+{
+  QString str = QString::fromStdString(t_message);
+  str.replace("\n", "<br>");
+  return str;
+}
+
+void DataPointJobContentView::addInitialConditionMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += QString("<b style=\"color:blue\">Initial Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+void DataPointJobContentView::addFinalConditionMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += QString("<b style=\"color:blue\">Final Condition</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+void DataPointJobContentView::addInfoMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += QString("<b style=\"color:green\">Info</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+void DataPointJobContentView::addWarningMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += QString("<b style=\"color:#C47B06\">Warning</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+void DataPointJobContentView::addErrorMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += QString("<b style=\"color:red\">Error</b>: ") + formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+void DataPointJobContentView::addStdErrorMessage(const std::string& message)
+{
+  QString html = m_textEdit->text();
+  html += formatMessageForHTML(message) + QString("<br></br>");
+  m_textEdit->setText(html);
+}
+
+DataPointJobItemView::DataPointJobItemView()
+  : OSCollapsibleView()
+{
+  setStyleSheet("openstudio--pat--DataPointJobItemView { background: #C3C3C3; margin-left:10px; }");
+
+  dataPointJobHeaderView = new DataPointJobHeaderView();
+  setHeader(dataPointJobHeaderView);
+ 
+  dataPointJobContentView = new DataPointJobContentView(); 
+  setContent(dataPointJobContentView);
+}
+
+void DataPointJobItemView::paintEvent(QPaintEvent * e)
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
+{
+  dataPointJobHeaderView->setName(rubyMeasure.name());
+  dataPointJobHeaderView->setLastRunTime(job.lastRun());
+  dataPointJobHeaderView->setStatus(job.status(), job.canceled());
+
+  dataPointJobContentView->clear();
+
+  std::vector<std::string> initialConditions = jobErrors.initialConditions();
+  Q_FOREACH(const std::string& initialCondition, initialConditions){
+    dataPointJobContentView->addInitialConditionMessage(initialCondition);
+  }
+
+  std::vector<std::string> finalConditions = jobErrors.finalConditions();
+  Q_FOREACH(const std::string& finalCondition, finalConditions){
+    dataPointJobContentView->addFinalConditionMessage(finalCondition);
+  }
+
+  std::vector<std::string> errors = jobErrors.errors();
+  dataPointJobHeaderView->setNumErrors(errors.size());
+  Q_FOREACH(const std::string& errorMessage, errors){
+    dataPointJobContentView->addErrorMessage(errorMessage);
+  }
+
+  // also display std err if job failed and it exists and is not empty
+  if (job.lastRun() && !job.running() && !jobErrors.succeeded()){
+    try{
+      runmanager::Files files(job.outputFiles());
+      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+      ifs.close();
+      if (!stdErrorMessage.empty()){
+        dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
+      }
+    }catch(std::exception&){
+
+    }
+  }
+
+  std::vector<std::string> warnings = jobErrors.warnings();
+  dataPointJobHeaderView->setNumWarnings(warnings.size());
+  Q_FOREACH(const std::string& warningMessage, warnings){
+    dataPointJobContentView->addWarningMessage(warningMessage);
+  }
+
+  std::vector<std::string> infos = jobErrors.infos();
+  Q_FOREACH(const std::string& infoMessage, infos){
+    dataPointJobContentView->addInfoMessage(infoMessage);
+  }
+
+  if (jobErrors.result == ruleset::OSResultValue::NA){
+    dataPointJobHeaderView->setNA(true);
+  }else{
+    dataPointJobHeaderView->setNA(false);
+  }
+}
+
+//***** SLOTS *****
+
+void ApplyMeasureNowDialog::on_cancelButton(bool checked)
+{
+  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
+    // N/A
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+    m_timer->stop();
+    this->okButton()->show();
+    return;
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+  }
+  
+  OSDialog::on_cancelButton(checked);
+}
+
+void ApplyMeasureNowDialog::on_okButton(bool checked)
+{
+  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
+    m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
+    m_timer->start(50);
+    this->okButton()->hide();
+    runMeasure();
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    // N/A
+    m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx); // TODO remove
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
+    // TODO
+    // close dialog
+    // display modified, cloned model in app
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+  }
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)

@@ -20,7 +20,14 @@
 #ifndef OPENSTUDIO_APPLYMEASURENOWDIALOG_H
 #define OPENSTUDIO_APPLYMEASURENOWDIALOG_H
 
+#include <shared_gui_components/HeaderViews.hpp>
 #include <shared_gui_components/OSDialog.hpp>
+#include <shared_gui_components/OSListView.hpp>
+
+#include <analysis/Problem.hpp>
+#include <analysis/RubyMeasure.hpp>
+
+#include <utilities/bcl/BCLMeasure.hpp>
 
 #include <analysis/Problem.hpp>
 #include <analysis/RubyMeasure.hpp>
@@ -33,8 +40,16 @@ class QTimer;
 
 namespace openstudio{
 
+class DateTime;
 class EditController;
 class LocalLibraryController;
+
+// Forward Decs
+class DataPointJobItemView;
+
+namespace runmanager {
+  class AdvancedStatus;
+}
 
 class ApplyMeasureNowDialog : public OSDialog
 {
@@ -88,7 +103,7 @@ private:
 
   QTextEdit * m_argumentsFailedTextEdit;
 
-  QTextEdit * m_outputWindow;
+  DataPointJobItemView * m_jobItemView;
 
   QTimer * m_timer;
 
@@ -101,6 +116,93 @@ private:
   int m_argumentsFailedPageIdx;
 
   int m_argumentsOkPageIdx;
+
+};
+
+class DataPointJobHeaderView : public OSHeader
+{
+  Q_OBJECT
+
+ public:
+
+  DataPointJobHeaderView();
+
+  virtual ~DataPointJobHeaderView() {}
+
+  void setName(const std::string& name);
+
+  void setLastRunTime(const boost::optional<openstudio::DateTime>& lastRunTime);
+
+  void setStatus(const openstudio::runmanager::AdvancedStatus& status, bool isCanceled);
+
+  void setNA(bool na);
+
+  void setNumWarnings(unsigned numWarnings);
+
+  void setNumErrors(unsigned numErrors);
+
+ private:
+
+  QLabel* m_name;
+  QLabel* m_lastRunTime;
+  QLabel* m_status;
+  QLabel* m_na;
+  QLabel* m_warnings;
+  QLabel* m_errors;
+};
+
+class DataPointJobContentView : public QWidget
+{
+  Q_OBJECT
+
+ public:
+
+  DataPointJobContentView();
+
+  virtual ~DataPointJobContentView() {}
+
+  void clear();
+
+  void addInitialConditionMessage(const std::string& message);
+
+  void addFinalConditionMessage(const std::string& message);
+
+  void addInfoMessage(const std::string& message);
+
+  void addWarningMessage(const std::string& message);
+
+  void addErrorMessage(const std::string& message);
+
+  void addStdErrorMessage(const std::string& message);
+
+ private:
+  static QString formatMessageForHTML(const std::string &t_message);
+
+  QLabel * m_textEdit;
+
+};
+
+class DataPointJobItemView : public OSCollapsibleView
+{
+  Q_OBJECT
+
+public:
+
+  DataPointJobItemView();
+
+  virtual ~DataPointJobItemView() {}
+
+  DataPointJobHeaderView * dataPointJobHeaderView;
+
+  DataPointJobContentView * dataPointJobContentView;
+
+protected:
+
+  void paintEvent(QPaintEvent * e);
+
+public slots:
+
+  void update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job);
 
 };
 
