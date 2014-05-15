@@ -168,7 +168,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
-  m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
+  m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
 
   // BUTTONS
 
