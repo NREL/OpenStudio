@@ -497,7 +497,7 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
 
   puts "#{Time.now.getutc}: writing output"
 
-  # how proceed on, as we have all of the contributions we want
+  # now proceed on, as we have all of the contributions we want
   allhours = []
 
   8760.times do |hour|
