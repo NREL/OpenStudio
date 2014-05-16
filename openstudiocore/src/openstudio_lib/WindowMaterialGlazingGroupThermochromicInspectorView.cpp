@@ -72,11 +72,13 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label = new QLabel("Optical Data Temperature: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,col);
+  label->hide();
 
   m_opticalDataTemperature = new OSQuantityEdit2("C", "C", "F", m_isIP);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_opticalDataTemperature,row++,0,1,3);
+  m_opticalDataTemperature->hide();
 
   // Window ThermochromicGlazing Glazing Name
 
@@ -117,11 +119,11 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
 {
   m_nameEdit->bind(thermochromicGlazing,"name");
 
-  m_opticalDataTemperature->bind(
-    m_isIP,
-    thermochromicGlazing,
-    DoubleGetter(boost::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
-    DoubleSetterVoidReturn(boost::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
+  //m_opticalDataTemperature->bind( // TODO
+  //  m_isIP,
+  //  thermochromicGlazing,
+  //  DoubleGetter(boost::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
+  //  DoubleSetterVoidReturn(boost::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 
