@@ -176,8 +176,6 @@ namespace detail{
                 AirTerminalSingleDuctVAVReheat mo = this->getObject<AirTerminalSingleDuctVAVReheat>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true; 

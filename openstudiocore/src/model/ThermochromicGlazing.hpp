@@ -38,7 +38,8 @@ class MODEL_API ThermochromicGlazing : public Glazing {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ThermochromicGlazing(const Model& model);
+  explicit ThermochromicGlazing(const Model& model,
+    double opticalDataTemperature = 80.0);
 
   virtual ~ThermochromicGlazing() {}
 
@@ -49,11 +50,15 @@ class MODEL_API ThermochromicGlazing : public Glazing {
   /** @name Getters */
   //@{
 
+  double opticalDataTemperature() const;
+
   // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Setters */
   //@{
+
+  void setOpticalDataTemperature(double value);
 
   // TODO: Handle this object's extensible fields.
 
