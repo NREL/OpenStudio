@@ -420,14 +420,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     # wrapper that imports all of the libraries/python wrappers into the appropriate modules.  
     # http://docs.python.org/2/tutorial/modules.html
     # http://docs.python.org/2/library/imp.html
-    #    IF(IS_UTILTIES)
-    #SET( MODULE "OpenStudio")
-      #ELSE()
-      # SET( MODULE "OpenStudio.${SIMPLENAME}" )
-      #ENDIF()    
  
     SET(MODULE ${LOWER_NAME})
-
       
     ADD_CUSTOM_COMMAND(
       OUTPUT "python_${NAME}_wrap.cxx"
@@ -447,7 +441,6 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       python_${NAME}_wrap.cxx 
     )
 
-
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME} )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/" )
@@ -463,20 +456,14 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
 
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
 
-    # SET( _NAME "_${LOWER_NAME}.so")
-    # IF(APPLE)
-    #   SET( _NAME "${LOWER_NAME}.so" )
-    # ELSE()
     IF(MSVC)
       SET( _NAME "_${LOWER_NAME}.pyd")
     ELSE()
-      SET( _NAME "_${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
+      SET( _NAME "_${LOWER_NAME}.so")
     ENDIF()
-    # ENDIF()
 
     IF( WIN32 OR APPLE )
       INSTALL( TARGETS ${swig_target} DESTINATION Python/openstudio/ )
-      # INSTALL(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
 
       SET( Prereq_Dirs
         "${CMAKE_BINARY_DIR}/Products/"
@@ -484,21 +471,9 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
         "${CMAKE_BINARY_DIR}/Products/Debug"
       )
 
-      # INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/Products/python DESTINATION Python/openstudio/
-      #     FILES_MATCHING PATTERN "*.py")
-      # INSTALL(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
-      # FILE(COPY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
-      # EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${CMAKE_BINARY_DIR}/Products/python/${LOWER_NAME}.py\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
-
       INSTALL(CODE "
-        # MESSAGE( \"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\" )
         INCLUDE(GetPrerequisites)
         GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
-        # GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${LOWER_NAME}.py PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
-        #MESSAGE( \"PREREQUISITES = \${PREREQUISITES}\" )
-
-        # EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
-
 
        IF(WIN32)
          LIST(REVERSE PREREQUISITES)
@@ -530,8 +505,6 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     ENDIF()
 
     INSTALL(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
-
-    # EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
     
     # add this target to a "global" variable so python tests can require these
     LIST( APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}" )
