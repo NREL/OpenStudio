@@ -162,8 +162,6 @@ namespace detail{
                 AirTerminalSingleDuctUncontrolled mo = this->getObject<AirTerminalSingleDuctUncontrolled>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true;

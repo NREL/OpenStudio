@@ -44,6 +44,9 @@ SET( ${target_name}_src
   AirLoopHVACUnitaryHeatPumpAirToAir.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp
   AirLoopHVACUnitaryHeatPumpAirToAir.cpp
+  AirLoopHVACUnitarySystem.hpp
+  AirLoopHVACUnitarySystem_Impl.hpp
+  AirLoopHVACUnitarySystem.cpp
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
@@ -1118,6 +1121,7 @@ SET( ${target_name}_test_src
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
+  test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp

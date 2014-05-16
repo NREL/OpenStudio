@@ -43,6 +43,7 @@
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>

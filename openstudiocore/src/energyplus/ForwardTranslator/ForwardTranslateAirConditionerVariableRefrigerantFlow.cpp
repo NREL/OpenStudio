@@ -440,7 +440,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   
   // PipingCorrectionFactorforLengthinHeatingModeCurveName
   
-  if( boost::optional<model::CurveCubic> curve = modelObject.pipingCorrectionFactorforLengthinHeatingModeCurve() )
+  if( boost::optional<model::CurveBiquadratic> curve = modelObject.pipingCorrectionFactorforLengthinHeatingModeCurve() )
   {
     if( boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get()) )
     {

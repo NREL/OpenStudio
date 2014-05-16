@@ -1,4 +1,4 @@
-!IDD_Version 1.3.3
+!IDD_Version 1.3.4
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -7863,6 +7863,388 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \key Multimode
        \key CoolReheat
 
+OS:AirLoopHVAC:UnitarySystem,
+       \memo AirloopHVAC:UnitarySystem is a generic HVAC system type that allows any
+       \memo configuration of coils and/or fan. This object is a replacement of other
+       \memo AirloopHVAC objects. This object can be used in outdoor air systems,
+       \memo outdoor air units, air loops, and as zone equipment if desired.
+       \min-fields 13
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+       \note Unique name for the Unitary System.
+  A3,  \field Control Type
+       \type choice
+       \key Load
+       \key SetPoint
+       \default Load
+       \note Load control requires a Controlling Zone name.
+       \note SetPoint control requires set points at coil outlet node.
+  A4,  \field Controlling Zone or Thermostat Location
+       \note Used only for Load based control
+       \type object-list
+       \object-list ThermalZoneNames
+       \note Zone name where thermostat is located. Required when Control Type = Load.
+  A5,  \field Dehumidification Control Type
+       \type choice
+       \key None
+       \key Multimode
+       \key CoolReheat
+       \default None
+       \note None = meet sensible load only
+       \note Multimode = activate enhanced dehumidification mode
+       \note as needed and meet sensible load.  Valid only with
+       \note cooling coil type CoilSystem:Cooling:DX:HeatExchangerAssisted.
+       \note This control mode allows the heat exchanger to be turned
+       \note on and off based on the zone dehumidification requirements.
+       \note A ZoneControl:Humidistat object is also required.
+       \note CoolReheat = cool beyond the dry bulb setpoint.
+       \note as required to meet the humidity setpoint.  Valid with all
+       \note cooling coil types. When a heat exchanger assisted cooling
+       \note coil is used, the heat exchanger is locked on at all times.
+       \note A ZoneControl:Humidistat object is also required.
+  A6,  \field Availability Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \note A schedule value greater than zero (usually 1 is used) indicates that the unit is
+       \note available to operate as needed. A value less than or equal to zero (usually zero
+       \note is used) denotes that the unit must be off.
+  A7,  \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the node name used as the inlet air node for the unitary system.
+  A8,  \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the node name used as the outlet air node for the unitary system.
+  A9, \field Supply Fan Name
+       \type object-list
+       \object-list FansCVandOnOffandVAV
+       \note Enter the name of the supply air fan if included in the unitary system.
+  A10, \field Fan Placement
+       \type choice
+       \key BlowThrough
+       \key DrawThrough
+       \note Enter the type of supply air fan if included in the unitary system.
+  A11, \field Supply Air Fan Operating Mode Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note A fan operating mode schedule value of 0 indicates cycling fan mode (supply air
+       \note fan cycles on and off in tandem with the cooling or heating coil).
+       \note Any other schedule value indicates continuous fan mode (supply air fan operates
+       \note continuously regardless of cooling or heating coil operation). Provide a schedule
+       \note with non-zero values when high humidity control is specified.
+       \note Leaving this schedule name blank will default to constant fan mode for the
+       \note entire simulation period.
+       \note This field is not used when set point based control is used where a set point
+       \note controls the coil (i.e., model assumes constant fan mode operation).
+  A12, \field Heating Coil Name
+       \type object-list
+       \object-list HeatingCoilsDX
+       \object-list HeatingCoilsDXMultiSpeed
+       \object-list HeatingCoilsDXVariableSpeed
+       \object-list HeatingCoilsWaterToAirHP
+       \object-list HeatingCoilsWaterToAirVSHP
+       \object-list HeatingCoilName
+       \object-list HeatingCoilsElectricMultiStage
+       \object-list HeatingCoilsGasMultiStage
+       \object-list HeatingCoilsDesuperheater
+       \note Enter the name of the heating coil if included in the unitary system.
+  N1,  \field DX Heating Coil Sizing Ratio
+       \type real
+       \default 1.0
+       \minimum> 0
+       \note Used to adjust heat pump heating capacity with respect to DX cooling capacity
+       \note used only for heat pump configurations (i.e., a cooling and DX heating coil is used).
+  A13, \field Cooling Coil Name
+       \type object-list
+       \object-list CoolingCoilsDX
+       \object-list CoolingCoilsDXMultiSpeed
+       \object-list CoolingCoilsDXVariableSpeed
+       \object-list CoolingCoilsWaterToAirHP
+       \object-list CoolingCoilsWaterToAirVSHP
+       \object-list CoolingCoilsWater
+       \note Enter the name of the cooling coil if included in the unitary system.
+  A14, \field Use DOAS DX Cooling Coil
+       \type choice
+       \key Yes
+       \key No
+       \default No
+       \note If Yes, the DX cooling coil runs as 100% DOAS DX coil.
+       \note If No, the DX cooling coil runs as a regular DX coil.
+       \note If left blank the default is regular dx coil.
+  N2,  \field DOAS DX Cooling Coil Leaving Minimum Air Temperature
+       \type real
+       \units C
+       \minimum 0.0
+       \maximum 7.2
+       \default 2.0
+       \note DX cooling coil leaving minimum air temperature defines the minimum DOAS DX cooling coil
+       \note leaving air temperature that should be maintained to avoid frost formation. This input
+       \note field is optional and only used along with the input field above.
+  A15, \field Latent Load Control
+       \type choice
+       \key SensibleOnlyLoadControl
+       \key LatentOnlyLoadControl
+       \key LatentWithSensibleLoadControl
+       \key LatentOrSensibleLoadControl
+       \Default SensibleOnlyLoadControl
+       \note SensibleOnlyLoadControl is selected when thermostat control is used.
+       \note LatentOnlyLoadControl is selected when humidistat control is used.
+       \note LatentWithSensibleLoadControl is selected when thermostat control is used and
+       \note dehumidification is required only when a sensible load exists.
+       \note LatentOrSensibleLoadControl is selected when thermostat control is used and
+       \note dehumidification is required any time the humidistat set point is exceeded.
+  A16, \field Supplemental Heating Coil Name
+       \type object-list
+       \object-list HeatingCoilName
+       \object-list HeatingCoilsDesuperheater
+       \note Enter the name of the supplemental heating coil if included in the unitary system.
+       \note Only required if dehumidification control type is "CoolReheat".
+  A17, \field Supply Air Flow Rate Method During Cooling Operation
+       \type choice
+       \key None
+       \key SupplyAirFlowRate
+       \key FlowPerFloorArea
+       \key FractionOfAutosizedCoolingValue
+       \key FlowPerCoolingCapacity
+       \note Enter the method used to determine the cooling supply air volume flow rate.
+       \note None is used when a cooling coil is not included in the unitary system or this field may be blank.
+       \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
+       \note FlowPerFloorArea is selected when the supply air volume flow rate is based on total floor area
+       \note served by the unitary system.
+       \note FractionOfAutosizedCoolingValue is selected when the supply air volume is a fraction of the
+       \note value determined by the simulation.
+       \note FlowPerCoolingCapacity is selected when the supply air volume is a fraction of the cooling
+       \note capacity as determined by the simulation.
+  N3,  \field Supply Air Flow Rate During Cooling Operation
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \note Enter the magnitude of the supply air volume flow rate during cooling operation.
+       \note Required field when Supply air Flow Rate Method During Cooling Operation is SupplyAirFlowRate.
+       \note This field may be blank if a cooling coil is not included in the unitary system.
+  N4,  \field Supply Air Flow Rate Per Floor Area During Cooling Operation
+       \type real
+       \units m3/s-m2
+       \minimum 0.0
+       \note Enter the supply air volume flow rate per total floor area fraction.
+       \note Required field when Supply air Flow Rate Method During Cooling Operation is FlowPerFloorArea.
+       \note This field may be blank if a cooling coil is not included in the unitary system.
+  N5,  \field Fraction of Autosized Design Cooling Supply Air Flow Rate
+       \type real
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
+       \note Required field when Supply air Flow Rate Method During Cooling Operation is FractionOfAutosizedCoolingValue.
+       \note This field may be blank if a cooling coil is not included in the unitary system.
+  N6,  \field Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the cooling capacity.
+       \note Required field when Supply air Flow Rate Method During Cooling Operation is FlowPerCoolingCapacity.
+       \note This field may be blank if a cooling coil is not included in the unitary system.
+  A18, \field Supply Air Flow Rate Method During Heating Operation
+       \type choice
+       \key None
+       \key SupplyAirFlowRate
+       \key FlowPerFloorArea
+       \key FractionOfAutosizedHeatingValue
+       \key FlowPerHeatingCapacity
+       \note Enter the method used to determine the heating supply air volume flow rate.
+       \note None is used when a heating coil is not included in the unitary system or this field may be blank.
+       \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
+       \note FlowPerFloorArea is selected when the supply air volume flow rate is based on total floor area
+       \note served by the unitary system.
+       \note FractionOfAutosizedHeatingValue is selected when the supply air volume is a fraction of the
+       \note value determined by the simulation.
+       \note FlowPerHeatingCapacity is selected when the supply air volume is a fraction of the heating
+       \note capacity as determined by the simulation.
+  N7,  \field Supply Air Flow Rate During Heating Operation
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \note Enter the magnitude of the supply air volume flow rate during heating operation.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is SupplyAirFlowRate.
+       \note This field may be blank if a heating coil is not included in the unitary system.
+  N8,  \field Supply Air Flow Rate Per Floor Area during Heating Operation
+       \type real
+       \units m3/s-m2
+       \minimum 0.0
+       \note Enter the supply air volume flow rate per total floor area fraction.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerFloorArea.
+       \note This field may be blank if a heating coil is not included in the unitary system.
+  N9,  \field Fraction of Autosized Design Heating Supply Air Flow Rate
+       \type real
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is FractionOfAutosizedHeatingValue.
+       \note This field may be blank if a heating coil is not included in the unitary system.
+  N10, \field Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the heating capacity.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerHeatingCapacity.
+       \note This field may be blank if a heating coil is not included in the unitary system.
+  A19, \field Supply Air Flow Rate Method When No Cooling or Heating is Required
+       \type choice
+       \key None
+       \key SupplyAirFlowRate
+       \key FlowPerFloorArea
+       \key FractionOfAutosizedCoolingValue
+       \key FractionOfAutosizedHeatingValue
+       \key FlowPerCoolingCapacity
+       \key FlowPerHeatingCapacity
+       \note Enter the method used to determine the supply air volume flow rate when no cooling or heating is required.
+       \note None is used when a heating coil is not included in the unitary system or this field may be blank.
+       \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
+       \note FlowPerFloorArea is selected when the supply air volume flow rate is based on total floor area
+       \note served by the unitary system.
+       \note FractionOfAutosizedCoolingValue is selected when the supply air volume is a fraction of the
+       \note cooling value determined by the simulation.
+       \note FractionOfAutosizedHeatingValue is selected when the supply air volume is a fraction of the
+       \note heating value determined by the simulation.
+       \note FlowPerCoolingCapacity is selected when the supply air volume is a fraction of the cooling
+       \note capacity as determined by the simulation.
+       \note FlowPerHeatingCapacity is selected when the supply air volume is a fraction of the heating
+       \note capacity as determined by the simulation.
+  N11, \field Supply Air Flow Rate When No Cooling or Heating is Required
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \autosizable
+       \note Enter the magnitude of the supply air volume flow rate during when no cooling or heating is required.
+       \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is SupplyAirFlowRate.
+  N12, \field Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required
+       \type real
+       \units m3/s-m2
+       \minimum 0.0
+       \note Enter the supply air volume flow rate per total floor area fraction.
+       \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FlowPerFloorArea.
+  N13, \field Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
+       \type real
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the cooling supply air flow rate.
+       \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FractionOfAutosizedCoolingValue.
+  N14, \field Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
+       \type real
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the heating supply air flow rate.
+       \note Required field when Supply air Flow Rate Method When No Cooling or Heating is Required is FractionOfAutosizedHeatingValue.
+  N15, \field Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the cooling capacity.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerCoolingCapacity.
+  N16, \field Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required
+       \type real
+       \units m3/s-W
+       \minimum 0.0
+       \note Enter the supply air volume flow rate as a fraction of the heating capacity.
+       \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerHeatingCapacity.
+  N17, \field Maximum Supply Air Temperature
+       \type real
+       \units C
+       \autosizable
+       \default 80.0
+       \note Enter the maximum supply air temperature leaving the heating coil.
+  N18, \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
+       \type real
+       \units C
+       \default 21.0
+       \note Enter the maximum outdoor dry-bulb temperature for supplemental heater operation.
+  A20, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+       \type alpha
+       \note If this field is blank, outdoor temperature from the weather file is used.
+       \note If this field is not blank, the node name specified determines the outdoor temperature used
+       \note for controlling supplemental heater operation.
+  N19, \field Maximum Cycling Rate
+       \type real
+       \units cycles/hr
+       \minimum 0.0
+       \maximum 5.0
+       \default 2.5
+       \note Used only for water source heat pump.
+       \note The maximum on-off cycling rate for the compressor.
+       \note Suggested value is 2.5 for a typical heat pump.
+  N20, \field Heat Pump Time Constant
+       \type real
+       \units s
+       \minimum 0.0
+       \maximum 500.0
+       \default 60.0
+       \note Used only for water source heat pump.
+       \note Time constant for the cooling coil's capacity to reach steady state after startup.
+       \note Suggested value is 60 for a typical heat pump.
+  N21, \field Fraction of On-Cycle Power Use
+       \type real
+       \minimum 0.0
+       \maximum 0.05
+       \default 0.01
+       \note Used only for water source heat pump.
+       \note The fraction of on-cycle power use to adjust the part load fraction based on
+       \note the off-cycle power consumption due to crankcase heaters, controls, fans, and etc.
+       \note Suggested value is 0.01 for a typical heat pump.
+  N22, \field Heat Pump Fan Delay Time
+       \type real
+       \units s
+       \minimum 0.0
+       \default 60
+       \note Used only for water source heat pump.
+       \note Programmed time delay for heat pump fan to shut off after compressor cycle off.
+       \note Only required when fan operating mode is cycling.
+       \note Enter 0 when fan operating mode is continuous.
+  N23, \field Ancilliary On-Cycle Electric Power
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Enter the value of ancilliary electric power for controls or other devices consumed during the on cycle.
+  N24, \field Ancilliary Off-Cycle Electric Power
+       \type real
+       \units W
+       \minimum 0
+       \default 0
+       \note Enter the value of ancilliary electric power for controls or other devices consumed during the off cycle.
+  N25, \field Design Heat Recovery Water Flow Rate
+       \type real
+       \units m3/s
+       \minimum 0.0
+       \default 0.0
+       \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
+       \note Used for heat recovery to an EnergyPlus plant loop.
+  N26, \field Maximum Temperature for Heat Recovery
+       \type real
+       \units C
+       \maximum 100.0
+       \minimum 0.0
+       \default 80.0
+       \note Enter the maximum heat recovery inlet temperature allowed for heat recovery.
+  A21, \field Heat Recovery Water Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the name of the heat recovery water inlet node if plant water loop connections are present.
+  A22, \field Heat Recovery Water Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
+  A23; \field Design Specification Multispeed Heat Pump Object Name
+       \type object-list
+       \object-list UnitarySystemPerformaceNames
+       \note Enter the name of the performance specification object used to describe the multispeed coil.
+
 OS:AirLoopHVAC:ZoneMixer,
        \memo Mix N inlet air streams into one (currently 50 per air loop, but extensible).  Node names cannot
        \memo be duplicated within a single zone mixer (AirLoopHVAC:ZoneMixer) list.
@@ -11467,6 +11849,7 @@ OS:Curve:Linear,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11522,6 +11905,7 @@ OS:Curve:Quadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11580,6 +11964,7 @@ OS:Curve:Cubic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11638,6 +12023,7 @@ OS:Curve:Quartic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11693,6 +12079,7 @@ OS:Curve:Exponent,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11786,6 +12173,7 @@ OS:Curve:Bicubic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11867,6 +12255,7 @@ OS:Curve:Biquadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -11945,6 +12334,7 @@ OS:Curve:QuadraticLinear,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 
@@ -12077,6 +12467,7 @@ OS:Curve:Triquadratic,
        \type choice
        \default Dimensionless
        \key Dimensionless
+       \key Temperature
        \key Capacity
        \key Power
 

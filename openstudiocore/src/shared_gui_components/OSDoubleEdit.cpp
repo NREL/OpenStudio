@@ -259,10 +259,20 @@ void OSDoubleEdit2::onEditingFinished() {
         double value = boost::lexical_cast<double>(str);
         setPrecision(str);
         if (m_set) {
-          (*m_set)(value);
+          bool result = (*m_set)(value);
+          if (!result){
+            //restore
+            refreshTextAndLabel();
+          }
+        }else if (m_setVoidReturn){
+          (*m_setVoidReturn)(value);
         }
       }
-      catch (...) {}
+      catch (...) 
+      {
+        //restore
+        refreshTextAndLabel();
+      }
     }
   }
 }
@@ -313,7 +323,17 @@ void OSDoubleEdit2::refreshTextAndLabel() {
         ss << std::fixed;
       }
       if (m_precision) {
-        ss << std::setprecision(*m_precision);
+
+        // check if precision is too small to display value
+        int precision = *m_precision;
+        double minValue = std::pow(10.0, -precision);
+        if (value < minValue){
+          m_precision.reset();
+        }
+
+        if (m_precision){
+          ss << std::setprecision(*m_precision);
+        }
       }
       ss << value;
       textValue = toQString(ss.str());
@@ -510,7 +530,17 @@ void OSDoubleEdit::refreshTextAndLabel() {
         ss << std::fixed;
       }
       if (m_precision) {
-        ss << std::setprecision(*m_precision);
+        
+        // check if precision is too small to display value
+        int precision = *m_precision;
+        double minValue = std::pow(10.0, -precision);
+        if (value < minValue){
+          m_precision.reset();
+        }  
+
+        if (m_precision){
+          ss << std::setprecision(*m_precision);
+        }
       }
       ss << value;
       textValue = toQString(ss.str());
