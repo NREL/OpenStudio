@@ -41,10 +41,11 @@
 
 #include <utilities/core/RubyException.hpp>
 
+#include <runmanager/lib/AdvancedStatus.hpp>
 #include <runmanager/lib/Job.hpp>
 #include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
+#include <runmanager/lib/Workflow.hpp>
 #include <runmanager/lib/WorkItem.hpp>
 
 #include <QBoxLayout>
@@ -68,7 +69,13 @@
 namespace openstudio {
 
 ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
-  : OSDialog(false, parent)
+  : OSDialog(false, parent),
+  m_editController(0),
+  m_mainPaneStackedWidget(0),
+  m_rightPaneStackedWidget(0),
+  m_argumentsFailedTextEdit(0),
+  m_jobItemView(0),
+  m_timer(0)
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -147,7 +154,7 @@ void ApplyMeasureNowDialog::createWidgets()
   label = new QLabel("Measure Output");
   label->setObjectName("H1");
 
-  DataPointJobItemView * m_jobItemView = new DataPointJobItemView();
+  m_jobItemView = new DataPointJobItemView();
 
   layout = new QVBoxLayout();
   layout->addWidget(label);
@@ -207,6 +214,15 @@ void ApplyMeasureNowDialog::displayMeasure()
 
     // Use this?
     //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
+
+    // TODO check measure type
+    //if (m_measureType == MeasureType::ModelMeasure) {
+    //  // OK
+    //} else if (m_measureType == MeasureType::EnergyPlusMeasure) {
+    //  return; // TODO bad news
+    //} else if (m_measureType == MeasureType::ReportingMeasure) {
+    //  return; // TODO bad news
+    //}
 
     // prep discrete variable
     std::string name = app->measureManager().suggestMeasureGroupName(*bclMeasure);
@@ -306,17 +322,25 @@ void ApplyMeasureNowDialog::runMeasure()
 
   wf.add(co.getTools());
 
-  openstudio::runmanager::Job j = wf.create(outDir, modelPath);
+  m_job = wf.create(outDir, modelPath);
 
-  openstudio::runmanager::RunManager rm;
-  rm.enqueue(j, true);
+  bool isConnected = false;
+  isConnected = m_job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), this, SLOT(runManagerStatusChange(const openstudio::runmanager::AdvancedStatus&)));
+  OS_ASSERT(isConnected);
 
-  j.waitForFinished();
-  rm.waitForFinished();
+  runmanager::RunManager rm;
+  bool queued = rm.enqueue(*m_job, true);
+  OS_ASSERT(queued);
+  std::vector<runmanager::Job> jobs = rm.getJobs();
+  OS_ASSERT(jobs.size() == 1);
+  rm.setPaused(false);
+}
 
-  j.errors();
-
-  openstudio::runmanager::JobErrors jobErrors = j.errors();
+void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
+{
+  if(advancedStatus.value() == runmanager::AdvancedStatusEnum::Idle){
+    displayResults();
+  }
 }
 
 void ApplyMeasureNowDialog::displayResults()
@@ -326,10 +350,19 @@ void ApplyMeasureNowDialog::displayResults()
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
   this->okButton()->setEnabled(true);
+  runmanager::JobErrors jobErrors = m_job->errors();
+  OS_ASSERT(m_jobItemView);
+  m_jobItemView->update(*m_rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
-  : OSHeader(new HeaderToggleButton())
+  : OSHeader(new HeaderToggleButton()),
+  m_name(0),
+  m_lastRunTime(0),
+  m_status(0),
+  m_na(0),
+  m_warnings(0),
+  m_errors(0)
 {
   QHBoxLayout * mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
@@ -424,7 +457,8 @@ void DataPointJobHeaderView::setNumErrors(unsigned numErrors)
 }
 
 DataPointJobContentView::DataPointJobContentView()
-  : QWidget()
+  : QWidget(),
+  m_textEdit(0)
 {
   QHBoxLayout* mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
@@ -494,15 +528,17 @@ void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 }
 
 DataPointJobItemView::DataPointJobItemView()
-  : OSCollapsibleView()
+  : OSCollapsibleView(),
+  m_dataPointJobHeaderView(0),
+  m_dataPointJobContentView(0)
 {
   setStyleSheet("openstudio--pat--DataPointJobItemView { background: #C3C3C3; margin-left:10px; }");
 
-  dataPointJobHeaderView = new DataPointJobHeaderView();
-  setHeader(dataPointJobHeaderView);
+  m_dataPointJobHeaderView = new DataPointJobHeaderView();
+  setHeader(m_dataPointJobHeaderView);
  
-  dataPointJobContentView = new DataPointJobContentView(); 
-  setContent(dataPointJobContentView);
+  m_dataPointJobContentView = new DataPointJobContentView(); 
+  setContent(m_dataPointJobContentView);
 }
 
 void DataPointJobItemView::paintEvent(QPaintEvent * e)
@@ -515,26 +551,28 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
 
 void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
 {
-  dataPointJobHeaderView->setName(rubyMeasure.name());
-  dataPointJobHeaderView->setLastRunTime(job.lastRun());
-  dataPointJobHeaderView->setStatus(job.status(), job.canceled());
+  OS_ASSERT(m_dataPointJobHeaderView);
+  m_dataPointJobHeaderView->setName(rubyMeasure.name());
+  m_dataPointJobHeaderView->setLastRunTime(job.lastRun());
+  m_dataPointJobHeaderView->setStatus(job.status(), job.canceled());
 
-  dataPointJobContentView->clear();
+  OS_ASSERT(m_dataPointJobContentView);
+  m_dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
   Q_FOREACH(const std::string& initialCondition, initialConditions){
-    dataPointJobContentView->addInitialConditionMessage(initialCondition);
+    m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
   Q_FOREACH(const std::string& finalCondition, finalConditions){
-    dataPointJobContentView->addFinalConditionMessage(finalCondition);
+    m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
-  dataPointJobHeaderView->setNumErrors(errors.size());
+  m_dataPointJobHeaderView->setNumErrors(errors.size());
   Q_FOREACH(const std::string& errorMessage, errors){
-    dataPointJobContentView->addErrorMessage(errorMessage);
+    m_dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
   // also display std err if job failed and it exists and is not empty
@@ -546,7 +584,7 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
       std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
       if (!stdErrorMessage.empty()){
-        dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
+        m_dataPointJobContentView->addStdErrorMessage(stdErrorMessage);
       }
     }catch(std::exception&){
 
@@ -554,20 +592,20 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
   }
 
   std::vector<std::string> warnings = jobErrors.warnings();
-  dataPointJobHeaderView->setNumWarnings(warnings.size());
+  m_dataPointJobHeaderView->setNumWarnings(warnings.size());
   Q_FOREACH(const std::string& warningMessage, warnings){
-    dataPointJobContentView->addWarningMessage(warningMessage);
+    m_dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
   Q_FOREACH(const std::string& infoMessage, infos){
-    dataPointJobContentView->addInfoMessage(infoMessage);
+    m_dataPointJobContentView->addInfoMessage(infoMessage);
   }
 
   if (jobErrors.result == ruleset::OSResultValue::NA){
-    dataPointJobHeaderView->setNA(true);
+    m_dataPointJobHeaderView->setNA(true);
   }else{
-    dataPointJobHeaderView->setNA(false);
+    m_dataPointJobHeaderView->setNA(false);
   }
 }
 

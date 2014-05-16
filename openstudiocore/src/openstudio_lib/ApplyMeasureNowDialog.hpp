@@ -44,7 +44,7 @@ class DateTime;
 class EditController;
 class LocalLibraryController;
 
-// Forward Decs
+// Local Forward Decs
 class DataPointJobItemView;
 
 namespace runmanager {
@@ -81,6 +81,8 @@ private slots:
 
   void disableOkButton(bool disable);
 
+  void runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus);
+
 private:
 
   void createWidgets();
@@ -94,6 +96,8 @@ private:
   boost::optional<BCLMeasure> m_bclMeasure;
 
   boost::optional<analysis::RubyMeasure> m_rubyMeasure;
+
+  boost::optional<runmanager::Job> m_job;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
@@ -176,6 +180,7 @@ class DataPointJobContentView : public QWidget
   void addStdErrorMessage(const std::string& message);
 
  private:
+
   static QString formatMessageForHTML(const std::string &t_message);
 
   QLabel * m_textEdit;
@@ -192,9 +197,9 @@ public:
 
   virtual ~DataPointJobItemView() {}
 
-  DataPointJobHeaderView * dataPointJobHeaderView;
+  DataPointJobHeaderView * m_dataPointJobHeaderView;
 
-  DataPointJobContentView * dataPointJobContentView;
+  DataPointJobContentView * m_dataPointJobContentView;
 
 protected:
 
