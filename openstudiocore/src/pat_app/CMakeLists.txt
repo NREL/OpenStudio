@@ -269,6 +269,7 @@ SET( depends
   openstudio_project
   openstudio_analysisdriver
   openstudio_osversion
+  openstudio_lib
   ${QT_LIBS}
   ${RUBY_LIBRARY}
 )

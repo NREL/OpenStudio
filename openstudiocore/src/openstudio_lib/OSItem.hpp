@@ -20,6 +20,8 @@
 #ifndef OPENSTUDIO_OSITEM_H
 #define OPENSTUDIO_OSITEM_H
 
+#include <openstudio_lib/OpenStudioAPI.hpp>
+
 #include <QLabel>
 #include <QVariant>
 #include <QWidget>
@@ -192,7 +194,7 @@ class OSItem : public QWidget
     QPixmap m_largePixmap;
 };
 
-class MeasureBadge : public QLabel
+class OPENSTUDIO_API MeasureBadge : public QLabel
 {
 
   public:
@@ -202,7 +204,7 @@ class MeasureBadge : public QLabel
       MY
     };
 
-    void setMeasureBadgeType(measureBadgeType type);
+    void setMeasureBadgeType(MeasureBadge::measureBadgeType type);
 
 };
 

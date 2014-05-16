@@ -619,7 +619,7 @@ void OSItem::onRemoveClicked()
   emit itemRemoveClicked(this);
 }
 
-void MeasureBadge::setMeasureBadgeType(measureBadgeType type)
+void MeasureBadge::setMeasureBadgeType(MeasureBadge::measureBadgeType type)
 {
   if(type == BCL) {
     setText("BCL");
