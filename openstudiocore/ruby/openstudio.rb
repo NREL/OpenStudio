@@ -1,3 +1,6 @@
+######################################################################
+#  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
+#  All rights reserved.
 #  
 #  This library is free software; you can redistribute it and/or
 #  modify it under the terms of the GNU Lesser General Public
@@ -12,9 +15,9 @@
 #  You should have received a copy of the GNU Lesser General Public
 #  License along with this library; if not, write to the Free Software
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-#####################################################################
+######################################################################
 
-if defined? Sketchup && Sketchup.version_number <= 14000000
+if (defined? Sketchup) && (Sketchup.version_number <= 14000000)
   require File.expand_path(File.dirname(__FILE__)) + '/openstudio/sketchup_plugin/stdruby/pathname'
 else
   require 'pathname'

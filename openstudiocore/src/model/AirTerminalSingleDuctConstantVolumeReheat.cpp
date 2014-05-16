@@ -172,8 +172,6 @@ namespace detail {
                 AirTerminalSingleDuctConstantVolumeReheat mo = this->getObject<AirTerminalSingleDuctConstantVolumeReheat>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true; 
