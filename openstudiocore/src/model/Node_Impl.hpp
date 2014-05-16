@@ -58,7 +58,7 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
-    virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
     unsigned inletPort();
 

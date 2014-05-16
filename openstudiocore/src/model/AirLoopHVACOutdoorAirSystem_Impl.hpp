@@ -91,7 +91,7 @@ namespace detail {
 
     virtual bool addToNode(Node & node);
 
-    virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
     std::vector<ModelObject> oaComponents() const;
 

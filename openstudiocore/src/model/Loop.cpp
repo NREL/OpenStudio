@@ -106,27 +106,27 @@ namespace detail {
 
   // Recursive depth first search
   // start algorithm with one source node in the visited vector
-  // when complete, paths will be populated with all nodes between the source node and sink
-  boost::optional<ModelObject> findModelObject(openstudio::Handle & handle, HVACComponent & sink, std::vector<HVACComponent> & visited, bool isDemandLoop)
+  // searches all paths of nodes between the source and sink until a handle match is found
+  boost::optional<ModelObject> findModelObject(const openstudio::Handle & handle, const HVACComponent & sink, std::vector<HVACComponent> & visited, bool isDemandComponents)
   {
     HVACComponent hvacComponent = visited.back();
     if( handle == hvacComponent.handle() ) { 
       return hvacComponent;
     }
-    std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(isDemandLoop);
+    std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
 
     for(std::vector<HVACComponent>::iterator it = nodes.begin();
         it != nodes.end();
         it++)
     {
       // if it node has already been visited or node is sink then continue
-      if( std::find(visited.begin(),visited.end(),*it) != visited.end() ||
+      if( std::find(visited.begin(), visited.end(), *it) != visited.end() ||
           *it == sink )
       {
         continue; 
       }
       visited.push_back(*it);
-      boost::optional<ModelObject> foundHandle = findModelObject(handle,sink,visited,isDemandLoop);
+      boost::optional<ModelObject> foundHandle = findModelObject(handle, sink, visited, isDemandComponents);
       if( foundHandle ) { return *foundHandle; }
       visited.pop_back();
     }
@@ -135,44 +135,6 @@ namespace detail {
 
   OptionalModelObject Loop_Impl::component(openstudio::Handle handle)
   {
-    // Node inletComp = this->supplyInletNode();
-    // Node outletComp = this->supplyOutletNode();
-    // if( inletComp == outletComp) {
-    //   if( inletComp.handle() == handle ) { return inletComp; }
-    // } else {
-    //   std::vector<HVACComponent> supplyVisited;
-    //   supplyVisited.push_back(inletComp);
-    //   std::vector<HVACComponent> supplyAllPaths;
-    //   OptionalModelObject supplyComponent = findModelObject(handle,outletComp,supplyVisited,supplyAllPaths);
-    //   if( supplyComponent ) { return supplyComponent; }
-    // }
-
-    // inletComp = this->demandInletNode();
-    // outletComp = this->demandOutletNode();
-    // if( inletComp == outletComp) {
-    //   if( inletComp.handle() == handle ) { return inletComp; }
-    //   else { return boost::none; }
-    // }
-    // std::vector<HVACComponent> demandVisited;
-    // demandVisited.push_back(inletComp);
-    // std::vector<HVACComponent> demandAllPaths;
-    // return findModelObject(handle,outletComp,demandVisited,demandAllPaths);
-
-    // OptionalModelObject result;
-
-    // ModelObjectVector allComponents = components();
-    // ModelObjectVector::iterator it;
-    // for( it = allComponents.begin();
-    //      it != allComponents.end();
-    //      it++ )
-    // {
-    //   if( it->handle() == handle )
-    //   {
-    //     return OptionalModelObject(*it);
-    //   }
-    // }
-    // return result;
-
     boost::optional<ModelObject> supplyComp = this->supplyComponent(handle);
     if( supplyComp ) { return supplyComp; }
     return this->demandComponent(handle);
@@ -186,22 +148,7 @@ namespace detail {
     if( handle == outletComp.handle() ) { return outletComp; }
     std::vector<HVACComponent> visited;
     visited.push_back(inletComp);
-    return findModelObject(handle,outletComp,visited,true);
-
-    // OptionalModelObject result;
-
-    // ModelObjectVector allComponents = demandComponents();
-    // ModelObjectVector::iterator it;
-    // for( it = allComponents.begin();
-    //      it != allComponents.end();
-    //      it++ )
-    // {
-    //   if( it->handle() == handle )
-    //   {
-    //     return OptionalModelObject(*it);
-    //   }
-    // }
-    // return result;
+    return findModelObject(handle, outletComp, visited, true);
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
@@ -212,22 +159,7 @@ namespace detail {
     if( handle == outletComp.handle() ) { return outletComp; }
     std::vector<HVACComponent> visited;
     visited.push_back(inletComp);
-    return findModelObject(handle,outletComp,visited,false);
-
-    // OptionalModelObject result;
-
-    // ModelObjectVector allComponents = supplyComponents();
-    // ModelObjectVector::iterator it;
-    // for( it = allComponents.begin();
-    //      it != allComponents.end();
-    //      it++ )
-    // {
-    //   if( it->handle() == handle )
-    //   {
-    //     return OptionalModelObject(*it);
-    //   }
-    // }
-    // return result;
+    return findModelObject(handle, outletComp, visited, false);
   }
 
   ModelObject Loop_Impl::clone(Model model) const
@@ -299,17 +231,16 @@ namespace detail {
   // Recursive depth first search
   // start algorithm with one source node in the visited vector
   // when complete, paths will be populated with all nodes between the source node and sink
-  void findModelObjects(HVACComponent & sink, std::vector<HVACComponent> & visited,std::vector<HVACComponent> & paths, bool isDemandLoop)
+  void findModelObjects(const HVACComponent & sink, std::vector<HVACComponent> & visited, std::vector<HVACComponent> & paths, bool isDemandComponents)
   {
-    // std::vector<ModelObject> nodes = getDemandOutletModelObjects(visited.back());
-    std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(isDemandLoop);
+    std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
 
     for(std::vector<HVACComponent>::iterator it = nodes.begin();
         it != nodes.end();
         it++)
     {
       // if it node has already been visited then continue
-      if( std::find(visited.begin(),visited.end(),*it) != visited.end() )
+      if( std::find(visited.begin(), visited.end(), *it) != visited.end() )
       {
         continue; 
       }
@@ -319,7 +250,7 @@ namespace detail {
         // Avoid pushing duplicate nodes into paths
         if( paths.empty() )
         {
-          paths.insert(paths.end(),visited.begin(),visited.end());
+          paths.insert(paths.end(), visited.begin(), visited.end());
         }
         else
         {
@@ -327,7 +258,7 @@ namespace detail {
                visitedit != visited.end();
                visitedit++ )
           {
-            if( std::find(paths.begin(),paths.end(),*visitedit) == paths.end() )
+            if( std::find(paths.begin(), paths.end(), *visitedit) == paths.end() )
             {
               paths.push_back(*visitedit);
             }
@@ -342,13 +273,13 @@ namespace detail {
         it++)
     {
       // if it node has already been visited or node is sink then continue
-      if( std::find(visited.begin(),visited.end(),*it) != visited.end() ||
+      if( std::find(visited.begin(), visited.end(), *it) != visited.end() ||
           *it == sink )
       {
         continue; 
       }
       visited.push_back(*it);
-      findModelObjects(sink,visited,paths,isDemandLoop);
+      findModelObjects(sink, visited, paths, isDemandComponents);
       visited.pop_back();
     }
   }
@@ -357,37 +288,26 @@ namespace detail {
                                                         HVACComponent outletComp,
                                                         openstudio::IddObjectType type )
   {
-    // if( m_demandComponents.empty() ) {
-      std::vector<HVACComponent> visited;
-      visited.push_back(inletComp);
-      std::vector<HVACComponent> allPaths;
+    std::vector<HVACComponent> visited;
+    visited.push_back(inletComp);
+    std::vector<HVACComponent> allPaths;
 
-      if( inletComp == outletComp )
-      {
-        allPaths.push_back(inletComp);
-      }
-      else
-      {
-        findModelObjects(outletComp,visited,allPaths,true);
-      }
-      m_demandComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
-      // for(std::vector<ModelObject>::iterator it = m_demandComponents.begin();
-      //     it != m_demandComponents.end();
-      //     ++it)
-      // {
-      //   std::cout << "iddObjectType: " << it->iddObject().type() << std::endl;
-      // }
-      // m_demandComponents = allPaths;
-    // }
+    if( inletComp == outletComp ) {
+      allPaths.push_back(inletComp);
+    }
+    else {
+      findModelObjects(outletComp, visited, allPaths, true);
+    }
+    std::vector<ModelObject> _demandComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
 
     // Filter modelObjects for type
     if( type == IddObjectType::Catchall ) {
-      return m_demandComponents;
+      return _demandComponents;
     }
     std::vector<ModelObject> reducedModelObjects;
     
-    for(std::vector<ModelObject>::iterator it = m_demandComponents.begin();
-        it != m_demandComponents.end();
+    for(std::vector<ModelObject>::iterator it = _demandComponents.begin();
+        it != _demandComponents.end();
         ++it)
     {
       if( type == it->iddObject().type() )
@@ -429,37 +349,26 @@ namespace detail {
                                                         HVACComponent outletComp,
                                                         openstudio::IddObjectType type) const
   {
-      // if( m_supplyComponents.empty() ) {
-      std::vector<HVACComponent> visited;
-      visited.push_back(inletComp);
-      std::vector<HVACComponent> allPaths;
+    std::vector<HVACComponent> visited;
+    visited.push_back(inletComp);
+    std::vector<HVACComponent> allPaths;
 
-      if( inletComp == outletComp )
-      {
-        allPaths.push_back(inletComp);
-      }
-      else
-      {
-        findModelObjects(outletComp,visited,allPaths,false);
-      }
-      m_supplyComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
-      // for(std::vector<ModelObject>::iterator it = m_supplyComponents.begin();
-      //     it != m_supplyComponents.end();
-      //     ++it)
-      // {
-      //   std::cout << "iddObjectType: " << it->iddObject().type() << std::endl;
-      // }
-      // m_supplyComponents = allPaths;
-    // }
+    if( inletComp == outletComp ) {
+      allPaths.push_back(inletComp);
+    }
+    else {
+      findModelObjects(outletComp, visited, allPaths, false);
+    }
+    std::vector<ModelObject> _supplyComponents = std::vector<ModelObject>(allPaths.begin(), allPaths.end());
 
     // Filter modelObjects for type
     if( type == IddObjectType::Catchall ) {
-      return m_supplyComponents;
+      return _supplyComponents;
     }
     std::vector<ModelObject> reducedModelObjects;
     
-    for(std::vector<ModelObject>::iterator it = m_supplyComponents.begin();
-        it != m_supplyComponents.end();
+    for(std::vector<ModelObject>::iterator it = _supplyComponents.begin();
+        it != _supplyComponents.end();
         ++it)
     {
       if( type == it->iddObject().type() )

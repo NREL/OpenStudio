@@ -104,7 +104,7 @@ namespace detail{
     return OS_NodeFields::OutletPort;
   }
 
-  std::vector<HVACComponent> Node_Impl::edges(bool isDemandLoop)
+  std::vector<HVACComponent> Node_Impl::edges(bool isDemandComponent)
   {
     std::vector<HVACComponent> edges;
     if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {

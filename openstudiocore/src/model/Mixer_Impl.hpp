@@ -65,7 +65,7 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
 
   virtual void removePortForBranch(unsigned branchIndex);
 
-  virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   bool isRemovable() const;
 

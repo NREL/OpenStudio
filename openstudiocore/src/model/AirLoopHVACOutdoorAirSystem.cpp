@@ -92,7 +92,7 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AirLoopHVACOutdoorAirSystem_Impl::iddObjectType() const {\
+  IddObjectType AirLoopHVACOutdoorAirSystem_Impl::iddObjectType() const {
     return AirLoopHVACOutdoorAirSystem::iddObjectType();
   }
 
@@ -272,7 +272,7 @@ namespace detail {
     return ModelObject_Impl::remove();
   }
 
-  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(bool isDemandLoop)
+  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(bool isDemandComponent)
   {
     std::vector<HVACComponent> edges;
     if( boost::optional<ModelObject> edgeModelObject = this->mixedAirModelObject() ) {

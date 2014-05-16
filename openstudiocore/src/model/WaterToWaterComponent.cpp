@@ -86,26 +86,10 @@ OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
   return connectedObject(demandOutletPort());
 }
 
-std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(bool isDemandLoop)
+std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(bool isDemandComponent)
 {
   std::vector<HVACComponent> edges;
-  // if( boost::optional<PlantLoop> _plantLoop = this->plantLoop() ) {
-  //   if( _plantLoop->supplyComponent(this->handle()) ) {
-  //     if( boost::optional<ModelObject> edgeModelObject = this->supplyOutletModelObject() ) {
-  //       if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-  //         edges.push_back(*edgeObject);
-  //       }
-  //     }
-  //   }
-  //   else if( _plantLoop->demandComponent(this->handle()) ) {
-  //     if( boost::optional<ModelObject> edgeModelObject = this->demandOutletModelObject() ) {
-  //       if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-  //         edges.push_back(*edgeObject);
-  //       }
-  //     }
-  //   }
-  // }
-  if( isDemandLoop ) {
+  if( isDemandComponent ) {
     if( boost::optional<ModelObject> edgeModelObject = this->demandOutletModelObject() ) {
       if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
         edges.push_back(*edgeObject);
@@ -118,16 +102,6 @@ std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(bool isDemandLoop)
       }
     }
   }
-  // if( boost::optional<ModelObject> edgeModelObject = this->supplyOutletModelObject() ) {
-  //   if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-  //     edges.push_back(*edgeObject);
-  //   }
-  // }
-  // if( boost::optional<ModelObject> edgeModelObject = this->demandOutletModelObject() ) {
-  //   if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
-  //     edges.push_back(*edgeObject);
-  //   }
-  // }
   return edges;
 }
 

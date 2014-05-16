@@ -85,7 +85,7 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
 
   virtual ModelObject clone(Model model) const;
 
-  virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 

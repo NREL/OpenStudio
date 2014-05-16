@@ -273,7 +273,7 @@ namespace detail {
     return ThermalZone::iddObjectType();
   }
 
-  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandLoop)
+  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandComponent)
   {
     std::vector<HVACComponent> edges;
     if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {

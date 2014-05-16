@@ -68,7 +68,7 @@ boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchInd
   return connectedObject( outletPort( branchIndex ) );
 }
 
-std::vector<HVACComponent> Splitter_Impl::edges(bool isDemandLoop)
+std::vector<HVACComponent> Splitter_Impl::edges(bool isDemandComponent)
 {
   return castVector<HVACComponent>(this->outletModelObjects());
 }

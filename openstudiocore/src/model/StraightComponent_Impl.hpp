@@ -56,7 +56,7 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const;
 
-    virtual std::vector<HVACComponent> edges(bool isDemandLoop);
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
     //@}
     /** @name Getters */
