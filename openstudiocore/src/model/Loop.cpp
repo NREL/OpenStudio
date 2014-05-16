@@ -253,14 +253,56 @@ namespace detail {
 
   OptionalModelObject Loop_Impl::component(openstudio::Handle handle)
   {
-    OptionalModelObject object;
-    if ( (object = supplyComponent(handle)) ) {
-      return object;
+    OptionalModelObject result;
+
+    ModelObjectVector allComponents = components();
+    ModelObjectVector::iterator it;
+    for( it = allComponents.begin();
+         it != allComponents.end();
+         it++ )
+    {
+      if( it->handle() == handle )
+      {
+        return OptionalModelObject(*it);
+      }
     }
-    else if ( (object = demandComponent(handle)) ) {
-      return object;
+    return result;
+  }
+
+  boost::optional<ModelObject> Loop_Impl::demandComponent(openstudio::Handle handle)
+  {
+    OptionalModelObject result;
+
+    ModelObjectVector allComponents = demandComponents();
+    ModelObjectVector::iterator it;
+    for( it = allComponents.begin();
+         it != allComponents.end();
+         it++ )
+    {
+      if( it->handle() == handle )
+      {
+        return OptionalModelObject(*it);
+      }
     }
-    return object;
+    return result;
+  }
+
+  boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
+  {
+    OptionalModelObject result;
+
+    ModelObjectVector allComponents = supplyComponents();
+    ModelObjectVector::iterator it;
+    for( it = allComponents.begin();
+         it != allComponents.end();
+         it++ )
+    {
+      if( it->handle() == handle )
+      {
+        return OptionalModelObject(*it);
+      }
+    }
+    return result;
   }
 
   ModelObject Loop_Impl::clone(Model model) const
@@ -506,175 +548,6 @@ namespace detail {
     result.insert(result.end(),demandComponents.begin(),demandComponents.end());
 
     return result;
-  }
-
-OptionalModelObject Loop_Impl::demandComponent( openstudio::Handle handle )
-  {
-    HVACComponent inletComp = demandInletNode();
-    HVACComponent outletComp = demandOutletNode();
-    OptionalModelObject modelObject(inletComp);
-
-    bool isPlantLoop = false;
-    if( this->iddObject().type() == IddObjectType::OS_PlantLoop ) {
-      isPlantLoop = true;
-    }
-
-    while(modelObject) {
-      if(OptionalNode node = modelObject->optionalCast<Node>()) {
-        if (node->handle() == handle) {
-          return *node;
-        }
-        else {
-          if( *node == outletComp ) { break; }
-          modelObject = node->outletModelObject();
-        }
-      }
-      else if(OptionalStraightComponent comp = modelObject->optionalCast<StraightComponent>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          modelObject = comp->outletModelObject();
-        }
-      }
-      else if(OptionalPortList comp = modelObject->optionalCast<PortList>()) {
-        if( boost::optional<ThermalZone> tz = comp->thermalZone() ) {
-          if (tz->handle() == handle) {
-            return *tz;
-          }
-          else {
-            if( *tz == outletComp ) { break; }
-            modelObject = tz->returnAirModelObject();
-          }
-        }
-      }
-      else if(OptionalMixer mixer = modelObject->optionalCast<Mixer>()) {
-        if (mixer->handle() == handle) {
-          return *mixer;
-        }
-        else {
-          if( *mixer == outletComp ) { break; }
-          modelObject = mixer->outletModelObject();
-        }
-      }
-      else if(OptionalWaterToAirComponent comp = modelObject->optionalCast<WaterToAirComponent>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          if( isPlantLoop ) {
-            modelObject = comp->waterOutletModelObject();
-          }
-          else {
-            modelObject = comp->airOutletModelObject();
-          }
-        }
-      }
-      else if(OptionalWaterToWaterComponent comp = modelObject->optionalCast<WaterToWaterComponent>()) {
-       if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          modelObject = comp->demandOutletModelObject();
-        }
-      }
-      else if(OptionalAirLoopHVACOutdoorAirSystem mixer = modelObject->optionalCast<AirLoopHVACOutdoorAirSystem>()) {
-        if (mixer->handle() == handle) {
-          return *mixer;
-        }
-        else {
-          if( *mixer == outletComp ) { break; }
-          modelObject = mixer->mixedAirModelObject();
-        }
-      }
-      else if(OptionalSplitter splitter = modelObject->optionalCast<Splitter>()) {
-        if (splitter->handle() == handle) { return *splitter; }
-        if( *splitter == outletComp ) { break; }
-
-        modelObject = boost::none;
-        std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
-
-        for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-             it != outletModelObjects.end();
-             ++it )
-        {
-          OptionalModelObject branchObject = OptionalModelObject(*it);
-
-          while(branchObject) {
-            if( OptionalNode node = branchObject->optionalCast<Node>() ) {
-              if (node->handle() == handle) {
-                return *node;
-              }
-              else {
-                if( *node == outletComp ) { break; }
-                branchObject = node->outletModelObject();
-              }
-            }
-            else if(OptionalStraightComponent comp = branchObject->optionalCast<StraightComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                branchObject = comp->outletModelObject();
-              }
-            }
-            else if(OptionalPortList comp = branchObject->optionalCast<PortList>()) {
-              if( boost::optional<ThermalZone> tz = comp->thermalZone() ) {
-                if (tz->handle() == handle) {
-                  return *tz;
-                }
-                else {
-                  if( *tz == outletComp ) { break; }
-                  branchObject = tz->returnAirModelObject();
-                }
-              }
-            }
-            else if(OptionalWaterToAirComponent comp = branchObject->optionalCast<WaterToAirComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                if( isPlantLoop ) {
-                  branchObject = comp->waterOutletModelObject();
-                }
-                else {
-                  branchObject = comp->airOutletModelObject();
-                }
-              }
-            }
-            else if(OptionalWaterToWaterComponent comp = branchObject->optionalCast<WaterToWaterComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                branchObject = comp->demandOutletModelObject();
-              }
-            }
-            else if(OptionalMixer mixer = branchObject->optionalCast<Mixer>() ) {
-              if (mixer->handle() == handle) { return *mixer; }
-              modelObject = *mixer;
-              break;
-            }
-            else {
-              break;
-              // Log unhandled component
-            }
-          }
-        }
-      }
-      else {
-        modelObject = boost::none;
-        break;
-        // Log unhandled component
-      }
-    }
-    return boost::none;
   }
 
   std::vector<ModelObject> Loop_Impl::supplyComponents( HVACComponent inletComp,
@@ -957,171 +830,6 @@ OptionalModelObject Loop_Impl::demandComponent( openstudio::Handle handle )
     {
       return std::vector<ModelObject>();
     }
-  }
-
-  OptionalModelObject Loop_Impl::supplyComponent( openstudio::Handle handle ) const
-  {
-    HVACComponent inletComp = supplyInletNode();
-    HVACComponent outletComp = supplyOutletNode();
-    OptionalModelObject modelObject(inletComp);
-
-    bool isPlantLoop = false;
-    if( this->iddObject().type() == IddObjectType::OS_PlantLoop ) {
-      isPlantLoop = true;
-    }
-
-    while(modelObject) {
-      if(OptionalNode node = modelObject->optionalCast<Node>()) {
-        if (node->handle() == handle) {
-          return *node;
-        }
-        else {
-          if( *node == outletComp ) { break; }
-          modelObject = node->outletModelObject();
-        }
-      }
-      else if(OptionalStraightComponent comp = modelObject->optionalCast<StraightComponent>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          modelObject = comp->outletModelObject();
-        }
-      }
-      else if(OptionalThermalZone comp = modelObject->optionalCast<ThermalZone>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          modelObject = comp->returnAirModelObject();
-        }
-      }
-      else if(OptionalMixer mixer = modelObject->optionalCast<Mixer>()) {
-        if (mixer->handle() == handle) {
-          return *mixer;
-        }
-        else {
-          if( *mixer == outletComp ) { break; }
-          modelObject = mixer->outletModelObject();
-        }
-      }
-      else if(OptionalWaterToAirComponent comp = modelObject->optionalCast<WaterToAirComponent>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          if( isPlantLoop ) {
-            modelObject = comp->waterOutletModelObject();
-          }
-          else {
-            modelObject = comp->airOutletModelObject();
-          }
-        }
-      }
-      else if(OptionalWaterToWaterComponent comp = modelObject->optionalCast<WaterToWaterComponent>()) {
-        if (comp->handle() == handle) {
-          return *comp;
-        }
-        else {
-          if( *comp == outletComp ) { break; }
-          modelObject = comp->supplyOutletModelObject();
-        }
-      }
-      else if(OptionalAirLoopHVACOutdoorAirSystem mixer = modelObject->optionalCast<AirLoopHVACOutdoorAirSystem>()) {
-        if (mixer->handle() == handle) {
-          return *mixer;
-        }
-        else {
-          if( *mixer == outletComp ) { break; }
-          modelObject = mixer->mixedAirModelObject();
-        }
-      }
-      else if(OptionalSplitter splitter = modelObject->optionalCast<Splitter>()) {
-        if (splitter->handle() == handle) { return *splitter; }
-        if( *splitter == outletComp ) { break; }
-
-        modelObject = boost::none;
-        std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
-
-        for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-             it != outletModelObjects.end();
-             ++it )
-        {
-          OptionalModelObject branchObject = OptionalModelObject(*it);
-
-          while(branchObject) {
-            if( OptionalNode node = branchObject->optionalCast<Node>() ) {
-              if (node->handle() == handle) {
-                return *node;
-              }
-              else {
-                if( *node == outletComp ) { break; }
-                branchObject = node->outletModelObject();
-              }
-            }
-            else if(OptionalStraightComponent comp = branchObject->optionalCast<StraightComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                branchObject = comp->outletModelObject();
-              }
-            }
-            else if(OptionalThermalZone comp = branchObject->optionalCast<ThermalZone>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                branchObject = comp->returnAirModelObject();
-              }
-            }
-            else if(OptionalWaterToAirComponent comp = branchObject->optionalCast<WaterToAirComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                if( isPlantLoop ) {
-                  branchObject = comp->waterOutletModelObject();
-                }
-                else {
-                  branchObject = comp->airOutletModelObject();
-                }
-              }
-            }
-            else if(OptionalWaterToWaterComponent comp = branchObject->optionalCast<WaterToWaterComponent>()) {
-              if (comp->handle() == handle) {
-                return *comp;
-              }
-              else {
-                if( *comp == outletComp ) { break; }
-                branchObject = comp->supplyOutletModelObject();
-              }
-            }
-            else if(OptionalMixer mixer = branchObject->optionalCast<Mixer>() ) {
-              if (mixer->handle() == handle) { return *mixer; }
-              modelObject = *mixer;
-              break;
-            }
-            else {
-              break;
-              // Log unhandled component
-            }
-          }
-        }
-      }
-      else {
-        modelObject = boost::none;
-        break;
-        // Log unhandled component
-      }
-    }
-    return boost::none;
   }
 
   std::vector<ModelObject> Loop_Impl::components(HVACComponent inletComp,
