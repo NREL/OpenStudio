@@ -79,9 +79,9 @@ namespace detail {
 
   boost::optional<ModelObject>  Connection_Impl::sourceObject()
   {
-    OptionalModelObject modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(
-        openstudio::OS_ConnectionFields::SourceObject);
-    return modelObject;
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) ) 
+      { return oCandidate->optionalCast<ModelObject>(); }
+    return boost::none;
   }
 
   boost::optional<unsigned> Connection_Impl::sourceObjectPort()
@@ -91,9 +91,9 @@ namespace detail {
 
   boost::optional<ModelObject> Connection_Impl::targetObject()
   {
-    OptionalModelObject modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(
-        openstudio::OS_ConnectionFields::TargetObject);
-    return modelObject;
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) ) 
+      { return oCandidate->optionalCast<ModelObject>(); }
+    return boost::none;
   }
 
   boost::optional<unsigned> Connection_Impl::targetObjectPort()

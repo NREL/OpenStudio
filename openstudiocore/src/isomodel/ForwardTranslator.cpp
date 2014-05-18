@@ -352,15 +352,15 @@ namespace isomodel {
     // get some important objects from the building model;
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
-    std::vector<openstudio::model::Surface> surfaces = model.getModelObjects<openstudio::model::Surface>();
-    std::vector<openstudio::model::SubSurface> sub_surfaces = model.getModelObjects<openstudio::model::SubSurface>();
-    std::vector<openstudio::model::Space> spaces = model.getModelObjects<openstudio::model::Space>();
-    std::vector<openstudio::model::ThermalZone> thermal_zones = model.getModelObjects<openstudio::model::ThermalZone>();
-    std::vector<openstudio::model::SpaceType> space_types = model.getModelObjects<openstudio::model::SpaceType>();
-    std::vector<openstudio::model::Construction> constructions = model.getModelObjects<openstudio::model::Construction>();
-    std::vector<openstudio::model::InternalMassDefinition> internal_masses = model.getModelObjects<openstudio::model::InternalMassDefinition>();
-    std::vector<openstudio::model::AirLoopHVAC> air_loops = model.getModelObjects<openstudio::model::AirLoopHVAC>();
-    std::vector<openstudio::model::PlantLoop> plant_loops = model.getModelObjects<openstudio::model::PlantLoop>();
+    std::vector<openstudio::model::Surface> surfaces = model.getConcreteModelObjects<openstudio::model::Surface>();
+    std::vector<openstudio::model::SubSurface> sub_surfaces = model.getConcreteModelObjects<openstudio::model::SubSurface>();
+    std::vector<openstudio::model::Space> spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    std::vector<openstudio::model::ThermalZone> thermal_zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
+    std::vector<openstudio::model::SpaceType> space_types = model.getConcreteModelObjects<openstudio::model::SpaceType>();
+    std::vector<openstudio::model::Construction> constructions = model.getConcreteModelObjects<openstudio::model::Construction>();
+    std::vector<openstudio::model::InternalMassDefinition> internal_masses = model.getConcreteModelObjects<openstudio::model::InternalMassDefinition>();
+    std::vector<openstudio::model::AirLoopHVAC> air_loops = model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>();
+    std::vector<openstudio::model::PlantLoop> plant_loops = model.getConcreteModelObjects<openstudio::model::PlantLoop>();
 
     LOG(Debug, "Found " << surfaces.size() << " surfaces");
     LOG(Debug, "Found " << sub_surfaces.size() << " sub surfaces");
@@ -621,7 +621,7 @@ namespace isomodel {
     LOG(Debug, "...Parsing Schedules");
 
 
-    std::vector<openstudio::model::ScheduleRuleset> schedule_rulesets = model.getModelObjects<openstudio::model::ScheduleRuleset>();
+    std::vector<openstudio::model::ScheduleRuleset> schedule_rulesets = model.getConcreteModelObjects<openstudio::model::ScheduleRuleset>();
     LOG(Debug, "Found " << schedule_rulesets.size() << " schedules in the OSM");
 
 
@@ -1040,7 +1040,7 @@ namespace isomodel {
     LOG(Debug, "Exterior Lighting Power = " << exterior_lighting_power << " W");
 
     // check for luminaire definitions and print a warning if they are defined;
-    std::vector<openstudio::model::Luminaire> luminaires = model.getModelObjects<openstudio::model::Luminaire>();
+    std::vector<openstudio::model::Luminaire> luminaires = model.getConcreteModelObjects<openstudio::model::Luminaire>();
     if (!luminaires.empty()) {
       LOG(Debug, "Warning: Luminaires defined in OSM but not currently translated into ISO");
     }
@@ -1061,7 +1061,7 @@ namespace isomodel {
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
 
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times;
-      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
+      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
 
       double total_zone_area = 0;
       double heat_setpoint_occ_total=0;
@@ -1437,8 +1437,8 @@ namespace isomodel {
 
     if (OSM_extract_infil_rate) {
       //first check to see if there effective leakage areas defined and if !those, then design flow rates;
-      if (!model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
-        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+      if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
+        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
 
         /// \todo no reason for this to be in a loop
         //      BOOST_FOREACH(const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil, infiltration) {
@@ -1447,8 +1447,8 @@ namespace isomodel {
         infiltration_rate = infil_rate_default;
         //      }
 
-      } else if (!model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>().empty()) {
-        std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
+      } else if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>().empty()) {
+        std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
         LOG(Debug, "Found " << infiltration.size() << " SpaceInfiltrationDesignFlowRate objects");
 
         /// \todo this is not used
@@ -2050,7 +2050,7 @@ namespace isomodel {
       }
 
       // extract the water usage by starting with the water use connections and then finding equipment;
-      std::vector<openstudio::model::WaterUseConnections> water_connects = model.getModelObjects<openstudio::model::WaterUseConnections>();
+      std::vector<openstudio::model::WaterUseConnections> water_connects = model.getConcreteModelObjects<openstudio::model::WaterUseConnections>();
       BOOST_FOREACH(const openstudio::model::WaterUseConnections &connect, water_connects) {
         std::vector<openstudio::model::WaterUseEquipment> equipments = connect.waterUseEquipment();
         BOOST_FOREACH(const openstudio::model::WaterUseEquipment &equip, equipments) {

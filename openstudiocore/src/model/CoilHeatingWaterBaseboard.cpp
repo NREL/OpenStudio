@@ -89,7 +89,7 @@ namespace detail {
     // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
     std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
     // populate the vector with all of them
-    zoneHVACBaseboardConvectiveWaters = this->model().getModelObjects<ZoneHVACBaseboardConvectiveWater>();
+    zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
     // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
     for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
     it < zoneHVACBaseboardConvectiveWaters.end();

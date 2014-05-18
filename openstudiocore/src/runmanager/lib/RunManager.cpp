@@ -485,7 +485,7 @@ namespace runmanager {
   {
 
     // reset windows with wwr bands to simplify geometry
-    std::vector<openstudio::model::Surface> surfaces = t_model.getModelObjects<openstudio::model::Surface>();
+    std::vector<openstudio::model::Surface> surfaces = t_model.getConcreteModelObjects<openstudio::model::Surface>();
 
     for (std::vector<openstudio::model::Surface>::iterator itr = surfaces.begin();
          itr != surfaces.end();
@@ -544,7 +544,7 @@ namespace runmanager {
 
     bool unknownDay = false;
 
-    BOOST_FOREACH(model::DesignDay designDay, t_model.getModelObjects<model::DesignDay>()) {
+    BOOST_FOREACH(model::DesignDay designDay, t_model.getConcreteModelObjects<model::DesignDay>()) {
       boost::optional<std::string> name;
       name = designDay.name();
 
