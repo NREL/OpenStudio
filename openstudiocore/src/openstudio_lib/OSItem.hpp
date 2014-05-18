@@ -20,19 +20,32 @@
 #ifndef OPENSTUDIO_OSITEM_H
 #define OPENSTUDIO_OSITEM_H
 
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include <utilities/core/Enum.hpp>
 
-#include <QLabel>
 #include <QVariant>
 #include <QWidget>
 #include <vector>
 
 class QDragEnterEvent;
 class QDropEvent;
+class QLabel;
 class QMimeData;
 class QPushButton;
 
 namespace openstudio {
+
+OPENSTUDIO_ENUM(AspectRatio,
+  ((Square))
+  ((Rectangle))
+);
+
+OPENSTUDIO_ENUM(OSItemType,
+  ((CollapsibleListHeader)) // has the arrow
+  ((ListItem))               // regular item
+  ((LibraryItem))            // library or my model item
+  ((DropzoneSquare))         // in scrolling drop zone
+  ((DropzoneRectangle))      // for fixed drop zone 
+);
 
 class MeasureBadge;
 
@@ -63,23 +76,10 @@ class OSItem : public QWidget
 
   public:
 
-    enum AspectRatio{
-      SQUARE,
-      RECTANGLE
-    };
-
-    enum Type{
-      COLLAPSIBLE_LIST_HEADER, // has the arrow
-      LIST_ITEM,               // regular item
-      LIBRARY_ITEM,            // library or my model item
-      DROPZONE_SQUARE,         // in scrolling drop zone
-      DROPZONE_RECTANGLE,      // for fixed drop zone 
-    };
-
     // creates a new OSItem if possible
-    static OSItem* makeItem(const OSItemId& itemId, Type type = LIST_ITEM);
+    static OSItem* makeItem(const OSItemId& itemId, OSItemType osItemType = OSItemType::ListItem);
 
-    OSItem(const OSItemId& itemId, Type type = LIST_ITEM, QWidget * parent = 0);
+    OSItem(const OSItemId& itemId, OSItemType osItemType = OSItemType::ListItem, QWidget * parent = 0);
 
     virtual ~OSItem() {}
 
@@ -111,10 +111,10 @@ class OSItem : public QWidget
     QPixmap rightPixmap() const;
     void setRightPixmap(const QPixmap & pixmap);
 
-    void setAspectRatio(OSItem::AspectRatio aspectRatio);
+    void setAspectRatio(AspectRatio aspectRatio);
 
-    Type type() const;
-    void setType(Type type);
+    OSItemType osItemType() const;
+    void setOSItemType(OSItemType osItemType);
 
     bool useLargeIcon();
     void setUseLargeIcon(bool userLargeIcon);
@@ -167,7 +167,7 @@ class OSItem : public QWidget
     void setFixedSize(const QSize & size);
     void setFixedWidth(int width);
     void setFixedHeight(int height);
-    void setAttributes(Type type);
+    void setAttributes(OSItemType osItemType);
     void createLayout();
     //void setItemSize();
     void setLabelPixmap(QLabel * label, const QPixmap & pixmap);
@@ -186,26 +186,12 @@ class OSItem : public QWidget
     bool m_inspectable;
     bool m_acceptsDrops;
     QSize m_size;
-    Type m_type;
+    OSItemType m_osItemType;
     QColor m_borderColor;
     bool m_useLargeIcon;
     // Large icon used behind everything else
     // For items that map to model objects, this will be set to the icon as opposed to the mini icon mapped to the type.
     QPixmap m_largePixmap;
-};
-
-class OPENSTUDIO_API MeasureBadge : public QLabel
-{
-
-  public:
-
-    enum measureBadgeType{
-      BCL,
-      MY
-    };
-
-    void setMeasureBadgeType(MeasureBadge::measureBadgeType type);
-
 };
 
 } // openstudio

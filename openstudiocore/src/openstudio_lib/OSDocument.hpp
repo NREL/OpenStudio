@@ -21,7 +21,6 @@
 #define OPENSTUDIO_OSDOCUMENT_H
 
 #include <openstudio_lib/OpenStudioAPI.hpp>
-#include <openstudio_lib/ApplyMeasureNowDialog.hpp>
 #include <shared_gui_components/OSQObjectController.hpp>
 
 #include <model/Model.hpp>
@@ -31,7 +30,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QSharedPointer>
 
 #include <boost/smart_ptr.hpp>
 
@@ -86,6 +84,8 @@ class BuildingStoriesTabController;
 class OSItemId;
 
 class BuildingComponentDialog;
+
+class ApplyMeasureNowDialog;
 
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
@@ -191,8 +191,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   boost::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
-  // DLM: Evan why are you using QSharedPointer instead of boost::shared_ptr?
-  QSharedPointer<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
+  boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
 
  signals:
 

@@ -24,6 +24,8 @@
 
 #include <openstudio_lib/OSItem.hpp>
 
+#include <shared_gui_components/MeasureBadge.hpp>
+
 #include <QApplication>
 #include <QButtonGroup>
 #include <QHBoxLayout>
@@ -151,7 +153,7 @@ LibraryItemView::LibraryItemView(QWidget * parent)
 
   m_measureBadge = new MeasureBadge();
   m_measureBadge->setFixedWidth(25);
-  m_measureBadge->setMeasureBadgeType(MeasureBadge::MY);
+  m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
   
   mainHBoxLayout->addWidget(m_measureBadge,Qt::AlignLeft);
 

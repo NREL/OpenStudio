@@ -327,13 +327,13 @@ void OSDropZone2::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   int numItems = 0;
-  OSItem::Type type;
+  OSItemType type;
   if((this->m_maxItems > 1) && (m_growsHorizontally)){
-    type = OSItem::DROPZONE_SQUARE;
+    type = OSItemType::DropzoneSquare;
     // somewhere set show / hide scroll bar TODO
   }
   else{
-    type = OSItem::DROPZONE_RECTANGLE;
+    type = OSItemType::DropzoneRectangle;
   }
 
   BOOST_FOREACH(const OSItemId& itemId, itemIds){
@@ -673,13 +673,13 @@ void OSDropZone::setItemIds(const std::vector<OSItemId>& itemIds)
   }
 
   int numItems = 0;
-  OSItem::Type type;
+  OSItemType type;
   if((this->m_maxItems > 1) && (m_growsHorizontally)){
-    type = OSItem::DROPZONE_SQUARE;
+    type = OSItemType::DropzoneSquare;
     // somewhere set show / hide scroll bar TODO
   }
   else{
-    type = OSItem::DROPZONE_RECTANGLE;
+    type = OSItemType::DropzoneRectangle;
   }
 
   BOOST_FOREACH(const OSItemId& itemId, itemIds){

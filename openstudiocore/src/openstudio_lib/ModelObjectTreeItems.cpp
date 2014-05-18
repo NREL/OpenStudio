@@ -127,8 +127,21 @@
 
 namespace openstudio {
 
-ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& modelObject, bool isDefaulted, OSItem::Type type, QTreeWidgetItem* parent)
-: QTreeWidgetItem(parent), m_handle(modelObject.handle()), m_modelObject(modelObject), m_model(modelObject.model()), m_dirty(false)
+const OSItemType ModelObjectTreeItem::m_type = ModelObjectTreeItem::initializeOSItemType();
+
+OSItemType ModelObjectTreeItem::initializeOSItemType()
+{
+  return OSItemType::ListItem;
+}
+
+OSItemType initializeOSItemType();
+
+ModelObjectTreeItem::ModelObjectTreeItem(const openstudio::model::ModelObject& modelObject, bool isDefaulted, OSItemType type, QTreeWidgetItem* parent)
+  : QTreeWidgetItem(parent),
+  m_handle(modelObject.handle()),
+  m_modelObject(modelObject),
+  m_model(modelObject.model()),
+  m_dirty(false)
 {
   m_item = new ModelObjectItem(modelObject,isDefaulted,type);
   m_item->setVisible(false);

@@ -1285,7 +1285,7 @@ void OSDocument::toggleUnits(bool displayIP)
 void OSDocument::openMeasuresDlg()
 {
   // open modal dialog
-  m_applyMeasureNowDialog = QSharedPointer<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
+  m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
   m_applyMeasureNowDialog->exec();
 }
 

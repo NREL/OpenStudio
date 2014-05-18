@@ -29,6 +29,8 @@
 
 #include <openstudio_lib/OSItem.hpp>
 
+#include <shared_gui_components/MeasureBadge.hpp>
+
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
@@ -510,7 +512,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
     }
 
     if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){
-      widget->m_measureBadge->setMeasureBadgeType(MeasureBadge::BCL);
+      widget->m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
     }
 
     // Name

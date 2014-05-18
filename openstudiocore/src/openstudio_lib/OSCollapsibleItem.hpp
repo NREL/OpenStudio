@@ -64,8 +64,8 @@ class OSCollapsibleItem : public QWidget
     bool itemsRemoveable() const;
     void setItemsRemoveable(bool itemsRemoveable);
 
-    OSItem::Type itemsType() const;
-    void setItemsType(OSItem::Type type);
+    OSItemType itemsType() const;
+    void setItemsType(OSItemType type);
 
     bool showFilterLayout();
     void setShowFilterLayout(const bool showFilterLayout);

@@ -40,7 +40,7 @@ namespace openstudio {
 
 UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Model& model, 
                                                  bool addScrollArea, 
-                                                 OSItem::Type headerType,
+                                                 OSItemType headerType,
                                                  QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType)
 { 
@@ -49,7 +49,7 @@ UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const model::Mo
 UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vector<std::pair<FuelType, std::string> >& utilityBillFuelTypesAndNames,
                                                  const model::Model& model,
                                                  bool addScrollArea, 
-                                                 OSItem::Type headerType,
+                                                 OSItemType headerType,
                                                  QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), 
     m_utilityBillFuelTypesAndNames(utilityBillFuelTypesAndNames), 
