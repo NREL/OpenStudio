@@ -194,7 +194,7 @@ namespace detail {
 
       std::map<std::string, openstudio::model::ThermalZone> thermalZones;
 
-      std::vector<openstudio::model::Space> spaces = model->getModelObjects<openstudio::model::Space>();
+      std::vector<openstudio::model::Space> spaces = model->getConcreteModelObjects<openstudio::model::Space>();
       for (std::vector<openstudio::model::Space>::iterator itr = spaces.begin();
            itr != spaces.end();
            ++itr)
@@ -254,7 +254,7 @@ namespace detail {
         }
       }
  
-      std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getModelObjects<openstudio::model::ShadingSurfaceGroup>(); 
+      std::vector<openstudio::model::ShadingSurfaceGroup> shadingsurfacegroups = outmodel.getConcreteModelObjects<openstudio::model::ShadingSurfaceGroup>(); 
       for (std::vector<openstudio::model::ShadingSurfaceGroup>::iterator itr = shadingsurfacegroups.begin();
            itr != shadingsurfacegroups.end();
            ++itr)
@@ -278,7 +278,7 @@ namespace detail {
         }
       }
 
-      std::vector<openstudio::model::OutputVariable> outputVariables = outmodel.getModelObjects<openstudio::model::OutputVariable>();
+      std::vector<openstudio::model::OutputVariable> outputVariables = outmodel.getConcreteModelObjects<openstudio::model::OutputVariable>();
       for (std::vector<openstudio::model::OutputVariable>::iterator itr = outputVariables.begin();
            itr != outputVariables.end();
            ++itr)

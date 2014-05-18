@@ -352,9 +352,7 @@ namespace detail {
 
     if( coilWaterInletNode )
     {
-      Model m = this->model();
-
-      std::vector<ControllerWaterCoil> controllers = m.getModelObjects<ControllerWaterCoil>();
+      std::vector<ControllerWaterCoil> controllers = this->model().getConcreteModelObjects<ControllerWaterCoil>();
 
       for( std::vector<ControllerWaterCoil>::iterator it = controllers.begin();
       it < controllers.end();
@@ -459,7 +457,7 @@ namespace detail {
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
-    zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
