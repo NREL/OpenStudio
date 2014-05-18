@@ -189,7 +189,7 @@ namespace detail {
     }
 
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = m.getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
          ++it )

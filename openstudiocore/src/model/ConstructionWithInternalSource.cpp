@@ -192,7 +192,7 @@ namespace detail {
     double tubeSpacing = this->tubeSpacing();
 
     Model model = this->model();
-    BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getModelObjects<ConstructionWithInternalSource>()) {
+    BOOST_FOREACH(const ConstructionWithInternalSource& other, model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
       
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;
