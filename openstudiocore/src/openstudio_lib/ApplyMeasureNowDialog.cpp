@@ -35,10 +35,9 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
-#include <analysis/NullMeasure.hpp>
-
 #include <analysisdriver/SimpleProject.hpp>
 
+#include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/RubyException.hpp>
 
 #include <runmanager/lib/AdvancedStatus.hpp>
@@ -46,7 +45,6 @@
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
 
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -198,12 +196,12 @@ void ApplyMeasureNowDialog::displayMeasure()
   this->okButton()->setEnabled(false);
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
-  openstudio::BaseApp * app = OSAppBase::instance();
+  openstudio::OSAppBase * app = OSAppBase::instance();
 
   QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
   UUID id = selectedItem->uuid();
 
-  boost::optional<analysisdriver::SimpleProject> project = OSAppBase::instance()->project();
+  boost::optional<analysisdriver::SimpleProject> project = app->project();
   OS_ASSERT(project);
 
   try {
@@ -215,14 +213,15 @@ void ApplyMeasureNowDialog::displayMeasure()
     // Use this?
     //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
-    // TODO check measure type
-    //if (m_measureType == MeasureType::ModelMeasure) {
-    //  // OK
-    //} else if (m_measureType == MeasureType::EnergyPlusMeasure) {
-    //  return; // TODO bad news
-    //} else if (m_measureType == MeasureType::ReportingMeasure) {
-    //  return; // TODO bad news
-    //}
+    // TODO limit displayed measure types
+    MeasureType measureType = bclMeasure->measureType();
+    if (measureType == MeasureType::ModelMeasure) {
+      // OK
+    } else if (measureType == MeasureType::EnergyPlusMeasure) {
+      return; // TODO bad news
+    } else if (measureType == MeasureType::ReportingMeasure) {
+      return; // TODO bad news
+    }
 
     // prep discrete variable
     std::string name = app->measureManager().suggestMeasureGroupName(*bclMeasure);
@@ -243,13 +242,8 @@ void ApplyMeasureNowDialog::displayMeasure()
       return;
     }
 
-    // TODO Should this be "fixed" ?
-    // null measure
-    analysis::NullMeasure nullPert;
-    dv.push(nullPert);
-
     // the new measure
-    name = app->measureManager().suggestMeasureName(*bclMeasure, true); // TODO is this "fixed" ?
+    name = app->measureManager().suggestMeasureName(*bclMeasure, false);
     rubyMeasure.setName(name);
     rubyMeasure.setDisplayName(name);
     rubyMeasure.setDescription(bclMeasure->description());
@@ -301,14 +295,14 @@ void ApplyMeasureNowDialog::runMeasure()
     return;
   }
 
-  openstudio::BaseApp * app = OSAppBase::instance();
+  openstudio::OSAppBase * app = OSAppBase::instance();
 
   // clone model
   boost::optional<model::Model> model = app->currentModel();
   OS_ASSERT(model);
   model::Model modelClone = model->clone().cast<model::Model>();
 
-  openstudio::path outDir = openstudio::tempDir() / openstudio::toPath("ApplyMeasureNow");
+  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
 
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
 
@@ -316,9 +310,24 @@ void ApplyMeasureNowDialog::runMeasure()
   Workspace(modelClone).save(modelPath,true); 
 
   openstudio::runmanager::Workflow wf;
- 
+
   runmanager::RubyJobBuilder rjb(*m_bclMeasure,m_rubyMeasure->arguments());
+
+  QString filePath(toQString(outDir));
+  filePath.append("\\UserScript\\in.osm");
+
+  rjb.addInputFile(runmanager::FileSelection::All,
+    runmanager::FileSource::All,
+    filePath.toStdString(),
+    "in.osm");
+
   rjb.addToWorkflow(wf);
+
+  openstudio::path p = getApplicationRunDirectory();
+
+  QString arg("-I");
+  arg.append(toQString(p));
+  rjb.addToolArgument(arg.toStdString());
 
   wf.add(co.getTools());
 
@@ -333,7 +342,7 @@ void ApplyMeasureNowDialog::runMeasure()
   OS_ASSERT(queued);
   std::vector<runmanager::Job> jobs = rm.getJobs();
   OS_ASSERT(jobs.size() == 1);
-  rm.setPaused(false);
+  rm.waitForFinished ();
 }
 
 void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
