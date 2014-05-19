@@ -505,16 +505,18 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
   QWidget * parent = NULL;
 
   std::vector<LogMessage> translatorErrors, translatorWarnings;
- 
-  QString text("Import ");
+   
+  QString fileExtension;
   if(type == SDD){
-    text.append("SDD");
+    fileExtension = "SDD";
   } else if(type == GBXML) {
-    text.append("gbXML");
+    fileExtension = "gbXML";
   } else {
     // should never get here
     OS_ASSERT(false);
   }
+  QString text("Import ");
+  text.append(fileExtension);
 
   if( this->currentDocument() )
   {
@@ -606,7 +608,7 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
       if (errorsOrWarnings){
         QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
-        messageBox.setText("Errors or warnings occurred on SDD import.");
+        messageBox.setText("Errors or warnings occurred on " + fileExtension + " import.");
         messageBox.setDetailedText(log);
         messageBox.exec();
       }
@@ -617,7 +619,7 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
       QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
       messageBox.setText("Could not import SDD file.");
-      messageBox.setDetailedText(QString("Could not import SDD file at ") + fileName);
+      messageBox.setDetailedText(QString("Could not import " + fileExtension + " file at ") + fileName);
       messageBox.exec();
     }
   }
