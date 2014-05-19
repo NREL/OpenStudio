@@ -160,6 +160,7 @@ SET( ${target_name}_SRC
   MaterialsController.cpp
   MaterialsController.hpp
   MaterialsView.cpp
+  MaterialsView.hpp
   ModelObjectInspectorView.cpp
   ModelObjectInspectorView.hpp
   ModelObjectItem.cpp
