@@ -524,6 +524,7 @@
     <rule IddField="Exhaust Air Outlet Node" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Refrigeration_System">
+    <rule IddField="Refrigerated CaseAndWalkInList Name" Access="HIDDEN"/>
     <rule IddField="Refrigeration TransferLoad List Name" Access="HIDDEN"/>
     <rule IddField="Refrigeration Condenser Name" Access="HIDDEN"/>
     <rule IddField="CompressorList Name" Access="HIDDEN"/>
