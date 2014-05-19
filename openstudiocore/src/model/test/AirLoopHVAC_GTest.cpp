@@ -22,17 +22,11 @@
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
 #include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
 #include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/ControllerOutdoorAir.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
@@ -43,23 +37,17 @@
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
 #include <model/SizingSystem.hpp>
 #include <model/SizingSystem_Impl.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/HVACComponent.hpp>
 #include <model/HVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
 #include <model/HVACTemplates.hpp>
 #include <model/LifeCycleCost.hpp>
 
-using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
@@ -127,9 +115,9 @@ TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
 
   ASSERT_EXIT (
     {
-      model::Model m;
+      Model m;
 
-      model::AirLoopHVAC airLoopHVAC(m);
+      AirLoopHVAC airLoopHVAC(m);
 
       airLoopHVAC.availabilitySchedule();
 
@@ -375,17 +363,17 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  model::Model m; 
+  Model m; 
 
-  model::ScheduleCompact s(m);
+  ScheduleCompact s(m);
   
-  model::PlantLoop plantLoop(m); 
+  PlantLoop plantLoop(m); 
 
-  model::AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-  model::Node airSupplyOutletNode = airLoop.supplyOutletNode();
+  Node airSupplyOutletNode = airLoop.supplyOutletNode();
 
-  model::CoilHeatingWater heatingCoil(m,s);
+  CoilHeatingWater heatingCoil(m,s);
 
   heatingCoil.addToNode(airSupplyOutletNode);
 
@@ -393,7 +381,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
 
-  model::CoilCoolingWater coolingCoil(m,s);
+  CoilCoolingWater coolingCoil(m,s);
 
   coolingCoil.addToNode(airSupplyOutletNode);
 
@@ -428,20 +416,20 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
 TEST_F(ModelFixture, AirLoopHVAC_remove3)
 {
-  model::Model m; 
+  Model m; 
 
-  EXPECT_EQ(0u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
 
-  model::Loop loop = addSystemType5(m);
+  Loop loop = addSystemType5(m);
 
-  EXPECT_EQ(1u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(1u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(1u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(1u, m.getModelObjects<SizingSystem>().size());
 
   loop.remove();
 
-  EXPECT_EQ(0u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_Cost)
@@ -520,9 +508,10 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 
 TEST_F(ModelFixture, AirLoopHVAC_edges)
 {
-  Model m; 
+  Model m;
 
-  AirLoopHVAC airLoopHVAC = AirLoopHVAC(m);
+  AirLoopHVAC airLoopHVAC(m);
+  PlantLoop plantLoop(m);
   // demand components
   ThermalZone thermalZone(m);
   ThermalZone thermalZone2(m);
@@ -536,6 +525,8 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
 
   AirLoopHVACZoneSplitter splitter = airLoopHVAC.zoneSplitter();
   AirLoopHVACZoneMixer mixer = airLoopHVAC.zoneMixer();
+
+  Mixer plantDemandMixer = plantLoop.demandMixer();
 
   // supply components
   ControllerOutdoorAir controllerOutdoorAir(m);
@@ -558,6 +549,8 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   coil.addToNode(supplyOutletNode);
   fan.addToNode(supplyOutletNode);
 
+  plantLoop.addDemandBranchForComponent(coil3);
+
   boost::optional<Node> OANode = outdoorAirSystem.outboardOANode();
   ASSERT_TRUE(OANode);
   coil2.addToNode(*OANode);
@@ -565,16 +558,16 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   boost::optional<ModelObject> oaSystem = airLoopHVAC.supplyComponent(outdoorAirSystem.handle());
   ASSERT_TRUE(oaSystem);
   EXPECT_EQ(outdoorAirSystem, *oaSystem);
-  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be Node
+  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
   ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
   ASSERT_EQ(1, edges.size());
   EXPECT_EQ(coil4, edges[0]);
 
   boost::optional<ModelObject> splitter_obj = airLoopHVAC.demandComponent(splitter.handle());
   ASSERT_TRUE(splitter_obj);
   EXPECT_EQ(splitter, *splitter_obj);
-  edges = splitter.getImpl<model::detail::HVACComponent_Impl>()->edges(true); // should be all air terminals
+  edges = splitter.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be all air terminals
   EXPECT_EQ(4, edges.size());
   bool found_terminal_1 = false;
   bool found_terminal_2 = false;
@@ -603,27 +596,27 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   boost::optional<ModelObject> thermal_zone = airLoopHVAC.demandComponent(thermalZone.handle());
   ASSERT_TRUE(thermal_zone);
   EXPECT_EQ(thermalZone, *thermal_zone);
-  edges = thermalZone.getImpl<model::detail::HVACComponent_Impl>()->edges(true); // should be Node
+  edges = thermalZone.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
   ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<model::detail::HVACComponent_Impl>()->edges(true); // should be Mixer
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Mixer
   ASSERT_EQ(1, edges.size());
   EXPECT_EQ(mixer, edges[0]);
 
   boost::optional<ModelObject> terminal = airLoopHVAC.demandComponent(singleDuctTerminal.handle());
   ASSERT_TRUE(terminal);
   EXPECT_EQ(singleDuctTerminal, *terminal);
-  edges = singleDuctTerminal.getImpl<model::detail::HVACComponent_Impl>()->edges(true); // should be Node
+  edges = singleDuctTerminal.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
   ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<model::detail::HVACComponent_Impl>()->edges(true); // should be ThermalZone
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be ThermalZone
   ASSERT_EQ(1, edges.size());
   EXPECT_EQ(thermalZone, edges[0]);
 
   boost::optional<ModelObject> heatingElecCoil = airLoopHVAC.supplyComponent(coil.handle());
   ASSERT_TRUE(heatingElecCoil);
   EXPECT_EQ(coil, *heatingElecCoil);
-  edges = coil.getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be Node
+  edges = coil.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
   ASSERT_EQ(1, edges.size());
-  edges = edges[0].getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be ConstantVolumeFan
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be ConstantVolumeFan
   ASSERT_EQ(1, edges.size());
   EXPECT_EQ(fan, edges[0]);
 
@@ -631,21 +624,29 @@ TEST_F(ModelFixture, AirLoopHVAC_edges)
   boost::optional<ModelObject> inletNode = airLoopHVAC.supplyComponent(supplyInletNode.handle());
   ASSERT_TRUE(inletNode);
   EXPECT_EQ(supplyInletNode, *inletNode);
-  edges = supplyInletNode.getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be OASystem
+  edges = supplyInletNode.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be OASystem
 
-  // doesn't work for OA loop, should it?
+  boost::optional<ModelObject> heatingWaterCoil_air = airLoopHVAC.supplyComponent(coil3.handle());
+  ASSERT_TRUE(heatingWaterCoil_air);
+  EXPECT_EQ(coil3, *heatingWaterCoil_air);
+  edges = coil3.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(coil, edges[0]);
+
+  boost::optional<ModelObject> heatingWaterCoil_plant = plantLoop.demandComponent(coil3.handle());
+  ASSERT_TRUE(heatingWaterCoil_plant);
+  EXPECT_EQ(coil3, *heatingWaterCoil_plant);
+  edges = coil3.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be ConnectorMixer
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(plantDemandMixer, edges[0]);
+
+  // does not search OA system
   boost::optional<ModelObject> oaInletNode = airLoopHVAC.supplyComponent((*OANode).handle());
   ASSERT_FALSE(oaInletNode);
-  // EXPECT_EQ((*OANode), *oaInletNode);
-  // edges = (*OANode).getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be coil?
-
   boost::optional<ModelObject> heatingElecCoil2 = airLoopHVAC.supplyComponent(coil2.handle());
   ASSERT_FALSE(heatingElecCoil2);
-  // EXPECT_EQ(coil2, *heatingElecCoil2);
-  // edges = coil2.getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be Node
-  // ASSERT_EQ(1, edges.size());
-  // edges = edges[0].getImpl<model::detail::HVACComponent_Impl>()->edges(false); // should be something?
-  // ASSERT_EQ(1, edges.size());
-  // EXPECT_EQ(coil4, edges[0]);
-
 }

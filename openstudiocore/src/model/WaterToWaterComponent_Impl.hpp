@@ -64,6 +64,10 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
 
   virtual boost::optional<ModelObject> demandOutletModelObject();
 
+  /** This function returns a vector of HVACComponent that are directly downstream
+   *  from this object on an AirLoopHVAC or PlantLoop. 
+   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+  **/
   virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   virtual boost::optional<ParentObject> parent() const;
