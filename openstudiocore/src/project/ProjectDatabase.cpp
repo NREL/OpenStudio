@@ -1213,6 +1213,23 @@ namespace detail {
     assertExec(query);
     query.clear();
 
+    // Code from update_1_3_3_to_1_3_4 needed to make AttributeRecord constructor work.
+    LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+        << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+    AttributeRecordColumns sourceColumn("source");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                      dataPointRecordIdColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
     for (std::vector< std::pair<int,std::vector<Attribute> > >::const_iterator it = algorithmOptions.begin(),
          itEnd = algorithmOptions.end(); it != itEnd; ++it)
     {
@@ -2450,32 +2467,37 @@ namespace detail {
     bool didStartTransaction = startTransaction();
     OS_ASSERT(didStartTransaction);
 
-    // add source and dataPointRecordId columns to AttributeRecords
-    LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
-        << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
-
     ProjectDatabase database(this->shared_from_this());
     QSqlQuery query(*(database.qSqlDatabase()));
+    bool test(false);
 
-    AttributeRecordColumns sourceColumn("source");
-    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
-                      " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
-    assertExec(query);
-    query.clear();
+    if (startVersion > VersionString("0.8.0")) {
+      // this change has not been made yet
 
-    AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
-    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
-                      " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
-                      dataPointRecordIdColumn.valueDescription()));
-    assertExec(query);
-    query.clear();
+      // add source and dataPointRecordId columns to AttributeRecords
+      LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+          << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+      AttributeRecordColumns sourceColumn("source");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                        dataPointRecordIdColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
     
-    save();
-    bool test = this->commitTransaction();
-    OS_ASSERT(test);
+      save();
+      test = this->commitTransaction();
+      OS_ASSERT(test);
 
-    didStartTransaction = startTransaction();
-    OS_ASSERT(didStartTransaction);
+      didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+    }
 
     // set default value of source to ""
     query.prepare(QString::fromStdString("UPDATE AttributeRecords SET source=:source"));
@@ -2484,7 +2506,7 @@ namespace detail {
     query.clear();
 
     save();
-    bool test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -2498,7 +2520,7 @@ namespace detail {
     query.clear();
 
     save();
-    bool test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
@@ -2523,33 +2545,38 @@ namespace detail {
     query.clear();
 
     // repoint child Attributes to parent DataPoint
-    BOOST_FOREACH(const std::pair<int,int>& frr_dpr,fileReferenceDataPointIdPairs) {
-      query.prepare(toQString("UPDATE AttributeRecords SET fileReferenceRecordId=NULL, " + 
-                        "dataPointRecordId=:dataPointRecordId WHERE " + 
-                        "fileReferenceRecordId=:fileReferenceRecordId"));
-      query.bindValue(":dataPointRecordId",frr_dpr.second);
-      query.bindValue(":fileReferenceRecordId",frr_dpr.first);
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(toQString(
+          std::string("UPDATE AttributeRecords SET fileReferenceRecordId=NULL, ") + 
+          std::string("dataPointRecordId=:dataPointRecordId WHERE ") + 
+          std::string("fileReferenceRecordId=:fileReferenceRecordId")));
+      query.bindValue(":dataPointRecordId",it->second);
+      query.bindValue(":fileReferenceRecordId",it->first);
       assertExec(query);
       query.clear();
     }
 
     save();
-    bool test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
 
     didStartTransaction = startTransaction();
     OS_ASSERT(didStartTransaction);
     
     // delete the fileReferenceRecords
-    BOOST_FOREACH(const std::pair<int,int>& frr_dpr,fileReferenceDataPointIdPairs) {
-      query.prepare(toQString("DELETE FROM FileReferenceRecords WHERE id=:fileReferenceRecordId"));
-      query.bindValue(":fileReferenceRecordId",frr_dpr.first);
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(QString("DELETE FROM FileReferenceRecords WHERE id=:fileReferenceRecordId"));
+      query.bindValue(":fileReferenceRecordId",it->first);
       assertExec(query);
       query.clear();
     }
 
     save();
-    bool test = this->commitTransaction();
+    test = this->commitTransaction();
     OS_ASSERT(test);
   }
 

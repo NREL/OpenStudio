@@ -60,7 +60,8 @@ namespace detail{
       m_fileReferenceRecordId(fileReferenceRecord.id()),
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
-      m_attributeUnits(attribute.units())
+      m_attributeUnits(attribute.units()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -78,7 +79,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_attributeVectorIndex(attributeVectorIndex)
+      m_attributeVectorIndex(attributeVectorIndex),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -94,7 +96,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_algorithmRecordId(algorithmRecord.id())
+      m_algorithmRecordId(algorithmRecord.id()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -110,7 +113,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_variableRecordId(variableRecord.id())
+      m_variableRecordId(variableRecord.id()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }
@@ -126,7 +130,8 @@ namespace detail{
       m_attributeValueType(attribute.valueType()),
       m_attributeValue(attribute.valueAsQVariant()),
       m_attributeUnits(attribute.units()),
-      m_dataPointRecordId(dataPointRecord.id())
+      m_dataPointRecordId(dataPointRecord.id()),
+      m_source(attribute.source())
   {
     storeAttribute(attribute);
   }

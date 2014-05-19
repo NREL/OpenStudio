@@ -691,9 +691,6 @@ namespace detail {
   }
 
   void DataPoint_Impl::setXmlOutputData(const std::vector<FileReference>& files) {
-    BOOST_FOREACH(const FileReference& fref,files) {
-      OS_ASSERT(fref.fileType() == FileReferenceType::XML);
-    }
     m_xmlOutputData = files;
     m_outputAttributes.clear();
     onChange(AnalysisObject_Impl::Benign);
