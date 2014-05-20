@@ -124,7 +124,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   QFile f(":/library/OpenStudioPolicy.xml");
 
-
   openstudio::model::AccessPolicyStore::Instance().loadFile(f);
 
   QFile data(":/openstudiolib.qss");
@@ -796,6 +795,55 @@ void  OpenStudioApp::showAbout()
   about.setStyleSheet("qproperty-alignment: AlignCenter;");
   about.setWindowTitle("About " + applicationName());
   about.exec();
+}
+
+void OpenStudioApp::reloadFile(const QString& fileToLoad, const QString& saveFileName)
+{
+  QFileInfo info(fileToLoad); // handles windows links and "\"
+  QString fileName = info.absoluteFilePath();
+  osversion::VersionTranslator versionTranslator;
+  boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+  if( model ){
+    
+    bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
+    this->setQuitOnLastWindowClosed(false);
+    if( m_osDocument ){
+      m_osDocument->mainWindow()->hide();
+      m_osDocument.reset();
+    }
+
+    processEvents();
+
+    m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+                                                                 hvacComponentLibrary(), 
+                                                                 resourcesPath(), 
+                                                                 model,
+                                                                 saveFileName) );
+
+    connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
+    connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
+    connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+    connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
+    connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
+    connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
+    connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
+    connect( m_osDocument.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
+    connect( m_osDocument.get(), SIGNAL(newClicked()), this,SLOT(newModel()) );
+    connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
+    connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
+
+    m_startupView->hide();
+
+    QTimer::singleShot(0, m_osDocument.get(), SLOT(markAsModified())); 
+
+    versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
+
+    this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
+
+  }else{
+    // todo: show error message
+  }
+
 }
 
 openstudio::path OpenStudioApp::resourcesPath() const

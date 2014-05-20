@@ -76,6 +76,10 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
+
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, const QString&)), app, SLOT(reloadFile(const QString&, const QString&)), Qt::QueuedConnection);
+  OS_ASSERT(isConnected);
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
@@ -199,6 +203,7 @@ void ApplyMeasureNowDialog::displayMeasure()
   m_currentMeasureItem.clear();
   m_job.reset();
   m_model.reset();
+  m_reloadPath.reset();
 
   openstudio::OSAppBase * app = OSAppBase::instance();
 
@@ -342,11 +347,20 @@ void ApplyMeasureNowDialog::displayResults()
 {
   analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
 
+  try{
+    m_reloadPath = m_job->allFiles().getLastByFilename("out.osm").fullPath;
+  }catch(...){
+  }
+
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
   m_timer->stop();
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
-  this->okButton()->setEnabled(true);
+  if (m_reloadPath){
+    this->okButton()->setEnabled(true);
+  }else{
+    this->okButton()->setEnabled(false);
+  }
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
@@ -636,11 +650,24 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
     // N/A
     OS_ASSERT(false);
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
-    // TODO
-    // close dialog
-    // display modified, cloned model in app
-    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+    
+    // hide this widget to prevent any more mouse events
+    // DLM: any way to clear mouse event queue?
+    this->hide();
+
+    // reload the model
+    QTimer::singleShot(0, this, SLOT(requestReload()));
   }
+}
+
+void ApplyMeasureNowDialog::requestReload()
+{
+  // todo: do this in memory without reloading from disk
+  OS_ASSERT(m_reloadPath);
+  QString fileToLoad = toQString(*m_reloadPath);
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  QString saveFileName = app->currentDocument()->savePath();
+  emit reloadFile(fileToLoad, saveFileName);
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)

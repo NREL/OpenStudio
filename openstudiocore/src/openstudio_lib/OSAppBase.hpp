@@ -64,6 +64,10 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void chooseHorizontalEditTab();
   virtual QSharedPointer<openstudio::EditController> editController();
 
+  public slots:
+
+    virtual void reloadFile(const QString& fileToLoad, const QString& saveFileName) = 0;
+
   private:
 
   REGISTER_LOGGER("openstudio.OSAppBase");

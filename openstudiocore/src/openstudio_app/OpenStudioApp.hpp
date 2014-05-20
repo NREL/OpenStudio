@@ -116,6 +116,8 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
+  virtual void reloadFile(const QString& fileToLoad, const QString& saveFileName);
+
  private slots:
 
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );

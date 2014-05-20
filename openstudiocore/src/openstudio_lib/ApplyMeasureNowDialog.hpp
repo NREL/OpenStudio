@@ -87,6 +87,12 @@ private slots:
 
   void runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus);
 
+  void requestReload();
+
+signals:
+
+  void reloadFile(const QString& fileToLoad, const QString& saveFileName);
+
 private:
 
   void createWidgets();
@@ -106,6 +112,8 @@ private:
   boost::optional<runmanager::Job> m_job;
 
   boost::optional<model::Model> m_model;
+
+  boost::optional<openstudio::path> m_reloadPath;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 
