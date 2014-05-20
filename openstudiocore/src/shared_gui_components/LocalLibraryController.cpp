@@ -52,9 +52,10 @@
 
 namespace openstudio{
   
-LocalLibraryController::LocalLibraryController(BaseApp *t_app)
+LocalLibraryController::LocalLibraryController(BaseApp *t_app, bool onlyShowModelMeasures)
   : QObject(),
-    m_app(t_app)
+    m_app(t_app),
+    m_onlyShowModelMeasures(onlyShowModelMeasures)
 {
   LOG(Debug, "Creating LocalLibraryController with base app " << t_app);
   QDomDocument doc("taxonomy");
@@ -195,7 +196,7 @@ QSharedPointer<LibraryTypeListController> LocalLibraryController::createLibraryL
 
       QString taxonomyTag = groupName + "." + subGroupName;
 
-      QSharedPointer<LibrarySubGroupItem> item = QSharedPointer<LibrarySubGroupItem>(new LibrarySubGroupItem(subGroupName,taxonomyTag,source, m_app));
+      QSharedPointer<LibrarySubGroupItem> item = QSharedPointer<LibrarySubGroupItem>(new LibrarySubGroupItem(subGroupName,taxonomyTag,source, m_app, m_onlyShowModelMeasures));
   
       subGroupListController->addItem(item);
 
@@ -358,12 +359,13 @@ void LibraryGroupListController::reset()
 
 LibrarySubGroupItem::LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
                                          LocalLibrary::LibrarySource source,
-                                         BaseApp *t_app)
+                                         BaseApp *t_app,
+                                         bool onlyShowModelMeasures)
   : OSListItem(),
     m_app(t_app),
     m_name(name)
 {
-  m_libraryListController = QSharedPointer<LibraryListController>( new LibraryListController(taxonomyTag, source, m_app) );
+  m_libraryListController = QSharedPointer<LibraryListController>( new LibraryListController(taxonomyTag, source, m_app, onlyShowModelMeasures) );
 }
 
 
@@ -555,11 +557,13 @@ void LibraryItemDelegate::selectedChanged()
 
 LibraryListController::LibraryListController(const QString & taxonomyTag, 
                                              LocalLibrary::LibrarySource source, 
-                                             BaseApp *t_app)
+                                             BaseApp *t_app,
+                                             bool onlyShowModelMeasures)
   : OSListController(),
     m_app(t_app),
     m_taxonomyTag(taxonomyTag),
-    m_source(source)
+    m_source(source),
+    m_onlyShowModelMeasures(onlyShowModelMeasures)
 {
   createItems();
 }
@@ -595,26 +599,40 @@ void LibraryListController::createItems()
 {
   m_items.clear();
 
+  std::vector<BCLMeasure> temp;
   std::vector<BCLMeasure> measures;
 
   if( m_source == LocalLibrary::USER )
   {
-    measures = m_app->measureManager().myMeasures();
+    temp = m_app->measureManager().myMeasures();
   }
   else if( m_source == LocalLibrary::BCL )
   {
-    measures = m_app->measureManager().bclMeasures();
+    temp = m_app->measureManager().bclMeasures();
   }
   else if( m_source == LocalLibrary::COMBINED )
   {
-    measures = m_app->measureManager().myMeasures();
+    temp = m_app->measureManager().myMeasures();
     std::vector<BCLMeasure> bclMeasures = m_app->measureManager().bclMeasures();
-    measures.insert(measures.end(), bclMeasures.begin(), bclMeasures.end());
+    temp.insert(temp.end(), bclMeasures.begin(), bclMeasures.end());
   }
   else
   {
     // should never get here
     OS_ASSERT(false);
+  }
+
+  if(m_onlyShowModelMeasures){
+     for( std::vector<BCLMeasure>::iterator it = temp.begin();
+         it != temp.end();
+         ++it )
+    {
+      if(it->measureType() == MeasureType::ModelMeasure){
+        measures.push_back(*it);
+      }
+    }
+  } else {
+    measures = temp;
   }
   
   // sort measures
