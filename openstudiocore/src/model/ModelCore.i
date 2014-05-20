@@ -2,7 +2,7 @@
 #define MODEL_CORE_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelcore
+  %module openstudiomodelcore
 #endif
 
 
@@ -10,14 +10,14 @@
 
 #if defined SWIGRUBY
 
-%init %{
-  rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_ModelObject) { OpenStudio::Model::toModelObject(self); } }");
-  rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_ModelExtensibleGroup) { OpenStudio::Model::toModelExtensibleGroup(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");  
-%}
+  %init %{
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_ModelObject) { OpenStudio::Model::toModelObject(self); } }");
+    rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_ModelExtensibleGroup) { OpenStudio::Model::toModelExtensibleGroup(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");  
+  %}
 
 #elif defined SWIGCSHARP
 
@@ -31,6 +31,19 @@
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
   %typemap(csclassmodifiers) openstudio::model::ModelObject "public partial class"
+  
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+        
+    public partial class IdfObject {
+      public OptionalModelObject to_ModelObject()
+      {
+        return OpenStudio.OpenStudioModelCore.toModelObject(this);
+      }
+    }    
+  %}
   
 #else
 
@@ -46,9 +59,9 @@
 %}
 
 #if defined SWIGJAVA
-%rename(loadComponent) openstudio::model::Component::load;
-%ignore openstudio::model::Meter::name;
-%ignore openstudio::model::Meter::setName;
+  %rename(loadComponent) openstudio::model::Component::load;
+  %ignore openstudio::model::Meter::name;
+  %ignore openstudio::model::Meter::setName;
 #endif
 
 // templates for non-ModelObjects

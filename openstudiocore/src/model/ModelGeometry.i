@@ -2,7 +2,7 @@
 #define MODEL_GEOMETRY_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelgeometry
+  %module openstudiomodelgeometry
 #endif
 
 
@@ -18,7 +18,6 @@
   #include <utilities/sql/SqlFile.hpp>
 
 %}
-
 
 #if defined SWIGCSHARP
 
@@ -159,18 +158,34 @@ SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 
-#if defined SWIGCSHARP
+#if defined SWIGCSHARP || defined(SWIGJAVA)
 
-%inline {
-  namespace openstudio {
-    namespace model {
-      std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
-        return spaceType.spaces();
+  %inline {
+    namespace openstudio {
+      namespace model {
+        std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
+          return spaceType.spaces();
+        }
       }
     }
   }
-}
 
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+    
+    public partial class SpaceType : ResourceObject {
+      public SpaceVector spaces()
+      {
+        return OpenStudio.OpenStudioModelGeometry.getSpaces(this);
+      }
+    }  
+  %}
 #endif
 
 #endif 

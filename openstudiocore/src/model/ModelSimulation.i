@@ -2,7 +2,7 @@
 #define MODEL_SIMULATION_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelsimulation
+  %module openstudiomodelsimulation
 #endif
 
 

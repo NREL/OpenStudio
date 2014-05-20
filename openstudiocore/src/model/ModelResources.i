@@ -2,7 +2,7 @@
 #define MODEL_RESOURCES_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelresources
+  %module openstudiomodelresources
 #endif
 
 

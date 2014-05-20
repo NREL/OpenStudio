@@ -105,31 +105,48 @@
       using System;
       using System.Runtime.InteropServices;
       
+      public partial class IdfObject {
+        public Optional##_name to_##_name()
+        {
+          return OpenStudio.##_csharp_module_name##.to##_name(this);
+        }
+      }
+      
       public partial class Model : Workspace {
         public _name##Vector get##_name##s()
         {
           return OpenStudio.##_csharp_module_name##.get##_name##s(this);
         }
-      }
-      
-      public partial class Model : Workspace {
+
         public Optional##_name get##_name##(OpenStudio.UUID handle)
         {
           return OpenStudio.##_csharp_module_name##.get##_name##(this, handle);
         }
+        
+        public Optional##_name get##_name##ByName(String name)
+        {
+          return OpenStudio.##_csharp_module_name##.get##_name##ByName(this, name);
+        }
+        
+        public _name##Vector get##_name##sByName(String name, bool exactMatch)
+        {
+          return OpenStudio.##_csharp_module_name##.get##_name##sByName(this, name, exactMatch);
+        } 
       }      
     %}
-    
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name ") { |handle| OpenStudio::Model::get" #_name "(self, handle); } }");
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "s) { OpenStudio::Model::get" #_name "s(self); } }");
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "ByName) { |name| OpenStudio::Model::get" #_name "ByName(self, name); } }");
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "sByName) { |name, exactMatch| OpenStudio::Model::get" #_name "sByName(self, name, exactMatch); } }");
   %enddef
 
   %define UNIQUEMODELOBJECT_EXTENSION(_name) 
     %typemap(csimports) openstudio::model::##_name %{
       using System;
       using System.Runtime.InteropServices;
+      
+      public partial class IdfObject {
+        public Optional##_name to_##_name()
+        {
+          return OpenStudio.##_csharp_module_name##.to##_name(this);
+        }
+      }
       
       public partial class Model : Workspace {
         public _name get##_name##()
@@ -142,14 +159,20 @@
         }
       }
     %}
-    
-    //rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name ") { OpenStudio::Model::get" #_name "(self); } }");
-    //rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getOptional" #_name ") { OpenStudio::Model::getOptional" #_name "(self); } }");
   %enddef
 
   %define MODELEXTENSIBLEGROUP_EXTENSION(_name) 
-    //rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
+    %typemap(csimports) openstudio::model::##_name %{
+      using System;
+      using System.Runtime.InteropServices;
+        
+      public partial class IdfExtensibleGroup {
+        public Optional##_name to_##_name()
+        {
+          return OpenStudio.##_csharp_module_name##.to##_name(this);
+        }
+      }  
+    %}
   %enddef
 
 #else

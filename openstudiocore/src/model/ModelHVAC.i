@@ -2,7 +2,7 @@
 #define MODEL_HVAC_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelhvac
+  %module openstudiomodelhvac
 #endif
 
 
@@ -228,23 +228,48 @@ SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent, 1);
 SWIG_MODELOBJECT(GroundHeatExchangerVertical, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
-
-%inline {
-  namespace openstudio {
-    namespace model {
-      std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
-        return building.thermalZones();
-      }
-      boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
-        return space.thermalZone();
-      }
-      bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
-        return space.setThermalZone(thermalZone);
+  %inline {
+    namespace openstudio {
+      namespace model {
+        std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
+          return building.thermalZones();
+        }
+        boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
+          return space.thermalZone();
+        }
+        bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
+          return space.setThermalZone(thermalZone);
+        }
       }
     }
   }
-}
+#endif
 
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+        
+    public partial class Building : ParentObject {
+      public ThermalZoneVector thermalZones()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZones(this);
+      }
+    }  
+    
+    public partial class Space : PlanarSurfaceGroup {
+      public OptionalThermalZone thermalZone()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);
+      }
+      public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
+      {
+        return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }  
+  %}
 #endif
 
 %include <model/HVACTemplates.hpp>

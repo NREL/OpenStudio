@@ -2,7 +2,7 @@
 #define MODEL_REFRIGERATION_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelrefrigeration
+  %module openstudiomodelrefrigeration
 #endif
 
 
