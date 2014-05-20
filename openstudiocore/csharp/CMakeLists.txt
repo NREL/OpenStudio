@@ -1,7 +1,6 @@
 #only building C# bindings with Visual Studio
 if(MSVC)
 
-
   install(DIRECTORY "examples"
     DESTINATION "CSharp/"
     FILES_MATCHING PATTERN "*.cs" 
@@ -15,14 +14,14 @@ if(MSVC)
   # Take stab at finding Sandcastle to make sure the runSandcastle.bat will execute
   # TODO: consider rolling runSandcastle.bat into this file, using CMake to find the
   # required tools.
-  find_program(SANDCASTLE_TOOLS MrefBuilder.exe
-    HINTS ENV ProgramFiles 
-    PATH_SUFFIXES "Sandcastle/ProductionTools"
-  )
+  #find_program(SANDCASTLE_TOOLS MrefBuilder.exe
+  #  HINTS ENV ProgramFiles 
+  #  PATH_SUFFIXES "Sandcastle/ProductionTools"
+  #)
 
-  if(${SANDCASTLE_TOOLS} STREQUAL "SANDCASTLE_TOOLS-NOTFOUND")
-    message(SEND_ERROR "Sandcastle tools not found, unable to build C# SDK on Windows")
-  endif()
+  #if(${SANDCASTLE_TOOLS} STREQUAL "SANDCASTLE_TOOLS-NOTFOUND")
+  #  message(SEND_ERROR "Sandcastle tools not found, unable to build C# SDK on Windows")
+  #endif()
 
 
   # CSharp unit tests
@@ -31,13 +30,13 @@ if(MSVC)
   #)
 
   # need to know if using the Express edition of Visual Studio, devenv is split into multiple programs
-  option(MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE)
+  #option(MSVC_IS_EXPRESS "using the Express editions of Visual Studio, must install both C++ and C# versions" FALSE)
 
-  if(${MSVC_IS_EXPRESS})
-    set(MSVC_BUILD_TOOL "vcsexpress")
-  else()
-    set(MSVC_BUILD_TOOL "devenv")
-  endif()
+  #if(${MSVC_IS_EXPRESS})
+    set(MSVC_BUILD_TOOL "MSBuild")
+  #else()
+  #  set(MSVC_BUILD_TOOL "MSBuild")
+  #endif()
 
   file(TO_NATIVE_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp" CSHARP_LIBRARY_OUTPUT_DIRECTORY)
   file(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/csharp" CSHARP_SOURCE_DIR)
@@ -45,22 +44,24 @@ if(MSVC)
 
   set(CSHARP_VERSION_MAJOR ${CMAKE_VERSION_MAJOR})
   set(CSHARP_VERSION_MINOR ${CMAKE_VERSION_MINOR})
-  set(CSHARP_VERSION_BUILD ${CMAKE_VERSION_PATCH}) # svn revision seems like a good match for build number, being trackable
-  set(CSHARP_VERSION_REVISION 0) # I don't think we have a good match for revision 
+  set(CSHARP_VERSION_PATCH ${CMAKE_VERSION_PATCH}) 
+  set(CSHARP_VERSION_BUILD ${CMAKE_VERSION_BUILD}) 
 
   # Test to see if CSHARP_VERSION_BUILD has something meaningful set
   if(${CSHARP_VERSION_BUILD} MATCHES [^0-9])
-    message(WARNING "Version patch does not have a valid value (${CSHARP_VERSION_BUILD}), defaulting to 0")
+    message(WARNING "CSHARP_VERSION_BUILD does not have a valid value (${CSHARP_VERSION_BUILD}), defaulting to 0")
     set(CSHARP_VERSION_BUILD 0)
   endif()
 
-  set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${CSHARP_VERSION_BUILD}.${CSHARP_VERSION_REVISION}")
+  set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${CSHARP_VERSION_PATCH}.${CSHARP_VERSION_BUILD}")
 
-  if(MSVC10)
-    set(CSHARP_TOOLS_VERSION "4.0")
-  else()
-    set(CSHARP_TOOLS_VERSION "3.5")
-  endif()
+  #if(MSVC12)
+    set(CSHARP_TOOLS_VERSION "4.5")
+  #elseif(MSVC10)
+  #  set(CSHARP_TOOLS_VERSION "4.0")
+  #else()
+  #  set(CSHARP_TOOLS_VERSION "3.5")
+  #endif()
 
   file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources")
   configure_file("${CMAKE_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj.in" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
@@ -74,12 +75,11 @@ if(MSVC)
   
   # the main OpenStudio dll
   set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)/OpenStudio.dll")
-  
-  
+
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "${MSVC_BUILD_TOOL}" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" /Build "\"$(ConfigurationName)|x86\""  
+    COMMAND "${MSVC_BUILD_TOOL}" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"  
     DEPENDS ${ALL_CSHARP_BINDING_TARGETS}
   )
   
