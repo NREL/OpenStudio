@@ -173,25 +173,25 @@ MODELOBJECT_TEMPLATES(OutputVariable);
 MODELOBJECT_TEMPLATES(GenericModelObject);
 MODELOBJECT_TEMPLATES(ModelObjectList);
 
-SWIG_MODELOBJECT(ParentObject);
-SWIG_MODELOBJECT(ResourceObject);
+SWIG_MODELOBJECT(ParentObject, 0);
+SWIG_MODELOBJECT(ResourceObject, 0);
 SWIG_UNIQUEMODELOBJECT(Version);
 SWIG_UNIQUEMODELOBJECT(LifeCycleCostParameters);
 SWIG_UNIQUEMODELOBJECT(RadianceParameters);
-SWIG_MODELOBJECT(Meter);
-SWIG_MODELOBJECT(LifeCycleCost); // Probably need to make a ModelEconomics.i file for these
-SWIG_MODELOBJECT(UtilityBill); // Probably need to make a ModelEconomics.i file for these
-SWIG_MODELOBJECT(ComponentData);
-SWIG_MODELOBJECT(ScheduleTypeLimits); // Needed for OutputVariable
-SWIG_MODELOBJECT(ScheduleBase); // Needed for OutputVariable
-SWIG_MODELOBJECT(Schedule);  // Needed for OutputVariable
-SWIG_MODELOBJECT(ScheduleDay);
-SWIG_MODELOBJECT(ScheduleWeek);
-SWIG_MODELOBJECT(ScheduleYear);
-SWIG_MODELOBJECT(ScheduleRule);
-SWIG_MODELOBJECT(ScheduleRuleset);
-SWIG_MODELOBJECT(OutputVariable);
-SWIG_MODELOBJECT(GenericModelObject); 
-SWIG_MODELOBJECT(ModelObjectList);
+SWIG_MODELOBJECT(Meter, 1);
+SWIG_MODELOBJECT(LifeCycleCost, 1); // Probably need to make a ModelEconomics.i file for these
+SWIG_MODELOBJECT(UtilityBill, 1); // Probably need to make a ModelEconomics.i file for these
+SWIG_MODELOBJECT(ComponentData, 1);
+SWIG_MODELOBJECT(ScheduleTypeLimits, 1); // Needed for OutputVariable
+SWIG_MODELOBJECT(ScheduleBase, 0); // Needed for OutputVariable
+SWIG_MODELOBJECT(Schedule, 0);  // Needed for OutputVariable
+SWIG_MODELOBJECT(ScheduleDay, 1);
+SWIG_MODELOBJECT(ScheduleWeek, 1);
+SWIG_MODELOBJECT(ScheduleYear, 1);
+SWIG_MODELOBJECT(ScheduleRule, 1);
+SWIG_MODELOBJECT(ScheduleRuleset, 1);
+SWIG_MODELOBJECT(OutputVariable, 1);
+SWIG_MODELOBJECT(GenericModelObject, 0); 
+SWIG_MODELOBJECT(ModelObjectList, 0);
 
 #endif //MODEL_CORE_I 

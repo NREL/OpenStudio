@@ -161,12 +161,11 @@
 #endif
 
 
-%define SWIG_MODELOBJECT(_name)
+%define SWIG_MODELOBJECT(_name, _isConcrete)
 
   #if defined SWIGJAVA
     %ignore openstudio::model::_name::iddObjectType();
   #endif
-
 
   #if defined SWIGCSHARP
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
@@ -194,13 +193,28 @@
         return t_model.getModelObject<_name>(t_handle);
       }
       std::vector<_name> get##_name##s(const Model &t_model) {
-        return t_model.getModelObjects<_name>();
+        %#if _isConcrete
+          return t_model.getConcreteModelObjects<_name>();
+        %#else
+          return t_model.getModelObjects<_name>();
+        %#endif
       }
       boost::optional<_name> get##_name##ByName(const Model &t_model, const std::string &t_name) {
-        return t_model.getModelObjectByName<_name>(t_name);
+        %#if _isConcrete
+          return t_model.getConcreteModelObjectByName<_name>(t_name);
+        %#else
+          return t_model.getModelObjectByName<_name>(t_name);
+        %#endif
       }
-      std::vector<_name> get##_name##sByName(const Model &t_model, const std::string &t_name, bool t_exactMatch) {
-        return t_model.getModelObjectsByName<_name>(t_name, t_exactMatch);
+      std::vector<_name> get##_name##sByName(const Model &t_model, const std::string &t_name, bool t_exactMatch) {        
+        %#if _isConcrete
+          if (t_exactMatch){
+            return t_model.getModelObjectsByName<_name>(t_name, t_exactMatch);
+          }
+          return t_model.getConcreteModelObjectsByName<_name>(t_name);
+        %#else
+          return t_model.getModelObjectsByName<_name>(t_name, t_exactMatch);
+        %#endif
       }
     }
     }
@@ -213,10 +227,10 @@
 %enddef
  
 %define SWIG_UNIQUEMODELOBJECT(_name)
+
   #if defined SWIGJAVA
     %ignore openstudio::model::_name::iddObjectType();
   #endif
-
 
   #if defined SWIGCSHARP
     %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
@@ -256,6 +270,15 @@
 
 %define SWIG_MODELEXTENSIBLEGROUP(_name)
 
+  #if defined SWIGJAVA
+    
+  #endif
+
+  #if defined SWIGCSHARP
+    %typemap(csclassmodifiers) openstudio::model::##_name "public partial class"
+    MODELEXTENSIBLEGROUP_EXTENSION(_name)
+  #endif
+  
   namespace openstudio {
   namespace model {
     boost::optional<_name> to##_name(const openstudio::IdfExtensibleGroup& extensibleGroup);
@@ -271,7 +294,9 @@
     }
   }
   
-  MODELEXTENSIBLEGROUP_EXTENSION(_name)
+  #if defined SWIGRUBY
+    MODELEXTENSIBLEGROUP_EXTENSION(_name)
+  #endif
   
 %enddef
 
