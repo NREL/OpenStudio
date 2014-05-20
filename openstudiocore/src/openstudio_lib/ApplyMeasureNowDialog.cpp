@@ -109,8 +109,8 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedTextEdit->setReadOnly(true);
   
   m_editController = QSharedPointer<EditController>( new EditController() );
-// TODO: Evan, add m_localLibraryController->onlyShowModelMeasures();
-  m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance()) );
+  bool onlyShowModelMeasures = true;
+  m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance(),onlyShowModelMeasures) );
 
   m_rightPaneStackedWidget = new  QStackedWidget();
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
@@ -155,6 +155,10 @@ void ApplyMeasureNowDialog::createWidgets()
   m_jobItemView = new DataPointJobItemView();
 
   m_jobPath = new QLabel();
+  m_jobPath->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  #if _NDEBUG
+    m_jobPath->hide();
+  #endif
 
   layout = new QVBoxLayout();
   layout->addWidget(label);
