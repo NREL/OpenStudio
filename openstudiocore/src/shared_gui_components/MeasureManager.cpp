@@ -584,6 +584,10 @@ bool MeasureManager::isMeasureSelected()
   return false;
 }
 
+QSharedPointer<ruleset::RubyUserScriptArgumentGetter> MeasureManager::argumentGetter() const
+{
+  return m_argumentGetter;
+}
 
 boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)
 {

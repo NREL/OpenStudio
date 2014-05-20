@@ -27,7 +27,11 @@
 #include <analysis/Problem.hpp>
 #include <analysis/RubyMeasure.hpp>
 
+#include <shared_gui_components/VariableList.hpp>
+
 #include <utilities/bcl/BCLMeasure.hpp>
+
+#include <model/Model.hpp>
 
 #include <analysis/Problem.hpp>
 #include <analysis/RubyMeasure.hpp>
@@ -95,9 +99,13 @@ private:
 
   boost::optional<BCLMeasure> m_bclMeasure;
 
-  boost::optional<analysis::RubyMeasure> m_rubyMeasure;
+  QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
+
+  //boost::optional<analysis::RubyMeasure> m_rubyMeasure;
 
   boost::optional<runmanager::Job> m_job;
+
+  boost::optional<model::Model> m_model;
 
   QSharedPointer<LocalLibraryController> m_localLibraryController;
 

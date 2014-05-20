@@ -35,8 +35,6 @@
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 
-#include <analysisdriver/SimpleProject.hpp>
-
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/RubyException.hpp>
 
@@ -107,7 +105,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedTextEdit->setReadOnly(true);
   
   m_editController = QSharedPointer<EditController>( new EditController() );
-
+// TODO: Evan, add m_localLibraryController->onlyShowModelMeasures();
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance()) );
 
   m_rightPaneStackedWidget = new  QStackedWidget();
@@ -124,8 +122,6 @@ void ApplyMeasureNowDialog::createWidgets()
   widget = new QWidget();
   widget->setLayout(layout);
   m_inputPageIdx = m_mainPaneStackedWidget->addWidget(widget);
-
-  // TODO Should at least indicate if Radiance is being used?
 
   // RUNNING
 
@@ -199,43 +195,47 @@ void ApplyMeasureNowDialog::displayMeasure()
   this->okButton()->setEnabled(false);
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
+  m_bclMeasure.reset();
+  m_currentMeasureItem.clear();
+  m_job.reset();
+  m_model.reset();
+
   openstudio::OSAppBase * app = OSAppBase::instance();
 
   QPointer<LibraryItem> selectedItem = m_localLibraryController->selectedItem();
+
+  if (!selectedItem){
+    return;
+  }
+
   UUID id = selectedItem->uuid();
 
-  boost::optional<analysisdriver::SimpleProject> project = app->project();
-  OS_ASSERT(project);
-
   try {
-    // Make a new variable
-    boost::optional<BCLMeasure> bclMeasure = app->measureManager().getMeasure(id);
-    OS_ASSERT(bclMeasure);
-    m_bclMeasure = bclMeasure;
-
-    // Use this?
-    //std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
-
-    // TODO limit displayed measure types
-    MeasureType measureType = bclMeasure->measureType();
-    if (measureType == MeasureType::ModelMeasure) {
-      // OK
-    } else if (measureType == MeasureType::EnergyPlusMeasure) {
-      return; // TODO bad news
-    } else if (measureType == MeasureType::ReportingMeasure) {
-      return; // TODO bad news
-    }
-
-    // prep discrete variable
-    std::string name = app->measureManager().suggestMeasureGroupName(*bclMeasure);
-    analysis::MeasureGroup dv(name, analysis::MeasureVector());
-    dv.setDisplayName(name);
+    // Get the selected measure
+    m_bclMeasure = app->measureManager().getMeasure(id);
+    OS_ASSERT(m_bclMeasure);
+    OS_ASSERT(m_bclMeasure->measureType() == MeasureType::ModelMeasure);
    
     // measure
-    analysis::RubyMeasure rubyMeasure(*bclMeasure);
-    m_rubyMeasure = rubyMeasure;
+    analysis::RubyMeasure rubyMeasure(*m_bclMeasure);
     try{
-      rubyMeasure.setArguments(app->measureManager().getArguments(*project, *bclMeasure));
+      // DLM: we don't want to use this, if we need to reload cached arguments for measure from member map we can
+      // we could use this t_project.hasStoredArguments(*projectMeasure)
+      
+      boost::optional<model::Model> currentModel = app->currentModel();
+      OS_ASSERT(currentModel);
+
+      // clone the current model in case arguments getting changes model
+      m_model = currentModel->clone().cast<model::Model>();
+
+      // pass in an empty workspace for the idf since you know it is a model measure
+      Workspace dummyIdf;
+      std::vector<ruleset::OSArgument> args = app->measureManager().argumentGetter()->getArguments(*m_bclMeasure, m_model, dummyIdf);
+      rubyMeasure.setArguments(args);
+
+      // DLM: don't save the arguments to the project, if we need to preserve user inputs save to member variable map or something
+      //t_project.registerArguments(t_measure, args);
+
     } catch (const RubyException & e) {
       QString errorMessage("Failed to compute arguments for measure: \n\n");
       errorMessage += QString::fromStdString(e.what());
@@ -245,24 +245,18 @@ void ApplyMeasureNowDialog::displayMeasure()
       return;
     }
 
-    // the new measure
-    name = app->measureManager().suggestMeasureName(*bclMeasure, false);
-    rubyMeasure.setName(name);
-    rubyMeasure.setDisplayName(name);
-    rubyMeasure.setDescription(bclMeasure->description());
-    dv.push(rubyMeasure);
-
-    QSharedPointer<measuretab::MeasureItem> item = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
+    m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
     bool isConnected = false;
-    isConnected = connect(item.data(),SIGNAL(argumentsChanged(bool)),
+    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),
       this,SLOT(disableOkButton(bool)));
     OS_ASSERT(isConnected);
 
-    bool hasIncompleteArguments = item->hasIncompleteArguments();
+    bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
 
-    m_editController->setMeasureItem(item.data(), app);
+    // DLM: this is ok, call with overload to ignore isItOKToClearResults
+    m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
 
   } catch (const std::exception & e) {
     QString errorMessage("Failed to display measure: \n\n");
@@ -277,16 +271,6 @@ void ApplyMeasureNowDialog::displayMeasure()
 void ApplyMeasureNowDialog::runMeasure()
 {
   runmanager::ConfigOptions co(true);
-
-  if (co.getTools().getAllByName("energyplus").tools().size() == 0)
-  {
-    QMessageBox::information(this,
-        "Missing EnergyPlus",
-        "EnergyPlus could not be located, simulation aborted.",
-        QMessageBox::Ok);
-
-    return;
-  }
       
   if (co.getTools().getAllByName("ruby").tools().size() == 0)
   {
@@ -300,36 +284,35 @@ void ApplyMeasureNowDialog::runMeasure()
 
   openstudio::OSAppBase * app = OSAppBase::instance();
 
-  // clone model
-  boost::optional<model::Model> model = app->currentModel();
-  OS_ASSERT(model);
-
-  // DLM: not sure if we need to do this clone
-  model::Model modelClone = model->clone().cast<model::Model>();
+  OS_ASSERT(m_model);
 
   openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
-
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
+  
+  // save cloned model to temp directory
+  m_model->save(modelPath,true); 
 
+  // remove?
   QString path("Measure Output Location: ");
   path.append(toQString(outDir));
   m_jobPath->setText(path);
-  
-  // save cloned model to temp directory
-  Workspace(modelClone).save(modelPath,true); 
 
-  openstudio::runmanager::Workflow wf;
+  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
 
-  runmanager::RubyJobBuilder rjb(*m_bclMeasure,m_rubyMeasure->arguments());
+  // DLM: should be able to assert this
+  bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
+  OS_ASSERT(!hasIncompleteArguments);
+
+  runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
 
   openstudio::path p = getApplicationRunDirectory();
   QString arg("-I");
   arg.append(toQString(p));
   rjb.addToolArgument(arg.toStdString());
 
+  openstudio::runmanager::Workflow wf;
   rjb.addToWorkflow(wf);
-
   wf.add(co.getTools());
   wf.setInputFiles(modelPath, openstudio::path());
 
@@ -357,6 +340,8 @@ void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager:
 
 void ApplyMeasureNowDialog::displayResults()
 {
+  analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
+
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
   m_timer->stop();
   this->okButton()->setText(ACCEPT_CHANGES);
@@ -364,7 +349,7 @@ void ApplyMeasureNowDialog::displayResults()
   this->okButton()->setEnabled(true);
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
-  m_jobItemView->update(*m_rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
+  m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -627,6 +612,7 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
 {
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     // N/A
+    OS_ASSERT(false);
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
@@ -648,7 +634,7 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
     runMeasure();
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     // N/A
-    m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx); // TODO remove
+    OS_ASSERT(false);
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     // TODO
     // close dialog

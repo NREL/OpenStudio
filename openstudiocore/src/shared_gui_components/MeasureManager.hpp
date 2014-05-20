@@ -92,6 +92,8 @@ class MeasureManager : public QObject
 
     bool isMeasureSelected();
 
+    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> argumentGetter() const;
+
   public slots:
     /// Update the UI display for all measures. Does not re-get the arguments nor
     /// update the measures in the project at all
