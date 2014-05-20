@@ -300,11 +300,14 @@ void ApplyMeasureNowDialog::runMeasure()
   // clone model
   boost::optional<model::Model> model = app->currentModel();
   OS_ASSERT(model);
+
+  // DLM: not sure if we need to do this clone
   model::Model modelClone = model->clone().cast<model::Model>();
 
   openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
 
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
+  openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
   // save cloned model to temp directory
   Workspace(modelClone).save(modelPath,true); 
@@ -313,23 +316,15 @@ void ApplyMeasureNowDialog::runMeasure()
 
   runmanager::RubyJobBuilder rjb(*m_bclMeasure,m_rubyMeasure->arguments());
 
-  QString filePath(toQString(outDir));
-  filePath.append("\\UserScript\\in.osm");
-
-  rjb.addInputFile(runmanager::FileSelection::All,
-    runmanager::FileSource::All,
-    filePath.toStdString(),
-    "in.osm");
-
-  rjb.addToWorkflow(wf);
-
   openstudio::path p = getApplicationRunDirectory();
-
   QString arg("-I");
   arg.append(toQString(p));
   rjb.addToolArgument(arg.toStdString());
 
+  rjb.addToWorkflow(wf);
+
   wf.add(co.getTools());
+  wf.setInputFiles(modelPath, openstudio::path());
 
   m_job = wf.create(outDir, modelPath);
 
@@ -337,6 +332,7 @@ void ApplyMeasureNowDialog::runMeasure()
   isConnected = m_job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), this, SLOT(runManagerStatusChange(const openstudio::runmanager::AdvancedStatus&)));
   OS_ASSERT(isConnected);
 
+  // DLM: you could make rm a class member then you would not have to call waitForFinished here
   runmanager::RunManager rm;
   bool queued = rm.enqueue(*m_job, true);
   OS_ASSERT(queued);
