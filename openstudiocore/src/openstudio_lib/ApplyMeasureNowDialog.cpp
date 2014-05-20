@@ -154,8 +154,11 @@ void ApplyMeasureNowDialog::createWidgets()
 
   m_jobItemView = new DataPointJobItemView();
 
+  m_jobPath = new QLabel();
+
   layout = new QVBoxLayout();
   layout->addWidget(label);
+  layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
   layout->addStretch();
@@ -306,6 +309,10 @@ void ApplyMeasureNowDialog::runMeasure()
 
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
 
+  QString path("Measure Output Location: ");
+  path.append(toQString(outDir));
+  m_jobPath->setText(path);
+  
   // save cloned model to temp directory
   Workspace(modelClone).save(modelPath,true); 
 

@@ -121,6 +121,8 @@ private:
 
   int m_argumentsOkPageIdx;
 
+  QLabel * m_jobPath;
+
 };
 
 class DataPointJobHeaderView : public OSHeader
