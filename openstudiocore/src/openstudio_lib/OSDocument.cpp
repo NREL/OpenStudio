@@ -177,7 +177,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
   openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
   openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
   openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
->>>>>>> refs/remotes/origin/develop
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
