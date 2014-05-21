@@ -290,9 +290,13 @@ void ApplyMeasureNowDialog::runMeasure()
   if (co.getTools().getAllByName("ruby").tools().size() == 0)
   {
     QMessageBox::information(this,
-        "Missing Ruby",
-        "Ruby could not be located, simulation aborted.",
-        QMessageBox::Ok);
+      "Missing Ruby",
+      "Ruby could not be located, simulation aborted.",
+      QMessageBox::Ok);
+
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+    m_timer->stop();
+    this->okButton()->hide();
 
     return;
   }
