@@ -61,12 +61,10 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( AirLo
   eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_zoneSplitter->name().get());
 
   std::vector<ModelObject> supplyPlenums = airLoopHVAC.demandComponents(AirLoopHVACSupplyPlenum::iddObjectType());
-  for( std::vector<ModelObject>::iterator it = supplyPlenums.begin();
-       it != supplyPlenums.end();
-       ++it )
+  for( auto & supplyPlenum : supplyPlenums )
   {
     eg = supplyPathIdf.pushExtensibleGroup();
-    boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(*it);
+    boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(supplyPlenum);
     OS_ASSERT(_supplyPlenum);
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_supplyPlenum->iddObject().name());
     eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_supplyPlenum->name().get());

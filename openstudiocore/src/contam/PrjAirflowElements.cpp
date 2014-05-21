@@ -47,7 +47,7 @@ AirflowElement::Type AirflowElement::convertTag(std::string string)
 
 AirflowElement* AirflowElement::readElement(Reader &input)
 {
-  AirflowElement *out=NULL;
+  AirflowElement *out=nullptr;
   int nr = input.read<int>();
   int icon = input.read<int>();
   std::string dataType = input.readString();

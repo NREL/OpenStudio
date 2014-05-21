@@ -52,15 +52,13 @@ void OSObjectListCBDS::initialize()
 {
   std::vector<model::ModelObject> modelObjects = m_model.getModelObjects<model::ModelObject>();
 
-  for( std::vector<model::ModelObject>::iterator it = modelObjects.begin();
-       it < modelObjects.end();
-       ++it )
+  for( const auto & modelObject : modelObjects )
   {
-    if( std::find(m_types.begin(),m_types.end(),it->iddObjectType()) != m_types.end() )
+    if( std::find(m_types.begin(),m_types.end(),modelObject.iddObjectType()) != m_types.end() )
     {
-      m_workspaceObjects << *it;
+      m_workspaceObjects << modelObject;
 
-      connect( it->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
+      connect( modelObject.getImpl<openstudio::model::detail::ModelObject_Impl>().get(),
                SIGNAL(onChange()),
                this,
                SLOT(onObjectChanged()) );
@@ -174,7 +172,7 @@ OSComboBox2::OSComboBox2( QWidget * parent )
   : QComboBox(parent)
 {
   this->setAcceptDrops(false);
-  QCompleter* completer = new QCompleter();
+  auto completer = new QCompleter();
   this->setCompleter(completer);
   setEnabled(false);
 }
@@ -267,11 +265,9 @@ void OSComboBox2::onChoicesRefreshTrigger() {
     this->blockSignals(true);
     
     clear();
-    for( std::vector<std::string>::iterator it = m_values.begin();
-         it < m_values.end();
-         ++it )
+    for( const auto & value : m_values )
     {
-      addItem(QString::fromStdString(*it));
+      addItem(QString::fromStdString(value));
     }
 
     // re-initialize
@@ -351,11 +347,9 @@ void OSComboBox2::completeBind() {
     m_values = m_choiceConcept->choices();
     this->blockSignals(true);
 
-    for( std::vector<std::string>::iterator it = m_values.begin();
-         it < m_values.end();
-         ++it )
+    for( const auto & value : m_values )
     {
-      addItem(QString::fromStdString(*it));
+      addItem(QString::fromStdString(value));
     }
 
     // initialize
@@ -448,11 +442,9 @@ void OSComboBox::bind(model::ModelObject & modelObject, const char * property)
 
   this->blockSignals(true);
 
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
+  for( const auto & value : m_values )
   {
-    addItem(QString::fromStdString(*it));
+    addItem(QString::fromStdString(value));
   }
 
   // Initialize
@@ -475,11 +467,9 @@ void OSComboBox::onModelObjectChanged()
   std::string value = variant.value<std::string>();
 
   int i = 0;
-  for( std::vector<std::string>::iterator it = m_values.begin();
-       it < m_values.end();
-       ++it )
+  for( const auto & value : m_values )
   {
-    if( istringEqual(*it,value) )
+    if( istringEqual(value,value) )
     {
       this->blockSignals(true);
       setCurrentIndex(i);

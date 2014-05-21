@@ -30,7 +30,7 @@ class ListWidget : public QListWidget
   Q_OBJECT
 
 public:
-  ListWidget(QWidget * parent = 0);
+  ListWidget(QWidget * parent = nullptr);
   virtual ~ListWidget();
 
   static const QString& getMimeType(){return mMimeType;}

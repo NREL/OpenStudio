@@ -150,11 +150,9 @@ class RUNMANAGER_API Files
     {
       std::vector<FileInfo> files;
 
-      for (std::vector<FileInfo>::const_iterator itr = m_files.begin();
-           itr != m_files.end();
-           ++itr)
+      for (const auto & file : m_files)
       {
-        files.push_back(itr->complete(t_basePath));
+        files.push_back(file.complete(t_basePath));
       }
 
       return Files(files);
@@ -302,8 +300,7 @@ class RUNMANAGER_API Files
 
     const FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) const
     {
-      std::vector<openstudio::runmanager::FileInfo>::const_reverse_iterator itr 
-        = std::find_if(m_files.rbegin(), m_files.rend(), f);
+      auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
       if (itr != m_files.rend())
       {
@@ -315,8 +312,7 @@ class RUNMANAGER_API Files
 
     FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) 
     {
-      std::vector<openstudio::runmanager::FileInfo>::reverse_iterator itr 
-        = std::find_if(m_files.rbegin(), m_files.rend(), f);
+      auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
       if (itr != m_files.rend())
       {
@@ -328,8 +324,8 @@ class RUNMANAGER_API Files
 
     Files getAll(const boost::function<bool (const FileInfo &)> &f) const
     {
-      std::vector<openstudio::runmanager::FileInfo>::const_iterator itr = m_files.begin();
-      const std::vector<openstudio::runmanager::FileInfo>::const_iterator end = m_files.end();
+      auto itr = m_files.begin();
+      auto end = m_files.end();
 
       Files ret;
 

@@ -48,10 +48,10 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   okButton->setText("Ok");
   okButton->setMinimumHeight(34);
 
-  QVBoxLayout* vLayout = new QVBoxLayout;
+  auto vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
 
-  QLabel* label = new QLabel;
+  auto label = new QLabel;
   label->setText("EDA Baseline:");
   label->setObjectName("H2");
   vLayout->addWidget(label);
@@ -93,7 +93,7 @@ ExportXMLDialog::ExportXMLDialog(const std::vector<std::string>& alternatives, Q
   vLayout->addWidget(m_certificationBaselineComboBox);
   vLayout->addSpacing(10);
 
-  QHBoxLayout* hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->addStretch();
   vLayout->addLayout(hLayout);
 

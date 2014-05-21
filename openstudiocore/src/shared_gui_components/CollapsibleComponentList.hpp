@@ -37,9 +37,9 @@ class CollapsibleComponentList : public QWidget
   Q_OBJECT
 
 public:
-  CollapsibleComponentList(QWidget * parent = 0);
+  CollapsibleComponentList(QWidget * parent = nullptr);
   CollapsibleComponentList(const std::vector<CollapsibleComponent *> & collapsibleComponents,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~CollapsibleComponentList() {}
   // return the checked component in the list, NULL if list is empty
   Component * checkedComponent() const;

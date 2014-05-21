@@ -101,9 +101,9 @@ namespace detail {
     if (!isWinterDesignDayScheduleDefaulted()) {
       daySchedules.push_back(winterDesignDaySchedule());
     }
-    ResourceObjectVector::iterator it = result.begin();
+    auto it = result.begin();
     while (it != result.end()) {
-      ScheduleDayVector::iterator jit = std::find(daySchedules.begin(),daySchedules.end(),*it);
+      auto jit = std::find(daySchedules.begin(),daySchedules.end(),*it);
       if (jit != daySchedules.end()) {
         it = result.erase(it);
         daySchedules.erase(jit);

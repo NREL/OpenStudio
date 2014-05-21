@@ -51,8 +51,8 @@ namespace openstudio {
 
 OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
   : QWidget(parent),
-  m_gridLayout(0),
-  m_CollapsibleView(0),
+  m_gridLayout(nullptr),
+  m_CollapsibleView(nullptr),
   m_gridController(gridController)
 {
   m_gridLayout = new QGridLayout();
@@ -61,19 +61,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-  QButtonGroup * buttonGroup = new QButtonGroup();
+  auto buttonGroup = new QButtonGroup();
   bool isConnected = false;
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(selectCategory(int)));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
+  auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
   buttonLayout->setContentsMargins(0,0,0,0);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-  GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-  OSDropZone * dropZone = 0; 
+  auto vectorController = new GridViewDropZoneVectorController();
+  OSDropZone * dropZone = nullptr; 
 #ifdef Q_OS_MAC
     dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
 #else
@@ -89,7 +89,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   std::vector<QString> categories = m_gridController->categories();
   for(unsigned i=0; i<categories.size(); i++){
-    QPushButton * button = new QPushButton(categories.at(i));
+    auto button = new QPushButton(categories.at(i));
 #ifdef Q_OS_MAC
     button->setFixedSize(WIDTH,HEIGHT);
 #else
@@ -101,19 +101,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   }
   buttonLayout->addStretch();
 
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  DarkGradientHeader * header = new DarkGradientHeader();
+  auto header = new DarkGradientHeader();
   header->label->setText(headerText);
 
-  QWidget * widget = new QWidget;
+  auto widget = new QWidget;
 
-  OSCollapsibleView * collabsibleView = new OSCollapsibleView(this);
+  auto collabsibleView = new OSCollapsibleView(this);
   layout->addWidget(collabsibleView);
   collabsibleView->setHeader(header);
   collabsibleView->setContent(widget);
@@ -121,7 +121,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   setGridController(m_gridController);
 
-  QVBoxLayout * m_contentLayout = 0;
+  QVBoxLayout * m_contentLayout = nullptr;
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(10);
@@ -194,15 +194,15 @@ void OSGridView::removeWidget(int row, int column)
 void OSGridView::deleteAll()
 {
   QLayoutItem * child;
-  while((child = m_gridLayout->takeAt(0)) != 0)
+  while((child = m_gridLayout->takeAt(0)) != nullptr)
   {
-      QWidget * widget = child->widget();
+    QWidget * widget = child->widget();
 
-      OS_ASSERT(widget);
+    OS_ASSERT(widget);
 
-      delete widget;
+    delete widget;
 
-      delete child;
+    delete child;
   }
 }
 
@@ -224,7 +224,7 @@ void OSGridView::refreshAll()
   }
   // NOTE This was added to make dissimilar widget types in a given column to
   // fill and justify correctly.  It appeared to be the most simple solution.
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
   widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
 }

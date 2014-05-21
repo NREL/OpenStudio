@@ -38,10 +38,10 @@ CollapsibleComponentHeader::CollapsibleComponentHeader(const std::string& text,
                                                        int numPages,
                                                        QWidget * parent)
   : QAbstractButton(parent),
-  m_text(NULL),
-  m_arrowLabel(NULL),
-  m_pageNavigator(NULL),
-  m_numLabel(NULL)
+  m_text(nullptr),
+  m_arrowLabel(nullptr),
+  m_pageNavigator(nullptr),
+  m_numLabel(nullptr)
 {
   createLayout(text, numResults,numPages);
 }
@@ -53,7 +53,7 @@ void CollapsibleComponentHeader::createLayout(const std::string& text, int numRe
   setObjectName("CollapsibleComponentHeader");
   setCheckable(true);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   setLayout(mainHLayout);
 
   // Arrow

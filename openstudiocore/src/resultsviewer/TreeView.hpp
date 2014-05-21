@@ -50,7 +50,7 @@ public:
   enum treeViewDisplayType { tvdtVariableName, tvdtKeyValue };
 
 
-  TreeView( QWidget* parent=0 );
+  TreeView( QWidget* parent=nullptr );
   openstudio::OptionalTimeSeries timeseriesFromTreeItem(QTreeWidgetItem* treeItem);
   resultsviewer::ResultsViewerPlotData resultsViewerPlotDataFromTreeItem(QTreeWidgetItem* treeItem);
   void displayFile(const QString &alias, openstudio::SqlFile sqlFile, treeViewDisplayType treeViewDisplay);

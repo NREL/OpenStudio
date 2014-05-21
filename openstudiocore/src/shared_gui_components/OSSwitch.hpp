@@ -31,7 +31,7 @@ class OSSwitch2 : public QPushButton {
   Q_OBJECT
  public:
 
-  OSSwitch2(QWidget * parent = 0);
+  OSSwitch2(QWidget * parent = nullptr);
 
   virtual ~OSSwitch2() {}
 
@@ -65,7 +65,7 @@ class OSSwitch : public QPushButton
 
   public:
 
-  OSSwitch(QWidget * parent = 0);
+  OSSwitch(QWidget * parent = nullptr);
 
   virtual ~OSSwitch() {}
 

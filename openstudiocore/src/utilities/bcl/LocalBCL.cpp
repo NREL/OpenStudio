@@ -650,17 +650,15 @@ namespace openstudio{
 
   std::vector<BCLComponent> LocalBCL::componentAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const
   {
-    typedef std::set<std::pair<std::string, std::string> > UidsType;
-
-    UidsType uids = this->attributeSearch(searchTerms, "component");
+    auto uids = attributeSearch(searchTerms, "component");
     if (uids.empty()){
        return std::vector<BCLComponent>();
     }
 
     std::vector<BCLComponent> result;
-    for (UidsType::iterator it=uids.begin(); it!=uids.end(); ++it)
+    for (const auto & uid : uids)
     {
-      boost::optional<BCLComponent> component = getComponent(it->first, it->second);
+      boost::optional<BCLComponent> component = getComponent(uid.first, uid.second);
       if (component){
         result.push_back(*component);
       }
@@ -671,17 +669,15 @@ namespace openstudio{
 
   std::vector<BCLMeasure> LocalBCL::measureAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const
   {
-    typedef std::set<std::pair<std::string, std::string> > UidsType;
-
-    UidsType uids = this->attributeSearch(searchTerms, "measure");
+    auto uids = this->attributeSearch(searchTerms, "measure");
     if (uids.empty()){
        return std::vector<BCLMeasure>();
     }
 
     std::vector<BCLMeasure> result;
-    for (UidsType::iterator it=uids.begin(); it!=uids.end(); ++it)
+    for (const auto uid : uids)
     {
-      boost::optional<BCLMeasure> measure = getMeasure(it->first, it->second);
+      boost::optional<BCLMeasure> measure = getMeasure(uid.first, uid.second);
       if (measure){
         result.push_back(*measure);
       }
@@ -696,7 +692,6 @@ namespace openstudio{
       const std::string componentType) const
   {
     typedef std::vector<std::pair<std::string, std::string> > UidsVecType;
-    typedef UidsVecType::const_iterator ItType;
     typedef std::set<std::pair<std::string, std::string> > UidsType;
 
     UidsType uids;
@@ -707,17 +702,17 @@ namespace openstudio{
       uids.insert(make_pair(toString(query.value(0).toString()), toString(query.value(1).toString())));
     }
     
-    for (ItType it = searchTerms.begin(), itend = searchTerms.end(); it != itend; ++it){
+    for (const auto & searchTerm : searchTerms){
 
       UidsType theseUids;
-      QString queryString = QString("SELECT uid, version_id FROM Attributes WHERE name='" + escape(it->first) + "' COLLATE NOCASE AND value='" + escape(it->second) + "' COLLATE NOCASE");
+      QString queryString = QString("SELECT uid, version_id FROM Attributes WHERE name='" + escape(searchTerm.first) + "' COLLATE NOCASE AND value='" + escape(searchTerm.second) + "' COLLATE NOCASE");
       query.exec(queryString);
       while (query.next()) {
         theseUids.insert(make_pair(toString(query.value(0).toString()), toString(query.value(1).toString())));
       }
 
       UidsVecType newUids(std::max(uids.size(), theseUids.size()));
-      UidsVecType::iterator insertEnd = std::set_intersection(uids.begin(), uids.end(), theseUids.begin(), theseUids.end(), newUids.begin());
+      auto insertEnd = std::set_intersection(uids.begin(), uids.end(), theseUids.begin(), theseUids.end(), newUids.begin());
       
       uids.clear();
       uids.insert(newUids.begin(), insertEnd);

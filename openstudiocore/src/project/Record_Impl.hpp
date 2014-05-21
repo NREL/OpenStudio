@@ -184,8 +184,8 @@ namespace project {
         void makeUpdateByIdQuery(QSqlQuery& query) const {
           UpdateByIdQueryData queryData = T::updateByIdQueryData();
           query.prepare(QString::fromStdString(queryData.queryString));
-          std::set<int>::const_iterator colIndexIt = queryData.columnValues.begin();
-          std::set<int>::const_iterator colIndexItEnd = queryData.columnValues.end();
+          auto colIndexIt = queryData.columnValues.begin();
+          auto colIndexItEnd = queryData.columnValues.end();
           std::vector<QVariant>::const_iterator nullIt = queryData.nulls.begin();
           std::vector<QVariant>::const_iterator nullItEnd = queryData.nulls.end();
           for (; colIndexIt != colIndexItEnd; ++colIndexIt, ++nullIt)

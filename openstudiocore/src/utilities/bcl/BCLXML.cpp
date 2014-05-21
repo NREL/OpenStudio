@@ -413,7 +413,7 @@ namespace openstudio{
 
   bool BCLXML::removeTag(const std::string& tagName)
   {
-    std::vector<std::string>::iterator it = std::find(m_tags.begin(), m_tags.end(), tagName);
+    auto it = std::find(m_tags.begin(), m_tags.end(), tagName);
     if (it != m_tags.end()){
       incrementVersionId();
       m_tags.erase(it);

@@ -23,7 +23,7 @@ namespace openstudio {
 
 Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
   Handle result;
-  HandleMap::const_iterator it = handleMap.find(original);
+  auto it = handleMap.find(original);
   if (it != handleMap.end()) {
     result = it->second;
   }
@@ -33,7 +33,7 @@ Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
 HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap) {
   HandleVector result;
   for (const Handle& oh : original) {
-    HandleMap::const_iterator it = handleMap.find(oh);
+    auto it = handleMap.find(oh);
     if (it != handleMap.end()) {
       result.push_back(it->second);
     }

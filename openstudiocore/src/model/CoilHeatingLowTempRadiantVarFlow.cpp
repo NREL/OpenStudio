@@ -118,15 +118,13 @@ namespace detail {
 
     zoneHVACLowTempRadiantVarFlows = this->model().getModelObjects<ZoneHVACLowTempRadiantVarFlow>();
 
-    for( std::vector<ZoneHVACLowTempRadiantVarFlow>::iterator it = zoneHVACLowTempRadiantVarFlows.begin();
-    it < zoneHVACLowTempRadiantVarFlows.end();
-    ++it )
+    for( const auto & zoneHVACLowTempRadiantVarFlow : zoneHVACLowTempRadiantVarFlows )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACLowTempRadiantVarFlow.heatingCoil() )
       {
         if( coil->handle() == this->handle() )  
         {
-          return *it;
+          return zoneHVACLowTempRadiantVarFlow;
         }
       }
     }

@@ -28,9 +28,9 @@ namespace openstudio {
 
 OSViewSwitcher::OSViewSwitcher(QWidget * parent)
   : QWidget(parent),
-    m_view(NULL)
+    m_view(nullptr)
 {
-  QVBoxLayout * layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
@@ -63,7 +63,7 @@ void OSViewSwitcher::clear()
     m_stack->removeWidget(m_view);    
   }
 
-  m_view = NULL;
+  m_view = nullptr;
 }
 
 void OSViewSwitcher::paintEvent(QPaintEvent *)

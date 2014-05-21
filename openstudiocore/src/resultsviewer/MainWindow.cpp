@@ -82,13 +82,12 @@ namespace resultsviewer{
 
     // recent files
     m_separatorAction = ui.menuFile->addSeparator(); // for showing and hiding
-    for (int i=0; i<MaxRecentFiles; i++) {
-      m_recentFileActions[i] = new QAction(this);
-      m_recentFileActions[i]->setVisible(false);
-      connect(m_recentFileActions[i],SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    for (auto & elem : m_recentFileActions) {
+      elem = new QAction(this);
+      elem->setVisible(false);
+      ui.menuFile->addAction(elem);
+      connect(elem, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     }
-
-    for (int i=0; i<MaxRecentFiles; i++) ui.menuFile->addAction(m_recentFileActions[i]);
 
     ui.menuFile->addSeparator();
 
@@ -153,19 +152,19 @@ namespace resultsviewer{
     //connect(btnApplyFilter, SIGNAL(clicked()),this,SLOT(slotApplyFilter()));
     connect(m_viewFilterText, SIGNAL(textChanged(const QString&)), this, SLOT(slotApplyFilter(const QString&)));
     connect(btnClearFilter, SIGNAL(clicked()),this,SLOT(slotClearFilter()));
-    QHBoxLayout *filterButtonLayout = new QHBoxLayout;
+    auto filterButtonLayout = new QHBoxLayout;
     filterButtonLayout->addWidget(m_viewFilterText);
     //filterButtonLayout->addWidget(btnApplyFilter);
     filterButtonLayout->addWidget(btnClearFilter);
-    QVBoxLayout *viewLayout = new QVBoxLayout;
+    auto viewLayout = new QVBoxLayout;
     viewLayout->addWidget(filterLabel);
     viewLayout->addLayout(filterButtonLayout);
     viewLayout->addWidget(m_mainTabView);
 
-    QSplitter *mainSplitter = new QSplitter(this);
+    auto mainSplitter = new QSplitter(this);
     mainSplitter->setObjectName("MainSplitter");
     setCentralWidget(mainSplitter);
-    QWidget *mainWidget = new QWidget(this);
+    auto mainWidget = new QWidget(this);
     mainWidget->setLayout(viewLayout);
     mainSplitter->addWidget(mainWidget);
     mainSplitter->addWidget(m_mainTabDock);
@@ -201,7 +200,7 @@ namespace resultsviewer{
     int index = currentEPlusHTML(filename);
     if (index > - 1)
     {
-      if (m_browserList.at(index)->parent() == 0)
+      if (m_browserList.at(index)->parent() == nullptr)
       {
         m_browserList.at(index)->show();
         m_browserList.at(index)->raise();
@@ -342,7 +341,7 @@ namespace resultsviewer{
     if (QFile::exists(abups))
     {
       // text browser for ABUPS
-      resultsviewer::BrowserView *browser = new resultsviewer::BrowserView(this);
+      auto browser = new resultsviewer::BrowserView(this);
       connect(browser,SIGNAL(signalClose(resultsviewer::BrowserView*)), this, SLOT(slotCloseBrowser(resultsviewer::BrowserView *)));
       connect(browser,SIGNAL(signalFloatOrDockMe(resultsviewer::BrowserView*)), this, SLOT(floatOrDockBrowser(resultsviewer::BrowserView *)));
       browser->setSource(QUrl::fromLocalFile(abups));
@@ -373,13 +372,13 @@ namespace resultsviewer{
       m_recentFiles.removeLast();
 
     // update menu
-    for (i=0; i < MaxRecentFiles; i++) m_recentFileActions[i]->setVisible(false);
+    for (auto & recentFile : m_recentFileActions) recentFile->setVisible(false);
 
     for (i=0; i<m_recentFiles.count();i++)
     {
       QString fileLabel = tr("&%1 (%2) %3").arg(i).arg(m_recentAliases[i]).arg(m_recentFiles[i]);
       m_recentFileActions[i]->setText(fileLabel);
-      m_recentFileActions[i]->setData(QStringList() << m_recentAliases[i] << m_recentFiles[i] );
+      m_recentFileActions[i]->setData(QStringList() << m_recentAliases[i] << m_recentFiles[i]);
       m_recentFileActions[i]->setVisible(true);
     }
     // set separator visibility
@@ -463,8 +462,8 @@ namespace resultsviewer{
 
     if (plotViewDataVec.size() > 0)
     {
-      PlotViewMimeData *mimeData = new PlotViewMimeData(plotViewDataVec);
-      QDrag *drag = new QDrag(this);
+      auto mimeData = new PlotViewMimeData(plotViewDataVec);
+      auto drag = new QDrag(this);
       drag->setMimeData(mimeData);
       drag->exec(Qt::MoveAction);
     }
@@ -561,7 +560,7 @@ namespace resultsviewer{
       resultsviewer::PlotViewData pd = plotViewDataFromResultsViewerPlotData(*fpVecIt);
       if (pd.ts) // create plot widget only if timeseries data available
       {
-        resultsviewer::PlotView *fp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
+        auto fp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
         fp->plotViewData(pd, boost::function<bool ()>());
         fp->show();
         emit (signalAddPlot(fp));
@@ -577,7 +576,7 @@ namespace resultsviewer{
     for(ipVecIt = ipVec.begin(); ipVecIt != ipVec.end(); ++ipVecIt)
     {
       resultsviewer::PlotViewData pd = plotViewDataFromResultsViewerPlotData(*ipVecIt);
-      resultsviewer::PlotView *ip = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_ILLUMINANCEPLOT);
+      auto ip = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_ILLUMINANCEPLOT);
       ip->plotViewData(pd, boost::function<bool ()>());
       ip->show();
       emit (signalAddPlot(ip));
@@ -592,7 +591,7 @@ namespace resultsviewer{
     QApplication::setOverrideCursor(Qt::WaitCursor);
     resultsviewer::PlotViewData pd0 = plotViewDataFromResultsViewerPlotData(ipVec[0]);
     resultsviewer::PlotViewData pd1 = plotViewDataFromResultsViewerPlotData(ipVec[1]);
-    resultsviewer::PlotView *ip = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_ILLUMINANCEPLOT);
+    auto ip = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_ILLUMINANCEPLOT);
     ip->plotViewDataDifference(pd0,pd1);
     ip->show();
     emit (signalAddPlot(ip));
@@ -634,7 +633,7 @@ namespace resultsviewer{
     if (pdVec.size() > 0)
     {
       boost::function<bool ()> canceledfunc = boost::bind(&QProgressDialog::wasCanceled, progressdialog);
-      resultsviewer::PlotView *lp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
+      auto lp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
       std::vector<resultsviewer::PlotViewData>::iterator pdVecIt;
       for (pdVecIt = pdVec.begin(); pdVecIt != pdVec.end() && !progressdialog->wasCanceled(); ++pdVecIt)
       {
@@ -671,7 +670,7 @@ namespace resultsviewer{
     if ( (pd0.ts) && (pd1.ts) ) // create plot widget only if timeseries data available
     {
       resultsviewer::PlotViewData plotViewData = plotViewDataDifference(pd0, pd1);
-      resultsviewer::PlotView *fp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
+      auto fp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
       fp0minus1->plotViewData(plotViewData, boost::function<bool ()>());
       fp0minus1->show();
       emit (signalAddPlot(fp0minus1));
@@ -692,7 +691,7 @@ namespace resultsviewer{
     if ( (pd0.ts) && (pd1.ts) ) // create plot widget only if timeseries data available
     {
       resultsviewer::PlotViewData plotViewData = plotViewDataDifference(pd0, pd1);
-      resultsviewer::PlotView *lp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
+      auto lp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
       lp0minus1->plotViewData(plotViewData, boost::function<bool ()>());
       lp0minus1->show();
       emit (signalAddPlot(lp0minus1));
@@ -1283,13 +1282,13 @@ namespace resultsviewer{
   {
     if ((index > -1) && (index < m_plotComboBox->count()))
     {
-      if (m_plotViewList.at(index)->parent() == 0)
+      if (m_plotViewList.at(index)->parent() == nullptr)
       {
         m_mainTabDock->addTab(m_plotViewList.at(index),m_plotViewList.at(index)->windowTitle());
       }
       else
       {
-        m_plotViewList.at(index)->setParent(0);
+        m_plotViewList.at(index)->setParent(nullptr);
         // default location
         m_plotViewList.at(index)->setGeometry(10,30,1024,768);
       }
@@ -1317,7 +1316,7 @@ namespace resultsviewer{
   { // show plot
     if ((index > -1) && (index < m_plotViewList.count()) )
     {
-      if (m_plotViewList.at(index)->parent() == 0)
+      if (m_plotViewList.at(index)->parent() == nullptr)
       {
         m_plotViewList.at(index)->show();
         m_plotViewList.at(index)->raise();
@@ -1460,7 +1459,7 @@ namespace resultsviewer{
 
   void MainWindow::createWelcomePage()
   {
-    resultsviewer::BrowserView *browser = new resultsviewer::BrowserView(this);
+    auto browser = new resultsviewer::BrowserView(this);
     browser->setWindowTitle(tr("Welcome"));
     browser->setSearchPaths(QStringList(":/doc"));
     browser->setSource(QUrl::fromLocalFile("Welcome.htm"));
@@ -1474,14 +1473,14 @@ namespace resultsviewer{
   {
     if (browser)
     {
-      if (browser->parent() == 0)
+      if (browser->parent() == nullptr)
       {
         m_mainTabDock->addTab(browser,browser->windowTitle());
         m_mainTabDock->setCurrentIndex(m_mainTabDock->count()-1);
       }
       else
       {
-        browser->setParent(0);
+        browser->setParent(nullptr);
         browser->setGeometry(10,30,1024,768);
         browser->show();
         browser->raise();

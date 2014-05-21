@@ -33,7 +33,7 @@ class OSCheckBox2 : public QPushButton {
 
  public:
 
-  OSCheckBox2(QWidget * parent = 0);
+  OSCheckBox2(QWidget * parent = nullptr);
 
   virtual ~OSCheckBox2() {}
 
@@ -66,7 +66,7 @@ class OSCheckBox : public QPushButton {
 
  public:
 
-  OSCheckBox(QWidget * parent = 0);
+  OSCheckBox(QWidget * parent = nullptr);
 
   virtual ~OSCheckBox() {}
 

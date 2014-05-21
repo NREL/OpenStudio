@@ -221,8 +221,7 @@ namespace detail {
 
     if (m_sourceData) {
       // find index and return target if handle not null
-      SourceData::pointer_set::const_iterator fpIt =
-         getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
       if (fpIt != m_sourceData->pointers.end()) {
         Handle th = fpIt->targetHandle;
         if (!th.isNull()) {
@@ -310,20 +309,20 @@ namespace detail {
                                                              bool checkValidity)
   {
     if (m_handle.isNull()) {
-      return false;
+      return boost::none;
     }
     StrictnessLevel level = m_workspace->strictnessLevel();
 
     OptionalUnsigned index = iddObject().nameFieldIndex();
     if (!index) {
-      return false;
+      return boost::none;
     }
 
     if (checkValidity && (level > StrictnessLevel::None)) {
 
       // do not set if would violate field NullAndRequired
       if ((level > StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
-        return false;
+        return boost::none;
       }
 
       OptionalString oldName = name();
@@ -673,10 +672,9 @@ namespace detail {
           outOfRangePtrs.push_back(ptr.fieldIndex);
         }
       }
-      for (unsigned index : outOfRangePtrs) {
+      for (const unsigned index : outOfRangePtrs) {
         nullifyPointer(index);
-        SourceData::pointer_set::iterator fpIt =
-            getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+        auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
         OS_ASSERT(fpIt != m_sourceData->pointers.end());
         m_sourceData->pointers.erase(fpIt);
       }
@@ -710,8 +708,7 @@ namespace detail {
   bool WorkspaceObject_Impl::isSource(unsigned index) const {
     if (m_handle.isNull()) { return false; }
     if (m_sourceData) {
-      SourceData::pointer_set::const_iterator it =
-        getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
       if ((it != m_sourceData->pointers.end()) && (!it->targetHandle.isNull())) {
         return true;
       }
@@ -764,7 +761,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same, field indices same--compare data
-    for (unsigned i : myFields) {
+    for (const unsigned i : myFields) {
       OptionalWorkspaceObject oMyTarget = getTarget(i);
       OptionalWorkspaceObject oOtherTarget = other.getTarget(i);
       if (oMyTarget || oOtherTarget) {
@@ -794,7 +791,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same--compare data
-    for (unsigned i : myFields) {
+    for (const unsigned i : myFields) {
       OptionalWorkspaceObject oMyTarget = getTarget(i);
       // always ok if I am not pointing to anyone
       if (!oMyTarget) { continue; }
@@ -964,7 +961,7 @@ namespace detail {
   void WorkspaceObject_Impl::disconnect() {
     emit onRemoveFromWorkspace(m_handle);
     m_handle = Handle();
-    m_workspace = 0;
+    m_workspace = nullptr;
   }
 
   // Pre-condition:  field index is a pointer, and its targetHandle is either null or valid in
@@ -982,8 +979,7 @@ namespace detail {
     }
 
     // forward pointer
-    SourceData::pointer_set::iterator fpIt =
-         getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
     OS_ASSERT(fpIt != m_sourceData->pointers.end());
     m_sourceData->pointers.erase(fpIt);
     std::pair<SourceData::pointer_set::iterator,bool> insertResult;
@@ -997,8 +993,7 @@ namespace detail {
   void WorkspaceObject_Impl::nullifyReversePointer(const Handle& sourceHandle,unsigned index) {
     OS_ASSERT(!m_handle.isNull());
     OS_ASSERT(m_targetData);
-    TargetData::pointer_set::iterator it =
-        m_targetData->reversePointers.find(ReversePointer(sourceHandle,index));
+    auto it = m_targetData->reversePointers.find(ReversePointer(sourceHandle,index));
     OS_ASSERT(it != m_targetData->reversePointers.end());
     m_targetData->reversePointers.erase(it);
   }
@@ -1056,8 +1051,7 @@ namespace detail {
     OS_ASSERT(!m_handle.isNull());
     Handle result;
     // check current status
-    SourceData::pointer_set::iterator fpIt =
-         getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+    auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
     if (fpIt == m_sourceData->pointers.end()) {
       /*bool result =*/ IdfObject_Impl::setString(index,std::string(),false);
     }
@@ -1147,8 +1141,7 @@ namespace detail {
       // nullify the pointer
       nullifyPointer(index);
       // get the pointer
-      SourceData::pointer_set::iterator fpIt =
-        getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+      auto fpIt = getIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
       OS_ASSERT(fpIt != m_sourceData->pointers.end());
       // erase the pointer
       m_sourceData->pointers.erase(fpIt);
@@ -1211,7 +1204,7 @@ namespace detail {
     bool result = true;
     if ((fieldType == IddFieldType::ObjectListType) && m_sourceData) {
       // automatically excludes unsupported reference lists by going through m_sourceData
-      SourceData::pointer_set::const_iterator it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
       if (it != m_sourceData.get().pointers.end()) {
         ForwardPointer ptr = *it;
         if (!ptr.targetHandle.isNull()) {
@@ -1234,7 +1227,7 @@ namespace detail {
 
     IddField field = *oIddField;
     if (m_sourceData) {
-      SourceData::pointer_set::const_iterator it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
+      auto it = getConstIteratorAtFieldIndex<SourceData>(m_sourceData.get().pointers,index);
       if (it != m_sourceData.get().pointers.end()) {
         if (it->targetHandle.isNull() && field.properties().required) {
           result = false;

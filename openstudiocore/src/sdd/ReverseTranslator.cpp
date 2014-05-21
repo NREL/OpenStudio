@@ -791,27 +791,25 @@ namespace sdd {
 
         std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
 
-        for( std::vector<model::AirLoopHVAC>::iterator it = airloops.begin();
-             it != airloops.end();
-             ++it )
+        for( auto & airloop : airloops)
         {
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyInletNode().name().get());
+          var.setKeyValue(airloop.supplyInletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyInletNode().name().get());
+          var.setKeyValue(airloop.supplyInletNode().name().get());
 
           var = model::OutputVariable("System Node Temperature",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyOutletNode().name().get());
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
 
           var = model::OutputVariable("System Node Mass Flow Rate",*result);
           var.setReportingFrequency(interval);
-          var.setKeyValue(it->supplyOutletNode().name().get());
+          var.setKeyValue(airloop.supplyOutletNode().name().get());
 
-          if( boost::optional<model::Node> node = it->mixedAirNode() )
+          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
           {
             var = model::OutputVariable("System Node Temperature",*result);
             var.setReportingFrequency(interval);

@@ -42,7 +42,7 @@ template<typename Enum>
       static std::string valueName(int t_value) 
       { 
         const std::map<int, std::string> &m = getNames();
-        std::map<int, std::string>::const_iterator itr = m.find(t_value);
+        auto itr = m.find(t_value);
         if (itr == m.end()) 
         { 
           throw std::runtime_error("Invalid domain"); 
@@ -55,7 +55,7 @@ template<typename Enum>
       static std::string valueDescription(int t_value) 
       {
         const std::map<int, std::string> &m = getDescriptions();
-        std::map<int, std::string>::const_iterator itr = m.find(t_value);
+        auto itr = m.find(t_value);
         if (itr == m.end()) 
         { 
           return valueName(t_value); 
@@ -116,7 +116,7 @@ template<typename Enum>
       { 
         boost::algorithm::to_upper(t_name); 
         const std::map<std::string, int> &names = getLookupMap(); 
-        std::map<std::string, int>::const_iterator itr = names.find(t_name); 
+        auto itr = names.find(t_name); 
         if (itr != names.end()) 
         { 
           return itr->second; 
@@ -180,18 +180,14 @@ template<typename Enum>
         const std::map<int, std::string> &m = getNames();
         const std::map<int, std::string> &d = getDescriptions();
 
-        for (std::map<int, std::string>::const_iterator itr = m.begin();
-            itr != m.end();
-            ++itr)
+        for (const auto & name : m)
         {
-          retval[boost::algorithm::to_upper_copy(itr->second)] = itr->first;
+          retval[boost::algorithm::to_upper_copy(name.second)] = name.first;
         }
 
-        for (std::map<int, std::string>::const_iterator itr = d.begin();
-            itr != d.end();
-            ++itr)
+        for (const auto & description : d)
         {
-          retval[boost::algorithm::to_upper_copy(itr->second)] = itr->first;
+          retval[boost::algorithm::to_upper_copy(description.second)] = description.first;
         }
 
         return retval;
@@ -203,11 +199,9 @@ template<typename Enum>
 
         std::set<int> retvals;
 
-        for (std::map<int, std::string>::const_iterator itr = names.begin();
-             itr != names.end();
-             ++itr)
+        for (const auto & name : names)
         {
-          retvals.insert(itr->first);
+          retvals.insert(name.first);
         }
 
         return retvals;

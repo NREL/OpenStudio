@@ -74,7 +74,7 @@ bool ExportSpreadsheet::exportSpreadsheet(const analysisdriver::SimpleProject& p
   args << openstudio::toQString(scriptPath);
   args << openstudio::toQString(projectPath);
 
-  QProcess *p = new QProcess();
+  auto p = new QProcess();
   p->start(toQString(rubyPath), args);
 
   if (!p->waitForStarted(30000)){

@@ -47,7 +47,7 @@ class OSListView : public QWidget
 
  public:
 
-  OSListView(bool scrollable = false, QWidget * parent = 0);
+  OSListView(bool scrollable = false, QWidget * parent = nullptr);
 
   virtual ~OSListView() {}
 

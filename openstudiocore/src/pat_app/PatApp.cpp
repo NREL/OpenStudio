@@ -99,8 +99,8 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
   : QApplication(argc, argv),
-    m_onlineBclDialog(0),
-    m_cloudDialog(0),
+    m_onlineBclDialog(nullptr),
+    m_cloudDialog(nullptr),
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
@@ -513,7 +513,7 @@ void PatApp::create()
     if(result == QMessageBox::Cancel) return;
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -720,7 +720,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
     // setting the seed model may take a long time due to version and energyplus translation
     // this progress bar will ensure process events is called to avoid locking up the app
     // we will disable the app until the processing is complete
-    ProcessEventsProgressBar* processEventsProgressBar = new ProcessEventsProgressBar();
+    auto processEventsProgressBar = new ProcessEventsProgressBar();
     mainWindow->setEnabled(false);
 
     // get original number of variables
@@ -887,7 +887,7 @@ bool PatApp::userInteractiveSaveAsProject()
     m_project->stop();
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -1328,7 +1328,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     analysis.disconnect();
 
     // detach all signals from project
-    disconnect(m_project->getImpl().get(), 0, this, 0);
+    disconnect(m_project->getImpl().get(), nullptr, this, nullptr);
   }
 
   // set this project as current project
@@ -1726,13 +1726,13 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
 
   setOkButtonAsDefault(true);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Enter New Project Name",this);
   label->setObjectName("H1");
   upperLayout()->addWidget(label);
 
-  QVBoxLayout * vertLayout = new QVBoxLayout();
+  auto vertLayout = new QVBoxLayout();
   vertLayout->setContentsMargins(20,10,10,10);
   vertLayout->setSpacing(20);
   upperLayout()->addLayout(vertLayout);

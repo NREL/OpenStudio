@@ -210,7 +210,7 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort

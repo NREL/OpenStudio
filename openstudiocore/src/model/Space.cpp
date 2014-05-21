@@ -2670,14 +2670,13 @@ namespace detail {
                                                     const T& instanceToKeep) 
   {
     int count(0);
-    for (typename std::vector<T>::iterator it = instances.begin(), itEnd = instances.end();
-         it != itEnd; ++it)
+    for (auto & instance : instances)
     {
-      if (*it == instanceToKeep) {
+      if (instance == instanceToKeep) {
         ++count;
         continue;
       }
-      it->remove();
+      instance.remove();
     }
     OS_ASSERT(count == 1);
   }
@@ -2881,7 +2880,7 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
   double z = floorPrint[0].z();
   double tol = 0.000001;
   for (const Point3d& point : floorPrint){
-    if (abs(point.z()-z) > tol){
+    if (std::abs(point.z()-z) > tol){
       LOG(Error, "Inconsistent z height in floorPrint.");
       return boost::none;
     }
@@ -2903,8 +2902,8 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   // create the floor
   std::vector<Point3d> points;
-  for (std::vector<Point3d>::const_iterator it = floorPrint.begin(), itend = floorPrint.end(); it != itend; ++it){
-    points.push_back(Point3d(it->x(), it->y(), z));
+  for (const auto & elem : floorPrint){
+    points.push_back(Point3d(elem.x(), elem.y(), z));
   }
   Surface floor(points, model);
   floor.setSpace(space);
@@ -2923,7 +2922,7 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   // create the roofCeiling
   points.clear();
-  for (std::vector<Point3d>::const_reverse_iterator rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
+  for (auto  rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
     points.push_back(Point3d(rit->x(), rit->y(), z + floorHeight));
   }
   Surface roofCeiling(points, model);

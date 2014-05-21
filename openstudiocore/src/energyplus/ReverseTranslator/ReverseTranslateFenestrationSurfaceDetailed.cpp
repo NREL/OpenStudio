@@ -134,7 +134,7 @@ OptionalModelObject ReverseTranslator::translateFenestrationSurfaceDetailed( con
       // SubSurface boundary condition
 
       // see if we have already mapped other sub surface, don't do it here because that is circular
-      std::map<Handle,ModelObject>::iterator it = m_workspaceToModelMap.find(target->handle());
+      auto it = m_workspaceToModelMap.find(target->handle());
       if( it !=  m_workspaceToModelMap.end()){
         if (it->second.optionalCast<SubSurface>()){
           // this will set other side boundary object on both surfaces

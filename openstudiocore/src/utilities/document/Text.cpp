@@ -96,14 +96,14 @@ namespace detail {
       append(paragraph); 
       return;
     }
-    StringVector::iterator it = m_paragraphs.begin();
+    auto it = m_paragraphs.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_paragraphs.insert(it,paragraph);
   }
 
   void Text_Impl::erase(unsigned index) {
     if (index < numParagraphs()) {
-      StringVector::iterator it = m_paragraphs.begin();
+      auto it = m_paragraphs.begin();
       for (unsigned i = 0; i < index; ++i, ++it) {}
       m_paragraphs.erase(it);
     }

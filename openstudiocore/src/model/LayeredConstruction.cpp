@@ -114,8 +114,8 @@ namespace detail {
 
     MaterialVector layers = this->layers();
     if (!(layerIndex < layers.size())) { return false; }
-    MaterialVector::iterator layersBegin = layers.begin();
-    MaterialVector::iterator toEraseIt = layersBegin;
+    auto layersBegin = layers.begin();
+    auto toEraseIt = layersBegin;
     while (static_cast<unsigned>(toEraseIt - layersBegin) < layerIndex) { ++toEraseIt; }
     layers.erase(toEraseIt);
 
@@ -135,9 +135,9 @@ namespace detail {
 
     unsigned n = numLayers();
     MaterialVector layers = this->layers();
-    MaterialVector::iterator layersBegin = layers.begin();
-    MaterialVector::iterator layersEnd = layers.end();
-    MaterialVector::iterator insertAtIt = layersBegin;
+    auto layersBegin = layers.begin();
+    auto layersEnd = layers.end();
+    auto insertAtIt = layersBegin;
     while ((static_cast<unsigned>(insertAtIt - layersBegin) < layerIndex) &&
            (insertAtIt != layersEnd)) 
     { ++insertAtIt; }
@@ -856,10 +856,10 @@ bool LayeredConstruction::layersAreValid(const std::vector<FenestrationMaterial>
   bool hasGasLayer = false;
   bool previousWasNonGasLayer = false;
   bool gasLayerEnclosed = true;
-  for (unsigned i = 0, n = fenestrationMaterials.size(); i < n; ++i) {
-    bool isGlazing = fenestrationMaterials[i].optionalCast<Glazing>();
-    bool isSimpleGlazing = fenestrationMaterials[i].optionalCast<SimpleGlazing>();
-    bool isGasLayer = fenestrationMaterials[i].optionalCast<GasLayer>();
+  for (const auto & fenestrationMaterial : fenestrationMaterials) {
+    bool isGlazing = fenestrationMaterial.optionalCast<Glazing>();
+    bool isSimpleGlazing = fenestrationMaterial.optionalCast<SimpleGlazing>();
+    bool isGasLayer = fenestrationMaterial.optionalCast<GasLayer>();
     // Rule 1
     if (isSimpleGlazing) {
       if (hasGlazing) { return false; }

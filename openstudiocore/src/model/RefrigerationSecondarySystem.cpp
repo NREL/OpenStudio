@@ -138,8 +138,8 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
             result.push_back(modelObject.get());
           }
@@ -308,10 +308,10 @@ namespace detail {
     if( modelObjectList ) {
       std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
 
-      for(std::vector<ModelObject>::iterator it = modelObjects.begin(); it != modelObjects.end(); ++it) {
-          boost::optional<T> modelObject = it->optionalCast<T>();
+      for(const auto & elem : modelObjects) {
+          boost::optional<T> modelObject = elem.optionalCast<T>();
           if (modelObject) {
-            modelObjectList->removeModelObject(*it);
+            modelObjectList->removeModelObject(elem);
           }
       }
     }  

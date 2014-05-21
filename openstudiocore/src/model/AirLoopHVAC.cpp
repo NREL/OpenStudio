@@ -427,15 +427,13 @@ namespace detail {
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
-    for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( const auto & elem : comps )
     {
-      if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
+      if( boost::optional<HVACComponent> comp = elem.containingHVACComponent() )
       {
         if( comp.get() == airTerminal )
         {
-          if( boost::optional<PlantLoop> plantLoop = it->plantLoop() )
+          if( boost::optional<PlantLoop> plantLoop = elem.plantLoop() )
           {
             return plantLoop;
           }
@@ -454,15 +452,13 @@ namespace detail {
   {
     std::vector<WaterToAirComponent> comps = airTerminal.model().getModelObjects<WaterToAirComponent>();
 
-    for( std::vector<WaterToAirComponent>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( const auto & elem : comps )
     {
-      if( boost::optional<HVACComponent> comp = it->containingHVACComponent() )
+      if( boost::optional<HVACComponent> comp = elem.containingHVACComponent() )
       {
         if( comp.get() == airTerminal )
         {
-          plantLoop.addDemandBranchForComponent(*it);
+          plantLoop.addDemandBranchForComponent(elem);
 
           return;
         }
@@ -511,20 +507,16 @@ namespace detail {
     zoneSplitter.removePortForBranch(zoneSplitter.branchIndexForOutletModelObject(splitterOutletObject.get()));
     zoneMixer.removePortForBranch(zoneMixer.branchIndexForInletModelObject(mixerInletObject.get()));
 
-    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-         it < modelObjects.end();
-         ++it )
+    for( const auto & modelObject : modelObjects )
     {
-      it->cast<HVACComponent>().disconnect();
+      modelObject.cast<HVACComponent>().disconnect();
     }
 
-    for( std::vector<ModelObject>::reverse_iterator it = modelObjects.rbegin();
-         it < modelObjects.rend();
-         ++it )
+    for( auto & modelObject : modelObjects )
     {
-      if( ! it->optionalCast<ThermalZone>() )
+      if( ! modelObject.optionalCast<ThermalZone>() )
       {
-        it->remove();
+        modelObject.remove();
       }
     }
 
@@ -777,18 +769,16 @@ namespace detail {
 
     sizingObjects = getObject<AirLoopHVAC>().getModelObjectSources<SizingSystem>();
 
-    for( std::vector<SizingSystem>::iterator it = sizingObjects.begin();
-         it < sizingObjects.end();
-         ++it )
+    for( const auto & sizingObject : sizingObjects )
     {
       try {
-        if( it->airLoopHVAC().handle() == this->handle() )
+        if( sizingObject.airLoopHVAC().handle() == this->handle() )
         {
-          sizingSystem = *it;
+          sizingSystem = sizingObject;
         }
       }
       catch (...) {
-        LOG(Debug,it->briefDescription() << " is not attached to an AirLoopHVAC object.");
+        LOG(Debug,sizingObject.briefDescription() << " is not attached to an AirLoopHVAC object.");
       }
     }
 
@@ -809,11 +799,9 @@ namespace detail {
 
     std::vector<ThermalZone> result;
 
-    for( std::vector<ModelObject>::iterator it = objects.begin();
-         it != objects.end();
-         ++it )
+    for( const auto & elem : objects )
     {
-      result.push_back(it->cast<ThermalZone>());
+      result.push_back(elem.cast<ThermalZone>());
     }
 
     return result;

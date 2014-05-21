@@ -58,12 +58,10 @@ boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACReturnPath( AirLo
   returnPathIdf.setString(openstudio::AirLoopHVAC_ReturnPathFields::ReturnAirPathOutletNodeName,node.name().get());
 
   std::vector<ModelObject> returnPlenums = airLoopHVAC.demandComponents(AirLoopHVACReturnPlenum::iddObjectType());
-  for( std::vector<ModelObject>::iterator it = returnPlenums.begin();
-       it != returnPlenums.end();
-       ++it )
+  for( auto & returnPlenum : returnPlenums )
   {
     IdfExtensibleGroup eg = returnPathIdf.pushExtensibleGroup();
-    boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(*it);
+    boost::optional<IdfObject> _returnPlenum = translateAndMapModelObject(returnPlenum);
     OS_ASSERT(_returnPlenum);
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentObjectType,_returnPlenum->iddObject().name());
     eg.setString(AirLoopHVAC_ReturnPathExtensibleFields::ComponentName,_returnPlenum->name().get());

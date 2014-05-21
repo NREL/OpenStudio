@@ -54,7 +54,7 @@ class OSCollapsibleView : public QWidget
 
   public:
 
-  OSCollapsibleView(QWidget * parent=0);
+  OSCollapsibleView(QWidget * parent=nullptr);
 
   virtual ~OSCollapsibleView() {}
 

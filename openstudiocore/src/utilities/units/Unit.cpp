@@ -112,7 +112,7 @@ namespace detail {
     std::vector<std::string>::iterator resultIter;
 
     std::vector<UnitElement>::const_iterator unitsIter;
-    std::vector<UnitElement>::const_iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
     for (resultIter = result.begin(), unitsIter = m_units.begin();
     unitsIter != unitsEnd; ++unitsIter, ++resultIter) {
       *resultIter = unitsIter->first; // copy baseUnit into result vector
@@ -122,7 +122,7 @@ namespace detail {
   }
 
   bool Unit_Impl::isBaseUnit(const std::string& baseUnit) const {
-    std::vector<UnitElement>::const_iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc == m_units.end()) {
       return false;
     }
@@ -130,7 +130,7 @@ namespace detail {
   }
 
   int Unit_Impl::baseUnitExponent(const std::string& baseUnit) const {
-    std::vector<UnitElement>::const_iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc == m_units.end()) {
       return 0;
     }
@@ -141,7 +141,7 @@ namespace detail {
 
   void Unit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -183,7 +183,7 @@ namespace detail {
     // determine number of non-zero, positive, and negative baseUnits
     int nnz(0), npos(0);
     std::vector<UnitElement>::const_iterator unitsIter,firstPosIter,firstNegIter;
-    std::vector<UnitElement>::const_iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
 
     firstPosIter = unitsEnd;
     firstNegIter = unitsEnd;
@@ -372,7 +372,7 @@ namespace detail {
 
     // u1 * u2, loop through both
     std::vector<UnitElement>::iterator lUnitsIter;
-    std::vector<UnitElement>::iterator lUnitsEnd = m_units.end();
+    auto lUnitsEnd = m_units.end();
     std::vector<UnitElement>::const_iterator rUnitsIter;
     std::vector<UnitElement>::const_iterator rUnitsEnd = rUnit.getImpl<detail::Unit_Impl>()->m_units.end();
     bool ordered = true;
@@ -413,12 +413,11 @@ namespace detail {
         }
       }
       // check rUnits
-      std::vector<std::string>::iterator checkedBaseUnitsEnd = checkedBaseUnits.end();
+      auto checkedBaseUnitsEnd = checkedBaseUnits.end();
       for (rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin();
       rUnitsIter != rUnitsEnd; ++rUnitsIter)
       {
-        std::vector<std::string>::iterator loc =
-            std::find(checkedBaseUnits.begin(),checkedBaseUnitsEnd,rUnitsIter->first);
+        auto loc = std::find(checkedBaseUnits.begin(),checkedBaseUnitsEnd,rUnitsIter->first);
         if (loc == checkedBaseUnitsEnd) {
           // this base unit not checked yet, and is not in lUnits
           if (rUnitsIter->second != 0) {
@@ -466,7 +465,7 @@ namespace detail {
 
   void Unit_Impl::pow(int expNum, int expDenom, bool okToCallFactory) {
     std::vector<UnitElement>::iterator unitsIter;
-    std::vector<UnitElement>::iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
 
     // check for errors first
     if (expDenom != 1) {
@@ -520,20 +519,18 @@ namespace detail {
   std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(
       const std::string& baseUnit)
   {
-    std::vector<Unit_Impl::UnitElement>::iterator result =
-        std::find_if(m_units.begin(),
-                     m_units.end(),
-                     boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+    auto result = std::find_if(m_units.begin(),
+                               m_units.end(),
+                               boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
     return result;
   }
 
   std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(
       const std::string& baseUnit) const
   {
-    std::vector<Unit_Impl::UnitElement>::const_iterator result =
-        std::find_if(m_units.begin(),
-                     m_units.end(),
-                     boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+    auto result = std::find_if(m_units.begin(),
+                               m_units.end(),
+                               boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
     return result;
   }
 

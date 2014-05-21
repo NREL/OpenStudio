@@ -137,13 +137,11 @@ namespace detail{
 
       std::vector<ControllerWaterCoil> controllers = m.getModelObjects<ControllerWaterCoil>();
 
-      for( std::vector<ControllerWaterCoil>::iterator it = controllers.begin();
-      it < controllers.end();
-      ++it )
+      for( const auto & controller : controllers )
       {
-        if( it->actuatorNode() == coilWaterInletNode )
+        if( controller.actuatorNode() == coilWaterInletNode )
         {
-          return *it;
+          return controller;
         }
       }
     }
@@ -379,22 +377,20 @@ namespace detail{
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil() )
       {
         if( heatingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
-      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      if( boost::optional<HVACComponent> suppHeatingCoil = airLoopHVACUnitarySystem.supplementalHeatingCoil() )
       {
         if( suppHeatingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -405,15 +401,13 @@ namespace detail{
 
     airTerminalSingleDuctVAVReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctVAVReheat>();
 
-    for( std::vector<AirTerminalSingleDuctVAVReheat>::iterator it = airTerminalSingleDuctVAVReheatObjects.begin();
-    it < airTerminalSingleDuctVAVReheatObjects.end();
-    ++it )
+    for( const auto & airTerminalSingleDuctVAVReheatObject : airTerminalSingleDuctVAVReheatObjects )
     {
-      if( boost::optional<HVACComponent> coil = it->reheatCoil() )
+      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctVAVReheatObject.reheatCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return airTerminalSingleDuctVAVReheatObject;
         }
       }
     }
@@ -424,15 +418,13 @@ namespace detail{
 
     airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
 
-    for( std::vector<AirTerminalSingleDuctConstantVolumeReheat>::iterator it = airTerminalSingleDuctConstantVolumeReheatObjects.begin();
-    it < airTerminalSingleDuctConstantVolumeReheatObjects.end();
-    ++it )
+    for( const auto & airTerminalSingleDuctConstantVolumeReheatObject : airTerminalSingleDuctConstantVolumeReheatObjects )
     {
-      if( boost::optional<HVACComponent> coil = it->reheatCoil() )
+      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctConstantVolumeReheatObject.reheatCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return airTerminalSingleDuctConstantVolumeReheatObject;
         }
       }
     }
@@ -443,15 +435,13 @@ namespace detail{
 
     airTerminalSingleDuctParallelPIUReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
 
-    for( std::vector<AirTerminalSingleDuctParallelPIUReheat>::iterator it = airTerminalSingleDuctParallelPIUReheatObjects.begin();
-    it < airTerminalSingleDuctParallelPIUReheatObjects.end();
-    ++it )
+    for( const auto & airTerminalSingleDuctParallelPIUReheatObject : airTerminalSingleDuctParallelPIUReheatObjects )
     {
-      if( boost::optional<HVACComponent> coil = it->reheatCoil() )
+      if( boost::optional<HVACComponent> coil = airTerminalSingleDuctParallelPIUReheatObject.reheatCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return airTerminalSingleDuctParallelPIUReheatObject;
         }
       }
     }
@@ -467,15 +457,13 @@ namespace detail{
 
     zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
 
-    for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
-    it < zoneHVACFourPipeFanCoils.end();
-    ++it )
+    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACFourPipeFanCoil;
         }
       }
      }
@@ -486,15 +474,13 @@ namespace detail{
 
     zoneHVACPackagedTerminalAirConditioners = this->model().getModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
-    for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
-    it < zoneHVACPackagedTerminalAirConditioners.end();
-    ++it )
+    for( const auto & zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACPackagedTerminalAirConditioner;
         }
       }
     }
@@ -504,15 +490,13 @@ namespace detail{
 
     zoneHVACWaterToAirHeatPumps = this->model().getModelObjects<ZoneHVACWaterToAirHeatPump>();
 
-    for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
-    it < zoneHVACWaterToAirHeatPumps.end();
-    ++it )
+    for( const auto & zoneHVACWaterToAirHeatPump : zoneHVACWaterToAirHeatPumps )
     {
-      if( boost::optional<HVACComponent> coil = it->supplementalHeatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACWaterToAirHeatPump.supplementalHeatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACWaterToAirHeatPump;
         }
       }
     }
@@ -523,15 +507,13 @@ namespace detail{
 
     zoneHVACUnitHeater = this->model().getModelObjects<ZoneHVACUnitHeater>();
 
-    for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
-    it < zoneHVACUnitHeater.end();
-    ++it )
+    for( const auto & elem : zoneHVACUnitHeater )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return elem;
         }
       }
      }

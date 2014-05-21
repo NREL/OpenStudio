@@ -35,8 +35,8 @@ PageNavigator::PageNavigator(int numPages,
   m_numPages(numPages),
   m_checkedTextColor(QColor(Qt::black)),
   m_uncheckedTextColor(QColor(104,104,104)),
-  m_buttonGroup(NULL),
-  m_buttonLayout(NULL)
+  m_buttonGroup(nullptr),
+  m_buttonLayout(nullptr)
 {
   if(m_numPages < m_numPagesListed){
     m_numPagesListed = m_numPages;
@@ -51,7 +51,7 @@ PageNavigator::~PageNavigator()
 
 void PageNavigator::createLayout()
 {
-  QHBoxLayout * layout = new QHBoxLayout();
+  auto layout = new QHBoxLayout();
   layout->setContentsMargins(0,0,0,0);
   layout->setSpacing(2);
 
@@ -64,7 +64,7 @@ void PageNavigator::createLayout()
                         this, SLOT(on_buttonClicked(QAbstractButton *)));
   OS_ASSERT(isConnected);
 
-  QPushButton * button = NULL;
+  QPushButton * button = nullptr;
 
   ///! button first page
   button = new QPushButton(this);
@@ -117,7 +117,7 @@ void PageNavigator::makeNumberedButtons()
     m_buttonGroup->removeButton(button);
     if(button){
       delete button;
-      button = NULL;
+      button = nullptr;
     }
   }
 
@@ -125,7 +125,7 @@ void PageNavigator::makeNumberedButtons()
   QString num;
   for(int i = 0; i < m_numPagesListed; ++i)
   {
-    QPushButton * button = new QPushButton();
+    auto button = new QPushButton();
     button->setText(num.setNum(i+1));
     button->setFixedSize(40,20);
     button->setCheckable(true);

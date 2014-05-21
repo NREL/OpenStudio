@@ -243,7 +243,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns a bool, but was not checking, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns a bool, but was not checking, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -287,7 +287,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but no check, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but no check, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -521,7 +521,7 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
@@ -630,7 +630,7 @@ namespace openstudio{
     LOG(Info, testString);
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -669,7 +669,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
@@ -751,7 +751,7 @@ namespace openstudio{
     //LOG(Warn, url.toString().toStdString());
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -800,7 +800,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -848,7 +848,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -902,7 +902,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
@@ -954,7 +954,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete

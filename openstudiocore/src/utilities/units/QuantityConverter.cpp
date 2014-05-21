@@ -291,7 +291,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
   while( it != end ) {
     int baseExponent = working.baseUnitExponent(*it);
     // apply conversion factor
-    BaseUnitConversionMap::const_iterator mapItr = m_toSImap.find(*it);
+    auto mapItr = m_toSImap.find(*it);
     if (mapItr == m_toSImap.end()) {
       LOG(Error,"Cannot convert base unit '" << *it << "' to SI because it is not "
           << "registered with the QuantityConverter.");
@@ -428,7 +428,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToTargetFromSI(
     while( it != end ) {
       int baseExponent = targetUnits.baseUnitExponent(*it);
       // apply conversion factor
-      BaseUnitConversionMap::const_iterator mapItr = m_toSImap.find(*it);
+      auto mapItr = m_toSImap.find(*it);
       if (mapItr == m_toSImap.end()) {
         LOG(Error,"Cannot convert to a target Unit containing base unit '" << *it
             << "', because it is not registered with the QuantityConverter.");

@@ -210,7 +210,7 @@ namespace detail {
     if (edge == Table::T) {
       num = nEmptyRows(Table::T);
       if (num > 0) {
-        std::vector<TableRow>::iterator itEraseEnd = m_table.begin();
+        auto itEraseEnd = m_table.begin();
         for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
         m_table.erase(m_table.begin(),itEraseEnd);
       }
@@ -230,7 +230,7 @@ namespace detail {
       num = nEmptyCols(Table::L);
       if (num > 0) {
         for (TableRow& row : m_table) {
-          TableRow::iterator itEraseEnd = row.begin();
+          auto itEraseEnd = row.begin();
           for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
           row.erase(row.begin(),itEraseEnd);
           OS_ASSERT(row.size() == m_nCols - num);

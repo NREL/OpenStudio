@@ -117,11 +117,11 @@ namespace detail {
 
     /** Returns the analysis seed model, if it is positively specified, can be located, and is an
      *  OpenStudio Model (not an EnergyPlus IDF). */
-    boost::optional<model::Model> seedModel(ProgressBar* progressBar = NULL) const;
+    boost::optional<model::Model> seedModel(ProgressBar* progressBar = nullptr) const;
 
     /** Returns the analysis seed if it is an IDF, or the seed model translated to IDF
      *  otherwise. */
-    boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
+    boost::optional<Workspace> seedIdf(ProgressBar* progressBar = nullptr) const;
 
     /** Returns the BCLMeasures in this project's scripts directory. */
     std::vector<BCLMeasure> measures() const;
@@ -209,7 +209,7 @@ namespace detail {
      *  models. The user is responsible for deleting any such measures that are no longer
      *  needed/desired. */
     std::pair<bool,std::vector<BCLMeasure> > setSeed(const FileReference& currentSeedLocation,
-                                                     ProgressBar* progressBar = NULL);
+                                                     ProgressBar* progressBar = nullptr);
 
     /** Looks for measure by UUID, returning this project's copy if found, adding and returning
      *  the new project-specific copy otherwise. */
@@ -374,14 +374,14 @@ namespace detail {
 
     /** Version translates the OSM at modelPath, and saves it back to disk. Returns true if model
      *  successfully translated and saved. */
-    bool upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar = NULL);
+    bool upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar = nullptr);
 
     /** Look for the seedModel's weather file and set the analysis weather file to match if
      *  located. */
-    bool setAnalysisWeatherFile(ProgressBar* progressBar = NULL);
+    bool setAnalysisWeatherFile(ProgressBar* progressBar = nullptr);
 
     /** Import measures in the seed model workflow as fixed measures. */
-    std::vector<BCLMeasure> importSeedModelMeasures(ProgressBar* progressBar = NULL);
+    std::vector<BCLMeasure> importSeedModelMeasures(ProgressBar* progressBar = nullptr);
 
     bool isPATFixedMeasure(const analysis::WorkflowStep& step) const;
 

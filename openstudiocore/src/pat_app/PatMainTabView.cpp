@@ -58,7 +58,7 @@ PatMainTabView::PatMainTabView()
 
   m_mainWidget->move(7,30);
 
-  QVBoxLayout * innerLayout = new QVBoxLayout();
+  auto innerLayout = new QVBoxLayout();
   innerLayout->setContentsMargins(1,1,0,0);
   innerLayout->setSpacing(0);
   m_mainWidget->setLayout(innerLayout);

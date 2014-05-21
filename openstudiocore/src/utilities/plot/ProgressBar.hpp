@@ -42,10 +42,10 @@ namespace openstudio{
   public:
 
     /// constructor
-    ProgressBar(QWidget* parent = 0);
+    ProgressBar(QWidget* parent = nullptr);
 
     /// constructor
-    ProgressBar(bool visible, QWidget* parent = 0);
+    ProgressBar(bool visible, QWidget* parent = nullptr);
 
     /// constructor from impl
     //ProgressBar(const boost::shared_ptr<QProgressBar>& impl);

@@ -40,14 +40,14 @@ namespace openstudio{
 EditRubyMeasureView::EditRubyMeasureView()
   : QWidget()
 {
-  QVBoxLayout * layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
-  QScrollArea * scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   layout->addWidget(scrollArea);
   scrollArea->setWidgetResizable(true);
 
-  QWidget * scrollWidget = new QWidget();
+  auto scrollWidget = new QWidget();
   scrollWidget->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);
   scrollArea->setWidget(scrollWidget);
 
@@ -62,7 +62,7 @@ EditRubyMeasureView::EditRubyMeasureView()
   m_mainVLayout->addWidget(measureOptionTitleLabel);
 
   QRegExp nameRegex("^\\S.*");
-  QRegExpValidator* validator = new QRegExpValidator(nameRegex, this);
+  auto validator = new QRegExpValidator(nameRegex, this);
 
   nameLineEdit = new QLineEdit();
   nameLineEdit->setValidator(validator);
@@ -87,7 +87,7 @@ EditRubyMeasureView::EditRubyMeasureView()
   modelerDescriptionLabel->setWordWrap(true);
   m_mainVLayout->addWidget(modelerDescriptionLabel);
 
-  QFrame * line2 = new QFrame();
+  auto line2 = new QFrame();
   line2->setFrameShape(QFrame::HLine);
   line2->setFrameShadow(QFrame::Sunken);
   m_mainVLayout->addWidget(line2);
@@ -122,7 +122,7 @@ void EditRubyMeasureView::clear()
 {
  QLayoutItem * child;
 
- while((child = m_inputsVLayout->takeAt(0)) != 0)
+ while((child = m_inputsVLayout->takeAt(0)) != nullptr)
  {
    QWidget * widget = child->widget();
 
@@ -137,12 +137,12 @@ void EditRubyMeasureView::clear()
 EditNullView::EditNullView() 
   : QWidget()
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(5,5,5,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
   
-  QLabel * label = new QLabel();
+  auto label = new QLabel();
   label->setText("Select a Measure to Edit");
   label->setWordWrap(true);
   label->setAlignment(Qt::AlignCenter);
@@ -162,7 +162,7 @@ void EditNullView::paintEvent(QPaintEvent * event)
 DoubleInputView::DoubleInputView()
   : InputView()
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(5);
   setLayout(vLayout);
@@ -196,7 +196,7 @@ void DoubleInputView::setDisplayValue(const QVariant & value)
 ChoiceInputView::ChoiceInputView()
   : InputView()
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(5);
   setLayout(vLayout);
@@ -233,7 +233,7 @@ void ChoiceInputView::setDisplayValue(const QVariant & value)
 BoolInputView::BoolInputView()
   : InputView()
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(5);
   setLayout(vLayout);
@@ -255,7 +255,7 @@ void BoolInputView::setDisplayValue(const QVariant & value)
 IntegerInputView::IntegerInputView()
   : InputView()
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(5);
   setLayout(vLayout);
@@ -289,7 +289,7 @@ void IntegerInputView::setDisplayValue(const QVariant & value)
 StringInputView::StringInputView()
   : InputView()
 {
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->setSpacing(5);
   setLayout(vLayout);
@@ -329,7 +329,7 @@ InputCheckBox::InputCheckBox()
 {
   setCheckable(true);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   QStyleOptionButton opt;
   QRect checkRect = style()->subElementRect(QStyle::SE_CheckBoxIndicator,&opt);
   int spacing = 5;

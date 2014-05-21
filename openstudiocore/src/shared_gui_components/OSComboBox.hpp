@@ -99,7 +99,7 @@ class OSComboBox2 : public QComboBox {
   Q_OBJECT
  public:
   
-  OSComboBox2( QWidget * parent = 0 );
+  OSComboBox2( QWidget * parent = nullptr );
 
   virtual ~OSComboBox2() {}
 
@@ -201,7 +201,7 @@ class OSComboBox : public QComboBox {
 
  public:
 
-  OSComboBox( QWidget * parent = 0 );
+  OSComboBox( QWidget * parent = nullptr );
 
   virtual ~OSComboBox() {}
 

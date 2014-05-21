@@ -311,7 +311,7 @@ public:
 
   template <class T> bool addAirflowElement(T element)
   {
-    T *copy = new T;
+    auto copy = new T;
     *copy = element;
     AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
     if(pointer)
@@ -329,7 +329,7 @@ public:
   {
     if(nr>0 && nr<=m_airflowElements.size())
     {
-      T *copy = new T;
+      auto copy = new T;
       *copy = element;
       AirflowElement *pointer = dynamic_cast<AirflowElement*>(copy);
       if(pointer)
@@ -346,7 +346,7 @@ public:
 
   template <class T> bool addControlNode(T element, bool sequence=true)
   {
-    T *copy = new T;
+    auto copy = new T;
     *copy = element;
     ControlNode *pointer = dynamic_cast<ControlNode*>(copy);
     if(pointer)

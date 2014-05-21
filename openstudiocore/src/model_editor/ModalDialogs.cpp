@@ -205,17 +205,17 @@ void ModelObjectSelectorDialog::createWidgets()
   m_cancelButton->setText(tr("Cancel"));
   m_cancelButton->setToolTip(tr("Cancel"));
 
-  QHBoxLayout* buttonLayout = new QHBoxLayout;
+  auto buttonLayout = new QHBoxLayout;
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_okButton);
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_cancelButton);
   buttonLayout->addStretch(0);
 
-  QWidget* buttonGroup = new QWidget(this);
+  auto buttonGroup = new QWidget(this);
   buttonGroup->setLayout(buttonLayout);
 
-  QVBoxLayout* mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   mainLayout->addWidget(m_userTextLabel);
   mainLayout->addWidget(m_comboBox);
   mainLayout->addWidget(buttonGroup);

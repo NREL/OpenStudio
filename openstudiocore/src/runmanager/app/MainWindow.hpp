@@ -55,7 +55,7 @@ namespace runmanager {
     Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0, bool newdb = false);
+    MainWindow(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr, bool newdb = false);
     virtual ~MainWindow();
 
   protected:

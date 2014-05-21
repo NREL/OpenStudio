@@ -185,7 +185,7 @@ namespace runmanager {
 
     void JobItem::updateOutputFile(const openstudio::runmanager::FileInfo &t_fi)
     {
-      QStandardItem *fileparent = 0;
+      QStandardItem *fileparent = nullptr;
 
       for (int i = 0; i < rowCount(); ++i)
       {
@@ -438,7 +438,7 @@ namespace runmanager {
   void JobStatusWidget::jobSelectionChanged(const openstudio::runmanager::Job &t_job)
   {
     if (m_outputjob) {
-      m_outputjob->disconnect(0,this, 0);
+      m_outputjob->disconnect(nullptr,this, nullptr);
     }
 
     t_job.connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
@@ -637,7 +637,7 @@ namespace runmanager {
     LOG(Info, "Adding Job to tree: " << toString(job.uuid()) << " " << job.description());
 
     boost::optional<Job> parent = job.parent();
-    QStandardItem *parentitem = 0;
+    QStandardItem *parentitem = nullptr;
 
     if (parent)
     {
@@ -650,7 +650,7 @@ namespace runmanager {
       }
     }
 
-    if (getJobItem(job) == 0)
+    if (getJobItem(job) == nullptr)
     {
 
       QList<QStandardItem*> cols;
@@ -720,7 +720,7 @@ namespace runmanager {
       }
     }
 
-    return 0;
+    return nullptr;
   }
 
 
@@ -737,11 +737,9 @@ namespace runmanager {
   {
     std::vector<Job> jobs = getJobs(ui.treeJobs->selectionModel()->selectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
-      itr->setCanceled(!itr->canceled());
+      job.setCanceled(!job.canceled());
     }
   }
 
@@ -749,12 +747,10 @@ namespace runmanager {
   {
     std::vector<Job> jobs = getJobs(ui.treeJobs->selectionModel()->selectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
-      itr->setTreeRunnable(false);
-      itr->setRunnable(true);
+      job.setTreeRunnable(false);
+      job.setRunnable(true);
     }
   }
 

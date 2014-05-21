@@ -112,10 +112,10 @@ boost::optional<IdfObject> IdfFile::getObject(const Handle& handle) const {
 
 std::vector<IdfObject> IdfFile::objects() const {
   IdfObjectVector result = m_objects;
-  for (std::set<unsigned>::const_reverse_iterator it = m_versionObjectIndices.rbegin(),
+  for (auto it = m_versionObjectIndices.rbegin(),
        itEnd = m_versionObjectIndices.rend(); it != itEnd; ++it)
   {
-    IdfObjectVector::iterator oit = result.begin();
+    auto oit = result.begin();
     for (unsigned i = 0; i < *it; ++i, ++oit);
     OS_ASSERT(oit->iddObject().isVersionObject() ||
                  ((oit->iddObject().type() == IddObjectType::Catchall) &&
@@ -128,10 +128,9 @@ std::vector<IdfObject> IdfFile::objects() const {
 
 std::vector<IdfObject> IdfFile::getObjectsByType(IddObjectType objectType) const {
   IdfObjectVector result;
-  for (IdfObjectVector::const_iterator it = m_objects.begin(),
-       itEnd = m_objects.end(); it != itEnd; ++it) {
-    if (it->iddObject().type() == objectType) {
-      result.push_back(*it);
+  for (const auto & idfObject : m_objects) {
+    if (idfObject.iddObject().type() == objectType) {
+      result.push_back(idfObject);
     }
   }
   return result;
@@ -184,7 +183,7 @@ void IdfFile::addObjects(const std::vector<IdfObject>& objects) {
 }
 
 void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
-  for (IdfObjectVector::iterator it = m_objects.begin(), itEnd = m_objects.end();
+  for (auto it = m_objects.begin(), itEnd = m_objects.end();
        it != itEnd; ++it) {
     if (it == itEnd || object.iddObject().type() < it->iddObject().type()) {
       // insert object immediately before it
@@ -204,8 +203,8 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
 }
 
 bool IdfFile::removeObject(const IdfObject& object) {
-  IdfObjectVector::iterator it = std::find_if(m_objects.begin(),m_objects.end(),
-                                              boost::bind(handleEquals<IdfObject,Handle>,_1,object.handle()));
+  auto it = std::find_if(m_objects.begin(),m_objects.end(),
+                         boost::bind(handleEquals<IdfObject,Handle>,_1,object.handle()));
   if (it != m_objects.end()) {
     unsigned index(it - m_objects.begin());
     if (it->iddObject().isVersionObject() || 
@@ -217,7 +216,7 @@ bool IdfFile::removeObject(const IdfObject& object) {
     }
     m_objects.erase(it);
     std::vector<unsigned> toModify;
-    for (unsigned i : m_versionObjectIndices) {
+    for (const unsigned i : m_versionObjectIndices) {
       if (i > index) {
         toModify.push_back(i);
       }
@@ -380,13 +379,13 @@ OptionalIdfFile IdfFile::load(const path& p,
   // complete path
   path wp(p);
 
-  if (iddFileType == IddFileType::OpenStudio) { 
+  if (iddFileType == IddFileType::OpenStudio) {
     // can be Model or Component
     wp = completePathToFile(wp,path(),modelFileExtension(),false);
     if (wp.empty()) { wp = completePathToFile(wp,path(),componentFileExtension(),false); }
   }
-  else { 
-    wp = completePathToFile(wp,path(),"idf",true); 
+  else {
+    wp = completePathToFile(wp,path(),"idf",true);
   }
 
   // try to open file and parse
@@ -422,7 +421,7 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
   IddFile catchallIdd = IddFile::catchallIddFile();
   IdfFile idf(catchallIdd);
   OS_ASSERT(!idf.versionObject());
-  idf.m_load(is,NULL,true);
+  idf.m_load(is,nullptr,true);
   if (OptionalIdfObject oVersionObject = idf.versionObject()) {
     unsigned n = oVersionObject->numFields();
     std::string versionString = oVersionObject->getString(n - 1,true).get();

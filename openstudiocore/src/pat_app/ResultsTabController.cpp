@@ -468,7 +468,7 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   openstudio::analysis::DataPoint baselineDataPoint = dataPointResultListItem->baselineDataPoint();
   bool alternateRow = dataPointResultListItem->alternateRow();
 
-  DataPointResultsView* result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
+  auto result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
   result->setHasEmphasis(dataPointResultListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointResultListItem.data(),SLOT(toggleSelected()));
@@ -493,7 +493,7 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
   bool alternateRow = dataPointCalibrationListItem->alternateRow();
 
-  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
+  auto result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
   result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));

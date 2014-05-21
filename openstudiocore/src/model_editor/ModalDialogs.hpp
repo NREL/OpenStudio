@@ -54,11 +54,11 @@ public:
 
   ModelObjectSelectorDialog(const openstudio::IddObjectType& typeToDisplay,
                             const openstudio::model::Model& model,
-                            QWidget * parent = 0);
+                            QWidget * parent = nullptr);
 
   ModelObjectSelectorDialog(const std::vector<openstudio::IddObjectType>& typesToDisplay,
                             const openstudio::model::Model& model,
-                            QWidget * parent = 0);
+                            QWidget * parent = nullptr);
 
   virtual ~ModelObjectSelectorDialog();
 

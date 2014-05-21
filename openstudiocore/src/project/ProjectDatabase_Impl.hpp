@@ -212,7 +212,7 @@ namespace project {
 
           std::set<int> values = T::ColumnsType::getValues();
           int expectedValue = 0;
-          for (std::set<int>::const_iterator it = values.begin(), itend = values.end(); it != itend; ++it){
+          for (auto it = values.begin(), itend = values.end(); it != itend; ++it){
             // require 0 based columns, don't skip any
             OS_ASSERT(*it == expectedValue);
 
@@ -220,7 +220,7 @@ namespace project {
             ss << T::ColumnsType::valueName(*it) << " " << T::ColumnsType::valueDescription(*it);
 
             // is this the last column?
-            std::set<int>::const_iterator nextIt = it;
+            auto nextIt = it;
             ++nextIt;
             if (nextIt == itend){
               ss << ");";

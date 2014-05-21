@@ -33,7 +33,7 @@ class BrowserView : public QTextBrowser
 
 public:
 
-  BrowserView( QWidget* parent=0);
+  BrowserView( QWidget* parent=nullptr);
 
   const QString& filename() {return m_filename;}
   void setFilename(const QString& filename);

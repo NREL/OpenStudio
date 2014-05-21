@@ -190,15 +190,13 @@ namespace detail {
 
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
+    for( auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        it->removeEquipment(thisObject);
+        thermalZone.removeEquipment(thisObject);
 
         break;
       }

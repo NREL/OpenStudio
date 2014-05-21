@@ -144,11 +144,9 @@ OptionalModelObject ReverseTranslator::translateGroundHeatExchangerVertical( con
   std::vector<IdfExtensibleGroup> groups = workspaceObject.extensibleGroups();
   ghex.removeAllGFunctions();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    ghex.pushExtensibleGroup(it->fields());
+    ghex.pushExtensibleGroup(group.fields());
   }
 
   return ghex;

@@ -138,11 +138,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneMixer( Air
   // Field: Inlet 1-N Node Name ///////////////////////////////////////////////
   std::vector<ModelObject> inletModelObjects = modelObject.inletModelObjects();
   int i = 2;
-  for( std::vector<ModelObject>::iterator it = inletModelObjects.begin();
-       it < inletModelObjects.end();
-       ++it )
+  for( const auto & inletModelObject : inletModelObjects )
   {
-    optS = it->name();
+    optS = inletModelObject.name();
     if(optS)
     {
       idfObject.setString(i,*optS);

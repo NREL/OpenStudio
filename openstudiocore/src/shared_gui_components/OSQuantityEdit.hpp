@@ -39,7 +39,7 @@ class OSQuantityEdit2: public QWidget {
  public:
 
   OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
-                  const std::string& ipUnits, bool isIP, QWidget * parent = 0);
+                  const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2() {}
 
@@ -145,7 +145,7 @@ class OSQuantityEdit: public QWidget {
 
  public:
 
-  OSQuantityEdit(bool isIP, QWidget * parent = 0);
+  OSQuantityEdit(bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit() {}
 

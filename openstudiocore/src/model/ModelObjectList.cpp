@@ -73,11 +73,9 @@ namespace detail {
     std::vector<ModelObject> modelObjects = this->modelObjects();
 
     if ( !modelObjects.empty() ){
-      for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-       it != modelObjects.end();
-       ++it )
+      for( auto & modelObject : modelObjects )
       {
-        std::vector<IdfObject> removedModelObject = it->remove();
+        std::vector<IdfObject> removedModelObject = modelObject.remove();
         result.insert(result.end(), removedModelObject.begin(), removedModelObject.end());
       }
     }
@@ -96,11 +94,9 @@ namespace detail {
 
     if ( !modelObjects.empty() ){
       modelObjectListClone.removeAllModelObjects();
-      for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-       it != modelObjects.end();
-       ++it )
+      for( const auto & modelObject : modelObjects )
       {
-        ModelObject modelObjectClone = it->clone(model);
+        ModelObject modelObjectClone = modelObject.clone(model);
         modelObjectListClone.addModelObject(modelObjectClone);
       }
     }
@@ -113,11 +109,9 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & group : groups )
     {
-      boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
 
       if( wo )
       {
@@ -154,17 +148,15 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & group : groups )
     {
-      boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ModelObjectListExtensibleFields::ModelObject);
 
       OS_ASSERT(wo);
 
       if( wo->handle() == modelObject.handle() )
       {
-        result = it->cast<WorkspaceExtensibleGroup>();
+        result = group.cast<WorkspaceExtensibleGroup>();
 
         break;
       }

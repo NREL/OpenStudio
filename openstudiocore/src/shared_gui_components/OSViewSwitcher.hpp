@@ -30,7 +30,7 @@ class OSViewSwitcher : public QWidget
 
   public:
 
-  OSViewSwitcher(QWidget * parent = 0);
+  OSViewSwitcher(QWidget * parent = nullptr);
 
   virtual ~OSViewSwitcher() {}
 

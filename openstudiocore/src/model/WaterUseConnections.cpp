@@ -192,11 +192,9 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & elem : groups )
     {
-      WorkspaceExtensibleGroup group = it->cast<WorkspaceExtensibleGroup>();
+      WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
 
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName);
        
@@ -233,11 +231,9 @@ namespace detail {
 
     int i = 0;
 
-    for( std::vector<WaterUseEquipment>::iterator it = equipment.begin();
-         it != equipment.end();
-         ++it )
+    for( const auto & elem : equipment )
     {
-      if( it->handle() == _waterUseEquipment.handle() )
+      if( elem.handle() == _waterUseEquipment.handle() )
       {
         eraseExtensibleGroup(i);
 

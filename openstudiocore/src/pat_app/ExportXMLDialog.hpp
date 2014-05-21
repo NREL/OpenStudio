@@ -39,7 +39,7 @@ class ExportXMLDialog : public OSDialog
   public:
 
     /// Constructor of the dialog to create a new BCL Measure
-    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = 0);
+    ExportXMLDialog(const std::vector<std::string>& alternatives, QWidget* parent = nullptr);
 
     virtual ~ExportXMLDialog();
 

@@ -107,7 +107,7 @@ public:
   
   /** Static translation function to translate an OpenStudio into a CONTAM airflow model and write it to a path. */
   static bool modelToPrj(const openstudio::model::Model& model, const openstudio::path& path,
-    bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=NULL);
+    bool translateHVAC=true, std::string leakageDescriptor="Average", ProgressBar* progressBar=nullptr);
 
   //@}
   /** @name Getters and Setters */

@@ -301,10 +301,10 @@ public:
 
 
   /// constructor
-  LinePlot(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  LinePlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// create
-  static LinePlot::Ptr create(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  static LinePlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// virtual destructor
   virtual ~LinePlot() {}
@@ -329,8 +329,8 @@ public:
   const int lineThickness() const {return m_lineThickness;}
 
 protected:
-/// drop target support for drag/drop operations
-    void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
+  /// drop target support for drag/drop operations
+  void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
 
 
 private:
@@ -366,7 +366,7 @@ private:
 
 private slots:
   /// legend clicked event
-    void showCurve(QwtPlotItem *, bool on);
+  void showCurve(QwtPlotItem *, bool on);
 
 };
 

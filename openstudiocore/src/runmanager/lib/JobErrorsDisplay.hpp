@@ -38,7 +38,7 @@ namespace runmanager {
 
   public:
     /** Create a JobErrorsDisplay dialog for displaying job warning / error output */
-    JobErrorsDisplay(QWidget *parent = 0, Qt::WindowFlags flags = 0, const JobErrors &errors = JobErrors());
+    JobErrorsDisplay(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr, const JobErrors &errors = JobErrors());
 
     virtual ~JobErrorsDisplay();
 

@@ -36,7 +36,7 @@ namespace openstudio{
     m_impl = boost::shared_ptr<QProgressBar>(new QProgressBar(parent));
 
     // if no parent assume we want this visible
-    if (parent == 0){
+    if (parent == nullptr){
       m_impl->setVisible(true);
     }
 

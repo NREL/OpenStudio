@@ -130,19 +130,15 @@ namespace detail {
   {
     std::vector<WaterUseConnections> connections = model().getModelObjects<WaterUseConnections>();
 
-    for( std::vector<WaterUseConnections>::iterator it = connections.begin();
-         it != connections.end();
-         ++it )
+    for( const auto & connection : connections )
     {
-      std::vector<WaterUseEquipment> equipment = it->waterUseEquipment();
+      std::vector<WaterUseEquipment> equipment = connection.waterUseEquipment();
 
-      for( std::vector<WaterUseEquipment>::iterator it2 = equipment.begin();
-           it2 != equipment.end();
-           ++it2 )
+      for( const auto & elem : equipment )
       {
-        if( it2->handle() == handle() )
+        if( elem.handle() == handle() )
         {
-          return *it;
+          return connection;
         }
       }
     }

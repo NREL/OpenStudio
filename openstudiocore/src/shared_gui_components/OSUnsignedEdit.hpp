@@ -36,7 +36,7 @@ class OSUnsignedEdit2: public QLineEdit {
 
  public:
 
-  OSUnsignedEdit2(QWidget * parent = 0);
+  OSUnsignedEdit2(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit2() {}
 
@@ -120,7 +120,7 @@ class OSUnsignedEdit: public QLineEdit {
 
  public:
 
-  OSUnsignedEdit(QWidget * parent = 0);
+  OSUnsignedEdit(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit() {}
 

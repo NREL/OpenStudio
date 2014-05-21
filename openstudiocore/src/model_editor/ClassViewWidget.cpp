@@ -37,8 +37,8 @@ namespace modeleditor
 
 ClassViewWidget::ClassViewWidget(openstudio::model::Model& model, QWidget *parent)
   : ViewWidget(parent),
-  mTableView(NULL),
-  mTableModel(NULL)
+  mTableView(nullptr),
+  mTableModel(nullptr)
 {
   mSplitterSetting = "ClassViewWidgetSplitterSizes";
   createWidgets();
@@ -55,8 +55,8 @@ ClassViewWidget::ClassViewWidget(openstudio::model::Model& model, QWidget *paren
 
 ClassViewWidget::ClassViewWidget(QWidget *parent)
   : ViewWidget(parent),
-  mTableView(NULL),
-  mTableModel(NULL)
+  mTableView(nullptr),
+  mTableModel(nullptr)
 {
   mSplitterSetting = "ClassViewWidgetSplitterSizes";
   createWidgets();

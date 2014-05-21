@@ -1449,7 +1449,7 @@ namespace detail {
 
     QPolygonF surfacePolygon;
     for (const Point3d& point : faceVertices){
-      if (abs(point.z()) > 0.001){
+      if (std::abs(point.z()) > 0.001){
         LOG(Warn, "Surface point z not on plane, z =" << point.z());
       }
       surfacePolygon << QPointF(point.x(),point.y());
@@ -1466,7 +1466,7 @@ namespace detail {
 
       QPolygonF windowPolygon;
       for (const Point3d& point : viewVertices){
-        if (abs(point.z()) > 0.001){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());
@@ -1492,7 +1492,7 @@ namespace detail {
     
       QPolygonF windowPolygon;
       for (const Point3d& point : daylightingVertices){
-        if (abs(point.z()) > 0.001){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());

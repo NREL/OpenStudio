@@ -34,9 +34,9 @@ class ComponentList : public QWidget {
   Q_OBJECT
 
 public:
-  ComponentList(QWidget * parent = 0);
+  ComponentList(QWidget * parent = nullptr);
   ComponentList(const std::vector<Component *> & components,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~ComponentList() {}
   // return the checked component in the list, NULL if list is empty
   Component * checkedComponent() const;

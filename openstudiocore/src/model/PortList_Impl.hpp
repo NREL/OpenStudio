@@ -67,7 +67,7 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   unsigned newPortAfterIndex(unsigned portIndex);
   
-  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = NULL );
+  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = nullptr );
 
   unsigned nextPortIndex();
 

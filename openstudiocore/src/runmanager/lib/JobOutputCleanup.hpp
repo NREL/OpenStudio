@@ -38,7 +38,7 @@ namespace runmanager {
 
   public:
     /** Create a JobOutputCleanup dialog for choosing files to remove */
-    JobOutputCleanup(QWidget *parent = 0, Qt::WindowFlags flags = 0, 
+    JobOutputCleanup(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr, 
         const std::vector<std::string> &files = std::vector<std::string>());
 
     virtual ~JobOutputCleanup();

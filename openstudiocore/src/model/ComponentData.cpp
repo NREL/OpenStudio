@@ -126,7 +126,7 @@ namespace detail {
   UUID ComponentData_Impl::createVersionUUID() {
     bool ok = setString(OS_ComponentDataFields::VersionUUID,toString(createUUID()));
     OS_ASSERT(ok);
-    ok = setInt(OS_ComponentDataFields::VersionTimestamp,time(NULL));
+    ok = setInt(OS_ComponentDataFields::VersionTimestamp,time(nullptr));
     OS_ASSERT(ok);
     return versionUUID();
   }
@@ -200,7 +200,7 @@ ComponentData::ComponentData(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ComponentData_Impl>());
   setString(OS_ComponentDataFields::UUID,toString(createUUID()));
-  setInt(OS_ComponentDataFields::CreationTimestamp,time(NULL));
+  setInt(OS_ComponentDataFields::CreationTimestamp,time(nullptr));
   createVersionUUID();
 }
 

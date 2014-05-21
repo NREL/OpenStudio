@@ -45,7 +45,7 @@ class IGWidget : public QWidget
 {
   public:
   
-  IGWidget( QWidget * parent = 0 )
+  IGWidget( QWidget * parent = nullptr )
     : QWidget(parent)
   {
     setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Preferred);
@@ -61,7 +61,7 @@ class IGComboBox : public QComboBox
 {
   public:
 
-  IGComboBox( QWidget * parent = 0 )
+  IGComboBox( QWidget * parent = nullptr )
     : QComboBox( parent )
   {
   }
@@ -116,7 +116,7 @@ public:
    * \sa IGChildFrame
    * \sa layoutModel
    */
-  InspectorGadget(QWidget* parent = 0, int indent = 0, ComboHighlightBridge* bridge=NULL);
+  InspectorGadget(QWidget* parent = nullptr, int indent = 0, ComboHighlightBridge* bridge=nullptr);
   /*! destructor
    *
    * The really shouldn't need to call this, the parent Widget ought to delete the IG.

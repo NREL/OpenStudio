@@ -193,14 +193,12 @@ namespace detail{
     */
 
     SetpointManagerSingleZoneReheatVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerSingleZoneReheat>();
-    for( SetpointManagerSingleZoneReheatVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it!=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
-      if( it->getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
+      if( modelObject.getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
           this->name().get() )
       {
-        return *it;
+        return modelObject;
       }
 
     }
@@ -287,15 +285,13 @@ namespace detail{
   boost::optional<SetpointManagerMixedAir> Node_Impl::getSetpointManagerMixedAir() const
   {
     SetpointManagerMixedAirVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerMixedAir>();
-    for( SetpointManagerMixedAirVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( it->getString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get() ==
+      if( modelObject.getString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get() ==
           this->name().get() )
       {
-        return *it;
+        return modelObject;
       }
 
     }
@@ -312,16 +308,14 @@ namespace detail{
   boost::optional<SetpointManagerScheduled> Node_Impl::setpointManagerScheduled() const
   {
     std::vector<SetpointManagerScheduled> modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerScheduled>();
-    for( std::vector<SetpointManagerScheduled>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -351,16 +345,14 @@ namespace detail{
   {
     std::vector<SetpointManagerFollowOutdoorAirTemperature> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerFollowOutdoorAirTemperature>();
-    for( std::vector<SetpointManagerFollowOutdoorAirTemperature>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -390,16 +382,14 @@ namespace detail{
   {
     std::vector<SetpointManagerOutdoorAirReset> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerOutdoorAirReset>();
-    for( std::vector<SetpointManagerOutdoorAirReset>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -427,16 +417,14 @@ namespace detail{
   {
     std::vector<SetpointManagerWarmest> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
-    for( std::vector<SetpointManagerWarmest>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }

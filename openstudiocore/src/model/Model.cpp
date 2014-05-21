@@ -861,23 +861,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     std::vector<ScheduleConstant> schedules = model().getModelObjects<ScheduleConstant>();
 
-    for( std::vector<ScheduleConstant>::iterator it = schedules.begin();
-         it != schedules.end();
-         ++it )
+    for( const auto & schedule : schedules )
     {
-      if( boost::optional<std::string> name = it->name() )
+      if( boost::optional<std::string> name = schedule.name() )
       {
         if( istringEqual(name.get(),alwaysOnName) )
         {
-          if( equal<double>(it->value(),1.0) )
+          if( equal<double>(schedule.value(),1.0) )
           {
-            if( boost::optional<ScheduleTypeLimits> limits = it->scheduleTypeLimits() )
+            if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
             {
               if( boost::optional<std::string> type = limits->numericType() )
               {
                 if( istringEqual(type.get(),"Discrete") )
                 {
-                  return *it;
+                  return schedule;
                 }
               }
             }
@@ -913,15 +911,13 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
 
-    for( std::vector<SpaceType>::iterator it = spaceTypes.begin();
-         it != spaceTypes.end();
-         ++it )
+    for( const auto & spaceType : spaceTypes )
     {
-      if( boost::optional<std::string> name = it->name() )
+      if( boost::optional<std::string> name = spaceType.name() )
       {
         if( istringEqual(name.get(),plenumSpaceTypeName) )
         {
-          return *it;
+          return spaceType;
         }
       }
     }
@@ -1145,7 +1141,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   }
 
   void Model_Impl::obsoleteComponentWatcher(const ComponentWatcher& watcher) {
-    ComponentWatcherVector::iterator it = std::find(m_componentWatchers.begin(),
+    auto it = std::find(m_componentWatchers.begin(),
         m_componentWatchers.end(),watcher);
     OS_ASSERT(it != m_componentWatchers.end());
     m_componentWatchers.erase(it);

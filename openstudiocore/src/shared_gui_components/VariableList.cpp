@@ -137,7 +137,7 @@ QWidget * VariableGroupItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
     // reporting measures cannot have measure groups
     bool fixedMeasuresOnly = (m_fixedMeasuresOnly || (measureType == MeasureType::ReportingMeasure));
-    VariableGroupItemView * variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly, measureType);
+    auto variableGroupItemView = new VariableGroupItemView(fixedMeasuresOnly, measureType);
 
     if (!fixedMeasuresOnly)
     {
@@ -594,7 +594,7 @@ QWidget * VariableItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<VariableItem> variableItem = dataSource.objectCast<VariableItem>())
   {
-    VariableItemView * variableItemView = new VariableItemView(variableItem->isFixedMeasure());
+    auto variableItemView = new VariableItemView(variableItem->isFixedMeasure());
     variableItemView->variableHeaderView->variableNameEdit->setText(variableItem->name());
 
     bool bingo = connect(variableItemView->variableHeaderView->variableNameEdit,SIGNAL(textEdited(const QString &)),
@@ -751,17 +751,15 @@ std::vector<analysis::RubyMeasure> MeasureListController::measures() const
 
   std::vector<analysis::Measure> allPerts = m_variableItem->variable().measures(false);
 
-  for( std::vector<analysis::Measure>::iterator it = allPerts.begin();
-      it != allPerts.end();
-      ++it )
+  for( const auto & measure : allPerts )
   {
-    if( boost::optional<analysis::RubyMeasure> rubyPert = it->optionalCast<analysis::RubyMeasure>() )
+    if( boost::optional<analysis::RubyMeasure> rubyPert = measure.optionalCast<analysis::RubyMeasure>() )
     {
       //if( boost::optional<BCLMeasure> measure = rubyPert->measure() )
       //{
       //  if( measure->measureType() ==  m_variableItem->measureType() )
       //  {
-      //    result.push_back(*it);
+      //    result.push_back(measure);
       //  }
       //}
       result.push_back(rubyPert.get());
@@ -976,7 +974,7 @@ QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 {
   if(QSharedPointer<MeasureItem> measureItem = dataSource.objectCast<MeasureItem>())
   {
-    MeasureItemView * measureItemView = new MeasureItemView(m_fixed);
+    auto measureItemView = new MeasureItemView(m_fixed);
 
     // Name
 

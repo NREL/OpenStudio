@@ -68,7 +68,7 @@ std::vector<ScheduleType> ScheduleTypeRegistrySingleton::getScheduleTypesByClass
     const std::string& className) const
 {
   ScheduleTypeVector result;
-  ClassNameToScheduleTypesMap::const_iterator it = m_classNameToScheduleTypesMap.find(className);
+  auto it = m_classNameToScheduleTypesMap.find(className);
   if (it != m_classNameToScheduleTypesMap.end()) {
     result = it->second;
   }
@@ -292,7 +292,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 
   int i(0);
   while (!scheduleTypes[i].className.empty()) {
-    ClassNameToScheduleTypesMap::iterator it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
+    auto it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
     if (it == m_classNameToScheduleTypesMap.end()) {
       m_classNameToScheduleTypesMap.insert(ClassNameToScheduleTypesMap::value_type(scheduleTypes[i].className,ScheduleTypeVector(1u,scheduleTypes[i])));
     }

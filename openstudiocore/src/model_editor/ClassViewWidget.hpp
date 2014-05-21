@@ -38,8 +38,8 @@ class ClassViewWidget : public ViewWidget
   Q_OBJECT
 
 public:
-  ClassViewWidget(openstudio::model::Model& model, QWidget *parent = 0);
-  ClassViewWidget(QWidget *parent = 0);
+  ClassViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
+  ClassViewWidget(QWidget *parent = nullptr);
   virtual ~ClassViewWidget();
   void loadWorkspace(const openstudio::Workspace& workspace);
   virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);

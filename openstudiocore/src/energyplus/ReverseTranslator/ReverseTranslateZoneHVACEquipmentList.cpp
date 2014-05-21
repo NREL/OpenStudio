@@ -56,11 +56,9 @@ OptionalModelObject ReverseTranslator::translateZoneHVACEquipmentList( const Wor
     return boost::none;
   }
 
-  for( std::vector<WorkspaceObject>::iterator it = zoneHVACEquipmentConnections.begin();
-       it != zoneHVACEquipmentConnections.end();
-       ++it )
+  for( const auto & zoneHVACEquipmentConnection : zoneHVACEquipmentConnections )
   {
-    if( boost::optional<std::string> name = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName) )
+    if( boost::optional<std::string> name = zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName) )
     {
       boost::optional<model::Space> space = m_model.getModelObjectByName<model::Space>(name.get());
 

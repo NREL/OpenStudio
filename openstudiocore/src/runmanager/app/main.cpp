@@ -214,7 +214,7 @@ int doUI(int argc, char*argv[])
 
       while (retry)
       {
-        openstudio::runmanager::MainWindow w(0,0,newdb);
+        openstudio::runmanager::MainWindow w(nullptr,nullptr,newdb);
         newdb = false;
         w.show();
     

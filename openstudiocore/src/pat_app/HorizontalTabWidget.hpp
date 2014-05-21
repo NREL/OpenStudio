@@ -43,7 +43,7 @@ class HorizontalTabWidget : public QWidget
 
   OSViewSwitcher * mainViewSwitcher;
 
-  HorizontalTabWidget(QWidget * parent = 0);
+  HorizontalTabWidget(QWidget * parent = nullptr);
   virtual ~HorizontalTabWidget() {}
 
   void addTab( int id,

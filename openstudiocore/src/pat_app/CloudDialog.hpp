@@ -44,7 +44,7 @@ class CloudDialog : public OSDialog
 
 public:
 
-  CloudDialog(QWidget * parent = 0);
+  CloudDialog(QWidget * parent = nullptr);
 
   virtual ~CloudDialog();
 

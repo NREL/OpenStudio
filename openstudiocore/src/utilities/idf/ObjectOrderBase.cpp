@@ -66,7 +66,7 @@ bool ObjectOrderBase::push_back(IddObjectType type) {
 
 bool ObjectOrderBase::insert(IddObjectType type, IddObjectType insertBeforeType) {
   if (!m_iddOrder) { return false; }
-  IddObjectTypeVector::iterator it = getIterator(insertBeforeType);
+  auto it = getIterator(insertBeforeType);
   m_iddOrder->insert(it,type);
   return true;
 }
@@ -74,7 +74,7 @@ bool ObjectOrderBase::insert(IddObjectType type, IddObjectType insertBeforeType)
 bool ObjectOrderBase::insert(IddObjectType type, unsigned index) {
   if (!m_iddOrder) { return false; }
   if (index < m_iddOrder->size()) {
-    IddObjectTypeVector::iterator it = m_iddOrder->begin();
+    auto it = m_iddOrder->begin();
     for (unsigned i = 0; i < index; ++i, ++it);
     m_iddOrder->insert(it,type);
   }
@@ -85,7 +85,7 @@ bool ObjectOrderBase::insert(IddObjectType type, unsigned index) {
 bool ObjectOrderBase::move(IddObjectType type, IddObjectType insertBeforeType) {
   if (!m_iddOrder) { return false; }
   // find type in order
-  IddObjectTypeVector::iterator it = getIterator(type);
+  auto it = getIterator(type);
   if (it == m_iddOrder->end()) { return false; }
   // handle degenerate case
   if (type == insertBeforeType) { return true; }
@@ -98,7 +98,7 @@ bool ObjectOrderBase::move(IddObjectType type, IddObjectType insertBeforeType) {
 bool ObjectOrderBase::move(IddObjectType type, unsigned index) {
   if (!m_iddOrder) { return false; }
   // find type in order
-  IddObjectTypeVector::iterator it = getIterator(type);
+  auto it = getIterator(type);
   if (it == m_iddOrder->end()) { return false; }
   // handle degenerate case
   if ((it - m_iddOrder->begin()) == static_cast<int>(index)) { return true; }
@@ -111,8 +111,8 @@ bool ObjectOrderBase::move(IddObjectType type, unsigned index) {
 bool ObjectOrderBase::swap(IddObjectType type1, IddObjectType type2) {
   if (!m_iddOrder) { return false; }
   // ETH@20100408 \todo Would std::swap work? Better?
-  IddObjectTypeVector::iterator it1 = getIterator(type1);
-  IddObjectTypeVector::iterator it2 = getIterator(type2);
+  auto it1 = getIterator(type1);
+  auto it2 = getIterator(type2);
   if ((it1 == m_iddOrder->end()) || (it2 == m_iddOrder->end())) { return false; }
   if (it1 == it2) { return true; }
   *it1 = type2;
@@ -122,7 +122,7 @@ bool ObjectOrderBase::swap(IddObjectType type1, IddObjectType type2) {
 
 bool ObjectOrderBase::erase(IddObjectType type) {
   if (!m_iddOrder) { return false; }
-  IddObjectTypeVector::iterator it = getIterator(type);
+  auto it = getIterator(type);
   if (it == m_iddOrder->end()) { return false; }
   m_iddOrder->erase(it);
   return true;
@@ -158,7 +158,7 @@ bool ObjectOrderBase::less(boost::optional<IddObjectType> left,
 bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
   if (m_orderByIddEnum) { return true; }
   if (m_iddOrder) {
-    IddObjectTypeVector::const_iterator it = getIterator(type);
+    auto it = getIterator(type);
     if (it != m_iddOrder->end()) { return true; }
   }
   return false;
@@ -167,7 +167,7 @@ bool ObjectOrderBase::inOrder(const IddObjectType& type) const {
 OptionalUnsigned ObjectOrderBase::indexInOrder(const IddObjectType& type) const {
   if (m_orderByIddEnum) { return static_cast<unsigned>(type.value()); }
   if (m_iddOrder) { 
-    IddObjectTypeVector::const_iterator it = getIterator(type);
+    auto it = getIterator(type);
     return (it - m_iddOrder->begin());
   }
   return boost::none;

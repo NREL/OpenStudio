@@ -101,11 +101,9 @@ void ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
 
   unsigned newPriority = 1;
 
-  for( std::vector<ModelObject>::iterator it = equipmentVector.begin();
-       it != equipmentVector.end();
-       ++it )
+  for( const auto & equipment : equipmentVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(equipment);
 
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,newPriority);
 
@@ -128,11 +126,9 @@ void ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
 
   unsigned newPriority = 1;
 
-  for( std::vector<ModelObject>::iterator it = equipmentVector.begin();
-       it != equipmentVector.end();
-       ++it )
+  for( const auto & equipment : equipmentVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(equipment);
 
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,newPriority);
 
@@ -146,17 +142,15 @@ WorkspaceExtensibleGroup ZoneHVACEquipmentList_Impl::getGroupForModelObject(cons
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
     if( wo->handle() == modelObject.handle() )
     {
-      result = it->cast<WorkspaceExtensibleGroup>();
+      result = group.cast<WorkspaceExtensibleGroup>();
 
       break;
     }
@@ -173,11 +167,9 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment() const
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     if( wo )
     {
@@ -194,13 +186,11 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder()
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    unsigned heatingPriority = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence).get();
+    unsigned heatingPriority = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence).get();
 
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
@@ -227,13 +217,11 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInCoolingOrder()
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    unsigned coolingPriority = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence).get();
+    unsigned coolingPriority = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence).get();
 
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
@@ -270,17 +258,15 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
     if( wo->handle() == equipment.handle() )
     {
-      getObject<ModelObject>().eraseExtensibleGroup(it->groupIndex());
+      getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
 
       break;
     }
@@ -291,11 +277,9 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   unsigned priority = 1;
 
-  for( std::vector<ModelObject>::iterator it = coolingVector.begin();
-       it != coolingVector.end();
-       ++it )
+  for( const auto & elem : coolingVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(elem);
 
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,priority);
 
@@ -304,11 +288,9 @@ void ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   priority = 1;
 
-  for( std::vector<ModelObject>::iterator it = heatingVector.begin();
-       it != heatingVector.end();
-       ++it )
+  for( const auto & elem : heatingVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(*it);
+    WorkspaceExtensibleGroup eg = getGroupForModelObject(elem);
 
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,priority);
 
@@ -323,17 +305,15 @@ unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipme
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
     if( wo->handle() == equipment.handle() )
     {
-      result = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence);
+      result = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence);
 
       break;
     }
@@ -350,17 +330,15 @@ unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipme
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-  for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-       it != groups.end();
-       ++it )
+  for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
     if( wo->handle() == equipment.handle() )
     {
-      result = it->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence);
+      result = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence);
 
       break;
     }

@@ -110,7 +110,7 @@ OptionalModelObject ReverseTranslator::translateCoilHeatingGas( const WorkspaceO
   catch (std::exception& e) {
     LOG(Error,"Unable to reverse translate " << workspaceObject.briefDescription() << ", because "
         << e.what() << ".");
-    return false;
+    return boost::none;
   }
 
   return result;

@@ -437,9 +437,9 @@ void SqliteMerge::printNumberRows(sqlite3 *db, const std::string &table)
   std::stringstream cmd;
   cmd << "select count(*) from " << table;
   std::cout << "\t" << table << " ";
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(db, cmd.str().c_str(),
-      rowCount, 0, &zErrMsg);
+      rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -454,9 +454,9 @@ void SqliteMerge::returnNumberRows(sqlite3 *db, const std::string &table)
   std::stringstream cmd;
   cmd << "select count(*) from " << table;
   std::cout << "\t" << table << " ";
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(db, cmd.str().c_str(),
-      rowCount, 0, &zErrMsg);
+      rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -467,7 +467,7 @@ void SqliteMerge::returnNumberRows(sqlite3 *db, const std::string &table)
 
 sqlite3 * SqliteMerge::openDatabase(const openstudio::path &file)
 {
-  sqlite3 *db = 0;
+  sqlite3 *db = nullptr;
   int rc = sqlite3_open(openstudio::toString(file).c_str(), &db);
   if (rc)
   {
@@ -600,9 +600,9 @@ void SqliteMerge::printMeterData(sqlite3 * dest)
   cmd << "where a.ReportMeterDataDictionaryIndex = b.ReportMeterDataDictionaryIndex ";
   cmd << "and a.timeIndex = t.timeIndex";
 
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(dest, cmd.str().c_str(),
-      callback, 0, &zErrMsg);
+      callback, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -646,8 +646,8 @@ void SqliteMerge::detachDatabases(sqlite3 *destination)
 
 bool SqliteMerge::executeCommand(sqlite3 *destination, const std::string &cmd)
 {
-  char *zErrMsg = 0;
-  int rc = sqlite3_exec(destination, cmd.c_str(), callback, 0, &zErrMsg);
+  char *zErrMsg = nullptr;
+  int rc = sqlite3_exec(destination, cmd.c_str(), callback, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);

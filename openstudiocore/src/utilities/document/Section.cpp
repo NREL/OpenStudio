@@ -112,7 +112,7 @@ namespace detail {
       append(element); 
       return;
     }
-    SectionElementVector::iterator it = m_contents.begin();
+    auto it = m_contents.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_contents.insert(it,element);
   }
@@ -130,7 +130,7 @@ namespace detail {
 
   void Section_Impl::erase(unsigned index) {
     if (index < numElements()) {
-      SectionElementVector::iterator it = m_contents.begin();
+      auto it = m_contents.begin();
       for (unsigned i = 0; i < index; ++i, ++it) {}
       m_contents.erase(it);
     }

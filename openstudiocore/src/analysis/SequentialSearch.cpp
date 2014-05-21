@@ -225,9 +225,9 @@ namespace detail {
       if (!current->isTag(curveTag)) {
         current->addTag(curveTag);
       }
-      OptimizationDataPointVector::iterator it = std::find(successfulPoints.begin(),
-                                                           successfulPoints.end(),
-                                                           result.back());
+      auto it = std::find(successfulPoints.begin(),
+                          successfulPoints.end(),
+                          result.back());
       successfulPoints.erase(it);
     }
     int otherIndex(0);
@@ -244,7 +244,7 @@ namespace detail {
         DoubleVector currentValues = current->objectiveValues();
         OptionalDouble candidateSlope;
         DoubleVector candidateValues;
-        for (OptimizationDataPointVector::iterator it = successfulPoints.begin();
+        for (auto it = successfulPoints.begin();
              it != successfulPoints.end(); )
         {
           DoubleVector values = it->objectiveValues();
@@ -288,9 +288,9 @@ namespace detail {
         if (!result.back().isTag(curveTag)) {
           result.back().addTag(curveTag);
         }
-        OptimizationDataPointVector::iterator it = std::find(successfulPoints.begin(),
-                                                             successfulPoints.end(),
-                                                             result.back());
+        auto it = std::find(successfulPoints.begin(),
+                            successfulPoints.end(),
+                            result.back());
         successfulPoints.erase(it);
       }
       current = candidate;
@@ -340,7 +340,7 @@ namespace detail {
     std::sort(successfulPoints.begin(),successfulPoints.end(),predicate);
 
     // non-dominated means that you cannot improve one objective without harming the other
-    OptimizationDataPointVector::iterator it = successfulPoints.begin();
+    auto it = successfulPoints.begin();
     DoubleVector currentValues;
     while (it != successfulPoints.end()) {
       // it has next-worst objective i

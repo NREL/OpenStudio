@@ -74,8 +74,8 @@ const char* InspectorGadget::s_indexSlotName="indexSlot";
 
 InspectorGadget::InspectorGadget(QWidget* parent, int indent,ComboHighlightBridge* bridge):
   QWidget(parent),
-  m_layout(NULL),
-  m_deleteHandle(NULL),
+  m_layout(nullptr),
+  m_deleteHandle(nullptr),
   m_indent(indent),
   m_locked(false),
   m_stretch(true),
@@ -113,9 +113,9 @@ InspectorGadget::InspectorGadget( WorkspaceObject& workspaceObj,
                                   bool showAllFields,
                                   bool recursive,
                                   bool locked):
-  QWidget(NULL),
-  m_layout(NULL),
-  m_deleteHandle(NULL),
+  QWidget(nullptr),
+  m_layout(nullptr),
+  m_deleteHandle(nullptr),
   m_indent(indent),
   m_locked(locked),
   m_stretch(true),
@@ -135,7 +135,7 @@ InspectorGadget::InspectorGadget( WorkspaceObject& workspaceObj,
   m_layout->setSpacing(0);
   m_layout->setMargin(0);
   setLayout(m_layout);
-  m_scroll = NULL;
+  m_scroll = nullptr;
   m_errorMessage = new QErrorMessage(this);
   setContentsMargins(0,0,0,0);
   layoutModelObj(workspaceObj,false,m_recursive,m_locked);
@@ -213,7 +213,7 @@ void InspectorGadget::layoutModelObj(openstudio::WorkspaceObject& workspaceObj,
   m_deleteHandle->setContentsMargins(0,0,0,0);
   m_deleteHandle->setObjectName("IG");
 
-  QVBoxLayout* layout = new QVBoxLayout(m_deleteHandle);
+  auto layout = new QVBoxLayout(m_deleteHandle);
   layout->setSpacing(0);
   layout->setMargin(0);
   m_deleteHandle->setLayout( layout );
@@ -241,10 +241,10 @@ void InspectorGadget::clear(bool recursive)
     {
       if( !recursive )
       {
-        for(MODELMAP::iterator i=m_childMap.begin(),iend=m_childMap.end();i!=iend;++i)
+        for(const auto & elem : m_childMap)
         {
-          layout->removeWidget(i->second);
-          i->second->setParent(NULL);
+          layout->removeWidget(elem.second);
+          elem.second->setParent(nullptr);
         }
       }
       else
@@ -255,7 +255,7 @@ void InspectorGadget::clear(bool recursive)
     
     // delete widgets before resetting m_workspaceObj so can handle editingFinished signals from any text boxes
     delete m_deleteHandle;
-    m_deleteHandle=NULL;
+    m_deleteHandle=nullptr;
   }
 
   m_workspaceObj.reset();
@@ -284,10 +284,10 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
     }
   }
 
-  QVBoxLayout* layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setMargin(0);
-  QHBoxLayout* hlayout = new QHBoxLayout();
+  auto hlayout = new QHBoxLayout();
   hlayout->setSpacing(0);
   hlayout->setMargin(0);
   masterLayout->addLayout( hlayout );
@@ -369,9 +369,9 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
   if( p && (!hideChildren))
   {
     ModelObjectVector cvec=p->children();
-    for( ModelObjectVector::iterator i=cvec.begin(),iend=cvec.end();i!=iend;++i)
+    for(auto & elem : cvec)
     {
-      MODELMAP::iterator igChildItr = m_childMap.find(*i);
+      auto igChildItr = m_childMap.find(elem);
       if( igChildItr != m_childMap.end() )
       {
         InspectorGadget* igchild = igChildItr->second;
@@ -385,19 +385,19 @@ void InspectorGadget::layoutItems(QVBoxLayout* masterLayout,
           comment = m_showComments;
           fields = m_showAllFields;
         }
-        InspectorGadget* igChild = new InspectorGadget(*i,
-                                                       m_indent,
-                                                       m_comboBridge,
-                                                       m_precision, 
-                                                       m_floatDisplayType,
-                                                       comment,
-                                                       fields,
-                                                       m_recursive,
-                                                       m_locked);
+        auto igChild = new InspectorGadget(elem,
+                                           m_indent,
+                                           m_comboBridge,
+                                           m_precision, 
+                                           m_floatDisplayType,
+                                           comment,
+                                           fields,
+                                           m_recursive,
+                                           m_locked);
 
         igChild->setUnitSystem(m_unitSystem);
         layout->addWidget(igChild);
-        m_childMap[*i] = igChild;
+        m_childMap[elem] = igChild;
       }
     }
   } // if(p)
@@ -507,9 +507,9 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
                                   int index,
                                   const string& comment)
 {
-  QFrame* frame = new QFrame(parent);
+  auto frame = new QFrame(parent);
   frame->setContentsMargins(0,0,0,0);
-  QHBoxLayout * hbox = new QHBoxLayout();
+  auto hbox = new QHBoxLayout();
   frame->setLayout(hbox);
   frame->setObjectName("IGHeader");
   hbox->setSpacing(0);
@@ -565,8 +565,8 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
 {
   openstudio::IddFieldProperties prop = field.properties();
 
-  QFrame* frame = new QFrame(parent);
-  QVBoxLayout * vbox = new QVBoxLayout();
+  auto frame = new QFrame(parent);
+  auto vbox = new QVBoxLayout();
   frame->setLayout(vbox);
 
   QLabel* label = new QLabel( QString(name.c_str()), parent  );
@@ -575,7 +575,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
 
   QString val= QString::fromStdString( curVal );
 
-  IGLineEdit* text = new IGLineEdit( val, this, parent  );
+  auto text = new IGLineEdit( val, this, parent );
   text->setProperty(s_indexSlotName,index);
   QLineEdit* commentText = new QLineEdit( QString(comment.c_str()), parent  );
   commentText->setProperty(s_indexSlotName,index);
@@ -654,7 +654,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     }
     else
     {
-      QIntValidator* valid = new QIntValidator(text);
+      auto valid = new QIntValidator(text);
 
       if(prop.minBoundType != IddFieldProperties::Unbounded)
       {
@@ -670,11 +670,11 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
     QLabel* units = new QLabel( s.c_str(), parent );
     units->setTextFormat(Qt::RichText);
 
-    QHBoxLayout* hardSizedLayout = new QHBoxLayout();
+    auto hardSizedLayout = new QHBoxLayout();
 
     if( prop.autosizable)
     {
-      QHBoxLayout* autoSizedLayout = new QHBoxLayout();
+      auto autoSizedLayout = new QHBoxLayout();
       QRadioButton* hardSizedRadio = new QRadioButton(tr("Hard Sized"), parent );
       QRadioButton* autosizedRadio = new QRadioButton(tr("Autosized"), parent );
       autosizedRadio->setProperty(s_indexSlotName,index);
@@ -744,7 +744,7 @@ void InspectorGadget::layoutText( QVBoxLayout* layout,
 
     if( m_floatDisplayType != UNFORMATED)
     {
-      QPushButton* btn = new QPushButton(this);
+      auto btn = new QPushButton(this);
       QIcon ico(":images/switch.png");
       btn->setIcon( ico );
       btn->setStyleSheet(" margin: 0px; border: 0px;" );
@@ -797,8 +797,8 @@ void InspectorGadget::layoutComboBox( QVBoxLayout* layout,
                                       const std::string& comment,
                                       bool exists)
 {
-  QFrame* frame = new QFrame(parent);
-  QVBoxLayout * vbox = new QVBoxLayout();
+  auto frame = new QFrame(parent);
+  auto vbox = new QVBoxLayout();
   frame->setLayout(vbox);
   QLabel* label = new QLabel( QString(name.c_str()), parent  );
   label->setWordWrap( true );
@@ -899,9 +899,9 @@ void InspectorGadget::createExtensibleToolBar( QVBoxLayout* layout,
   if( !props.extensible )
     return;
 
-  QFrame* frame = new QFrame(parent);
+  auto frame = new QFrame(parent);
   frame->setContentsMargins(0,0,0,0);
-  QHBoxLayout * hbox = new QHBoxLayout();
+  auto hbox = new QHBoxLayout();
   frame->setLayout(hbox);
   hbox->setSpacing(0);
   hbox->setMargin(0);
@@ -912,12 +912,12 @@ void InspectorGadget::createExtensibleToolBar( QVBoxLayout* layout,
 
   QLabel* label = new QLabel(tr("Add/Remove Extensible Groups"),parent);
 
-  QPushButton* addBtn = new QPushButton(frame);
+  auto addBtn = new QPushButton(frame);
   QIcon ico(":images/edit_add.png");
   addBtn->setIcon( ico );
   addBtn->setStyleSheet(" margin: 0px; border: 0px;" );
 
-  QPushButton* subBtn = new QPushButton(frame);
+  auto subBtn = new QPushButton(frame);
   QIcon ico2(":images/edit_remove.png");
   subBtn->setIcon( ico2 );
   subBtn->setStyleSheet(" margin: 0px; border: 0px;" );
@@ -965,7 +965,7 @@ void InspectorGadget::IGdefaultRemoved(const QString&)
   QObject* source = sender();
   QWidget* w = dynamic_cast<QWidget*>(source);
   w->setStyleSheet("color:black");
-  disconnect(source,0,this,SLOT(IGdefaultRemoved(const QString&)));
+  disconnect(source,nullptr,this,SLOT(IGdefaultRemoved(const QString&)));
   
 }
 
@@ -1152,9 +1152,9 @@ void InspectorGadget::createAllFields()
 
   if( m_recursive )
   {
-    for(MODELMAP::iterator i=m_childMap.begin(),iend=m_childMap.end();i!=iend;++i)
+    for(const auto & elem : m_childMap)
     {
-      i->second->createAllFields();
+      elem.second->createAllFields();
     }
   } 
 }
@@ -1168,9 +1168,9 @@ void InspectorGadget::showAllFields( bool state )
   rebuild( false );
   if( m_recursive )
   {
-    for(MODELMAP::iterator i=m_childMap.begin(),iend=m_childMap.end();i!=iend;++i)
+    for(const auto & elem : m_childMap)
     {
-      i->second->showAllFields(state);
+      elem.second->showAllFields(state);
     }
   }
 }
@@ -1178,9 +1178,9 @@ void InspectorGadget::showAllFields( bool state )
 void InspectorGadget::setRecursive(bool recursive)
 {
   m_recursive=recursive;
-  for(MODELMAP::iterator i=m_childMap.begin(),iend=m_childMap.end();i!=iend;++i)
+  for(const auto & elem : m_childMap)
   {
-    i->second->setRecursive(recursive);
+    elem.second->setRecursive(recursive);
   }
 }
 

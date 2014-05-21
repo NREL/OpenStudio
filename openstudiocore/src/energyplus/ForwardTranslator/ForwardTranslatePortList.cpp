@@ -57,11 +57,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePortList( PortList & mode
     idfObject.setName(*s);
   }
 
-  for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-       it != modelObjects.end();
-       ++it )
+  for( const auto & modelObject : modelObjects )
   {
-    if( boost::optional<Node> node = it->optionalCast<Node>() )
+    if( boost::optional<Node> node = modelObject.optionalCast<Node>() )
     {
       IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
 

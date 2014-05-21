@@ -199,15 +199,13 @@ namespace detail {
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
     std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
+    for( auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        it->removeEquipment(thisObject);
+        thermalZone.removeEquipment(thisObject);
 
         break;
       }

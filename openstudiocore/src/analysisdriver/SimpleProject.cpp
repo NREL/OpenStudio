@@ -218,10 +218,10 @@ namespace detail {
       }
     }
     for (const BCLMeasure& gone : toRemove) {
-      std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
+      auto it1 = m_measures.find(gone.uuid());
       OS_ASSERT(it1 != m_measures.end());
       m_measures.erase(it1);
-      std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(gone.uuid());
+      auto it2 = m_measureArguments.find(gone.uuid());
       if (it2 != m_measureArguments.end()) {
         m_measureArguments.erase(it2);
       }
@@ -238,7 +238,7 @@ namespace detail {
       }
     }
     if (candidateDirs.size() > result.size()) {
-      StringVector::iterator it = candidateDirs.begin();
+      auto it = candidateDirs.begin();
       while (it != candidateDirs.end()) {
         if (std::find(resultDirs.begin(),resultDirs.end(),*it) != resultDirs.end()) {
           it = candidateDirs.erase(it);
@@ -250,7 +250,7 @@ namespace detail {
       for (const std::string& newDir : candidateDirs) {
         if (OptionalBCLMeasure newMeasure = BCLMeasure::load(dir / toPath(newDir))) {
           UUID newUUID = newMeasure->uuid();
-          std::map<UUID,BCLMeasure>::iterator it = m_measures.find(newUUID);
+          auto it = m_measures.find(newUUID);
           if (it != m_measures.end()) {
             m_measures.erase(it);
             LOG(Warn,"There are measures with duplicate UUIDs in this project.");
@@ -268,7 +268,7 @@ namespace detail {
   boost::optional<BCLMeasure> SimpleProject_Impl::getMeasureByUUID(const UUID& uuid) const {
     OptionalBCLMeasure result;
     // check map
-    std::map<UUID,BCLMeasure>::iterator it = m_measures.find(uuid);
+    auto it = m_measures.find(uuid);
     if (it != m_measures.end()) {
       // make sure measure is still there
       if ((boost::filesystem::exists(it->second.directory()) &&
@@ -293,7 +293,7 @@ namespace detail {
           OptionalBCLMeasure candidate = BCLMeasure::load(dit->path());
           if (candidate) {
             UUID candidateUUID = candidate->uuid();
-            std::map<UUID,BCLMeasure>::iterator it = m_measures.find(candidateUUID);
+            auto it = m_measures.find(candidateUUID);
             if (it != m_measures.end()) {
               m_measures.erase(it);
             }
@@ -1989,14 +1989,14 @@ namespace detail {
                     << toString(dir) << ".");
     }
     BCLMeasure result = *measureCopy;
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(result.uuid());
+    auto it1 = m_measures.find(result.uuid());
     if (it1 != m_measures.end()) {
       m_measures.erase(it1);
     }
     std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
         m_measures.insert(std::map<UUID,BCLMeasure>::value_type(result.uuid(),result));
     OS_ASSERT(insertResult.second);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(result.uuid());
+    auto it2 = m_measureArguments.find(result.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }
@@ -2005,7 +2005,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeMeasure(const BCLMeasure& measure) {
     OS_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(measure.uuid());
+    auto it1 = m_measures.find(measure.uuid());
     OS_ASSERT(it1 != m_measures.end());
     try {
       boost::filesystem::remove_all(measure.directory());
@@ -2015,7 +2015,7 @@ namespace detail {
           << " from file system, because " << e.what() << ".");
     }
     m_measures.erase(it1);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(measure.uuid());
+    auto it2 = m_measureArguments.find(measure.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }

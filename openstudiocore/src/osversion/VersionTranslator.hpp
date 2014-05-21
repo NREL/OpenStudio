@@ -87,20 +87,20 @@ class OSVERSION_API VersionTranslator {
   /** Returns a current-version OpenStudio Model, if possible. The file at pathToOldOsm must
    *  be an osm of version 0.7.0 or later. */ 
   boost::optional<model::Model> loadModel(const openstudio::path& pathToOldOsm, 
-                                          ProgressBar* progressBar = NULL);
+                                          ProgressBar* progressBar = nullptr);
 
   /** \overload */
   boost::optional<model::Model> loadModel(std::istream& is,
-                                          ProgressBar* progressBar = NULL);
+                                          ProgressBar* progressBar = nullptr);
 
   /** Returns a current-version OpenStudio Component, if possible. The file at pathToOldOsc 
    *  must be an osc of version 0.7.0 or later. */
   boost::optional<model::Component> loadComponent(const openstudio::path& pathToOldOsc, 
-                                                  ProgressBar* progressBar = NULL);
+                                                  ProgressBar* progressBar = nullptr);
 
   /** \overload */
   boost::optional<model::Component> loadComponent(std::istream& is,
-                                                  ProgressBar* progressBar = NULL);
+                                                  ProgressBar* progressBar = nullptr);
 
   //@}
   /** @name Queries 
@@ -155,7 +155,7 @@ class OSVERSION_API VersionTranslator {
 
   boost::optional<model::Model> updateVersion(std::istream& is, 
                                               bool isComponent,
-                                              ProgressBar* progressBar = NULL);
+                                              ProgressBar* progressBar = nullptr);
 
   void initializeMap(std::istream& is);
 

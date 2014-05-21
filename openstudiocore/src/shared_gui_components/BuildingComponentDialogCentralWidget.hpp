@@ -42,8 +42,8 @@ class BuildingComponentDialogCentralWidget : public QWidget
   Q_OBJECT
 
 public:
-  BuildingComponentDialogCentralWidget(QWidget * parent = 0);
-  BuildingComponentDialogCentralWidget(int tid, QWidget * parent = 0);
+  BuildingComponentDialogCentralWidget(QWidget * parent = nullptr);
+  BuildingComponentDialogCentralWidget(int tid, QWidget * parent = nullptr);
   virtual ~BuildingComponentDialogCentralWidget() {}
   int tid();
   void setTid(const std::string& filterType,

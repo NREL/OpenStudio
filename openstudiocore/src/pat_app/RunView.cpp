@@ -70,7 +70,7 @@ RunView::RunView()
   // Main Content
   mainContent = new QWidget();
 
-  QVBoxLayout * mainContentVLayout = new QVBoxLayout();
+  auto mainContentVLayout = new QVBoxLayout();
   mainContentVLayout->setContentsMargins(0,0,0,0);
   mainContentVLayout->setSpacing(0);
   mainContentVLayout->setAlignment(Qt::AlignTop);
@@ -87,7 +87,7 @@ RunView::RunView()
   dataPointRunListView->setContentsMargins(5,5,5,5);
   dataPointRunListView->setSpacing(5);
 
-  QScrollArea* scrollArea = new QScrollArea();
+  auto scrollArea = new QScrollArea();
   scrollArea->setWidgetResizable(true);
   scrollArea->setWidget(dataPointRunListView);
   
@@ -101,22 +101,22 @@ RunStatusView::RunStatusView()
 {
   setStyleSheet("openstudio--pat--RunStatusView { background: #D5D5D5; border-bottom: 1px solid #8C8C8C; }");
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout(); 
+  auto mainVLayout = new QVBoxLayout(); 
   mainVLayout->setContentsMargins(5,5,5,5);
   mainVLayout->setSpacing(5);
   this->setLayout(mainVLayout);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout(); 
+  auto mainHLayout = new QHBoxLayout(); 
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   mainVLayout->addLayout(mainHLayout);
 
-  QHBoxLayout * radianceHLayout = new QHBoxLayout(); 
+  auto radianceHLayout = new QHBoxLayout(); 
   radianceHLayout->setContentsMargins(5,5,5,5);
   radianceHLayout->setSpacing(0);
   mainVLayout->addLayout(radianceHLayout);
 
-  QHBoxLayout * buttonHLayout = new QHBoxLayout(); 
+  auto buttonHLayout = new QHBoxLayout(); 
   buttonHLayout->setContentsMargins(5,5,5,5);
   buttonHLayout->setSpacing(0);
   mainVLayout->addLayout(buttonHLayout);
@@ -140,14 +140,14 @@ RunStatusView::RunStatusView()
   mainHLayout->addWidget(m_progressBar);
 
   // percent complete/failed
-  QWidget *percentContainer = new QWidget();
+  auto percentContainer = new QWidget();
   percentContainer->setMinimumWidth(105);
   m_percentComplete = new QLabel();
   m_percentComplete->setStyleSheet("QLabel {font-size: 13px; font: bold; color: green;}");
   m_percentFailed = new QLabel();
   m_percentFailed->setStyleSheet("QLabel {font-size: 13px; font: bold; color: red;}");
   
-  QVBoxLayout *percentCompleteLayout = new QVBoxLayout();
+  auto percentCompleteLayout = new QVBoxLayout();
   percentCompleteLayout->setContentsMargins(0,0,0,0);
   percentCompleteLayout->addWidget(m_percentComplete);
   percentCompleteLayout->addWidget(m_percentFailed);
@@ -181,11 +181,11 @@ RunStatusView::RunStatusView()
 
 
   // Cloud Status
-  QWidget *statusContainer = new QWidget();
+  auto statusContainer = new QWidget();
   statusContainer->setMinimumWidth(105);
   m_cloudTime = new QLabel(this);
   m_cloudInstances = new QLabel(this);
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto vLayout = new QVBoxLayout();
   vLayout->setContentsMargins(0,0,0,0);
   vLayout->addWidget(m_cloudTime);
   vLayout->addWidget(m_cloudInstances);
@@ -202,9 +202,9 @@ RunStatusView::RunStatusView()
   m_energyPlus = new QRadioButton("EnergyPlus");
   m_radiance = new QRadioButton("Radiance");
 
-  QWidget *radianceWidget = new QWidget();
+  auto radianceWidget = new QWidget();
   radianceWidget->setObjectName("RunStatusViewRadiance");
-  QHBoxLayout *radianceInteriorLayout = new QHBoxLayout();
+  auto radianceInteriorLayout = new QHBoxLayout();
 
   isConnected = connect(m_radiance, SIGNAL(toggled(bool)),
                         this, SLOT(radianceToggled(bool)));
@@ -225,9 +225,9 @@ RunStatusView::RunStatusView()
 
   // "Select All" Button Layout
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
-  QSpacerItem * horizontalSpacer = 0;
+  QSpacerItem * horizontalSpacer = nullptr;
 
   QString style;
 
@@ -612,19 +612,19 @@ void RunStatusView::updateCloudData()
 DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataPoint& dataPoint)
   : OSHeader(new HeaderToggleButton()),
   m_dataPoint(dataPoint),
-  m_name(0),
-  m_lastRunTime(0),
-  m_status(0),
-  m_nas(0),
-  m_warnings(0),
-  m_errors(0),
-  m_download(0),
-  m_clear(0),
+  m_name(nullptr),
+  m_lastRunTime(nullptr),
+  m_status(nullptr),
+  m_nas(nullptr),
+  m_warnings(nullptr),
+  m_errors(nullptr),
+  m_download(nullptr),
+  m_clear(nullptr),
   m_updateRequested(false)
 {
   setFixedHeight(30);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -668,7 +668,7 @@ DataPointRunHeaderView::DataPointRunHeaderView(const openstudio::analysis::DataP
                         this,SLOT(on_downloadClicked(bool)));
   OS_ASSERT(isConnected);
 
-  QSpacerItem* horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
+  auto horizontalSpacer = new QSpacerItem(20, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
   mainHLayout->addSpacerItem(horizontalSpacer);
 
   m_clear = new QPushButton();
@@ -1009,7 +1009,7 @@ void DataPointRunItemView::checkForUpdate()
 DataPointJobHeaderView::DataPointJobHeaderView()
   : OSHeader(new HeaderToggleButton())
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
   mainHLayout->setSpacing(5);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -1104,7 +1104,7 @@ void DataPointJobHeaderView::setNumErrors(unsigned numErrors)
 DataPointJobContentView::DataPointJobContentView()
   : QWidget()
 {
-  QHBoxLayout* mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(15,5,5,5);
   mainHLayout->setSpacing(0);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -1214,12 +1214,10 @@ std::vector<std::pair<std::string, int> > DataPointJobItemView::collateMessages(
 {
   std::vector<std::pair<std::string, int> > retval;
 
-  for (std::vector<std::string>::const_iterator itr = t_messages.begin();
-       itr != t_messages.end();
-       ++itr)
+  for (const auto & message : t_messages)
   {
-    if (retval.empty() || retval.back().first != *itr) {
-      retval.push_back(std::make_pair(*itr, 1));
+    if (retval.empty() || retval.back().first != message) {
+      retval.push_back(std::make_pair(message, 1));
     } else {
       ++(retval.back().second);
     }

@@ -40,10 +40,10 @@ public:
   Component(const BCLSearchResult & bclSearchResult,
     bool showAbridgedView = true,
     bool showCheckBox = true,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(bool showAbridgedView = false,
     bool showCheckBox = false,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(const Component & other);
   virtual ~Component();
   Component & operator=(const Component & other);

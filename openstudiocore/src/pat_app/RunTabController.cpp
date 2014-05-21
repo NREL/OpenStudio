@@ -615,7 +615,7 @@ QWidget * DataPointRunItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   openstudio::analysis::DataPoint dataPoint = dataPointRunListItem->dataPoint();
 
   // connect signals to DataPointRunItemView 
-  DataPointRunItemView* result = new DataPointRunItemView(dataPoint);
+  auto result = new DataPointRunItemView(dataPoint);
   bool test = connect(dataPoint.getImpl<openstudio::analysis::detail::DataPoint_Impl>().get(), SIGNAL(changed(ChangeType)),
                       result, SLOT(checkForUpdate()));
   OS_ASSERT(test);
@@ -693,7 +693,7 @@ QWidget * DataPointJobItemDelegate::view(QSharedPointer<OSListItem> dataSource)
 
   analysis::WorkflowStepJob workflowStepJob = dataPointJobItem->workflowStepJob();
 
-  DataPointJobItemView* result = new DataPointJobItemView(workflowStepJob);
+  auto result = new DataPointJobItemView(workflowStepJob);
 
   OS_ASSERT(workflowStepJob.job);
   bool test = workflowStepJob.job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), result, SLOT(requestUpdate()));

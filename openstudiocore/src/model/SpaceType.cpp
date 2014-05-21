@@ -314,7 +314,7 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -416,7 +416,7 @@ namespace detail {
     if (standardsSpaceType){
       finder.addTarget(*standardsSpaceType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -1341,14 +1341,13 @@ namespace detail {
   template <typename T>
   void SpaceType_Impl::removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep) {
     int count(0);
-    for (typename std::vector<T>::iterator it = instances.begin(), itEnd = instances.end();
-         it != itEnd; ++it)
+    for (auto & instance : instances)
     {
-      if (*it == instanceToKeep) {
+      if (instance == instanceToKeep) {
         ++count;
         continue;
       }
-      it->remove();
+      instance.remove();
     }
     OS_ASSERT(count == 1);
   }

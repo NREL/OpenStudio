@@ -667,12 +667,10 @@ namespace runmanager {
     }
 
     // Then try to merge them with the parent
-    for (std::vector<Job>::iterator itr = children.begin();
-        itr != children.end();
-        ++itr)
+    for (const auto & child : children)
     {
       try {
-        t_job.mergeJob(*itr);
+        t_job.mergeJob(child);
         didsomething = true;
       } catch (const openstudio::runmanager::MergeJobError &) {
         // continue anyhow

@@ -52,7 +52,7 @@ class TabBarDrag : public QTabBar
 
  public:
 
-  TabBarDrag( QWidget* parent=0);
+  TabBarDrag(QWidget* parent=nullptr);
 
  private:
 //  void dropEvent(QDropEvent *evt);

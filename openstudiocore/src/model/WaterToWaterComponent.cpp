@@ -238,11 +238,9 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const
   {
     std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
 
-    for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-    it != itEnd;
-    ++it )
+    for(const auto & elem : plantLoops)
     {
-      OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
+      OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
       if(plantLoop)
       {
         if( plantLoop->supplyComponent(this->handle()) )
@@ -268,11 +266,9 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::secondaryPlantLoop() cons
   {
     std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
 
-    for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-    it != itEnd;
-    ++it )
+    for(const auto & elem : plantLoops)
     {
-      OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
+      OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
       if(plantLoop)
       {
         if( plantLoop->demandComponent(this->handle()) )

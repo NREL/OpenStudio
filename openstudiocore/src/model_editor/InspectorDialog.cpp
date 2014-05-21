@@ -56,7 +56,7 @@ using namespace openstudio::model;
 
 InspectorDialog::InspectorDialog(InspectorDialogClient client, QWidget * parent)
   : QMainWindow(parent),
-    m_inspectorGadget(NULL),
+    m_inspectorGadget(nullptr),
     m_workspaceChanged(false),
     m_workspaceObjectAdded(false),
     m_workspaceObjectRemoved(false)
@@ -68,7 +68,7 @@ InspectorDialog::InspectorDialog(openstudio::model::Model& model,
                                  InspectorDialogClient client,
                                  QWidget * parent)
   : QMainWindow(parent),
-    m_inspectorGadget(NULL),
+    m_inspectorGadget(nullptr),
     m_model(model),
     m_workspaceChanged(false),
     m_workspaceObjectAdded(false),
@@ -195,9 +195,9 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
     //std::string temp = toString(handleString);
     Handle handle(handleString);
 
-    std::vector<Handle>::iterator it = std::find(m_selectedObjectHandles.begin(),
-                                                 m_selectedObjectHandles.end(),
-                                                 handle);
+    auto it = std::find(m_selectedObjectHandles.begin(),
+                        m_selectedObjectHandles.end(),
+                        handle);
     if (it != m_selectedObjectHandles.end()){
       //select this row
       m_tableWidget->selectRow(i);
@@ -282,7 +282,7 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
   }
 
   // disconnect all signals with previous model
-  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), 0, this, 0);
+  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), nullptr, this, nullptr);
 
   // change model
   m_model = model;
@@ -491,7 +491,7 @@ void InspectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::deta
   // if removed object is of current type
   if (impl->iddObject().type() == m_iddObjectType){
 
-    std::vector<Handle>::iterator it = std::remove(m_objectHandles.begin(),m_objectHandles.end(),impl->handle());
+    auto it = std::remove(m_objectHandles.begin(),m_objectHandles.end(),impl->handle());
     if (it != m_objectHandles.end()){
       m_objectHandles.erase(it, m_objectHandles.end());
     }
@@ -744,7 +744,7 @@ void InspectorDialog::createWidgets()
   //subLabelFont.setPointSize(12);
   subLabelFont.setBold(true);
 
-  QLabel* listLabel = new QLabel(this);
+  auto listLabel = new QLabel(this);
   listLabel->setObjectName("listLabel");
   listLabel->setText("Select Type");
   listLabel->setFont(labelFont);
@@ -759,15 +759,15 @@ void InspectorDialog::createWidgets()
   m_listWidget->setAcceptDrops(false);
   m_listWidget->setDragEnabled(false);
 
-  QVBoxLayout* listHolderLayout = new QVBoxLayout;
+  auto listHolderLayout = new QVBoxLayout;
   listHolderLayout->addWidget(listLabel);
   listHolderLayout->addWidget(m_listWidget);
 
-  QWidget* listHolderWidget = new QWidget(this);
+  auto listHolderWidget = new QWidget(this);
   listHolderWidget->setLayout(listHolderLayout);
 
   /// The table widget
-  QLabel* tableLabel = new QLabel(this);
+  auto tableLabel = new QLabel(this);
   tableLabel->setObjectName("tableLabel");
   tableLabel->setText("Select Object");
   tableLabel->setFont(labelFont);
@@ -818,7 +818,7 @@ void InspectorDialog::createWidgets()
   m_pushButtonPurge->setObjectName("pushButtonPurge");
   m_pushButtonPurge->setToolTip(tr("Purge unused objects"));
 
-  QHBoxLayout* buttonLayout = new QHBoxLayout;
+  auto buttonLayout = new QHBoxLayout;
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_pushButtonNew);
   buttonLayout->addSpacing(5);
@@ -829,17 +829,17 @@ void InspectorDialog::createWidgets()
   buttonLayout->addWidget(m_pushButtonPurge);
   buttonLayout->addStretch(0);
 
-  QWidget* buttonGroup = new QWidget(this);
+  auto buttonGroup = new QWidget(this);
   buttonGroup->setLayout(buttonLayout);
 
-  QVBoxLayout* tableVBoxLayout = new QVBoxLayout;
+  auto tableVBoxLayout = new QVBoxLayout;
   tableVBoxLayout->addWidget(m_tableWidget);
   tableVBoxLayout->addWidget(buttonGroup);
 
-  QWidget* tableWidgetHolder = new QWidget(this);
+  auto tableWidgetHolder = new QWidget(this);
   tableWidgetHolder->setLayout(tableVBoxLayout);
 
-  QLabel* noSelectionImage = new QLabel(this);
+  auto noSelectionImage = new QLabel(this);
   noSelectionImage->setPixmap(QPixmap(":/images/alert_image.png"));
 
   QLabel * noSelectionLabel = new QLabel("Pick your selection in SketchUp.", this);
@@ -848,30 +848,30 @@ void InspectorDialog::createWidgets()
   noSelectionLabel->setAlignment(Qt::AlignCenter);
   noSelectionLabel->setWordWrap(true);
 
-  QVBoxLayout* noSelectionLayout = new QVBoxLayout;
+  auto noSelectionLayout = new QVBoxLayout;
   noSelectionLayout->addStretch();
   noSelectionLayout->addWidget(noSelectionImage,0,Qt::AlignCenter);
   noSelectionLayout->addWidget(noSelectionLabel,0,Qt::AlignCenter);
   noSelectionLayout->addStretch();
 
-  QWidget* noSelectionWidget = new QWidget(this);
+  auto noSelectionWidget = new QWidget(this);
   noSelectionWidget->setLayout(noSelectionLayout);
 
   m_stackedWidget = new QStackedWidget(this);
   m_stackedWidget->addWidget(tableWidgetHolder);
   m_stackedWidget->addWidget(noSelectionWidget);
 
-  QVBoxLayout* tableHolderLayout = new QVBoxLayout;
+  auto tableHolderLayout = new QVBoxLayout;
   tableHolderLayout->addWidget(tableLabel);
   tableHolderLayout->addWidget(m_selectionLabel);
   tableHolderLayout->addWidget(m_stackedWidget);
 
-  QWidget* tableHolderWidget = new QWidget(this);
+  auto tableHolderWidget = new QWidget(this);
   tableHolderWidget->setLayout(tableHolderLayout);
 
   // The inspectorGadget widget
 
-  QLabel* inspectorGadgetLabel = new QLabel(this);
+  auto inspectorGadgetLabel = new QLabel(this);
   inspectorGadgetLabel->setObjectName("igLabel");
   inspectorGadgetLabel->setText("Edit Object");
   inspectorGadgetLabel->setFont(labelFont);
@@ -883,16 +883,16 @@ void InspectorDialog::createWidgets()
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  QVBoxLayout* inspectorGadgetHolderLayout = new QVBoxLayout;
+  auto inspectorGadgetHolderLayout = new QVBoxLayout;
   inspectorGadgetHolderLayout->addWidget(inspectorGadgetLabel);
   inspectorGadgetHolderLayout->addWidget(m_inspectorGadget);
 
-  QWidget* inspectorGadgetHolderWidget = new QWidget(this);
+  auto inspectorGadgetHolderWidget = new QWidget(this);
   inspectorGadgetHolderWidget->setLayout(inspectorGadgetHolderLayout);
 
   // The left widget
 
-  QSplitter* leftSplitter = new QSplitter(this);
+  auto leftSplitter = new QSplitter(this);
   leftSplitter->setOrientation(Qt::Vertical);
   leftSplitter->addWidget(listHolderWidget);
   leftSplitter->addWidget(tableHolderWidget);
@@ -906,7 +906,7 @@ void InspectorDialog::createWidgets()
 */
   // The central widget
 
-  QSplitter* centralSplitter = new QSplitter(this);
+  auto centralSplitter = new QSplitter(this);
   centralSplitter->setOrientation(Qt::Horizontal);
   centralSplitter->addWidget(leftSplitter);
   centralSplitter->addWidget(inspectorGadgetHolderWidget);
@@ -1157,7 +1157,7 @@ void InspectorDialog::loadTableWidgetData()
     unsigned numSources = object.numSources();
     displayName += QString(" (") + QString::number(numSources) + QString(")");
 
-    QTableWidgetItem * tableItem = new QTableWidgetItem(displayName);
+    auto tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
     QString handleString(object.handle().toString());
     //std::string temp = toString(handleString);

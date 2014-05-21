@@ -59,7 +59,7 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
   m_lineEdit->setAcceptDrops(false);
   setEnabled(false);
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   setLayout(hLayout);
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->addWidget(m_lineEdit);
@@ -411,7 +411,7 @@ OSQuantityEdit::OSQuantityEdit(bool isIP, QWidget * parent)
   m_lineEdit->setAcceptDrops(false);
   setEnabled(false);
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   setLayout(hLayout);
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->addWidget(m_lineEdit);

@@ -37,10 +37,10 @@ namespace modeleditor
 
 ViewWidget::ViewWidget(QWidget *parent)
   : QWidget(parent),
-  mSplitter(NULL),
-  mIG(NULL),
-  mIGPrecisionDlg(NULL),
-  mModelExplorer(NULL),
+  mSplitter(nullptr),
+  mIG(nullptr),
+  mIGPrecisionDlg(nullptr),
+  mModelExplorer(nullptr),
   mModelDirty(false)
 {
   mModelExplorer = qobject_cast<ModelExplorer *>(this->parent());
@@ -53,10 +53,10 @@ ViewWidget::ViewWidget(QWidget *parent)
 
 ViewWidget::ViewWidget(openstudio::model::Model model, QWidget *parent)
   : QWidget(parent),
-  mSplitter(NULL),
-  mIG(NULL),
-  mIGPrecisionDlg(NULL),
-  mModelExplorer(NULL),
+  mSplitter(nullptr),
+  mIG(nullptr),
+  mIGPrecisionDlg(nullptr),
+  mModelExplorer(nullptr),
   mModel(model),
   mModelDirty(false)
 {
@@ -175,7 +175,7 @@ void ViewWidget::connectSignalsAndSlots()
 
 void ViewWidget::createLayout()
 {
-  QHBoxLayout * hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->addWidget(mSplitter);
 
   setLayout(hLayout);

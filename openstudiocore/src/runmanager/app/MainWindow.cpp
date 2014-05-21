@@ -183,11 +183,9 @@ namespace runmanager {
     if (!badtools.empty())
     {
       std::string paths;
-      for (std::set<std::string>::const_iterator itr = badtools.begin();
-           itr != badtools.end();
-           ++itr)
+      for (const auto & badtool : badtools)
       {
-        paths += "\n\t" + *itr;
+        paths += "\n\t" + badtool;
       }
 
       QMessageBox::warning(this,
@@ -825,11 +823,9 @@ namespace runmanager {
       StatusBarProgress sbp("Adding jobs to queue", statusBar());
       sbp.update(0, t_files.size()-1, 0);
       int place = 0;
-      for (std::vector<openstudio::path>::const_iterator itr = t_files.begin();
-           itr != t_files.end();
-           ++itr)
+      for (const auto & file : t_files)
       {
-        queueSimulation(*itr, epw);
+        queueSimulation(file, epw);
         ++place;
         sbp.update(place);
       }

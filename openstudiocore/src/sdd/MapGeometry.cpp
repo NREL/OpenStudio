@@ -1418,7 +1418,7 @@ namespace sdd {
   model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl)
   {
     std::pair<double, double> key = std::make_pair(solRefl, visRefl);
-    std::map<std::pair<double, double>, model::ConstructionBase>::iterator it = m_shadingConstructionMap.find(key);
+    auto it = m_shadingConstructionMap.find(key);
     if (it != m_shadingConstructionMap.end()){
       return it->second;
     }

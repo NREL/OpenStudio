@@ -244,7 +244,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   /** Translates the given Model to a Workspace. 
    */
-  Workspace translateModel( const model::Model & model, ProgressBar* progressBar=NULL );
+  Workspace translateModel( const model::Model & model, ProgressBar* progressBar=nullptr );
 
   /** Translates a ModelObject into a Workspace
    */

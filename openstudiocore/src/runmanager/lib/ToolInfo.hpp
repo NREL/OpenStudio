@@ -323,8 +323,7 @@ namespace runmanager {
 
       ToolInfo getLast(const boost::function<bool (const ToolInfo &)> &f) const
       {
-        std::vector<openstudio::runmanager::ToolInfo>::const_reverse_iterator itr 
-          = std::find_if(m_tools.rbegin(), m_tools.rend(), f);
+        auto itr = std::find_if(m_tools.rbegin(), m_tools.rend(), f);
 
         if (itr != m_tools.rend())
         {
@@ -336,7 +335,7 @@ namespace runmanager {
 
       Tools getAll(const boost::function<bool (const ToolInfo &)> &f) const
       {
-        std::vector<openstudio::runmanager::ToolInfo>::const_iterator itr = m_tools.begin();
+        auto itr = m_tools.begin();
         const std::vector<openstudio::runmanager::ToolInfo>::const_iterator end = m_tools.end();
 
         Tools ret;

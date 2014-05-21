@@ -114,9 +114,9 @@ class ANALYSIS_API AnalysisObject {
                const char* slot,
                Qt::ConnectionType type = Qt::AutoConnection) const;
 
-  bool disconnect(const char* signal=0,
-                  const QObject* receiver=0,
-                  const char* slot=0) const;
+  bool disconnect(const char* signal=nullptr,
+                  const QObject* receiver=nullptr,
+                  const char* slot=nullptr) const;
 
   //@}
   /** @name Type Casting */

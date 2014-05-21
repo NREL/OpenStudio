@@ -30,7 +30,7 @@ class TableView : public QTableView
   Q_OBJECT
 
 public:
-  TableView(QWidget *parent = 0);
+  TableView(QWidget *parent = nullptr);
   virtual ~TableView();
   bool getSelectedRows(QModelIndexList& rowList);
   bool hasSelectedRows();

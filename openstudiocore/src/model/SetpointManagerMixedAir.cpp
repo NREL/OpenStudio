@@ -300,17 +300,15 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
 
   std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
 
-  for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
-         it != supplyComponents.end();
-         ++it )
+  for( const auto & supplyComponent : supplyComponents )
   {
-    if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
+    if( boost::optional<FanVariableVolume> variableFan = supplyComponent.optionalCast<FanVariableVolume>() ) {
       fans.insert(fans.begin(), *variableFan);
     }
-    else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
+    else if( boost::optional<FanConstantVolume> constantFan = supplyComponent.optionalCast<FanConstantVolume>() ) {
       fans.insert(fans.begin(), *constantFan);
     }
-    else if( boost::optional<FanOnOff> onOffFan = it->optionalCast<FanOnOff>() ) {
+    else if( boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>() ) {
       fans.insert(fans.begin(), *onOffFan);
     }
   } 
@@ -336,11 +334,9 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
   {
     std::vector<model::Node> nodes = subsetCastVector<model::Node>(airLoopHVAC.supplyComponents());
 
-    for( std::vector<model::Node>::iterator it = nodes.begin();
-         it != nodes.end();
-         ++it )
+    for( auto & node : nodes )
     {
-      if( boost::optional<model::SetpointManagerMixedAir> spm = it->getSetpointManagerMixedAir() )
+      if( boost::optional<model::SetpointManagerMixedAir> spm = node.getSetpointManagerMixedAir() )
       {
         spm->setFanInletNode(fanInletNode.get());
 

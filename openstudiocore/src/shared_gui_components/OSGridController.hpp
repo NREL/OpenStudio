@@ -324,7 +324,7 @@ class HorizontalHeaderWidget : public QWidget
 
 public:
 
-  HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = 0);
+  HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = nullptr);
 
   virtual ~HorizontalHeaderWidget() {}
 
@@ -340,7 +340,7 @@ class BulkSelectionWidget : public QWidget
 
 public:
 
-  BulkSelectionWidget(QWidget * parent = 0);
+  BulkSelectionWidget(QWidget * parent = nullptr);
 
   virtual ~BulkSelectionWidget() {}
 

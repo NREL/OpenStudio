@@ -68,11 +68,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
   	_caseAndWalkinList.setName(idfObject.name().get() + name);
 
-  	for( std::vector<RefrigerationCase>::iterator it = mediumTemperatureCases.begin();
-  	   it != mediumTemperatureCases.end();
-  	   ++it )
+  	for( auto & mediumTemperatureCase : mediumTemperatureCases )
   	{
-  		boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
+  		boost::optional<IdfObject> _case = translateAndMapModelObject(mediumTemperatureCase);
 
   		if( _case )
   		{
@@ -82,11 +80,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
   		}
   	}
 
-  	for( std::vector<RefrigerationWalkIn>::iterator it = mediumTemperatureWalkins.begin();
-  	   it != mediumTemperatureWalkins.end();
-  	   ++it )
+  	for( auto & mediumTemperatureWalkin : mediumTemperatureWalkins )
   	{
-  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
+  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(mediumTemperatureWalkin);
 
   		if( _walkin )
   		{
@@ -113,11 +109,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     _caseAndWalkinList.setName(idfObject.name().get() + name);
 
-    for( std::vector<RefrigerationCase>::iterator it = lowTemperatureCases.begin();
-       it != lowTemperatureCases.end();
-       ++it )
+    for( auto & lowTemperatureCase : lowTemperatureCases )
     {
-      boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _case = translateAndMapModelObject(lowTemperatureCase);
 
       if( _case )
       {
@@ -127,11 +121,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
       }
     }
 
-    for( std::vector<RefrigerationWalkIn>::iterator it = lowTemperatureWalkins.begin();
-       it != lowTemperatureWalkins.end();
-       ++it )
+    for( auto & lowTemperatureWalkin : lowTemperatureWalkins )
     {
-      boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _walkin = translateAndMapModelObject(lowTemperatureWalkin);
 
       if( _walkin )
       {
@@ -177,11 +169,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     _compressorList.setName(idfObject.name().get() + name);
 
-    for( std::vector<RefrigerationCompressor>::iterator it = highPressureCompressors.begin();
-       it != highPressureCompressors.end();
-       ++it )
+    for( auto & highPressureCompressor :  highPressureCompressors )
     {
-      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _compressor = translateAndMapModelObject(highPressureCompressor);
 
       if( _compressor )
       {
@@ -207,11 +197,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationTranscritica
 
     _compressorList.setName(idfObject.name().get() + name);
 
-    for( std::vector<RefrigerationCompressor>::iterator it = lowPressureCompressors.begin();
-       it != lowPressureCompressors.end();
-       ++it )
+    for( auto & lowPressureCompressor : lowPressureCompressors )
     {
-      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _compressor = translateAndMapModelObject(lowPressureCompressor);
 
       if( _compressor )
       {

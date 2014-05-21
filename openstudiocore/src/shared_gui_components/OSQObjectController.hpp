@@ -50,7 +50,7 @@ class OSQObjectController : public QObject
 
   private slots:
 
-  void onObjectDestroyed(QObject * object = 0);
+  void onObjectDestroyed(QObject * object = nullptr);
 
   private:
 

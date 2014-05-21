@@ -32,7 +32,7 @@ class MODELEDITOR_API IGPrecisionDialog:
 Q_OBJECT
 
 public:
-  IGPrecisionDialog(QWidget* parent=0);
+  IGPrecisionDialog(QWidget* parent=nullptr);
 
 public slots:
   void on_buttonBox_accepted();

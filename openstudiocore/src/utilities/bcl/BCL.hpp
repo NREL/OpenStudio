@@ -254,7 +254,7 @@ namespace openstudio{
 
   protected:
     /// Default constructor
-    BCL(QObject * parent = NULL);
+    BCL(QObject * parent = nullptr);
 
   };
 

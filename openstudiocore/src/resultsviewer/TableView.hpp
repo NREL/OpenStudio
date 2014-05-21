@@ -40,7 +40,7 @@ class TableView : public QTableWidget
   Q_OBJECT
 public:
 
-  TableView( QWidget* parent=0);
+  TableView( QWidget* parent=nullptr);
   bool addFile(const QString& alias, openstudio::SqlFile sqlFile);
   void removeFile(const QString& filename);
   bool updateFileAlias(const QString& alias, const QString& filename);

@@ -332,9 +332,9 @@ namespace detail {
       OSArgument newArgClone = newArg.clone();
       // look for current value
       NameFinder<OSArgument> finder(newArgClone.name(),true);
-      ruleset::OSArgumentVector::iterator it = std::find_if(currentArgs.begin(),
-                                                            currentArgs.end(),
-                                                            finder);
+      auto it = std::find_if(currentArgs.begin(),
+                             currentArgs.end(),
+                             finder);
       if (it != currentArgs.end()) {
         // already exists--try to preserve value
         if (it->hasValue()) {
@@ -421,9 +421,9 @@ namespace detail {
 
   void RubyMeasure_Impl::setArgument(const ruleset::OSArgument& argument) {
     NameFinder<ruleset::OSArgument> finder(argument.name(),true);
-    ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
-                                                          m_arguments.end(),
-                                                          finder);
+    auto it = std::find_if(m_arguments.begin(),
+                           m_arguments.end(),
+                           finder);
     if (it != m_arguments.end()) {
       m_arguments.at(int(it - m_arguments.begin())) = argument;
     }
@@ -443,9 +443,9 @@ namespace detail {
 
   bool RubyMeasure_Impl::removeArgument(const std::string& argumentName) {
     NameFinder<ruleset::OSArgument> finder(argumentName,true);
-    ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
-                                                          m_arguments.end(),
-                                                          finder);
+    auto it = std::find_if(m_arguments.begin(),
+                           m_arguments.end(),
+                           finder);
     if (it != m_arguments.end()) {
       m_arguments.erase(it);
       onChange(AnalysisObject_Impl::InvalidatesResults);

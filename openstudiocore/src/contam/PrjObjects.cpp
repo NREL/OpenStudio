@@ -3058,7 +3058,7 @@ ControlNode::Type ControlNode::convertTag(std::string string)
 
 ControlNode* ControlNode::readElement(Reader &input)
 {
-  ControlNode *out=NULL;
+  ControlNode *out=nullptr;
   int nr = input.read<int>();
   std::string dataType = input.readString();
   int seqnr = input.read<int>();

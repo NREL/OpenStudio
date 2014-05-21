@@ -254,11 +254,9 @@ unsigned PortList_Impl::airLoopHVACPort()
 {
   std::vector<ModelObject> objects = modelObjects();
 
-  for( std::vector<ModelObject>::iterator it = objects.begin();
-       it != objects.end();
-       ++it )
+  for( const auto & elem : objects )
   {
-    if( boost::optional<HVACComponent> hvacComponent = it->optionalCast<HVACComponent>() )
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() )
     {
       if( hvacComponent->airLoopHVAC() )
       {
@@ -276,11 +274,9 @@ boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject()
 
   std::vector<ModelObject> objects = modelObjects();
 
-  for( std::vector<ModelObject>::iterator it = objects.begin();
-       it != objects.end();
-       ++it )
+  for( const auto & elem : objects )
   {
-    if( boost::optional<HVACComponent> hvacComponent = it->optionalCast<HVACComponent>() )
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() )
     {
       if( hvacComponent->airLoopHVAC() )
       {

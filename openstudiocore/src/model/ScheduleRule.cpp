@@ -83,7 +83,7 @@ namespace detail {
     // remove daySchedule as a resource so it can be a child
     ResourceObjectVector result = ModelObject_Impl::resources();
     ScheduleDay daySchedule = this->daySchedule();
-    ResourceObjectVector::iterator it = result.begin();
+    auto it = result.begin();
     while (it != result.end()) {
       if ((*it) == daySchedule) {
         result.erase(it);

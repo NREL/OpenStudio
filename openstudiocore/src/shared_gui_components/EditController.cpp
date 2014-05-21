@@ -88,11 +88,9 @@ void EditController::setMeasureItem(measuretab::MeasureItem * measureItem, BaseA
 
   std::vector<ruleset::OSArgument> arguments = m_measureItem->arguments();
 
-  for( std::vector<ruleset::OSArgument>::iterator it = arguments.begin();
-       it != arguments.end();
-       ++it )
+  for( const auto & arg : arguments )
   {
-    QSharedPointer<InputController> inputController = QSharedPointer<InputController>(new InputController(this,*it,t_app));
+    QSharedPointer<InputController> inputController = QSharedPointer<InputController>(new InputController(this,arg,t_app));
 
     m_inputControllers.push_back(inputController);
 
@@ -116,7 +114,7 @@ void EditController::reset()
 
   m_inputControllers.clear();
 
-  m_measureItem = NULL;
+  m_measureItem = nullptr;
 
   editRubyMeasureView->nameLineEdit->disconnect();
 
@@ -151,7 +149,7 @@ InputController::InputController(EditController * editController,const ruleset::
 {
   if( m_argument.type() == ruleset::OSArgumentType::Double )
   {
-    DoubleInputView * doubleInputView = new DoubleInputView();
+    auto doubleInputView = new DoubleInputView();
 
     doubleInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
 
@@ -172,7 +170,7 @@ InputController::InputController(EditController * editController,const ruleset::
   }
   else if( m_argument.type() == ruleset::OSArgumentType::Choice )
   {
-    ChoiceInputView * choiceInputView = new ChoiceInputView();
+    auto choiceInputView = new ChoiceInputView();
 
     choiceInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
 
@@ -182,11 +180,9 @@ InputController::InputController(EditController * editController,const ruleset::
     const std::vector<std::string> & values = m_argument.choiceValues();
 
     int i = 0;
-    for( std::vector<std::string>::const_iterator it = choices.begin();
-         it != choices.end();
-         ++it )
+    for( const auto & choice : choices )
     {
-      choiceInputView->comboBox->addItem(QString::fromStdString(*it),QString::fromStdString(values[i]));
+      choiceInputView->comboBox->addItem(QString::fromStdString(choice),QString::fromStdString(values[i]));
 
       i++;
     }
@@ -235,7 +231,7 @@ InputController::InputController(EditController * editController,const ruleset::
   }
   else if( m_argument.type() == ruleset::OSArgumentType::Boolean )
   {
-    BoolInputView * boolInputView = new BoolInputView();
+    auto boolInputView = new BoolInputView();
 
     boolInputView->checkBox->setText(QString::fromStdString(m_argument.displayName()));
 
@@ -260,7 +256,7 @@ InputController::InputController(EditController * editController,const ruleset::
   }
   else if( m_argument.type() == ruleset::OSArgumentType::Integer )
   {
-    IntegerInputView * integerInputView = new IntegerInputView();
+    auto integerInputView = new IntegerInputView();
 
     integerInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
 
@@ -281,7 +277,7 @@ InputController::InputController(EditController * editController,const ruleset::
   }
   else if( m_argument.type() == ruleset::OSArgumentType::String )
   {
-    StringInputView * stringInputView = new StringInputView();
+    auto stringInputView = new StringInputView();
 
     stringInputView->nameLabel->setText(QString::fromStdString(m_argument.displayName()));
 
@@ -373,7 +369,7 @@ bool InputController::isArgumentIncomplete() const
 
   std::map<std::string,ruleset::OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
-  std::map<std::string,ruleset::OSArgument>::iterator it = argumentMap.find(m_argument.name());
+  auto it = argumentMap.find(m_argument.name());
 
   if(it != argumentMap.end())
   {

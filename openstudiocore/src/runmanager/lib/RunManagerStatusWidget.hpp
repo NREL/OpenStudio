@@ -39,7 +39,7 @@ namespace openstudio {
 
       public:
         //! Creates a RunManagerStatusWidget dialog for displaying job status
-        RunManagerStatusWidget(QWidget *parent = 0);
+        RunManagerStatusWidget(QWidget *parent = nullptr);
         virtual ~RunManagerStatusWidget();
 
 

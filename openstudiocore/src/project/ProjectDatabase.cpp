@@ -162,19 +162,15 @@ namespace detail {
     m_ignoreSignals = true;
 
     // delete new objects
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleNewRecordMap.end();
-    for( ; it != itend; ++it){
-      it->second.removeRow(m_qSqlDatabase);
+    for(auto handleNewRecord : m_handleNewRecordMap){
+      handleNewRecord.second.removeRow(m_qSqlDatabase);
     }
     m_handleNewRecordMap.clear();
 
     // re-add deleted objects
-    it = m_handleRemovedRecordMap.begin();
-    itend = m_handleRemovedRecordMap.end();
-    for( ; it != itend; ++it){
-      it->second.insertRow(m_qSqlDatabase);
-      it->second.saveRow(m_qSqlDatabase);
+    for(auto handleRemovedRecord : m_handleRemovedRecordMap){
+      handleRemovedRecord.second.insertRow(m_qSqlDatabase);
+      handleRemovedRecord.second.saveRow(m_qSqlDatabase);
     }
     m_handleRemovedRecordMap.clear();
 
@@ -357,21 +353,17 @@ namespace detail {
     ProjectDatabase other(this->shared_from_this());
 
     // save new objects and move to clean
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleNewRecordMap.end();
-    for( ; it != itend; ++it){
-      m_handleCleanRecordMap.insert(*it);
-      it->second.saveRow(other);
+    for(auto & handleNewRecord : m_handleNewRecordMap){
+      m_handleCleanRecordMap.insert(handleNewRecord);
+      handleNewRecord.second.saveRow(other);
       didChange = true;
     }
     m_handleNewRecordMap.clear();
 
     // save dirty objects and move to clean
-    it = m_handleDirtyRecordMap.begin();
-    itend = m_handleDirtyRecordMap.end();
-    for( ; it != itend; ++it){
-      m_handleCleanRecordMap.insert(*it);
-      it->second.saveRow(other);
+    for(auto & handleDirtyRecord : m_handleDirtyRecordMap){
+      m_handleCleanRecordMap.insert(handleDirtyRecord);
+      handleDirtyRecord.second.saveRow(other);
       didChange = true;
     }
     m_handleDirtyRecordMap.clear();
@@ -435,7 +427,7 @@ namespace detail {
     }
 
     // save new object and move to clean
-    std::map<UUID, Record>::iterator it = m_handleNewRecordMap.find(record.handle());
+    auto it = m_handleNewRecordMap.find(record.handle());
     if(it != m_handleNewRecordMap.end()){
       m_handleCleanRecordMap.insert(*it);
       it->second.saveRow(other);
@@ -452,7 +444,7 @@ namespace detail {
 
     // remove undo struct for this record
     HandleFinder finder(record.handle());
-    std::vector<RemoveUndo>::iterator ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
+    auto ruit = std::remove_if(m_removeUndos.begin(), m_removeUndos.end(), finder);
     m_removeUndos.erase(ruit,m_removeUndos.end());
 
     // delete removed object
@@ -790,7 +782,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(record.handle());
+    auto it = m_handleNewRecordMap.find(record.handle());
     if (it != m_handleNewRecordMap.end()){
       return true;
     }
@@ -804,7 +796,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleCleanRecordMap.find(record.handle());
+    auto it = m_handleCleanRecordMap.find(record.handle());
     if (it != m_handleCleanRecordMap.end()){
       return true;
     }
@@ -823,7 +815,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleDirtyRecordMap.find(record.handle());
+    auto it = m_handleDirtyRecordMap.find(record.handle());
     if (it != m_handleDirtyRecordMap.end()){
       return true;
     }
@@ -837,7 +829,7 @@ namespace detail {
       return false;
     }
 
-    std::map<UUID, Record>::const_iterator it = m_handleRemovedRecordMap.find(record.handle());
+    auto it = m_handleRemovedRecordMap.find(record.handle());
     if (it != m_handleRemovedRecordMap.end()){
       return true;
     }
@@ -851,7 +843,7 @@ namespace detail {
       // new and removed objects stay where they are
 
       // move clean objects to dirty
-      std::map<UUID, Record>::iterator it = m_handleCleanRecordMap.find(handle);
+      auto it = m_handleCleanRecordMap.find(handle);
       if (it != m_handleCleanRecordMap.end()){
         m_handleDirtyRecordMap.insert(*it);
         m_handleCleanRecordMap.erase(it);
@@ -868,7 +860,7 @@ namespace detail {
   {
     boost::optional<Record> result;
 
-    std::map<UUID, Record>::const_iterator it = m_handleNewRecordMap.find(handle);
+    auto it = m_handleNewRecordMap.find(handle);
     if (it != m_handleNewRecordMap.end()){
       OS_ASSERT(!result);
       result = it->second;
@@ -905,8 +897,8 @@ namespace detail {
   void ProjectDatabase_Impl::unloadUnusedCleanRecords()
   {
 
-    std::map<UUID, Record>::iterator it = m_handleCleanRecordMap.begin();
-    std::map<UUID, Record>::iterator itend = m_handleCleanRecordMap.end();
+    auto it = m_handleCleanRecordMap.begin();
+    auto itend = m_handleCleanRecordMap.end();
 
     // there is no remove_if equivalent for maps, this is example provided for equivalent functionality
     for(; it != itend; ) {
@@ -924,7 +916,7 @@ namespace detail {
     typedef std::pair<UUID, RemoveUndo::RemoveSource> RemovedObjectType;
     for (RemovedObjectType removedObject : removeUndo.removedObjects()){
       // delete removed object
-      std::map<UUID, Record>::iterator it = m_handleRemovedRecordMap.find(removedObject.first);
+      auto it = m_handleRemovedRecordMap.find(removedObject.first);
       if(it != m_handleRemovedRecordMap.end()){
         // erase removed object
         m_handleRemovedRecordMap.erase(it);
@@ -1025,7 +1017,7 @@ namespace detail {
     QSqlQuery attUpdateQuery(*(database.qSqlDatabase()));
     while (query.next()) {
       int parentId = query.value(AttributeRecordColumns::parentAttributeRecordId).toInt();
-      std::vector< std::pair<int,int> >::reverse_iterator rit = std::find_if(
+      auto rit = std::find_if(
           currentIndices.rbegin(),currentIndices.rend(),boost::bind(firstOfPairEqual<int,int>,_1,parentId));
       if (rit == currentIndices.rend()) {
         currentIndices.push_back(std::pair<int,int>(parentId,-1));

@@ -83,7 +83,7 @@ namespace modeleditor
 TreeModel::TreeModel(openstudio::model::Model& model, TreeViewWidget * parent)
   : QAbstractItemModel(parent),
   mTreeViewWidget(parent),
-  rootItem(NULL),
+  rootItem(nullptr),
   mMaskGUIDs(false)
 {
   QList<QVariant> rootData;
@@ -103,7 +103,7 @@ TreeModel::TreeModel(openstudio::model::Model& model, TreeViewWidget * parent)
 TreeModel::TreeModel(TreeViewWidget *parent)
   : QAbstractItemModel(parent),
   mTreeViewWidget(parent),
-  rootItem(NULL),
+  rootItem(nullptr),
   mMaskGUIDs(false)
 {
 }
@@ -172,7 +172,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
   if (index.isValid())
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
   else
-    return 0;
+    return nullptr;
 }
 
 TreeItem *TreeModel::getItem(const QModelIndex &index) const
@@ -317,11 +317,10 @@ bool TreeModel::pasteRows(const QModelIndex& parentRow, std::vector<openstudio::
   openstudio::model::OptionalModelObject optionalModelObject;
   openstudio::model::OptionalParentObject optionalParentObject;
 
-  for(std::vector<openstudio::model::ModelObject>::iterator i= modelObjectsToPaste.begin(), iEnd = modelObjectsToPaste.end();
-      i!=iEnd;++i)
+  for(const auto & elem : modelObjectsToPaste)
   {
    
-    iddObjectToPaste = i->iddObject();
+    iddObjectToPaste = elem.iddObject();
     iddObjectToPasteType = iddObjectToPaste.type();
     if(iddObjectToPasteType == openstudio::IddObjectType::UserCustom) return success;
     optionalWorkspaceObject = parentItem->modelObject().model().addObject(openstudio::IdfObject(iddObjectToPasteType));
@@ -472,7 +471,7 @@ void TreeModel::setupModelData(const openstudio::model::ModelObject& object, Tre
   QList<QVariant> objectNames;
   getObjectNames(object, objectNames);
 
-  TreeItem * newTreeItem = new TreeItem(object, objectNames, treeItemParent);
+  auto newTreeItem = new TreeItem(object, objectNames, treeItemParent);
   treeItemParent->appendChild(newTreeItem);
 
   // loop through each child

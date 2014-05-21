@@ -74,13 +74,11 @@ namespace runmanager {
     {
       std::vector<std::string> results;
 
-      for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = allErrors.begin();
-           itr != allErrors.end();
-           ++itr)
+      for (const auto & error : allErrors)
       {
-        if (itr->first == t_et)
+        if (error.first == t_et)
         {
-          results.push_back(itr->second);
+          results.push_back(error.second);
         }
       }
 

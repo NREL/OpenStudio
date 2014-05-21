@@ -344,7 +344,7 @@ bool TableModel::insertRows(std::vector<openstudio::WorkspaceObject> wsObjects, 
 {
   beginInsertRows(QModelIndex(), position+1, position+rows);
 
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+position+1;
+  auto it = mObjects.begin()+position+1;
   mObjects.insert(it,wsObjects.begin(),wsObjects.end());
 
   endInsertRows();
@@ -374,7 +374,7 @@ bool TableModel::moveRows(const QModelIndex& row, const QModelIndexList& rowList
   beginMoveRows(QModelIndex(), position, position+rows-1, QModelIndex(), row.row());
 
   ///! std::list could use splice, but we are working with a vector
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+row.row();
+  auto it = mObjects.begin()+row.row();
   mObjects.insert(it,temp.begin(),temp.end());
 
   if(position > row.row()){
@@ -404,7 +404,7 @@ bool TableModel::removeRows(int position, int rows, const QModelIndex &index)
   Q_UNUSED(index);    
   beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+position;
+  auto it = mObjects.begin()+position;
   mObjects.erase(it,it+rows);
 
   endRemoveRows();
@@ -441,7 +441,7 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
   if (index.isValid())
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
   else
-    return 0;
+    return nullptr;
 }
 //! [7]
 

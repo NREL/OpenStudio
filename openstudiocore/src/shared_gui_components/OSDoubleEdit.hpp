@@ -37,7 +37,7 @@ class OSDoubleEdit2: public QLineEdit {
   Q_OBJECT
  public:
 
-  OSDoubleEdit2(QWidget * parent = 0);
+  OSDoubleEdit2(QWidget * parent = nullptr);
 
   virtual ~OSDoubleEdit2() {}
 
@@ -144,7 +144,7 @@ class OSDoubleEdit: public QLineEdit {
 
  public:
 
-  OSDoubleEdit(QWidget * parent = 0);
+  OSDoubleEdit(QWidget * parent = nullptr);
 
   virtual ~OSDoubleEdit() {}
 

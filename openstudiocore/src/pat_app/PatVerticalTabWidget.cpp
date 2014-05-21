@@ -52,7 +52,7 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
                         this,SLOT(on_buttonClicked(int)));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -100,7 +100,7 @@ void PatVerticalTabWidget::addTab( int id,
                                    const QString & doneImagePath,
                                    bool enabled )
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setFixedSize(QSize(39,42));
 

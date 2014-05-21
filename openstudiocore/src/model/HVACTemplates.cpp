@@ -263,13 +263,11 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 {
   std::vector<model::ThermalZone> zonesToAddTo;
 
-  for( std::vector<model::ThermalZone>::iterator it = zones.begin();
-       it < zones.end();
-       ++it )
+  for( const auto & zone : zones )
   {
-    if( it->model() == model )
+    if( zone.model() == model )
     {
-      zonesToAddTo.push_back(*it);
+      zonesToAddTo.push_back(zone);
     }
   }
 
@@ -318,13 +316,11 @@ void addSystemType1(Model & model, std::vector<ThermalZone> zones)
 
     hotWaterSPM.addToNode(hotWaterOutletNode);
 
-    for( std::vector<model::ThermalZone>::iterator it = zonesToAddTo.begin();
-         it < zonesToAddTo.end();
-         ++it )
+    for( auto & zone : zonesToAddTo )
     {
         model::ZoneHVACPackagedTerminalAirConditioner ptac = addSystemType1(model);
 
-        ptac.addToThermalZone(*it);
+        ptac.addToThermalZone(zone);
 
         HVACComponent comp = ptac.heatingCoil();
 
@@ -454,15 +450,13 @@ ZoneHVACPackagedTerminalHeatPump addSystemType2(Model & model)
 
 void addSystemType2(Model & model, std::vector<ThermalZone> zones)
 {
-  for( std::vector<model::ThermalZone>::iterator it = zones.begin();
-       it < zones.end();
-       ++it )
+  for( auto & zone : zones )
   {
-    if( it->model() == model )
+    if( zone.model() == model )
     {
       ZoneHVACPackagedTerminalHeatPump pthp = addSystemType2(model);
 
-      pthp.addToThermalZone(*it);
+      pthp.addToThermalZone(zone);
     }
   }
 }

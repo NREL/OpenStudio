@@ -119,11 +119,9 @@ void FileInfo::addRequiredFile(const QUrl &t_url, const openstudio::path &t_targ
 
 void FileInfo::prependRequiredFilePath(const openstudio::path &t_path)
 {
-  for (std::vector<std::pair<QUrl, openstudio::path> >::iterator itr = requiredFiles.begin();
-       itr != requiredFiles.end();
-       ++itr)
+  for (auto & requiredFile : requiredFiles)
   {
-    itr->second = t_path / itr->second;
+    requiredFile.second = t_path / requiredFile.second;
   }
 }
 

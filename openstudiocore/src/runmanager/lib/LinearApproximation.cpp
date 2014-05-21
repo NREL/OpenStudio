@@ -17,11 +17,9 @@ LinearApproximation::~LinearApproximation()
 double LinearApproximation::average() const
 {
   double sum = 0;
-  for (std::vector<std::vector<double> >::const_iterator lhsitr = m_values.begin();
-      lhsitr != m_values.end();
-      ++lhsitr)
+  for (const auto & lhsitr : m_values)
   {
-    sum += (*lhsitr)[m_numVars];
+    sum += lhsitr[m_numVars];
   }
   return sum / m_numVars;
 }
@@ -35,31 +33,27 @@ LinearApproximation LinearApproximation::operator-(const LinearApproximation &t_
 
   LinearApproximation retval(m_numVars);
 
-  for (std::vector<std::vector<double> >::const_iterator lhsitr = m_values.begin();
-      lhsitr != m_values.end();
-      ++lhsitr)
+  for (const auto & lhsitr : m_values)
   {
-    for (std::vector<std::vector<double> >::const_iterator rhsitr = t_rhs.m_values.begin();
-        rhsitr != t_rhs.m_values.end();
-        ++rhsitr)
+    for (const auto & rhsitr : t_rhs.m_values)
     {
       std::vector<double> vals(m_numVars, 0);
 
       bool match = true;
       for (size_t i = 0; i < m_numVars; ++i)
       {
-        if ( (*lhsitr)[i] != (*rhsitr)[i] )
+        if ( lhsitr[i] != rhsitr[i] )
         {
           match = false;
           break;
         } else {
-          vals[i] = (*lhsitr)[i];
+          vals[i] = lhsitr[i];
         }
       }
 
       if (match)
       {
-        double value = (*lhsitr)[m_numVars] - (*rhsitr)[m_numVars];
+        double value = lhsitr[m_numVars] - rhsitr[m_numVars];
         retval.addVals(vals, value);
         break;
       }
@@ -281,20 +275,20 @@ const std::vector<std::vector<double> > LinearApproximation::filterForSimilarity
     int differencePosition = -1;
 
     int rowCount = 0;
-    for (std::vector<std::vector<double> >::const_iterator itr = t_vals.begin();
-        itr != t_vals.end();
-        ++itr, ++rowCount)
+    for (const auto & vals : t_vals)
     {
-      if (t_vals[0][i] != (*itr)[i])
+      if (t_vals[0][i] != vals[i])
       {
         diversityFound = true; // not all of the inputs match each other
       }
 
-      if (t_point[i] != (*itr)[i])
+      if (t_point[i] != vals[i])
       {
         allTheSame = false; // not all of the inputs for this position match the requested approximation
         differencePosition = rowCount;
       }
+
+      ++rowCount;
     }
 
     if (!diversityFound && !allTheSame)
@@ -327,11 +321,9 @@ std::vector<std::vector<std::vector<double> > > LinearApproximation::buildCoeffi
   for (size_t i = 0; i <= m_numVars; ++i)
   {
     bool allthesame = true;
-    for (std::vector<std::vector<double> >::const_iterator itr = t_points.begin();
-        itr != t_points.end();
-        ++itr)
+    for (const auto & point : t_points)
     {
-      if ((*itr)[i] != t_points[0][i])
+      if (point[i] != t_points[0][i])
       {
         allthesame = false;
       }
@@ -499,11 +491,9 @@ std::vector<double> LinearApproximation::solveDeterminates(const std::vector<std
 {
   std::vector<double> retval;
 
-  for (std::vector<std::vector<std::vector<double> > >::const_iterator itr = t_matrices.begin();
-      itr != t_matrices.end();
-      ++itr)
+  for (const auto & matrix : t_matrices)
   {
-    retval.push_back(determinate(*itr));
+    retval.push_back(determinate(matrix));
   }
 
   return retval; 
@@ -514,20 +504,16 @@ std::vector<std::vector<double> > LinearApproximation::sortByDistance(const std:
 {
   std::set<std::pair<double, std::vector<double> > > distanceSorted;
 
-  for (std::vector<std::vector<double> >::const_iterator itr = t_values.begin();
-      itr != t_values.end();
-      ++itr)
+  for (const auto & vals : t_values)
   {
-    distanceSorted.insert(std::make_pair(distance(t_point, *itr), *itr));
+    distanceSorted.insert(std::make_pair(distance(t_point, vals), vals));
   }
 
   std::vector<std::vector<double> > retval;
 
-  for (std::set<std::pair<double, std::vector<double> > >::const_iterator itr = distanceSorted.begin();
-      itr != distanceSorted.end();
-      ++itr)
+  for (const auto & vals : distanceSorted)
   {
-    retval.push_back(itr->second);
+    retval.push_back(vals.second);
   }
 
   return retval;
@@ -555,11 +541,9 @@ void LinearApproximation::print(const std::string &t_str, const std::vector<doub
   }
 
   std::cout << "[ ";
-  for (std::vector<double>::const_iterator itr = t_vals.begin();
-      itr != t_vals.end();
-      ++itr)
+  for (const auto & vals : t_vals)
   {
-    std::cout << std::setw(10) << *itr << " ";
+    std::cout << std::setw(10) << vals << " ";
   }
   std::cout << "]" << std::endl;
 }
@@ -571,11 +555,9 @@ void LinearApproximation::print(const std::string &t_str, const std::vector<std:
     std::cout << t_str << std::endl;
   }
 
-  for (std::vector<std::vector<double> >::const_iterator itr = t_vals.begin();
-      itr != t_vals.end();
-      ++itr)
+  for (const auto & vals : t_vals)
   {
-    print("", *itr);
+    print("", vals);
   }
 }
 
@@ -598,11 +580,9 @@ void LinearApproximation::print(const std::string &t_str, const std::vector<std:
     std::cout << t_str << std::endl;
   }
 
-  for (std::vector<std::vector<std::vector<double> > >::const_iterator itr = t_vals.begin();
-      itr != t_vals.end();
-      ++itr)
+  for (const auto & vals : t_vals)
   {
-    print("", *itr);
+    print("", vals);
     std::cout << std::endl;
   }
 }

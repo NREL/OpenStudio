@@ -46,7 +46,7 @@ class PatMainWindow : public QMainWindow
 
   public:
 
-  PatMainWindow(QWidget *parent = 0);
+  PatMainWindow(QWidget *parent = nullptr);
 
   virtual ~PatMainWindow() {}
 

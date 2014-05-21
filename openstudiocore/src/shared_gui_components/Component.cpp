@@ -53,8 +53,8 @@ Component::Component(const BCLSearchResult & bclSearchResult,
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   parseBCLSearchResult(bclSearchResult);
@@ -151,8 +151,8 @@ Component::Component(bool showAbridgedView,
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   if(m_showAbridgedView){
@@ -290,11 +290,11 @@ void Component::createAbridgedLayout()
     m_checkBox->hide();
   }
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   QString string;
 
-  QVBoxLayout * leftLayout = new QVBoxLayout();
+  auto leftLayout = new QVBoxLayout();
 
   string = "Name: ";
   string += m_name;
@@ -346,7 +346,7 @@ void Component::createAbridgedLayout()
   leftLayout->addWidget(m_msg);
   
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
   mainLayout->addLayout(leftLayout);
   mainLayout->addStretch();
   mainLayout->addWidget(m_checkBox);
@@ -355,13 +355,13 @@ void Component::createAbridgedLayout()
 
 void Component::createCompleteLayout()
 {
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   QString string;
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
-  QTableWidget * tableWidget = NULL;
+  QTableWidget * tableWidget = nullptr;
 
   ///! Attributes
   ///! Class BCL only stores double (optional units),

@@ -195,16 +195,14 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
     _airLoopHVACZoneMixers = workspaceObject.workspace().getObjectsByType(IddObjectType::AirLoopHVAC_ZoneMixer);
 
     boost::optional<WorkspaceObject> _airLoopHVACZoneMixer;
-    for( std::vector<WorkspaceObject>::iterator it = _airLoopHVACZoneMixers.begin();
-         it < _airLoopHVACZoneMixers.end();
-         ++it )
+    for( const auto & elem : _airLoopHVACZoneMixers )
     {
       boost::optional<std::string> mixerOutletNodeName;
-      mixerOutletNodeName = it->getString(AirLoopHVAC_ZoneMixerFields::OutletNodeName);
+      mixerOutletNodeName = elem.getString(AirLoopHVAC_ZoneMixerFields::OutletNodeName);
 
       if( mixerOutletNodeName && mixerOutletNodeName.get() == demandOutletNodeName.get() )
       {
-        _airLoopHVACZoneMixer = *it;
+        _airLoopHVACZoneMixer = elem;
         break;
       }
     }
@@ -221,15 +219,13 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
 
         _zoneHVACEquipmentConnections = _workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentConnections);
 
-        for( std::vector<WorkspaceObject>::iterator it = _zoneHVACEquipmentConnections.begin(),itEnd=_zoneHVACEquipmentConnections.end();
-             it !=itEnd ;
-             ++it )
+        for( const auto & _zoneHVACEquipmentConnection : _zoneHVACEquipmentConnections )
         {
 
-          OptionalString returnAirNodeName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName);
-          OptionalString inletAirNodeName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName);
-          OptionalString zoneName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
-          OptionalString zoneEquipListName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);
+          OptionalString returnAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName);
+          OptionalString inletAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName);
+          OptionalString zoneName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
+          OptionalString zoneEquipListName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);
 
           OptionalWorkspaceObject _zone;
           OptionalWorkspaceObject _zoneEquipmentList;

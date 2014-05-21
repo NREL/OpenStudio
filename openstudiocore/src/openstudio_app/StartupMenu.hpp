@@ -32,7 +32,7 @@ class StartupMenu : public QMenuBar
 
   public:
 
-  StartupMenu(QWidget *parent = 0);
+  StartupMenu(QWidget *parent = nullptr);
 
   virtual ~StartupMenu() {}
 

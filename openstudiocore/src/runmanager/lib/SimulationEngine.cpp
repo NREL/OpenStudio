@@ -23,26 +23,24 @@ namespace openstudio {
 
 
       LOG(Info, "Scanning jobs from RunManager: " << jobs.size());
-      for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
-          itr != jobs.end();
-          ++itr)
+      for (const auto & job : jobs)
       {
-        if (!itr->parent())
+        if (!job.parent())
         {
-          LOG(Info, "Connecting top level job: " << itr->description());
-          connectSignals(*itr);
+          LOG(Info, "Connecting top level job: " << job.description());
+          connectSignals(job);
 
-          if (itr->treeStatus() == TreeStatusEnum::Finished)
+          if (job.treeStatus() == TreeStatusEnum::Finished)
           {
-            LOG(Info, "Loading results from job tree: " << openstudio::toString(itr->uuid()));
-            loadResults(*itr);
+            LOG(Info, "Loading results from job tree: " << openstudio::toString(job.uuid()));
+            loadResults(job);
           } else {
-            LOG(Info, "Tree status was not finished, was: " << itr->treeStatus().valueName());
+            LOG(Info, "Tree status was not finished, was: " << job.treeStatus().valueName());
           }
 
           // register that we are keeping track of this simulation
-          std::vector<double> variables = getVariables(*itr);
-          std::vector<int> discreteVariables = getDiscreteVariables(*itr);
+          std::vector<double> variables = getVariables(job);
+          std::vector<int> discreteVariables = getDiscreteVariables(job);
           LOG(Info, "Registering loaded simulation " << toString(variables) << " " << toString(discreteVariables));
           m_simulations.insert(std::make_pair(variables, discreteVariables));
         }
@@ -256,11 +254,9 @@ namespace openstudio {
     std::string SimulationEngine::toString(const std::vector<T> &t_variables)
     {
       std::stringstream ss;
-      for(typename std::vector<T>::const_iterator itr = t_variables.begin();
-          itr != t_variables.end();
-          ++itr)
+      for(const auto & elem : t_variables)
       {
-        ss << *itr << ",";
+        ss << elem << ",";
       }
       return ss.str();
     }
@@ -360,8 +356,7 @@ namespace openstudio {
 
     std::pair<std::vector<double>, std::vector<int> > SimulationEngine::lookupSimulationId(const std::string &t_simulationId) const
     {
-      std::map<std::string, std::pair<std::vector<double>, std::vector<int> > >::const_iterator itr =
-        m_simulationIds.find(t_simulationId);
+      auto itr = m_simulationIds.find(t_simulationId);
 
       if (itr != m_simulationIds.end())
       {
@@ -379,7 +374,7 @@ namespace openstudio {
 
     ErrorEstimation &SimulationEngine::getErrorEstimation(const std::vector<int> &t_discreteVariables)
     {
-      std::map<std::vector<int>, ErrorEstimation>::iterator itr = m_errorEstimations.find(t_discreteVariables);
+      auto itr = m_errorEstimations.find(t_discreteVariables);
       if (itr != m_errorEstimations.end())
       {
         return itr->second;
@@ -394,7 +389,7 @@ namespace openstudio {
 
     const ErrorEstimation &SimulationEngine::getErrorEstimation(const std::vector<int> &t_discreteVariables) const
     {
-      std::map<std::vector<int>, ErrorEstimation>::const_iterator itr = m_errorEstimations.find(t_discreteVariables);
+      auto itr = m_errorEstimations.find(t_discreteVariables);
       if (itr != m_errorEstimations.end())
       {
         return itr->second;
@@ -407,7 +402,7 @@ namespace openstudio {
     {
       validateNumVariables(t_variables);
 
-      std::map<std::pair<std::vector<double>, std::vector<int> >, SimulationDetails>::const_iterator itr = m_details.find(std::make_pair(t_variables, t_discreteVariables));
+      auto itr = m_details.find(std::make_pair(t_variables, t_discreteVariables));
 
       if (itr != m_details.end())
       {

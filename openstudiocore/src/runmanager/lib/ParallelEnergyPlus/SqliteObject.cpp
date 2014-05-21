@@ -58,7 +58,7 @@ SqliteObject::SqliteObject(const openstudio::path &file)
 {
 
   // Open a database connection
-  m_db = 0;
+  m_db = nullptr;
   int rc = sqlite3_open(openstudio::toString(file).c_str(), &m_db);
   if (rc)
   {
@@ -73,7 +73,7 @@ SqliteObject::~SqliteObject(){
   //std::cout << "closing database" << std::endl;
   sqlite3_close(m_db);
 
-  if( m_results != 0) {
+  if( m_results != nullptr) {
     delete m_results;
   }
 
@@ -141,7 +141,7 @@ bool SqliteObject::execute(const std::string& cmd){
 
   //std::cout << " Execute: " << m_results->header.size() << std::endl;
 
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(m_db, cmd.c_str(), callback, m_results, &zErrMsg);
   if (rc != SQLITE_OK)
   {

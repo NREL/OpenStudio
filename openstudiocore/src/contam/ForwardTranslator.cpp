@@ -170,7 +170,7 @@ void ForwardTranslator::clear()
   m_startDateTime = boost::optional<DateTime>();
   m_endDateTime = boost::optional<DateTime>();
   m_translateHVAC = true;
-  m_progressBar = 0;
+  m_progressBar = nullptr;
 }
 
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
@@ -365,7 +365,7 @@ boost::optional<double> ForwardTranslator::exteriorDeltaP() const
 
 bool ForwardTranslator::setExteriorFlowRate(double flow, double n, double deltaP)
 {
-  if(flow > 0 && m_n > 0 && m_deltaP > 0)
+  if(flow > 0 && n > 0 && deltaP > 0)
   {
     m_flow = boost::optional<double>(flow);
     m_n = boost::optional<double>(n);

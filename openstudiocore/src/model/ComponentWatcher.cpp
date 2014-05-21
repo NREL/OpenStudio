@@ -156,7 +156,7 @@ namespace detail {
     }
     // if removedObject is a componentObject, remove from the vector and refresh
     // component contents
-    ModelObjectVector::iterator it = std::find_if(m_componentObjects.begin(),
+    auto it = std::find_if(m_componentObjects.begin(),
         m_componentObjects.end(),boost::bind(handleEquals<ModelObject,Handle>,_1,handleOfRemovedObject));
     if (it != m_componentObjects.end()) {
       OS_ASSERT(it != m_componentObjects.begin());

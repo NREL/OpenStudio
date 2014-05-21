@@ -108,7 +108,7 @@ void AnalysisDriverWatcher::analysisComplete(const openstudio::UUID& analysis) {
     if (watching(analysis)) {
       LOG(Debug,"Calling on AnalysisComplete.");
       this->onAnalysisComplete(analysis);
-      std::vector<openstudio::UUID>::iterator it = std::find(m_analyses.begin(),m_analyses.end(),analysis);
+      auto it = std::find(m_analyses.begin(),m_analyses.end(),analysis);
       m_analyses.erase(it);
     }
   } catch (const std::exception &e) {

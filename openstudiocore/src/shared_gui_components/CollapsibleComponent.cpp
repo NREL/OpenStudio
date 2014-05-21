@@ -38,7 +38,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
   : QAbstractButton(parent),
     m_collapsibleComponentHeader(collapsibleComponentHeader),
     m_componentList(componentList),
-    m_mainLayout(NULL)
+    m_mainLayout(nullptr)
 {
 
   OS_ASSERT(m_collapsibleComponentHeader);

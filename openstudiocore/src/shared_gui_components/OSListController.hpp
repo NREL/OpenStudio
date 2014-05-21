@@ -103,7 +103,7 @@ class OSListItem : public QObject
 
   public:
 
-  OSListItem(OSListController * listController = 0);
+  OSListItem(OSListController * listController = nullptr);
 
   virtual ~OSListItem();
 

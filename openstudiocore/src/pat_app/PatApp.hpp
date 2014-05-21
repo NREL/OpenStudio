@@ -299,7 +299,7 @@ class NewProjectDialog : public OSDialog
 
 public:
 
-  NewProjectDialog(QWidget * parent = 0);
+  NewProjectDialog(QWidget * parent = nullptr);
 
   QLineEdit * m_projectNameLineEdit;
 

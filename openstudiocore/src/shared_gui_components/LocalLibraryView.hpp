@@ -38,7 +38,7 @@ class LocalLibraryView : public QWidget
 
   public:
 
-  LocalLibraryView(QWidget * parent = 0);
+  LocalLibraryView(QWidget * parent = nullptr);
 
   virtual ~LocalLibraryView() {}
 
@@ -105,7 +105,7 @@ class LibraryItemView : public OSDragableView
 
   public:
 
-  LibraryItemView(QWidget * parent = 0);
+  LibraryItemView(QWidget * parent = nullptr);
 
   virtual ~LibraryItemView() {}
 

@@ -301,7 +301,7 @@ namespace detail {
                                                bool returnDefault) const
   {
     UnsignedVector urlIdx = iddObject().urlFields();
-    UnsignedVector::iterator i= find( urlIdx.begin(), urlIdx.end(), index );
+    auto i= find( urlIdx.begin(), urlIdx.end(), index );
     if( i != urlIdx.end() ) {
       OptionalString value = getString(index, returnDefault, false);
       if (value) {
@@ -1589,7 +1589,7 @@ namespace detail {
     // quick check to see if action is necessary
     if (!result.empty() && (result.back() >= n)) {
       // assume indices are in order and find first that is out of range
-      for (UnsignedVector::iterator it = result.begin(), 
+      for (auto it = result.begin(), 
            itEnd = result.end(); it != itEnd; ++it) {
         if (*it >= n) {
           result.erase(it,result.end());

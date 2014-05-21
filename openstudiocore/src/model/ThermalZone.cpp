@@ -1237,7 +1237,7 @@ namespace detail {
 
     for (Surface surface : surfaces){
 
-      std::set<Surface>::iterator it = mergedSurfaces.find(surface);
+      auto it = mergedSurfaces.find(surface);
       if (it != mergedSurfaces.end()){
         continue;
       }
@@ -1349,11 +1349,9 @@ namespace detail {
 
     std::vector<ModelObject> comps = this->equipment();
 
-    for( std::vector<ModelObject>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( auto & comp : comps )
     {
-      it->remove();
+      comp.remove();
     }
 
     //detatch it from the zone air node
@@ -1406,11 +1404,9 @@ namespace detail {
 
       std::vector<ModelObject> comps = this->equipment();
 
-      for( std::vector<ModelObject>::iterator it = comps.begin();
-           it < comps.end();
-           ++it )
+      for( auto & comp : comps )
       {
-        it->remove();
+        comp.remove();
       }
 
       if( boost::optional<AirLoopHVAC> airLoop = this->airLoopHVAC() )
@@ -1602,13 +1598,11 @@ namespace detail {
     
     sizingObjects = model().getModelObjects<SizingZone>();
 
-    for( std::vector<SizingZone>::iterator it = sizingObjects.begin();
-         it < sizingObjects.end();
-         ++it )
+    for( const auto & sizingObject : sizingObjects )
     {
-      if( it->thermalZone().handle() == this->handle() )
+      if( sizingObject.thermalZone().handle() == this->handle() )
       {
-        sizingZone = *it;
+        sizingZone = sizingObject;
       }
     }
 
@@ -1706,11 +1700,9 @@ namespace detail {
 
           std::vector<ModelObject> supplyNodes = airLoop->supplyComponents(Node::iddObjectType());
 
-          for( std::vector<ModelObject>::iterator it = supplyNodes.begin();
-               it != supplyNodes.end();
-               ++it )
+          for( const auto & supplyNode : supplyNodes )
           {
-            if( boost::optional<SetpointManagerSingleZoneReheat> spm = it->cast<Node>().getSetpointManagerSingleZoneReheat() )
+            if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyNode.cast<Node>().getSetpointManagerSingleZoneReheat() )
             {
               if( ! spm->controlZone() )
               {
@@ -1751,13 +1743,11 @@ namespace detail {
 
     std::vector<ZoneHVACEquipmentList> list = model().getModelObjects<ZoneHVACEquipmentList>();
 
-    for( std::vector<ZoneHVACEquipmentList>::iterator it = list.begin();
-         it != list.end();
-         ++it )
+    for( const auto & elem : list )
     {
-      if( it->thermalZone().handle() == handle() )
+      if( elem.thermalZone().handle() == handle() )
       {
-        result = *it;
+        result = elem;
       }
     }
 
@@ -1829,15 +1819,13 @@ namespace detail {
 
     std::vector<AirLoopHVACSupplyPlenum> plenums = model().getModelObjects<AirLoopHVACSupplyPlenum>();
 
-    for(std::vector<AirLoopHVACSupplyPlenum>::iterator it = plenums.begin();
-        it != plenums.end();
-        ++it)
+    for(const auto & plenum : plenums)
     {
-      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
       {
         if( tz->handle() == handle() )
         {
-          result = *it;
+          result = plenum;
           break;
         }
       }
@@ -1852,15 +1840,13 @@ namespace detail {
 
     std::vector<AirLoopHVACReturnPlenum> plenums = model().getModelObjects<AirLoopHVACReturnPlenum>();
 
-    for(std::vector<AirLoopHVACReturnPlenum>::iterator it = plenums.begin();
-        it != plenums.end();
-        ++it)
+    for(const auto & plenum : plenums)
     {
-      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
       {
         if( tz->handle() == handle() )
         {
-          return *it;
+          return plenum;
         }
       }
     }
@@ -1976,7 +1962,7 @@ namespace detail {
         }
         else
         {
-          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
           ModelObject plenumOutletModelObject = *(it + 1);
           unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
           unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
@@ -2072,7 +2058,7 @@ namespace detail {
         }
         else
         {
-          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
           ModelObject plenumInletModelObject = *(it - 1);
           unsigned branchIndex = plenum->branchIndexForInletModelObject(plenumInletModelObject);
           unsigned port = plenum->connectedObjectPort(plenum->inletPort(branchIndex)).get();

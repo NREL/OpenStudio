@@ -47,8 +47,8 @@ class ViewWidget : public QWidget
   Q_OBJECT
 
 public:
-  ViewWidget(QWidget *parent = 0);
-  ViewWidget(openstudio::model::Model model, QWidget *parent = 0);
+  ViewWidget(QWidget *parent = nullptr);
+  ViewWidget(openstudio::model::Model model, QWidget *parent = nullptr);
   virtual ~ViewWidget();
   virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom) = 0;
   virtual void loadModel() = 0;

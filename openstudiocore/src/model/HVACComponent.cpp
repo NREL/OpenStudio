@@ -95,11 +95,9 @@ namespace detail {
     {
       AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>();
 
-      for( AirLoopHVACVector::iterator it = airLoops.begin(),itEnd=airLoops.end();
-      it != itEnd;
-      ++it )
+      for(const auto & elem : airLoops)
       {
-        OptionalAirLoopHVAC airLoop = it->optionalCast<AirLoopHVAC>();
+        OptionalAirLoopHVAC airLoop = elem.optionalCast<AirLoopHVAC>();
         if(airLoop)
         {
           if( airLoop->component(this->handle()) )
@@ -134,15 +132,13 @@ namespace detail {
     {
       AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getModelObjects<AirLoopHVACOutdoorAirSystem>();
 
-      for( AirLoopHVACOutdoorAirSystemVector::iterator it = oaLoops.begin(),itEnd=oaLoops.end();
-      it != itEnd;
-      ++it )
+      for(auto & oaLoop : oaLoops)
       {
-        if( it->component(this->handle()) )
+        if( oaLoop.component(this->handle()) )
         {
-          m_airLoopHVACOutdoorAirSystem = *it;
+          m_airLoopHVACOutdoorAirSystem = oaLoop;
 
-          return *it;
+          return oaLoop;
         }
       }
     }
@@ -160,11 +156,9 @@ namespace detail {
     {
       std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
 
-      for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-      it != itEnd;
-      ++it )
+      for(const auto & elem : plantLoops)
       {
-        OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
+        OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
         if(plantLoop)
         {
           if( plantLoop->component(this->handle()) )

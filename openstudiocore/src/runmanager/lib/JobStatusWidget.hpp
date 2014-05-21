@@ -97,7 +97,7 @@ namespace openstudio {
 
       public:
         //! Create a JobStatusWidget dialog for displaying job status
-        JobStatusWidget(openstudio::runmanager::RunManager t_runmanager, QWidget *parent = 0);
+        JobStatusWidget(openstudio::runmanager::RunManager t_runmanager, QWidget *parent = nullptr);
         virtual ~JobStatusWidget();
 
         /// Returns a vector of QAction objects to display on a toolbar or some other easily accessible location

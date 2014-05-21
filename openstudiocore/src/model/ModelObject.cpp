@@ -507,7 +507,7 @@ namespace detail {
         continue;
       }
 
-      std::set<Handle>::const_iterator it = uniqueResourceHandles.find(handle);
+      auto it = uniqueResourceHandles.find(handle);
       if (it != uniqueResourceHandles.end()){
         continue;
       }

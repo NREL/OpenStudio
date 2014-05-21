@@ -34,7 +34,7 @@ class TabDropDock : public QTabWidget
 
 public:
 
-  TabDropDock( QWidget* parent=0);
+  TabDropDock( QWidget* parent=nullptr);
 
 
 private:

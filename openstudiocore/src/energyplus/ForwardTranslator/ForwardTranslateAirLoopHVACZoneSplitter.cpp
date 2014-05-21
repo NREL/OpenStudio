@@ -65,12 +65,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
   // Field: Outlet 1-N Node Name //////////////////////////////////////////////
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
   int i = 2;
-  for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-       it < outletModelObjects.end();
-       ++it )
+  for( const auto & outletModelObject : outletModelObjects )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
-        it->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+        outletModelObject.optionalCast<AirTerminalSingleDuctUncontrolled>() )
     {
       temp = airTerminal->outletModelObject();
       if(temp)
@@ -82,7 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
     }
     else
     {
-      s = it->name().get();
+      s = outletModelObject.name().get();
       idfObject.setString(i,s);
     }
     i++;

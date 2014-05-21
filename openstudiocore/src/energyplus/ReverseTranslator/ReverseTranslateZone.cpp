@@ -133,11 +133,9 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
     std::vector<WorkspaceObject> _zoneControlThermostats;
     _zoneControlThermostats = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat);
 
-    for( std::vector<WorkspaceObject>::iterator it = _zoneControlThermostats.begin();
-         it < _zoneControlThermostats.end();
-         ++it )
+    for( const auto & _zoneControlThermostat : _zoneControlThermostats )
     {
-      if( boost::optional<std::string> zoneName = it->getString( ZoneControl_ThermostatFields::ZoneorZoneListName ) )
+      if( boost::optional<std::string> zoneName = _zoneControlThermostat.getString( ZoneControl_ThermostatFields::ZoneorZoneListName ) )
       {
         bool zoneControlThermostatfound = false;
 
@@ -149,11 +147,9 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
         {
           std::vector<IdfExtensibleGroup> zoneListGroup = _zoneList->extensibleGroups();
 
-          for( std::vector<IdfExtensibleGroup>::iterator zoneListGroupIt = zoneListGroup.begin();
-               zoneListGroupIt < zoneListGroup.end();
-               ++zoneListGroupIt )
+          for( const auto & zoneListElem : zoneListGroup )
           {
-            boost::optional<std::string> zoneListZoneName = zoneListGroupIt->getString(ZoneListExtensibleFields::ZoneName);
+            boost::optional<std::string> zoneListZoneName = zoneListElem.getString(ZoneListExtensibleFields::ZoneName);
             if( zoneListZoneName )
             {
               if( zoneListZoneName.get() == idfZoneName ) { zoneControlThermostatfound = true; }
@@ -163,13 +159,11 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
         }
         if( zoneControlThermostatfound )
         {
-          std::vector<IdfExtensibleGroup> extensibleGroups = it->extensibleGroups();
-          for( std::vector<IdfExtensibleGroup>::iterator egIt = extensibleGroups.begin();
-               egIt < extensibleGroups.end();
-               ++egIt )
+          std::vector<IdfExtensibleGroup> extensibleGroups = _zoneControlThermostat.extensibleGroups();
+          for( const auto & extensibleGroup : extensibleGroups )
           {
-            boost::optional<std::string> thermostatType = egIt->getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType);
-            boost::optional<std::string> thermostatName = egIt->getString(ZoneControl_ThermostatExtensibleFields::ControlName);
+            boost::optional<std::string> thermostatType = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType);
+            boost::optional<std::string> thermostatName = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlName);
 
             if( thermostatName && thermostatType )
             {

@@ -45,7 +45,7 @@ class MODELEDITOR_API EditorFrame : public QMainWindow
   Q_OBJECT
 
 public:
-  EditorFrame(QWidget * parent = 0);
+  EditorFrame(QWidget * parent = nullptr);
   virtual ~EditorFrame();
   void loadStyleSheet(QString& style);
 

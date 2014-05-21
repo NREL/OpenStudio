@@ -71,7 +71,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   this->okButton()->hide();
   this->backButton()->hide();
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
   
   QVBoxLayout * mainLayout = this->upperLayout();
   mainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -85,7 +85,7 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
   label->setText("<b>" + (tr("Requirements for cloud:")) + "</b>");
   mainLayout->addWidget(label);
 
-  QVBoxLayout * vLayout = new QVBoxLayout;
+  auto vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
   vLayout->setSpacing(5);
   vLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -125,15 +125,15 @@ void LostCloudConnectionDialog::createWidgets(bool internetAvailable,
 
 void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayout)
 {
-  QHBoxLayout * hLayout = 0;
+  QHBoxLayout * hLayout = nullptr;
 
-  QSpacerItem * horizontalSpacer = 0;
+  QSpacerItem * horizontalSpacer = nullptr;
 
-  QPushButton * button = 0;
+  QPushButton * button = nullptr;
 
   bool isConnected = false;
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
         
   label = new QLabel;
   label->setText("<b>" + tr("Options to correct the problem:") + "</b>");

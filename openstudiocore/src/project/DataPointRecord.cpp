@@ -300,7 +300,7 @@ namespace detail {
     // order them
     for (const InputVariableRecord& ivr : ivrs) {
       if (ivr.optionalCast<MeasureGroupRecord>()) {
-        MeasureRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             measureRecords.begin(),
             measureRecords.end(),
             boost::bind(variableRecordIdEquals,_1,ivr.id()));
@@ -310,7 +310,7 @@ namespace detail {
         measureRecords.erase(it);
       }
       else {
-        DataPointValueRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             cvValueRecords.begin(),
             cvValueRecords.end(),
             boost::bind(continuousVariableRecordIdEquals,_1,ivr.id()));
@@ -352,7 +352,7 @@ namespace detail {
 
     // order them
     for (const MeasureGroupRecord& mgr : mgrs) {
-      MeasureRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
           boost::bind(variableRecordIdEquals,_1,mgr.id()));
@@ -389,7 +389,7 @@ namespace detail {
 
     // order them
     for (const ContinuousVariableRecord& cvr : cvrs) {
-      DataPointValueRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
           boost::bind(continuousVariableRecordIdEquals,_1,cvr.id()));
@@ -952,7 +952,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -960,7 +960,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -974,7 +974,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // bind all values to avoid parameter mismatch error
@@ -1381,7 +1381,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
   if (childFileReferences.empty() && !outputAttributes.empty()) {
     // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
     NameFinder<FileReferenceRecord> finder("fake.xml",true);
-    FileReferenceRecordVector::iterator it = std::find_if(
+    auto it = std::find_if(
         oldFileReferenceRecords.begin(),
         oldFileReferenceRecords.end(),
         finder);
@@ -1408,7 +1408,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
     bool save(true);
     if (!isNew) {
       // see if there is already a record
-      FileReferenceRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
             oldFileReferenceRecords.begin(),
             oldFileReferenceRecords.end(),
             boost::bind(handleEquals<ObjectRecord,UUID>,_1,childFileReference.uuid()));

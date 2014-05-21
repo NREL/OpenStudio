@@ -116,8 +116,8 @@ namespace openstudio {
 
       unzGetCurrentFileInfo(m_unzFile, &file_info,
           &filename.front(), filename.size(),
-          0,0,
-          0,0);
+          nullptr,0,
+          nullptr,0);
 
       paths.push_back(openstudio::toPath(std::string(&filename.front(), file_info.size_filename)));
       cont = unzGoToNextFile(m_unzFile) == UNZ_OK;

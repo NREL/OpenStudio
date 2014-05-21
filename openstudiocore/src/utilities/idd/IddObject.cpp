@@ -174,13 +174,13 @@ namespace detail {
                 << "       \\type handle" << std::endl
                 << "       \\required-field";
       IddField handleField = IddField::load("Handle", fieldText.str(), m_name).get();
-      IddFieldVector::iterator it = m_fields.insert(m_fields.begin(),handleField);
+      auto it = m_fields.insert(m_fields.begin(),handleField);
       ++it;
-      for (IddFieldVector::iterator itEnd = m_fields.end(); it != itEnd; ++it) {
+      for (auto itEnd = m_fields.end(); it != itEnd; ++it) {
         it->incrementFieldId(); // by default, applies only to 'A'-type fields
       }
       it = m_extensibleFields.begin();
-      for (IddFieldVector::iterator itEnd = m_extensibleFields.end(); it != itEnd; ++it) {
+      for (auto itEnd = m_extensibleFields.end(); it != itEnd; ++it) {
         it->incrementFieldId(); // by default, applies only to 'A'-type fields
       }
       ++m_properties.minFields;
@@ -431,7 +431,7 @@ namespace detail {
       m_properties.print(os);
 
       bool extensibleFields = !m_extensibleFields.empty();
-      for (IddFieldVector::const_iterator it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
+      for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
         if (extensibleFields) {
           it->print(os, false); // don't print ; just yet
         }
@@ -439,7 +439,7 @@ namespace detail {
           it->print(os, (it == itend-1));
         }
       }
-      for (IddFieldVector::const_iterator it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it){
+      for (auto it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it){
         it->print(os, (it == itend-1));
       }
 
@@ -495,8 +495,8 @@ namespace detail {
     }
 
     // find the begin extensible field, there should be only one
-    IddFieldVector::iterator extensibleBegin = m_fields.end();
-    for (IddFieldVector::iterator it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
+    auto extensibleBegin = m_fields.end();
+    for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
       if (it->properties().beginExtensible){
         extensibleBegin = it;
         break;

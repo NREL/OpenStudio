@@ -136,7 +136,7 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
         surface->setOutsideBoundaryCondition("Adiabatic");
         return surface.get();
       }else{
-        std::map<Handle,ModelObject>::iterator it = m_workspaceToModelMap.find(target->handle());
+        auto it = m_workspaceToModelMap.find(target->handle());
         if( it !=  m_workspaceToModelMap.end()){
           if (it->second.optionalCast<Surface>()){
             // this will set other side boundary object on both surfaces

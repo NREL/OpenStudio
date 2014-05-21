@@ -37,7 +37,7 @@ class ObjectExplorer : public QWidget
   Q_OBJECT
 
 public:
-  ObjectExplorer(openstudio::IddFile& iddFile, QWidget * parent = 0);
+  ObjectExplorer(openstudio::IddFile& iddFile, QWidget * parent = nullptr);
   virtual ~ObjectExplorer();
   void updateIddFile();
 

@@ -91,15 +91,13 @@ namespace detail {
     // populate the vector with all of them
     zoneHVACBaseboardConvectiveWaters = this->model().getModelObjects<ZoneHVACBaseboardConvectiveWater>();
     // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
-    for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
-    it < zoneHVACBaseboardConvectiveWaters.end();
-    ++it )
+    for( const auto & zoneHVACBaseboardConvectiveWater : zoneHVACBaseboardConvectiveWaters )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACBaseboardConvectiveWater.heatingCoil() )
       {
         if( coil->handle() == this->handle() )  //if the handles match, this coil is inside of a zonehvacbaseboard
         {
-          return *it;
+          return zoneHVACBaseboardConvectiveWater;
         }
       }
     }

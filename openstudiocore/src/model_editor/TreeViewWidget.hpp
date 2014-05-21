@@ -37,8 +37,8 @@ class TreeViewWidget : public ViewWidget
   Q_OBJECT
 
 public:
-  TreeViewWidget(openstudio::model::Model& model, QWidget *parent = 0);
-  TreeViewWidget(QWidget *parent = 0);
+  TreeViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
+  TreeViewWidget(QWidget *parent = nullptr);
   virtual ~TreeViewWidget();
   virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
   virtual void loadModel();

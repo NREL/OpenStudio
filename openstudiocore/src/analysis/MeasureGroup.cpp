@@ -51,7 +51,7 @@ namespace detail {
     // get null measures straightened out
     bool hasNull(false);
     bool isSelected(false);
-    MeasureVector::iterator it = m_measures.begin();
+    auto it = m_measures.begin();
     while (it != m_measures.end()) {
       if (OptionalNullMeasure oNull = it->optionalCast<NullMeasure>()) {
         if (isSelected && oNull->isSelected()) {
@@ -218,7 +218,7 @@ namespace detail {
       const UUID& uuid) const
   {
     OptionalMeasure result;
-    MeasureVector::const_iterator it = std::find_if(
+    auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
         boost::bind(uuidEquals<Measure,UUID>,_1,uuid));
@@ -236,7 +236,7 @@ namespace detail {
       const Measure& measure) const
   {
     OptionalInt result;
-    MeasureVector::const_iterator it = std::find_if(
+    auto it = std::find_if(
           m_measures.begin(),
           m_measures.end(),
           boost::bind(uuidEquals<Measure,UUID>,_1,measure.uuid()));
@@ -282,7 +282,7 @@ namespace detail {
       return false;
     }
 
-    MeasureVector::iterator it = m_measures.begin();
+    auto it = m_measures.begin();
     for (int count = 0; count < index; ++count, ++it);
     it = m_measures.insert(it,measure);
     for (int i = index, n = int(m_measures.size()); i < n; ++i) {
@@ -294,7 +294,7 @@ namespace detail {
   }
 
   bool MeasureGroup_Impl::erase(const Measure& measure) {
-    MeasureVector::iterator it = std::find_if(
+    auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
         boost::bind(uuidsEqual<Measure,Measure>,_1,measure));
@@ -314,11 +314,11 @@ namespace detail {
   bool MeasureGroup_Impl::swap(const Measure& measure1,
                                    const Measure& measure2)
   {
-    MeasureVector::iterator it1 = std::find_if(
+    auto it1 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
         boost::bind(uuidsEqual<Measure,Measure>,_1,measure1));
-    MeasureVector::iterator it2 = std::find_if(
+    auto it2 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
         boost::bind(uuidsEqual<Measure,Measure>,_1,measure2));
@@ -376,7 +376,7 @@ namespace detail {
 
     // check proposals against file types of other measures
     MeasureVector pv = measures(false);
-    MeasureVector::iterator it = std::find(pv.begin(),pv.end(),childMeasure);
+    auto it = std::find(pv.begin(),pv.end(),childMeasure);
     OS_ASSERT(it != pv.end());
     pv.erase(it);
 

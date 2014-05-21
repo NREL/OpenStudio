@@ -106,7 +106,7 @@ Workspace ForwardTranslator::translateModelObject( ModelObject & modelObject )
   Model modelCopy;
   modelObject.clone(modelCopy);
 
-  m_progressBar = NULL;
+  m_progressBar = nullptr;
 
   return translateModelPrivate(modelCopy, false);
 }
@@ -359,8 +359,8 @@ struct ChildSorter {
   // sort first by position in iddObjectTypes and then by name
   bool operator()(const model::ModelObject& a, const model::ModelObject& b) const
   {
-    std::vector<IddObjectType>::const_iterator ita = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), a.iddObject().type());
-    std::vector<IddObjectType>::const_iterator itb = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), b.iddObject().type());
+    auto ita = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), a.iddObject().type());
+    auto itb = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), b.iddObject().type());
   
     if (ita < itb){
       return true;
@@ -1701,10 +1701,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     // sort these objects as well
     std::sort(children.begin(), children.end(), ChildSorter(types));
     
-    for(ModelObjectVector::iterator c=children.begin(),cend=children.end();c!=cend;++c)
+    for(auto & elem : children)
     {
-      if (std::find(types.begin(),types.end(),c->iddObject().type()) != types.end()) {
-        translateAndMapModelObject(*c);
+      if (std::find(types.begin(),types.end(),elem.iddObject().type()) != types.end()) {
+        translateAndMapModelObject(elem);
       }
     }
   }
@@ -2090,7 +2090,7 @@ model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Mo
 
 model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction)
 {
-  std::map<Handle, ConstructionBase>::iterator it = m_constructionHandleToReversedConstructions.find(construction.handle());
+  auto it = m_constructionHandleToReversedConstructions.find(construction.handle());
   if (it != m_constructionHandleToReversedConstructions.end()){
     return it->second;
   }
@@ -2545,7 +2545,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   sstm << glycolType << "_" << glycolConcentration;
   std::string glycolName = sstm.str();
 
-  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+  for( auto it = m_idfObjects.begin();
      it != m_idfObjects.end();
      ++it )
   {
@@ -2584,7 +2584,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   boost::optional<IdfObject> idfObject;
   boost::optional<IdfFile> idfFile;
 
-  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+  for( auto it = m_idfObjects.begin();
      it != m_idfObjects.end();
      ++it )
   {
@@ -2609,7 +2609,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   if(idfFile){
     std::vector<IdfObject> fluidObjects = idfFile->objects();
 
-    for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+    for( auto it = fluidObjects.begin();
        it != fluidObjects.end();
        ++it )
     {

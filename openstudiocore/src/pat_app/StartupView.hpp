@@ -32,7 +32,7 @@ class StartupView : public QWidget
 
   public:
 
-  StartupView(QWidget *parent = 0);
+  StartupView(QWidget *parent = nullptr);
 
   virtual ~StartupView() {}
 
@@ -47,7 +47,7 @@ class LoadingProjectView : public QWidget
 
   public:
 
-  LoadingProjectView(QWidget * parent = 0);
+  LoadingProjectView(QWidget * parent = nullptr);
 
   virtual ~LoadingProjectView() {}
 

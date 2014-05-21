@@ -38,8 +38,7 @@ namespace runmanager {
       /// \returns the JobParam matching the given value. Throws an exception if it is not found
       static JobParam paramByValue(const std::vector<JobParam> &t_params, const std::string &t_value)
       {
-        std::vector<JobParam>::const_reverse_iterator itr 
-          = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
+        auto itr = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
 
         if (itr != t_params.rend())
         {
@@ -54,8 +53,7 @@ namespace runmanager {
       /// \returns the JobParam matching the given value. Throws an exception if it is not found
       static bool hasByValue(const std::vector<JobParam> &t_params, const std::string &t_value)
       {
-        std::vector<JobParam>::const_reverse_iterator itr 
-          = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
+        auto itr = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
 
         if (itr != t_params.rend())
         {
@@ -75,8 +73,7 @@ namespace runmanager {
         bool cont = true;
         while (cont)
         {
-          std::vector<JobParam>::iterator itr 
-            = std::find_if(t_params.begin(), t_params.end(), JobParamValueCompare(t_value));
+          auto itr = std::find_if(t_params.begin(), t_params.end(), JobParamValueCompare(t_value));
 
           if (itr != t_params.end())
           {

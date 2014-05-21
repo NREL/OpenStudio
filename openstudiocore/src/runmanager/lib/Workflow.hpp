@@ -65,11 +65,9 @@ namespace runmanager {
             finishedJob = boost::shared_ptr<WorkflowJob>(new WorkflowJob(*t_wfjob.finishedJob));
           }
 
-          for (std::vector<boost::shared_ptr<WorkflowJob> >::const_iterator itr = t_wfjob.children.begin();
-               itr != t_wfjob.children.end();
-               ++itr)
+          for (const auto & workflowJob : t_wfjob.children)
           {
-            children.push_back(boost::shared_ptr<WorkflowJob>(new WorkflowJob(*itr->get())));
+            children.push_back(boost::shared_ptr<WorkflowJob>(new WorkflowJob(*workflowJob.get())));
           }
         }
 
@@ -82,11 +80,9 @@ namespace runmanager {
 
           bool childrenequal = true;
 
-          typedef std::vector<boost::shared_ptr<WorkflowJob> >::const_iterator ChildIter;
-
           if (t_rhs.children.size() == children.size())
           {
-            for (ChildIter itr1 = children.begin(), itr2 = t_rhs.children.begin();
+            for (auto itr1 = children.begin(), itr2 = t_rhs.children.begin();
                 itr1 != children.end() &&  itr2 != t_rhs.children.end();
                 ++itr1, ++itr2)
             {

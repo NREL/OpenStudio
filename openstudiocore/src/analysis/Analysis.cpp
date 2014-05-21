@@ -532,7 +532,7 @@ namespace detail {
   bool Analysis_Impl::removeDataPoint(const DataPoint &dataPoint) {
     OptionalDataPoint exactDataPoint = getDataPointByUUID(dataPoint);
     if (exactDataPoint) {
-      DataPointVector::iterator it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
+      auto it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
       OS_ASSERT(it != m_dataPoints.end());
       disconnectChild(*it);
       m_dataPoints.erase(it);

@@ -123,27 +123,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     upperNodes.erase(upperNodes.end() - 1);
   }
 
-  for( std::vector<Node>::iterator it = upperNodes.begin();
-       it != upperNodes.end();
-       ++it )
+  for( 	auto & upperNode : upperNodes )
   {
-    if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+    if( ! upperNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
     {
       SetpointManagerMixedAir spm(t_model);
-      spm.addToNode(*it);
+      spm.addToNode(upperNode);
     }
   } 
 
   if( boost::optional<ModelObject> mo = airLoopHVAC.supplyOutletNode().getImpl<model::detail::Node_Impl>()->setpointManager() )
   {
-    for( std::vector<Node>::iterator it = lowerNodes.begin();
-         it != lowerNodes.end();
-         ++it )
+    for( auto & lowerNode : lowerNodes )
     {
-      if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+      if( ! lowerNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
       {
         HVACComponent spmClone = mo->clone(t_model).cast<HVACComponent>();
-        spmClone.addToNode(*it);
+        spmClone.addToNode(lowerNode);
       }
     }
   }
@@ -154,16 +150,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
     if( outboardOANode )
     {
-      for( std::vector<Node>::iterator it = oaNodes.begin();
-           it != oaNodes.end();
-           ++it )
+      for( auto & oaNode : oaNodes )
       {
-        if( *it != outboardOANode.get() )
+        if( oaNode != outboardOANode.get() )
         {
-          if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+          if( ! oaNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
           {
             SetpointManagerMixedAir spm(t_model);
-            spm.addToNode(*it);
+            spm.addToNode(oaNode);
           }
         }
       }
@@ -201,22 +195,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   std::vector<ModelObject> controllers;
 
-  for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
-       it < supplyComponents.end();
-       ++it )
+  for( const auto & supplyComponent : supplyComponents )
   {
     boost::optional<ControllerWaterCoil> controller;
 
-    switch(it->iddObject().type().value())
+    switch(supplyComponent.iddObject().type().value())
     {
       case openstudio::IddObjectType::OS_Coil_Cooling_Water :
       {
-        controller = it->cast<CoilCoolingWater>().controllerWaterCoil();
+        controller = supplyComponent.cast<CoilCoolingWater>().controllerWaterCoil();
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Water :
       {
-        controller = it->cast<CoilHeatingWater>().controllerWaterCoil();
+        controller = supplyComponent.cast<CoilHeatingWater>().controllerWaterCoil();
         break;
       }
       default:
@@ -242,11 +234,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
     int i = 1;
 
-    for( std::vector<ModelObject>::iterator it = controllers.begin();
-         it < controllers.end();
-         ++it )
+    for( auto & elem : controllers )
     {
-      boost::optional<IdfObject> _controller = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _controller = translateAndMapModelObject(elem);
 
       if( _controller )
       {
@@ -512,11 +502,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   createAirLoopHVACReturnPath(airLoopHVAC);
 
   std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
-  for( std::vector<ModelObject>::iterator it = demandComponents.begin();
-       it < demandComponents.end();
-       ++it )
+  for( auto & demandComponent : demandComponents )
   {
-    translateAndMapModelObject(*it);
+    translateAndMapModelObject(demandComponent);
   }
 
   return boost::optional<IdfObject>(idfObject);

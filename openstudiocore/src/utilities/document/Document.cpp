@@ -177,7 +177,7 @@ void Document::insert(unsigned index, const SectionElement& element) {
     append(element); 
     return;
   }
-  SectionElementVector::iterator it = m_contents.begin();
+  auto it = m_contents.begin();
   for (unsigned i = 0; i < index; ++i, ++it) {}
   m_contents.insert(it,element);
 }
@@ -195,7 +195,7 @@ Section Document::insertSection(unsigned index,const std::string& headingText) {
 
 void Document::erase(unsigned index) {
   if (index < numElements()) {
-    SectionElementVector::iterator it = m_contents.begin();
+    auto it = m_contents.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_contents.erase(it);
   }

@@ -34,7 +34,7 @@ class ChangeAliasDialog : public QDialog
 {
   Q_OBJECT
 public:
-  ChangeAliasDialog(const QString& oldAlias, const QString& filename, QWidget* parent=0);
+  ChangeAliasDialog(const QString& oldAlias, const QString& filename, QWidget* parent=nullptr);
   const QString& newAlias() {return m_newAlias;}
 
 private slots:

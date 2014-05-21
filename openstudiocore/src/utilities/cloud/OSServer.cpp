@@ -39,7 +39,7 @@ namespace openstudio{
 
     OSServer_Impl::OSServer_Impl(const QUrl& url)
       : QObject(), m_url(url), m_networkAccessManager(new QNetworkAccessManager()),
-        m_networkReply(0), m_mutex(new QMutex()),
+        m_networkReply(nullptr), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
         m_lastCreateProjectSuccess(false),
@@ -431,7 +431,7 @@ namespace openstudio{
         ++current;
       }
 
-      QObject::disconnect(m_networkReply, 0, this, 0);
+      QObject::disconnect(m_networkReply, nullptr, this, nullptr);
       resetNetworkReply();
       m_mutex->unlock();
 
@@ -1755,7 +1755,7 @@ namespace openstudio{
       if (m_networkReply) {
         m_networkReply->blockSignals(true);
         m_networkReply->deleteLater();
-        m_networkReply = 0;
+        m_networkReply = nullptr;
       };
     }
 

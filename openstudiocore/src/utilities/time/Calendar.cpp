@@ -161,7 +161,7 @@ namespace openstudio{
     }
 
     bool result = false;
-    MapType::const_iterator it = m_dateMap.find(date);
+    auto it = m_dateMap.find(date);
     if (it != m_dateMap.end()){
       result = it->second.isHoliday;
     }
@@ -200,7 +200,7 @@ namespace openstudio{
     }
 
     std::string result;
-    MapType::const_iterator it = m_dateMap.find(date);
+    auto it = m_dateMap.find(date);
     if (it != m_dateMap.end()){
       result = it->second.name;
     }

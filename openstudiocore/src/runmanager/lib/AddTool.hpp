@@ -39,7 +39,7 @@ namespace runmanager {
 
   public:
     //! Create a AddTool dialog for setting ConfigOptions
-    AddTool(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    AddTool(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     virtual ~AddTool();
 
     //! Returns the tool created during execution of the dialog

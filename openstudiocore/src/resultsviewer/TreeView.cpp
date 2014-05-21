@@ -306,7 +306,7 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
 
     QTreeWidgetItem *parent = this->invisibleRootItem();
 
-    QTreeWidgetItem *fileItem = new QTreeWidgetItem(parent,ddtFile);
+    auto fileItem = new QTreeWidgetItem(parent,ddtFile);
     //    fileItem->setText(0,QString("(%1) - %2").arg(m_alias).arg(m_filename));
     QString filename = openstudio::toQString(sqlFile.energyPlusSqliteFile());
     fileItem->setText(0,QString("(%1) - %2").arg(alias).arg(filename));
@@ -315,10 +315,10 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
     int textWidth = fontMetrics().width(fileItem->text(0))+30;
     if (textWidth > this->columnWidth(0)) this->setColumnWidth(0,textWidth);
 
-    QTreeWidgetItem* reportFreqItem = NULL;
-    QTreeWidgetItem* variableNameItem = NULL;
-    QTreeWidgetItem* keyValueItem = NULL;
-    QTreeWidgetItem* hourlyBranch = NULL;
+    QTreeWidgetItem* reportFreqItem = nullptr;
+    QTreeWidgetItem* variableNameItem = nullptr;
+    QTreeWidgetItem* keyValueItem = nullptr;
+    QTreeWidgetItem* hourlyBranch = nullptr;
 
     // environment period branch
     std::vector<std::string> vecEnvPeriods(sqlFile.availableEnvPeriods());
@@ -327,7 +327,7 @@ void TreeView::displaySqlFileVariableName(const QString& alias, openstudio::SqlF
     {
       s = toQString(*iterEnv);
       // add to file branch
-      QTreeWidgetItem* envItem = new QTreeWidgetItem(fileItem, ddtEnv);
+      auto envItem = new QTreeWidgetItem(fileItem, ddtEnv);
       envItem->setText(0, s);
 
       // setup reporting frequency branch

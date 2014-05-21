@@ -88,7 +88,7 @@ namespace detail {
       /// \param[in] method receiving slot to disconnect
       ///
       /// \sa Job::connect
-      bool disconnect(const char *signal=0, const QObject *receiver=0, const char *method=0);
+      bool disconnect(const char *signal=nullptr, const QObject *receiver=nullptr, const char *method=nullptr);
 
       /// Begin execution of the job. Note that execution does not necessarily begin immediately.
       /// Check isRunning or handle the started() signal to know when the job state has changed

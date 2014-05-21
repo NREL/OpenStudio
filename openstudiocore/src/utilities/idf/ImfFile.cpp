@@ -61,7 +61,7 @@ StringVector ImfFile::sectionNames() const {
 
 IdfObjectVector ImfFile::section(const std::string& section) const {
   IdfObjectVector result;
-  SectionMapType::const_iterator it = m_sectionMap.find(section);
+  auto it = m_sectionMap.find(section);
   if (it != m_sectionMap.end()) {
     result = it->second;
   }

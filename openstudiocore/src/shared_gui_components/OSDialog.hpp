@@ -41,7 +41,7 @@ class OSDialog : public QDialog
 public:
 
   OSDialog(bool isIP = false,
-           QWidget * parent = 0);
+           QWidget * parent = nullptr);
 
   virtual ~OSDialog() {}
 

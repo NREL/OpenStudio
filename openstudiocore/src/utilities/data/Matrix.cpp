@@ -363,7 +363,7 @@ namespace openstudio{
     for (unsigned i = 0; i < N; ++i){
 
       A(i,i) = 1.0; // must be self connected
-      if ( abs(matrix(i,i) - 1.0) > tol){
+      if ( std::abs(matrix(i,i) - 1.0) > tol){
         // warn
       }
 

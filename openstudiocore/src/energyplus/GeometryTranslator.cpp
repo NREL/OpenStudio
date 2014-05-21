@@ -428,7 +428,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -531,7 +531,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -633,7 +633,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -761,7 +761,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();

@@ -102,15 +102,13 @@ namespace detail {
 
     airTerminalSingleDuctConstantVolumeCooledBeam = this->model().getModelObjects<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
-    for( std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam>::iterator it = airTerminalSingleDuctConstantVolumeCooledBeam.begin();
-    it < airTerminalSingleDuctConstantVolumeCooledBeam.end();
-    ++it )
+    for( const auto & elem : airTerminalSingleDuctConstantVolumeCooledBeam )
     {
-      if( boost::optional<HVACComponent> coil = it-> coilCoolingCooledBeam() )
+      if( boost::optional<HVACComponent> coil = elem.coilCoolingCooledBeam() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return elem;
         }
       }
     }

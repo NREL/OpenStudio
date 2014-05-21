@@ -119,11 +119,9 @@ namespace detail {
     t_model->blockSignals(true);
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
-         it != zoneBoundaries.end();
-         ++it )
+    for( auto & zoneBoundary : zoneBoundaries )
     {
-      std::vector<IdfObject> removedZoneBoundaries = it->remove();
+      std::vector<IdfObject> removedZoneBoundaries = zoneBoundary.remove();
       result.insert(result.end(), removedZoneBoundaries.begin(), removedZoneBoundaries.end());
     }      
 
@@ -142,11 +140,9 @@ namespace detail {
     modelObjectClone.removeAllZoneBoundaries();
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator it = zoneBoundaries.begin();
-         it != zoneBoundaries.end();
-         ++it )
+    for( const auto & zoneBoundary : zoneBoundaries )
     {
-      RefrigerationWalkInZoneBoundary zoneBoundaryClone = it->clone(model).cast<RefrigerationWalkInZoneBoundary>();
+      RefrigerationWalkInZoneBoundary zoneBoundaryClone = zoneBoundary.clone(model).cast<RefrigerationWalkInZoneBoundary>();
       modelObjectClone.addZoneBoundary(zoneBoundaryClone);
     }
 
@@ -183,11 +179,9 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & group : groups )
     {
-      if( boost::optional<WorkspaceObject> wo = it->cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
+      if( boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Refrigeration_WalkInExtensibleFields::WalkInZoneBoundary) )
       {
         if(boost::optional<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundary = 
             wo->optionalCast<RefrigerationWalkInZoneBoundary>())

@@ -40,8 +40,8 @@ namespace modeleditor
 
 TreeViewWidget::TreeViewWidget(openstudio::model::Model& model, QWidget *parent)
   : ViewWidget(parent),
-  mTreeView(NULL),
-  mTreeModel(NULL)
+  mTreeView(nullptr),
+  mTreeModel(nullptr)
 {
   mSplitterSetting = "TreeViewWidgetSplitterSizes";
   createWidgets();
@@ -60,8 +60,8 @@ TreeViewWidget::TreeViewWidget(openstudio::model::Model& model, QWidget *parent)
 
 TreeViewWidget::TreeViewWidget(QWidget *parent)
   : ViewWidget(parent),
-  mTreeView(NULL),
-  mTreeModel(NULL)
+  mTreeView(nullptr),
+  mTreeModel(nullptr)
 {
   mSplitterSetting = "TreeViewWidgetSplitterSizes";
   createWidgets();

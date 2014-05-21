@@ -265,8 +265,8 @@ namespace detail {
 
     m_properties.print(os);
 
-    for (IddKeyVector::const_iterator it = m_keys.begin(), itend = m_keys.end(); it != itend; ++it){
-      it->print(os);
+    for (const auto & key : m_keys){
+      key.print(os);
     }
 
     return os;

@@ -190,27 +190,27 @@ namespace resultsviewer{
     int row = rowCount();
     insertRow(row);
 
-    QTableWidgetItem *aliasCol = new QTableWidgetItem;
+    auto aliasCol = new QTableWidgetItem;
     aliasCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Alias"),aliasCol);
 
-    QTableWidgetItem *fileCol = new QTableWidgetItem;
+    auto fileCol = new QTableWidgetItem;
     fileCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("File"),fileCol);
 
-    QTableWidgetItem *envPerCol = new QTableWidgetItem;
+    auto envPerCol = new QTableWidgetItem;
     envPerCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Environment Period"),envPerCol);
 
-    QTableWidgetItem *timestepCol = new QTableWidgetItem;
+    auto timestepCol = new QTableWidgetItem;
     timestepCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Reporting Frequency"),timestepCol);
 
-    QTableWidgetItem *zoneNameCol = new QTableWidgetItem;
+    auto zoneNameCol = new QTableWidgetItem;
     zoneNameCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Key Value"),zoneNameCol);
 
-    QTableWidgetItem *varNameCol = new QTableWidgetItem;
+    auto varNameCol = new QTableWidgetItem;
     varNameCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Variable Name"),varNameCol);
 

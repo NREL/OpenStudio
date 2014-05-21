@@ -95,16 +95,16 @@ namespace detail {
       if (!options.sequenceStart().empty()) {
         ss << "          sequence_start = ";
         std::vector<int> sequenceStart = options.sequenceStart();
-        for (std::vector<int>::iterator i = sequenceStart.begin(); i != sequenceStart.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : sequenceStart) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }
       if (!options.sequenceLeap().empty()) {
         ss << "          sequence_leap = ";
         std::vector<int> sequenceLeap = options.sequenceLeap();
-        for (std::vector<int>::iterator i = sequenceLeap.begin(); i != sequenceLeap.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : sequenceLeap) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }

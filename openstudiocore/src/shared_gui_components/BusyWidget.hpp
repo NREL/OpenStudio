@@ -35,7 +35,7 @@ class BusyWidget : public QWidget
 
   public:
 
-  BusyWidget(QWidget * parent = 0);
+  BusyWidget(QWidget * parent = nullptr);
 
   virtual ~BusyWidget() {}
 

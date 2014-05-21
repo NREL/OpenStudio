@@ -68,12 +68,10 @@ namespace detail {
 
     std::vector<ModelObject> outletModelObjects = splitter.outletModelObjects();
 
-    for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-         it != outletModelObjects.end();
-         ++it )
+    for( const auto & outletModelObject : outletModelObjects )
     {
       thisBranchModelObjects.clear();
-      nextModelObject = OptionalModelObject(*it);
+      nextModelObject = OptionalModelObject(outletModelObject);
 
       while(nextModelObject && (! outletNodeFound))
       {
@@ -387,11 +385,9 @@ namespace detail {
     {
       std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
 
-      for(std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-          it != outletModelObjects.end();
-          ++it)
+      for(const auto outletModelObject : outletModelObjects)
       {
-        result.push_back(*it);
+        result.push_back(outletModelObject);
       }
     }
     else if( boost::optional<Mixer> mixer = mo.optionalCast<Mixer>() )
@@ -440,18 +436,16 @@ namespace detail {
   {
     std::vector<ModelObject> nodes = getDemandOutletModelObjects(visited.back());
 
-    for(std::vector<ModelObject>::iterator it = nodes.begin();
-        it != nodes.end();
-        ++it)
+    for(const auto & node : nodes)
     {
       // if it node has already been visited then continue
-      if( std::find(visited.begin(),visited.end(),*it) != visited.end() )
+      if( std::find(visited.begin(),visited.end(),node) != visited.end() )
       {
         continue; 
       }
-      if( *it == sink )
+      if( node == sink )
       {
-        visited.push_back(*it);
+        visited.push_back(node);
         // Avoid pushing duplicate nodes into paths
         if( paths.empty() )
         {
@@ -459,13 +453,11 @@ namespace detail {
         }
         else
         {
-          for( std::vector<ModelObject>::iterator visitedit = visited.begin();
-               visitedit != visited.end();
-               ++visitedit )
+          for( const auto & visitedit : visited )
           {
-            if( std::find(paths.begin(),paths.end(),*visitedit) == paths.end() )
+            if( std::find(paths.begin(),paths.end(),visitedit) == paths.end() )
             {
-              paths.push_back(*visitedit);
+              paths.push_back(visitedit);
             }
           }
         }
@@ -473,17 +465,15 @@ namespace detail {
       }
     }
 
-    for(std::vector<ModelObject>::iterator it = nodes.begin();
-        it != nodes.end();
-        ++it)
+    for(const auto & node : nodes)
     {
       // if it node has already been visited or node is sink then continue
-      if( std::find(visited.begin(),visited.end(),*it) != visited.end() ||
-          *it == sink )
+      if( std::find(visited.begin(),visited.end(),node) != visited.end() ||
+          node == sink )
       {
         continue; 
       }
-      visited.push_back(*it);
+      visited.push_back(node);
       findDemandModelObjects(sink,visited,paths);
       visited.pop_back();
     }
@@ -509,15 +499,13 @@ namespace detail {
     // Filter modelObjects for type
     std::vector<ModelObject> reducedModelObjects;
 
-    for(std::vector<ModelObject>::iterator it = allPaths.begin();
-        it != allPaths.end();
-        ++it)
+    for(const auto & path : allPaths)
     {
       if(((type == IddObjectType::Catchall) || 
-         (it->iddObject().type() == type)) &&
-         (it->iddObject().type() != PortList::iddObjectType()))
+         (path.iddObject().type() == type)) &&
+         (path.iddObject().type() != PortList::iddObjectType()))
       {
-        reducedModelObjects.push_back(*it);
+        reducedModelObjects.push_back(path);
       }
     }
 
@@ -683,12 +671,10 @@ namespace detail {
 
         std::vector<ModelObject> outletModelObjects = splitter->outletModelObjects();
 
-        for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-             it != outletModelObjects.end();
-             ++it )
+        for( const auto & outletModelObject : outletModelObjects )
         {
           thisBranchModelObjects.clear();
-          OptionalModelObject branchObject = OptionalModelObject(*it);
+          OptionalModelObject branchObject = OptionalModelObject(outletModelObject);
 
           while(branchObject)
           {

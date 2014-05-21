@@ -68,15 +68,15 @@ namespace runmanager {
     void cull_dbs()
     {
       QMutexLocker l(&m_mutex);
-      DB_Map::iterator itr = m_dbs.begin();
-      DB_Map::iterator end = m_dbs.end();
+      auto itr = m_dbs.begin();
+      auto end = m_dbs.end();
 
       while (itr != end)
       {
         // If it's expired, we don't need to keep a reference to it
         if (itr->second.expired())
         {
-          DB_Map::iterator to_erase = itr;
+          auto to_erase = itr;
           ++itr; // skip to the next before erasing the current
           m_dbs.erase(to_erase);
         } else {
@@ -96,7 +96,7 @@ namespace runmanager {
       // it may be premature to implement this, but it seems to make sense,
       // this way anyone in the same application with the same db file open
       // will be looking at the same list of queue items and such
-      DB_Map::iterator itr = m_dbs.find(wDB);
+      auto itr = m_dbs.find(wDB);
 
       if (itr != m_dbs.end())
       {
@@ -363,14 +363,12 @@ namespace runmanager {
 
     std::vector<Job> currentJobs = getJobs();
 
-    for (std::vector<Job>::const_iterator itr = currentJobs.begin();
-         itr != currentJobs.end();
-         ++itr)
+    for (const auto & job : currentJobs)
     {
       // only parent jobs get saved
-      if (!itr->parent())
+      if (!job.parent())
       {
-        retval.push_back(*itr);
+        retval.push_back(job);
       }
     }
 
@@ -418,7 +416,7 @@ namespace runmanager {
 
   void RunManager::showConfigGui()
   {
-    m_impl->showConfigGui(0);
+    m_impl->showConfigGui(nullptr);
   }
 
   RunManager::DB_Handler &RunManager::get_db_handler()
@@ -487,19 +485,17 @@ namespace runmanager {
     // reset windows with wwr bands to simplify geometry
     std::vector<openstudio::model::Surface> surfaces = t_model.getModelObjects<openstudio::model::Surface>();
 
-    for (std::vector<openstudio::model::Surface>::iterator itr = surfaces.begin();
-         itr != surfaces.end();
-         ++itr)
+    for (auto & surface : surfaces)
     {
-      if (itr->outsideBoundaryCondition() == "Outdoors"
-          && itr->surfaceType() == "Wall")
+      if (surface.outsideBoundaryCondition() == "Outdoors"
+          && surface.surfaceType() == "Wall")
       {
-        double wwr = itr->windowToWallRatio();
+        double wwr = surface.windowToWallRatio();
         LOG(Debug, "Existing WWR: " << wwr);
 
         if (wwr > 0)
         {
-          if (!itr->setWindowToWallRatio(wwr))
+          if (!surface.setWindowToWallRatio(wwr))
           {
             LOG(Warn, "Error setting WWR");
           }

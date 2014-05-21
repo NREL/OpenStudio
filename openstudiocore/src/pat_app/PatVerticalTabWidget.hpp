@@ -42,7 +42,7 @@ class PatVerticalTabWidget : public QWidget
 
   OSViewSwitcher * mainViewSwitcher;
 
-  PatVerticalTabWidget(QWidget * parent = 0);
+  PatVerticalTabWidget(QWidget * parent = nullptr);
 
   virtual ~PatVerticalTabWidget();
   

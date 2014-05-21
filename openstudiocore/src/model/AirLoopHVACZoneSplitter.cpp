@@ -145,12 +145,10 @@ namespace detail{
                                                    demandOutletNode.get(),
                                                    ThermalZone::iddObjectType() );
 
-    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-    it < modelObjects.end();
-    ++it )
+    for( const auto & modelObject : modelObjects )
     {
       OptionalThermalZone zone;
-      zone = it->optionalCast<ThermalZone>();
+      zone = modelObject.optionalCast<ThermalZone>();
       if( zone )
       {
         zones.push_back(*zone);

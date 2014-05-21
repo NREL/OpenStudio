@@ -72,18 +72,17 @@ bool UnitFactorySingleton::registerUnit(CreateUnitCallback createFn,UnitSystem s
             << " and there is not enough information to resolve the conflict. "
             << "Note that C and F are assumed to not conflict--all other units use K and R.";
     // mask registry in main map, save in case need to reconstitute
-    m_callbackMaps[UnitSystem(UnitSystem::Mixed)][standardString] = NULL;
+    m_callbackMaps[UnitSystem(UnitSystem::Mixed)][standardString] = 0;
 
     // make sure string registered elsewhere
     bool found(false);
-    for (CallbackMapMap::const_iterator it = m_callbackMaps.begin(), itEnd = m_callbackMaps.end();
-         it != itEnd; ++it)
+    for (const auto & callbackMap : m_callbackMaps)
     {
-      if ((it->first == UnitSystem::Mixed) || (it->first == system)) {
+      if ((callbackMap.first == UnitSystem::Mixed) || (callbackMap.first == system)) {
         continue;
       }
-      StandardStringCallbackMap::const_iterator lookupPair = it->second.find(standardString);
-      if (lookupPair != it->second.end()) {
+      auto lookupPair = callbackMap.second.find(standardString);
+      if (lookupPair != callbackMap.second.end()) {
         found = true;
         break;
       }
@@ -282,7 +281,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
 
   OptionalUnit candidate;
   StandardStringLookupMap::const_iterator lookupPair;
-  StandardStringLookupMap::const_iterator standardStringMapEnd = m_standardStringLookupMap.end();
+  auto standardStringMapEnd = m_standardStringLookupMap.end();
   lookupPair = m_standardStringLookupMap.find(unitString);
   if (lookupPair != standardStringMapEnd) {
 
@@ -297,7 +296,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
       callbackMap = m_callbackMaps.find(UnitSystem(UnitSystem::Mixed));
       OS_ASSERT(callbackMap != m_callbackMaps.end());
       callbackPair = callbackMap->second.find(standardString);
-      if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
+      if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != nullptr)) {
         temp = callbackPair->second();
       }
       else {
@@ -305,7 +304,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
         callbackMap = m_callbackMaps.find(system);
         if (callbackMap != m_callbackMaps.end()) {
           callbackPair = callbackMap->second.find(standardString);
-          if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
+          if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != nullptr)) {
             temp = callbackPair->second();
           }
         }
@@ -320,7 +319,7 @@ boost::optional<Unit> UnitFactorySingleton::createUnitSimple(const std::string& 
             callbackMap = m_callbackMaps.find(tempSystem);
             if (callbackMap != m_callbackMaps.end()) {
               callbackPair = callbackMap->second.find(standardString);
-              if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != NULL)) {
+              if ((callbackPair != callbackMap->second.end()) && (callbackPair->second != nullptr)) {
                 temp = callbackPair->second();
                 break;
               }

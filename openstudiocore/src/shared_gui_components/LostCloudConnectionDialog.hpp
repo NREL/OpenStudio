@@ -35,7 +35,7 @@ public:
   LostCloudConnectionDialog(bool internetAvailable,
     bool authenticated,
     bool cloudRunning,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
 
   virtual ~LostCloudConnectionDialog();
 

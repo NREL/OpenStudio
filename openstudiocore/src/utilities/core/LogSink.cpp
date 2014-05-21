@@ -43,7 +43,7 @@ namespace openstudio{
   namespace detail{
 
     LogSink_Impl::LogSink_Impl()
-      : m_mutex(new QReadWriteLock()), m_threadId(NULL)
+      : m_mutex(new QReadWriteLock()), m_threadId(nullptr)
     {
       m_sink = boost::shared_ptr<LogSinkBackend>(new LogSinkBackend());
     }
@@ -154,7 +154,7 @@ namespace openstudio{
     {
       QWriteLocker l(m_mutex);
 
-      m_threadId = NULL;
+      m_threadId = nullptr;
 
       this->updateFilter(l);
     }

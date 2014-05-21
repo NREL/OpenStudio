@@ -209,7 +209,7 @@ namespace detail {
     if ((index < 0) || (index >= numObjectives())) {
       return false;
     }
-    FunctionVector::iterator it = m_objectives.begin();
+    auto it = m_objectives.begin();
     for (int count = 0; count < index; ++count, ++it);
     it = m_objectives.insert(it,objective);
     for (int i = index, n = int(m_objectives.size()); i < n; ++i) {
@@ -221,7 +221,7 @@ namespace detail {
   }
 
   bool OptimizationProblem_Impl::eraseObjective(const Function& objective) {
-    FunctionVector::iterator it = std::find_if(
+    auto it = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
           boost::bind(uuidsEqual<Function,Function>,_1,objective));
@@ -241,11 +241,11 @@ namespace detail {
   bool OptimizationProblem_Impl::swapObjectives(const Function& objective1,
                                                 const Function& objective2)
   {
-    FunctionVector::iterator it1 = std::find_if(
+    auto it1 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
           boost::bind(uuidsEqual<Function,Function>,_1,objective1));
-    FunctionVector::iterator it2 = std::find_if(
+    auto it2 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
           boost::bind(uuidsEqual<Function,Function>,_1,objective2));

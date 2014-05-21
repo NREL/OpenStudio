@@ -40,7 +40,7 @@ namespace runmanager {
     Q_OBJECT
 
     public:
-      SpinBoxDelegate(QObject *parent = 0);
+      SpinBoxDelegate(QObject *parent = nullptr);
       virtual ~SpinBoxDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -60,7 +60,7 @@ namespace runmanager {
     Q_OBJECT
 
     public:
-      ToolNameDelegate(QObject *parent = 0);
+      ToolNameDelegate(QObject *parent = nullptr);
       virtual ~ToolNameDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -83,7 +83,7 @@ namespace runmanager {
 
   public:
     //! Create a Configuration dialog for setting ConfigOptions
-    Configuration(QWidget *parent = 0, 
+    Configuration(QWidget *parent = nullptr, 
                   Qt::WindowFlags flags = Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint), 
                   const ConfigOptions &co = ConfigOptions());
     virtual ~Configuration();

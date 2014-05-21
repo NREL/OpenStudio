@@ -273,7 +273,7 @@ namespace detail {
           Qt::ConnectionType type = Qt::QueuedConnection) const;
 
       /// Disconnects signal or signals from the underlying RunManager_Impl object
-      bool disconnect( const char * signal = 0, const QObject * receiver = 0, const char * method = 0);
+      bool disconnect( const char * signal = nullptr, const QObject * receiver = nullptr, const char * method = nullptr);
 
       /// \returns a set of named statistics regarding the job queue
       std::map<std::string, double> statistics() const;

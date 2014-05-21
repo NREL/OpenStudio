@@ -128,7 +128,7 @@ namespace detail {
   }
 
   void AlgorithmOptions_Impl::clearOption(const std::string& name) {
-    std::vector<Attribute>::iterator it = findIteratorByName(m_options,name,true);
+    auto it = findIteratorByName(m_options,name,true);
     if (it != m_options.end()) {
       m_options.erase(it);
     }

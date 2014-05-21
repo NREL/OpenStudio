@@ -391,13 +391,13 @@ namespace openstudio{
       COMMON_PTR_TYPEDEFS(FloodPlot);
 
       /// default constructor
-      FloodPlot(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+      FloodPlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       /// matrix constructor
       FloodPlot(const Matrix& m);
 
       /// create
-      static FloodPlot::Ptr create(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+      static FloodPlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
       static FloodPlot::Ptr create(const Matrix& m);
 

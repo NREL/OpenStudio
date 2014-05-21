@@ -167,11 +167,11 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Returns the analysis seed model, if it is positively specified, can be located, and is an 
    *  OpenStudio Model (not an EnergyPlus IDF). */
-  boost::optional<model::Model> seedModel(ProgressBar* progressBar = NULL) const;
+  boost::optional<model::Model> seedModel(ProgressBar* progressBar = nullptr) const;
 
   /** Returns the analysis seed if it is an IDF, or the seed model translated to IDF
    *  otherwise. */
-  boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
+  boost::optional<Workspace> seedIdf(ProgressBar* progressBar = nullptr) const;
 
   /** Returns true if the seed model or any alternate models need version translation, or if
    *  the analysis weather file cannot be located. */
@@ -261,7 +261,7 @@ class ANALYSISDRIVER_API SimpleProject {
    *  models. The user is responsible for deleting any such measures that are no longer
    *  needed/desired. */
   std::pair<bool,std::vector<BCLMeasure> > setSeed(const FileReference& currentSeedLocation, 
-                                                   ProgressBar* progressBar = NULL);
+                                                   ProgressBar* progressBar = nullptr);
 
   /** Looks for measure by UUID, returning this project's copy if found, adding and returning
    *  the new project-specific copy otherwise. */

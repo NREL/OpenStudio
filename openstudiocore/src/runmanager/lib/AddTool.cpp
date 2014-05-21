@@ -32,11 +32,9 @@ namespace runmanager {
 
     std::set<int> values = ToolType::getValues();
 
-    for (std::set<int>::const_iterator itr = values.begin();
-         itr != values.end();
-         ++itr)
+    for (const auto & value : values)
     {
-      ui.cbToolType->addItem(toQString(ToolType::valueDescription(*itr)));
+      ui.cbToolType->addItem(toQString(ToolType::valueDescription(value)));
     }
 
     connect(ui.btnRemoteToolLocationBrowse, SIGNAL(clicked()), this, SLOT(remoteBrowse()));

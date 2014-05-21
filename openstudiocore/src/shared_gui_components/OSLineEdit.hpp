@@ -33,7 +33,7 @@ class OSLineEdit2 : public QLineEdit {
 
  public:
 
-  OSLineEdit2(QWidget * parent = 0);
+  OSLineEdit2(QWidget * parent = nullptr);
 
   virtual ~OSLineEdit2() {}
 
@@ -85,7 +85,7 @@ class OSLineEdit : public QLineEdit
 
   public:
 
-  OSLineEdit(QWidget * parent = 0);
+  OSLineEdit(QWidget * parent = nullptr);
 
   virtual ~OSLineEdit() {}
 

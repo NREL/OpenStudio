@@ -34,7 +34,7 @@ class PatMainMenu : public QMenuBar
 
   public:
 
-  PatMainMenu(QWidget *parent = 0);
+  PatMainMenu(QWidget *parent = nullptr);
 
   virtual ~PatMainMenu();
 

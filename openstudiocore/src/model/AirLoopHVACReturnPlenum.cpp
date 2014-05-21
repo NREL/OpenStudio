@@ -270,7 +270,7 @@ namespace detail {
       AirLoopHVACZoneMixer zoneMixer = t_airLoopHVAC->zoneMixer();
       std::vector<ModelObject> t_inletModelObjects = inletModelObjects();
 
-      for( std::vector<ModelObject>::reverse_iterator it = t_inletModelObjects.rbegin();
+      for( auto it = t_inletModelObjects.rbegin();
            it != t_inletModelObjects.rend();
            ++it )
       {

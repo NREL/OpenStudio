@@ -245,16 +245,16 @@ namespace detail {
 
     FuelTypeVector fts = availableFuelTypes();
     MeterVector meters = model().getUniqueModelObject<Facility>().meters();
-    for (unsigned i = 0, n = fts.size(); i < n; ++i) {
+    for (const auto & ft : fts) {
       MeterVector::const_iterator meterIt = std::find_if(meters.begin(),meters.end(),
-          boost::bind(MeterFuelTypeEquals,_1,fts[i]));
+          boost::bind(MeterFuelTypeEquals,_1,ft));
       if (meterIt == meters.end()) {
         std::string urlString;
         OptionalString oUrlString = this->url();
         if (oUrlString){
           urlString = *oUrlString;
         }
-        LOG(Info,"No meter associated with fuel type '" << fts[i].valueName() << "' called out "
+        LOG(Info,"No meter associated with fuel type '" << ft.valueName() << "' called out "
             << "in time dependent valuation file '" << urlString << "'.");
         continue;
       }
@@ -266,7 +266,7 @@ namespace detail {
           urlString = *oUrlString;
         }
         LOG(Info,"No time series data retrieved for " << meterIt->briefDescription() << ". Unable "
-            << "to included fuel type '" << fts[i].valueName() << "' in time dependent valuation "
+            << "to included fuel type '" << ft.valueName() << "' in time dependent valuation "
             << "based on file '" << urlString << "'.");
         continue;
       }
@@ -281,12 +281,12 @@ namespace detail {
         }
         LOG(Info,"Time series data retrieved for " << meterIt->briefDescription() << " is of "
             << "length " << timeSeriesValues.size() << " rather than 8760. Unable "
-            << "to included fuel type '" << fts[i].valueName() << "' in time dependent valuation "
+            << "to included fuel type '" << ft.valueName() << "' in time dependent valuation "
             << "based on file '" << urlString << "'.");
         continue;
       }
       // get TDV column
-      DoubleVector temp = mf_tdvValues(tdvFile,fts[i]);
+      DoubleVector temp = mf_tdvValues(tdvFile,ft);
       Vector tdvValues = createVector(temp);
       OS_ASSERT(tdvValues.size() == 8760u);
 

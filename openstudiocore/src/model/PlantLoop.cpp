@@ -370,17 +370,15 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
   allComponents.erase(allComponents.begin());
   allComponents.erase(allComponents.end() - 1);
 
-  for( std::vector<ModelObject>::iterator it = allComponents.begin();
-       it < allComponents.end();
-       ++it )
+  for( auto & elem : allComponents )
   {
-    if( ! it->optionalCast<Node>() )
+    if( ! elem.optionalCast<Node>() )
     {
-      if( boost::optional<StraightComponent> comp = it->optionalCast<StraightComponent>() )
+      if( boost::optional<StraightComponent> comp = elem.optionalCast<StraightComponent>() )
       {
-        it->remove();
+        elem.remove();
       }
-      else if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
+      else if( boost::optional<WaterToAirComponent> comp = elem.optionalCast<WaterToAirComponent>() )
       {
         comp->removeFromPlantLoop();
 
@@ -389,7 +387,7 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
           comp->remove();
         }
       }
-      else if( boost::optional<WaterToWaterComponent> comp = it->optionalCast<WaterToWaterComponent>() )
+      else if( boost::optional<WaterToWaterComponent> comp = elem.optionalCast<WaterToWaterComponent>() )
       {
         if( isSupplyComponent )
         {
@@ -596,13 +594,11 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
   
   sizingObjects = model().getModelObjects<SizingPlant>();
 
-  for( std::vector<SizingPlant>::iterator it = sizingObjects.begin();
-       it < sizingObjects.end();
-       ++it )
+  for( const auto & sizingObject : sizingObjects )
   {
-    if( it->plantLoop().handle() == this->handle() )
+    if( sizingObject.plantLoop().handle() == this->handle() )
     {
-      sizingPlant = *it;
+      sizingPlant = sizingObject;
     }
   }
 

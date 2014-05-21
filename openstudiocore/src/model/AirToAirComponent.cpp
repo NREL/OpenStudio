@@ -218,11 +218,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextSupplyComponent
 
-      std::vector<ModelObject>::iterator dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
+      auto dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
 
       OS_ASSERT( dropNodeLocation != oaComponents.end() );
 
-      for( std::vector<ModelObject>::iterator it = dropNodeLocation;
+      for( auto it = dropNodeLocation;
            it != oaComponents.end();
            ++it )
       {
@@ -241,12 +241,12 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevSupplyComponent
 
-      std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
+      auto rDropNodeLocation = 
         std::find(oaComponents.rbegin(),oaComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != oaComponents.rend() );
 
-      for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
+      for( auto it = rDropNodeLocation;
            it != oaComponents.rend();
            ++it )
       {
@@ -280,7 +280,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
         prevReliefComponentLocation = reliefComponents.begin();
       }
 
-      for( std::vector<ModelObject>::iterator it = prevReliefComponentLocation;
+      for( auto it = prevReliefComponentLocation;
            it != reliefComponents.end();
            ++it )
       {
@@ -347,11 +347,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextReliefComponent
 
-      std::vector<ModelObject>::iterator dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
+      auto dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
 
       OS_ASSERT( dropNodeLocation != reliefComponents.end() );
 
-      for( std::vector<ModelObject>::iterator it = dropNodeLocation;
+      for( auto it = dropNodeLocation;
            it != reliefComponents.end();
            ++it )
       {
@@ -370,12 +370,12 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevReliefComponent
 
-      std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
+      auto rDropNodeLocation = 
         std::find(reliefComponents.rbegin(),reliefComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != reliefComponents.rend() );
 
-      for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
+      for( auto it = rDropNodeLocation;
            it != reliefComponents.rend();
            ++it )
       {
@@ -409,7 +409,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       prevSupplyComponentLocation = std::find(oaComponents.begin(),oaComponents.end(),prevSupplyComponent.get());
 
-      for( std::vector<ModelObject>::iterator it = prevSupplyComponentLocation;
+      for( auto it = prevSupplyComponentLocation;
            it != oaComponents.end();
            ++it )
       {

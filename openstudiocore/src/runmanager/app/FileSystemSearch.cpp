@@ -102,7 +102,7 @@ namespace runmanager {
       {
 
         // Make sure the signal is coming from the thread we expect it to, and it's not just queued up
-        QStandardItem *qsi = new QStandardItem(filestring);
+        auto qsi = new QStandardItem(filestring);
         qsi->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         qsi->setCheckable(true);
         qsi->setCheckState(Qt::Unchecked);

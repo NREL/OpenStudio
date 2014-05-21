@@ -36,7 +36,7 @@ class PageNavigator : public QWidget
 public:
   PageNavigator(int numPages,
     int numPagesListed = 5,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~PageNavigator();
   void setNumPages(int numPages);
   void setNumPagesListed(int numPagesListed = 5);

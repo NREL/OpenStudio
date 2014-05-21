@@ -35,9 +35,9 @@ namespace openstudio {
 
 CollapsibleComponentList::CollapsibleComponentList(QWidget * parent)
   : QWidget(parent),
-  m_mainLayout(NULL),
-  m_contentLayout(NULL),
-  m_collapsibleComponentGroup(NULL)
+  m_mainLayout(nullptr),
+  m_contentLayout(nullptr),
+  m_collapsibleComponentGroup(nullptr)
 {
   createLayout();
 }
@@ -45,9 +45,9 @@ CollapsibleComponentList::CollapsibleComponentList(QWidget * parent)
 CollapsibleComponentList::CollapsibleComponentList(const std::vector<CollapsibleComponent *> & collapsibleComponents,
                                                    QWidget * parent)
   : QWidget(parent),
-  m_mainLayout(NULL),
-  m_contentLayout(NULL),
-  m_collapsibleComponentGroup(NULL)
+  m_mainLayout(nullptr),
+  m_contentLayout(nullptr),
+  m_collapsibleComponentGroup(nullptr)
 
 {
   createLayout();
@@ -58,11 +58,11 @@ void CollapsibleComponentList::createLayout()
 {
   this->setObjectName("GrayWidget"); 
 
-  QVBoxLayout * outerVLayout = new QVBoxLayout();
+  auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);
   this->setLayout(outerVLayout);
 
-  QWidget * outerWidget = new QWidget();
+  auto outerWidget = new QWidget();
 
   outerVLayout->addWidget(outerWidget);
 
@@ -78,7 +78,7 @@ void CollapsibleComponentList::createLayout()
 
 Component * CollapsibleComponentList::checkedComponent() const
 {
-  Component * result = NULL;
+  Component * result = nullptr;
   if (checkedCollapsibleComponent()){
     result = checkedCollapsibleComponent()->componentList()->checkedComponent();
   }

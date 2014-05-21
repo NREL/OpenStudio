@@ -95,16 +95,16 @@ namespace detail {
       if (!options.finalPoint().empty()) {
         ss << "          final_point = ";
         std::vector<double> finalPoint = options.finalPoint();
-        for (std::vector<double>::iterator i = finalPoint.begin(); i != finalPoint.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : finalPoint) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
       else if (!options.stepVector().empty()) {
         ss << "          step_vector = ";
         std::vector<double> stepVector = options.stepVector();
-        for (std::vector<double>::iterator i = stepVector.begin(); i != stepVector.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : stepVector) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
@@ -117,8 +117,8 @@ namespace detail {
       if (!options.listOfPoints().empty()) {
         ss << "          list_of_points = ";
         std::vector<double> listOfPoints = options.listOfPoints();
-        for (std::vector<double>::iterator i = listOfPoints.begin(); i != listOfPoints.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : listOfPoints) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
@@ -130,14 +130,14 @@ namespace detail {
       if (!options.stepVector().empty()) {
         ss << "          step_vector = ";
         std::vector<double> stepVector = options.stepVector();
-        for (std::vector<double>::iterator i = stepVector.begin(); i != stepVector.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : stepVector) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
         ss << "          steps_per_variable = ";
         std::vector<int> stepsPerVariable = options.stepsPerVariable();
-        for (std::vector<int>::iterator i = stepsPerVariable.begin(); i != stepsPerVariable.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : stepsPerVariable) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }
@@ -149,8 +149,8 @@ namespace detail {
       if (!options.partitions().empty()) {
         ss << "          partitions = ";
         std::vector<int> partitions = options.partitions();
-        for (std::vector<int>::iterator i = partitions.begin(); i != partitions.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : partitions) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }

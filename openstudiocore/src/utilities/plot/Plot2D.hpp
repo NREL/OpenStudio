@@ -252,7 +252,7 @@ public:
 
 protected:
   /// constructor
-  Plot2D(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  Plot2D(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   QVBoxLayout *m_vBoxLayout;
 

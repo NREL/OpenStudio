@@ -265,7 +265,7 @@ namespace resultsviewer{
   {
     Q_OBJECT
   public:
-    PlotViewToolbar(const QString &title, QWidget *parent = 0);
+    PlotViewToolbar(const QString &title, QWidget *parent = nullptr);
 
   protected:
     void mouseDoubleClickEvent(QMouseEvent *evt);
@@ -284,8 +284,8 @@ signals:
 
   public:
 
-    PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=0);
-    PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=0);
+    PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
+    PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
 
 
     // plot view data handler

@@ -39,7 +39,7 @@ class MonitorUseDialog : public OSDialog
 
 public:
 
-  MonitorUseDialog(QWidget * parent = 0);
+  MonitorUseDialog(QWidget * parent = nullptr);
 
   virtual ~MonitorUseDialog();
 

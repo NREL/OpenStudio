@@ -36,7 +36,7 @@ class OSIntegerEdit2: public QLineEdit {
 
  public:
 
-  OSIntegerEdit2(QWidget * parent = 0);
+  OSIntegerEdit2(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit2() {}
 
@@ -120,7 +120,7 @@ class OSIntegerEdit: public QLineEdit {
 
  public:
 
-  OSIntegerEdit(QWidget * parent = 0);
+  OSIntegerEdit(QWidget * parent = nullptr);
 
   virtual ~OSIntegerEdit() {}
 

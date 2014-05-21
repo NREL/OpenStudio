@@ -357,7 +357,7 @@ namespace detail {
 
   bool DataPoint_Impl::isTag(const std::string& tagName) const {
     NameFinder<Tag> finder(tagName);
-    TagVector::const_iterator it = std::find_if(m_tags.begin(),m_tags.end(),finder);
+    auto it = std::find_if(m_tags.begin(),m_tags.end(),finder);
     return (it != m_tags.end());
   }
 
@@ -431,7 +431,7 @@ namespace detail {
 
   void DataPoint_Impl::deleteTag(const std::string& tagName) {
     NameFinder<Tag> finder(tagName);
-    TagVector::iterator it = std::find_if(m_tags.begin(),m_tags.end(),finder);
+    auto it = std::find_if(m_tags.begin(),m_tags.end(),finder);
     if (it != m_tags.end()) {
       m_tags.erase(it);
       onChange(AnalysisObject_Impl::Benign);

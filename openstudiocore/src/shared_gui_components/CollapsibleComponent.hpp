@@ -38,7 +38,7 @@ class CollapsibleComponent : public QAbstractButton
 public:
   CollapsibleComponent(CollapsibleComponentHeader * collapsibleComponentHeader,
     ComponentList * componentList,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~CollapsibleComponent() {}
   bool expanded() const;
   void setExpanded(bool expanded);

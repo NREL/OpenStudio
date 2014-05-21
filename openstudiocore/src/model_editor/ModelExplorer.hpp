@@ -56,7 +56,7 @@ namespace modeleditor
     Q_OBJECT
 
     public:
-    ModelExplorer(QWidget * parent = 0);
+    ModelExplorer(QWidget * parent = nullptr);
     virtual ~ModelExplorer();
     void loadFile(const QString &fileName);
     void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);

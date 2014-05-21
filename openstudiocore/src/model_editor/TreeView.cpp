@@ -55,7 +55,7 @@ void TreeView::keyReleaseEvent(QKeyEvent * event)
 bool TreeView::getSelectedRows(QModelIndexList& rowList)
 {
   //bool success = false;
-  QItemSelectionModel * selectionMod = NULL;
+  QItemSelectionModel * selectionMod = nullptr;
   selectionMod = selectionModel();
   if(selectionMod){
     //success = true;

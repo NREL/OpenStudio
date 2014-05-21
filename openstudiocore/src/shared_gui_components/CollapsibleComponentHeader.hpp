@@ -41,7 +41,7 @@ public:
   CollapsibleComponentHeader(const std::string& text,
     int numResults,
     int numPages,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~CollapsibleComponentHeader() {}
   void setChecked(bool isChecked);
   void setText(const QString& text);

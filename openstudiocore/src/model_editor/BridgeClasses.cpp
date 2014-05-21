@@ -24,7 +24,7 @@
 
 ComboHighlightBridge::ComboHighlightBridge(QObject* parent):
   QObject(parent),
-  m_source(NULL)
+  m_source(nullptr)
 {
 }
 

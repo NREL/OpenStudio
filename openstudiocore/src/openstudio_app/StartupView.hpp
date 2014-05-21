@@ -38,7 +38,7 @@ class StartupView : public QWidget
 
   public:
 
-  StartupView(QWidget * parent = 0);
+  StartupView(QWidget * parent = nullptr);
 
   virtual ~StartupView() {}
 
@@ -88,7 +88,7 @@ class TemplateListModel : public QAbstractListModel
 {
   public:
 
-  TemplateListModel(QObject * parent = 0);
+  TemplateListModel(QObject * parent = nullptr);
 
   int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 

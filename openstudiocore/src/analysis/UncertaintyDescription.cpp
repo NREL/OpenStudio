@@ -148,7 +148,7 @@ namespace detail {
         return false;
       }
     }   
-    AttributeVector::iterator it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
+    auto it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
     if (it == m_attributes.end()) {
       return false;
     }

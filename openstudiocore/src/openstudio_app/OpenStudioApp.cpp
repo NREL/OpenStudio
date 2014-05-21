@@ -360,7 +360,7 @@ boost::shared_ptr<OSDocument> OpenStudioApp::currentDocument() const
 
 void OpenStudioApp::importIdf()
 {
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   if( this->currentDocument() )
   {
@@ -439,22 +439,18 @@ void OpenStudioApp::importIdf()
 
         std::vector<LogMessage> messages = trans.errors();
 
-        for( std::vector<LogMessage>::iterator it = messages.begin();
-             it < messages.end();
-             ++it )
+        for( const auto & message : messages )
         {
-          log.append(QString::fromStdString(it->logMessage()));
+          log.append(QString::fromStdString(message.logMessage()));
           log.append("\n");
           log.append("\n");
         }
 
         messages = trans.warnings();
 
-        for( std::vector<LogMessage>::iterator it = messages.begin();
-             it < messages.end();
-             ++it )
+        for( const auto & message : messages )
         {
-          log.append(QString::fromStdString(it->logMessage()));
+          log.append(QString::fromStdString(message.logMessage()));
           log.append("\n");
           log.append("\n");
         }
@@ -471,7 +467,7 @@ void OpenStudioApp::importIdf()
 
 void OpenStudioApp::importSDD()
 {
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   if( this->currentDocument() )
   {
@@ -531,26 +527,22 @@ void OpenStudioApp::importSDD()
 
       std::vector<LogMessage> messages = trans.errors();
 
-      for( std::vector<LogMessage>::iterator it = messages.begin();
-           it < messages.end();
-           ++it )
+      for( const auto & message : messages )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(it->logMessage()));
+        log.append(QString::fromStdString(message.logMessage()));
         log.append("\n");
         log.append("\n");
       }
 
       messages = trans.warnings();
 
-      for( std::vector<LogMessage>::iterator it = messages.begin();
-           it < messages.end();
-           ++it )
+      for( const auto & message : messages )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(it->logMessage()));
+        log.append(QString::fromStdString(message.logMessage()));
         log.append("\n");
         log.append("\n");
       }
@@ -585,7 +577,7 @@ bool OpenStudioApp::closeDocument()
   {
     QWidget * parent = m_osDocument->mainWindow();
 
-    QMessageBox * messageBox = new QMessageBox(parent);
+    auto messageBox = new QMessageBox(parent);
 
     messageBox->setText("The document has been modified.");
 
@@ -659,7 +651,7 @@ void OpenStudioApp::onCloseClicked()
 
 void OpenStudioApp::open()
 {
-  QWidget * parent = NULL;
+  QWidget * parent = nullptr;
 
   if( this->currentDocument() )
   {
@@ -777,22 +769,18 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
 
   std::vector<LogMessage> messages = translator.errors();
 
-  for( std::vector<LogMessage>::iterator it = messages.begin();
-       it < messages.end();
-       ++it )
+  for( const auto & message : messages )
   {
-    log.append(QString::fromStdString(it->logMessage()));
+    log.append(QString::fromStdString(message.logMessage()));
     log.append("\n");
     log.append("\n");
   }
 
   messages = translator.warnings();
 
-  for( std::vector<LogMessage>::iterator it = messages.begin();
-       it < messages.end();
-       ++it )
+  for( const auto & message : messages )
   {
-    log.append(QString::fromStdString(it->logMessage()));
+    log.append(QString::fromStdString(message.logMessage()));
     log.append("\n");
     log.append("\n");
   }

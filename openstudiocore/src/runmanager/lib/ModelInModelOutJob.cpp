@@ -147,12 +147,10 @@ namespace detail {
         LOG(Info, "ModelInModelOut executing primary job");
         model::Model outmodel = modelToModelRun(*m);
 
-        for (std::vector<boost::shared_ptr<ModelInModelOutJob> >::iterator itr = mergedJobs.begin();
-             itr != mergedJobs.end();
-             ++itr)
+        for (const auto & mergedJob : mergedJobs)
         {
           LOG(Info, "ModelInModelOut executing merged job");
-          outmodel = (*itr)->modelToModelRun(outmodel);
+          outmodel = mergedJob->modelToModelRun(outmodel);
         }
 
         openstudio::path outFile = outpath / toPath("out.osm");
