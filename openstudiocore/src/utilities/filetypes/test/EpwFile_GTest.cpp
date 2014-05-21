@@ -92,13 +92,27 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_FALSE(data[8759].fieldByName("Liquid Precipitation Depth"));
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
-    EXPECT_TRUE(series);
-    EXPECT_EQ(8760,series->values().size());
+    ASSERT_TRUE(series);
+    ASSERT_EQ(8760,series->values().size());
+    DateTimeVector seriesTimes = series->dateTimes();
+    ASSERT_EQ(8760,seriesTimes.size());
     // Check the times in the data and the time series
-    //DateTime current = DateTime
-    //for(unsigned i=0;i<8760;i++) {
-      
-    //}
+    DateTime current(Date(1,1,1999),Time(0,1)); // Use 1999 to avoid leap years
+    Time delta(0,1);
+    for(unsigned i=0;i<8760;i++) {
+      // This is a lot more complicated that it probably should be to avoid the year being a problem
+      DateTime datatime = data[i].dateTime();
+      EXPECT_EQ(datatime.date().monthOfYear(), current.date().monthOfYear());
+      EXPECT_EQ(datatime.date().dayOfMonth(), current.date().dayOfMonth());
+      EXPECT_EQ(datatime.time().hours(), current.time().hours());
+      EXPECT_EQ(datatime.time().minutes(), current.time().minutes());
+      DateTime seriestime = seriesTimes[i];
+      EXPECT_EQ(seriestime.date().monthOfYear(), current.date().monthOfYear());
+      EXPECT_EQ(seriestime.date().dayOfMonth(), current.date().dayOfMonth());
+      EXPECT_EQ(seriestime.time().hours(), current.time().hours());
+      EXPECT_EQ(seriestime.time().minutes(), current.time().minutes());
+      current += delta;
+    }
     // We should redo the original tests because we have reparsed the entire file
     EXPECT_EQ(p, epwFile.path());
     EXPECT_EQ("E2EFCD8E", epwFile.checksum());
@@ -153,13 +167,27 @@ TEST(Filetypes, EpwFile_International_Data)
     EXPECT_FALSE(data[8759].fieldByName("Liquid Precipitation Depth"));
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
-    EXPECT_TRUE(series);
-    EXPECT_EQ(8760,series->values().size());
+    ASSERT_TRUE(series);
+    ASSERT_EQ(8760,series->values().size());
+    DateTimeVector seriesTimes = series->dateTimes();
+    ASSERT_EQ(8760,seriesTimes.size());
     // Check the times in the data and the time series
-    //DateTime current = DateTime
-    //for(unsigned i=0;i<8760;i++) {
-    //  
-    //}
+    DateTime current(Date(1,1,1999),Time(0,1)); // Use 1999 to avoid leap years
+    Time delta(0,1);
+    for(unsigned i=0;i<8760;i++) {
+      // This is a lot more complicated that it probably should be to avoid the year being a problem
+      DateTime datatime = data[i].dateTime();
+      EXPECT_EQ(datatime.date().monthOfYear(), current.date().monthOfYear());
+      EXPECT_EQ(datatime.date().dayOfMonth(), current.date().dayOfMonth());
+      EXPECT_EQ(datatime.time().hours(), current.time().hours());
+      EXPECT_EQ(datatime.time().minutes(), current.time().minutes());
+      DateTime seriestime = seriesTimes[i];
+      EXPECT_EQ(seriestime.date().monthOfYear(), current.date().monthOfYear());
+      EXPECT_EQ(seriestime.date().dayOfMonth(), current.date().dayOfMonth());
+      EXPECT_EQ(seriestime.time().hours(), current.time().hours());
+      EXPECT_EQ(seriestime.time().minutes(), current.time().minutes());
+      current += delta;
+    }
     // No need to redo the original tests here since the data should have been loaded in the constructor
   }catch(...){
     ASSERT_TRUE(false);
