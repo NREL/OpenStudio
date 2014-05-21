@@ -18,38 +18,38 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include <model/test/ModelFixture.hpp>
 #include <model/BoilerHotWater.hpp>
 #include <model/BoilerHotWater_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(BoilerHotWater,BoilerHotWater_BoilerHotWater)
+TEST_F(ModelFixture,BoilerHotWater_BoilerHotWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
-
-     model::BoilerHotWater boiler(m); 
+     Model m; 
+     BoilerHotWater boiler(m); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(BoilerHotWater,BoilerHotWater_connections)
+TEST_F(ModelFixture,BoilerHotWater_connections)
 {
-  model::Model m; 
-  
-  model::BoilerHotWater boiler(m); 
+  Model m; 
+  BoilerHotWater boiler(m); 
 
-  model::Node inletNode(m);
-
-  model::Node outletNode(m);
+  Node inletNode(m);
+  Node outletNode(m);
 
   m.connect(inletNode,inletNode.outletPort(),boiler,boiler.inletPort());
   m.connect(boiler,boiler.outletPort(),outletNode,outletNode.inletPort());
@@ -61,3 +61,34 @@ TEST(BoilerHotWater,BoilerHotWater_connections)
   EXPECT_EQ( outletNode.handle(), boiler.outletModelObject()->handle() );
 }
 
+TEST_F(ModelFixture,BoilerHotWater_addToNode) {
+  Model m;
+  BoilerHotWater testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  BoilerHotWater testObjectClone = testObject.clone(m).cast<BoilerHotWater>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+}

@@ -35,9 +35,7 @@
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_Uncontrolled_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace model {
@@ -164,8 +162,6 @@ namespace detail{
                 AirTerminalSingleDuctUncontrolled mo = this->getObject<AirTerminalSingleDuctUncontrolled>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true;
@@ -189,7 +185,7 @@ namespace detail{
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
-    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
          ++it )

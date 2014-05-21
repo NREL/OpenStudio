@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanZoneExhaust( FanZoneEx
   
   if( value )
   {
-    idfObject.setDouble(Fan_ZoneExhaustFields::FanEfficiency, *value);
+    idfObject.setDouble(Fan_ZoneExhaustFields::FanTotalEfficiency, *value);
   }
   
   // N2, Field Pressure Rise

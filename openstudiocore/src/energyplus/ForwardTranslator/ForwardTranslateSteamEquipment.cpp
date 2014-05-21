@@ -64,10 +64,10 @@ boost::optional<IdfObject> ForwardTranslator::translateSteamEquipment(
   if (space){
     boost::optional<ThermalZone> thermalZone = space->thermalZone();
     if (thermalZone){
-      idfObject.setString(SteamEquipmentFields::ZoneName, thermalZone->name().get());
+      idfObject.setString(SteamEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
     }
   }else if(spaceType){
-    idfObject.setString(SteamEquipmentFields::ZoneName, spaceType->name().get());
+    idfObject.setString(SteamEquipmentFields::ZoneorZoneListName, spaceType->name().get());
   }
 
   boost::optional<Schedule> schedule = modelObject.schedule();

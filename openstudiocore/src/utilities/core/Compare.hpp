@@ -36,9 +36,18 @@ namespace openstudio {
 class BCLComponent;
 class WorkspaceObject;
 
+/** Small functor object for case insensitive char compare.
+ *   Used in istringEqual. */
+struct UTILITIES_API IcharCompare{
+  bool operator()(char cA, char cB) const{
+    return toupper(cA) == toupper(cB);
+  };
+};
+
 /** Test equality between two strings without regard to case. */
 inline UTILITIES_API bool istringEqual(const std::string& x, const std::string& y){
-  return boost::iequals(x, y);
+  return x.size() == y.size() &&
+         std::equal(x.begin(), x.end(), y.begin(), IcharCompare());
 };
 
 /** Small functor object for case insensitive std::string equality. */

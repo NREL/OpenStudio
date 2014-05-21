@@ -73,7 +73,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
   }
 
   // Fan Efficiency /////////////////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_VariableVolumeFields::FanEfficiency,modelObject.fanEfficiency());
+  idfObject.setDouble(openstudio::Fan_VariableVolumeFields::FanTotalEfficiency,modelObject.fanEfficiency());
 
   // Pressure Rise //////////////////////////////////////////////////////////
   idfObject.setDouble(openstudio::Fan_VariableVolumeFields::PressureRise,modelObject.pressureRise());

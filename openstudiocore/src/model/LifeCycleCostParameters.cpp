@@ -242,6 +242,12 @@ namespace detail {
     return result;
   }
 
+  std::vector<std::string> LifeCycleCostParameters_Impl::validNistRegionValues() const
+  {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_LifeCycleCost_ParametersFields::NISTRegion);
+  }
+
   bool LifeCycleCostParameters_Impl::isNISTRegionDefaulted() const{
     return isEmpty(OS_LifeCycleCost_ParametersFields::NISTRegion);
   }
@@ -253,6 +259,12 @@ namespace detail {
       result = getString(OS_LifeCycleCost_ParametersFields::NISTSector, true);
     }
     return result;
+  }
+
+  std::vector<std::string> LifeCycleCostParameters_Impl::validNistSectorValues() const
+  {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_LifeCycleCost_ParametersFields::NISTSector);
   }
 
   bool LifeCycleCostParameters_Impl::isNISTSectorDefaulted() const{
@@ -378,14 +390,24 @@ namespace detail {
   {
     bool changed = (this->analysisType() != analysisType);
 
-    bool result = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, analysisType);
+    bool result = setString(OS_LifeCycleCost_ParametersFields::AnalysisType, analysisType, false);
     if (result && changed){
       if (isFEMPAnalysis()){
         if (isConstantDollarAnalysis()){
-          setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+          // DLM: don't emit change signals until end
+          //setRealDiscountRate(LifeCycleCostParameters::fempRealDiscountRate());
+          setDouble(OS_LifeCycleCost_ParametersFields::RealDiscountRate,LifeCycleCostParameters::fempRealDiscountRate(), false);
+          setString(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, "", false);
+          setString(OS_LifeCycleCost_ParametersFields::Inflation, "", false);
         }else{  
-          setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
-          setInflation(LifeCycleCostParameters::fempInflation());
+          // DLM: this call has logic that prevents it from working if isFEMPAnalysis 
+          // DLM: don't emit change signals until end
+          //setNominalDiscountRate(LifeCycleCostParameters::fempNominalDiscountRate());
+          //setInflation(LifeCycleCostParameters::fempInflation());
+          setString(OS_LifeCycleCost_ParametersFields::RealDiscountRate, "", false);
+          setDouble(OS_LifeCycleCost_ParametersFields::NominalDiscountRate, LifeCycleCostParameters::fempNominalDiscountRate(), false);
+          setDouble(OS_LifeCycleCost_ParametersFields::Inflation, LifeCycleCostParameters::fempInflation(), false);
         }
 
         if (lengthOfStudyPeriodInYears() > 25){
@@ -393,6 +415,8 @@ namespace detail {
         }
       }
     }
+
+    emitChangeSignals();
 
     return result;
   }
@@ -943,12 +967,22 @@ boost::optional<std::string> LifeCycleCostParameters::nistRegion() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->nistRegion();
 }
 
+std::vector<std::string> LifeCycleCostParameters::validNistRegionValues() const
+{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->validNistRegionValues();
+}
+
 bool LifeCycleCostParameters::isNISTRegionDefaulted() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->isNISTRegionDefaulted();
 }
 
 boost::optional<std::string> LifeCycleCostParameters::nistSector() const {
   return getImpl<detail::LifeCycleCostParameters_Impl>()->nistSector();
+}
+
+std::vector<std::string> LifeCycleCostParameters::validNistSectorValues() const
+{
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->validNistSectorValues();
 }
 
 bool LifeCycleCostParameters::isNISTSectorDefaulted() const {

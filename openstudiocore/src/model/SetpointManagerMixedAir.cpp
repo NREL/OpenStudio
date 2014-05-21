@@ -301,13 +301,20 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
 
   std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
 
-  std::vector<FanConstantVolume> constantFans = subsetCastVector<FanConstantVolume>(supplyComponents);
-  std::vector<FanVariableVolume> variableFans = subsetCastVector<FanVariableVolume>(supplyComponents);
-  std::vector<FanOnOff> onoffFans = subsetCastVector<FanOnOff>(supplyComponents);
-
-  fans.insert(fans.begin(),constantFans.begin(),constantFans.end());
-  fans.insert(fans.begin(),variableFans.begin(),variableFans.end());
-  fans.insert(fans.begin(),onoffFans.begin(),onoffFans.end());
+  for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
+         it != supplyComponents.end();
+         ++it )
+  {
+    if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
+      fans.insert(fans.begin(), *variableFan);
+    }
+    else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
+      fans.insert(fans.begin(), *constantFan);
+    }
+    else if( boost::optional<FanOnOff> onOffFan = it->optionalCast<FanOnOff>() ) {
+      fans.insert(fans.begin(), *onOffFan);
+    }
+  } 
 
   if( fans.size() > 0 )
   {

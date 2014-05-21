@@ -18,28 +18,29 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
 #include <model/test/ModelFixture.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
 #include <model/DistrictHeating.hpp>
 #include <model/DistrictHeating_Impl.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/Unit.hpp>
+#include <model/AirLoopHVAC.hpp>
 #include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
+using namespace openstudio;
+using namespace openstudio::model;
 
 //test construction of the object
-TEST(DistrictHeating,DistrictHeating_DistrictHeating)
+TEST_F(ModelFixture,DistrictHeating_DistrictHeating)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
   {
-    openstudio::model::Model m;
-
-    openstudio::model::DistrictHeating districtHeating(m);
+    Model m;
+    DistrictHeating districtHeating(m);
 
     exit(0); 
   } ,
@@ -47,18 +48,18 @@ TEST(DistrictHeating,DistrictHeating_DistrictHeating)
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
-TEST(DistrictHeating,DistrictHeating_connections)
+TEST_F(ModelFixture,DistrictHeating_connections)
 {
-  openstudio::model::Model m;
+  Model m;
 
   //make a plant loop
-  openstudio::model::PlantLoop plantLoop(m);
+  PlantLoop plantLoop(m);
 
   //make a districtheating object
-  openstudio::model::DistrictHeating districtHeating(m);
+  DistrictHeating districtHeating(m);
 
   //get the supply outlet node of the plant loop
-  openstudio::model::Node plantOutletNode = plantLoop.supplyOutletNode();
+  Node plantOutletNode = plantLoop.supplyOutletNode();
 
   //hook the districtheating object to the supply outlet node
   ASSERT_TRUE (districtHeating.addToNode(plantOutletNode));
@@ -80,22 +81,20 @@ TEST(DistrictHeating,DistrictHeating_connections)
   ASSERT_FALSE(districtHeating.outletModelObject() );
  
   //make an airloop
-  openstudio::model::AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
   //get the supply outlet node of the airloop
-  openstudio::model::Node airOutletNode = airLoop.supplyOutletNode();
+  Node airOutletNode = airLoop.supplyOutletNode();
 
   //it should not connect to an airloop
   ASSERT_FALSE(districtHeating.addToNode(airOutletNode));
-
 }
 
 //test setting and getting the nominal capacity
 TEST_F(ModelFixture,DistrictHeating_NominalCapacity_Quantity) {
 
-  openstudio::model::Model m;
-
-  openstudio::model::DistrictHeating districtHeating(m);
+  Model m;
+  DistrictHeating districtHeating(m);
 
   //test setting and getting the field with a double
   double testValue(1);
@@ -106,44 +105,73 @@ TEST_F(ModelFixture,DistrictHeating_NominalCapacity_Quantity) {
 
   //test setting and getting the field with a quantity
 
-  openstudio::Unit testUnits = districtHeating.getNominalCapacity(true).units(); // Get IP units.
+  Unit testUnits = districtHeating.getNominalCapacity(true).units(); // Get IP units.
 
-  openstudio::Quantity testQuantity(testValue,testUnits);
+  Quantity testQuantity(testValue,testUnits);
 
   EXPECT_TRUE(districtHeating.setNominalCapacity(testQuantity));
 
-  openstudio::Quantity testOutQuantity = districtHeating.getNominalCapacity(true);
+  Quantity testOutQuantity = districtHeating.getNominalCapacity(true);
 
   EXPECT_NEAR(testValue,testOutQuantity.value(),1.0E-8);
 
   EXPECT_EQ(testUnits.standardString(),testOutQuantity.units().standardString());
-
 }
 
 //test cloning the object
-TEST(DistrictHeating,DistrictHeating_Clone){
+TEST_F(ModelFixture,DistrictHeating_Clone){
 
-  openstudio::model::Model m;
+  Model m;
 
   //make an object to clone, and edit some property to make sure the clone worked
 
-  openstudio::model::DistrictHeating districtHeating(m);
+  DistrictHeating districtHeating(m);
 
   districtHeating.setNominalCapacity(1234);
 
   //clone into the same model
 
-  openstudio::model::DistrictHeating districtHeatingClone = districtHeating.clone(m).cast<openstudio::model::DistrictHeating>();
+  DistrictHeating districtHeatingClone = districtHeating.clone(m).cast<DistrictHeating>();
 
   ASSERT_EQ(1234,districtHeatingClone.nominalCapacity());
 
   //clone into another model
 
-  openstudio::model::Model m2;
+  Model m2;
 
-  openstudio::model::DistrictHeating districtHeatingClone2 = districtHeating.clone(m2).cast<openstudio::model::DistrictHeating>();
+  DistrictHeating districtHeatingClone2 = districtHeating.clone(m2).cast<DistrictHeating>();
 
   ASSERT_EQ(1234,districtHeatingClone2.nominalCapacity());
+}
 
+TEST_F(ModelFixture,DistrictHeating_addToNode) {
+  Model m;
+  DistrictHeating testObject(m);
 
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  DistrictHeating testObjectClone = testObject.clone(m).cast<DistrictHeating>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }

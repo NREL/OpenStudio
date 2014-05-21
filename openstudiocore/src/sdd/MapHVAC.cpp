@@ -166,8 +166,6 @@ namespace openstudio {
 namespace sdd {
 
 const double footToMeter =  0.3048;
-const double meterToFoot = 1.0/0.3048;
-const double footCandleToLux = 10.76391;
 const double cpWater = 4180.0;
 const double densityWater = 1000.0;
 

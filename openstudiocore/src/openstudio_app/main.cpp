@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
     modules.push_back("openstudiomodelresources");
     modules.push_back("openstudiomodelgeometry");
     modules.push_back("openstudiomodelhvac");
+    modules.push_back("openstudiomodelrefrigeration");
     modules.push_back("openstudioenergyplus");
     modules.push_back("openstudioruleset");
 

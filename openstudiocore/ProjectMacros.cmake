@@ -37,6 +37,10 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
   IF( BUILD_TESTING )
     ADD_EXECUTABLE( ${BASE_NAME}_tests ${SRC} )
 
+    LIST( APPEND ALL_TESTING_TARGETS "${BASE_NAME}_tests" )
+    SET( ALL_TESTING_TARGETS "${ALL_TESTING_TARGETS}" PARENT_SCOPE)
+
+
     CREATE_SRC_GROUPS( "${SRC}" )
     
     GET_TARGET_PROPERTY(BASE_NAME_TYPE ${BASE_NAME} TYPE)
@@ -297,6 +301,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     ELSE()
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )  
     ENDIF()
+  ELSEIF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess" )
   ENDIF()
 
   IF (CMAKE_COMPILER_IS_GNUCXX)
@@ -414,14 +420,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     # wrapper that imports all of the libraries/python wrappers into the appropriate modules.  
     # http://docs.python.org/2/tutorial/modules.html
     # http://docs.python.org/2/library/imp.html
-    #    IF(IS_UTILTIES)
-    #SET( MODULE "OpenStudio")
-      #ELSE()
-      # SET( MODULE "OpenStudio.${SIMPLENAME}" )
-      #ENDIF()    
  
     SET(MODULE ${LOWER_NAME})
-
       
     ADD_CUSTOM_COMMAND(
       OUTPUT "python_${NAME}_wrap.cxx"
@@ -433,14 +433,13 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
                -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
                "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
+    )
 
-    ) 
     ADD_LIBRARY(
       ${swig_target}
       MODULE
       python_${NAME}_wrap.cxx 
     )
-
 
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME} )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
@@ -450,10 +449,62 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     IF(MSVC)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".pyd" )
+    ELSEIF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess" )
     ENDIF()
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY} )
 
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+
+    IF(MSVC)
+      SET( _NAME "_${LOWER_NAME}.pyd")
+    ELSE()
+      SET( _NAME "_${LOWER_NAME}.so")
+    ENDIF()
+
+    IF( WIN32 OR APPLE )
+      INSTALL( TARGETS ${swig_target} DESTINATION Python/openstudio/ )
+
+      SET( Prereq_Dirs
+        "${CMAKE_BINARY_DIR}/Products/"
+        "${CMAKE_BINARY_DIR}/Products/Release"
+        "${CMAKE_BINARY_DIR}/Products/Debug"
+      )
+
+      INSTALL(CODE "
+        INCLUDE(GetPrerequisites)
+        GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
+
+       IF(WIN32)
+         LIST(REVERSE PREREQUISITES)
+       ENDIF(WIN32)
+
+       FOREACH( PREREQ IN LISTS PREREQUISITES )
+         GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+         EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
+
+         GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+
+         IF(APPLE)
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME}\")
+           FOREACH( PR IN LISTS PREREQUISITES )
+            GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
+            GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
+            EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\${PREREQNAME}\")
+           ENDFOREACH()
+         ENDIF()
+       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
+
+       IF(APPLE)
+         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
+          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
+       ENDIF()
+      " )
+    ELSE(WIN32 OR APPLE)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/python")
+    ENDIF()
+
+    INSTALL(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
     
     # add this target to a "global" variable so python tests can require these
     LIST( APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}" )
@@ -539,6 +590,111 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
          GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
        ENDFOREACH( PREREQ IN LISTS PREREQUISITES )  
       ")
+    ENDIF()
+  ENDIF()
+
+  # java
+  IF ( BUILD_JAVA_BINDINGS )
+    SET( swig_target "java_${NAME}" )
+    
+    STRING(SUBSTRING ${NAME} 10 -1 SIMPLIFIED_NAME )
+    STRING(TOLOWER ${SIMPLIFIED_NAME} SIMPLIFIED_NAME )
+
+    IF(IS_UTILTIES)
+      SET( NAMESPACE "gov.nrel.openstudio")
+      SET( MODULE "${SIMPLIFIED_NAME}_global" )
+    ELSE()
+      #SET( NAMESPACE "OpenStudio.${NAME}" )
+      SET( NAMESPACE "gov.nrel.openstudio" )  
+      SET( MODULE "${SIMPLIFIED_NAME}_global" )
+    ENDIF()    
+
+    SET(SWIG_WRAPPER "java_${NAME}_wrap.cxx")    
+    SET(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}") 
+
+    SET(JAVA_OUTPUT_NAME "${NAME}_java")
+    SET(JAVA_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources/${NAME}" )
+    FILE(MAKE_DIRECTORY ${JAVA_GENERATED_SRC_DIR})
+
+    ADD_CUSTOM_COMMAND(
+    OUTPUT ${SWIG_WRAPPER}
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${JAVA_GENERATED_SRC_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${JAVA_GENERATED_SRC_DIR}"
+    COMMAND "${SWIG_EXECUTABLE}"
+            "-java" "-c++" 
+            -package ${NAMESPACE}
+            #          -features autodoc=1
+            -outdir "${JAVA_GENERATED_SRC_DIR}"  "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+            -module "${MODULE}"
+            -o "${SWIG_WRAPPER_FULL_PATH}"
+            # -dllimport "${JAVA_OUTPUT_NAME}"
+            "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}  
+     DEPENDS ${this_depends}
+
+    )
+
+    INCLUDE_DIRECTORIES("${JAVA_INCLUDE_PATH}" "${JAVA_INCLUDE_PATH2}")
+
+    ADD_LIBRARY(
+      ${swig_target}
+      MODULE
+      ${SWIG_WRAPPER}
+    )
+
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME "${JAVA_OUTPUT_NAME}" )
+    #SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/java/" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java/" )
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/java/" )
+    IF(MSVC)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      SET(final_name "${JAVA_OUTPUT_NAME}.dll")
+    ENDIF()
+    TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
+    IF(APPLE)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".dylib" )
+      SET(final_name "lib${JAVA_OUTPUT_NAME}.dylib")
+     ENDIF() 
+    
+    #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+    
+    # add this target to a "global" variable so java tests can require these
+    LIST( APPEND ALL_JAVA_BINDING_TARGETS "${swig_target}" )
+    SET( ALL_JAVA_BINDING_TARGETS "${ALL_JAVA_BINDING_TARGETS}" PARENT_SCOPE )
+  
+    LIST( APPEND ALL_JAVA_SRC_DIRECTORIES "${JAVA_GENERATED_SRC_DIR}" )
+    SET( ALL_JAVA_SRC_DIRECTORIES "${ALL_JAVA_SRC_DIRECTORIES}" PARENT_SCOPE )
+  
+  
+    IF( WIN32 OR APPLE)
+      INSTALL( TARGETS ${swig_target} DESTINATION Java/openstudio/ )
+
+      INSTALL(CODE "
+       INCLUDE(GetPrerequisites)
+       GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Java/openstudio/${final_name} PREREQUISITES 1 1 \"\" \"${CMAKE_BINARY_DIR}/Products/\" )
+      
+       IF(WIN32)
+         LIST(REVERSE PREREQUISITES)
+       ENDIF(WIN32)
+       
+       FOREACH( PREREQ IN LISTS PREREQUISITES )
+         GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+         EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\") 
+
+         GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+
+         IF(APPLE)
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/${final_name}\")
+           FOREACH( PR IN LISTS PREREQUISITES )
+             GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
+             GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
+             EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Java/openstudio/\${PREREQNAME}\")
+           ENDFOREACH()
+         ENDIF()
+       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )  
+      ")
+    ELSE(WIN32 OR APPLE)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/java")
     ENDIF()
   ENDIF()
 
@@ -665,11 +821,11 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
       IF(APPLE)
         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/Resources/\")
+          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/Resources/\")
       ENDIF()
       " )
     ELSE(WIN32 OR APPLE)
-      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/${V8_TYPE}")
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/${V8_TYPE}")
     ENDIF()
   ENDIF()
 

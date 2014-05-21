@@ -20,9 +20,13 @@
 #include <gtest/gtest.h>
 
 #include <model/test/ModelFixture.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/ScheduleConstant.hpp>
 #include <model/ScheduleConstant_Impl.hpp>
-
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
 
@@ -85,3 +89,43 @@ TEST_F(ModelFixture,CoilCoolingLowTempRadiantConstFlow_SetGetFields) {
   //EXPECT_TRUE(*value2,1.0);
 }
 
+TEST_F(ModelFixture,CoilCoolingLowTempRadiantConstFlow_addToNode) {
+  Model m;
+  ScheduleConstant coolingHighWaterTempSched(m);
+  ScheduleConstant coolingLowWaterTempSched(m);
+  ScheduleConstant coolingHighControlTempSched(m);
+  ScheduleConstant coolingLowControlTempSched(m);
+
+  CoilCoolingLowTempRadiantConstFlow testObject(m,
+                                                coolingHighWaterTempSched,
+                                                coolingLowWaterTempSched,
+                                                coolingHighControlTempSched,
+                                                coolingLowControlTempSched);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  CoilCoolingLowTempRadiantConstFlow testObjectClone = testObject.clone(m).cast<CoilCoolingLowTempRadiantConstFlow>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+}

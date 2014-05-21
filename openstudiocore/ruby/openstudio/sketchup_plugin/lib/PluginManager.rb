@@ -449,7 +449,7 @@ module OpenStudio
     end
 
     def energyplus_version
-      return('8.0.0')
+      return('8.1.0')
     end
     
     def minimal_template_path

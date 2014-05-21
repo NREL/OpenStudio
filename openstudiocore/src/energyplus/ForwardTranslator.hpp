@@ -23,6 +23,7 @@
 #include <energyplus/EnergyPlusAPI.hpp>
 #include <model/Model.hpp>
 #include <model/ConstructionBase.hpp>
+#include <model/HVACComponent.hpp>
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/StringStreamLogSink.hpp>
@@ -38,6 +39,7 @@ class AirConditionerVariableRefrigerantFlow;
 class AirGap;
 class AirLoopHVAC;
 class AirLoopHVACUnitaryHeatPumpAirToAir;
+class AirLoopHVACUnitarySystem;
 class AirLoopHVACReturnPlenum;
 class AirLoopHVACSupplyPlenum;
 class AirLoopHVACZoneSplitter;
@@ -233,7 +235,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.0"
+#define ENERGYPLUS_VERSION "8.1"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -304,6 +306,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateAirLoopHVACOutdoorAirSystem( model::AirLoopHVACOutdoorAirSystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACUnitaryHeatPumpAirToAir( model::AirLoopHVACUnitaryHeatPumpAirToAir & modelObject );
+
+  boost::optional<IdfObject> translateAirLoopHVACUnitarySystem( model::AirLoopHVACUnitarySystem & modelObject );
 
   boost::optional<IdfObject> translateAirLoopHVACReturnPlenum( model::AirLoopHVACReturnPlenum & airLoopHVACReturnPlenum );
 
@@ -731,6 +735,10 @@ class ENERGYPLUS_API ForwardTranslator {
 
   static std::vector<IddObjectType> iddObjectsToTranslate();
   static std::vector<IddObjectType> iddObjectsToTranslateInitializer();
+
+  /** Determines whether or not the HVACComponent is part of a unitary sytem or on an
+   *  AirLoopHVAC */
+  bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
 
   /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
    *  IdfFile if successful. */

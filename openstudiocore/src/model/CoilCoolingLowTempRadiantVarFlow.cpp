@@ -30,6 +30,10 @@
 #include <model/ScheduleTypeRegistry.hpp>
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Cooling_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
@@ -107,7 +111,7 @@ namespace detail {
 
     std::vector<ZoneHVACLowTempRadiantVarFlow> zoneHVACLowTempRadiantVarFlows;
 
-    zoneHVACLowTempRadiantVarFlows = this->model().getModelObjects<ZoneHVACLowTempRadiantVarFlow>();
+    zoneHVACLowTempRadiantVarFlows = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
 
     for( std::vector<ZoneHVACLowTempRadiantVarFlow>::iterator it = zoneHVACLowTempRadiantVarFlows.begin();
     it < zoneHVACLowTempRadiantVarFlows.end();
@@ -300,6 +304,19 @@ namespace detail {
       resetCoolingControlTemperatureSchedule();
     }
     return true;
+  }
+
+  bool CoilCoolingLowTempRadiantVarFlow_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
 } // detail

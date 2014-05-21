@@ -125,7 +125,7 @@ if (not ARGV[1] or not File::file?(ARGV[1]) or File::directory?(ARGV[1]))
   puts "no sql file given, running EnergyPlus..."
  
   # find EnergyPlus
-  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,0)
+  ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
   ep_path = OpenStudio::Path.new(ep_hash[:energyplus_exe].to_s)
   ep_parent_path = ep_path.parent_path()
 

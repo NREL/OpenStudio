@@ -114,7 +114,11 @@ void OSLineEdit2::unbind()
 
 void OSLineEdit2::onEditingFinished() {
   if(m_modelObject && m_set) {
-    (*m_set)(this->text().toStdString());   
+    bool result = (*m_set)(this->text().toStdString());
+    if (!result){
+      //restore
+      onModelObjectChange();
+    }
   }
 }
 

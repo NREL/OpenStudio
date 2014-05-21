@@ -47,6 +47,8 @@
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <utilities/idd/OS_Fan_OnOff_FieldEnums.hxx>
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Assert.hpp>
@@ -388,8 +390,24 @@ namespace detail {
   {
     // Process all types that might contain a FanOnOff object.
 
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
     // AirLoopHVACUnitaryHeatPumpAirToAir
-    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();

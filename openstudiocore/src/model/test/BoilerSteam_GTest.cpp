@@ -18,17 +18,65 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/BoilerSteam.hpp>
 #include <model/BoilerSteam_Impl.hpp>
-
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/Unit.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture,BoilerSteam_BoilerSteam)
+{
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+
+  ASSERT_EXIT ( 
+  {  
+     Model m; 
+     BoilerSteam boiler(m); 
+
+     exit(0); 
+  } ,
+    ::testing::ExitedWithCode(0), "" );
+}
+
+TEST_F(ModelFixture,BoilerSteam_addToNode) {
+  Model m;
+  BoilerSteam testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  BoilerSteam testObjectClone = testObject.clone(m).cast<BoilerSteam>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+}
 
 TEST_F(ModelFixture,BoilerSteam_MaximumOperatingPressure_Quantity) {
   Model model;

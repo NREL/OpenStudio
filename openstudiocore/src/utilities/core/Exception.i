@@ -42,6 +42,15 @@
       SWIG_CSharpSetPendingException(SWIG_CSharpApplicationException, e.what());
     }
   }
+#elif defined(SWIGJAVA)
+  %exception {
+    try {
+      $action
+    } catch (const std::exception &e) {
+      SWIG_exception(SWIG_RuntimeError, const_cast<char*>(e.what()));
+    }
+  }
+
 #elif defined(SWIGJAVASCRIPT)
 
   %exception {

@@ -3377,6 +3377,23 @@ Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
+void intersectSurfaces(std::vector<Space>& spaces)
+{
+  std::vector<BoundingBox> bounds;
+  BOOST_FOREACH(const Space& space, spaces){
+    bounds.push_back(space.transformation()*space.boundingBox());
+  }
+
+  for (unsigned i = 0; i < spaces.size(); ++i){
+    for (unsigned j = i+1; j < spaces.size(); ++j){
+      if (!bounds[i].intersects(bounds[j])){
+        continue;
+      }
+      spaces[i].intersectSurfaces(spaces[j]);
+    }
+  }
+}
+
 void matchSurfaces(std::vector<Space>& spaces)
 {
   std::vector<BoundingBox> bounds;
@@ -3459,9 +3476,6 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
 
   double floorPrintWidth = (xmax-xmin);
   double floorPrintHeight = (ymax-ymin);
-  double floorPrintArea = floorPrintWidth * floorPrintHeight;
-  double desiredArea = desiredWidth * desiredHeight;
-  double numSkylights = skylightToProjectedFloorRatio*floorPrintArea/desiredArea;
 
   double numSkylightsX = std::sqrt(skylightToProjectedFloorRatio)*floorPrintWidth/desiredWidth;
   double numSkylightsY = std::sqrt(skylightToProjectedFloorRatio)*floorPrintHeight/desiredHeight;

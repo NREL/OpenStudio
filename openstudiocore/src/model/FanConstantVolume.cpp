@@ -37,6 +37,8 @@
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
@@ -188,43 +190,27 @@ namespace detail {
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
   {
-    if( OptionalAirLoopHVAC airLoopHVAC = node.airLoopHVAC() )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
+      if( airLoop->supplyComponent(node.handle()) )
       {
-        if( oaSystem->component(node.handle()) )
+        std::vector<ModelObject> allFans;
+        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
+        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
+        allFans = constantFans;
+        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+
+        if( allFans.size() > 1 )
         {
           return false;
         }
+
+        if( StraightComponent_Impl::addToNode(node) ) 
+        {
+          SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
+          return true;
+        }
       }
-
-      if( ! airLoopHVAC->supplyComponent(node.handle()) )
-      {
-        return false;
-      }
-
-      std::vector<ModelObject> allFans;
-
-      std::vector<ModelObject> constantFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-
-      std::vector<ModelObject> variableFans = airLoopHVAC->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-
-      allFans = constantFans;
-      allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
-
-      if( allFans.size() > 0 )
-      {
-        return false;
-      }
-
-      bool result = StraightComponent_Impl::addToNode( node );
-
-      if( result )
-      {
-        SetpointManagerMixedAir::updateFanInletOutletNodes(airLoopHVAC.get());
-      }
-
-      return result;
     }
 
     return false;
@@ -264,11 +250,27 @@ namespace detail {
   {
     // Process all types that might contain a CoilHeatingWater object.
 
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> fan = it->supplyFan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
     // AirTerminalSingleDuctParallelPIUReheat
 
     std::vector<AirTerminalSingleDuctParallelPIUReheat> airTerminalSingleDuctParallelPIUReheatObjects;
 
-    airTerminalSingleDuctParallelPIUReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
+    airTerminalSingleDuctParallelPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
 
     for( std::vector<AirTerminalSingleDuctParallelPIUReheat>::iterator it = airTerminalSingleDuctParallelPIUReheatObjects.begin();
     it < airTerminalSingleDuctParallelPIUReheatObjects.end();
@@ -287,7 +289,7 @@ namespace detail {
 
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
 
-    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
@@ -311,7 +313,7 @@ namespace detail {
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
-    zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
@@ -330,7 +332,7 @@ namespace detail {
 
     std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
 
-    zoneHVACPackagedTerminalAirConditioners = this->model().getModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+    zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
     for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
     it < zoneHVACPackagedTerminalAirConditioners.end();
@@ -349,7 +351,7 @@ namespace detail {
 
     std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
 
-    zoneHVACPackagedTerminalHeatPumps = this->model().getModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+    zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
     for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
     it < zoneHVACPackagedTerminalHeatPumps.end();
@@ -368,7 +370,7 @@ namespace detail {
 
     std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeater;
 
-    zoneHVACUnitHeater = this->model().getModelObjects<ZoneHVACUnitHeater>();
+    zoneHVACUnitHeater = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
 
     for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
     it < zoneHVACUnitHeater.end();
