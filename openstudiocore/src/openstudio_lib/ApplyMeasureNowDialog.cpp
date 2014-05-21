@@ -330,6 +330,11 @@ void ApplyMeasureNowDialog::runMeasure()
   arg.append(toQString(p));
   rjb.addToolArgument(arg.toStdString());
 
+  p = getOpenStudioRubyIncludePath();
+  arg = "-I";
+  arg.append(toQString(p));
+  rjb.addToolArgument(arg.toStdString());
+
   openstudio::runmanager::Workflow wf;
   rjb.addToWorkflow(wf);
   wf.add(co.getTools());
