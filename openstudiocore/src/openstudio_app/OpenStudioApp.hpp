@@ -116,7 +116,7 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
-  virtual void reloadFile(const QString& fileToLoad, const QString& saveFileName);
+  virtual void reloadFile(const QString& fileToLoad, bool modified);
 
  private slots:
 

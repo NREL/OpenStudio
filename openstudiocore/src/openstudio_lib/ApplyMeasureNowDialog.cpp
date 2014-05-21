@@ -78,7 +78,7 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   createWidgets();
 
   openstudio::OSAppBase * app = OSAppBase::instance();
-  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, const QString&)), app, SLOT(reloadFile(const QString&, const QString&)), Qt::QueuedConnection);
+  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, bool)), app, SLOT(reloadFile(const QString&, bool)), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 }
 
@@ -669,9 +669,7 @@ void ApplyMeasureNowDialog::requestReload()
   // todo: do this in memory without reloading from disk
   OS_ASSERT(m_reloadPath);
   QString fileToLoad = toQString(*m_reloadPath);
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  QString saveFileName = app->currentDocument()->savePath();
-  emit reloadFile(fileToLoad, saveFileName);
+  emit reloadFile(fileToLoad, true);
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)

@@ -127,9 +127,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_savePath(filePath),
     m_isPlugin(isPlugin)
 {
-
-
-  bool modifiedOnLoad = false;
   bool isConnected = false;
 
   m_combinedCompLibrary = model::Model(m_compLibrary.clone());
@@ -148,35 +145,25 @@ OSDocument::OSDocument( openstudio::model::Model library,
     }
   }
 
-  if( model )
-  {
-    m_model = model.get();
-  }
-  else
-  {
-    m_model = openstudio::model::Model();
-  }
-
   m_mainWindow = new MainWindow(m_isPlugin);
-  isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
-  OS_ASSERT(isConnected);
-
   addQObject(m_mainWindow);
 
-  bool isIP = m_mainWindow->displayIP();
+  if( !model ){
+    model = openstudio::model::Model();
+  }
 
   openstudio::path modelTempDir = createModelTempDir();
   m_modelTempDir = toQString(modelTempDir);
 
-  if( !m_savePath.isEmpty() )
-  {
+  if( m_savePath.isEmpty() ){
+    m_mainWindow->setWindowFilePath("Untitled");
+  }else{
+    m_mainWindow->setWindowFilePath(m_savePath);
     initializeModelTempDir(toPath(m_savePath), modelTempDir);
   }
 
-  modifiedOnLoad |= updateModelTempDir(m_model, modelTempDir);
-
+  bool modifiedOnLoad = updateModelTempDir(*model, modelTempDir);
+  bool modified = (m_savePath.isEmpty() || modifiedOnLoad);
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
@@ -280,12 +267,140 @@ OSDocument::OSDocument( openstudio::model::Model library,
   analysis::DataPoint baselineDataPoint = m_simpleProject->baselineDataPoint();
   openstudio::analysis::Analysis analysis = m_simpleProject->analysis();
 
+  // DLM: do we need to set seed model
+
   openstudio::runmanager::ConfigOptions co(true);
   m_simpleProject->runManager().setConfigOptions(co);
 
   isConnected = analysis.connect(SIGNAL(changed(ChangeType)), this, SLOT(markAsModified()));
   OS_ASSERT(isConnected);
 
+  // set the model, this will create widgets
+  setModel(*model, modified);
+
+  // connect signals to main window
+  isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect( m_mainWindow, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()) );
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_mainWindow,SIGNAL(verticalTabSelected(int)),this,SLOT(onVerticalTabSelected(int)));
+  OS_ASSERT(isConnected);
+
+  isConnected = connect(m_mainWindow, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(osmDropped(QString)),this,SIGNAL(osmDropped(QString)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exportClicked()), this, SLOT(exportIdf()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exportgbXMLClicked()), this, SLOT(exportgbXML()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(exportSDDClicked()), this, SLOT(exportSDD()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), this, SLOT(revert()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(showRunManagerPreferencesClicked()), this, SLOT(showRunManagerPreferences()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(toggleUnitsClicked(bool)), this, SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
+  OS_ASSERT(isConnected);
+  isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
+  OS_ASSERT(isConnected);
+  isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
+  OS_ASSERT(isConnected);
+
+  QTimer::singleShot(0, this, SLOT(showFirstTab())); 
+}
+
+//void OSDocument::showRubyConsole()
+//{
+//  if (!m_consoleWidget)
+//  {
+//    m_consoleWidget = boost::shared_ptr<OSConsoleWidget>(new OSConsoleWidget(m_model));
+//  }
+//
+//  m_consoleWidget->show();
+//}
+
+OSDocument::~OSDocument()
+{
+  m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
+
+  // release the file watchers so can remove model temp dir
+  m_scriptsTabController.reset();
+
+  removeDir(m_modelTempDir);
+}
+  
+void OSDocument::showFirstTab()
+{
+  m_mainWindow->selectVerticalTab(SITE);
+
+  m_mainWindow->show();
+}
+
+void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
+{
+  //m_inspectorController->layoutModelObject(modelObject);
+
+  //if( modelObject )
+  //{
+  //  //m_mainWindow->selectHorizontalTab(EDIT);
+  //}
+}
+
+MainWindow * OSDocument::mainWindow()
+{
+  return m_mainWindow;
+}
+
+model::Model OSDocument::model()
+{
+  return m_model;
+}
+
+void OSDocument::setModel(const model::Model& model, bool modified)
+{
+  bool isConnected = false;
+
+  bool wasVisible = m_mainWindow->isVisible();
+  m_mainWindow->setVisible(false);
+
+  bool isIP = m_mainWindow->displayIP();
+
+  m_model = model;
 
   // Main Right Column
 
@@ -619,11 +734,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
       m_runTabController.get(), SLOT(updateToolsWarnings()));
   connect(m_runTabController.get(), SIGNAL(toolsUpdated()),
       m_runTabController.get(), SLOT(updateToolsWarnings()));
-
-
-  isConnected = connect( m_mainWindow, SIGNAL(closeClicked()), this, SIGNAL(closeClicked()) );
-  OS_ASSERT(isConnected);
-
   isConnected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), SIGNAL(onChange()), this, SLOT(markAsModified()) );
   OS_ASSERT(isConnected);
 
@@ -633,121 +743,18 @@ OSDocument::OSDocument( openstudio::model::Model library,
            SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_mainWindow,SIGNAL(verticalTabSelected(int)),this,SLOT(onVerticalTabSelected(int)));
-  OS_ASSERT(isConnected);
+  // DLM: this might work to reload weather file if changed?
+  this->setFullWeatherFilePath(); 
 
-  isConnected = connect(m_mainWindow, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(osmDropped(QString)),this,SIGNAL(osmDropped(QString)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportClicked()), this, SLOT(exportIdf()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportgbXMLClicked()), this, SLOT(exportgbXML()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(exportSDDClicked()), this, SLOT(exportSDD()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(saveAsFileClicked()), this, SLOT(saveAs()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), this, SLOT(revert()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(showRunManagerPreferencesClicked()), this, SLOT(showRunManagerPreferences()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(toggleUnitsClicked(bool)), this, SIGNAL(toggleUnitsClicked(bool)));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
-  OS_ASSERT(isConnected);
-  isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
-  OS_ASSERT(isConnected);
-  isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
-  OS_ASSERT(isConnected);
+  m_mainWindow->setVisible(wasVisible);
+
+  if (modified){
+    QTimer::singleShot(0, this, SLOT(markAsModified()));
+  } else {
+    QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
+  }
 
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
-
-  if( m_savePath.isEmpty() ){
-    m_mainWindow->setWindowFilePath("Untitled");
-    QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
-  }else{
-    m_mainWindow->setWindowFilePath(m_savePath);
-    if (modifiedOnLoad)
-    {
-      QTimer::singleShot(0, this, SLOT(markAsModified()));
-    } else {
-      QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
-    }
-  }
-}
-
-//void OSDocument::showRubyConsole()
-//{
-//  if (!m_consoleWidget)
-//  {
-//    m_consoleWidget = boost::shared_ptr<OSConsoleWidget>(new OSConsoleWidget(m_model));
-//  }
-//
-//  m_consoleWidget->show();
-//}
-
-OSDocument::~OSDocument()
-{
-  m_model.getImpl<openstudio::model::detail::Model_Impl>()->blockSignals(true);
-
-  // release the file watchers so can remove model temp dir
-  m_scriptsTabController.reset();
-
-  removeDir(m_modelTempDir);
-}
-  
-void OSDocument::showFirstTab()
-{
-  m_mainWindow->selectVerticalTab(SITE);
-
-  m_mainWindow->show();
-}
-
-void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
-{
-  //m_inspectorController->layoutModelObject(modelObject);
-
-  //if( modelObject )
-  //{
-  //  //m_mainWindow->selectHorizontalTab(EDIT);
-  //}
-}
-
-MainWindow * OSDocument::mainWindow()
-{
-  return m_mainWindow;
-}
-
-model::Model OSDocument::model()
-{
-  return m_model;
 }
 
 runmanager::RunManager OSDocument::runManager() {

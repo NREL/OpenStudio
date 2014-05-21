@@ -106,6 +106,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // Returns the model associated with this document.
   model::Model model();
 
+  // Sets the model associated with this document.
+  // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
+  void setModel(const model::Model& model, bool modified);
+
   // Returns the RunManager for this document.
   runmanager::RunManager runManager();
 
