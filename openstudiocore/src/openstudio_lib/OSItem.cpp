@@ -193,7 +193,6 @@ void OSItem::createLayout()
 
   m_measureBadge = new MeasureBadge();
   //m_measureBadge->setFixedWidth(25); NOTE mirror other instance?
-  m_measureBadge->setMeasureBadgeType(MeasureBadgeType::MyMeasure);
 
   leftVBoxLayout->addWidget(m_measureBadge);
 
