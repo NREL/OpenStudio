@@ -155,15 +155,15 @@ OSDocument::OSDocument( openstudio::model::Model library,
   openstudio::path modelTempDir = createModelTempDir();
   m_modelTempDir = toQString(modelTempDir);
 
-  if( m_savePath.isEmpty() ){
-    m_mainWindow->setWindowFilePath("Untitled");
-  }else{
-    m_mainWindow->setWindowFilePath(m_savePath);
+  if( !m_savePath.isEmpty() ){
     initializeModelTempDir(toPath(m_savePath), modelTempDir);
   }
 
   bool modifiedOnLoad = updateModelTempDir(*model, modelTempDir);
-  bool modified = (m_savePath.isEmpty() || modifiedOnLoad);
+  
+  if (m_savePath.isEmpty()){
+    modifiedOnLoad = false;
+  }
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
@@ -276,7 +276,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
 
   // set the model, this will create widgets
-  setModel(*model, modified);
+  setModel(*model, modifiedOnLoad);
 
   // connect signals to main window
   isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
@@ -340,6 +340,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
   OS_ASSERT(isConnected);
+
+  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
 
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
 }
@@ -810,11 +812,7 @@ QString OSDocument::modelTempDir() const
 void OSDocument::setSavePath(const QString & filePath)
 {
   m_savePath = filePath;
-  if ( m_savePath.isEmpty() ){
-    m_mainWindow->setWindowFilePath("Untitled");
-  }else{
-    m_mainWindow->setWindowFilePath(m_savePath);
-  }
+  updateWindowFilePath();
 }
 
 bool OSDocument::setFullWeatherFilePath()
@@ -1316,6 +1314,15 @@ void OSDocument::changeBclLogin()
 {
   // TODO
   QMessageBox::information( this->mainWindow(), QString("Change BCL Login Information"), QString("Not yet available.\nMiddleware testing required."));
+}
+
+void OSDocument::updateWindowFilePath()
+{
+  if ( m_savePath.isEmpty() ){
+    m_mainWindow->setWindowFilePath("Untitled");
+  }else{
+    m_mainWindow->setWindowFilePath(m_savePath);
+  }
 }
 
 void OSDocument::openBclDlg()

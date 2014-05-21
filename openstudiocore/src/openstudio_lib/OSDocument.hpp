@@ -285,6 +285,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void changeBclLogin();
 
+  void updateWindowFilePath();
+
  private:
 
   enum fileType{
