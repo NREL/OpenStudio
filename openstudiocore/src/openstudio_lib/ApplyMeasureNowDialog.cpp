@@ -28,6 +28,7 @@
 #include <shared_gui_components/OSViewSwitcher.hpp>
 #include <shared_gui_components/VariableList.hpp>
 
+#include <openstudio_lib/MainRightColumnController.hpp>
 #include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/OSDocument.hpp>
 #include <openstudio_lib/OSItem.hpp>
@@ -98,6 +99,8 @@ void ApplyMeasureNowDialog::createWidgets()
   QLabel * label = 0;
   bool isConnected = false;
 
+  openstudio::OSAppBase * app = OSAppBase::instance();
+
   // PAGE STACKED WIDGET
 
   m_mainPaneStackedWidget = new  QStackedWidget();
@@ -111,6 +114,9 @@ void ApplyMeasureNowDialog::createWidgets()
   m_editController = QSharedPointer<EditController>( new EditController() );
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance(),onlyShowModelMeasures) );
+  m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
+  app->measureManager().setLibraryController(m_localLibraryController); 
+  app->measureManager().updateMeasuresLists();
 
   m_rightPaneStackedWidget = new  QStackedWidget();
   m_argumentsFailedPageIdx = m_rightPaneStackedWidget->addWidget(m_argumentsFailedTextEdit);
@@ -629,8 +635,7 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
 void ApplyMeasureNowDialog::on_cancelButton(bool checked)
 {
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
-    // N/A
-    OS_ASSERT(false);
+    // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
@@ -639,7 +644,9 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
-  
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController());
+
   OSDialog::on_cancelButton(checked);
 }
 

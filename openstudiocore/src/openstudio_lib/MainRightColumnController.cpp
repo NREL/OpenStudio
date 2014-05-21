@@ -136,6 +136,11 @@ HorizontalTabWidget * MainRightColumnController::mainRightColumnView() const
   return m_horizontalTabWidget;
 }
 
+QSharedPointer<LocalLibraryController> MainRightColumnController::measureLibraryController()
+{
+  return m_measureLibraryController;
+}
+
 void MainRightColumnController::setEditView(QWidget *widget)
 {
   if( QWidget * oldwidget = m_editView->currentWidget() )
