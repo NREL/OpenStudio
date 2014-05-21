@@ -582,9 +582,14 @@ void DataPointJobItemView::paintEvent(QPaintEvent * e)
 void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasure & bclMeasure, openstudio::runmanager::JobErrors jobErrors, openstudio::runmanager::Job job)
 {
   OS_ASSERT(m_dataPointJobHeaderView);
+
   m_dataPointJobHeaderView->setName(rubyMeasure.name());
   m_dataPointJobHeaderView->setLastRunTime(job.lastRun());
   m_dataPointJobHeaderView->setStatus(job.status(), job.canceled());
+
+  m_dataPointJobHeaderView->m_na->setText("");
+  m_dataPointJobHeaderView->m_warnings->setText("");
+  m_dataPointJobHeaderView->m_errors->setText("");
 
   OS_ASSERT(m_dataPointJobContentView);
   m_dataPointJobContentView->clear();

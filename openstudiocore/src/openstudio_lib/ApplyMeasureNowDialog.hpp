@@ -163,8 +163,6 @@ class DataPointJobHeaderView : public OSHeader
 
   void setNumErrors(unsigned numErrors);
 
- private:
-
   QLabel* m_name;
   QLabel* m_lastRunTime;
   QLabel* m_status;
