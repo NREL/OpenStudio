@@ -50,6 +50,8 @@ class MainRightColumnController : public OSQObjectController
 
   HorizontalTabWidget * mainRightColumnView() const;
 
+  QSharedPointer<LocalLibraryController> measureLibraryController();
+
   enum RightColumnTabID
   {
     MY_MODEL,
