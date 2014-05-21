@@ -57,18 +57,23 @@ void WaitDialog::createWidgets()
   QLabel * label = 0;
   bool isConnected = false;
 
+  upperLayout()->addStretch();
+
   label = new QLabel(m_windowMessage);
   label->setObjectName("H2");
-
-  BusyWidget * busyWidget = new BusyWidget();
-
-  QTimer * timer = new QTimer(this);
-  connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
-  timer->start(50);
-
-  upperLayout()->addStretch();
   upperLayout()->addWidget(label,0,Qt::AlignCenter);
-  upperLayout()->addWidget(busyWidget,0,Qt::AlignCenter);
+
+  //BusyWidget * busyWidget = new BusyWidget();
+  //upperLayout()->addWidget(busyWidget,0,Qt::AlignCenter);
+
+  //QTimer * timer = new QTimer(this);
+  //connect(timer,SIGNAL(timeout()),busyWidget,SLOT(rotate()));
+  //timer->start(50);
+  
+  label = new QLabel("This may take a minute...");
+  label->setObjectName("H2");
+  upperLayout()->addWidget(label,0,Qt::AlignCenter);
+
   upperLayout()->addStretch();
 
   // BUTTONS

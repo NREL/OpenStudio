@@ -246,12 +246,12 @@ bool OpenStudioApp::openFile(const QString& fileName)
   {
 
     WaitDialog waitDialog("Loading Model","Loading Model");
-    QThread * thread = new QThread();
-    thread->setPriority(QThread::TimeCriticalPriority);
-    waitDialog.moveToThread(thread);
-    thread->start();
     waitDialog.open();
-    processEvents();
+    processEvents();  
+    // Note: currently not needed
+    //QThread * thread = new QThread();
+    //waitDialog.moveToThread(thread);
+    //thread->start();
 
     osversion::VersionTranslator versionTranslator;
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
