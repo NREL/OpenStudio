@@ -154,6 +154,8 @@ end
 path = OpenStudio::Path.new(radiancePath).to_s
 raypath = (OpenStudio::Path.new(radiancePath).parent_path() / OpenStudio::Path.new("lib")).to_s()
 
+ENV["EPW2WEAPATH"] = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new("epw2wea")).to_s
+
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   perlpath = ""
   if OpenStudio::applicationIsRunningFromBuildDirectory()

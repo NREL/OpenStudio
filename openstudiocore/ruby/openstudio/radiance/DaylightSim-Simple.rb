@@ -1100,23 +1100,12 @@ weaPath = nil
 smxPath = nil
 
 # reduce/convert epw data to Daysim-style ".wea" input format
-# TODO should really look for epw2wea in the Radiance bin dir 
-# (this is part of the standard Radiance distro now)
 if (!epwFile.empty?)
   epwFilePath = epwFile.get().path()
   weaPath = outPath / OpenStudio::Path.new("in.wea")
 
-  epw2weapath = nil
+  epw2weapath = OpenStudio::Path.new(ENV['EPW2WEAPATH'])
 
-  if (/darwin/.match(RUBY_PLATFORM))
-    if (OpenStudio::applicationIsRunningFromBuildDirectory())
-      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("epw2wea")
-    else
-      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("bin") / OpenStudio::Path.new("epw2wea")
-    end
-  else
-    epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
-  end
   puts "Executing epw2wea: #{epw2weapath}"
   exec_statement("\"#{epw2weapath.to_s}\" \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
 end

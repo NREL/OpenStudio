@@ -780,9 +780,6 @@ IF (UNIX AND NOT APPLE)
 
 ENDIF ()
 
-# build epw2wea for supporting gendaymtx
-ADD_SUBDIRECTORY( src/epw2wea )
-
 # csharp, after loading projects
 IF(BUILD_CSHARP_BINDINGS)
   ADD_SUBDIRECTORY( csharp )
@@ -896,7 +893,6 @@ export(TARGETS
   FILE "${TARGETS_FILE}")
 
 SET(all_exe_targets
-  epw2wea
   GenerateIddFactory
   ModelEditor
   gbXMLToIdf
