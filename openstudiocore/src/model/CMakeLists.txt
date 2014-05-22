@@ -838,6 +838,9 @@ SET( ${target_name}_src
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
+  ZoneControlHumidistat.hpp
+  ZoneControlHumidistat_Impl.hpp
+  ZoneControlHumidistat.cpp
   ZoneHVACBaseboardConvectiveElectric.hpp
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric.cpp
@@ -1275,6 +1278,7 @@ SET( ${target_name}_test_src
   test/WeatherFile_GTest.cpp
   test/YearDescription_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
+  test/ZoneControlHumidistat_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp

@@ -262,6 +262,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"WaterUseEquipment","Cold Water Supply Temperature","coldWaterSupplyTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterUseEquipment","Sensible Fraction","sensibleFractionSchedule",true,"",0.0,1.0},
     {"WaterUseEquipment","Latent Fraction","latentFractionSchedule",true,"",0.0,1.0},
+    {"ZoneControlHumidistat","Humidifying Relative Humidity Setpoint","humidifyingRelativeHumiditySetpointSchedule",false,"percent",0.0,100.0},
+    {"ZoneControlHumidistat","Dehumidifying Relative Humidity Setpoint","dehumidifyingRelativeHumiditySetpointSchedule",false,"percent",0.0,100.0},
     {"ZoneHVACBaseboardConvectiveElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACBaseboardConvectiveWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACIdealLoadsAirSystem","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
