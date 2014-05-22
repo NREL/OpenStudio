@@ -120,6 +120,7 @@ class GasMixture;
 class GroundHeatExchangerVertical;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
+class HeatExchangerFluidToFluid;
 class HotWaterEquipment;
 class IlluminanceMap;
 class InsideSurfaceConvectionAlgorithm;
@@ -472,6 +473,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateHeatBalanceAlgorithm( model::HeatBalanceAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent( model::HeatExchangerAirToAirSensibleAndLatent & modelObject );
+
+  boost::optional<IdfObject> translateHeatExchangerFluidToFluid( model::HeatExchangerFluidToFluid & modelObject );
 
   boost::optional<IdfObject> translateHotWaterEquipment( model::HotWaterEquipment & modelObject );
 

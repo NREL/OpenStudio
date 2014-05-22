@@ -1001,6 +1001,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHeatExchangerAirToAirSensibleAndLatent(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
+    {
+      model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
+      retVal = translateHeatExchangerFluidToFluid(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_HotWaterEquipment :
     {
       model::HotWaterEquipment hotWaterEquipment = modelObject.cast<HotWaterEquipment>();
