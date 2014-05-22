@@ -45,6 +45,8 @@
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
+#include <model/ZoneControlHumidistat.hpp>
+#include <model/ZoneControlHumidistat_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/Model.hpp>
@@ -59,6 +61,7 @@
 #include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
+#include <utilities/idd/OS_ZoneControl_Humidistat_FieldEnums.hxx>
 
 #include <QStyleOption>
 #include <QTimer>
@@ -236,8 +239,10 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   QGridLayout * thermostatLayout = new QGridLayout();
   thermostatLayout->setContentsMargins(0,0,0,0);
   thermostatLayout->setSpacing(5);
-  thermostatLayout->setColumnStretch(1,1000);
   thermostatLayout->setColumnStretch(0,0);
+  thermostatLayout->setColumnStretch(1,100);
+  thermostatLayout->setColumnStretch(2,0);
+  thermostatLayout->setColumnStretch(3,900);
 
   zoneThermostatWidget->setLayout(thermostatLayout);
 
@@ -260,18 +265,18 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   QLabel * heatingLabel = new QLabel();
   heatingLabel->setPixmap(QPixmap(":images/fire.png"));
   heatingLabel->setFixedSize(24,24);
-  thermostatLayout->addWidget(heatingLabel,2,0,Qt::AlignLeft);
+  thermostatLayout->addWidget(heatingLabel,0,2,Qt::AlignLeft);
 
   QLabel * heatingTextLabel = new QLabel("Heating Thermostat Schedule");
   heatingTextLabel->setObjectName("H2");
-  thermostatLayout->addWidget(heatingTextLabel,2,1);
+  thermostatLayout->addWidget(heatingTextLabel,0,3);
   
   m_heatingThermostatVectorController = new HeatingScheduleVectorController();
   m_heatingThermostatDropZone = new OSDropZone(m_heatingThermostatVectorController);
   m_heatingThermostatDropZone->setMinItems(0);
   m_heatingThermostatDropZone->setMaxItems(1);
   m_heatingThermostatDropZone->setItemsAcceptDrops(true);
-  thermostatLayout->addWidget(m_heatingThermostatDropZone,3,1,Qt::AlignLeft);
+  thermostatLayout->addWidget(m_heatingThermostatDropZone,1,3,Qt::AlignLeft);
 
   m_thermostatButton = new OSSwitch();
   thermostatHeaderLayout->addWidget(m_thermostatButton);
@@ -281,6 +286,75 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   hvacLine2->setFrameShape(QFrame::HLine);
   hvacLine2->setFrameShadow(QFrame::Sunken);
   vLayout->addWidget(hvacLine2);
+
+  // Humidistat
+
+  QWidget * humidistatHeader = new QWidget();
+  QHBoxLayout * humidistatHeaderLayout = new QHBoxLayout();
+  humidistatHeaderLayout->setContentsMargins(0,0,0,0);
+  humidistatHeader->setLayout(humidistatHeaderLayout);
+  QLabel * humidistatImage = new QLabel();
+  humidistatImage->setPixmap(QPixmap(":/images/thermostat.png"));
+  humidistatHeaderLayout->addWidget(humidistatImage);
+  QLabel * humidistatLabel = new QLabel();
+  humidistatLabel->setText("Humidistat");
+  humidistatLabel->setObjectName("H1");
+  humidistatHeaderLayout->addWidget(humidistatLabel);
+  humidistatHeaderLayout->addStretch();
+  vLayout->addWidget(humidistatHeader);
+  QWidget * zoneHumidistatWidget = new QWidget();
+  vLayout->addWidget(zoneHumidistatWidget);
+
+  QGridLayout * humidistatLayout = new QGridLayout();
+  humidistatLayout->setContentsMargins(0,0,0,0);
+  humidistatLayout->setSpacing(5);
+  humidistatLayout->setColumnStretch(0,0);
+  humidistatLayout->setColumnStretch(1,100);
+  humidistatLayout->setColumnStretch(2,0);
+  humidistatLayout->setColumnStretch(3,900);
+
+  zoneHumidistatWidget->setLayout(humidistatLayout);
+
+  QLabel * humidifyingLabel = new QLabel();
+  humidifyingLabel->setFixedSize(24,24);
+  humidifyingLabel->setPixmap(QPixmap(":images/snowflake.png"));
+  humidistatLayout->addWidget(humidifyingLabel,0,0,Qt::AlignLeft);
+
+  QLabel * humidifyingTextLabel = new QLabel("Humdifying Setpoint Schedule");
+  humidifyingTextLabel->setObjectName("H2");
+  humidistatLayout->addWidget(humidifyingTextLabel,0,1);
+  
+  m_humidifyingHumidistatVectorController = new HumidifyingScheduleVectorController();
+  m_humidifyingHumidistatDropZone = new OSDropZone(m_humidifyingHumidistatVectorController);
+  m_humidifyingHumidistatDropZone->setMinItems(0);
+  m_humidifyingHumidistatDropZone->setMaxItems(1);
+  m_humidifyingHumidistatDropZone->setItemsAcceptDrops(true);
+  humidistatLayout->addWidget(m_humidifyingHumidistatDropZone,1,1,Qt::AlignLeft);
+
+  QLabel * dehumidifyingLabel = new QLabel();
+  dehumidifyingLabel->setPixmap(QPixmap(":images/fire.png"));
+  dehumidifyingLabel->setFixedSize(24,24);
+  humidistatLayout->addWidget(dehumidifyingLabel,0,2,Qt::AlignLeft);
+
+  QLabel * dehumidifyingTextLabel = new QLabel("Dehumdifying Setpoint Schedule");
+  dehumidifyingTextLabel->setObjectName("H2");
+  humidistatLayout->addWidget(dehumidifyingTextLabel,0,3);
+  
+  m_dehumidifyingHumidistatVectorController = new DehumidifyingScheduleVectorController();
+  m_dehumidifyingHumidistatDropZone = new OSDropZone(m_dehumidifyingHumidistatVectorController);
+  m_dehumidifyingHumidistatDropZone->setMinItems(0);
+  m_dehumidifyingHumidistatDropZone->setMaxItems(1);
+  m_dehumidifyingHumidistatDropZone->setItemsAcceptDrops(true);
+  humidistatLayout->addWidget(m_dehumidifyingHumidistatDropZone,1,3,Qt::AlignLeft);
+
+  m_humidistatButton = new OSSwitch();
+  humidistatHeaderLayout->addWidget(m_humidistatButton);
+  connect( m_humidistatButton, SIGNAL(clicked(bool)), this, SLOT(onHumidistatButtonClicked(bool)));
+
+  QFrame * hvacLine3 = new QFrame();
+  hvacLine3->setFrameShape(QFrame::HLine);
+  hvacLine3->setFrameShadow(QFrame::Sunken);
+  vLayout->addWidget(hvacLine3);
 
   // Sizing Paramaters
 
@@ -387,6 +461,8 @@ void ThermalZoneView::onClearSelection()
   m_equipmentVectorController->detach();
   m_heatingThermostatVectorController->detach();
   m_coolingThermostatVectorController->detach();
+  m_humidifyingHumidistatVectorController->detach();
+  m_dehumidifyingHumidistatVectorController->detach();
 
   m_sizingParametersView->unbind();
 }
@@ -436,6 +512,7 @@ void ThermalZoneView::refreshNow()
     if( boost::optional<model::ThermalZone> zone = this->thermalZone() )
     {
       boost::optional<model::ThermostatSetpointDualSetpoint> thermostat = zone->thermostatSetpointDualSetpoint();
+      boost::optional<model::ZoneControlHumidistat> humidistat = zone->zoneControlHumidistat();
     
       if(thermostat)
       {
@@ -464,6 +541,33 @@ void ThermalZoneView::refreshNow()
         m_coolingThermostatDropZone->setEnabled(false);
       }
 
+      if(humidistat)
+      {
+        m_humidistatButton->setChecked(true);
+      
+        m_humidifyingHumidistatDropZone->setEnabled(true);
+        m_dehumidifyingHumidistatDropZone->setEnabled(true);
+
+        m_humidifyingHumidistatVectorController->attach(humidistat.get());
+        m_dehumidifyingHumidistatVectorController->attach(humidistat.get());
+
+        m_humidifyingHumidistatVectorController->reportItems(); 
+        m_dehumidifyingHumidistatVectorController->reportItems(); 
+      }
+      else
+      {
+        m_humidistatButton->setChecked(false);
+
+        m_humidifyingHumidistatVectorController->detach();
+        m_dehumidifyingHumidistatVectorController->detach();
+
+        m_humidifyingHumidistatVectorController->reportItems(); 
+        m_dehumidifyingHumidistatVectorController->reportItems(); 
+
+        m_humidifyingHumidistatDropZone->setEnabled(false);
+        m_dehumidifyingHumidistatDropZone->setEnabled(false);
+      }
+
       if( boost::optional<model::AirLoopHVAC> airLoop = zone->airLoopHVAC() )
       {
         m_airLoopNameLabel->setText(QString::fromStdString(airLoop->name().get()));
@@ -488,6 +592,14 @@ void ThermalZoneView::onThermostatButtonClicked(bool state)
   if( boost::optional<model::ThermalZone> zone = this->thermalZone() )
   {
     emit enableThermostatClicked(zone.get(),state);
+  }
+}
+
+void ThermalZoneView::onHumidistatButtonClicked(bool state)
+{
+  if( boost::optional<model::ThermalZone> zone = this->thermalZone() )
+  {
+    emit enableHumidistatClicked(zone.get(),state);
   }
 }
 
@@ -799,6 +911,189 @@ void ThermalZoneView::CoolingScheduleVectorController::onDrop(const OSItemId& it
 
         model::Schedule schedule = mo->cast<model::Schedule>();
         thermostat->setCoolingSetpointTemperatureSchedule(schedule);
+      }
+    }
+  }
+}
+
+void ThermalZoneView::HumidifyingScheduleVectorController::onChangeRelationship(
+       const openstudio::model::ModelObject& modelObject, 
+       int index, 
+       Handle newHandle, 
+       Handle oldHandle)
+{
+  if( index == OS_ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName )
+  {
+    reportItems();
+  }
+}
+
+void ThermalZoneView::HumidifyingScheduleVectorController::onObjectRemoved( const openstudio::model::ModelObject& modelObject, 
+                                                                        const openstudio::IddObjectType& iddObjectType, 
+                                                                        const openstudio::UUID& handle )
+{
+  if( boost::optional<model::ZoneControlHumidistat> h = zoneControlHumidistat() )
+  {
+    if( h->handle() == handle )
+    {
+      reportItems();
+    }
+    else if( ! h->humidifyingRelativeHumiditySetpointSchedule() )
+    {
+      reportItems();
+    }
+  }
+}
+
+boost::optional<model::ZoneControlHumidistat> 
+  ThermalZoneView::HumidifyingScheduleVectorController::zoneControlHumidistat()
+{
+  if( m_modelObject )
+  {
+    return m_modelObject->optionalCast<model::ZoneControlHumidistat>();
+  }
+  else
+  {
+    return boost::none;
+  }
+}
+
+std::vector<OSItemId> ThermalZoneView::HumidifyingScheduleVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+
+  if( boost::optional<model::ZoneControlHumidistat> mo = zoneControlHumidistat() )
+  {
+    if( boost::optional<model::Schedule> s = mo->humidifyingRelativeHumiditySetpointSchedule() )
+    {
+      result.push_back(modelObjectToItemId(s.get(), false)); 
+    }
+  }
+
+  return result;
+}
+
+void ThermalZoneView::HumidifyingScheduleVectorController::onRemoveItem(OSItem* item)
+{
+  if( boost::optional<model::ZoneControlHumidistat> mo = zoneControlHumidistat() )
+  {
+    mo->resetHumidifyingRelativeHumiditySetpointSchedule();
+  }
+}
+
+void ThermalZoneView::HumidifyingScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void ThermalZoneView::HumidifyingScheduleVectorController::onDrop(const OSItemId& itemId)
+{
+  if( boost::optional<model::ZoneControlHumidistat> humidistat = zoneControlHumidistat() )
+  {
+    boost::optional<model::ModelObject> mo = this->getModelObject(itemId);
+
+    if (mo)
+    {
+      if (mo->optionalCast<model::Schedule>())
+      {
+        if (this->fromComponentLibrary(itemId))
+        {
+          mo = mo->clone(humidistat->model());
+        }
+        model::Schedule schedule = mo->cast<model::Schedule>();
+        humidistat->setHumidifyingRelativeHumiditySetpointSchedule(schedule);
+      }
+    }
+  }
+}
+
+void ThermalZoneView::DehumidifyingScheduleVectorController::onChangeRelationship(
+       const openstudio::model::ModelObject& modelObject, 
+       int index, 
+       Handle newHandle, 
+       Handle oldHandle)
+{
+  if( index == OS_ZoneControl_HumidistatFields::DehumidifyingRelativeHumiditySetpointScheduleName )
+  {
+    reportItems();
+  }
+}
+
+void ThermalZoneView::DehumidifyingScheduleVectorController::onObjectRemoved( const openstudio::model::ModelObject& modelObject, 
+                                                                        const openstudio::IddObjectType& iddObjectType, 
+                                                                        const openstudio::UUID& handle )
+{
+  if( boost::optional<model::ZoneControlHumidistat> t = zoneControlHumidistat() )
+  {
+    if( t->handle() == handle )
+    {
+      reportItems();
+    }
+    else if( ! t->dehumidifyingRelativeHumiditySetpointSchedule() )
+    {
+      reportItems();
+    }
+  }
+}
+
+boost::optional<model::ZoneControlHumidistat> 
+  ThermalZoneView::DehumidifyingScheduleVectorController::zoneControlHumidistat()
+{
+  if( m_modelObject )
+  {
+    return m_modelObject->optionalCast<model::ZoneControlHumidistat>();
+  }
+  else
+  {
+    return boost::none;
+  }
+}
+
+std::vector<OSItemId> ThermalZoneView::DehumidifyingScheduleVectorController::makeVector()
+{
+  std::vector<OSItemId> result;
+
+  if( boost::optional<model::ZoneControlHumidistat> mo = zoneControlHumidistat() )
+  {
+    if( boost::optional<model::Schedule> s = mo->dehumidifyingRelativeHumiditySetpointSchedule() )
+    {
+      result.push_back(modelObjectToItemId(s.get(), false)); 
+    }
+  }
+
+  return result;
+}
+
+void ThermalZoneView::DehumidifyingScheduleVectorController::onRemoveItem(OSItem* item)
+{
+  if( boost::optional<model::ZoneControlHumidistat> mo = zoneControlHumidistat() )
+  {
+    mo->resetDehumidifyingRelativeHumiditySetpointSchedule();
+  }
+}
+
+void ThermalZoneView::DehumidifyingScheduleVectorController::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void ThermalZoneView::DehumidifyingScheduleVectorController::onDrop(const OSItemId& itemId)
+{
+  if( boost::optional<model::ZoneControlHumidistat> humidistat = zoneControlHumidistat() )
+  {
+    boost::optional<model::ModelObject> mo = this->getModelObject(itemId);
+
+    if (mo)
+    {
+      if (mo->optionalCast<model::Schedule>())
+      {
+        if (this->fromComponentLibrary(itemId))
+        {
+          mo = mo->clone(humidistat->model());
+        }
+
+        model::Schedule schedule = mo->cast<model::Schedule>();
+        humidistat->setDehumidifyingRelativeHumiditySetpointSchedule(schedule);
       }
     }
   }
