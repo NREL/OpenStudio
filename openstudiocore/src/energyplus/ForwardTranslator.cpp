@@ -1577,6 +1577,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_ZoneControl_Humidistat :
+    {
+      model::ZoneControlHumidistat mo = modelObject.cast<ZoneControlHumidistat>();
+      retVal = translateZoneControlHumidistat(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric :
     {
       model::ZoneHVACBaseboardConvectiveElectric mo = modelObject.cast<ZoneHVACBaseboardConvectiveElectric>();

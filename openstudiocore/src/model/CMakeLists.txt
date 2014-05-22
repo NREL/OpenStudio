@@ -1278,7 +1278,6 @@ SET( ${target_name}_test_src
   test/WeatherFile_GTest.cpp
   test/YearDescription_GTest.cpp
   test/ZoneCapacitanceMultiplierResearchSpecial_GTest.cpp
-  test/ZoneControlHumidistat_GTest.cpp
   test/ZoneHVACBaseboardConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp

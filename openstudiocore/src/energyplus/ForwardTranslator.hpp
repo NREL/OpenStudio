@@ -211,6 +211,7 @@ class WaterHeaterMixed;
 class WaterUseConnections;
 class WaterUseEquipment;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneControlHumidistat;
 class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
 class ZoneHVACFourPipeFanCoil;
@@ -652,6 +653,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWaterUseEquipment( model::WaterUseEquipment & modelObject );
 
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateZoneControlHumidistat( model::ZoneControlHumidistat& modelObject );
   
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveElectric( model::ZoneHVACBaseboardConvectiveElectric & modelObject );
 
