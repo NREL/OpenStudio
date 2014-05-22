@@ -123,6 +123,7 @@ MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
 MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
+MODELOBJECT_TEMPLATES(HeatExchangerFluidToFluid);
 MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 
 SWIG_MODELOBJECT(PortList);
@@ -225,6 +226,7 @@ SWIG_MODELOBJECT(WaterUseEquipmentDefinition);
 SWIG_MODELOBJECT(WaterUseEquipment);
 SWIG_MODELOBJECT(WaterUseConnections);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent);
+SWIG_MODELOBJECT(HeatExchangerFluidToFluid);
 SWIG_MODELOBJECT(GroundHeatExchangerVertical);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)

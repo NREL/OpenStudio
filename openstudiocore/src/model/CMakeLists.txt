@@ -383,6 +383,9 @@ SET( ${target_name}_src
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
+  HeatExchangerFluidToFluid.hpp
+  HeatExchangerFluidToFluid_Impl.hpp
+  HeatExchangerFluidToFluid.cpp
   HotWaterEquipment.hpp
   HotWaterEquipment_Impl.hpp
   HotWaterEquipment.cpp
@@ -1190,6 +1193,7 @@ SET( ${target_name}_test_src
   test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
+  test/HeatExchangerFluidToFluid_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
