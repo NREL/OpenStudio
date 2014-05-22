@@ -551,50 +551,16 @@ namespace detail {
 
   AirLoopHVACZoneMixer AirLoopHVAC_Impl::zoneMixer()
   {
-    Node demandNode = demandOutletNode();
-    OptionalModelObject mixer = demandNode.inletModelObject();
-    if( !mixer )
-    {
-      Model _model = model();
-      AirLoopHVACZoneMixer airLoopHVACZoneMixer(_model);
-      _model.connect(airLoopHVACZoneMixer,
-                    openstudio::OS_AirLoopHVAC_ZoneMixerFields::OutletNodeName,
-                    demandNode,
-                    openstudio::OS_NodeFields::InletPort);
-
-
-      mixer = airLoopHVACZoneMixer;
-    }
-
-    return mixer->cast<AirLoopHVACZoneMixer>();
+    std::vector<AirLoopHVACZoneMixer> mixers = subsetCastVector<AirLoopHVACZoneMixer>(demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneMixer ));
+    OS_ASSERT(! mixers.empty());
+    return mixers.front();
   }
 
   AirLoopHVACZoneSplitter AirLoopHVAC_Impl::zoneSplitter()
   {
-    OptionalAirLoopHVACZoneSplitter split;
-    std::vector<ModelObject> v = this->demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneSplitter );
-    if( v.size() == 0)
-    {
-      Model _model = model();
-      std::vector<Node> inletVec = demandInletNodes();
-      OS_ASSERT(inletVec.size()==1);
-      AirLoopHVACZoneSplitter airLoopHVACZoneSplitter(_model);
-      _model.connect(inletVec[0],
-                    openstudio::OS_NodeFields::OutletPort,
-                    airLoopHVACZoneSplitter,
-                    openstudio::OS_AirLoopHVAC_ZoneSplitterFields::InletNodeName);
-
-      return airLoopHVACZoneSplitter;
-    }
-    else if( v.size() == 1 )
-    {
-      return v[0].cast<AirLoopHVACZoneSplitter>();
-    }
-    else
-    {
-      throw;
-    }
-    return *split;
+    std::vector<AirLoopHVACZoneSplitter> splitters = subsetCastVector<AirLoopHVACZoneSplitter>(demandComponents( IddObjectType::OS_AirLoopHVAC_ZoneSplitter ));
+    OS_ASSERT(! splitters.empty());
+    return splitters.front();
   }
 
   ModelObject AirLoopHVAC_Impl::clone(Model model) const
@@ -1248,4 +1214,3 @@ std::string AirLoopHVAC::nightCycleControlType() const
 } // model
 
 } // openstudio
-

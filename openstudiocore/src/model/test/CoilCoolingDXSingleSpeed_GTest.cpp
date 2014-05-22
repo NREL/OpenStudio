@@ -18,31 +18,33 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
+#include <model/Schedule.hpp>
 #include <model/CurveBiquadratic.hpp>
 #include <model/CurveQuadratic.hpp>
-
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_Quantity) {
-  Model model;
-  
-  ScheduleConstant scheduleConstant(model);
-  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(model);
-  CurveQuadratic totalCoolingCapacityFunctionofFlowFractionCurve(model);
-  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(model);
-  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(model);
-  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(m);
+  CurveQuadratic totalCoolingCapacityFunctionofFlowFractionCurve(m);
+  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(m);
+  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic partLoadFractionCorrelationCurve(m);
 
-  CoilCoolingDXSingleSpeed coil(model,
-                                scheduleConstant,
+  CoilCoolingDXSingleSpeed coil(m, s,
                                 totalCoolingCapacityFunctionofTemperatureCurve,
                                 totalCoolingCapacityFunctionofFlowFractionCurve,
                                 energyInputRatioFunctionofTemperatureCurve,
@@ -81,4 +83,102 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_Quantity)
   EXPECT_EQ(coil.basinHeaterCapacity(),1.5);
   EXPECT_EQ(coil.basinHeaterSetpointTemperature(),2.5);
   
+}
+
+TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(m);
+  CurveQuadratic totalCoolingCapacityFunctionofFlowFractionCurve(m);
+  CurveBiquadratic energyInputRatioFunctionofTemperatureCurve(m);
+  CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic partLoadFractionCorrelationCurve(m);
+
+  CoilCoolingDXSingleSpeed testObject(m, s,
+                                      totalCoolingCapacityFunctionofTemperatureCurve,
+                                      totalCoolingCapacityFunctionofFlowFractionCurve,
+                                      energyInputRatioFunctionofTemperatureCurve,
+                                      energyInputRatioFunctionofFlowFractionCurve,
+                                      partLoadFractionCorrelationCurve);
+
+  AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  CurveBiquadratic  c1(m);
+  CurveQuadratic  c2(m);
+  CurveBiquadratic  c3(m);
+  CurveQuadratic  c4(m);
+  CurveQuadratic  c5(m);
+
+  CoilCoolingDXSingleSpeed testObject2(m, s, c1, c2, c3, c4, c5);
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
+  }
+
+  CurveBiquadratic  c1_2(m);
+  CurveQuadratic  c2_2(m);
+  CurveBiquadratic  c3_2(m);
+  CurveQuadratic  c4_2(m);
+  CurveQuadratic  c5_2(m);
+
+  CoilCoolingDXSingleSpeed testObject3(m, s, c1_2, c2_2, c3_2, c4_2, c5_2);
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  // tests and checks to figure out clone bug
+  // resolution: Due to using ModelObject::clone instead of StraightComponent::clone in reimplementation
+  AirLoopHVAC airLoop2(m);
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  CoilCoolingDXSingleSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  CoilCoolingDXSingleSpeed testObjectClone2 = testObject.clone(m).cast<CoilCoolingDXSingleSpeed>();
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  Node supplyOutletNode2 = airLoop2.supplyOutletNode();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_NE(testObject, testObjectClone);
+  EXPECT_FALSE(testObjectClone.loop());
+  EXPECT_FALSE(testObjectClone.airLoopHVAC());
+  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfTemperatureCurve(), testObjectClone.totalCoolingCapacityFunctionOfTemperatureCurve());
+  EXPECT_NE(testObject.totalCoolingCapacityFunctionOfFlowFractionCurve(), testObjectClone.totalCoolingCapacityFunctionOfFlowFractionCurve());
+  EXPECT_NE(testObject.energyInputRatioFunctionOfTemperatureCurve(), testObjectClone.energyInputRatioFunctionOfTemperatureCurve());
+  EXPECT_NE(testObject.energyInputRatioFunctionOfFlowFractionCurve(), testObjectClone.energyInputRatioFunctionOfFlowFractionCurve());
+  EXPECT_NE(testObject.partLoadFractionCorrelationCurve(), testObjectClone.partLoadFractionCorrelationCurve());
+  EXPECT_TRUE(testObject.inletModelObject());
+  EXPECT_TRUE(testObject.outletModelObject());
+  EXPECT_FALSE(testObjectClone.inletModelObject());
+  EXPECT_FALSE(testObjectClone.outletModelObject());
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode2));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_EQ( (unsigned)3, airLoop2.supplyComponents().size() );
+  EXPECT_TRUE(testObjectClone2.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

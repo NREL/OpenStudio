@@ -19,6 +19,10 @@
 
 #include <model/CoilHeatingWaterBaseboard.hpp>
 #include <model/CoilHeatingWaterBaseboard_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/PlantLoop_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 
@@ -85,7 +89,7 @@ namespace detail {
     // declare a vector to hold all of the zoneHVACBaseboardConvectiveWater
     std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
     // populate the vector with all of them
-    zoneHVACBaseboardConvectiveWaters = this->model().getModelObjects<ZoneHVACBaseboardConvectiveWater>();
+    zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
     // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
     for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
     it < zoneHVACBaseboardConvectiveWaters.end();
@@ -200,6 +204,19 @@ namespace detail {
   void CoilHeatingWaterBaseboard_Impl::resetConvergenceTolerance() {
     bool result = setString(OS_Coil_Heating_Water_BaseboardFields::ConvergenceTolerance, "");
     OS_ASSERT(result);
+  }
+
+  bool CoilHeatingWaterBaseboard_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
+    {
+      if( plant->demandComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
   }
 
  

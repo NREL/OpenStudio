@@ -199,7 +199,7 @@ void SchedulesTabController::removeSelectedSchedule()
 
 void SchedulesTabController::purgeUnusedScheduleRulesets()
 {
-  std::vector<model::ScheduleRuleset> schedules = m_model.getModelObjects<model::ScheduleRuleset>();
+  std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
 
   for( std::vector<model::ScheduleRuleset>::iterator it = schedules.begin();
        it != schedules.end();

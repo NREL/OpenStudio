@@ -198,6 +198,7 @@ namespace detail {
     bool result(false);
     if (ratedSuperheat) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedSuperheat, ratedSuperheat.get());
+      resetRatedReturnGasTemperature();
     }
     else {
       resetRatedSuperheat();
@@ -215,6 +216,7 @@ namespace detail {
     bool result(false);
     if (ratedReturnGasTemperature) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedReturnGasTemperature, ratedReturnGasTemperature.get());
+      resetRatedSuperheat();
     }
     else {
       resetRatedReturnGasTemperature();
@@ -232,6 +234,7 @@ namespace detail {
     bool result(false);
     if (ratedLiquidTemperature) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedLiquidTemperature, ratedLiquidTemperature.get());
+      resetRatedSubcooling();
     }
     else {
       resetRatedLiquidTemperature();
@@ -249,6 +252,7 @@ namespace detail {
     bool result(false);
     if (ratedSubcooling) {
       result = setDouble(OS_Refrigeration_CompressorFields::RatedSubcooling, ratedSubcooling.get());
+      resetRatedLiquidTemperature();
     }
     else {
       resetRatedSubcooling();

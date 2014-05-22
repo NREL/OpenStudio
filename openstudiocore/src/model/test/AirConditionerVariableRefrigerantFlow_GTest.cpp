@@ -22,9 +22,13 @@
 #include <model/AirConditionerVariableRefrigerantFlow.hpp>
 #include <model/AirConditionerVariableRefrigerantFlow_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp>
 #include <model/ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -35,23 +39,21 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
-
-     model::AirConditionerVariableRefrigerantFlow vrf(m); 
+     Model m; 
+     AirConditionerVariableRefrigerantFlow vrf(m); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 
-   model::Model m; 
-
-   model::AirConditionerVariableRefrigerantFlow vrf(m); 
+   Model m; 
+   AirConditionerVariableRefrigerantFlow vrf(m); 
 
   for( int i = 0; i != 5; i++ )
   {
-    model::ThermalZone zone(m);
+    ThermalZone zone(m);
 
-    model::ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
 
     ASSERT_TRUE(vrfTerminal.addToThermalZone(zone));
 
@@ -60,7 +62,7 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 
   ASSERT_EQ(5u,vrf.terminals().size());
 
-  model::Model m2;
+  Model m2;
 
   boost::optional<AirConditionerVariableRefrigerantFlow> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlow>(); 
   ASSERT_TRUE(vrfClone);
@@ -70,3 +72,28 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
   ASSERT_TRUE(! vrfClone->remove().empty()); 
 }
 
+TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
+  Model m;
+  AirConditionerVariableRefrigerantFlow testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+}

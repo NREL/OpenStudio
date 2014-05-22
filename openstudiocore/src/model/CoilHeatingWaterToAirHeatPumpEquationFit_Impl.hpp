@@ -168,6 +168,8 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
 
+    virtual boost::optional<HVACComponent> containingHVACComponent() const;
+
   };
 
 } // detail

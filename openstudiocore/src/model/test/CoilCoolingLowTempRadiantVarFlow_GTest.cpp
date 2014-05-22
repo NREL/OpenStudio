@@ -20,9 +20,13 @@
 #include <gtest/gtest.h>
 
 #include <model/test/ModelFixture.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/ScheduleConstant.hpp>
 #include <model/ScheduleConstant_Impl.hpp>
-
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
 #include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 
@@ -101,6 +105,37 @@ TEST_F(ModelFixture,CoilCoolingLowTempRadiantVarFlow_Getters_Setters)
   value = testCoil.condensationControlDewpointOffset();
   EXPECT_EQ(*value,1.0);
   EXPECT_TRUE(testCoil.isCondensationControlDewpointOffsetDefaulted());
-
 }
 
+TEST_F(ModelFixture,CoilCoolingLowTempRadiantVarFlow_addToNode) {
+  Model m;
+  ScheduleConstant coolingControlTemperatureSchedule(m);
+  CoilCoolingLowTempRadiantVarFlow testObject(m, coolingControlTemperatureSchedule);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  CoilCoolingLowTempRadiantVarFlow testObjectClone = testObject.clone(m).cast<CoilCoolingLowTempRadiantVarFlow>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+}

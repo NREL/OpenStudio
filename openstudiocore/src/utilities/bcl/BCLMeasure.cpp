@@ -340,7 +340,7 @@ namespace openstudio{
     if (applicationIsRunningFromBuildDirectory()){
       result = getApplicationSourceDirectory() / toPath("src/pat_app/Measures/");
     }else{
-      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio/pat/Measures/");
+      result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
     }
     return result;
   }

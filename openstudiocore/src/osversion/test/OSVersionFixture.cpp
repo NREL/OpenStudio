@@ -52,7 +52,7 @@ void OSVersionFixture::SetUpTestCase() {
   // directly copied over, and so all these items can be copied back into source.
   model::Model model = openstudio::model::exampleModel();
   model.save(thisVersionPath / toPath("example.osm"),true);
-  model::Component component = model.getModelObjects<model::Construction>()[0].createComponent();
+  model::Component component = model.getConcreteModelObjects<model::Construction>()[0].createComponent();
   component.save(thisVersionPath / toPath("example.osc"),true);
   IddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
   iddFile.save(thisVersionPath / toPath("OpenStudio.idd"),true);

@@ -19,16 +19,17 @@
 
 #include <openstudio_lib/LifeCycleCostsTabView.hpp>
 
-#include "../shared_gui_components/OSIntegerEdit.hpp"
+#include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSDoubleEdit.hpp"
+#include "../shared_gui_components/OSIntegerEdit.hpp"
 
+#include <model/LifeCycleCostParameters_Impl.hpp>
 #include <model/Model_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
 #include <QButtonGroup>
-#include <QComboBox>
 #include <QLabel>
 #include <QRadioButton>
 #include <QStackedWidget>
@@ -49,7 +50,9 @@ LifeCycleCostsView::LifeCycleCostsView(const model::Model & model)
   : QWidget(),
     m_model(model)
 {
+  m_lifeCycleCostParameters = m_model.getUniqueModelObject<model::LifeCycleCostParameters>();
   createWidgets();
+  attach(m_lifeCycleCostParameters.get());
 }
 
 void LifeCycleCostsView::createWidgets()
@@ -122,30 +125,28 @@ void LifeCycleCostsView::createWidgets()
   vLayout = new QVBoxLayout();
   vLayout->setSpacing(10);
 
-  label = new QLabel();
-  label->setText("Analysis Length (Years)");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
+  m_analysisLengthLabel = new QLabel();
+  m_analysisLengthLabel->setText("Analysis Length (Years)");
+  m_analysisLengthLabel->setObjectName("H2");
+  vLayout->addWidget(m_analysisLengthLabel);
 
-  m_AnalysisLengthIntegerEdit = new OSIntegerEdit();  // TODO must cap max at 25
-  m_AnalysisLengthIntegerEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_AnalysisLengthIntegerEdit->bind();
-  vLayout->addWidget(m_AnalysisLengthIntegerEdit);
+  m_analysisLengthIntegerEdit = new OSIntegerEdit2();
+  m_analysisLengthIntegerEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_analysisLengthIntegerEdit);
 
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft);
 
   vLayout = new QVBoxLayout();
   vLayout->setSpacing(5);
 
-  label = new QLabel();
-  label->setText("Real Discount Rate (%)");
-  label->setObjectName("H2");
-  vLayout->addWidget(label);
+  m_realDiscountRateLabel = new QLabel();
+  m_realDiscountRateLabel->setText("Real Discount Rate (fraction)");
+  m_realDiscountRateLabel->setObjectName("H2");
+  vLayout->addWidget(m_realDiscountRateLabel);
 
-  m_RealDiscountRateDoubleEdit = new OSDoubleEdit();
-  m_RealDiscountRateDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_RealDiscountRateDoubleEdit->bind();
-  vLayout->addWidget(m_RealDiscountRateDoubleEdit);
+  m_realDiscountRateDoubleEdit = new OSDoubleEdit2();
+  m_realDiscountRateDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_realDiscountRateDoubleEdit);
 
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft);
 
@@ -154,9 +155,6 @@ void LifeCycleCostsView::createWidgets()
   mainLayout->addLayout(gridLayout);
 
   // NIST radio buttons
-  
-  //  boost::optional<std::string> nistRegion() const;
-  //  boost::optional<std::string> nistSector() const;
   
   vLayout = new QVBoxLayout();
   vLayout->setSpacing(5);
@@ -185,11 +183,12 @@ void LifeCycleCostsView::createWidgets()
   // stacked widget
   
   m_stackedWidget = new QStackedWidget();
-  m_stackedWidget->addWidget(createInflationRatesWidget());
   m_stackedWidget->addWidget(createNistWidget());
+  m_stackedWidget->addWidget(createInflationRatesWidget());
   mainLayout->addWidget(m_stackedWidget);
 
   mainLayout->addStretch();
+
 }
 
 QWidget * LifeCycleCostsView::createInflationRatesWidget()
@@ -225,13 +224,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Electricity (%)");
+  label->setText("Electricity (fraction)");
   vLayout->addWidget(label);
 
-  m_ElectricityDoubleEdit = new OSDoubleEdit();
-  m_ElectricityDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_ElectricityDoubleEdit->bind();
-  vLayout->addWidget(m_ElectricityDoubleEdit);
+  m_electricityDoubleEdit = new OSDoubleEdit2();
+  m_electricityDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_electricityDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -241,13 +239,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Natural Gas (%)");
+  label->setText("Natural Gas (fraction)");
   vLayout->addWidget(label);
 
-  m_NaturalGasDoubleEdit = new OSDoubleEdit();
-  m_NaturalGasDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_NaturalGasDoubleEdit->bind();
-  vLayout->addWidget(m_NaturalGasDoubleEdit);
+  m_naturalGasDoubleEdit = new OSDoubleEdit2();
+  m_naturalGasDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_naturalGasDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -256,13 +253,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Steam (%)");
+  label->setText("Steam (fraction)");
   vLayout->addWidget(label);
 
-  m_SteamDoubleEdit = new OSDoubleEdit();
-  m_SteamDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_SteamDoubleEdit->bind();
-  vLayout->addWidget(m_SteamDoubleEdit);
+  m_steamDoubleEdit = new OSDoubleEdit2();
+  m_steamDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_steamDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -270,13 +266,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Gasoline (%)");
+  label->setText("Gasoline (fraction)");
   vLayout->addWidget(label);
 
-  m_GasolineDoubleEdit = new OSDoubleEdit();
-  m_GasolineDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_GasolineDoubleEdit->bind();
-  vLayout->addWidget(m_GasolineDoubleEdit);
+  m_gasolineDoubleEdit = new OSDoubleEdit2();
+  m_gasolineDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_gasolineDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount,Qt::AlignLeft);
@@ -288,13 +283,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Diesel (%)");
+  label->setText("Diesel (fraction)");
   vLayout->addWidget(label);
 
-  m_DieselDoubleEdit = new OSDoubleEdit();
-  m_DieselDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_DieselDoubleEdit->bind();
-  vLayout->addWidget(m_DieselDoubleEdit);
+  m_dieselDoubleEdit = new OSDoubleEdit2();
+  m_dieselDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_dieselDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -303,13 +297,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Propane (%)");
+  label->setText("Propane (fraction)");
   vLayout->addWidget(label);
 
-  m_PropaneDoubleEdit = new OSDoubleEdit();
-  m_PropaneDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_PropaneDoubleEdit->bind();
-  vLayout->addWidget(m_PropaneDoubleEdit);
+  m_propaneDoubleEdit = new OSDoubleEdit2();
+  m_propaneDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_propaneDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -318,13 +311,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Coal (%)");
+  label->setText("Coal (fraction)");
   vLayout->addWidget(label);
 
-  m_CoalDoubleEdit = new OSDoubleEdit();
-  m_CoalDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_CoalDoubleEdit->bind();
-  vLayout->addWidget(m_CoalDoubleEdit);
+  m_coalDoubleEdit = new OSDoubleEdit2();
+  m_coalDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_coalDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -333,13 +325,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Fuel Oil #1 (%)");
+  label->setText("Fuel Oil #1 (fraction)");
   vLayout->addWidget(label);
 
-  m_FuelOil_1DoubleEdit = new OSDoubleEdit();
-  m_FuelOil_1DoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_FuelOil_1DoubleEdit->bind();
-  vLayout->addWidget(m_FuelOil_1DoubleEdit);
+  m_fuelOil_1DoubleEdit = new OSDoubleEdit2();
+  m_fuelOil_1DoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_fuelOil_1DoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount,Qt::AlignLeft);
@@ -351,13 +342,12 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Fuel Oil #2 (%)");
+  label->setText("Fuel Oil #2 (fraction)");
   vLayout->addWidget(label);
 
-  m_FuelOil_2DoubleEdit = new OSDoubleEdit();
-  m_FuelOil_2DoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_FuelOil_2DoubleEdit->bind();
-  vLayout->addWidget(m_FuelOil_2DoubleEdit);
+  m_fuelOil_2DoubleEdit = new OSDoubleEdit2();
+  m_fuelOil_2DoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_fuelOil_2DoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount,columnCount++,Qt::AlignLeft);
@@ -366,24 +356,17 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
   vLayout = new QVBoxLayout();
 
   label = new QLabel();
-  label->setText("Water (%)");
+  label->setText("Water (fraction)");
   vLayout->addWidget(label);
 
-  m_WaterDoubleEdit = new OSDoubleEdit();
-  m_WaterDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
-  //m_WaterDoubleEdit->bind();
-  vLayout->addWidget(m_WaterDoubleEdit);
+  m_waterDoubleEdit = new OSDoubleEdit2();
+  m_waterDoubleEdit->setFixedWidth(OS_EDIT_WIDTH);
+  vLayout->addWidget(m_waterDoubleEdit);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,rowCount++,columnCount,Qt::AlignLeft);
 
   gridLayout->setColumnStretch(100,100);
-
-  OS_ASSERT(m_fempGroup->button(0));
-  m_fempGroup->button(0)->setChecked(true);
-
-  OS_ASSERT(m_nistGroup->button(0));
-  m_nistGroup->button(0)->setChecked(true);
 
   return widget;
 
@@ -391,8 +374,6 @@ QWidget * LifeCycleCostsView::createInflationRatesWidget()
 
 QWidget * LifeCycleCostsView::createNistWidget()
 {
-  bool isConnected = false;
-
   QLabel * label = NULL;
 
   QVBoxLayout * vLayout = NULL;
@@ -411,14 +392,8 @@ QWidget * LifeCycleCostsView::createNistWidget()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_nistRegionComboBox = new QComboBox();
-  m_nistRegionComboBox->addItem("region 1");
-  m_nistRegionComboBox->addItem("region 2");
+  m_nistRegionComboBox = new OSComboBox2();
   vLayout->addWidget(m_nistRegionComboBox);
-
-  isConnected = connect(m_nistRegionComboBox, SIGNAL(currentIndexChanged(const QString&)),
-                                        this, SLOT(nistRegionChanged(const QString&)));
-  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,0,0,Qt::AlignLeft);
@@ -432,14 +407,8 @@ QWidget * LifeCycleCostsView::createNistWidget()
   label->setObjectName("H2");
   vLayout->addWidget(label);
 
-  m_nistSectorComboBox = new QComboBox();
-  m_nistSectorComboBox->addItem("sector 1");
-  m_nistSectorComboBox->addItem("sector 2");
+  m_nistSectorComboBox = new OSComboBox2();
   vLayout->addWidget(m_nistSectorComboBox);
-
-  isConnected = connect(m_nistSectorComboBox, SIGNAL(currentIndexChanged(const QString&)),
-                                        this, SLOT(nistSectorChanged(const QString&)));
-  OS_ASSERT(isConnected);
 
   vLayout->addStretch();
   gridLayout->addLayout(vLayout,0,1,Qt::AlignLeft);
@@ -450,29 +419,202 @@ QWidget * LifeCycleCostsView::createNistWidget()
 
 }
 
+void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lifeCycleCostParameters)
+{
+  if(m_nistRegionComboBox){
+    m_nistRegionComboBox->bind<std::string>(
+      *m_lifeCycleCostParameters,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      boost::bind(&model::LifeCycleCostParameters::validNistRegionValues,m_lifeCycleCostParameters.get_ptr()),
+      OptionalStringGetter(boost::bind(&model::LifeCycleCostParameters::nistRegion,m_lifeCycleCostParameters.get_ptr())),
+      boost::bind(&model::LifeCycleCostParameters::setNISTRegion,m_lifeCycleCostParameters.get_ptr(),_1));
+  }
+
+  if(m_nistSectorComboBox){
+    m_nistSectorComboBox->bind<std::string>(
+      *m_lifeCycleCostParameters,
+      static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      boost::bind(&model::LifeCycleCostParameters::validNistSectorValues,m_lifeCycleCostParameters.get_ptr()),
+      OptionalStringGetter(boost::bind(&model::LifeCycleCostParameters::nistSector,m_lifeCycleCostParameters.get_ptr())),
+      boost::bind(&model::LifeCycleCostParameters::setNISTSector,m_lifeCycleCostParameters.get_ptr(),_1));
+  }
+
+  if(m_analysisLengthIntegerEdit){
+    m_analysisLengthIntegerEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalIntGetter(boost::bind(&model::LifeCycleCostParameters::lengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<IntSetter>(boost::bind(&model::LifeCycleCostParameters::setLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_realDiscountRateDoubleEdit){
+    m_realDiscountRateDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::realDiscountRate,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setRealDiscountRate,m_lifeCycleCostParameters.get_ptr(),_1)));
+  }
+
+  if(m_electricityDoubleEdit){
+    m_electricityDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::electricityInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setElectricityInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetElectricityInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_naturalGasDoubleEdit){
+    m_naturalGasDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::naturalGasInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setNaturalGasInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetNaturalGasInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_steamDoubleEdit){
+    m_steamDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::steamInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setSteamInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetSteamInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_gasolineDoubleEdit){
+    m_gasolineDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::gasolineInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setGasolineInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetGasolineInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_dieselDoubleEdit){
+    m_dieselDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::dieselInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setDieselInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetDieselInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_propaneDoubleEdit){
+    m_propaneDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::propaneInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setPropaneInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetPropaneInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_coalDoubleEdit){
+    m_coalDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::coalInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setCoalInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetCoalInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_fuelOil_1DoubleEdit){
+    m_fuelOil_1DoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::fuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_fuelOil_2DoubleEdit){
+    m_fuelOil_2DoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::fuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+
+  if(m_waterDoubleEdit){
+    m_waterDoubleEdit->bind(
+      *m_lifeCycleCostParameters,
+      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::waterInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setWaterInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
+      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetWaterInflation,m_lifeCycleCostParameters.get_ptr())));
+  }
+ 
+  OS_ASSERT(m_fempGroup->button(0));
+  QString type = m_lifeCycleCostParameters->analysisType().c_str();
+  if(type == "FEMP"){
+    m_fempGroup->button(0)->setChecked(true);
+    fempGroupClicked(0);
+  } else if(type == "Custom") {
+    m_fempGroup->button(1)->setChecked(true);
+    fempGroupClicked(1);
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  
+  OS_ASSERT(m_nistGroup->button(0));
+  bool useNist = m_lifeCycleCostParameters->useNISTFuelEscalationRates();
+  if(useNist){
+    m_nistGroup->button(0)->setChecked(true);
+    nistGroupClicked(0);
+  } else {
+    m_nistGroup->button(1)->setChecked(true);
+    nistGroupClicked(1);
+  }
+}
+
+void LifeCycleCostsView::detach()
+{
+  m_nistRegionComboBox->unbind();
+  m_nistSectorComboBox->unbind();
+  m_analysisLengthIntegerEdit->unbind();
+  m_realDiscountRateDoubleEdit->unbind();
+  m_electricityDoubleEdit->unbind();
+  m_naturalGasDoubleEdit->unbind();
+  m_steamDoubleEdit->unbind();
+  m_gasolineDoubleEdit->unbind();
+  m_dieselDoubleEdit->unbind();
+  m_propaneDoubleEdit->unbind();
+  m_coalDoubleEdit->unbind();
+  m_fuelOil_1DoubleEdit->unbind();
+  m_fuelOil_2DoubleEdit->unbind();
+  m_waterDoubleEdit->unbind();
+}
+
 ////// SLOTS ///////
 
 void LifeCycleCostsView::fempGroupClicked(int index)
-{
-  m_RealDiscountRateDoubleEdit->setEnabled(index);
+{  
+  // 0 = FEMP, 1 = Custom
+  // DLM: model object actually lets analysis length change under FEMP, it just can't be > 25
+  // DLM: analysis length can't be > 30 when using NIST fuel escalation
+  //m_analysisLengthLabel->setEnabled(index);
+  //m_AnalysisLengthIntegerEdit->setEnabled(index);
 
-  // Check to set FEMP rate
+  // this is locked under FEMP
+  m_realDiscountRateLabel->setEnabled(index);
+  m_realDiscountRateDoubleEdit->setEnabled(index);
+
   if(index == 0){
-    m_RealDiscountRateDoubleEdit->setText("3"); // TODO call actual number
+    m_lifeCycleCostParameters->setAnalysisType("FEMP");
+  } else if(index == 1) {
+    m_lifeCycleCostParameters->setAnalysisType("Custom");
+  } else {
+    // should never get here
+    OS_ASSERT(false);
   }
 }
 
 void LifeCycleCostsView::nistGroupClicked(int index)
 {
+
+  // 0 = Use NIST rates, 1 = don't
   m_stackedWidget->setCurrentIndex(index);
-}
 
-void LifeCycleCostsView::nistRegionChanged(const QString& string)
-{
-}
+  if(index == 0){
+    m_lifeCycleCostParameters->setUseNISTFuelEscalationRates(true);
+  } else if(index == 1) {
+    m_lifeCycleCostParameters->setUseNISTFuelEscalationRates(false);
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
 
-void LifeCycleCostsView::nistSectorChanged(const QString& string)
-{
 }
 
 } // openstudio

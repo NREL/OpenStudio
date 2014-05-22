@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( Simula
   {
     simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation,"Yes");
   }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getModelObjects<ThermalZone>().size() > 0) )
+  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<ThermalZone>().size() > 0) )
   {
     simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation,"Yes");
   }
@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( Simula
   {
     simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation,"Yes");
   }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getModelObjects<AirLoopHVAC>().size() > 0) )
+  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<AirLoopHVAC>().size() > 0) )
   {
     simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation,"Yes");
   }
@@ -81,7 +81,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( Simula
   {
     simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation,"Yes");
   }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getModelObjects<PlantLoop>().size() > 0) )
+  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<PlantLoop>().size() > 0) )
   {
     simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation,"Yes");
   }

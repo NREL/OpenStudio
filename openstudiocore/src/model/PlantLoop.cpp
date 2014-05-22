@@ -594,7 +594,7 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
 
   std::vector<SizingPlant> sizingObjects;
   
-  sizingObjects = model().getModelObjects<SizingPlant>();
+  sizingObjects = model().getConcreteModelObjects<SizingPlant>();
 
   for( std::vector<SizingPlant>::iterator it = sizingObjects.begin();
        it < sizingObjects.end();

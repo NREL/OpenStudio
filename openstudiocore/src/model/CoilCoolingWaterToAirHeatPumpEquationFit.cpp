@@ -24,6 +24,8 @@
 
 #include <model/ZoneHVACWaterToAirHeatPump.hpp>
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
@@ -595,14 +597,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<HVACComponent> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-   boost::optional<ZoneHVACComponent> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::containingZoneHVACComponent() const
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilCoolingWaterToAirHeatPumpEquationFit_Impl::containingZoneHVACComponent() const
   {
     // ZoneHVACWaterToAirHeatPump
 
     std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPumps;
 
-    zoneHVACWaterToAirHeatPumps = this->model().getModelObjects<ZoneHVACWaterToAirHeatPump>();
+    zoneHVACWaterToAirHeatPumps = this->model().getConcreteModelObjects<ZoneHVACWaterToAirHeatPump>();
 
     for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
     it < zoneHVACWaterToAirHeatPumps.end();

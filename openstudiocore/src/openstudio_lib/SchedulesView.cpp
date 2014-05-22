@@ -199,7 +199,7 @@ SchedulesView::SchedulesView(bool isIP,
           Qt::QueuedConnection);
 
   // get all schedules
-  std::vector<model::ScheduleRuleset> schedules = m_model.getModelObjects<model::ScheduleRuleset>();
+  std::vector<model::ScheduleRuleset> schedules = m_model.getConcreteModelObjects<model::ScheduleRuleset>();
 
   // sort by name
   std::sort(schedules.begin(), schedules.end(), WorkspaceObjectNameGreater());

@@ -18,34 +18,20 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CoilHeatingGas.hpp>
 #include <model/CoilHeatingWater.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
 
-//using namespace openstudio;
 using namespace openstudio::model; 
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructorWithCoilHeatingElectric)
@@ -55,7 +41,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
   ASSERT_EXIT ( 
   {  
     Model model;
-    ScheduleCompact schedule(model);
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -71,7 +57,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
   ASSERT_EXIT ( 
   {  
     Model model;
-    ScheduleCompact schedule(model);
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingGas coil = CoilHeatingGas(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -87,7 +73,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
   ASSERT_EXIT ( 
   {  
     Model model;
-    ScheduleCompact schedule(model);
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
     CoilHeatingWater coil = CoilHeatingWater(model,schedule);
     AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -96,67 +82,45 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_DefaultConstructo
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNode)
-{
-  Model model;
-  ScheduleCompact schedule(model);
-  CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
-  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
+TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeReheat_addToNode) {
+  Model m; 
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CoilHeatingElectric coil(m,s);
+  AirTerminalSingleDuctConstantVolumeReheat testObject(m,s,coil);
 
-  AirLoopHVAC airLoop(model);
-
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
-
-  EXPECT_TRUE(testObject.addToNode(inletNode));
-
-  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
-  
-  EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());   
-}
-
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeAirLoopSupplySide)
-{
-  Model model;
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
-  
-  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
-
-  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());  
-}
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
-TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodePlantLoop)
-{
-  Model model;
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  CoilHeatingWater coil = CoilHeatingWater(model,schedule);
-  PlantLoop plantLoop(model);
-  
-  AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+  EXPECT_TRUE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
-  Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
 
-  EXPECT_FALSE(testObject.addToNode(demandInletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
-  Node supplyInletNode = plantLoop.supplySplitter().lastOutletModelObject()->cast<Node>();
+  AirTerminalSingleDuctConstantVolumeReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeReheat>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
-  EXPECT_FALSE(testObject.addToNode(supplyInletNode));
-  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());  
+  EXPECT_FALSE(testObjectClone.addToNode(inletNode));
+  EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
+  EXPECT_EQ( (unsigned)10, airLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeWithThermalZone)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -176,7 +140,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeWithTher
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddAirTerminalWaterHeatingCoilToPlant)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -202,7 +166,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddAirTerminalWat
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveAirTerminalWaterHeatingCoilFromPlant)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -229,7 +193,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveAirTerminal
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForZoneWithThermalZone)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -247,7 +211,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForHVACComponent)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -264,7 +228,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoopAddBranchForHVACComponentWithThermalZone)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -283,7 +247,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddObjectByAirLoo
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeTwoSameObjects)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -301,7 +265,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_AddToNodeTwoSameO
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_IsRemovable)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -311,7 +275,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_IsRemovable)
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_Remove)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -329,7 +293,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_Remove)
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveObjectWithThermalZone)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -350,7 +314,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_RemoveObjectWithT
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWithDefaultData)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -365,7 +329,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWith
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWithCustomData)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
   testObject.setMaximumAirFlowRate(999.0);
@@ -385,7 +349,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneOneModelWith
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneTwoModelsWithDefaultData)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coil);
 
@@ -405,7 +369,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_CloneTwoModelsWit
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_SetNewReheatCoil)
 {
   Model model;
-  ScheduleCompact schedule(model);
+  Schedule schedule = model.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coilElec = CoilHeatingElectric(model,schedule);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(model,schedule,coilElec);
 
@@ -421,7 +385,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_SetNewReheatCoil)
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRate) 
 {
   Model m;
-  ScheduleCompact s(m);
+  Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingElectric coil = CoilHeatingElectric(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
@@ -445,7 +409,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumAirFlowRat
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWaterorSteamFlowRate) 
 {
   Model m;
-  ScheduleCompact s(m);
+  Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
@@ -469,7 +433,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumHotWateror
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWaterorSteamFlowRate) 
 {
   Model m;
-  ScheduleCompact s(m);
+  Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
@@ -489,7 +453,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MinimumHotWateror
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolerance) 
 {
   Model m;
-  ScheduleCompact s(m);
+  Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 
@@ -511,7 +475,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_ConvergenceTolera
 TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeReheat_MaximumReheatAirTemperature) 
 {
   Model m;
-  ScheduleCompact s(m);
+  Schedule s = m.alwaysOnDiscreteSchedule();
   CoilHeatingWater coil = CoilHeatingWater(m,s);
   AirTerminalSingleDuctConstantVolumeReheat testObject = AirTerminalSingleDuctConstantVolumeReheat(m,s,coil);
 

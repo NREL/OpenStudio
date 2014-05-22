@@ -33,6 +33,10 @@
 #include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACUnitHeater.hpp>
 #include <model/ZoneHVACUnitHeater_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
@@ -130,9 +134,7 @@ namespace detail{
 
     if( coilWaterInletNode )
     {
-      Model m = this->model();
-
-      std::vector<ControllerWaterCoil> controllers = m.getModelObjects<ControllerWaterCoil>();
+      std::vector<ControllerWaterCoil> controllers = this->model().getConcreteModelObjects<ControllerWaterCoil>();
 
       for( std::vector<ControllerWaterCoil>::iterator it = controllers.begin();
       it < controllers.end();
@@ -373,11 +375,32 @@ namespace detail{
   {
     // Process all types that might contain a CoilHeatingWater object.
 
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> heatingCoil = it->heatingCoil() )
+      {
+        if( heatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+      if( boost::optional<HVACComponent> suppHeatingCoil = it->supplementalHeatingCoil() )
+      {
+        if( suppHeatingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+
     // AirTerminalSingleDuctVAVReheat
 
-    std::vector<AirTerminalSingleDuctVAVReheat> airTerminalSingleDuctVAVReheatObjects;
-
-    airTerminalSingleDuctVAVReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctVAVReheat>();
+    std::vector<AirTerminalSingleDuctVAVReheat> airTerminalSingleDuctVAVReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctVAVReheat>();
 
     for( std::vector<AirTerminalSingleDuctVAVReheat>::iterator it = airTerminalSingleDuctVAVReheatObjects.begin();
     it < airTerminalSingleDuctVAVReheatObjects.end();
@@ -394,9 +417,7 @@ namespace detail{
 
     // AirTerminalSingleDuctConstantVolumeReheat
 
-    std::vector<AirTerminalSingleDuctConstantVolumeReheat> airTerminalSingleDuctConstantVolumeReheatObjects;
-
-    airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
+    std::vector<AirTerminalSingleDuctConstantVolumeReheat> airTerminalSingleDuctConstantVolumeReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeReheat>();
 
     for( std::vector<AirTerminalSingleDuctConstantVolumeReheat>::iterator it = airTerminalSingleDuctConstantVolumeReheatObjects.begin();
     it < airTerminalSingleDuctConstantVolumeReheatObjects.end();
@@ -413,9 +434,7 @@ namespace detail{
 
     // AirTerminalSingleDuctParallelPIUReheat
 
-    std::vector<AirTerminalSingleDuctParallelPIUReheat> airTerminalSingleDuctParallelPIUReheatObjects;
-
-    airTerminalSingleDuctParallelPIUReheatObjects = this->model().getModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
+    std::vector<AirTerminalSingleDuctParallelPIUReheat> airTerminalSingleDuctParallelPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctParallelPIUReheat>();
 
     for( std::vector<AirTerminalSingleDuctParallelPIUReheat>::iterator it = airTerminalSingleDuctParallelPIUReheatObjects.begin();
     it < airTerminalSingleDuctParallelPIUReheatObjects.end();
@@ -439,7 +458,7 @@ namespace detail{
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
-    zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
@@ -458,7 +477,7 @@ namespace detail{
 
     std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
 
-    zoneHVACPackagedTerminalAirConditioners = this->model().getModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+    zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
     for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
     it < zoneHVACPackagedTerminalAirConditioners.end();
@@ -476,7 +495,7 @@ namespace detail{
 
     std::vector<ZoneHVACWaterToAirHeatPump> zoneHVACWaterToAirHeatPumps;
 
-    zoneHVACWaterToAirHeatPumps = this->model().getModelObjects<ZoneHVACWaterToAirHeatPump>();
+    zoneHVACWaterToAirHeatPumps = this->model().getConcreteModelObjects<ZoneHVACWaterToAirHeatPump>();
 
     for( std::vector<ZoneHVACWaterToAirHeatPump>::iterator it = zoneHVACWaterToAirHeatPumps.begin();
     it < zoneHVACWaterToAirHeatPumps.end();
@@ -495,7 +514,7 @@ namespace detail{
 
     std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeater;
 
-    zoneHVACUnitHeater = this->model().getModelObjects<ZoneHVACUnitHeater>();
+    zoneHVACUnitHeater = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
 
     for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
     it < zoneHVACUnitHeater.end();

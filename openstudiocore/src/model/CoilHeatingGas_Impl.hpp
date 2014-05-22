@@ -128,6 +128,8 @@ namespace detail {
 
     ModelObject clone(Model model) const;
 
+    bool addToNode(Node & node);
+
     //@}
   private:
     REGISTER_LOGGER("openstudio.model.CoilHeatingGas");

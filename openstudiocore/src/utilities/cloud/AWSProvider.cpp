@@ -26,6 +26,8 @@
 #include <utilities/core/String.hpp>
 #include <utilities/core/System.hpp>
 
+#include <OpenStudio.hxx>
+
 #include <qjson/parser.h>
 #include <qjson/serializer.h>
 
@@ -529,7 +531,7 @@ namespace openstudio{
         m_script = getApplicationBuildDirectory() / openstudio::toPath("ruby/cloud/aws.rb");
       } else {
 #ifdef Q_OS_LINUX
-        m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio/Ruby/cloud/aws.rb");
+        m_script = getApplicationInstallDirectory() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/Ruby/cloud/aws.rb");
 #elif defined(Q_OS_MAC)
         m_script = getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("Ruby/cloud/aws.rb");
 #else
