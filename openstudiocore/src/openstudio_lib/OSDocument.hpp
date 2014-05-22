@@ -274,6 +274,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
   void showFirstTab();
+ 
+  void initializeModel();
 
   void toggleUnits(bool displayIP);
 

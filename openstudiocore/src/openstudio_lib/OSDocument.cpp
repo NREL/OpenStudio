@@ -171,13 +171,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
     modifiedOnLoad = false;
   }
 
-  // These objects used to be added to the model as you clicked through the App's tabs,
-  // resulting in a uncertain set of model changes.  With these changes, every model will
-  // always have the following objects.
-  openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
-  openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
-  openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
-
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening
   options.setInitializeRunManagerUI(true);
@@ -384,6 +377,16 @@ void OSDocument::showFirstTab()
   m_mainWindow->selectVerticalTab(SITE);
 
   m_mainWindow->show();
+}
+
+void OSDocument::initializeModel()
+{
+  // These objects used to be added to the model as you clicked through the App's tabs,
+  // resulting in a uncertain set of model changes.  With these changes, every model will
+  // always have the following objects.
+  openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
+  openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
+  openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
 }
 
 void OSDocument::inspectModelObject(model::OptionalModelObject & modelObject, bool readOnly)
@@ -758,18 +761,21 @@ void OSDocument::setModel(const model::Model& model, bool modified)
            SLOT(inspectModelObject( model::OptionalModelObject &, bool )) );
   OS_ASSERT(isConnected);
 
-  // DLM: this might work to reload weather file if changed?
-  this->setFullWeatherFilePath(); 
-
-  m_mainWindow->setVisible(wasVisible);
-
   if (modified){
     QTimer::singleShot(0, this, SLOT(markAsModified()));
   } else {
     QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
   }
 
+  // DLM: this might work to reload weather file if changed?
+  this->setFullWeatherFilePath(); 
+
+  QTimer::singleShot(0, this, SLOT(initializeModel())); 
+
+  // TODO: add parameters which indicate tab and sub tab to start on
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
+
+  m_mainWindow->setVisible(wasVisible);
 }
 
 runmanager::RunManager OSDocument::runManager() {
