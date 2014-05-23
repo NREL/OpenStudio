@@ -90,51 +90,64 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   setLiquidPrecipitationQuantity(liquidPrecipitationQuantity);
 }
 
-EpwDataPoint::EpwDataPoint(std::string line)
+boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
 {
+  EpwDataPoint pt;
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
-  if(list.size() != 35)
-  {
-    std::cout << "Bad input line" << std::endl;
-    return;
+  if(list.size() < 35) {
+    // JWD: Should this just use the entries that are there and fill in the rest as unavailable?
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
+    return boost::optional<EpwDataPoint>();
+  } else if(list.size() > 35) {
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size() << ", additional data will be ignored");
+    return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
-  setYear(list[0].toStdString());
-  setMonth(list[1].toStdString());
-  setDay(list[2].toStdString());
-  setHour(list[3].toStdString());
-  setMinute(list[4].toStdString());
-  setDataSourceandUncertaintyFlags(list[5].toStdString());
-  setDryBulbTemperature(list[6].toStdString());
-  setDewPointTemperature(list[7].toStdString());
-  setRelativeHumidity(list[8].toStdString());
-  setAtmosphericStationPressure(list[9].toStdString());
-  setExtraterrestrialHorizontalRadiation(list[10].toStdString());
-  setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
-  setHorizontalInfraredRadiationIntensity(list[12].toStdString());
-  setGlobalHorizontalRadiation(list[13].toStdString());
-  setDirectNormalRadiation(list[14].toStdString());
-  setDiffuseHorizontalRadiation(list[15].toStdString());
-  setGlobalHorizontalIlluminance(list[16].toStdString());
-  setDirectNormalIlluminance(list[17].toStdString());
-  setDiffuseHorizontalIlluminance(list[18].toStdString());
-  setZenithLuminance(list[19].toStdString());
-  setWindDirection(list[20].toStdString());
-  setWindSpeed(list[21].toStdString());
-  setTotalSkyCover(list[22].toStdString());
-  setOpaqueSkyCover(list[23].toStdString());
-  setVisibility(list[24].toStdString());
-  setCeilingHeight(list[25].toStdString());
-  setPresentWeatherObservation(list[26].toStdString());
-  setPresentWeatherCodes(list[27].toStdString());
-  setPrecipitableWater(list[28].toStdString());
-  setAerosolOpticalDepth(list[29].toStdString());
-  setSnowDepth(list[30].toStdString());
-  setDaysSinceLastSnowfall(list[31].toStdString());
-  setAlbedo(list[32].toStdString());
-  setLiquidPrecipitationDepth(list[33].toStdString());
-  setLiquidPrecipitationQuantity(list[34].toStdString());
+  if(!pt.setYear(list[0].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setMonth(list[1].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setDay(list[2].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setHour(list[3].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  // The minute field is not set here - it is set based upon the header data
+  pt.setDataSourceandUncertaintyFlags(list[5].toStdString());
+  pt.setDryBulbTemperature(list[6].toStdString());
+  pt.setDewPointTemperature(list[7].toStdString());
+  pt.setRelativeHumidity(list[8].toStdString());
+  pt.setAtmosphericStationPressure(list[9].toStdString());
+  pt.setExtraterrestrialHorizontalRadiation(list[10].toStdString());
+  pt.setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
+  pt.setHorizontalInfraredRadiationIntensity(list[12].toStdString());
+  pt.setGlobalHorizontalRadiation(list[13].toStdString());
+  pt.setDirectNormalRadiation(list[14].toStdString());
+  pt.setDiffuseHorizontalRadiation(list[15].toStdString());
+  pt.setGlobalHorizontalIlluminance(list[16].toStdString());
+  pt.setDirectNormalIlluminance(list[17].toStdString());
+  pt.setDiffuseHorizontalIlluminance(list[18].toStdString());
+  pt.setZenithLuminance(list[19].toStdString());
+  pt.setWindDirection(list[20].toStdString());
+  pt.setWindSpeed(list[21].toStdString());
+  pt.setTotalSkyCover(list[22].toStdString());
+  pt.setOpaqueSkyCover(list[23].toStdString());
+  pt.setVisibility(list[24].toStdString());
+  pt.setCeilingHeight(list[25].toStdString());
+  pt.setPresentWeatherObservation(list[26].toStdString());
+  pt.setPresentWeatherCodes(list[27].toStdString());
+  pt.setPrecipitableWater(list[28].toStdString());
+  pt.setAerosolOpticalDepth(list[29].toStdString());
+  pt.setSnowDepth(list[30].toStdString());
+  pt.setDaysSinceLastSnowfall(list[31].toStdString());
+  pt.setAlbedo(list[32].toStdString());
+  pt.setLiquidPrecipitationDepth(list[33].toStdString());
+  pt.setLiquidPrecipitationQuantity(list[34].toStdString());
+  return boost::optional<EpwDataPoint>(pt);
 }
 
 std::string EpwDataPoint::unitsByName(std::string name)
@@ -407,7 +420,7 @@ static double psat(double T)
   return exp(rhs);
 }
 
-std::string EpwDataPoint::toWthString()
+boost::optional<std::string> EpwDataPoint::toWthString()
 {
   QStringList output;
   QString date = QString("%1/%2").arg(m_month).arg(m_day);
@@ -417,25 +430,29 @@ std::string EpwDataPoint::toWthString()
   boost::optional<double> value = dryBulbTemperature();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   double drybulb = value.get()+273.15;
   output << QString("%1").arg(drybulb);
   value = atmosphericStationPressure();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   double p = value.get();
   output << m_atmosphericStationPressure;
   if(!windSpeed())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windSpeed;
   if(!windDirection())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windDirection;
   double pw;
@@ -445,7 +462,8 @@ std::string EpwDataPoint::toWthString()
     value = dewPointTemperature();
     if(!value)
     {
-      LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      LOG_FREE(Error,"openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      return boost::optional<std::string>();
     }
     double dewpoint = value.get()+273.15;
     pw = psat(dewpoint);
@@ -463,7 +481,7 @@ std::string EpwDataPoint::toWthString()
   output << "0";
   // Pass on snow and rain
   output << "0" << "0";
-  return output.join("\t").toStdString();
+  return boost::optional<std::string>(output.join("\t").toStdString());
 }
 
 Date EpwDataPoint::date() const
@@ -529,8 +547,8 @@ int EpwDataPoint::month() const
 
 bool EpwDataPoint::setMonth(int month)
 {
-  if(1 > month || 12 < month)
-  {
+  if(1 > month || 12 < month) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
     return false;
   }
   m_month = month;
@@ -541,8 +559,11 @@ bool EpwDataPoint::setMonth(std::string month)
 {
   bool ok;
   int value = QString().fromStdString(month).toInt(&ok);
-  if(1 > value || 12 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 12 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
     return false;
   }
   m_month = value;
@@ -556,8 +577,8 @@ int EpwDataPoint::day() const
 
 bool EpwDataPoint::setDay(int day)
 {
-  if(1 > day || 31 < day)
-  {
+  if(1 > day || 31 < day) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
     return false;
   }
   m_day = day;
@@ -568,8 +589,11 @@ bool EpwDataPoint::setDay(std::string day)
 {
   bool ok;
   int value = QString().fromStdString(day).toInt(&ok);
-  if(1 > value || 31 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 31 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
     return false;
   }
   m_day = value;
@@ -583,8 +607,8 @@ int EpwDataPoint::hour() const
 
 bool EpwDataPoint::setHour(int hour)
 {
-  if(1 > hour || 24 < hour)
-  {
+  if(1 > hour || 24 < hour) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
     return false;
   }
   m_hour = hour;
@@ -595,8 +619,11 @@ bool EpwDataPoint::setHour(std::string hour)
 {
   bool ok;
   int value = QString().fromStdString(hour).toInt(&ok);
-  if(1 > value || 24 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
+    return false;
+  } else if(1 > value || 24 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
     return false;
   }
   m_hour = value;
@@ -610,8 +637,8 @@ int EpwDataPoint::minute() const
 
 bool EpwDataPoint::setMinute(int minute)
 {
-  if(0 > minute || 59 < minute)
-  {
+  if(0 > minute || 59 < minute) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
     return false;
   }
   m_minute = minute;
@@ -622,8 +649,11 @@ bool EpwDataPoint::setMinute(std::string minute)
 {
   bool ok;
   int value = QString().fromStdString(minute).toInt(&ok);
-  if(0 > value || 59 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
+    return false;
+  } else if(0 > value || 59 < value) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
     return false;
   }
   m_minute = value;
@@ -1556,7 +1586,6 @@ boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData
   return result;
 }
 
-
 openstudio::path EpwFile::path() const
 {
   return m_path;
@@ -1614,7 +1643,12 @@ double EpwFile::elevation() const
 
 Time EpwFile::timeStep() const
 {
-  return m_timeStep;
+  return Time(0,0,60/m_recordsPerHour);
+}
+
+int EpwFile::recordsPerHour() const
+{
+  return m_recordsPerHour;
 }
 
 DayOfWeek EpwFile::startDayOfWeek() const
@@ -1753,19 +1787,21 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   firstPt.setDateTime(dateTime);
 
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
-  try
-  {
-    stream << firstPt.toWthString() << '\n';
-    for(unsigned int i=0;i<data().size();i++)
-    {
-      stream << data()[i].toWthString() << '\n';
-    }
-  }
-  catch(...)
-  {
+  boost::optional<std::string> output = firstPt.toWthString();
+  if(!output) {
     LOG(Error, "Translation to WTH has failed");
     fp.close();
     return false;
+  }
+  stream << output.get() << '\n';
+  for(unsigned int i=0;i<data().size();i++) {
+    output = data()[i].toWthString();
+    if(!output) {
+      LOG(Error, "Translation to WTH has failed");
+      fp.close();
+      return false;
+    }
+    stream << output.get() << '\n';
   }
   fp.close();
   return true;
@@ -1823,12 +1859,16 @@ bool EpwFile::parse(bool storeData)
   }
 
   // read rest of file
+  int lineNumber = 8;
   boost::optional<Date> startDate;
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
+  int minutesPerRecord = 60/m_recordsPerHour;
+  int currentMinute = 0;
   while(std::getline(ifs, line)){
+    lineNumber++;
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
     boost::smatch matches;
     if (boost::regex_search(line, matches, dateRegex)){
@@ -1856,17 +1896,31 @@ bool EpwFile::parse(bool storeData)
         }
         lastDate = date;
       }catch(...){
-        LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+        LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         ifs.close();
         return false;
       }
       if(storeData)
       {
-        EpwDataPoint pt(line);
-        m_data.push_back(pt);
+        boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwString(line);
+        if(m_recordsPerHour!=1)
+        {
+          currentMinute += minutesPerRecord;
+          if(currentMinute >= 60) { // This could really be ==, but >= is used for safety
+            currentMinute = 0;
+          }
+          pt->setMinute(currentMinute);
+        }
+        if(pt) {
+          m_data.push_back(pt.get());
+        } else {
+          LOG(Error,"Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
+          ifs.close();
+          return false;
+        }
       }
     }else{
-      LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+      LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
     }
@@ -1876,11 +1930,11 @@ bool EpwFile::parse(bool storeData)
   ifs.close();
 
   if (!startDate){
-    LOG(Error, "Could not find start date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");
     return false;
   }
   if (!endDate){
-    LOG(Error, "Could not find end date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find end date in data section of EPW file '" << m_path << "'");
     return false;
   }
 
@@ -1888,27 +1942,27 @@ bool EpwFile::parse(bool storeData)
       (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
       (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
       (m_endDate.dayOfMonth() != endDate->dayOfMonth())){
-    LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+    LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
     return false;
   }
 
   if (realYear){
     if (m_startDayOfWeek != startDate->dayOfWeek()){
-      LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
-      return false;
-    }
+      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "', data will be treated as typical");
+      // The flag needs to be changed so we can do the wrapAround check below
+      realYear = false;
+    } else {
+      // set dates with years
+      m_startDate = startDate.get();
+      m_startDateActualYear = startDate->year();
 
-    // set dates with years
-    m_startDate = startDate.get();
-    m_startDateActualYear = startDate->year();
-
-    m_endDate = endDate.get();
-    m_endDateActualYear = endDate->year();
-  }else{
-    if (wrapAround){
-      LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
-      return false;
+      m_endDate = endDate.get();
+      m_endDateActualYear = endDate->year();
     }
+  }
+  if(!realYear && wrapAround) {
+    LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
+    return false;
   }
 
   return result;
@@ -1992,7 +2046,11 @@ bool EpwFile::parseDataPeriod(const std::string& line)
       result = false;
     }
     try{
-      m_timeStep = Time(boost::lexical_cast<double>(timeStep) / 24.0);
+      m_recordsPerHour = boost::lexical_cast<int>(timeStep);
+      if(60 % m_recordsPerHour != 0) {
+        LOG(Error, "Number of records per hour does not result in integral mintes between records in EPW file '" << m_path<<"'");
+        return false;
+      }
     }catch(...){
       result = false;
     }

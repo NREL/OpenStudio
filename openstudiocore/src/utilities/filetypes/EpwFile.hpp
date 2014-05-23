@@ -72,8 +72,7 @@ OPENSTUDIO_ENUM(EpwDataField,
 class UTILITIES_API EpwDataPoint
 {
 public:
-  EpwDataPoint(std::string line);
-  EpwDataPoint(int year=1,int month=1,int day=1,int hour=0,int minute=0,
+  EpwDataPoint(int year=1,int month=1,int day=1,int hour=1,int minute=0,
     std::string dataSourceandUncertaintyFlags="",double dryBulbTemperature=99.9,double dewPointTemperature=99.9,
     double relativeHumidity=999,double atmosphericStationPressure=999999,double extraterrestrialHorizontalRadiation=9999,
     double extraterrestrialDirectNormalRadiation=9999,double horizontalInfraredRadiationIntensity=9999,
@@ -90,7 +89,8 @@ public:
   boost::optional<double> fieldByName(std::string name);
   boost::optional<double> field(EpwDataField id);
   // Conversion
-  std::string toWthString();
+  static boost::optional<EpwDataPoint> fromEpwString(std::string line);
+  boost::optional<std::string> toWthString();
   // One billion getters and setters
   Date date() const;
   void setDate(Date date);
@@ -290,6 +290,9 @@ public:
   /// get the time step
   Time timeStep() const;
 
+  /// get the records per hour
+  int recordsPerHour() const;
+
   /// get the start day of the week
   DayOfWeek startDayOfWeek() const;
 
@@ -335,7 +338,7 @@ private:
   double m_longitude;
   double m_timeZone;
   double m_elevation;
-  Time m_timeStep;
+  int m_recordsPerHour;
   DayOfWeek m_startDayOfWeek;
   Date m_startDate;
   Date m_endDate;
