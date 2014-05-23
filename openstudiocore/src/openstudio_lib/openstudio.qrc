@@ -67,6 +67,7 @@
     <file>images/fast_forward.png</file>
     <file>images/fast_reverse.png</file>
     <file>images/fire.png</file>
+    <file>images/fluid_hx.png</file>
     <file>images/forward.png</file>
     <file>images/four_pipe_fan_coil.png</file>    
     <file>images/furnace.png</file>    
@@ -271,6 +272,7 @@
     <file>images/mini_icons/fan_on_off_mini.png</file>
     <file>images/mini_icons/fan_variable.png</file>
     <file>images/mini_icons/fan_zoneexhaust.png</file>
+    <file>images/mini_icons/fluid_hx_mini.png</file>
     <file>images/mini_icons/folder.png</file>
     <file>images/mini_icons/four_pipe_fan_coil.png</file>    
     <file>images/mini_icons/furnace.png</file>
