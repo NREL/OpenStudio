@@ -73,7 +73,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
 
   // ModelType
 
-  if( s = modelObject.modelType() )
+  if( (s = modelObject.modelType()) )
   {
     idfObject.setString(CoolingTower_VariableSpeedFields::ModelType,s.get());
   }
@@ -90,21 +90,21 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
 
   // DesignInletAirWetBulbTemperature
 
-  if( d = modelObject.designInletAirWetBulbTemperature() )
+  if( (d = modelObject.designInletAirWetBulbTemperature()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignInletAirWetBulbTemperature,d.get());
   }
 
   // DesignApproachTemperature
 
-  if( d = modelObject.designApproachTemperature() )
+  if( (d = modelObject.designApproachTemperature()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignApproachTemperature,d.get());
   }
 
   // DesignRangeTemperature
   
-  if( d = modelObject.designRangeTemperature() )
+  if( (d = modelObject.designRangeTemperature()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignRangeTemperature,d.get());
   }
@@ -133,7 +133,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
 
   // DesignFanPower
 
-  if( d = modelObject.designFanPower() )
+  if( (d = modelObject.designFanPower()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::DesignFanPower,d.get());
   }
@@ -154,14 +154,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerVariableSpeed
 
   // MinimumAirFlowRateRatio
 
-  if( d = modelObject.minimumAirFlowRateRatio() )
+  if( (d = modelObject.minimumAirFlowRateRatio()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::MinimumAirFlowRateRatio,d.get());
   }
 
   // FractionofTowerCapacityinFreeConvectionRegime
 
-  if( d = modelObject.fractionofTowerCapacityinFreeConvectionRegime() )
+  if( (d = modelObject.fractionofTowerCapacityinFreeConvectionRegime()) )
   {
     idfObject.setDouble(CoolingTower_VariableSpeedFields::FractionofTowerCapacityinFreeConvectionRegime,d.get());
   }

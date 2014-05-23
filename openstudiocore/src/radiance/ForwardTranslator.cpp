@@ -141,7 +141,7 @@ namespace radiance {
 
     // preprocess the model here
     unsigned numSpacesToSimulate = 0;
-    BOOST_FOREACH(openstudio::model::Space space, model.getModelObjects<openstudio::model::Space>()){
+    BOOST_FOREACH(openstudio::model::Space space, model.getConcreteModelObjects<openstudio::model::Space>()){
       
       // remove any space's not associated with a thermal zone
       boost::optional<openstudio::model::ThermalZone> thermalZone = space.thermalZone();

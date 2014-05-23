@@ -60,7 +60,7 @@ OptionalModelObject ReverseTranslator::translateShadingBuildingDetailed( const W
 
   // look for first site level shading surface group
   OptionalShadingSurfaceGroup shadingSurfaceGroup;
-  BOOST_FOREACH(const ShadingSurfaceGroup& group, m_model.getModelObjects<ShadingSurfaceGroup>()){
+  BOOST_FOREACH(const ShadingSurfaceGroup& group, m_model.getConcreteModelObjects<ShadingSurfaceGroup>()){
     if (istringEqual("Building", group.shadingSurfaceType())){
       shadingSurfaceGroup = group;
       break;

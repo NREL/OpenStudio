@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -244,7 +244,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
 
   contam::ForwardTranslator translator;
 
-  boost::optional<openstudio::contam::PrjModel> prjModel = translator.translateModel(demoModel.get());
+  boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
 
   ASSERT_TRUE(prjModel);
 
@@ -266,14 +266,14 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(2,systemZoneCount);
   EXPECT_EQ(4,interiorZoneCount);
   // 26 Paths
-  EXPECT_EQ(26,prjModel->paths().size());
+  EXPECT_EQ(26,prjModel->airflowPaths().size());
   int exhaustPathCount=0;
   int systemPathCount=0;
   int windPressurePathCount=0;
   int outsideAirPathCount=0;
   int recirculationPathCount=0;
   int plainPathCount=0;
-  BOOST_FOREACH(contam::Path afp, prjModel->paths())
+  BOOST_FOREACH(contam::AirflowPath afp, prjModel->airflowPaths())
   {
     if(afp.system())
     {
@@ -331,4 +331,10 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
     int zoneExteriorWallCount = exteriorFlowPaths[zoneNumber-1].size();
     EXPECT_EQ(exteriorWallCount[thermalZone.name().get()],zoneExteriorWallCount);
   }
+
+  // Try setting some values to make sure things work
+  EXPECT_TRUE(prjModel->setDef_T(297.15));
+  EXPECT_TRUE(prjModel->setDef_T("297.15"));
+  EXPECT_FALSE(prjModel->setDef_T("twoninetysevenpointonefive"));
+  EXPECT_EQ(297.15,prjModel->def_T());
 }

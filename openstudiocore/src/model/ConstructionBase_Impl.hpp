@@ -106,6 +106,8 @@ namespace detail {
 
     virtual bool isFenestration() const=0;
 
+    virtual bool isSolarDiffusing() const=0;
+
     virtual bool isModelPartition() const=0;
 
     /** Returns true if the construction has RoofVegetation as the outer layer. */

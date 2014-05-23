@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 #include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
+#include <model/FanOnOff.hpp>
+#include <model/FanOnOff_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 #include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
 #include <model/ScheduleConstant.hpp>
 #include <model/Curve.hpp>
 #include <model/Curve_Impl.hpp>
@@ -36,9 +36,6 @@
 #include <model/CurveCubic_Impl.hpp>
 #include <model/CurveExponent.hpp>
 #include <model/CurveExponent_Impl.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <utilities/units/Unit.hpp>
 
 #include <model/HVACComponent.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -139,11 +136,21 @@ TEST_F(ModelFixture,FanOnOff_addToNode)
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-
   EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
-  EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)

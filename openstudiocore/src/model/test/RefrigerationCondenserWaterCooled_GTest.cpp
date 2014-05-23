@@ -18,14 +18,16 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
 #include <model/RefrigerationCondenserWaterCooled.hpp>
 #include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
+#include <model/ScheduleCompact.hpp>
+#include <model/ScheduleCompact_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -51,6 +53,38 @@ TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_iddObjectType)
 	RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
 	EXPECT_EQ( refrigerationCondenserWaterCooled.iddObjectType(), IddObjectType::OS_Refrigeration_Condenser_WaterCooled);
+}
+
+TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_addToNode) {
+  Model m;
+  RefrigerationCondenserWaterCooled testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  RefrigerationCondenserWaterCooled testObjectClone = testObject.clone(m).cast<RefrigerationCondenserWaterCooled>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
 }
 
 TEST_F(ModelFixture,RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRejectionRate)

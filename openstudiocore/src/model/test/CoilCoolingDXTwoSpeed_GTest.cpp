@@ -18,13 +18,18 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/ControllerOutdoorAir.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
 #include <model/CoilCoolingWater.hpp>
+#include <model/Schedule.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/Curve.hpp>
 #include <model/CurveBiquadratic.hpp>
@@ -34,67 +39,52 @@
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveQuadratic_Impl.hpp>
 #include <model/LifeCycleCost.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
 //Test construction of the coil, then check that fields in default constructor
 //are being set to the expected values
-TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_CoilCoolingDXTwoSpeed)
+TEST_F(ModelFixture,CoilCoolingDXTwoSpeed_CoilCoolingDXTwoSpeed)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
     {
       //create a model to use in testing this code.
-      model::Model m;
+      Model m;
 
       //create a schedule and the curves to use in the constructor
-      model::ScheduleCompact schedule(m);
-      model::CurveBiquadratic ccfot(m);
-      model::CurveCubic ccfof(m);
-      model::CurveBiquadratic eirfot(m);
-      model::CurveQuadratic eirfof(m);
-      model::CurveCubic plf(m);
-      model::CurveBiquadratic lsccfot(m);
-      model::CurveBiquadratic lseirfot(m);
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      CurveBiquadratic ccfot(m);
+      CurveCubic ccfof(m);
+      CurveBiquadratic eirfot(m);
+      CurveQuadratic eirfof(m);
+      CurveCubic plf(m);
+      CurveBiquadratic lsccfot(m);
+      CurveBiquadratic lseirfot(m);
 
       //make a coil to do the testing on
-      model::CoilCoolingDXTwoSpeed coil(m,
-                                        schedule,
-                                        ccfot,
-                                        ccfof,
-                                        eirfot,
-                                        eirfof,
-                                        plf,
-                                        lsccfot,
-                                        lseirfot);
+      CoilCoolingDXTwoSpeed coil(m, s, ccfot, ccfof, eirfot, eirfof, plf, lsccfot, lseirfot);
       exit(0);
     } ,
     ::testing::ExitedWithCode(0), "" );
 
       //create a model to use in testing this code.
-      model::Model m;
+      Model m;
 
       //create a schedule and the curves to use in the constructor
-      model::ScheduleCompact schedule(m);
-      model::CurveBiquadratic ccfot(m);
-      model::CurveCubic ccfof(m);
-      model::CurveBiquadratic eirfot(m);
-      model::CurveQuadratic eirfof(m);
-      model::CurveCubic plf(m);
-      model::CurveBiquadratic lsccfot(m);
-      model::CurveBiquadratic lseirfot(m);
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      CurveBiquadratic ccfot(m);
+      CurveCubic ccfof(m);
+      CurveBiquadratic eirfot(m);
+      CurveQuadratic eirfof(m);
+      CurveCubic plf(m);
+      CurveBiquadratic lsccfot(m);
+      CurveBiquadratic lseirfot(m);
 
       //make a coil to do the testing on
-      model::CoilCoolingDXTwoSpeed coil(m,
-                                        schedule,
-                                        ccfot,
-                                        ccfof,
-                                        eirfot,
-                                        eirfof,
-                                        plf,
-                                        lsccfot,
-                                        lseirfot);
+      CoilCoolingDXTwoSpeed coil(m, s, ccfot, ccfof, eirfot, eirfof, plf, lsccfot, lseirfot);
 
     //ASSERT_EQ("Autosize",coil.getRatedHighSpeedTotalCoolingCapacity().get());
     ASSERT_EQ(3,coil.getRatedHighSpeedCOP().get());
@@ -104,110 +94,93 @@ TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_CoilCoolingDXTwoSpeed)
     ASSERT_EQ(0,coil.getBasinHeaterCapacity().get());
     ASSERT_EQ(10,coil.getBasinHeaterSetpointTemperature().get());
     ASSERT_EQ("AirCooled",coil.getCondenserType());
-
 }
 
 //Test cloning the coil
-TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_Clone)
+TEST_F(ModelFixture,CoilCoolingDXTwoSpeed_Clone)
 {
     //create a model to use in testing this code.
-    model::Model m;
+    Model m;
 
     //create a schedule and the curves to use in the constructor
-    model::ScheduleCompact schedule(m);
-    model::CurveBiquadratic ccfot1(m);
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    CurveBiquadratic ccfot1(m);
       ccfot1.setCoefficient1Constant(1);
       ccfot1.setCoefficient2x(1);
       ccfot1.setCoefficient3xPOW2(1);
-    model::CurveCubic ccfof2(m);
+    CurveCubic ccfof2(m);
       ccfof2.setCoefficient1Constant(2);
       ccfof2.setCoefficient2x(2);
       ccfof2.setCoefficient3xPOW2(2);
-    model::CurveBiquadratic eirfot3(m);
+    CurveBiquadratic eirfot3(m);
       eirfot3.setCoefficient1Constant(3);
       eirfot3.setCoefficient2x(3);
       eirfot3.setCoefficient3xPOW2(3);
-    model::CurveQuadratic eirfof4(m);
+    CurveQuadratic eirfof4(m);
       eirfof4.setCoefficient1Constant(4);
       eirfof4.setCoefficient2x(4);
       eirfof4.setCoefficient3xPOW2(4);
-    model::CurveCubic plf5(m);
+    CurveCubic plf5(m);
       plf5.setCoefficient1Constant(5);
       plf5.setCoefficient2x(5);
       plf5.setCoefficient3xPOW2(5);
-    model::CurveBiquadratic lsccfot6(m);
+    CurveBiquadratic lsccfot6(m);
       lsccfot6.setCoefficient1Constant(6);
       lsccfot6.setCoefficient2x(6);
       lsccfot6.setCoefficient3xPOW2(6);
-    model::CurveBiquadratic lseirfot7(m);
+    CurveBiquadratic lseirfot7(m);
       lseirfot7.setCoefficient1Constant(7);
       lseirfot7.setCoefficient2x(7);
       lseirfot7.setCoefficient3xPOW2(7);
 
     //make a coil to do the testing on
-    model::CoilCoolingDXTwoSpeed coil(m,
-                                      schedule,
-                                      ccfot1,
-                                      ccfof2,
-                                      eirfot3,
-                                      eirfof4,
-                                      plf5,
-                                      lsccfot6,
-                                      lseirfot7);
+    CoilCoolingDXTwoSpeed coil(m, s, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
 
     //Clone into the same model
-    model::CoilCoolingDXTwoSpeed  coilClone = coil.clone(m).cast<model::CoilCoolingDXTwoSpeed>();
+    CoilCoolingDXTwoSpeed  coilClone = coil.clone(m).cast<CoilCoolingDXTwoSpeed>();
 
-    ASSERT_EQ(1,coilClone.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(2,coilClone.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<model::CurveCubic>().coefficient1Constant());
-    ASSERT_EQ(3,coilClone.getEnergyInputRatioFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(4,coilClone.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<model::CurveQuadratic>().coefficient1Constant());
-    ASSERT_EQ(5,coilClone.getPartLoadFractionCorrelationCurve().cast<model::CurveCubic>().coefficient1Constant());
-    ASSERT_EQ(6,coilClone.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(7,coilClone.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(1,coilClone.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(2,coilClone.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
+    ASSERT_EQ(3,coilClone.getEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(4,coilClone.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
+    ASSERT_EQ(5,coilClone.getPartLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
+    ASSERT_EQ(6,coilClone.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(7,coilClone.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
 
     //Clone into another model
-    model::Model m2;
-    model::CoilCoolingDXTwoSpeed  coilClone2 = coil.clone(m2).cast<model::CoilCoolingDXTwoSpeed>();
+    Model m2;
+    CoilCoolingDXTwoSpeed  coilClone2 = coil.clone(m2).cast<CoilCoolingDXTwoSpeed>();
 
-    ASSERT_EQ(1,coilClone2.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(2,coilClone2.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<model::CurveCubic>().coefficient1Constant());
-    ASSERT_EQ(3,coilClone2.getEnergyInputRatioFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(4,coilClone2.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<model::CurveQuadratic>().coefficient1Constant());
-    ASSERT_EQ(5,coilClone2.getPartLoadFractionCorrelationCurve().cast<model::CurveCubic>().coefficient1Constant());
-    ASSERT_EQ(6,coilClone2.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
-    ASSERT_EQ(7,coilClone2.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<model::CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(1,coilClone2.getTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(2,coilClone2.getTotalCoolingCapacityFunctionOfFlowFractionCurve().cast<CurveCubic>().coefficient1Constant());
+    ASSERT_EQ(3,coilClone2.getEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(4,coilClone2.getEnergyInputRatioFunctionOfFlowFractionCurve().cast<CurveQuadratic>().coefficient1Constant());
+    ASSERT_EQ(5,coilClone2.getPartLoadFractionCorrelationCurve().cast<CurveCubic>().coefficient1Constant());
+    ASSERT_EQ(6,coilClone2.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
+    ASSERT_EQ(7,coilClone2.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve().cast<CurveBiquadratic>().coefficient1Constant());
 }
 
 //Test the methods that set and get all the fields
-TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_SetGetFields)
+TEST_F(ModelFixture,CoilCoolingDXTwoSpeed_SetGetFields)
 {
     //create a model to use in testing this code.
-    model::Model m;
+    Model m;
 
     //create a schedule and the curves to use in the constructor
-    model::ScheduleCompact schedule(m);
-    model::CurveBiquadratic ccfot1(m);
-    model::CurveCubic ccfof2(m);
-    model::CurveBiquadratic eirfot3(m);
-    model::CurveQuadratic eirfof4(m);
-    model::CurveCubic plf5(m);
-    model::CurveBiquadratic lsccfot6(m);
-    model::CurveBiquadratic lseirfot7(m);
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    CurveBiquadratic ccfot1(m);
+    CurveCubic ccfof2(m);
+    CurveBiquadratic eirfot3(m);
+    CurveQuadratic eirfof4(m);
+    CurveCubic plf5(m);
+    CurveBiquadratic lsccfot6(m);
+    CurveBiquadratic lseirfot7(m);
 
     //make a coil to do the testing on
-    model::CoilCoolingDXTwoSpeed coil(m,
-                                      schedule,
-                                      ccfot1,
-                                      ccfof2,
-                                      eirfot3,
-                                      eirfof4,
-                                      plf5,
-                                      lsccfot6,
-                                      lseirfot7);
+    CoilCoolingDXTwoSpeed coil(m, s, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
 
     //  A2 , \field Availability Schedule Name
-    model::ScheduleCompact availSch(m);
+    ScheduleCompact availSch(m);
     coil.setAvailabilitySchedule(availSch);
     ASSERT_EQ(availSch,coil.getAvailabilitySchedule());
 
@@ -228,9 +201,9 @@ TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_SetGetFields)
     ASSERT_EQ(999,coil.getRatedHighSpeedAirFlowRate().get());
 
     //create some curves for testing
-    model::CurveBiquadratic  testBiquadratic(m);
-    model::CurveCubic  testCubic(m);
-    model::CurveQuadratic  testQuadratic(m);
+    CurveBiquadratic  testBiquadratic(m);
+    CurveCubic  testCubic(m);
+    CurveQuadratic  testQuadratic(m);
 
     //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
     //\object-list BiquadraticCurves
@@ -338,41 +311,113 @@ TEST(CoilCoolingDXTwoSpeed,CoilCoolingDXTwoSpeed_SetGetFields)
     ASSERT_EQ(35,coil.getBasinHeaterSetpointTemperature().get());
 
     //  A16; \field Basin Heater Operating Schedule Name
-    model::ScheduleCompact basinSch(m);
+    ScheduleCompact basinSch(m);
     coil.setBasinHeaterOperatingSchedule(basinSch);
     ASSERT_EQ(basinSch,coil.getBasinHeaterOperatingSchedule().get());
 }
 
 //Test adding LifeCycleCost
-TEST(CoilCoolingDXTwoSpeed, CoilCoolingDXTwoSpeed_Cost)
+TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_Cost)
 {
     //create a model to use in testing this code.
-    model::Model m;
+    Model m;
 
     //create a schedule and the curves to use in the constructor
-    model::ScheduleCompact schedule(m);
-    model::CurveBiquadratic ccfot1(m);
-    model::CurveCubic ccfof2(m);
-    model::CurveBiquadratic eirfot3(m);
-    model::CurveQuadratic eirfof4(m);
-    model::CurveCubic plf5(m);
-    model::CurveBiquadratic lsccfot6(m);
-    model::CurveBiquadratic lseirfot7(m);
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    CurveBiquadratic ccfot1(m);
+    CurveCubic ccfof2(m);
+    CurveBiquadratic eirfot3(m);
+    CurveQuadratic eirfof4(m);
+    CurveCubic plf5(m);
+    CurveBiquadratic lsccfot6(m);
+    CurveBiquadratic lseirfot7(m);
 
     //make a coil to do the testing on
-    model::CoilCoolingDXTwoSpeed coil(m,
-                                      schedule,
-                                      ccfot1,
-                                      ccfof2,
-                                      eirfot3,
-                                      eirfof4,
-                                      plf5,
-                                      lsccfot6,
-                                      lseirfot7);
+    CoilCoolingDXTwoSpeed coil(m, s, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
 
-  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
+  boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Install", coil, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
+}
 
+TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_addToNode)
+{
+  //create a model to use in testing this code.
+  Model m;
+
+  //create a schedule and the curves to use in the constructor
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  CurveBiquadratic ccfot1(m);
+  CurveCubic ccfof2(m);
+  CurveBiquadratic eirfot3(m);
+  CurveQuadratic eirfof4(m);
+  CurveCubic plf5(m);
+  CurveBiquadratic lsccfot6(m);
+  CurveBiquadratic lseirfot7(m);
+
+  //make a coil to do the testing on
+  CoilCoolingDXTwoSpeed testObject(m, s, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
+
+  AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  CurveBiquadratic  c1(m);
+  CurveCubic  c2(m);
+  CurveBiquadratic  c3(m);
+  CurveQuadratic  c4(m);
+  CurveCubic  c5(m);
+  CurveBiquadratic c6(m);
+  CurveBiquadratic c7(m);
+
+  CoilCoolingDXTwoSpeed testObject2(m, s, c1, c2, c3, c4, c5, c6, c7);
+
+  if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
+  }
+
+  CurveBiquadratic  c1_2(m);
+  CurveCubic  c2_2(m);
+  CurveBiquadratic  c3_2(m);
+  CurveQuadratic  c4_2(m);
+  CurveCubic  c5_2(m);
+  CurveBiquadratic c6_2(m);
+  CurveBiquadratic c7_2(m);
+
+  CoilCoolingDXTwoSpeed testObject3(m, s, c1_2, c2_2, c3_2, c4_2, c5_2, c6_2, c7_2);
+
+  if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
+    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+  }
+
+  CoilCoolingDXTwoSpeed testObjectClone = testObject.clone(m).cast<CoilCoolingDXTwoSpeed>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, airLoop.supplyComponents().size() );
 }

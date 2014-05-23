@@ -168,7 +168,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   resolveMatchedSubSurfaceConstructionConflicts(model);
 
   // check for spaces not in a thermal zone
-  BOOST_FOREACH(Space space, model.getModelObjects<Space>()){
+  BOOST_FOREACH(Space space, model.getConcreteModelObjects<Space>()){
     if (!space.thermalZone()){
       LOG(Warn, "Space " << space.name().get() << " is not associated with a ThermalZone, it will not be translated.");
       space.remove();
@@ -177,12 +177,12 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
-  BOOST_FOREACH(ThermalZone thermalZone, model.getModelObjects<ThermalZone>()){
+  BOOST_FOREACH(ThermalZone thermalZone, model.getConcreteModelObjects<ThermalZone>()){
     thermalZone.combineSpaces();
   }
 
   // remove unused space types
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
   BOOST_FOREACH(SpaceType spaceType, spaceTypes){
     std::vector<Space> spaces = spaceType.spaces();
     if (spaces.empty()){
@@ -199,7 +199,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   //Fix for Bug 717 - Take any OtherEquipment objects that still point to a spacetype and make
   //a new instance of them for every space that that spacetype points to then delete the one
   //that pointed to a spacetype
-  std::vector<OtherEquipment> otherEquipments = model.getModelObjects<OtherEquipment>();
+  std::vector<OtherEquipment> otherEquipments = model.getConcreteModelObjects<OtherEquipment>();
   BOOST_FOREACH(OtherEquipment otherEquipment, otherEquipments){
     boost::optional<SpaceType> spaceTypeOfOtherEquipment = otherEquipment.spaceType();
     if (spaceTypeOfOtherEquipment){
@@ -222,7 +222,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
     // we will not warn users because these objects are not exposed in the GUI
-    BOOST_FOREACH(model::RunPeriodControlSpecialDays holiday, model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
+    BOOST_FOREACH(model::RunPeriodControlSpecialDays holiday, model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()){ 
       holiday.remove();
     }
   }
@@ -234,7 +234,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
       if (!lifeCycleCostParameters){
         // only warn if costs are present
-        if (!model.getModelObjects<LifeCycleCost>().empty()){
+        if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
           LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
         }
         
@@ -288,7 +288,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     m_idfObjects.push_back(globalGeometryRules);
 
     // create meters for utility bill objects
-    std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
+    std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     BOOST_FOREACH(UtilityBill utilityBill, utilityBills){
       // these meters and variables will be translated later
       Meter consumptionMeter = utilityBill.consumptionMeter();
@@ -300,21 +300,21 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   translateSchedules(model);
 
   // get air loops in sorted order
-  std::vector<AirLoopHVAC> airLoops = model.getModelObjects<AirLoopHVAC>();
+  std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
   BOOST_FOREACH(AirLoopHVAC airLoop, airLoops){
     translateAndMapModelObject(airLoop);
   }
 
   // get AirConditionerVariableRefrigerantFlow objects in sorted order
-  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
+  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>();
   std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
   BOOST_FOREACH(AirConditionerVariableRefrigerantFlow vrf, vrfs){
     translateAndMapModelObject(vrf);
   }
 
   // get plant loops in sorted order
-  std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
+  std::vector<PlantLoop> plantLoops = model.getConcreteModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
   BOOST_FOREACH(PlantLoop plantLoop, plantLoops){
     translateAndMapModelObject(plantLoop);
@@ -484,6 +484,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirLoopHVACUnitaryHeatPumpAirToAir(unitary);
       break;
     }
+  case openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem :
+    {
+      model::AirLoopHVACUnitarySystem unitary = modelObject.cast<AirLoopHVACUnitarySystem>();
+      retVal = translateAirLoopHVACUnitarySystem(unitary);
+      break;
+    }
   case openstudio::IddObjectType::OS_AvailabilityManagerAssignmentList :
     {
       return retVal;
@@ -548,13 +554,21 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();
-      retVal = translateCoilCoolingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed :
     {
       model::CoilCoolingDXTwoSpeed coil = modelObject.cast<CoilCoolingDXTwoSpeed>();
-      retVal = translateCoilCoolingDXTwoSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilCoolingDXTwoSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilCoolingDXTwoSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow :
@@ -594,7 +608,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   case openstudio::IddObjectType::OS_Coil_Heating_DX_SingleSpeed :
     {
       model::CoilHeatingDXSingleSpeed coil = modelObject.cast<CoilHeatingDXSingleSpeed>();
-      retVal = translateCoilHeatingDXSingleSpeed(coil);
+      if( this->isHVACComponentWithinUnitary(coil) ) {
+        retVal = translateCoilHeatingDXSingleSpeedWithoutUnitary(coil);
+      } else {
+        retVal = translateCoilHeatingDXSingleSpeed(coil);
+      }
       break;
     }
   case openstudio::IddObjectType::OS_Coil_Heating_Electric :
@@ -2123,7 +2141,7 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
 
   std::set<Handle> processedSurfaces;
 
-  model::SurfaceVector surfaces = model.getModelObjects<model::Surface>();
+  model::SurfaceVector surfaces = model.getConcreteModelObjects<model::Surface>();
   BOOST_FOREACH(model::Surface surface, surfaces){
 
     if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()){
@@ -2270,7 +2288,7 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
 
   std::set<Handle> processedSubSurfaces;
 
-  model::SubSurfaceVector subSurfaces = model.getModelObjects<model::SubSurface>();
+  model::SubSurfaceVector subSurfaces = model.getConcreteModelObjects<model::SubSurface>();
   BOOST_FOREACH(model::SubSurface subSurface, subSurfaces){
 
     if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()){
@@ -2485,6 +2503,26 @@ boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path)
   ss << in.readAll().toStdString();
 
   return IdfFile::load(ss, IddFileType::EnergyPlus);
+}
+
+bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const
+{
+  if( hvacComponent.containingHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingZoneHVACComponent() )
+  {
+    return true;
+  }
+  else if( hvacComponent.containingStraightComponent() )
+  {
+    return true;
+  }    
+  else
+  {
+    return false;
+  }
 }
 
 void ForwardTranslator::createFluidPropertiesMap()

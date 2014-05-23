@@ -186,7 +186,7 @@ namespace energyplus {
 
     // get the GlobalGeometryRules
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::GlobalGeometryRules);
-    if (!objects.size() == 1){
+    if (objects.size() != 1){
       LOG(Warn, "Could not find GlobalGeometryRules object, assuming defaults");
       result.svp = StartingVertexPosition::UpperLeftCorner;
       result.ved = VertexEntryDirection::Counterclockwise;
@@ -248,7 +248,7 @@ namespace energyplus {
   {
     // get the Building
     WorkspaceObjectVector objects = m_workspace.getObjectsByType(IddObjectType::Building);
-    if (!objects.size() == 1){
+    if (objects.size() != 1){
       LOG(Warn, "Could not find Building object, assuming 0 rotation");
       return Transformation();
     }

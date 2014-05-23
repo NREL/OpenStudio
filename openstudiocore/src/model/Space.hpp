@@ -48,6 +48,7 @@ class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
 class OtherEquipment;
+class WaterUseEquipment;
 class DaylightingControl;
 class IlluminanceMap;
 class GlareSensor;
@@ -193,11 +194,14 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   /// Returns all HotWaterEquipment in this space.
   std::vector<HotWaterEquipment> hotWaterEquipment() const;
 
-  /// Returns all SteamEquipment in this space type.
+  /// Returns all SteamEquipment in this space.
   std::vector<SteamEquipment> steamEquipment() const;
 
-  /// Returns all OtherEquipment in this space type.
+  /// Returns all OtherEquipment in this space.
   std::vector<OtherEquipment> otherEquipment() const;  
+
+  /// Returns all WaterUseEquipment in this space.
+  std::vector<WaterUseEquipment> waterUseEquipment() const; 
 
   /// Returns all DaylightingControls in this space.
   std::vector<DaylightingControl> daylightingControls() const;
@@ -567,6 +571,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
 
   REGISTER_LOGGER("openstudio.model.Space");
 };
+
+/** Intersect surfaces within spaces. */
+MODEL_API void intersectSurfaces(std::vector<Space>& spaces);
 
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces);

@@ -92,17 +92,22 @@ namespace detail{
 
   bool EvaporativeCoolerDirectResearchSpecial_Impl::addToNode(Node & node)
   {
-    bool result = StraightComponent_Impl::addToNode( node );
-  
-    if( result )
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( boost::optional<Node> node = this->outletModelObject()->optionalCast<Node>() )
+      if( ! airLoop->demandComponent(node.handle()) )
       {
-        this->setSensorNode(node.get());
+        if( StraightComponent_Impl::addToNode( node ) )
+        {
+          if( boost::optional<Node> node = this->outletModelObject()->optionalCast<Node>() )
+          {
+            this->setSensorNode(node.get());
+          }
+          return true;
+        }
       }
     }
 
-    return result;
+    return false;
   }
 
   std::vector<openstudio::IdfObject> EvaporativeCoolerDirectResearchSpecial_Impl::remove()

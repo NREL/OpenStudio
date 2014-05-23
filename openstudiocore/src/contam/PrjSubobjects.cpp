@@ -17,246 +17,347 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include "PrjSubobjects.hpp"
+#include "PrjSubobjectsImpl.hpp"
 
 namespace openstudio {
 namespace contam {
 
-WeatherData::WeatherData(RX Tambt,RX barpres,RX windspd,RX winddir,RX relhum,int daytyp,int uTa,int ubP,int uws,int uwd)
+WeatherData::WeatherData()
 {
-  d = new WeatherDataPrivate(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd);
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl);
+}
+
+WeatherData::WeatherData(std::string Tambt,std::string barpres,std::string windspd,std::string winddir,std::string relhum,int daytyp,
+                         int uTa,int ubP,int uws,int uwd)
+{
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
+}
+
+WeatherData::WeatherData(double Tambt,double barpres,double windspd,double winddir,double relhum,int daytyp,
+                         int uTa,int ubP,int uws,int uwd)
+{
+  m_impl = boost::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt,barpres,windspd,winddir,relhum,daytyp,uTa,ubP,uws,uwd));
+}
+
+WeatherData::WeatherData(const WeatherData &other) : m_impl(other.m_impl)
+{}
+
+WeatherData::~WeatherData()
+{}
+
+WeatherData& WeatherData::operator=(const WeatherData &other)
+{
+  m_impl = other.m_impl;
+  return *this;
+}
+
+bool WeatherData::operator==(const WeatherData &other) const
+{
+  return m_impl==other.m_impl;
+}
+
+bool WeatherData::operator!=(const WeatherData &other) const
+{
+  return m_impl!=other.m_impl;
 }
 
 std::string WeatherData::write()
 {
-  return d->write();
+  return m_impl->write();
 }
 
 void WeatherData::read(Reader &input)
 {
-  d->read(input);
+  m_impl->read(input);
 }
 
-RX WeatherData::Tambt() const
+double WeatherData::Tambt() const
 {
-  return d->Tambt;
+  return m_impl->Tambt();
 }
 
-void WeatherData::setTambt(const RX Tambt)
+bool WeatherData::setTambt(const double Tambt)
 {
-  d->Tambt = Tambt;
+  return m_impl->setTambt(Tambt);
 }
 
-RX WeatherData::barpres() const
+bool WeatherData::setTambt(const std::string &Tambt)
 {
-  return d->barpres;
+  return m_impl->setTambt(Tambt);
 }
 
-void WeatherData::setBarpres(const RX barpres)
+double WeatherData::barpres() const
 {
-  d->barpres = barpres;
+  return m_impl->barpres();
 }
 
-RX WeatherData::windspd() const
+bool WeatherData::setBarpres(const double barpres)
 {
-  return d->windspd;
+  return m_impl->setBarpres(barpres);
 }
 
-void WeatherData::setWindspd(const RX windspd)
+bool WeatherData::setBarpres(const std::string &barpres)
 {
-  d->windspd = windspd;
+  return m_impl->setBarpres(barpres);
 }
 
-RX WeatherData::winddir() const
+double WeatherData::windspd() const
 {
-  return d->winddir;
+  return m_impl->windspd();
 }
 
-void WeatherData::setWinddir(const RX winddir)
+bool WeatherData::setWindspd(const double windspd)
 {
-  d->winddir = winddir;
+  return m_impl->setWindspd(windspd);
 }
 
-RX WeatherData::relhum() const
+bool WeatherData::setWindspd(const std::string &windspd)
 {
-  return d->relhum;
+  return m_impl->setWindspd(windspd);
 }
 
-void WeatherData::setRelhum(const RX relhum)
+double WeatherData::winddir() const
 {
-  d->relhum = relhum;
+  return m_impl->winddir();
+}
+
+bool WeatherData::setWinddir(const double winddir)
+{
+  return m_impl->setWinddir(winddir);
+}
+
+bool WeatherData::setWinddir(const std::string &winddir)
+{
+  return m_impl->setWinddir(winddir);
+}
+
+double WeatherData::relhum() const
+{
+  return m_impl->relhum();
+}
+
+bool WeatherData::setRelhum(const double relhum)
+{
+  return m_impl->setRelhum(relhum);
+}
+
+bool WeatherData::setRelhum(const std::string &relhum)
+{
+  return m_impl->setRelhum(relhum);
 }
 
 int WeatherData::daytyp() const
 {
-  return d->daytyp;
+  return m_impl->daytyp();
 }
 
 void WeatherData::setDaytyp(const int daytyp)
 {
-  d->daytyp = daytyp;
+  m_impl->setDaytyp(daytyp);
 }
 
 int WeatherData::uTa() const
 {
-  return d->uTa;
+  return m_impl->uTa();
 }
 
 void WeatherData::setUTa(const int uTa)
 {
-  d->uTa = uTa;
+  m_impl->setUTa(uTa);
 }
 
 int WeatherData::ubP() const
 {
-  return d->ubP;
+  return m_impl->ubP();
 }
 
 void WeatherData::setUbP(const int ubP)
 {
-  d->ubP = ubP;
+  m_impl->setUbP(ubP);
 }
 
 int WeatherData::uws() const
 {
-  return d->uws;
+  return m_impl->uws();
 }
 
 void WeatherData::setUws(const int uws)
 {
-  d->uws = uws;
+  m_impl->setUws(uws);
 }
 
 int WeatherData::uwd() const
 {
-  return d->uwd;
+  return m_impl->uwd();
 }
 
 void WeatherData::setUwd(const int uwd)
 {
-  d->uwd = uwd;
+  m_impl->setUwd(uwd);
+}
+
+Icon::Icon()
+{
+  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl());
 }
 
 Icon::Icon(int icon,int col,int row,int nr)
 {
-  d = new IconPrivate(icon,col,row,nr);
+  m_impl = boost::shared_ptr<detail::IconImpl>(new detail::IconImpl(icon,col,row,nr));
+}
+
+Icon::Icon(const Icon &other) : m_impl(other.m_impl)
+{}
+
+Icon::~Icon()
+{}
+
+Icon& Icon::operator=(const Icon &other)
+{
+  m_impl = other.m_impl;
+  return *this;
+}
+
+bool Icon::operator==(const Icon &other) const
+{
+  return m_impl==other.m_impl;
+}
+
+bool Icon::operator!=(const Icon &other) const
+{
+  return m_impl!=other.m_impl;
 }
 
 std::string Icon::write()
 {
-  return d->write();
+  return m_impl->write();
 }
 
 void Icon::read(Reader &input)
 {
-  d->read(input);
+  m_impl->read(input);
 }
 
 int Icon::icon() const
 {
-  return d->icon;
+  return m_impl->icon();
 }
 
 void Icon::setIcon(const int icon)
 {
-  d->icon = icon;
+  m_impl->setIcon(icon);
 }
 
 int Icon::col() const
 {
-  return d->col;
+  return m_impl->col();
 }
 
 void Icon::setCol(const int col)
 {
-  d->col = col;
+  m_impl->setCol(col);
 }
 
 int Icon::row() const
 {
-  return d->row;
+  return m_impl->row();
 }
 
 void Icon::setRow(const int row)
 {
-  d->row = row;
+  m_impl->setRow(row);
 }
 
 int Icon::nr() const
 {
-  return d->nr;
+  return m_impl->nr();
 }
 
 void Icon::setNr(const int nr)
 {
-  d->nr = nr;
+  m_impl->setNr(nr);
 }
-
-
 
 bool Icon::isWall()
 {
-  return (d->icon >= WL_EW) && (d->icon <= WL_NESW);
+  return m_impl->isWall();
 }
 
-uint Icon::bits()
+void FanDataPoint::setDefaults()
 {
-  if(isWall())
-    switch(d->icon)
-  {
-    case WL_EW:
-      return BIT_EW;
-    case WL_NS:
-      return BIT_NS;
-    case WL_ES:
-      return BIT_ES;
-    case WL_SW:
-      return BIT_SW;
-    case WL_NW:
-      return BIT_NW;
-    case WL_NE:
-      return BIT_NE;
-    case WL_NES:
-      return BIT_NES;
-    case WL_ESW:
-      return BIT_ESW;
-    case WL_NSW:
-      return BIT_NSW;
-    case WL_NEW:
-      return BIT_NEW;
-    case WL_NESW:
-      return BIT_NESW;
-  }
-  return 0;
+  m_mF = PRJFLOAT("0.0");
+  m_u_mF = 0;
+  m_dP = PRJFLOAT("0.0");
+  m_u_dP = 0;
+  m_rP = PRJFLOAT("0.0");
+  m_u_rP = 0;
 }
 
-FanDataPoint::FanDataPoint(RX mF,int u_mF,RX dP,int u_dP,RX rP,int u_rP):m_mF(mF),m_u_mF(u_mF),m_dP(dP),m_u_dP(u_dP),m_rP(rP),m_u_rP(u_rP)
-{}
+FanDataPoint::FanDataPoint()
+{
+  setDefaults();
+}
+
+FanDataPoint::FanDataPoint(double mF,int u_mF,double dP,int u_dP,double rP,int u_rP)
+{
+  setDefaults();
+  setMF(mF);
+  setU_mF(u_mF);
+  setDP(dP);
+  setU_dP(u_dP);
+  setRP(rP);
+  setU_rP(u_rP);
+}
+
+FanDataPoint::FanDataPoint(std::string mF,int u_mF,std::string dP,int u_dP,std::string rP,int u_rP)
+{
+  setDefaults();
+  setMF(mF);
+  setU_mF(u_mF);
+  setDP(dP);
+  setU_dP(u_dP);
+  setRP(rP);
+  setU_rP(u_rP);
+}
 
 void FanDataPoint::read(Reader &input)
 {
-  m_mF = input.readNumber<RX>(FILELINE);
-  m_u_mF = input.read<int>(FILELINE);
-  m_dP = input.readNumber<RX>(FILELINE);
-  m_u_dP = input.read<int>(FILELINE);
-  m_rP = input.readNumber<RX>(FILELINE);
-  m_u_rP = input.read<int>(FILELINE);
+  setMF(input.readNumber<std::string>());
+  setU_mF(input.read<int>());
+  setDP(input.readNumber<std::string>());
+  setU_dP(input.read<int>());
+  setRP(input.readNumber<std::string>());
+  setU_rP(input.read<int>());
 }
 
 std::string FanDataPoint::write()
 {
   std::string string;
-  string += openstudio::toString(m_mF) + ' ' + openstudio::toString(m_u_mF) + ' ' + openstudio::toString(m_dP) + ' ' + openstudio::toString(m_u_dP) + ' ' + openstudio::toString(m_rP) + ' ' + openstudio::toString(m_u_rP) + '\n';
+  string += ANY_TO_STR(m_mF) + ' ' + ANY_TO_STR(m_u_mF) + ' ' + ANY_TO_STR(m_dP) + ' ' + ANY_TO_STR(m_u_dP) + ' ' + ANY_TO_STR(m_rP) + ' ' + ANY_TO_STR(m_u_rP) + '\n';
   return string;
 }
 
-RX FanDataPoint::mF() const
+double FanDataPoint::mF() const
 {
-  return m_mF;
+  return m_mF.toDouble();
 }
 
-void FanDataPoint::setMF(const RX mF)
+bool FanDataPoint::setMF(const double mF)
 {
-  m_mF = mF;
+  m_mF = QString::number(mF);
+  return true;
+}
+
+bool FanDataPoint::setMF(const std::string &mF)
+{
+  bool ok;
+  FLOAT_CHECK(mF,&ok);
+  if(ok)
+  {
+    m_mF = STR_TO_FLOAT(mF);
+    return true;
+  }
+  return false;
 }
 
 int FanDataPoint::u_mF() const
@@ -269,14 +370,27 @@ void FanDataPoint::setU_mF(const int u_mF)
   m_u_mF = u_mF;
 }
 
-RX FanDataPoint::dP() const
+double FanDataPoint::dP() const
 {
-  return m_dP;
+  return m_dP.toDouble();
 }
 
-void FanDataPoint::setDP(const RX dP)
+bool FanDataPoint::setDP(const double dP)
 {
-  m_dP = dP;
+  m_dP = QString::number(dP);
+  return true;
+}
+
+bool FanDataPoint::setDP(const std::string &dP)
+{
+  bool ok;
+  FLOAT_CHECK(dP,&ok);
+  if(ok)
+  {
+    m_dP = STR_TO_FLOAT(dP);
+    return true;
+  }
+  return false;
 }
 
 int FanDataPoint::u_dP() const
@@ -289,14 +403,27 @@ void FanDataPoint::setU_dP(const int u_dP)
   m_u_dP = u_dP;
 }
 
-RX FanDataPoint::rP() const
+double FanDataPoint::rP() const
 {
-  return m_rP;
+  return m_rP.toDouble();
 }
 
-void FanDataPoint::setRP(const RX rP)
+bool FanDataPoint::setRP(const double rP)
 {
-  m_rP = rP;
+  m_rP = QString::number(rP);
+  return true;
+}
+
+bool FanDataPoint::setRP(const std::string &rP)
+{
+  bool ok;
+  FLOAT_CHECK(rP,&ok);
+  if(ok)
+  {
+    m_rP = STR_TO_FLOAT(rP);
+    return true;
+  }
+  return false;
 }
 
 int FanDataPoint::u_rP() const
@@ -309,56 +436,129 @@ void FanDataPoint::setU_rP(const int u_rP)
   m_u_rP = u_rP;
 }
 
-DataPoint::DataPoint(RX x,RX y):m_x(x),m_y(y)
-{}
-
-void DataPoint::read(Reader &input)
+void XyDataPoint::setDefaults()
 {
-  m_x = input.readNumber<RX>(FILELINE);
-  m_y = input.readNumber<RX>(FILELINE);
+  m_x = PRJFLOAT("0.0");
+  m_y = PRJFLOAT("0.0");
 }
 
-std::string DataPoint::write()
+XyDataPoint::XyDataPoint()
+{
+  setDefaults();
+}
+
+XyDataPoint::XyDataPoint(double x,double y)
+{
+  setDefaults();
+  setX(x);
+  setY(y);
+}
+
+XyDataPoint::XyDataPoint(std::string x,std::string y)
+{
+  setDefaults();
+  setX(x);
+  setY(y);
+}
+
+void XyDataPoint::read(Reader &input)
+{
+  setX(input.readNumber<std::string>());
+  setY(input.readNumber<std::string>());
+}
+
+std::string XyDataPoint::write()
 {
   std::string string;
-  string += openstudio::toString(m_x) + ' ' + openstudio::toString(m_y) + '\n';
+  string += ANY_TO_STR(m_x) + ' ' + ANY_TO_STR(m_y) + '\n';
   return string;
 }
 
-RX DataPoint::x() const
+double XyDataPoint::x() const
 {
-  return m_x;
+  return m_x.toDouble();
 }
 
-void DataPoint::setX(const RX x)
+bool XyDataPoint::setX(const double x)
 {
-  m_x = x;
+  m_x = QString::number(x);
+  return true;
 }
 
-RX DataPoint::y() const
+bool XyDataPoint::setX(const std::string &x)
 {
-  return m_y;
+  bool ok;
+  FLOAT_CHECK(x,&ok);
+  if(ok)
+  {
+    m_x = STR_TO_FLOAT(x);
+    return true;
+  }
+  return false;
 }
 
-void DataPoint::setY(const RX y)
+double XyDataPoint::y() const
 {
-  m_y = y;
+  return m_y.toDouble();
 }
 
-AirflowSubelementData::AirflowSubelementData(int nr,RX relHt,int filt):m_nr(nr),m_relHt(relHt),m_filt(filt)
-{}
+bool XyDataPoint::setY(const double y)
+{
+  m_y = QString::number(y);
+  return true;
+}
+
+bool XyDataPoint::setY(const std::string &y)
+{
+  bool ok;
+  FLOAT_CHECK(y,&ok);
+  if(ok)
+  {
+    m_y = STR_TO_FLOAT(y);
+    return true;
+  }
+  return false;
+}
+
+void AirflowSubelementData::setDefaults()
+{
+  m_nr = 0;
+  m_relHt = PRJFLOAT("0.0");
+  m_filt = 0;
+}
+
+AirflowSubelementData::AirflowSubelementData()
+{
+  setDefaults();
+}
+
+AirflowSubelementData::AirflowSubelementData(int nr,double relHt,int filt)
+{
+  setDefaults();
+  setNr(nr);
+  setRelHt(relHt);
+  setFilt(filt);
+}
+
+AirflowSubelementData::AirflowSubelementData(int nr,std::string relHt,int filt)
+{
+  setDefaults();
+  setNr(nr);
+  setRelHt(relHt);
+  setFilt(filt);
+}
 
 void AirflowSubelementData::read(Reader &input)
 {
-  m_nr = input.read<int>(FILELINE);
-  m_relHt = input.readNumber<RX>(FILELINE);
-  m_filt = input.read<int>(FILELINE);
+  setNr(input.read<int>());
+  setRelHt(input.readNumber<std::string>());
+  setFilt(input.read<int>());
 }
 
 std::string AirflowSubelementData::write()
 {
   std::string string;
-  string += openstudio::toString(m_nr) + ' ' + openstudio::toString(m_relHt) + ' ' + openstudio::toString(m_filt) + '\n';
+  string += ANY_TO_STR(m_nr) + ' ' + ANY_TO_STR(m_relHt) + ' ' + ANY_TO_STR(m_filt) + '\n';
   return string;
 }
 
@@ -372,14 +572,27 @@ void AirflowSubelementData::setNr(const int nr)
   m_nr = nr;
 }
 
-RX AirflowSubelementData::relHt() const
+double AirflowSubelementData::relHt() const
 {
-  return m_relHt;
+  return m_relHt.toDouble();
 }
 
-void AirflowSubelementData::setRelHt(const RX relHt)
+bool AirflowSubelementData::setRelHt(const double relHt)
 {
-  m_relHt = relHt;
+  m_relHt = QString::number(relHt);
+  return true;
+}
+
+bool AirflowSubelementData::setRelHt(const std::string &relHt)
+{
+  bool ok;
+  FLOAT_CHECK(relHt,&ok);
+  if(ok)
+  {
+    m_relHt = STR_TO_FLOAT(relHt);
+    return true;
+  }
+  return false;
 }
 
 int AirflowSubelementData::filt() const
@@ -392,55 +605,125 @@ void AirflowSubelementData::setFilt(const int filt)
   m_filt = filt;
 }
 
-PressureCoefficientPoint::PressureCoefficientPoint(RX azm,RX coef):m_azm(azm),m_coef(coef)
-{}
+void PressureCoefficientPoint::setDefaults()
+{
+  m_azm = PRJFLOAT("0.0");
+  m_coef = PRJFLOAT("0.0");
+}
+
+PressureCoefficientPoint::PressureCoefficientPoint()
+{
+  setDefaults();
+}
+
+PressureCoefficientPoint::PressureCoefficientPoint(double azm,double coef)
+{
+  setDefaults();
+  setAzm(azm);
+  setCoef(coef);
+}
+
+PressureCoefficientPoint::PressureCoefficientPoint(std::string azm,std::string coef)
+{
+  setDefaults();
+  setAzm(azm);
+  setCoef(coef);
+}
 
 void PressureCoefficientPoint::read(Reader &input)
 {
-  m_azm = input.readNumber<RX>(FILELINE);
-  m_coef = input.readNumber<RX>(FILELINE);
+  setAzm(input.readNumber<std::string>());
+  setCoef(input.readNumber<std::string>());
 }
 
 std::string PressureCoefficientPoint::write()
 {
   std::string string;
-  string += openstudio::toString(m_azm) + ' ' + openstudio::toString(m_coef) + '\n';
+  string += ANY_TO_STR(m_azm) + ' ' + ANY_TO_STR(m_coef) + '\n';
   return string;
 }
 
-RX PressureCoefficientPoint::azm() const
+double PressureCoefficientPoint::azm() const
 {
-  return m_azm;
+  return m_azm.toDouble();
 }
 
-void PressureCoefficientPoint::setAzm(const RX azm)
+bool PressureCoefficientPoint::setAzm(const double azm)
 {
-  m_azm = azm;
+  m_azm = QString::number(azm);
+  return true;
 }
 
-RX PressureCoefficientPoint::coef() const
+bool PressureCoefficientPoint::setAzm(const std::string &azm)
 {
-  return m_coef;
+  bool ok;
+  FLOAT_CHECK(azm,&ok);
+  if(ok)
+  {
+    m_azm = STR_TO_FLOAT(azm);
+    return true;
+  }
+  return false;
 }
 
-void PressureCoefficientPoint::setCoef(const RX coef)
+double PressureCoefficientPoint::coef() const
 {
-  m_coef = coef;
+  return m_coef.toDouble();
 }
 
-SchedulePoint::SchedulePoint(std::string time,RX ctrl):m_time(time),m_ctrl(ctrl)
-{}
+bool PressureCoefficientPoint::setCoef(const double coef)
+{
+  m_coef = QString::number(coef);
+  return true;
+}
+
+bool PressureCoefficientPoint::setCoef(const std::string &coef)
+{
+  bool ok;
+  FLOAT_CHECK(coef,&ok);
+  if(ok)
+  {
+    m_coef = STR_TO_FLOAT(coef);
+    return true;
+  }
+  return false;
+}
+
+void SchedulePoint::setDefaults()
+{
+  m_time = std::string("00:00:00");
+  m_ctrl = PRJFLOAT("0.0");
+}
+
+SchedulePoint::SchedulePoint()
+{
+  setDefaults();
+}
+
+SchedulePoint::SchedulePoint(std::string time,double ctrl)
+{
+  setDefaults();
+  setTime(time);
+  setCtrl(ctrl);
+}
+
+SchedulePoint::SchedulePoint(std::string time,std::string ctrl)
+{
+  setDefaults();
+  setTime(time);
+  setCtrl(ctrl);
+}
 
 void SchedulePoint::read(Reader &input)
 {
-  m_time = input.readString(FILELINE);
-  m_ctrl = input.readNumber<RX>(FILELINE);
+  setTime(input.readString());
+  setCtrl(input.readNumber<std::string>());
 }
 
 std::string SchedulePoint::write()
 {
   std::string string;
-  string += m_time + ' ' + openstudio::toString(m_ctrl) + '\n';
+  string += m_time + ' ' + ANY_TO_STR(m_ctrl) + '\n';
   return string;
 }
 
@@ -449,19 +732,32 @@ std::string SchedulePoint::time() const
   return m_time;
 }
 
-void SchedulePoint::setTime(const std::string time)
+void SchedulePoint::setTime(const std::string &time)
 {
   m_time = time;
 }
 
-RX SchedulePoint::ctrl() const
+double SchedulePoint::ctrl() const
 {
-  return m_ctrl;
+  return m_ctrl.toDouble();
 }
 
-void SchedulePoint::setCtrl(const RX ctrl)
+bool SchedulePoint::setCtrl(const double ctrl)
 {
-  m_ctrl = ctrl;
+  m_ctrl = QString::number(ctrl);
+  return true;
+}
+
+bool SchedulePoint::setCtrl(const std::string &ctrl)
+{
+  bool ok;
+  FLOAT_CHECK(ctrl,&ok);
+  if(ok)
+  {
+    m_ctrl = STR_TO_FLOAT(ctrl);
+    return true;
+  }
+  return false;
 }
 
 } // contam

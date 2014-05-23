@@ -616,7 +616,7 @@ namespace detail {
   bool SimpleProject_Impl::shouldIncludeCalibrationReports() const {
     bool result(false);
     if (OptionalModel model = seedModel()) {
-      result = (model->getModelObjects<model::UtilityBill>().size() > 0);
+      result = (model->getConcreteModelObjects<model::UtilityBill>().size() > 0);
     }
     return result;
   }

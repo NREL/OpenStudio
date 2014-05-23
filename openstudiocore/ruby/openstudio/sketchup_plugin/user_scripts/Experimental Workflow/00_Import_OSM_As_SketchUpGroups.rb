@@ -121,10 +121,21 @@ class ImportOsmAsGroups < OpenStudio::Ruleset::UtilityUserScript
     def make_surface(group, vertices)
       entities = group.entities
       pts = []
+      verticesTestString = []
+      toleranceValue = 10000
       vertices.each do |pt|
+        if verticesTestString.include? "#{(pt.x*toleranceValue).to_i},#{(pt.y*toleranceValue).to_i},#{(pt.z*toleranceValue).to_i}" # added test to resolve duplicate vertices, probably need to address tolerance.
+          puts "removing point within tolerance of another point in face in #{group.name}."
+          next # this was added to avoid ruby error on add_face pts if pts were too similar to each other SketchUp failed showing duplicate
+        end
+        verticesTestString << "#{(pt.x*toleranceValue).to_i},#{(pt.y*toleranceValue).to_i},#{(pt.z*toleranceValue).to_i}"
         pts << ["#{pt.x}m".to_l,"#{pt.y}m".to_l,"#{pt.z}m".to_l]
       end
-      face = entities.add_face pts
+      if pts.size < 3
+        puts "skipping face in #{group.name} because it has less than three vertices."
+      else
+        face = entities.add_face pts
+      end
     end
 
     # loop through spaces

@@ -419,6 +419,7 @@ namespace detail {
     return result;
   }
 
+
 } // detail
 
 Meter::Meter(const Model& model)

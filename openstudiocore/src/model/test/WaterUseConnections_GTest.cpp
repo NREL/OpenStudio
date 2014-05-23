@@ -18,20 +18,17 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/WaterUseConnections.hpp>
 #include <model/WaterUseConnections_Impl.hpp>
 #include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
 #include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-
-using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture,WaterUseConnections_WaterUseConnections)
@@ -41,23 +38,24 @@ TEST_F(ModelFixture,WaterUseConnections_WaterUseConnections)
   ASSERT_EXIT ( 
   {  
     //create a model to use in testing this code.
-    model::Model m; 
+    Model m; 
 
-    model::WaterUseConnections waterUseConnections(m);
+    WaterUseConnections waterUseConnections(m);
 
     exit(0); 
   } ,
   ::testing::ExitedWithCode(0), "" );
+}
 
-  model::Model m;
+TEST_F(ModelFixture,WaterUseConnections_addRemoveEquipment) {
+  Model m;
+  WaterUseConnections waterUseConnections(m);
 
-  model::WaterUseConnections waterUseConnections(m);
+  WaterUseEquipmentDefinition definition(m);
 
-  model::WaterUseEquipmentDefinition definition(m);
-
-  model::WaterUseEquipment e1(definition);
-  model::WaterUseEquipment e2(definition);
-  model::WaterUseEquipment e3(definition);
+  WaterUseEquipment e1(definition);
+  WaterUseEquipment e2(definition);
+  WaterUseEquipment e3(definition);
 
   waterUseConnections.addWaterUseEquipment(e1);
   waterUseConnections.addWaterUseEquipment(e2);
@@ -70,3 +68,34 @@ TEST_F(ModelFixture,WaterUseConnections_WaterUseConnections)
   EXPECT_EQ(2u,waterUseConnections.waterUseEquipment().size()); 
 }
 
+TEST_F(ModelFixture,WaterUseConnections_addToNode) {
+  Model m;
+  WaterUseConnections testObject(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_TRUE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+
+  WaterUseConnections testObjectClone = testObject.clone(m).cast<WaterUseConnections>();
+  demandOutletNode = plantLoop.demandOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+}

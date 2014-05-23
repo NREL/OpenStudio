@@ -1129,6 +1129,108 @@ TEST_F(IdfFixture,Workspace_DefaultNames) {
   EXPECT_EQ(static_cast<unsigned>(5),ws.numObjectsOfType(IddObjectType::Zone));
 }
 
+TEST_F(IdfFixture,Workspace_ComplexNames) {
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject oObject = ws.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject building = *oObject;
+  ASSERT_TRUE(building.name());
+  EXPECT_EQ("",building.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone 1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone 2",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            2",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1  1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone  1",zone.name().get());
+
+  EXPECT_EQ(static_cast<unsigned>(15),ws.numObjectsOfType(IddObjectType::Zone));
+}
+
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
@@ -1799,7 +1901,7 @@ TEST_F(IdfFixture, Workspace_Signals)
   IdfFile idfFile(IddFileType::EnergyPlus);
   Workspace workspace(idfFile);
 
-  WorkspaceReciever* reciever;
+  WorkspaceReciever* reciever = NULL;
 
   ASSERT_NO_THROW( reciever = new WorkspaceReciever(workspace) );
 

@@ -192,14 +192,14 @@ namespace sdd {
     }
 
     // remove unused CFactor constructions
-    BOOST_FOREACH(model::CFactorUndergroundWallConstruction cFactorConstruction, model.getModelObjects<model::CFactorUndergroundWallConstruction>()){
+    BOOST_FOREACH(model::CFactorUndergroundWallConstruction cFactorConstruction, model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
       if (cFactorConstruction.directUseCount() == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
-    BOOST_FOREACH(model::FFactorGroundFloorConstruction fFactorConstruction, model.getModelObjects<model::FFactorGroundFloorConstruction>()){
+    BOOST_FOREACH(model::FFactorGroundFloorConstruction fFactorConstruction, model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
       if (fFactorConstruction.directUseCount() == 0){
         fFactorConstruction.remove();
       }
@@ -341,6 +341,25 @@ namespace sdd {
        OS_ASSERT(exteriorShading);
       }
     }
+
+    // DLM: volume is now a property associated with Thermal Zone, http://code.google.com/p/cbecc/issues/detail?id=490
+    //// volume
+    //if (!volElement.isNull()){
+    //  // sdd units = ft^3, os units = m^3
+    //  Quantity spaceVolumeIP(volElement.text().toDouble(), BTUUnit(BTUExpnt(0,3,0,0)));
+    //  OptionalQuantity spaceVolumeSI = QuantityConverter::instance().convert(spaceVolumeIP, UnitSystem(UnitSystem::Wh));
+    //  OS_ASSERT(spaceVolumeSI);
+    //  OS_ASSERT(spaceVolumeSI->units() == WhUnit(WhExpnt(0,0,3,0)));
+    //
+    //  if (thermalZone->isVolumeDefaulted()){
+    //    thermalZone->setVolume(spaceVolumeSI->value());
+    //  }else{
+    //    boost::optional<double> zoneVolume = thermalZone->volume();
+    //    OS_ASSERT(zoneVolume);
+    //    zoneVolume = *zoneVolume + spaceVolumeSI->value();
+    //    thermalZone->setVolume(zoneVolume);
+    // }
+    //}
 
     // Service Hot Water
 
@@ -562,10 +581,18 @@ namespace sdd {
     {
       //<IntLPDReg>1.1</IntLPDReg> - W per ft2
       //<IntLtgRegSchRef>Office Lighting Sched</IntLtgRegSchRef>
+      //<IntLtgRegHtGnSpcFrac>0.61</IntLtgRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgRegHtGnRadFrac>0.75</IntLtgRegHtGnRadFrac> - radiant fraction
       //<IntLPDNonReg>0</IntLPDNonReg> - W per ft2
+      //<IntLtgNonRegSchRef>Office Lighting Sched</IntLtgNonRegSchRef>
+      //<IntLtgNonRegHtGnSpcFrac>0.5</IntLtgNonRegHtGnSpcFrac> - fraction to space, 1-Return Air Fraction
+      //<IntLtgNonRegHtGnRadFrac>0.55</IntLtgNonRegHtGnRadFrac> - radiant fraction
+
 
       QDomElement intLPDRegElement = element.firstChildElement("IntLPDReg");
       QDomElement intLtgRegSchRefElement = element.firstChildElement("IntLtgRegSchRef");
+      QDomElement intLtgRegHtGnSpcFracElement = element.firstChildElement("IntLtgRegHtGnSpcFrac");
+      QDomElement intLtgRegHtGnRadFracElement = element.firstChildElement("IntLtgRegHtGnRadFrac");
       if (!intLPDRegElement.isNull() && (intLPDRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -591,10 +618,25 @@ namespace sdd {
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
         }
+
+        if (!intLtgRegHtGnSpcFracElement.isNull()){
+          double spaceFraction = intLtgRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+        
+          if (!intLtgRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
+        }
       }
 
       QDomElement intLPDNonRegElement = element.firstChildElement("IntLPDNonReg");
-      QDomElement intLPDNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegSchRefElement = element.firstChildElement("IntLtgNonRegSchRef");
+      QDomElement intLtgNonRegHtGnSpcFracElement = element.firstChildElement("IntLtgNonRegHtGnSpcFrac");
+      QDomElement intLtgNonRegHtGnRadFracElement = element.firstChildElement("IntLtgNonRegHtGnRadFrac");
       if (!intLPDNonRegElement.isNull() && (intLPDNonRegElement.text().toDouble() > 0)){
 
         openstudio::Quantity lightingDensityIP(intLPDNonRegElement.text().toDouble(), openstudio::createUnit("W/ft^2").get());
@@ -611,14 +653,27 @@ namespace sdd {
         lights.setSpace(space);
         lights.setEndUseSubcategory("NonReg Ltg");
 
-        if (!intLPDNonRegSchRefElement.isNull()){
-          std::string scheduleName = escapeName(intLPDNonRegSchRefElement.text());
+        if (!intLtgNonRegSchRefElement.isNull()){
+          std::string scheduleName = escapeName(intLtgNonRegSchRefElement.text());
           boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
           if (schedule){
             lights.setSchedule(*schedule);
           }else{
             LOG(Error, "Could not find schedule '" << scheduleName << "'");
           }
+        }
+
+        if (!intLtgNonRegHtGnSpcFracElement.isNull()){
+          double spaceFraction = intLtgNonRegHtGnSpcFracElement.text().toDouble();
+          double returnAirFraction = 1.0 - spaceFraction;
+          lightsDefinition.setReturnAirFraction(returnAirFraction);
+
+          if (!intLtgNonRegHtGnRadFracElement.isNull()){
+            double fractionRadiant = intLtgNonRegHtGnRadFracElement.text().toDouble() * spaceFraction;
+            lightsDefinition.setFractionRadiant(fractionRadiant);
+          }
+        }else if (!intLtgNonRegHtGnRadFracElement.isNull()){
+          LOG(Warn, "IntLtgNonRegHtGnRadFracElement is specified for space '" << name << "' but IntLtgNonRegHtGnSpcFracElement is not, IntLtgNonRegHtGnRadFracElement will be ignored.");
         }
       }
     }
@@ -1423,7 +1478,7 @@ namespace sdd {
     buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
 
     // translate storys
-    std::vector<model::BuildingStory> buildingStories = building.model().getModelObjects<model::BuildingStory>();
+    std::vector<model::BuildingStory> buildingStories = building.model().getConcreteModelObjects<model::BuildingStory>();
     std::sort(buildingStories.begin(), buildingStories.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
@@ -1450,7 +1505,7 @@ namespace sdd {
     */
 
     // translate building shading
-    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getModelObjects<model::ShadingSurfaceGroup>();
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
@@ -1492,7 +1547,7 @@ namespace sdd {
     }
 
     // issue warning if any spaces not assigned to building story
-    std::vector<model::Space> spaces = building.model().getModelObjects<model::Space>();
+    std::vector<model::Space> spaces = building.model().getConcreteModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
     BOOST_FOREACH(const model::Space& space, spaces){
@@ -1503,7 +1558,7 @@ namespace sdd {
     }
 
     // translate thermal zones
-    std::vector<model::ThermalZone> thermalZones = building.model().getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = building.model().getConcreteModelObjects<model::ThermalZone>();
     std::sort(thermalZones.begin(), thermalZones.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){

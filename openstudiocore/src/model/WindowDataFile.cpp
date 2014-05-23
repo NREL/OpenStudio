@@ -71,6 +71,8 @@ namespace detail {
 
   bool WindowDataFile_Impl::isFenestration() const { return true; }
 
+  bool WindowDataFile_Impl::isSolarDiffusing() const { return true; }
+
   bool WindowDataFile_Impl::isModelPartition() const { return false; }
 
   int WindowDataFile_Impl::renderingColorIndex() const

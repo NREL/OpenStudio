@@ -145,6 +145,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+    
+    bool addToNode(Node & node);
 
     //@}
    protected:

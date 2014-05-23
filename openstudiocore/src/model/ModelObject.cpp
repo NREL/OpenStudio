@@ -527,7 +527,7 @@ namespace detail {
     std::vector<std::string> variableNames = this->outputVariableNames();
     OptionalString name = this->name();
 
-    BOOST_FOREACH(const OutputVariable& variable, this->model().getModelObjects<OutputVariable>()){
+    BOOST_FOREACH(const OutputVariable& variable, this->model().getConcreteModelObjects<OutputVariable>()){
       std::string keyValue = variable.keyValue();
       std::string variableName = variable.variableName();
 

@@ -18,79 +18,129 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
+#include <model/test/ModelFixture.hpp>
 #include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/ScheduleCompact.hpp>
+#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
+#include <model/Schedule.hpp>
 #include <model/FanConstantVolume.hpp>
 #include <model/CoilHeatingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilHeatingElectric.hpp>
 #include <model/CurveBiquadratic.hpp>
 #include <model/CurveQuadratic.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
-using namespace openstudio;
+using namespace openstudio::model;
 
-TEST(AirLoopHVACUnitaryHeatPumpAirToAir,AirLoopHVACUnitaryHeatPumpAirToAir_AirLoopHVACUnitaryHeatPumpAirToAir)
+TEST_F(ModelFixture,AirLoopHVACUnitaryHeatPumpAirToAir_AirLoopHVACUnitaryHeatPumpAirToAir)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
+    Model m;
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume supplyFan(m,s);
 
-     model::ScheduleCompact unitarySchedule(m);
+    CurveBiquadratic  ctotalHeatingCapacityFunctionofTemperatureCurve(m);
+    CurveQuadratic  ctotalHeatingCapacityFunctionofFlowFractionCurve(m);
+    CurveBiquadratic  cenergyInputRatioFunctionofTemperatureCurve(m);
+    CurveQuadratic  cenergyInputRatioFunctionofFlowFractionCurve(m);
+    CurveQuadratic  cpartLoadFractionCorrelationCurve(m);
 
-     model::ScheduleCompact fanSchedule(m);
+    CoilHeatingDXSingleSpeed coolingCoil(m, s,
+                                        ctotalHeatingCapacityFunctionofTemperatureCurve,
+                                        ctotalHeatingCapacityFunctionofFlowFractionCurve,
+                                        cenergyInputRatioFunctionofTemperatureCurve,
+                                        cenergyInputRatioFunctionofFlowFractionCurve,
+                                        cpartLoadFractionCorrelationCurve ); 
 
-     model::ScheduleCompact heatingCoilSchedule(m);
+    CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
+    CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
+    CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
+    CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
+    CurveQuadratic  partLoadFractionCorrelationCurve(m);
 
-     model::ScheduleCompact coolingCoilSchedule(m);
+    CoilHeatingDXSingleSpeed heatingCoil(m, s,
+                                        totalHeatingCapacityFunctionofTemperatureCurve,
+                                        totalHeatingCapacityFunctionofFlowFractionCurve,
+                                        energyInputRatioFunctionofTemperatureCurve,
+                                        energyInputRatioFunctionofFlowFractionCurve,
+                                        partLoadFractionCorrelationCurve ); 
 
-     model::FanConstantVolume supplyFan(m,fanSchedule);
+    CoilHeatingElectric coilHeatingElectric(m,s);
 
-     model::CurveBiquadratic  ctotalHeatingCapacityFunctionofTemperatureCurve(m);
-     model::CurveQuadratic  ctotalHeatingCapacityFunctionofFlowFractionCurve(m);
-     model::CurveBiquadratic  cenergyInputRatioFunctionofTemperatureCurve(m);
-     model::CurveQuadratic  cenergyInputRatioFunctionofFlowFractionCurve(m);
-     model::CurveQuadratic  cpartLoadFractionCorrelationCurve(m);
+    AirLoopHVACUnitaryHeatPumpAirToAir coil(m, s, supplyFan, heatingCoil, coolingCoil, coilHeatingElectric);
 
-     model::CoilHeatingDXSingleSpeed coolingCoil( m,
-                                           coolingCoilSchedule,
-                                           ctotalHeatingCapacityFunctionofTemperatureCurve,
-                                           ctotalHeatingCapacityFunctionofFlowFractionCurve,
-                                           cenergyInputRatioFunctionofTemperatureCurve,
-                                           cenergyInputRatioFunctionofFlowFractionCurve,
-                                           cpartLoadFractionCorrelationCurve ); 
-
-     model::CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
-     model::CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
-     model::CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
-     model::CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
-     model::CurveQuadratic  partLoadFractionCorrelationCurve(m);
-
-     model::CoilHeatingDXSingleSpeed heatingCoil( m,
-                                                  heatingCoilSchedule,
-                                                  totalHeatingCapacityFunctionofTemperatureCurve,
-                                                  totalHeatingCapacityFunctionofFlowFractionCurve,
-                                                  energyInputRatioFunctionofTemperatureCurve,
-                                                  energyInputRatioFunctionofFlowFractionCurve,
-                                                  partLoadFractionCorrelationCurve ); 
-
-     model::CoilHeatingElectric coilHeatingElectric( m,heatingCoilSchedule);
-
-     model::AirLoopHVACUnitaryHeatPumpAirToAir coil( m,
-                                                     unitarySchedule,
-                                                     supplyFan,
-                                                     heatingCoil,
-                                                     coolingCoil,
-                                                     coilHeatingElectric );
-
-     exit(0); 
+    exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,AirLoopHVACUnitaryHeatPumpAirToAir_addToNode)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m,s);
 
+  CurveBiquadratic  ctotalHeatingCapacityFunctionofTemperatureCurve(m);
+  CurveQuadratic  ctotalHeatingCapacityFunctionofFlowFractionCurve(m);
+  CurveBiquadratic  cenergyInputRatioFunctionofTemperatureCurve(m);
+  CurveQuadratic  cenergyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic  cpartLoadFractionCorrelationCurve(m);
+
+  CoilCoolingDXSingleSpeed coolingCoil(m, s,
+                                      ctotalHeatingCapacityFunctionofTemperatureCurve,
+                                      ctotalHeatingCapacityFunctionofFlowFractionCurve,
+                                      cenergyInputRatioFunctionofTemperatureCurve,
+                                      cenergyInputRatioFunctionofFlowFractionCurve,
+                                      cpartLoadFractionCorrelationCurve ); 
+
+  CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
+  CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);
+  CurveBiquadratic  energyInputRatioFunctionofTemperatureCurve(m);
+  CurveQuadratic  energyInputRatioFunctionofFlowFractionCurve(m);
+  CurveQuadratic  partLoadFractionCorrelationCurve(m);
+
+  CoilHeatingDXSingleSpeed heatingCoil(m, s,
+                                      totalHeatingCapacityFunctionofTemperatureCurve,
+                                      totalHeatingCapacityFunctionofFlowFractionCurve,
+                                      energyInputRatioFunctionofTemperatureCurve,
+                                      energyInputRatioFunctionofFlowFractionCurve,
+                                      partLoadFractionCorrelationCurve ); 
+
+  CoilHeatingElectric coilHeatingElectric(m,s);
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObject(m, s, supplyFan, heatingCoil, coolingCoil, coilHeatingElectric);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  AirLoopHVACUnitaryHeatPumpAirToAir testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+  supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+}

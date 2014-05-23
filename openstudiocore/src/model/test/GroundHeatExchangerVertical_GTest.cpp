@@ -18,13 +18,14 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-
 #include <model/test/ModelFixture.hpp>
-
 #include <model/GroundHeatExchangerVertical.hpp>
 #include <model/GroundHeatExchangerVertical_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -63,54 +64,35 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Connections)
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNode)
 {
-  Model model; 
-  GroundHeatExchangerVertical testObject(model);
+  Model m;
+  GroundHeatExchangerVertical testObject(m);
 
-  PlantLoop plantLoop(model);
-
-  Node supplyOutletNode = plantLoop.supplyOutletNode();
-
-  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
-
-  // inlet and outlet ports
-  EXPECT_TRUE(testObject.inletPort());
-  EXPECT_TRUE(testObject.outletPort());
-
-}
-
-TEST_F(ModelFixture, GroundHeatExchangerVertical_addToNodeDemandSide)
-{
-  Model model; 
-  GroundHeatExchangerVertical testObject(model);
-
-  PlantLoop plantLoop(model);
-
-  Node demandInletNode = plantLoop.demandInletNode();
-
-  EXPECT_FALSE(testObject.addToNode(demandInletNode));
-
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
-}
-
-TEST_F(ModelFixture, GroundHeatExchangerVertical_AddToNodeAirLoop)
-{
-  Model model; 
-  GroundHeatExchangerVertical testObject(model);
-
-  AirLoopHVAC airLoop(model);
+  AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
-  Node demandInletNode = airLoop.demandInletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_FALSE(testObject.addToNode(demandInletNode));
-
   EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-  EXPECT_EQ( (unsigned)5, airLoop.demandComponents().size() );
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+
+  GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
+  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_AddRemoveSupplyBranchForComponent)

@@ -112,14 +112,15 @@ namespace detail {
 
   bool DistrictHeating_Impl::addToNode(Node & node)
   {
-    if( node.airLoopHVAC() )
+    if( boost::optional<PlantLoop> plant = node.plantLoop() )
     {
-      return false;
+      if( plant->supplyComponent(node.handle()) )
+      {
+        return StraightComponent_Impl::addToNode(node);
+      }
     }
-    else
-    {
-      return StraightComponent_Impl::addToNode(node);
-    }
+
+    return false;
   }
 
 } // detail

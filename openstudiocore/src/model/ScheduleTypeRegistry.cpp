@@ -137,6 +137,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AirConditionerVariableRefrigerantFlow","Basin Heater Operating Schedule","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirLoopHVACUnitaryHeatPumpAirToAir","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
+    {"AirLoopHVACUnitarySystem","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"AirLoopHVACUnitarySystem","Supply Air Fan Operating Mode","supplyAirFanOperatingModeSchedule",false,"ControlMode",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctConstantVolumeReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"AirTerminalSingleDuctParallelPIUReheat","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -406,7 +408,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
                                                                 const std::string& scheduleDisplayName)
 {
   ScheduleTypeLimitsVector result;
-  ScheduleTypeLimitsVector candidates = model.getModelObjects<ScheduleTypeLimits>();
+  ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
     if (isCompatible(scheduleType,candidate)) {

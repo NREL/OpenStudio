@@ -194,6 +194,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(AirLoopHVACOutdoorAirSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACReturnPlenum);
     REGISTER_CONSTRUCTOR(AirLoopHVACSupplyPlenum);
+    REGISTER_CONSTRUCTOR(AirLoopHVACUnitarySystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneMixer);
     REGISTER_CONSTRUCTOR(AirLoopHVACZoneSplitter);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -481,6 +482,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACOutdoorAirSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACReturnPlenum);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACSupplyPlenum);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitarySystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneMixer);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACZoneSplitter);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctConstantVolumeCooledBeam);
@@ -860,7 +862,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     std::string alwaysOnName("Always On Discrete");
 
-    std::vector<ScheduleConstant> schedules = model().getModelObjects<ScheduleConstant>();
+    std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
     for( std::vector<ScheduleConstant>::iterator it = schedules.begin();
          it != schedules.end();
@@ -1504,13 +1506,13 @@ void addExampleModelObjects(Model& model)
 
   // add schedules
   addExampleSchedules(model);
-  OS_ASSERT(model.getModelObjects<DefaultScheduleSet>().size() >= 1);
-  DefaultScheduleSet defaultScheduleSet = model.getModelObjects<DefaultScheduleSet>()[0];
+  OS_ASSERT(model.getConcreteModelObjects<DefaultScheduleSet>().size() >= 1);
+  DefaultScheduleSet defaultScheduleSet = model.getConcreteModelObjects<DefaultScheduleSet>()[0];
 
   // add constructions
   addExampleConstructions(model);
-  OS_ASSERT(model.getModelObjects<DefaultConstructionSet>().size() >= 1);
-  DefaultConstructionSet defaultConstructionSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  OS_ASSERT(model.getConcreteModelObjects<DefaultConstructionSet>().size() >= 1);
+  DefaultConstructionSet defaultConstructionSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
 
   // add a space type
   SpaceType spaceType(model);
@@ -1693,7 +1695,7 @@ void addExampleModelObjects(Model& model)
   neighboringBuilding.setShadingSurfaceGroup(neighboringBuildingGroup);
 
   // match surfaces
-  std::vector<Space> spaces =  model.getModelObjects<Space>();
+  std::vector<Space> spaces =  model.getConcreteModelObjects<Space>();
   matchSurfaces(spaces);
 
   // Add an air loop
@@ -1825,7 +1827,7 @@ void addExampleModelObjects(Model& model)
 
   // add some example variables
   i = 1;
-  BOOST_FOREACH(const Surface& surface, model.getModelObjects<Surface>()){
+  BOOST_FOREACH(const Surface& surface, model.getConcreteModelObjects<Surface>()){
     BOOST_FOREACH(const std::string& variableName, surface.outputVariableNames()){
       OutputVariable(variableName, model);
       if (++i > 2){

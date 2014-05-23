@@ -120,22 +120,8 @@ namespace detail {
   }
 
   void ZoneAirContaminantBalance_Impl::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
-    if (carbonDioxideConcentration) {
-      setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "Yes");
-    } else {
-      setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "No");
-    }
+    setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, carbonDioxideConcentration);
   }
-
-  //void ZoneAirContaminantBalance_Impl::setCarbonDioxideConcentration(bool carbonDioxideConcentration) {
-  //  bool result = false;
-  //  if (carbonDioxideConcentration) {
-  //    result = setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "Yes");
-  //  } else {
-  //    result = setBooleanFieldValue(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "No");
-  //  }
-  //  OS_ASSERT(result);
-  //}
 
   void ZoneAirContaminantBalance_Impl::resetCarbonDioxideConcentration() {
     bool result = setString(OS_ZoneAirContaminantBalanceFields::CarbonDioxideConcentration, "");

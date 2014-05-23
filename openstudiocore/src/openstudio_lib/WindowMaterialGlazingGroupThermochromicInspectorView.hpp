@@ -34,6 +34,8 @@ class OSLineEdit;
 
 class OSQuantityEdit;
 
+class OSQuantityEdit2;
+
 class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -64,7 +66,7 @@ class WindowMaterialGlazingGroupThermochromicInspectorView : public ModelObjectI
 
     OSLineEdit * m_nameEdit;
 
-    OSQuantityEdit * m_opticalDataTemperature;
+    OSQuantityEdit2 * m_opticalDataTemperature;
 
     OSLineEdit * m_windowMaterialGlazingName;
 

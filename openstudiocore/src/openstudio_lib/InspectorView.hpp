@@ -569,6 +569,36 @@ class ZoneHVACUnitHeaterInspectorView : public BaseInspectorView
 
 };
 
+class AirLoopHVACUnitarySystemInspectorView : public BaseInspectorView
+{
+  Q_OBJECT;
+
+  public:
+
+  AirLoopHVACUnitarySystemInspectorView(QWidget * parent = 0);
+
+  virtual ~AirLoopHVACUnitarySystemInspectorView() {}
+
+  void layoutModelObject( model::ModelObject &, bool readOnly, bool displayIP );
+
+  signals:
+
+  void addToLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  void removeFromLoopClicked(model::Loop &, boost::optional<model::HVACComponent> &);
+
+  private:
+
+  boost::optional<model::ModelObject> m_modelObject;
+
+  InspectorGadget * m_inspectorGadget;
+
+  LoopChooserView * m_heatingLoopChooserView;
+  LoopChooserView * m_coolingLoopChooserView;
+  LoopChooserView * m_secondaryLoopChooserView;
+
+};
+
 } // openstudio
 
 #endif // OPENSTUDIO_INSPECTORVIEW_HPP

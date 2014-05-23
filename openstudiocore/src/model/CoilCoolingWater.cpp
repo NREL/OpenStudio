@@ -26,6 +26,8 @@
 #include <model/Model.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
@@ -350,9 +352,7 @@ namespace detail {
 
     if( coilWaterInletNode )
     {
-      Model m = this->model();
-
-      std::vector<ControllerWaterCoil> controllers = m.getModelObjects<ControllerWaterCoil>();
+      std::vector<ControllerWaterCoil> controllers = this->model().getConcreteModelObjects<ControllerWaterCoil>();
 
       for( std::vector<ControllerWaterCoil>::iterator it = controllers.begin();
       it < controllers.end();
@@ -430,13 +430,34 @@ namespace detail {
     }
     return false;
   }
+
+  boost::optional<HVACComponent> CoilCoolingWater_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
+    it < airLoopHVACUnitarySystems.end();
+    ++it )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return *it;
+        }
+      }
+    }
+    return boost::none;
+  }
+
   boost::optional<ZoneHVACComponent> CoilCoolingWater_Impl::containingZoneHVACComponent() const
   {
     // ZoneHVACFourPipeFanCoil
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
-    zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();

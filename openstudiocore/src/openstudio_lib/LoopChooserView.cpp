@@ -99,7 +99,7 @@ void LoopChooserView::layoutView()
     m_vLayout->addWidget(label);
 
     std::vector<model::PlantLoop> loops;
-    loops = m_component->model().getModelObjects<model::PlantLoop>();
+    loops = m_component->model().getConcreteModelObjects<model::PlantLoop>();
 
     for( std::vector<model::PlantLoop>::iterator it = loops.begin();
           it < loops.end();
