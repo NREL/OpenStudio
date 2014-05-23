@@ -364,7 +364,11 @@ else()
 
   if(WIN32 AND MSVC)
     if(CMAKE_CL_64)
-      message(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
+      if(MSVC12)
+        message(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
+      else()
+        message(SEND_ERROR "64bit build of Ruby 2.0 only supported with MSVC12")
+      endif()      
     else()
       option(BUILD_RUBY_MINGW32_2_0 "Use mingw32 Ruby 2.0" OFF)
       mark_as_advanced(BUILD_RUBY_MINGW32_2_0)
@@ -386,7 +390,11 @@ endif()
 
 if(CMAKE_CL_64 OR (MSVC AND BUILD_QT))
   if(CMAKE_CL_64)
-    set(NMAKE_ARCH "/amd64")
+    if(MSVC10)
+      set(NMAKE_ARCH "/amd64")
+    elseif(MSVC12)
+      set(NMAKE_ARCH "")
+    endif()
   else()
     set(NMAKE_ARCH "")
   endif()
@@ -454,8 +462,8 @@ if(BUILD_RUBY)
   else()
 
     if(CMAKE_CL_64)
-      find_program(NMAKE_EXE nmake)
-
+      #find_program(NMAKE_EXE nmake)
+      
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
@@ -467,9 +475,9 @@ if(BUILD_RUBY)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE} install
       )
       set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
-      set(RUBY_DLL x64-msvcr100-ruby200.dll)
+      set(RUBY_DLL x64-msvcr120-ruby200.dll)
       set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
-      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
+      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr120-ruby200.lib")
     else()
       if(BUILD_RUBY_MINGW32_2_0)
         # And windows requires mingw to build ruby, so we just unpackage it locally
