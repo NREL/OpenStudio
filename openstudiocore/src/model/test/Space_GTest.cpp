@@ -1351,3 +1351,118 @@ TEST_F(ModelFixture,Space_Plenum)
   EXPECT_FALSE(returnSpace.partofTotalFloorArea());
 
 }
+
+
+TEST_F(ModelFixture, Space_Intersect_OneToFour){
+
+  double areaTol = 0.000001;
+  double xOrigin = 20.0;
+
+  // space 1 has one large surface, space 2 has 4 rectangles, test that intersection is correct independent of rotation and intersect order
+  for (double rotation = 0; rotation < 360.0; rotation += 10.0){
+    for (unsigned iStart = 0; iStart < 4; ++iStart){
+
+      Transformation t = Transformation::rotation(Vector3d(0,0,1), degToRad(rotation));
+
+      Model model;
+      Space space1(model);
+      Space space2(model);
+
+      Point3dVector points;
+      points.push_back(Point3d(xOrigin,  0, 20));
+      points.push_back(Point3d(xOrigin,  0,  0));
+      points.push_back(Point3d(xOrigin, 10,  0));
+      points.push_back(Point3d(xOrigin, 10, 20));
+      Surface surface(t*points, model);
+      surface.setSpace(space1);
+      EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
+
+      std::vector<Surface> surfaces;
+      for (unsigned i = 0; i < 4; ++i){
+        points.clear();
+        points.push_back(Point3d(xOrigin, 10, (i+1)*5));
+        points.push_back(Point3d(xOrigin, 10,  i*5));
+        points.push_back(Point3d(xOrigin,  0,  i*5));
+        points.push_back(Point3d(xOrigin,  0, (i+1)*5));
+        Surface tempSurface(t*points, model);
+        tempSurface.setSpace(space2);
+        EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
+        surfaces.push_back(tempSurface);
+      }
+
+      space1.intersectSurfaces(space2);
+      space1.matchSurfaces(space2);
+
+      EXPECT_EQ(4u, space1.surfaces().size());
+      BOOST_FOREACH(Surface s, space1.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+        EXPECT_TRUE(s.adjacentSurface());
+      }
+
+      EXPECT_EQ(4u, space2.surfaces().size());
+      BOOST_FOREACH(Surface s, space2.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+        EXPECT_TRUE(s.adjacentSurface());
+      }
+    }
+  }
+}
+
+TEST_F(ModelFixture, Space_Intersect_FourToOne){
+
+  double areaTol = 0.000001;
+  double xOrigin = 20.0;
+
+  // space 1 has one large surface, space 2 has 4 rectangles, test that intersection is correct independent of rotation and intersect order
+  for (double rotation = 0; rotation < 360.0; rotation += 10.0){
+    for (unsigned iStart = 0; iStart < 4; ++iStart){
+
+      Transformation t = Transformation::rotation(Vector3d(0,0,1), degToRad(rotation));
+
+      Model model;
+      Space space1(model);
+      Space space2(model);
+
+      Point3dVector points;
+      points.push_back(Point3d(xOrigin,  0, 20));
+      points.push_back(Point3d(xOrigin,  0,  0));
+      points.push_back(Point3d(xOrigin, 10,  0));
+      points.push_back(Point3d(xOrigin, 10, 20));
+      Surface surface(t*points, model);
+      surface.setSpace(space1);
+      EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
+
+      std::vector<Surface> surfaces;
+      for (unsigned i = 0; i < 4; ++i){
+        points.clear();
+        points.push_back(Point3d(xOrigin, 10, (i+1)*5));
+        points.push_back(Point3d(xOrigin, 10,  i*5));
+        points.push_back(Point3d(xOrigin,  0,  i*5));
+        points.push_back(Point3d(xOrigin,  0, (i+1)*5));
+        Surface tempSurface(t*points, model);
+        tempSurface.setSpace(space2);
+        EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
+        surfaces.push_back(tempSurface);
+      }
+
+      space2.intersectSurfaces(space1);
+      space2.matchSurfaces(space1);
+
+      EXPECT_EQ(4u, space1.surfaces().size());
+      BOOST_FOREACH(Surface s, space1.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+        EXPECT_TRUE(s.adjacentSurface());
+      }
+
+      EXPECT_EQ(4u, space2.surfaces().size());
+      BOOST_FOREACH(Surface s, space2.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+        EXPECT_TRUE(s.adjacentSurface());
+      }
+    }
+  }
+}
