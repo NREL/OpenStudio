@@ -5840,7 +5840,51 @@ OS:Refrigeration:Case,
         \units kg/m
         \type real
         \default 0.0
-  A16;  \field Case Defrost Cycle Parameters Name
+  N22,  \field Number Of Doors
+        \type integer
+        \minimum> 0
+  N23,  \field Rated Total Cooling Capacity per Door
+        \type real
+        \units W
+        \minimum> 0.0
+  N24,  \field Standard Case Fan Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N25,  \field Operating Case Fan Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N26,  \field Standard Case Lighting Power per Door
+        \type real
+        \units W
+  N27,  \field Installed Case Lighting Power per Door
+        \type real
+        \units W
+  N28,  \field Case Anti-Sweat Heater Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+        \default 0.0
+  N29,  \field Minimum Anti-Sweat Heater Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+        \default 0.0
+        \note This field is only applicable to the Linear, Dewpoint Method, and
+        \note Heat Balance Method anti-sweat heater control types
+  N30,  \field Case Defrost Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+        \default 0.0
+        \note Used to evaluate load on case as well as power or heat consumption
+  A16,  \field Unit Type
+        \type choice
+        \key UnitLength
+        \key NumberOfDoors
+        \default UnitLength
+  A17;  \field Case Defrost Cycle Parameters Name
         \type object-list
         \object-list RefrigerationDefrostCycleParameters
 
