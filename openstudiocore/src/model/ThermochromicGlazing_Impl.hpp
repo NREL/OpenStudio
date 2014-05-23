@@ -92,6 +92,8 @@ namespace detail {
 
     virtual double visibleReflectance() const;
 
+    double opticalDataTemperature() const;
+
     // TODO: Handle this object's extensible fields.
 
     //@}
@@ -125,6 +127,8 @@ namespace detail {
     virtual bool setVisibleAbsorptance(double value);
 
     virtual bool setVisibleReflectance(double value);
+
+    void  setOpticalDataTemperature(double value);
 
     // TODO: Handle this object's extensible fields.
 

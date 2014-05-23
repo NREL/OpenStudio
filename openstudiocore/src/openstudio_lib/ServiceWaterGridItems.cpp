@@ -330,7 +330,7 @@ ServiceWaterItem::ServiceWaterItem(ServiceWaterScene * serviceWaterScene)
 {
   serviceWaterScene->addItem(this);
 
-  std::vector<model::WaterUseConnections> waterConnectionsObjects = serviceWaterScene->model().getModelObjects<model::WaterUseConnections>();
+  std::vector<model::WaterUseConnections> waterConnectionsObjects = serviceWaterScene->model().getConcreteModelObjects<model::WaterUseConnections>();
 
   int branchCount = waterConnectionsObjects.size();
 

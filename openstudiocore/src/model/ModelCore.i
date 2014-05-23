@@ -2,7 +2,7 @@
 #define MODEL_CORE_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelcore
+  %module openstudiomodelcore
 #endif
 
 
@@ -10,14 +10,14 @@
 
 #if defined SWIGRUBY
 
-%init %{
-  rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_ModelObject) { OpenStudio::Model::toModelObject(self); } }");
-  rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_ModelExtensibleGroup) { OpenStudio::Model::toModelExtensibleGroup(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
-  rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");  
-%}
+  %init %{
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_ModelObject) { OpenStudio::Model::toModelObject(self); } }");
+    rb_eval_string("OpenStudio::IdfExtensibleGroup.class_eval { define_method(:to_ModelExtensibleGroup) { OpenStudio::Model::toModelExtensibleGroup(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Model) { OpenStudio::Model::toModel(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalModel) { OpenStudio::Model::toOptionalModel(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_Component) { OpenStudio::Component::toComponent(self); } }");
+    rb_eval_string("OpenStudio::Workspace.class_eval { define_method(:to_OptionalComponent) { OpenStudio::Component::toOptionalComponent(self); } }");  
+  %}
 
 #elif defined SWIGCSHARP
 
@@ -31,6 +31,19 @@
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
   %typemap(csclassmodifiers) openstudio::model::ModelObject "public partial class"
+  
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+        
+    public partial class IdfObject {
+      public OptionalModelObject to_ModelObject()
+      {
+        return OpenStudio.OpenStudioModelCore.toModelObject(this);
+      }
+    }    
+  %}
   
 #else
 
@@ -46,9 +59,9 @@
 %}
 
 #if defined SWIGJAVA
-%rename(loadComponent) openstudio::model::Component::load;
-%ignore openstudio::model::Meter::name;
-%ignore openstudio::model::Meter::setName;
+  %rename(loadComponent) openstudio::model::Component::load;
+  %ignore openstudio::model::Meter::name;
+  %ignore openstudio::model::Meter::setName;
 #endif
 
 // templates for non-ModelObjects
@@ -173,25 +186,25 @@ MODELOBJECT_TEMPLATES(OutputVariable);
 MODELOBJECT_TEMPLATES(GenericModelObject);
 MODELOBJECT_TEMPLATES(ModelObjectList);
 
-SWIG_MODELOBJECT(ParentObject);
-SWIG_MODELOBJECT(ResourceObject);
+SWIG_MODELOBJECT(ParentObject, 0);
+SWIG_MODELOBJECT(ResourceObject, 0);
 SWIG_UNIQUEMODELOBJECT(Version);
 SWIG_UNIQUEMODELOBJECT(LifeCycleCostParameters);
 SWIG_UNIQUEMODELOBJECT(RadianceParameters);
-SWIG_MODELOBJECT(Meter);
-SWIG_MODELOBJECT(LifeCycleCost); // Probably need to make a ModelEconomics.i file for these
-SWIG_MODELOBJECT(UtilityBill); // Probably need to make a ModelEconomics.i file for these
-SWIG_MODELOBJECT(ComponentData);
-SWIG_MODELOBJECT(ScheduleTypeLimits); // Needed for OutputVariable
-SWIG_MODELOBJECT(ScheduleBase); // Needed for OutputVariable
-SWIG_MODELOBJECT(Schedule);  // Needed for OutputVariable
-SWIG_MODELOBJECT(ScheduleDay);
-SWIG_MODELOBJECT(ScheduleWeek);
-SWIG_MODELOBJECT(ScheduleYear);
-SWIG_MODELOBJECT(ScheduleRule);
-SWIG_MODELOBJECT(ScheduleRuleset);
-SWIG_MODELOBJECT(OutputVariable);
-SWIG_MODELOBJECT(GenericModelObject); 
-SWIG_MODELOBJECT(ModelObjectList);
+SWIG_MODELOBJECT(Meter, 1);
+SWIG_MODELOBJECT(LifeCycleCost, 1); // Probably need to make a ModelEconomics.i file for these
+SWIG_MODELOBJECT(UtilityBill, 1); // Probably need to make a ModelEconomics.i file for these
+SWIG_MODELOBJECT(ComponentData, 1);
+SWIG_MODELOBJECT(ScheduleTypeLimits, 1); // Needed for OutputVariable
+SWIG_MODELOBJECT(ScheduleBase, 0); // Needed for OutputVariable
+SWIG_MODELOBJECT(Schedule, 0);  // Needed for OutputVariable
+SWIG_MODELOBJECT(ScheduleDay, 1);
+SWIG_MODELOBJECT(ScheduleWeek, 1);
+SWIG_MODELOBJECT(ScheduleYear, 1);
+SWIG_MODELOBJECT(ScheduleRule, 1);
+SWIG_MODELOBJECT(ScheduleRuleset, 1);
+SWIG_MODELOBJECT(OutputVariable, 1);
+SWIG_MODELOBJECT(GenericModelObject, 0); 
+SWIG_MODELOBJECT(ModelObjectList, 1);
 
 #endif //MODEL_CORE_I 

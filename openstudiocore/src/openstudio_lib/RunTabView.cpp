@@ -478,7 +478,7 @@ void RunView::playButtonClicked(bool t_checked)
     m_canceling = false;
     m_outputWindow->clear();
 
-    bool requireCalibrationReports = (osdocument->model().getModelObjects<model::UtilityBill>().size() > 0);
+    bool requireCalibrationReports = (osdocument->model().getConcreteModelObjects<model::UtilityBill>().size() > 0);
 
     // reset the model's sqlFile
     osdocument->model().resetSqlFile();

@@ -88,7 +88,7 @@ namespace detail {
     std::reverse(reverseLayers.begin(), reverseLayers.end());
 
     Model model = this->model();
-    BOOST_FOREACH(const Construction& other, model.getModelObjects<Construction>()) {
+    BOOST_FOREACH(const Construction& other, model.getConcreteModelObjects<Construction>()) {
       
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){

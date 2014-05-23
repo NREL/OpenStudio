@@ -2,7 +2,7 @@
 #define MODEL_HVAC_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelhvac
+  %module openstudiomodelhvac
 #endif
 
 
@@ -125,126 +125,151 @@ MODELOBJECT_TEMPLATES(WaterUseConnections);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
 MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 
-SWIG_MODELOBJECT(PortList);
-SWIG_MODELOBJECT(Loop);
-SWIG_MODELOBJECT(ZoneHVACComponent);
-SWIG_MODELOBJECT(ZoneHVACEquipmentList);
-SWIG_MODELOBJECT(HVACComponent);
-SWIG_MODELOBJECT(StraightComponent);
-SWIG_MODELOBJECT(WaterToAirComponent);
-SWIG_MODELOBJECT(WaterToWaterComponent);
-SWIG_MODELOBJECT(AirToAirComponent);
-SWIG_MODELOBJECT(Node);
-SWIG_MODELOBJECT(SizingZone);
-SWIG_MODELOBJECT(SizingSystem);
-SWIG_MODELOBJECT(ThermalZone);
-SWIG_MODELOBJECT(ThermostatSetpointDualSetpoint);
-SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlow);
-SWIG_MODELOBJECT(AirLoopHVAC);
-SWIG_MODELOBJECT(SizingPlant);
-SWIG_MODELOBJECT(PlantLoop);
-SWIG_MODELOBJECT(AirLoopHVACOutdoorAirSystem);
-SWIG_MODELOBJECT(ControllerMechanicalVentilation);
-SWIG_MODELOBJECT(ControllerOutdoorAir);
-SWIG_MODELOBJECT(ControllerWaterCoil);
-SWIG_MODELOBJECT(Mixer);
-SWIG_MODELOBJECT(AirLoopHVACReturnPlenum);
-SWIG_MODELOBJECT(AirLoopHVACZoneMixer);
-SWIG_MODELOBJECT(ConnectorMixer);
-SWIG_MODELOBJECT(AvailabilityManagerNightCycle);
-SWIG_MODELOBJECT(AvailabilityManagerScheduled);
-SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature);
-SWIG_MODELOBJECT(SetpointManagerMixedAir);
-SWIG_MODELOBJECT(SetpointManagerOutdoorAirReset);
-SWIG_MODELOBJECT(SetpointManagerScheduled);
-SWIG_MODELOBJECT(SetpointManagerSingleZoneReheat);
-SWIG_MODELOBJECT(SetpointManagerWarmest);
-SWIG_MODELOBJECT(Splitter);
-SWIG_MODELOBJECT(AirLoopHVACSupplyPlenum);
-SWIG_MODELOBJECT(AirLoopHVACZoneSplitter);
-SWIG_MODELOBJECT(ConnectorSplitter);
-SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeCooledBeam);
-SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat);
-SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat);
-SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled);
-SWIG_MODELOBJECT(AirTerminalSingleDuctVAVReheat);
-SWIG_MODELOBJECT(AirTerminalSingleDuctVAVNoReheat);
-SWIG_MODELOBJECT(BoilerHotWater);
-SWIG_MODELOBJECT(BoilerSteam);
-SWIG_MODELOBJECT(ChillerElectricEIR);
-SWIG_MODELOBJECT(CoilCoolingCooledBeam);
-SWIG_MODELOBJECT(CoilCoolingDXSingleSpeed);
-SWIG_MODELOBJECT(CoilCoolingDXTwoSpeed);
-SWIG_MODELOBJECT(CoilCoolingDXVariableRefrigerantFlow);
-SWIG_MODELOBJECT(CoilCoolingLowTempRadiantConstFlow);
-SWIG_MODELOBJECT(CoilCoolingLowTempRadiantVarFlow);
-SWIG_MODELOBJECT(CoilCoolingWaterToAirHeatPumpEquationFit);
-SWIG_MODELOBJECT(CoilHeatingDesuperheater);
-SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed);
-SWIG_MODELOBJECT(CoilHeatingDXVariableRefrigerantFlow);
-SWIG_MODELOBJECT(CoilHeatingElectric);
-SWIG_MODELOBJECT(CoilHeatingGas);
-SWIG_MODELOBJECT(CoilHeatingLowTempRadiantConstFlow);
-SWIG_MODELOBJECT(CoilHeatingLowTempRadiantVarFlow);
-SWIG_MODELOBJECT(CoilWaterHeatingDesuperheater);
-SWIG_MODELOBJECT(CoolingTowerSingleSpeed);
-SWIG_MODELOBJECT(CoolingTowerVariableSpeed);
-SWIG_MODELOBJECT(CoolingTowerPerformanceYorkCalc);
-SWIG_MODELOBJECT(CoolingTowerPerformanceCoolTools);
-SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial);
-SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed);
-SWIG_MODELOBJECT(FanConstantVolume);
-SWIG_MODELOBJECT(FanOnOff);
-SWIG_MODELOBJECT(FanVariableVolume);
-SWIG_MODELOBJECT(FanZoneExhaust);
-SWIG_MODELOBJECT(PumpConstantSpeed);
-SWIG_MODELOBJECT(PumpVariableSpeed);
-SWIG_MODELOBJECT(CoilCoolingWater);
-SWIG_MODELOBJECT(CoilHeatingWater);
-SWIG_MODELOBJECT(CoilHeatingWaterToAirHeatPumpEquationFit);
-SWIG_MODELOBJECT(CoilHeatingWaterBaseboard);
-SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAir);
-SWIG_MODELOBJECT(AirLoopHVACUnitarySystem);
-SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveElectric);
-SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveWater);
-SWIG_MODELOBJECT(ZoneHVACIdealLoadsAirSystem);
-SWIG_MODELOBJECT(ZoneHVACFourPipeFanCoil);
-SWIG_MODELOBJECT(ZoneHVACLowTemperatureRadiantElectric);
-SWIG_MODELOBJECT(ZoneHVACLowTempRadiantConstFlow);
-SWIG_MODELOBJECT(ZoneHVACLowTempRadiantVarFlow);
-SWIG_MODELOBJECT(ZoneHVACPackagedTerminalAirConditioner);
-SWIG_MODELOBJECT(ZoneHVACPackagedTerminalHeatPump);
-SWIG_MODELOBJECT(ZoneHVACTerminalUnitVariableRefrigerantFlow);
-SWIG_MODELOBJECT(ZoneHVACWaterToAirHeatPump);
-SWIG_MODELOBJECT(ZoneHVACUnitHeater);
-SWIG_MODELOBJECT(PipeAdiabatic);
-SWIG_MODELOBJECT(DistrictHeating);
-SWIG_MODELOBJECT(DistrictCooling);
-SWIG_MODELOBJECT(WaterHeaterMixed);
-SWIG_MODELOBJECT(WaterUseEquipmentDefinition);
-SWIG_MODELOBJECT(WaterUseEquipment);
-SWIG_MODELOBJECT(WaterUseConnections);
-SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent);
-SWIG_MODELOBJECT(GroundHeatExchangerVertical);
+SWIG_MODELOBJECT(PortList, 1);
+SWIG_MODELOBJECT(Loop, 0);
+SWIG_MODELOBJECT(ZoneHVACComponent, 0);
+SWIG_MODELOBJECT(ZoneHVACEquipmentList, 1);
+SWIG_MODELOBJECT(HVACComponent, 0);
+SWIG_MODELOBJECT(StraightComponent, 0);
+SWIG_MODELOBJECT(WaterToAirComponent, 0);
+SWIG_MODELOBJECT(WaterToWaterComponent, 0);
+SWIG_MODELOBJECT(AirToAirComponent, 0);
+SWIG_MODELOBJECT(Node, 1);
+SWIG_MODELOBJECT(SizingZone, 1);
+SWIG_MODELOBJECT(SizingSystem, 1);
+SWIG_MODELOBJECT(ThermalZone, 1);
+SWIG_MODELOBJECT(ThermostatSetpointDualSetpoint, 1);
+SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlow, 1);
+SWIG_MODELOBJECT(AirLoopHVAC, 1);
+SWIG_MODELOBJECT(SizingPlant, 1);
+SWIG_MODELOBJECT(PlantLoop, 1);
+SWIG_MODELOBJECT(AirLoopHVACOutdoorAirSystem, 1);
+SWIG_MODELOBJECT(ControllerMechanicalVentilation, 1);
+SWIG_MODELOBJECT(ControllerOutdoorAir, 1);
+SWIG_MODELOBJECT(ControllerWaterCoil, 1);
+SWIG_MODELOBJECT(Mixer, 0);
+SWIG_MODELOBJECT(AirLoopHVACReturnPlenum, 1);
+SWIG_MODELOBJECT(AirLoopHVACZoneMixer, 1);
+SWIG_MODELOBJECT(ConnectorMixer, 1);
+SWIG_MODELOBJECT(AvailabilityManagerNightCycle, 1);
+SWIG_MODELOBJECT(AvailabilityManagerScheduled, 1);
+SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature, 1);
+SWIG_MODELOBJECT(SetpointManagerMixedAir, 1);
+SWIG_MODELOBJECT(SetpointManagerOutdoorAirReset, 1);
+SWIG_MODELOBJECT(SetpointManagerScheduled, 1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneReheat, 1);
+SWIG_MODELOBJECT(SetpointManagerWarmest, 1);
+SWIG_MODELOBJECT(Splitter, 0);
+SWIG_MODELOBJECT(AirLoopHVACSupplyPlenum, 1);
+SWIG_MODELOBJECT(AirLoopHVACZoneSplitter, 1);
+SWIG_MODELOBJECT(ConnectorSplitter, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeCooledBeam, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctVAVReheat, 1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctVAVNoReheat, 1);
+SWIG_MODELOBJECT(BoilerHotWater, 1);
+SWIG_MODELOBJECT(BoilerSteam, 1);
+SWIG_MODELOBJECT(ChillerElectricEIR, 1);
+SWIG_MODELOBJECT(CoilCoolingCooledBeam, 1);
+SWIG_MODELOBJECT(CoilCoolingDXSingleSpeed, 1);
+SWIG_MODELOBJECT(CoilCoolingDXTwoSpeed, 1);
+SWIG_MODELOBJECT(CoilCoolingDXVariableRefrigerantFlow, 1);
+SWIG_MODELOBJECT(CoilCoolingLowTempRadiantConstFlow, 1);
+SWIG_MODELOBJECT(CoilCoolingLowTempRadiantVarFlow, 1);
+SWIG_MODELOBJECT(CoilCoolingWaterToAirHeatPumpEquationFit, 1);
+SWIG_MODELOBJECT(CoilHeatingDesuperheater, 1);
+SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed, 1);
+SWIG_MODELOBJECT(CoilHeatingDXVariableRefrigerantFlow, 1);
+SWIG_MODELOBJECT(CoilHeatingElectric, 1);
+SWIG_MODELOBJECT(CoilHeatingGas, 1);
+SWIG_MODELOBJECT(CoilHeatingLowTempRadiantConstFlow, 1);
+SWIG_MODELOBJECT(CoilHeatingLowTempRadiantVarFlow, 1);
+SWIG_MODELOBJECT(CoilWaterHeatingDesuperheater, 1);
+SWIG_MODELOBJECT(CoolingTowerSingleSpeed, 1);
+SWIG_MODELOBJECT(CoolingTowerVariableSpeed, 1);
+SWIG_MODELOBJECT(CoolingTowerPerformanceYorkCalc, 1);
+SWIG_MODELOBJECT(CoolingTowerPerformanceCoolTools, 1);
+SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial, 1);
+SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed, 1);
+SWIG_MODELOBJECT(FanConstantVolume, 1);
+SWIG_MODELOBJECT(FanOnOff, 1);
+SWIG_MODELOBJECT(FanVariableVolume, 1);
+SWIG_MODELOBJECT(FanZoneExhaust, 1);
+SWIG_MODELOBJECT(PumpConstantSpeed, 1);
+SWIG_MODELOBJECT(PumpVariableSpeed, 1);
+SWIG_MODELOBJECT(CoilCoolingWater, 1);
+SWIG_MODELOBJECT(CoilHeatingWater, 1);
+SWIG_MODELOBJECT(CoilHeatingWaterToAirHeatPumpEquationFit, 1);
+SWIG_MODELOBJECT(CoilHeatingWaterBaseboard, 1);
+SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAir, 1);
+SWIG_MODELOBJECT(AirLoopHVACUnitarySystem, 1);
+SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveElectric, 1);
+SWIG_MODELOBJECT(ZoneHVACBaseboardConvectiveWater, 1);
+SWIG_MODELOBJECT(ZoneHVACIdealLoadsAirSystem, 1);
+SWIG_MODELOBJECT(ZoneHVACFourPipeFanCoil, 1);
+SWIG_MODELOBJECT(ZoneHVACLowTemperatureRadiantElectric, 1);
+SWIG_MODELOBJECT(ZoneHVACLowTempRadiantConstFlow, 1);
+SWIG_MODELOBJECT(ZoneHVACLowTempRadiantVarFlow, 1);
+SWIG_MODELOBJECT(ZoneHVACPackagedTerminalAirConditioner, 1);
+SWIG_MODELOBJECT(ZoneHVACPackagedTerminalHeatPump, 1);
+SWIG_MODELOBJECT(ZoneHVACTerminalUnitVariableRefrigerantFlow, 1);
+SWIG_MODELOBJECT(ZoneHVACWaterToAirHeatPump, 1);
+SWIG_MODELOBJECT(ZoneHVACUnitHeater, 1);
+SWIG_MODELOBJECT(PipeAdiabatic, 1);
+SWIG_MODELOBJECT(DistrictHeating, 1);
+SWIG_MODELOBJECT(DistrictCooling, 1);
+SWIG_MODELOBJECT(WaterHeaterMixed, 1);
+SWIG_MODELOBJECT(WaterUseEquipmentDefinition, 1);
+SWIG_MODELOBJECT(WaterUseEquipment, 1);
+SWIG_MODELOBJECT(WaterUseConnections, 1);
+SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent, 1);
+SWIG_MODELOBJECT(GroundHeatExchangerVertical, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
-
-%inline {
-  namespace openstudio {
-    namespace model {
-      std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
-        return building.thermalZones();
-      }
-      boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
-        return space.thermalZone();
-      }
-      bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
-        return space.setThermalZone(thermalZone);
+  %inline {
+    namespace openstudio {
+      namespace model {
+        std::vector<openstudio::model::ThermalZone> getThermalZones(const openstudio::model::Building& building){
+          return building.thermalZones();
+        }
+        boost::optional<openstudio::model::ThermalZone> getThermalZone(const openstudio::model::Space& space){
+          return space.thermalZone();
+        }
+        bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
+          return space.setThermalZone(thermalZone);
+        }
       }
     }
   }
-}
+#endif
 
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+        
+    public partial class Building : ParentObject {
+      public ThermalZoneVector thermalZones()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZones(this);
+      }
+    }  
+    
+    public partial class Space : PlanarSurfaceGroup {
+      public OptionalThermalZone thermalZone()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);
+      }
+      public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
+      {
+        return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }  
+  %}
 #endif
 
 %include <model/HVACTemplates.hpp>

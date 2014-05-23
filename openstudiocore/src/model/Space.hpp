@@ -572,6 +572,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   REGISTER_LOGGER("openstudio.model.Space");
 };
 
+/** Intersect surfaces within spaces. */
+MODEL_API void intersectSurfaces(std::vector<Space>& spaces);
+
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces);
 

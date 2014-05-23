@@ -90,7 +90,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
-  m_updateMethods[VersionString("1.3.4")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -150,6 +150,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.3.1"));
   m_startVersions.push_back(VersionString("1.3.2"));
   m_startVersions.push_back(VersionString("1.3.3"));
+  m_startVersions.push_back(VersionString("1.3.4"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -804,7 +805,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
 
 
   // deal with component data
-  model::ComponentDataVector allComponentData = model.getModelObjects<model::ComponentData>();
+  model::ComponentDataVector allComponentData = model.getConcreteModelObjects<model::ComponentData>();
   std::vector<IdfObject> allIdfComponentData; // make sure idf versions share data
   std::vector<model::ModelObjectVector> allComponentDataObjects;
   BOOST_FOREACH(const model::ComponentData& cd,allComponentData) {
@@ -897,7 +898,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     boost::dynamic_pointer_cast<InterobjectIssueInformation_0_8_3_to_0_8_4>(info);
 
   // make sure ScheduleDays are owned by their ScheduleRules and ScheduleRulesets
-  model::ScheduleDayVector daySchedules = model.getModelObjects<model::ScheduleDay>();
+  model::ScheduleDayVector daySchedules = model.getConcreteModelObjects<model::ScheduleDay>();
   BOOST_FOREACH(model::ScheduleDay& daySchedule,daySchedules) {
     model::ScheduleRulesetVector rulesetUsers = daySchedule.getModelObjectSources<model::ScheduleRuleset>();
     model::ScheduleRuleVector ruleUsers = daySchedule.getModelObjectSources<model::ScheduleRule>();

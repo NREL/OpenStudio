@@ -408,7 +408,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
                                                                 const std::string& scheduleDisplayName)
 {
   ScheduleTypeLimitsVector result;
-  ScheduleTypeLimitsVector candidates = model.getModelObjects<ScheduleTypeLimits>();
+  ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   BOOST_FOREACH(const ScheduleTypeLimits& candidate,candidates) {
     if (isCompatible(scheduleType,candidate)) {

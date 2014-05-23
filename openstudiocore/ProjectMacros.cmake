@@ -420,14 +420,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     # wrapper that imports all of the libraries/python wrappers into the appropriate modules.  
     # http://docs.python.org/2/tutorial/modules.html
     # http://docs.python.org/2/library/imp.html
-    #    IF(IS_UTILTIES)
-    #SET( MODULE "OpenStudio")
-      #ELSE()
-      # SET( MODULE "OpenStudio.${SIMPLENAME}" )
-      #ENDIF()    
  
     SET(MODULE ${LOWER_NAME})
-
       
     ADD_CUSTOM_COMMAND(
       OUTPUT "python_${NAME}_wrap.cxx"
@@ -439,14 +433,13 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
                -o "${CMAKE_CURRENT_BINARY_DIR}/python_${NAME}_wrap.cxx"
                "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
       DEPENDS ${this_depends}
+    )
 
-    ) 
     ADD_LIBRARY(
       ${swig_target}
       MODULE
       python_${NAME}_wrap.cxx 
     )
-
 
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME} )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES PREFIX "" )
@@ -462,6 +455,56 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY} )
 
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
+
+    IF(MSVC)
+      SET( _NAME "_${LOWER_NAME}.pyd")
+    ELSE()
+      SET( _NAME "_${LOWER_NAME}.so")
+    ENDIF()
+
+    IF( WIN32 OR APPLE )
+      INSTALL( TARGETS ${swig_target} DESTINATION Python/openstudio/ )
+
+      SET( Prereq_Dirs
+        "${CMAKE_BINARY_DIR}/Products/"
+        "${CMAKE_BINARY_DIR}/Products/Release"
+        "${CMAKE_BINARY_DIR}/Products/Debug"
+      )
+
+      INSTALL(CODE "
+        INCLUDE(GetPrerequisites)
+        GET_PREREQUISITES( \${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\" )
+
+       IF(WIN32)
+         LIST(REVERSE PREREQUISITES)
+       ENDIF(WIN32)
+
+       FOREACH( PREREQ IN LISTS PREREQUISITES )
+         GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+         EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\")
+
+         GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+
+         IF(APPLE)
+           EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/${_NAME}\")
+           FOREACH( PR IN LISTS PREREQUISITES )
+            GP_RESOLVE_ITEM( \"\" \${PR} \"\" \"\" PRPATH )
+            GET_FILENAME_COMPONENT( PRNAME \${PRPATH} NAME)
+            EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/\${PREREQNAME}\")
+           ENDFOREACH()
+         ENDIF()
+       ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
+
+       IF(APPLE)
+         file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
+          DESTINATION \"\${CMAKE_INSTALL_PREFIX}/Python/openstudio/Resources/\")
+       ENDIF()
+      " )
+    ELSE(WIN32 OR APPLE)
+      INSTALL(TARGETS ${swig_target} DESTINATION "lib/openstudio/python")
+    ENDIF()
+
+    INSTALL(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py DESTINATION Python/openstudio/)
     
     # add this target to a "global" variable so python tests can require these
     LIST( APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}" )

@@ -807,7 +807,7 @@ namespace detail {
 
     std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
 
-    zoneHVACFourPipeFanCoils = this->model().getModelObjects<ZoneHVACFourPipeFanCoil>();
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
 
     for( std::vector<ZoneHVACFourPipeFanCoil>::iterator it = zoneHVACFourPipeFanCoils.begin();
     it < zoneHVACFourPipeFanCoils.end();
@@ -826,7 +826,7 @@ namespace detail {
 
     std::vector<ZoneHVACUnitHeater> zoneHVACUnitHeater;
 
-    zoneHVACUnitHeater = this->model().getModelObjects<ZoneHVACUnitHeater>();
+    zoneHVACUnitHeater = this->model().getConcreteModelObjects<ZoneHVACUnitHeater>();
 
     for( std::vector<ZoneHVACUnitHeater>::iterator it = zoneHVACUnitHeater.begin();
     it < zoneHVACUnitHeater.end();
