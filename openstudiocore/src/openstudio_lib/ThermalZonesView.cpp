@@ -294,7 +294,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   humidistatHeaderLayout->setContentsMargins(0,0,0,0);
   humidistatHeader->setLayout(humidistatHeaderLayout);
   QLabel * humidistatImage = new QLabel();
-  humidistatImage->setPixmap(QPixmap(":/images/thermostat.png"));
+  humidistatImage->setPixmap(QPixmap(":/images/humidistat.png"));
   humidistatHeaderLayout->addWidget(humidistatImage);
   QLabel * humidistatLabel = new QLabel();
   humidistatLabel->setText("Humidistat");
@@ -317,7 +317,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
 
   QLabel * humidifyingLabel = new QLabel();
   humidifyingLabel->setFixedSize(24,24);
-  humidifyingLabel->setPixmap(QPixmap(":images/snowflake.png"));
+  humidifyingLabel->setPixmap(QPixmap(":images/humidify_schedule_icon.png"));
   humidistatLayout->addWidget(humidifyingLabel,0,0,Qt::AlignLeft);
 
   QLabel * humidifyingTextLabel = new QLabel("Humdifying Setpoint Schedule");
@@ -332,7 +332,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   humidistatLayout->addWidget(m_humidifyingHumidistatDropZone,1,1,Qt::AlignLeft);
 
   QLabel * dehumidifyingLabel = new QLabel();
-  dehumidifyingLabel->setPixmap(QPixmap(":images/fire.png"));
+  dehumidifyingLabel->setPixmap(QPixmap(":images/dehumidify_schedule_icon.png"));
   dehumidifyingLabel->setFixedSize(24,24);
   humidistatLayout->addWidget(dehumidifyingLabel,0,2,Qt::AlignLeft);
 

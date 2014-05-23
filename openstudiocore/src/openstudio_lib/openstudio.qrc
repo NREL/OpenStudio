@@ -41,6 +41,7 @@
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
     <file>images/cooling_tower_variable.png</file>
+    <file>images/dehumidify_schedule_icon.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
     <file>images/delete_disabled.png</file>
@@ -75,6 +76,8 @@
     <file>images/heat_coil.png</file>
     <file>images/heat_pump3.png</file>
     <file>images/heat_transfer_outdoorair.png</file>
+    <file>images/humidify_schedule_icon.png</file>
+    <file>images/humidistat.png</file>
     <file>images/hvac-icon.png</file>
     <file>images/icon_scripts.png</file>
     <file>images/image_header.png</file>
