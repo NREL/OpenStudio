@@ -205,6 +205,6 @@ SWIG_MODELOBJECT(ScheduleRule, 1);
 SWIG_MODELOBJECT(ScheduleRuleset, 1);
 SWIG_MODELOBJECT(OutputVariable, 1);
 SWIG_MODELOBJECT(GenericModelObject, 0); 
-SWIG_MODELOBJECT(ModelObjectList, 0);
+SWIG_MODELOBJECT(ModelObjectList, 1);
 
 #endif //MODEL_CORE_I 
