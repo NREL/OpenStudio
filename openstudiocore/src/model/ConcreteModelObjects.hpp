@@ -448,7 +448,6 @@
 #include <model/ScheduleCompact_Impl.hpp>
 #include <model/ScheduleConstant_Impl.hpp>
 #include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleInterval_Impl.hpp>
 #include <model/ScheduleFixedInterval_Impl.hpp>
 #include <model/ScheduleTypeLimits_Impl.hpp>
 #include <model/ScheduleWeek_Impl.hpp>
