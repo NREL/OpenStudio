@@ -87,8 +87,6 @@ namespace detail {
 
     bool isControlTypeDefaulted() const;
 
-    boost::optional<Node> heatExchangerSetpointNode() const;
-
     double minimumTemperatureDifferencetoActivateHeatExchanger() const;
 
     bool isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const;
@@ -141,10 +139,6 @@ namespace detail {
     bool setControlType(std::string controlType);
 
     void resetControlType();
-
-    bool setHeatExchangerSetpointNode(const boost::optional<Node>& node);
-
-    void resetHeatExchangerSetpointNode();
 
     bool setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger);
 

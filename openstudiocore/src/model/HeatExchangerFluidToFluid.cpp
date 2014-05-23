@@ -153,10 +153,6 @@ namespace detail {
     return isEmpty(OS_HeatExchanger_FluidToFluidFields::ControlType);
   }
 
-  boost::optional<Node> HeatExchangerFluidToFluid_Impl::heatExchangerSetpointNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName);
-  }
-
   double HeatExchangerFluidToFluid_Impl::minimumTemperatureDifferencetoActivateHeatExchanger() const {
     boost::optional<double> value = getDouble(OS_HeatExchanger_FluidToFluidFields::MinimumTemperatureDifferencetoActivateHeatExchanger,true);
     OS_ASSERT(value);
@@ -282,23 +278,6 @@ namespace detail {
 
   void HeatExchangerFluidToFluid_Impl::resetControlType() {
     bool result = setString(OS_HeatExchanger_FluidToFluidFields::ControlType, "");
-    OS_ASSERT(result);
-  }
-
-  bool HeatExchangerFluidToFluid_Impl::setHeatExchangerSetpointNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName, node.get().handle());
-    }
-    else {
-      resetHeatExchangerSetpointNode();
-      result = true;
-    }
-    return result;
-  }
-
-  void HeatExchangerFluidToFluid_Impl::resetHeatExchangerSetpointNode() {
-    bool result = setString(OS_HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName, "");
     OS_ASSERT(result);
   }
 
@@ -521,10 +500,6 @@ bool HeatExchangerFluidToFluid::isControlTypeDefaulted() const {
   return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->isControlTypeDefaulted();
 }
 
-boost::optional<Node> HeatExchangerFluidToFluid::heatExchangerSetpointNode() const {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->heatExchangerSetpointNode();
-}
-
 double HeatExchangerFluidToFluid::minimumTemperatureDifferencetoActivateHeatExchanger() const {
   return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->minimumTemperatureDifferencetoActivateHeatExchanger();
 }
@@ -619,14 +594,6 @@ bool HeatExchangerFluidToFluid::setControlType(std::string controlType) {
 
 void HeatExchangerFluidToFluid::resetControlType() {
   getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetControlType();
-}
-
-bool HeatExchangerFluidToFluid::setHeatExchangerSetpointNode(const Node& node) {
-  return getImpl<detail::HeatExchangerFluidToFluid_Impl>()->setHeatExchangerSetpointNode(node);
-}
-
-void HeatExchangerFluidToFluid::resetHeatExchangerSetpointNode() {
-  getImpl<detail::HeatExchangerFluidToFluid_Impl>()->resetHeatExchangerSetpointNode();
 }
 
 bool HeatExchangerFluidToFluid::setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger) {

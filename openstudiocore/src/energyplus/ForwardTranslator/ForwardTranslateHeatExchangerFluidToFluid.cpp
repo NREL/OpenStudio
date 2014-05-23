@@ -63,20 +63,14 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   mo = modelObject.demandInletModelObject();
   if( mo )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::LoopDemandSideInletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::LoopDemandSideInletNodeName,mo->name().get());
   }
 
   // LoopDemandSideOutletNode
   mo = modelObject.demandOutletModelObject();
   if( mo )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNodeName,mo->name().get());
   }
 
   // LoopDemandSideDesignFlowRate
@@ -96,20 +90,14 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   mo = modelObject.supplyInletModelObject();
   if( mo )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::LoopSupplySideInletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::LoopSupplySideInletNodeName,mo->name().get());
   }
 
   // LoopSupplySideOutletNode
   mo = modelObject.supplyOutletModelObject();
   if( mo )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNodeName,mo->name().get());
   }
 
   // LoopSupplySideDesignFlowRate
@@ -151,12 +139,9 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   }
 
   // HeatExchangerSetpointNodeName
-  if( (mo = modelObject.heatExchangerSetpointNode()) )
+  if( (mo = modelObject.supplyOutletModelObject()) )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::HeatExchangerSetpointNodeName,mo->name().get());
   }
 
   // MinimumTemperatureDifferencetoActivateHeatExchanger
@@ -174,19 +159,13 @@ boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerFluidToFluid
   // ComponentOverrideLoopSupplySideInletNode
   if( (mo = modelObject.componentOverrideLoopSupplySideInletNode()) )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::ComponentOverrideLoopSupplySideInletNodeName,mo->name().get());
   }
 
   // ComponentOverrideLoopDemandSideInletNode
   if( (mo = modelObject.componentOverrideLoopDemandSideInletNode()) )
   {
-    if( (idfo = translateAndMapModelObject(mo.get())) )
-    {
-      idfObject.setString(HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNodeName,idfo->name().get());
-    }
+    idfObject.setString(HeatExchanger_FluidToFluidFields::ComponentOverrideLoopDemandSideInletNodeName,mo->name().get());
   }
 
   // ComponentOverrideCoolingControlTemperatureMode

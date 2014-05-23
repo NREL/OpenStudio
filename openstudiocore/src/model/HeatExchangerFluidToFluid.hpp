@@ -83,8 +83,6 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
 
   bool isControlTypeDefaulted() const;
 
-  boost::optional<Node> heatExchangerSetpointNode() const;
-
   double minimumTemperatureDifferencetoActivateHeatExchanger() const;
 
   bool isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const;
@@ -136,10 +134,6 @@ class MODEL_API HeatExchangerFluidToFluid : public WaterToWaterComponent {
   bool setControlType(std::string controlType);
 
   void resetControlType();
-
-  bool setHeatExchangerSetpointNode(const Node& node);
-
-  void resetHeatExchangerSetpointNode();
 
   bool setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger);
 
