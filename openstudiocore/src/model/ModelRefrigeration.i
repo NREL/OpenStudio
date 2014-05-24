@@ -2,7 +2,7 @@
 #define MODEL_REFRIGERATION_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelrefrigeration
+  %module openstudiomodelrefrigeration
 #endif
 
 
@@ -36,20 +36,20 @@ MODELOBJECT_TEMPLATES(RefrigerationTranscriticalSystem);
 MODELOBJECT_TEMPLATES(RefrigerationWalkIn);
 MODELOBJECT_TEMPLATES(RefrigerationWalkInZoneBoundary);
 
-SWIG_MODELOBJECT(RefrigerationAirChiller);
-SWIG_MODELOBJECT(RefrigerationCase);
-SWIG_MODELOBJECT(RefrigerationCompressor);
-SWIG_MODELOBJECT(RefrigerationCondenserAirCooled);
-SWIG_MODELOBJECT(RefrigerationCondenserCascade);
-SWIG_MODELOBJECT(RefrigerationCondenserEvaporativeCooled);
-SWIG_MODELOBJECT(RefrigerationCondenserWaterCooled);
-SWIG_MODELOBJECT(RefrigerationGasCoolerAirCooled);
-SWIG_MODELOBJECT(RefrigerationSubcoolerLiquidSuction);
-SWIG_MODELOBJECT(RefrigerationSubcoolerMechanical);
-SWIG_MODELOBJECT(RefrigerationSecondarySystem);
-SWIG_MODELOBJECT(RefrigerationSystem);
-SWIG_MODELOBJECT(RefrigerationTranscriticalSystem);
-SWIG_MODELOBJECT(RefrigerationWalkIn);
-SWIG_MODELOBJECT(RefrigerationWalkInZoneBoundary);
+SWIG_MODELOBJECT(RefrigerationAirChiller, 1);
+SWIG_MODELOBJECT(RefrigerationCase, 1);
+SWIG_MODELOBJECT(RefrigerationCompressor, 1);
+SWIG_MODELOBJECT(RefrigerationCondenserAirCooled, 1);
+SWIG_MODELOBJECT(RefrigerationCondenserCascade, 1);
+SWIG_MODELOBJECT(RefrigerationCondenserEvaporativeCooled, 1);
+SWIG_MODELOBJECT(RefrigerationCondenserWaterCooled, 1);
+SWIG_MODELOBJECT(RefrigerationGasCoolerAirCooled, 1);
+SWIG_MODELOBJECT(RefrigerationSubcoolerLiquidSuction, 1);
+SWIG_MODELOBJECT(RefrigerationSubcoolerMechanical, 1);
+SWIG_MODELOBJECT(RefrigerationSecondarySystem, 1);
+SWIG_MODELOBJECT(RefrigerationSystem, 1);
+SWIG_MODELOBJECT(RefrigerationTranscriticalSystem, 1);
+SWIG_MODELOBJECT(RefrigerationWalkIn, 1);
+SWIG_MODELOBJECT(RefrigerationWalkInZoneBoundary, 1);
 
 #endif 
