@@ -90,7 +90,7 @@ namespace detail {
       result.push_back(*dst);
     }
 
-    for (RunPeriodControlSpecialDays day : model.getModelObjects<RunPeriodControlSpecialDays>()){
+    for (RunPeriodControlSpecialDays day : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
       result.push_back(day);
     }
 

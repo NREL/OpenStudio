@@ -217,14 +217,14 @@ namespace detail {
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObject(const Handle& handle) const {
-    OptionalWorkspaceObject result;
     auto womIt = m_workspaceObjectMap.find(handle);
-    if (womIt != m_workspaceObjectMap.end()) { result = WorkspaceObject(womIt->second); }
-    return result;
+    if (womIt != m_workspaceObjectMap.end()) { return WorkspaceObject(womIt->second); }
+    return boost::none;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::objects(bool sorted) const {
     OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject();
+    if (!versionIdd) { return WorkspaceObjectVector(); }
 
     if (sorted) {
       OptionalHandleVector directOrder = order().directOrder();
@@ -234,9 +234,7 @@ namespace detail {
         for (const Handle& h : *directOrder) {
           OptionalWorkspaceObject owo = getObject(h);
           std::pair<HandleSet::iterator,bool> insertResult = setToCheckUniqueness.insert(h);
-          if (owo &&
-              insertResult.second &&
-              (!versionIdd || (owo->iddObject() != versionIdd.get())))
+          if (owo && insertResult.second && (owo->iddObject() != versionIdd.get()) )
           {
             result.push_back(*owo);
           }
@@ -252,7 +250,7 @@ namespace detail {
     WorkspaceObjectVector result;
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
       WorkspaceObject obj = WorkspaceObject(p.second);
-      if (!versionIdd || (obj.iddObject() != versionIdd.get())) {
+      if (obj.iddObject() != versionIdd.get()) {
         result.push_back(obj);
       }
     }
@@ -277,8 +275,9 @@ namespace detail {
 
     HandleVector result;
     OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject();
+    if (!versionIdd) { return result; }
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
-      if (!versionIdd || (p.second->iddObject() != versionIdd.get())) {
+      if (p.second->iddObject() != versionIdd.get()) {
         result.push_back(p.first);
       }
     }
@@ -346,12 +345,9 @@ namespace detail {
     }
     else {
       std::string baseName = getBaseName(name);
-      boost::regex baseNameRegex = getBaseNameRegex(baseName);
       for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
         if (OptionalString candidate = p.second->name()) {
-          std::string lcCandidate = candidate.get();
-          boost::to_lower(lcCandidate);
-          if (boost::regex_match(lcCandidate,baseNameRegex)) {
+          if (baseNamesMatch(baseName, *candidate)) {
             result.push_back(WorkspaceObject(p.second));
           }
         }
@@ -363,7 +359,12 @@ namespace detail {
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(IddObjectType objectType) const {
     auto loc = m_iddObjectTypeMap.find(objectType);
     if (loc == m_iddObjectTypeMap.end()) { return WorkspaceObjectVector(); }
-    return getObjects(handles(loc->second)); // convert set to vector, then getObjects
+    std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
+    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+      result.push_back( it->second );
+    }
+    return result;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(const IddObject& objectType) const {
@@ -379,15 +380,13 @@ namespace detail {
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByTypeAndName(
       IddObjectType objectType,const std::string& name) const
   {
-    OptionalWorkspaceObject result;
     for (const WorkspaceObject& object : getObjectsByType(objectType)) {
       OptionalString candidate = object.name();
       if (candidate && istringEqual(*candidate,name)) {
-        result = object;
-        break;
+        return object;
       }
     }
-    return result;
+    return boost::none;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByTypeAndName(
@@ -396,12 +395,9 @@ namespace detail {
   {
     WorkspaceObjectVector result;
     std::string baseName = getBaseName(name);
-    boost::regex baseNameRegex = getBaseNameRegex(baseName);
     for (const WorkspaceObject& object : getObjectsByType(objectType)) {
       if (OptionalString candidate = object.name()) {
-        std::string lcCandidate = candidate.get();
-        boost::to_lower(lcCandidate);
-        if (boost::regex_match(lcCandidate,baseNameRegex)) {
+        if (baseNamesMatch(baseName, *candidate)) {
           result.push_back(object);
         }
       }
@@ -413,42 +409,44 @@ namespace detail {
       const std::string& referenceName) const
   {
     auto loc = m_idfReferencesMap.find(referenceName);
-    if (loc == m_idfReferencesMap.end()) {
-      return WorkspaceObjectVector();
+    if (loc == m_idfReferencesMap.end()) { return WorkspaceObjectVector(); }
+    std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
+    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+      result.push_back( it->second );
     }
-    return getObjects(handles(loc->second)); // convert set to vector, then getObjects
+    return result;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByReference(
       const std::vector<std::string>& referenceNames) const
   {
-    HandleSet hs;
+    WorkspaceObjectMap objectMap;
     for (const std::string& referenceName : referenceNames) {
-      auto loc = m_idfReferencesMap.find(referenceName);
+      IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
       if (loc != m_idfReferencesMap.end()) {
-        for (const Handle& h : loc->second) {
-          hs.insert(h);
-        }
+        objectMap.insert(loc->second.begin(),loc->second.end());
       }
     }
-    return getObjects(handles(hs)); // convert set to vector, then getObjects
+    std::vector<WorkspaceObject> result;
+    result.reserve(objectMap.size());
+    for( WorkspaceObjectMap::const_iterator it = objectMap.begin(); it != objectMap.end(); ++it ) {
+      result.push_back( it->second );
+    }
+    return result;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(
       std::string name,
       const std::vector<std::string>& referenceNames) const
   {
-    OptionalWorkspaceObject result;
-    boost::to_lower(name);
     for (const WorkspaceObject& object : getObjectsByReference(referenceNames)) {
-      std::string candidateName = object.name().get();
-      boost::to_lower(candidateName);
-      if (candidateName == name) {
-        result = object;
-        break;
+      OptionalString candidate = object.name();
+      if (candidate && istringEqual(*candidate,name)) {
+        return object;
       }
     }
-    return result;
+    return boost::none;
   }
 
   bool Workspace_Impl::fastNaming() const
@@ -1551,7 +1549,7 @@ namespace detail {
     OptionalIddField iddField = sourceObject.iddObject().getField(index);
     OS_ASSERT(iddField);
     for (const std::string& referenceName : iddField->properties().references) {
-      m_idfReferencesMap[referenceName].insert(targetHandle);
+      m_idfReferencesMap[referenceName].insert(std::make_pair(targetHandle,getObject(targetHandle)->getImpl<WorkspaceObject_Impl>()));
     }
   }
 
@@ -1912,28 +1910,44 @@ namespace detail {
     return result;
   }
 
-  std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
-    //boost::regex nameWithSuffix("([\\w :]*) \\d+");
-    // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
-    boost::regex nameWithSuffix("(.*) \\d+$");
-    boost::smatch m;
-    if (boost::regex_match(objectName,m,nameWithSuffix)) {
-      std::string result(m[1].first,m[1].second);
-      return result;
-    }
-    return objectName;
+  bool Workspace_Impl::baseNamesMatch(const std::string& baseName, const std::string& objectName) const {
+    return istringEqual(baseName, getBaseName(objectName));
   }
 
-  boost::regex Workspace_Impl::getBaseNameRegex(std::string baseName) const {
-    std::stringstream ss;
-    boost::to_lower(baseName);
-    //ss << baseName << "( \\d+)?";
-    // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
-    const boost::regex esc("[\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\{\\}\\/\\\\]");
-    const std::string rep("\\\\\\1&");
-    std::string escapedBaseName = regex_replace(baseName, esc, rep, boost::match_default | boost::format_sed);
-    ss << escapedBaseName << "( \\d+)?$";
-    return boost::regex(ss.str());
+  boost::optional<int> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
+    std::size_t found = objectName.find_last_of(' ');
+    if ( found != string::npos ) {
+      std::string strSuffix = objectName.substr(found+1);
+      const char *p = strSuffix.c_str();
+      int suffix = 0;
+      int count = 0;
+      while (*p >= '0' && *p <= '9') {
+          suffix = (suffix * 10) + (*p - '0');
+          ++p;
+          ++count;
+      }
+      if (suffix > 0 && count == strSuffix.size() ) { return suffix; }
+    }
+    return boost::none;
+  }
+
+  std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
+    std::size_t found = objectName.find_last_of(' ');
+    if ( found != string::npos ) {
+      std::string strSuffix = objectName.substr(found+1);
+      const char *p = strSuffix.c_str();
+      int suffix = 0;
+      int count = 0;
+      while (*p >= '0' && *p <= '9') {
+          suffix = (suffix * 10) + (*p - '0');
+          ++p;
+          ++count;
+      }
+      if (suffix > 0 && count == strSuffix.size() ) {
+        return objectName.substr(0, found);
+      }
+    }
+    return objectName;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getEquivalentObject(
@@ -2026,7 +2040,7 @@ namespace detail {
   void Workspace_Impl::insertIntoIddObjectTypeMap(
       const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
-    m_iddObjectTypeMap[objectImplPtr->iddObject().type()].insert(objectImplPtr->handle());
+    m_iddObjectTypeMap[objectImplPtr->iddObject().type()].insert(std::make_pair(objectImplPtr->handle(),objectImplPtr));
   }
 
   void Workspace_Impl::insertIntoIdfReferencesMap(
@@ -2034,7 +2048,7 @@ namespace detail {
   {
     StringVector references = objectImplPtr->iddObject().references();
     for (const std::string& referenceName : references) {
-      m_idfReferencesMap[referenceName].insert(objectImplPtr->handle());
+      m_idfReferencesMap[referenceName].insert(std::make_pair(objectImplPtr->handle(), objectImplPtr));
     }
   }
   bool Workspace_Impl::resolvePotentialNameConflicts(Workspace& other) {
@@ -2486,21 +2500,14 @@ namespace detail {
                                                 const std::vector<WorkspaceObject>& objectsInTheSeries,
                                                 bool fillIn) const
   {
-    IntSet takenValues;
-    std::string baseName = getBaseName(objectName);
-    boost::regex nameRegex = getBaseNameRegex(baseName);
-    boost::smatch m;
+    vector<int> takenValues;
     for (const WorkspaceObject& object : objectsInTheSeries) {
-      std::string name = object.name().get();
-      boost::to_lower(name);
-      if (boost::regex_match(name,m,nameRegex)) {
-        std::string intstr(m[1].first,m[1].second);
-        boost::trim(intstr);
-        if (!intstr.empty()) {
-          takenValues.insert(boost::lexical_cast<int>(intstr));
-        }
+      if (boost::optional<int> takenSuffix = getNameSuffix(*(object.name()))) {
+        takenValues.push_back(*takenSuffix);
       }
     }
+    std::sort(takenValues.begin(), takenValues.end());
+    takenValues.erase(std::unique(takenValues.begin(), takenValues.end()), takenValues.end());
 
     int suffix(1);
     if (fillIn) {
@@ -2519,9 +2526,7 @@ namespace detail {
       }
     }
 
-    std::stringstream ss;
-    ss << baseName << " " << suffix;
-    return ss.str();
+    return getBaseName(objectName) + ' ' + boost::lexical_cast<std::string>(suffix);
   }
 
   std::vector< std::vector<WorkspaceObject> > Workspace_Impl::nameConflicts(

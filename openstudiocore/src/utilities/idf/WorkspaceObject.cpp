@@ -1183,8 +1183,9 @@ namespace detail {
     }
     WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
     for (const WorkspaceObject& candidate : candidates) {
-      OS_ASSERT(candidate.name());
-      if ((istringEqual(*oName,*(candidate.name())) &&
+      OptionalString candidateName = candidate.name();
+      OS_ASSERT(candidateName);
+      if ((istringEqual(*oName,*candidateName) &&
           (!initialized() || (getObject<WorkspaceObject>() != candidate))))
       {
         return false;

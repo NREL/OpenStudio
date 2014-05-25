@@ -1596,7 +1596,7 @@ namespace detail {
 
     std::vector<SizingZone> sizingObjects;
     
-    sizingObjects = model().getModelObjects<SizingZone>();
+    sizingObjects = model().getConcreteModelObjects<SizingZone>();
 
     for( const auto & sizingObject : sizingObjects )
     {
@@ -1741,7 +1741,7 @@ namespace detail {
   {
     boost::optional<ZoneHVACEquipmentList> result;
 
-    std::vector<ZoneHVACEquipmentList> list = model().getModelObjects<ZoneHVACEquipmentList>();
+    std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
 
     for( const auto & elem : list )
     {

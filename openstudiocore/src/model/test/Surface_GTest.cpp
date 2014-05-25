@@ -3293,3 +3293,97 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
     }
   }
 }
+
+
+TEST_F(ModelFixture, Surface_Intersect_OneToFour){
+
+  double areaTol = 0.000001;
+  double xOrigin = 20.0;
+
+  // space 1 has one large surface, space 2 has 4 rectangles, test that intersection is correct independent of rotation and intersect order
+  for (double rotation = 0; rotation < 360.0; rotation += 10.0){
+    for (unsigned iStart = 0; iStart < 4; ++iStart){
+
+      Transformation t = Transformation::rotation(Vector3d(0,0,1), degToRad(rotation));
+
+      Model model;
+      Space space1(model);
+      Space space2(model);
+
+      Point3dVector points;
+      points.push_back(Point3d(xOrigin,  0, 20));
+      points.push_back(Point3d(xOrigin,  0,  0));
+      points.push_back(Point3d(xOrigin, 10,  0));
+      points.push_back(Point3d(xOrigin, 10, 20));
+      Surface surface(t*points, model);
+      surface.setSpace(space1);
+      EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
+
+      std::vector<Surface> surfaces;
+      for (unsigned i = 0; i < 4; ++i){
+        points.clear();
+        points.push_back(Point3d(xOrigin, 10, (i+1)*5));
+        points.push_back(Point3d(xOrigin, 10,  i*5));
+        points.push_back(Point3d(xOrigin,  0,  i*5));
+        points.push_back(Point3d(xOrigin,  0, (i+1)*5));
+        Surface tempSurface(t*points, model);
+        tempSurface.setSpace(space2);
+        EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
+        surfaces.push_back(tempSurface);
+      }
+
+      // shuffle order of intersection
+      std::vector<unsigned> indices;
+      for (unsigned i = iStart; i < 4; ++i){
+        indices.push_back(i);
+      }
+      for (unsigned i = 0; i < iStart; ++i){
+        indices.push_back(i);
+      }
+      ASSERT_EQ(4u, indices.size());
+
+      std::set<Handle> intersectedSpace1Surfaces;
+
+      double expectedArea = 200.0;
+      BOOST_FOREACH(unsigned i, indices){
+
+        double totalGrossArea = 0.0;
+        BOOST_FOREACH(Surface s, space1.surfaces()){
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
+            totalGrossArea += s.grossArea();
+          }
+        }
+        EXPECT_NEAR(expectedArea, totalGrossArea, areaTol);
+        EXPECT_NEAR(50.0, surfaces[i].grossArea(), areaTol);
+
+        // one of the non-intersected surfaces should intersect
+        boost::optional<Surface> intersectedSurface;
+        BOOST_FOREACH(Surface s, space1.surfaces()){
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
+            if (s.intersect(surfaces[i])){
+              intersectedSurface = s;
+              intersectedSpace1Surfaces.insert(s.handle());
+              expectedArea -= 50.0;
+              break;
+            }
+          }
+        }
+        ASSERT_TRUE(intersectedSurface);
+        EXPECT_NEAR(50.0, intersectedSurface->grossArea(), areaTol);
+        EXPECT_NEAR(50.0, surfaces[i].grossArea(), areaTol);
+      }
+
+      EXPECT_EQ(4u, space1.surfaces().size());
+      BOOST_FOREACH(Surface s, space1.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+      }
+
+      EXPECT_EQ(4u, space2.surfaces().size());
+      BOOST_FOREACH(Surface s, space2.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+      }
+    }
+  }
+}

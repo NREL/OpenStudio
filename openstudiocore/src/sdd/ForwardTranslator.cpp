@@ -238,7 +238,7 @@ namespace sdd {
     }
 
     std::set<Handle> surfaceConstructions;
-    for (const model::Surface& surface : model.getModelObjects<model::Surface>()){
+    for (const model::Surface& surface : model.getConcreteModelObjects<model::Surface>()){
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction){
         surfaceConstructions.insert(construction->handle());
@@ -247,7 +247,7 @@ namespace sdd {
 
     std::set<Handle> doorConstructions;
     std::set<Handle> fenestrationConstructions;
-    for (const model::SubSurface& subSurface : model.getModelObjects<model::SubSurface>()){
+    for (const model::SubSurface& subSurface : model.getConcreteModelObjects<model::SubSurface>()){
       boost::optional<model::ConstructionBase> construction = subSurface.construction();
       if (construction){
         std::string subSurfaceType = subSurface.subSurfaceType();
@@ -308,7 +308,7 @@ namespace sdd {
     }
 
     // translate site shading
-    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = model.getModelObjects<model::ShadingSurfaceGroup>();
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = model.getConcreteModelObjects<model::ShadingSurfaceGroup>();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){

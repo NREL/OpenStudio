@@ -86,7 +86,7 @@ namespace detail {
     std::reverse(reverseLayers.begin(), reverseLayers.end());
 
     Model model = this->model();
-    for (const Construction& other : model.getModelObjects<Construction>()) {
+    for (const Construction& other : model.getConcreteModelObjects<Construction>()) {
       
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){

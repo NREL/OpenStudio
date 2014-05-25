@@ -68,14 +68,11 @@ namespace detail {
 
   boost::optional<Loop> HVACComponent_Impl::loop() const
   {
-    boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC();
-    boost::optional<PlantLoop> plantLoop = this->plantLoop();
-
-    if( airLoopHVAC )
+    if( boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC() )
     {
       return airLoopHVAC->optionalCast<Loop>();
     }
-    else if( plantLoop )
+    else if( boost::optional<PlantLoop> plantLoop = this->plantLoop() )
     {
       return plantLoop->optionalCast<Loop>();
     }
@@ -93,27 +90,21 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>();
+      AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
 
-      for(const auto & elem : airLoops)
+      for( auto & airLoop : airLoops)
       {
-        OptionalAirLoopHVAC airLoop = elem.optionalCast<AirLoopHVAC>();
-        if(airLoop)
+        if( airLoop.component(this->handle()) )
         {
-          if( airLoop->component(this->handle()) )
+          m_airLoopHVAC = airLoop;
+          return airLoop;
+        }
+        if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop.airLoopHVACOutdoorAirSystem() )
+        {
+          if( oaSystem->component(this->handle()) )
           {
             m_airLoopHVAC = airLoop;
-
             return airLoop;
-          }
-          if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem() )
-          {
-            if( oaSystem->component(this->handle()) )
-            {
-              m_airLoopHVAC = airLoop;
-
-              return airLoop;
-            }
           }
         }
       }
@@ -130,14 +121,13 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getModelObjects<AirLoopHVACOutdoorAirSystem>();
+      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>();
 
       for(auto & oaLoop : oaLoops)
       {
         if( oaLoop.component(this->handle()) )
         {
           m_airLoopHVACOutdoorAirSystem = oaLoop;
-
           return oaLoop;
         }
       }
@@ -154,19 +144,14 @@ namespace detail {
     }
     else
     {
-      std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
+      std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-      for(const auto & elem : plantLoops)
+      for( auto & plantLoop : plantLoops )
       {
-        OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
-        if(plantLoop)
+        if( plantLoop.component(this->handle()) )
         {
-          if( plantLoop->component(this->handle()) )
-          {
-            m_plantLoop = plantLoop;
-
-            return plantLoop;
-          }
+          m_plantLoop = plantLoop;
+          return plantLoop;
         }
       }
     }
@@ -240,30 +225,24 @@ namespace detail {
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::airLoopHVACAsModelObject() const {
-    OptionalModelObject result;
-    OptionalAirLoopHVAC intermediate = airLoopHVAC();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalAirLoopHVAC intermediate = airLoopHVAC()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::plantLoopAsModelObject() const {
-    OptionalModelObject result;
-    OptionalPlantLoop intermediate = plantLoop();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalPlantLoop intermediate = plantLoop()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::airLoopHVACOutdoorAirSystemAsModelObject() const {
-    OptionalModelObject result;
-    OptionalAirLoopHVACOutdoorAirSystem intermediate = airLoopHVACOutdoorAirSystem();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalAirLoopHVACOutdoorAirSystem intermediate = airLoopHVACOutdoorAirSystem()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   ModelObject HVACComponent_Impl::clone(Model model) const

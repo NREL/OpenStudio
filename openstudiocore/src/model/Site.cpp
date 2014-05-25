@@ -123,7 +123,7 @@ namespace detail {
     result.insert(result.end(),sizingPeriods.begin(),sizingPeriods.end());
 
     // lighting design days
-    LightingDesignDayVector lightingDesignDays = model().getModelObjects<LightingDesignDay>();
+    LightingDesignDayVector lightingDesignDays = model().getConcreteModelObjects<LightingDesignDay>();
     result.insert(result.end(),lightingDesignDays.begin(),lightingDesignDays.end());
 
     // time dependent valuation
@@ -131,7 +131,7 @@ namespace detail {
     if (tdv) { result.push_back(*tdv); }
 
     // some SkyTemperatures are children (those that do not explicitly point to something else)
-    SkyTemperatureVector skyTemperatures = model().getModelObjects<SkyTemperature>();
+    SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
     ParentObject siteAsParent = getObject<ParentObject>();
     for (const SkyTemperature& st : skyTemperatures) {
       OptionalParentObject opo = st.parent();
@@ -301,7 +301,7 @@ namespace detail {
   ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Site")){
         result.push_back(shadingGroup);
       }

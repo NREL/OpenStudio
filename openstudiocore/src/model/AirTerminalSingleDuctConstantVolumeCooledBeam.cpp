@@ -182,7 +182,6 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
                 AirTerminalSingleDuctConstantVolumeCooledBeam mo = this->getObject<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true;
@@ -209,7 +208,7 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
-    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
     for( auto & thermalZone : thermalZones )
     {
       std::vector<ModelObject> equipment = thermalZone.equipment();

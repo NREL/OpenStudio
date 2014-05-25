@@ -17,16 +17,17 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ######################################################################
 
-if defined? Sketchup && Sketchup.version_number <= 14000000
-  require File.expand_path(File.dirname(__FILE__)) + '/openstudio/sketchup_plugin/stdruby/pathname'
+# no handling of symlinks but that should be ok for developer build
+require "#{File.dirname(__FILE__)}/config"
+
+if (defined? Sketchup) && (Sketchup.version_number <= 14000000)
+  require "#{$OpenStudio_LibPath}/openstudio/sketchup_plugin/stdruby/pathname"
 else
   require 'pathname'
 end
 
 # follow symlinks so that we find the original path to the so's 
 $OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpath()))}/"
-
-require "#{$OpenStudio_Dir}config"
 
 # add binary dir to system path
 original_path = ENV['PATH']

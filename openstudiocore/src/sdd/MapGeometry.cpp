@@ -192,14 +192,14 @@ namespace sdd {
     }
 
     // remove unused CFactor constructions
-    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getModelObjects<model::CFactorUndergroundWallConstruction>()){
+    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
       if (cFactorConstruction.directUseCount() == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
-    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getModelObjects<model::FFactorGroundFloorConstruction>()){
+    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
       if (fFactorConstruction.directUseCount() == 0){
         fFactorConstruction.remove();
       }
@@ -1478,7 +1478,7 @@ namespace sdd {
     buildingAzimuthElement.appendChild(doc.createTextNode(QString::number(buildingAzimuth)));
 
     // translate storys
-    std::vector<model::BuildingStory> buildingStories = building.model().getModelObjects<model::BuildingStory>();
+    std::vector<model::BuildingStory> buildingStories = building.model().getConcreteModelObjects<model::BuildingStory>();
     std::sort(buildingStories.begin(), buildingStories.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
@@ -1505,7 +1505,7 @@ namespace sdd {
     */
 
     // translate building shading
-    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getModelObjects<model::ShadingSurfaceGroup>();
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){
@@ -1547,7 +1547,7 @@ namespace sdd {
     }
 
     // issue warning if any spaces not assigned to building story
-    std::vector<model::Space> spaces = building.model().getModelObjects<model::Space>();
+    std::vector<model::Space> spaces = building.model().getConcreteModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
     for (const model::Space& space : spaces){
@@ -1558,7 +1558,7 @@ namespace sdd {
     }
 
     // translate thermal zones
-    std::vector<model::ThermalZone> thermalZones = building.model().getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = building.model().getConcreteModelObjects<model::ThermalZone>();
     std::sort(thermalZones.begin(), thermalZones.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){

@@ -236,7 +236,7 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const
   }
   else
   {
-    std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
+    std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
     for(const auto & elem : plantLoops)
     {
@@ -264,7 +264,7 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::secondaryPlantLoop() cons
   }
   else
   {
-    std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
+    std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
     for(const auto & elem : plantLoops)
     {

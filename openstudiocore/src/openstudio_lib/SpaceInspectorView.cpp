@@ -467,7 +467,7 @@ void SpaceDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -561,7 +561,7 @@ void SpaceSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }

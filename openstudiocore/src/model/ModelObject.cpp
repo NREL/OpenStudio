@@ -526,7 +526,7 @@ namespace detail {
     std::vector<std::string> variableNames = this->outputVariableNames();
     OptionalString name = this->name();
 
-    for (const OutputVariable& variable : this->model().getModelObjects<OutputVariable>()){
+    for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()){
       std::string keyValue = variable.keyValue();
       std::string variableName = variable.variableName();
 

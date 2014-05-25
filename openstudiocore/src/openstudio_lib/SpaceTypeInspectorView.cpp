@@ -231,7 +231,7 @@ void SpaceTypeDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -313,7 +313,7 @@ void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }
@@ -395,7 +395,7 @@ void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::onMakeNewIt
 void SpaceTypeSpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::Space& space : modelObject.model().getModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -474,7 +474,7 @@ void SpaceTypeSpacesVectorController::onDrop(const OSItemId& itemId)
 void SpaceTypeUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -491,7 +491,7 @@ void SpaceTypeUnassignedSpacesVectorController::onChangeRelationship(const model
 std::vector<OSItemId> SpaceTypeUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  for (const model::Space& space : m_model->getModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getConcreteModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (space.isSpaceTypeDefaulted()){
         result.push_back(modelObjectToItemId(space, false));

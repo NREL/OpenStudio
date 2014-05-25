@@ -111,7 +111,7 @@ namespace detail {
 
     std::vector<ZoneHVACLowTempRadiantVarFlow> zoneHVACLowTempRadiantVarFlows;
 
-    zoneHVACLowTempRadiantVarFlows = this->model().getModelObjects<ZoneHVACLowTempRadiantVarFlow>();
+    zoneHVACLowTempRadiantVarFlows = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantVarFlow>();
 
     for( const auto & zoneHVACLowTempRadiantVarFlow : zoneHVACLowTempRadiantVarFlows )
     {

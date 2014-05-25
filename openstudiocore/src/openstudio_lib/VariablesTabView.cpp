@@ -252,7 +252,7 @@ namespace openstudio {
     }
 
     // add all variables to map, allow only one variable per variable name in this application 
-    for (openstudio::model::OutputVariable outputVariable : m_model.getModelObjects<openstudio::model::OutputVariable>())
+    for (openstudio::model::OutputVariable outputVariable : m_model.getConcreteModelObjects<openstudio::model::OutputVariable>())
     {
       if (outputVariableMap.count(outputVariable.variableName()) == 0)
       {

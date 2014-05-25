@@ -190,7 +190,7 @@ namespace detail {
     double tubeSpacing = this->tubeSpacing();
 
     Model model = this->model();
-    for (const ConstructionWithInternalSource& other : model.getModelObjects<ConstructionWithInternalSource>()) {
+    for (const ConstructionWithInternalSource& other : model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
       
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;

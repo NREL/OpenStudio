@@ -157,7 +157,7 @@ void BuildingStoryDefaultScheduleSetVectorController::onDrop(const OSItemId& ite
 void BuildingStorySpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::Space& space : modelObject.model().getModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -229,7 +229,7 @@ void BuildingStorySpacesVectorController::onDrop(const OSItemId& itemId)
 void BuildingStoryUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -246,7 +246,7 @@ void BuildingStoryUnassignedSpacesVectorController::onChangeRelationship(const m
 std::vector<OSItemId> BuildingStoryUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  for (const model::Space& space : m_model->getModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getConcreteModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (!space.buildingStory()){
         result.push_back(modelObjectToItemId(space, false));

@@ -172,7 +172,7 @@ namespace gbxml {
     }
 */
     // do thermal zones
-    std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
@@ -216,7 +216,7 @@ namespace gbxml {
     }
 
     // translate surfaces
-    std::vector<model::Surface> surfaces = model.getModelObjects<model::Surface>();
+    std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
       m_progressBar->setMinimum(0);

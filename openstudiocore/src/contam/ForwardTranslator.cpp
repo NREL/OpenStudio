@@ -505,7 +505,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     }
   }
   // Get stories
-  std::vector<openstudio::model::BuildingStory> stories = model.getModelObjects<openstudio::model::BuildingStory>();
+  std::vector<openstudio::model::BuildingStory> stories = model.getConcreteModelObjects<openstudio::model::BuildingStory>();
   // It appears that we will need for each story to have an elevation
   for (const openstudio::model::BuildingStory& buildingStory : stories)
   {
@@ -914,7 +914,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
       {
         // Loop through and get a time series for each zone we can find
-        for (model::ThermalZone thermalZone : model.getModelObjects<model::ThermalZone>())
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
         {
           boost::optional<std::string> name = thermalZone.name();
           if(!name)
@@ -956,7 +956,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         LOG(Warn, "Zone equipment not yet accounted for.");
         // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
         // This should be moved to inside the contam translator
-        for (model::ThermalZone thermalZone : model.getModelObjects<model::ThermalZone>())
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
         {
           // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
 

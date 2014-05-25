@@ -100,7 +100,7 @@ namespace detail {
 
     std::vector<AirTerminalSingleDuctConstantVolumeCooledBeam> airTerminalSingleDuctConstantVolumeCooledBeam;
 
-    airTerminalSingleDuctConstantVolumeCooledBeam = this->model().getModelObjects<AirTerminalSingleDuctConstantVolumeCooledBeam>();
+    airTerminalSingleDuctConstantVolumeCooledBeam = this->model().getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeCooledBeam>();
 
     for( const auto & elem : airTerminalSingleDuctConstantVolumeCooledBeam )
     {

@@ -247,7 +247,7 @@ void ThermalZonesController::onReplaceObject(openstudio::model::ModelObject mode
 void ThermalZonesController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
   //std::vector<Handle> toRemove;
-  for (model::ThermalZone thermalZone : this->model().getModelObjects<model::ThermalZone>()){
+  for (model::ThermalZone thermalZone : this->model().getConcreteModelObjects<model::ThermalZone>()){
     if (thermalZone.spaces().empty() && thermalZone.isRemovable()){
       //toRemove.push_back(thermalZone.handle());
 

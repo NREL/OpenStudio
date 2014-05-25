@@ -495,11 +495,11 @@ namespace detail {
     WorkspaceObjectOrder m_workspaceObjectOrder;
 
     // map of IddObjectType to set of objects identified by UUID
-    typedef std::map<IddObjectType, HandleSet > IddObjectTypeMap;
+    typedef std::map<IddObjectType, WorkspaceObjectMap > IddObjectTypeMap;
     IddObjectTypeMap m_iddObjectTypeMap;
 
     // map of reference to set of objects identified by UUID
-    typedef std::map<std::string, HandleSet> IdfReferencesMap; // , IstringCompare
+    typedef std::map<std::string, WorkspaceObjectMap> IdfReferencesMap; // , IstringCompare
     IdfReferencesMap m_idfReferencesMap;
 
     // data object for undos
@@ -517,11 +517,14 @@ namespace detail {
     // Change over from a HandleSet to a std::vector<Handle>.
     std::vector<Handle> handles(const std::set<Handle>& handles, bool sorted=false) const;
 
+    /** Checks if objectName without any suffix integers matches supplied base name. */
+    bool baseNamesMatch(const std::string& baseName, const std::string& objectName) const;
+
+    /** Returns optional suffix integer from objectName. */
+    boost::optional<int> getNameSuffix(const std::string& objectName) const;
+
     /** Returns objectName in with any suffix integers removed. */
     std::string getBaseName(const std::string& objectName) const;
-
-    /** Returns a regex with objectName in lower case and an optional integer suffix. */
-    boost::regex getBaseNameRegex(std::string baseName) const;
 
     boost::optional<WorkspaceObject> getEquivalentObject(const IdfObject& other) const;
 

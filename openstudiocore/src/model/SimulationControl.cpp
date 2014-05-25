@@ -465,7 +465,7 @@ namespace detail{
   }
 
   std::vector<RunPeriod> SimulationControl_Impl::runPeriods() const {
-    return model().getModelObjects<RunPeriod>();
+    return model().getConcreteModelObjects<RunPeriod>();
   }
 
   boost::optional<ShadowCalculation> SimulationControl_Impl::shadowCalculation() const {

@@ -78,7 +78,7 @@ namespace detail {
   }
 
   ComponentData Component_Impl::componentData() const {
-    ComponentDataVector candidates = model().getModelObjects<ComponentData>();
+    ComponentDataVector candidates = model().getConcreteModelObjects<ComponentData>();
     OS_ASSERT(candidates.size() == 1);
     return candidates[0];
   }
@@ -199,7 +199,7 @@ Component::Component(const openstudio::IdfFile& idfFile)
   }
 
   // 1 ComponentData object
-  ComponentDataVector componentDataObjects = getModelObjects<ComponentData>();
+  ComponentDataVector componentDataObjects = getConcreteModelObjects<ComponentData>();
   if (componentDataObjects.size() != 1) {
     LOG_AND_THROW("Cannot construct Component from IdfFile because the file contains "
       << componentDataObjects.size() << " ComponentData objects.");
@@ -276,7 +276,7 @@ Component::Component(const std::vector<ModelObject>& contents)
   WorkspaceObjectVector objects = getImpl<openstudio::detail::Workspace_Impl>()->addObjects(objectImplPtrs);
   OS_ASSERT(objects.size() == static_cast<unsigned>(1));
 
-  ComponentDataVector cdTemp = getModelObjects<ComponentData>();
+  ComponentDataVector cdTemp = getConcreteModelObjects<ComponentData>();
   OS_ASSERT(cdTemp.size() == 1);
   ComponentData componentData = cdTemp[0];
   componentData.setString(OS_ComponentDataFields::UUID,toString(createUUID()));

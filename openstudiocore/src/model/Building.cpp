@@ -99,7 +99,7 @@ namespace detail {
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
-    BuildingStoryVector stories = model().getModelObjects<BuildingStory>();
+    BuildingStoryVector stories = model().getConcreteModelObjects<BuildingStory>();
     result.insert(result.end(),stories.begin(),stories.end());
 
     // exterior shading groups
@@ -335,7 +335,7 @@ namespace detail {
   MeterVector Building_Impl::meters() const
   {
     MeterVector result;
-    MeterVector meters = this->model().getModelObjects<Meter>();
+    MeterVector meters = this->model().getConcreteModelObjects<Meter>();
     for (const Meter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())){
         result.push_back(meter);
@@ -352,13 +352,13 @@ namespace detail {
   std::vector<Space> Building_Impl::spaces() const
   {
     // all spaces in workspace implicitly belong to building
-    return this->model().getModelObjects<Space>();
+    return this->model().getConcreteModelObjects<Space>();
   }
 
   ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")){
         result.push_back(shadingGroup);
       }
@@ -369,12 +369,12 @@ namespace detail {
   std::vector<ThermalZone> Building_Impl::thermalZones() const
   {
     // all thermal zones in workspace implicitly belong to building
-    return this->model().getModelObjects<ThermalZone>();
+    return this->model().getConcreteModelObjects<ThermalZone>();
   }
 
   std::vector<Surface> Building_Impl::exteriorWalls() const {
     SurfaceVector result;
-    SurfaceVector candidates = model().getModelObjects<Surface>();
+    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
     for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
@@ -387,7 +387,7 @@ namespace detail {
 
   std::vector<Surface> Building_Impl::roofs() const {
     SurfaceVector result;
-    SurfaceVector candidates = model().getModelObjects<Surface>();
+    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
     for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();

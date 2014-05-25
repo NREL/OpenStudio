@@ -515,7 +515,7 @@ void LocationView::onDesignDayBtnClicked()
 
         bool unknownDay = false;
 
-        for (model::DesignDay designDay : ddyModel.getModelObjects<model::DesignDay>()) {
+        for (model::DesignDay designDay : ddyModel.getConcreteModelObjects<model::DesignDay>()) {
           boost::optional<std::string> name;
           name = designDay.name();
 

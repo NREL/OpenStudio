@@ -421,9 +421,8 @@ namespace detail {
 
   boost::optional<ThermalZone> ZoneHVACLowTempRadiantVarFlow_Impl::thermalZone() const
   {
-    Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
     for( const auto & thermalZone : thermalZones )
     {
       std::vector<ModelObject> equipment = thermalZone.equipment();

@@ -283,7 +283,7 @@ class CalibrationReports < OpenStudio::Ruleset::ReportingUserScript
           end
           modelPeakDemand << ","
 
-          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty? and not billingPeriod.consumption.get == 0
+          if not billingPeriod.peakDemand.empty? and not billingPeriod.modelPeakDemand.empty? and not billingPeriod.peakDemand.get == 0
             percent = 100 * ((billingPeriod.modelPeakDemand.get / 1000) - billingPeriod.peakDemand.get) / billingPeriod.peakDemand.get
             percent_str = sprintf "%.2f", percent
             demandNMBE << percent_str.to_s

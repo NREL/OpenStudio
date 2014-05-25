@@ -1201,4 +1201,3 @@ std::string AirLoopHVAC::nightCycleControlType() const
 } // model
 
 } // openstudio
-

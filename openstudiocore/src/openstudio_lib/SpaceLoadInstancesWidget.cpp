@@ -736,7 +736,7 @@ void SpaceLoadInstancesWidget::detach()
     model::Building building = m_model->getUniqueModelObject<model::Building>();
     this->disconnect(building.getImpl<openstudio::model::detail::Model_Impl>().get());
 
-    for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
+    for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
       this->disconnect(spaceType.getImpl<openstudio::model::detail::Model_Impl>().get());
     }
 
@@ -777,7 +777,7 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
@@ -824,7 +824,7 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
                         SLOT(onBuildingRelationshipChange(int, Handle, Handle)));
   OS_ASSERT(isConnected);
 
-  for (model::SpaceType spaceType : m_model->getModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : m_model->getConcreteModelObjects<model::SpaceType>()){
     isConnected = connect(spaceType.getImpl<model::detail::ModelObject_Impl>().get(),
                           SIGNAL(onRelationshipChange(int, Handle, Handle)),
                           this, 
