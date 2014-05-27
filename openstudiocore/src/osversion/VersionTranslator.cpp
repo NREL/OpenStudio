@@ -2316,11 +2316,11 @@ std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, c
 
       IdfObject newWalkin = object.clone(true);
 
-      boost::optional<std::string> s = object.getString(23);
+      boost::optional<std::string> s = object.getString(22);
       if (s){
-        bool test = newWalkin.setString(23, "");
+        bool test = newWalkin.setString(22, "");
         OS_ASSERT(test);
-        test = newWalkin.setString(24, *s);
+        test = newWalkin.setString(23, *s);
         OS_ASSERT(test);
       }
 
