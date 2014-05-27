@@ -2,18 +2,16 @@
 #define MODEL_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodel
+  %module openstudiomodel
 
-%pythoncode %{
-
-from openstudiomodelcore import *
-from openstudiomodelsimulation import *
-from openstudiomodelresources import *
-from openstudiomodelgeometry import *
-from openstudiomodelhvac import *
-from openstudiomodelrefrigeration import *
-
-%}
+  %pythoncode %{
+    from openstudiomodelcore import *
+    from openstudiomodelsimulation import *
+    from openstudiomodelresources import *
+    from openstudiomodelgeometry import *
+    from openstudiomodelhvac import *
+    from openstudiomodelrefrigeration import *
+  %}
 
 #endif
 
