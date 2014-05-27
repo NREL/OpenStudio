@@ -235,6 +235,7 @@
 #include <model/SteamEquipmentDefinition.hpp>
 #include <model/SubSurface.hpp>
 #include <model/Surface.hpp>
+#include <model/TableMultiVariableLookup.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/ThermochromicGlazing.hpp>
@@ -489,6 +490,7 @@
 #include <model/SteamEquipmentDefinition_Impl.hpp>
 #include <model/SubSurface_Impl.hpp>
 #include <model/Surface_Impl.hpp>
+#include <model/TableMultiVariableLookup_Impl.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/ThermochromicGlazing_Impl.hpp>
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>

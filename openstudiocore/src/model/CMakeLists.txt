@@ -757,6 +757,9 @@ SET( ${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  TableMultiVariableLookup.hpp
+  TableMultiVariableLookup_Impl.hpp
+  TableMultiVariableLookup.cpp
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
