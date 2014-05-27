@@ -13263,7 +13263,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \default 0.008
        \units percent
        \note Rate of drift loss as a percentage of circulating spray water flow rate
-       \note Default value for this field in under investigation. For now Cooling towerÓ³ drift loss
+       \note Default value for this field in under investigation. For now Cooling tower's drift loss
        \note percent default value is taken here.
   A9 , \field Blowdown Calculation Mode
        \type choice
@@ -13278,7 +13278,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \note Blowdown is water intentionally drained from the basin in order to offset the build
        \note up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value for this field in under investigation. For now Cooling towerÓ³
+       \note Default value for this field in under investigation. For now Cooling tower's
        \note Blowdown Concentration Ratio percent default value is taken here.
   A10, \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
