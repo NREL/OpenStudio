@@ -274,7 +274,7 @@ class MODEL_API Building : public ParentObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Building(boost::shared_ptr<detail::Building_Impl> impl);
+  explicit Building(std::shared_ptr<detail::Building_Impl> impl);
 
   /// @endcond
  private:

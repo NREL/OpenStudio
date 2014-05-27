@@ -247,9 +247,9 @@ namespace detail{
   private:
 
     Url m_url;
-    boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+    std::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
     QNetworkReply* m_networkReply;
-    boost::shared_ptr<QMutex> m_mutex;
+    std::shared_ptr<QMutex> m_mutex;
 
     bool m_lastAvailable;
     std::vector<UUID> m_lastProjectUUIDs; 

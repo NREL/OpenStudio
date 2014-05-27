@@ -47,7 +47,6 @@
 #include <qwt/qwt_plot_panner.h>
 #include <qwt/qwt_scale_widget.h>
 #include <qwt/qwt_scale_draw.h>
-#include <boost/shared_ptr.hpp>
 #include <qwt/qwt_plot_curve.h>
 
 #include <QApplication>

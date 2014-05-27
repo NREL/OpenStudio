@@ -30,7 +30,6 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
 
-#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <QDir>
 
@@ -333,7 +332,7 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
       std::vector<std::pair<openstudio::path,openstudio::path> >::const_iterator finderIt = 
           std::find_if(m_requiredFiles.begin(),
                        m_requiredFiles.end(),
-                       boost::bind(secondOfPairEqual<openstudio::path,openstudio::path>,_1,destination));
+                       std::bind(secondOfPairEqual<openstudio::path,openstudio::path>,std::placeholders::_1,destination));
       if (finderIt == m_requiredFiles.end()) {
         if (!(t_originalBasePath.empty() || t_newBasePath.empty())) {
           openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
@@ -698,7 +697,7 @@ std::vector<RubyJobBuilder> RubyJobBuilder::createRubyJobsFromFolder(
   {
     RubyJobBuilder rjb;
     auto it = std::find_if(t_userScripts.begin(),t_userScripts.end(),
-                           boost::bind(firstOfPairEqual<openstudio::path,ruleset::OSArgumentVector>,_1,rubyFile));
+                           std::bind(firstOfPairEqual<openstudio::path,ruleset::OSArgumentVector>,std::placeholders::_1,rubyFile));
     if (it != t_userScripts.end()) {
       rjb = createUserScriptRubyJob(it->first,it->second, t_relativePath, t_copyFileArguments);
     }

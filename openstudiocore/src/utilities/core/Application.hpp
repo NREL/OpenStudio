@@ -25,7 +25,6 @@
 
 #include <QApplication>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 namespace openstudio{

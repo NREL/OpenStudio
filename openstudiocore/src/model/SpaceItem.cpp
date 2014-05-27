@@ -117,7 +117,7 @@ SpaceItem::SpaceItem(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceItem_Impl>());
 }
 
-SpaceItem::SpaceItem(boost::shared_ptr<detail::SpaceItem_Impl> impl)
+SpaceItem::SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl)
   : ModelObject(impl)
 {}
 

@@ -77,7 +77,7 @@ class AnalysisDriverFixture : public ::testing::Test {
 
   /// static data
   static boost::optional<openstudio::FileLogSink> logFile;
-  static boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter;
+  static std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter;
 
   /** Return Problem saved to resources database by SetUpTestCase. Creates appropriate
    *  simulation workflow based on modelToIdf and energyPlus. */

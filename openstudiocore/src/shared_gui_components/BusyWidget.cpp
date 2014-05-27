@@ -41,7 +41,7 @@ BusyWidget::BusyWidget(QWidget * parent)
   //QPixmap pixmap = QPixmap(":/shared_gui_components/images/rotating_arrow.png").scaled(25,25);
   QPixmap pixmap = QPixmap(":/shared_gui_components/images/rotating_arrow.png");
 
-  m_pixmap = boost::shared_ptr<QPixmap>(new QPixmap(pixmap));
+  m_pixmap = std::shared_ptr<QPixmap>(new QPixmap(pixmap));
 
   m_rotation = 0.0;
 

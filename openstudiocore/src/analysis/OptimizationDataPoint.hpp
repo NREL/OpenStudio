@@ -116,7 +116,7 @@ class ANALYSIS_API OptimizationDataPoint : public DataPoint {
   friend class detail::AnalysisObject_Impl;
   friend class detail::OptimizationDataPoint_Impl;
 
-  explicit OptimizationDataPoint(boost::shared_ptr<detail::OptimizationDataPoint_Impl> impl);
+  explicit OptimizationDataPoint(std::shared_ptr<detail::OptimizationDataPoint_Impl> impl);
   /// @endcond
 
   friend class detail::OptimizationProblem_Impl;

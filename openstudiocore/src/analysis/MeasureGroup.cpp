@@ -36,8 +36,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -115,7 +113,7 @@ namespace detail {
   }
 
   AnalysisObject MeasureGroup_Impl::clone() const {
-    boost::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
+    std::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
     MeasureGroup result(impl);
     MeasureVector measures = result.measures(false);
     for (Measure& measure : measures) {
@@ -221,7 +219,7 @@ namespace detail {
     auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidEquals<Measure,UUID>,_1,uuid));
+        std::bind(uuidEquals<Measure,UUID>,std::placeholders::_1,uuid));
     if (it != m_measures.end()) {
       result = *it;
     }
@@ -239,7 +237,7 @@ namespace detail {
     auto it = std::find_if(
           m_measures.begin(),
           m_measures.end(),
-          boost::bind(uuidEquals<Measure,UUID>,_1,measure.uuid()));
+          std::bind(uuidEquals<Measure,UUID>,std::placeholders::_1,measure.uuid()));
     if (it != m_measures.end()) {
       result = int(it - m_measures.begin());
     }
@@ -297,7 +295,7 @@ namespace detail {
     auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure));
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure));
     if (it == m_measures.end()) {
       return false;
     }
@@ -317,11 +315,11 @@ namespace detail {
     auto it1 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure1));
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure1));
     auto it2 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure2));
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure2));
     if ((it1 == m_measures.end()) || (it2 == m_measures.end())) {
       return false;
     }
@@ -466,7 +464,7 @@ namespace detail {
     MeasureVector measures = deserializeOrderedVector(
           map["measures"].toList(),
           "measure_group_index",
-          boost::function<Measure (const QVariant&)>(boost::bind(Measure_Impl::factoryFromVariant,_1,version)));
+          std::function<Measure (const QVariant&)>(std::bind(Measure_Impl::factoryFromVariant,std::placeholders::_1,version)));
 
     return MeasureGroup(toUUID(map["uuid"].toString().toStdString()),
                         toUUID(map["version_uuid"].toString().toStdString()),
@@ -524,7 +522,7 @@ namespace detail {
 
 MeasureGroup::MeasureGroup(const std::string& name,
                                    const std::vector<Measure>& measures)
-  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+  : DiscreteVariable(std::shared_ptr<detail::MeasureGroup_Impl>(
         new detail::MeasureGroup_Impl(name,measures)))
 {
   MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
@@ -540,7 +538,7 @@ MeasureGroup::MeasureGroup(const UUID& uuid,
                                    const std::string& description,
                                    const boost::optional<UncertaintyDescription>& udesc,
                                    const std::vector<Measure>& measures)
-  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+  : DiscreteVariable(std::shared_ptr<detail::MeasureGroup_Impl>(
         new detail::MeasureGroup_Impl(uuid,
                                       versionUUID,
                                       name,
@@ -635,7 +633,7 @@ void MeasureGroup::clearPerturbations() {
 }
 
 /// @cond
-MeasureGroup::MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl)
+MeasureGroup::MeasureGroup(std::shared_ptr<detail::MeasureGroup_Impl> impl)
   : DiscreteVariable(impl)
 {}
 

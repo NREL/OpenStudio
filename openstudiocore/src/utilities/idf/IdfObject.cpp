@@ -48,7 +48,6 @@
 #include <boost/filesystem/fstream.hpp> 
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/bind.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -318,13 +317,13 @@ namespace detail {
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
     unsigned n = numFields();
     unsigned i = n;
-    boost::shared_ptr<detail::IdfObject_Impl> p;
+    std::shared_ptr<detail::IdfObject_Impl> p;
     IdfExtensibleGroup eg(p,i);
     if (m_iddObject.properties().extensible) {
       if (m_iddObject.index(
             ExtensibleIndex(groupIndex,m_iddObject.properties().numExtensible-1)) < n) {
         i = m_iddObject.index(ExtensibleIndex(groupIndex,0));
-        eg = IdfExtensibleGroup(boost::const_pointer_cast<IdfObject_Impl>(shared_from_this()),i);
+        eg = IdfExtensibleGroup(std::const_pointer_cast<IdfObject_Impl>(shared_from_this()),i);
       }
     }
     return eg;
@@ -1183,9 +1182,9 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text)
+  std::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text)
   {
-    boost::shared_ptr<IdfObject_Impl> result;
+    std::shared_ptr<IdfObject_Impl> result;
     IdfObject_Impl idfObjectImpl;
 
     try {
@@ -1195,14 +1194,14 @@ namespace detail {
     catch (...) { return result; }
 
     bool keepHandle = idfObjectImpl.iddObject().hasHandleField();
-    result = boost::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
+    result = std::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
     return result;
   }
 
-  boost::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text,
+  std::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text,
                                                          const IddObject& iddObject)
   {
-    boost::shared_ptr<IdfObject_Impl> result;
+    std::shared_ptr<IdfObject_Impl> result;
     IdfObject_Impl idfObjectImpl(iddObject,true);
 
     try {
@@ -1212,7 +1211,7 @@ namespace detail {
     catch (...) { return result; }
 
     bool keepHandle = idfObjectImpl.iddObject().hasHandleField();
-    result = boost::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
+    result = std::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
     return result;
   }
 
@@ -1945,17 +1944,17 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
 IdfObject::IdfObject(IddObjectType type) 
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type));
   OS_ASSERT(m_impl);
 }
 
 IdfObject::IdfObject(const IddObject& iddObject)
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject));
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(boost::shared_ptr<detail::IdfObject_Impl> impl):
+IdfObject::IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl):
   m_impl(impl) 
 {
   OS_ASSERT(m_impl);
@@ -1969,7 +1968,7 @@ IdfObject::IdfObject(const IdfObject& other):
 
 IdfObject IdfObject::clone(bool keepHandle) const
 {
-  IdfObject copy(boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(*m_impl, keepHandle)));
+  IdfObject copy(std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(*m_impl, keepHandle)));
   return copy;
 }
 
@@ -2199,13 +2198,13 @@ bool IdfObject::operator!=(const IdfObject& other) const
 // SERIALIZATION
 
 OptionalIdfObject IdfObject::load(const std::string& text) {
-  boost::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text);
+  std::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text);
   if (p) { return IdfObject(p); }
   return boost::none;
 }
 
 OptionalIdfObject IdfObject::load(const std::string& text,const IddObject& iddObject) {
-  boost::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text,iddObject);
+  std::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text,iddObject);
   if (p) { return IdfObject(p); }
   return boost::none;
 }

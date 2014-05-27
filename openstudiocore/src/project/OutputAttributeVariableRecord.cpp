@@ -71,7 +71,7 @@ namespace detail {
     return result;
   }
 
-  void OutputAttributeVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OutputAttributeVariableRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OutputAttributeVariableRecord>(query);
@@ -155,7 +155,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
     FunctionRecord& functionRecord,
     int variableVectorIndex,
     boost::optional<double> functionCoefficient)
-  : OutputVariableRecord(boost::shared_ptr<detail::OutputAttributeVariableRecord_Impl>(
+  : OutputVariableRecord(std::shared_ptr<detail::OutputAttributeVariableRecord_Impl>(
         new detail::OutputAttributeVariableRecord_Impl(outputAttributeVariable,
                                                        functionRecord,
                                                        variableVectorIndex,
@@ -167,7 +167,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
 
 OutputAttributeVariableRecord::OutputAttributeVariableRecord(
     const QSqlQuery& query, ProjectDatabase& database)
-  : OutputVariableRecord(boost::shared_ptr<detail::OutputAttributeVariableRecord_Impl>(
+  : OutputVariableRecord(std::shared_ptr<detail::OutputAttributeVariableRecord_Impl>(
         new detail::OutputAttributeVariableRecord_Impl(query, database)),
         database)
 {
@@ -175,7 +175,7 @@ OutputAttributeVariableRecord::OutputAttributeVariableRecord(
 }
 
 OutputAttributeVariableRecord::OutputAttributeVariableRecord(
-    boost::shared_ptr<detail::OutputAttributeVariableRecord_Impl> impl,
+    std::shared_ptr<detail::OutputAttributeVariableRecord_Impl> impl,
     ProjectDatabase database)
   : OutputVariableRecord(impl, database)
 {
@@ -244,7 +244,7 @@ OutputAttributeVariableRecord::outputAttributeVariable() const
 }
 
 /// @cond
-OutputAttributeVariableRecord::OutputAttributeVariableRecord(boost::shared_ptr<detail::OutputAttributeVariableRecord_Impl> impl)
+OutputAttributeVariableRecord::OutputAttributeVariableRecord(std::shared_ptr<detail::OutputAttributeVariableRecord_Impl> impl)
   : OutputVariableRecord(impl)
 {}
 /// @endcond

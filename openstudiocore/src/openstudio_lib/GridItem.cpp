@@ -1063,8 +1063,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     m_loop(loop),
     m_loopScene(loopScene)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->registerSystemItem(m_loop.handle(),this);
 
   m_loopScene->addItem(this);
@@ -1163,8 +1163,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
 SystemItem::~SystemItem()
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->unregisterSystemItem(m_loop.handle());
 }
 

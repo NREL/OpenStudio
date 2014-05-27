@@ -142,7 +142,7 @@ class MODEL_API ControllerOutdoorAir : public ParentObject {
 
   friend class openstudio::IdfObject;
 
-  explicit ControllerOutdoorAir(boost::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
+  explicit ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
 
  private:
 

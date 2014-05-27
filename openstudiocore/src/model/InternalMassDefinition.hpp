@@ -123,7 +123,7 @@ class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit InternalMassDefinition(boost::shared_ptr<detail::InternalMassDefinition_Impl> impl);
+  explicit InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl);
 
   /// @endcond
  private:

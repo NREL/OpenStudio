@@ -54,7 +54,7 @@ OSAppBase * OSAppBase::instance()
 
 boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -66,7 +66,7 @@ boost::optional<openstudio::analysisdriver::SimpleProject> OSAppBase::project()
 
 QWidget *OSAppBase::mainWidget()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -78,7 +78,7 @@ QWidget *OSAppBase::mainWidget()
 
 boost::optional<openstudio::model::Model> OSAppBase::currentModel()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
   if (document)
   {
     return document->model();
@@ -94,11 +94,11 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
-    boost::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
+    std::shared_ptr<MainRightColumnController> mainRightColumnController = document->mainRightColumnController();
 
     if (mainRightColumnController)
     {
@@ -123,7 +123,7 @@ void OSAppBase::duplicateSelectedMeasure()
 
 void OSAppBase::updateMyMeasures()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -141,7 +141,7 @@ void OSAppBase::updateMyMeasures()
 
 void OSAppBase::updateBCLMeasures()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -165,7 +165,7 @@ void OSAppBase::downloadUpdatedBCLMeasures()
 
 void OSAppBase::openBclDlg()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -176,7 +176,7 @@ void OSAppBase::openBclDlg()
 
 void OSAppBase::chooseHorizontalEditTab()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {
@@ -186,7 +186,7 @@ void OSAppBase::chooseHorizontalEditTab()
 
 QSharedPointer<EditController> OSAppBase::editController()
 {
-  boost::shared_ptr<OSDocument> document = currentDocument();
+  std::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
   {

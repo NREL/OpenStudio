@@ -63,7 +63,7 @@ class ANALYSIS_API BinomialDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit BinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit BinomialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

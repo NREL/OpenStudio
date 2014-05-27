@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 TriangularDistribution::TriangularDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(TriangularDistribution::type())))
 {}
 
 TriangularDistribution::TriangularDistribution(double mode, double lowerBound, double upperBound) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(TriangularDistribution::type())))
 {
   setMode(mode);
@@ -67,7 +67,7 @@ void TriangularDistribution::setUpperBound(double value) {
   impl()->setAttribute(Attribute("upper_bounds",value),false);
 }
 
-TriangularDistribution::TriangularDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+TriangularDistribution::TriangularDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == TriangularDistribution::type());

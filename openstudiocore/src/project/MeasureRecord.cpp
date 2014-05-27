@@ -325,13 +325,13 @@ void MeasureRecord::updatePathData(ProjectDatabase database,
                                                 const openstudio::path& newBase)
 {}
 
-MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
+MeasureRecord::MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
   OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
-MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl)
+MeasureRecord::MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
@@ -372,16 +372,16 @@ boost::optional<MeasureRecord> MeasureRecord::getMeasureRecord(int id, ProjectDa
 
 boost::optional<MeasureRecord> MeasureRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
 {
-  boost::shared_ptr<detail::MeasureRecord_Impl> impl;
+  std::shared_ptr<detail::MeasureRecord_Impl> impl;
 
   int measureRecordType = query.value(MeasureRecordColumns::measureRecordType).toInt();
 
   switch (measureRecordType){
     case MeasureRecordType::RubyMeasureRecord:
-      impl = boost::shared_ptr<detail::RubyMeasureRecord_Impl>(new detail::RubyMeasureRecord_Impl(query, database));
+      impl = std::shared_ptr<detail::RubyMeasureRecord_Impl>(new detail::RubyMeasureRecord_Impl(query, database));
       break;
     case MeasureRecordType::NullMeasureRecord:
-      impl = boost::shared_ptr<detail::NullMeasureRecord_Impl>(new detail::NullMeasureRecord_Impl(query, database));
+      impl = std::shared_ptr<detail::NullMeasureRecord_Impl>(new detail::NullMeasureRecord_Impl(query, database));
       break;
     default:
       LOG(Error, "Unknown measureRecordType " << measureRecordType);
@@ -408,7 +408,7 @@ MeasureRecord MeasureRecord::factoryFromMeasure(
   }
 
   OS_ASSERT(false);
-  return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>());
+  return MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl>());
 }
 
 boost::optional<int> MeasureRecord::variableRecordId() const {

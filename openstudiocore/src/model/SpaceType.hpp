@@ -356,7 +356,7 @@ class MODEL_API SpaceType : public ResourceObject {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::SpaceType_Impl;
 
-  explicit SpaceType(boost::shared_ptr<detail::SpaceType_Impl> impl);
+  explicit SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl);
 
   /// @endcond
  private:

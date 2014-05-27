@@ -50,8 +50,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -112,7 +110,7 @@ namespace detail {
     return m_description;
   }
 
-  void OpenStudioPostProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void OpenStudioPostProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     QWriteLocker l(&m_mutex);
 

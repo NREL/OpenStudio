@@ -160,7 +160,7 @@ class MODEL_API SiteGroundReflectance : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteGroundReflectance_Impl;
 
-  explicit SiteGroundReflectance(boost::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
+  explicit SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
 
   explicit SiteGroundReflectance(Model& model);
 

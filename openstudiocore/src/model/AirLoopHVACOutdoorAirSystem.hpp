@@ -146,7 +146,7 @@ class MODEL_API AirLoopHVACOutdoorAirSystem : public HVACComponent {
   typedef detail::AirLoopHVACOutdoorAirSystem_Impl ImplType;
 
   explicit AirLoopHVACOutdoorAirSystem(
-      boost::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
+      std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl);
 
  private:
 

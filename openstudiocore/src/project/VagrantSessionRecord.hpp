@@ -70,14 +70,14 @@ class PROJECT_API VagrantSessionRecord : public CloudSessionRecord {
   //@}
  protected:
   /// @cond
-  explicit VagrantSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl> impl);
+  explicit VagrantSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl> impl);
 
   friend class detail::VagrantSessionRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  VagrantSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl> impl,
+  VagrantSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl> impl,
                        ProjectDatabase database);
 
   /// @endcond

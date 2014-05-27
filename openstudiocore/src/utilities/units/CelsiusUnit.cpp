@@ -41,7 +41,7 @@ namespace detail {
 
   Unit CelsiusUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Celsius);
-    boost::shared_ptr<CelsiusUnit_Impl> impl(new CelsiusUnit_Impl(*this));
+    std::shared_ptr<CelsiusUnit_Impl> impl(new CelsiusUnit_Impl(*this));
     return CelsiusUnit(impl).cast<Unit>();
   }
 
@@ -58,19 +58,19 @@ namespace detail {
 } // detail
 
 CelsiusUnit::CelsiusUnit(int CExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
                         new detail::CelsiusUnit_Impl(CExp,scaleExponent,prettyString)))
 {}
 
 CelsiusUnit::CelsiusUnit(const std::string& scaleAbbreviation,
                          int CExp,
                          const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
                         new detail::CelsiusUnit_Impl(scaleAbbreviation,CExp,prettyString)))
 {}
 
 /// @cond
-CelsiusUnit::CelsiusUnit(boost::shared_ptr<detail::CelsiusUnit_Impl> impl)
+CelsiusUnit::CelsiusUnit(std::shared_ptr<detail::CelsiusUnit_Impl> impl)
   : TemperatureUnit(impl)
 {}
 /// @endcond

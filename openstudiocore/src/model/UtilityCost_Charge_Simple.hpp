@@ -90,7 +90,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Charge_Simple(boost::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl);
+  explicit UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.UtilityCost_Charge_Simple");

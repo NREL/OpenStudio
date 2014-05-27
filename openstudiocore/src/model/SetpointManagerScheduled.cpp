@@ -311,7 +311,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
   }
 }
 
-SetpointManagerScheduled::SetpointManagerScheduled(boost::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
+SetpointManagerScheduled::SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
   : HVACComponent(p)
 {
 }

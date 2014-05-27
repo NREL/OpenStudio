@@ -23,8 +23,6 @@
 #include "PrjObjectsImpl.hpp"
 #include "ContamAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 namespace contam {
 
@@ -254,7 +252,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::ZoneImpl> m_impl;
+  std::shared_ptr<detail::ZoneImpl> m_impl;
 };
 
 /** The Species object contains descriptive information about contaminants in
@@ -386,7 +384,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  boost::shared_ptr<detail::SpeciesImpl> m_impl;
+  std::shared_ptr<detail::SpeciesImpl> m_impl;
 };
 
 /** Ahs is a class that represents CONTAM's simple air handling system. These
@@ -465,7 +463,7 @@ public:
   void setDesc(const std::string &desc);
   //@}
 private:
-  boost::shared_ptr<detail::AhsImpl> m_impl;
+  std::shared_ptr<detail::AhsImpl> m_impl;
 };
 
 /** The AirflowPath object stores one flow linkage in the airflow network. */
@@ -688,7 +686,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::AirflowPathImpl> m_impl;
+  std::shared_ptr<detail::AirflowPathImpl> m_impl;
 };
 
 /** The RunControl object stores most of the information related to how CONTAM solves the airflow network
@@ -1231,7 +1229,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::RunControlImpl> m_impl;
+  std::shared_ptr<detail::RunControlImpl> m_impl;
 };
 
 /** Level objects contain information about the levels that make up a CONTAM
@@ -1311,7 +1309,7 @@ public:
   void setIcons(const std::vector<Icon> &icons);
   //@}
 private:
-  boost::shared_ptr<detail::LevelImpl> m_impl;
+  std::shared_ptr<detail::LevelImpl> m_impl;
 };
 
 /** The DaySchedule object contains schedule data for a single day. */
@@ -1385,7 +1383,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::DayScheduleImpl> m_impl;
+  std::shared_ptr<detail::DayScheduleImpl> m_impl;
 };
 
 /** The WeekSchedule object represents a complete week with 12 possible day
@@ -1457,7 +1455,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::WeekScheduleImpl> m_impl;
+  std::shared_ptr<detail::WeekScheduleImpl> m_impl;
 };
 
 /** WindPressureProfile objects store pressure coefficient as a function of
@@ -1524,7 +1522,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::WindPressureProfileImpl> m_impl;
+  std::shared_ptr<detail::WindPressureProfileImpl> m_impl;
 };
 
 /** The ControlNode object is the base class of all control node elements. */
@@ -1667,7 +1665,7 @@ public:
   void setValuename(const std::string &valuename);
   //@}
 private:
-  boost::shared_ptr<detail::CdvDatImpl> m_impl;
+  std::shared_ptr<detail::CdvDatImpl> m_impl;
 };
 
 /** The CvfDat object represents a continuous value datas file control node. */

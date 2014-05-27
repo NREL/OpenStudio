@@ -149,7 +149,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit LifeCycleCost(boost::shared_ptr<detail::LifeCycleCost_Impl> impl);
+  explicit LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.LifeCycleCost");

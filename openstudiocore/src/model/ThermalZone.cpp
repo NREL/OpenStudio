@@ -2586,7 +2586,7 @@ void ThermalZone::removeReturnPlenum()
 }
 
 /// @cond
-ThermalZone::ThermalZone(boost::shared_ptr<detail::ThermalZone_Impl> impl)
+ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

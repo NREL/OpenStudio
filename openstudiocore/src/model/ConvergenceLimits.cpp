@@ -224,7 +224,7 @@ void ConvergenceLimits::resetMaximumPlantIterations() {
 }
 
 /// @cond
-ConvergenceLimits::ConvergenceLimits(boost::shared_ptr<detail::ConvergenceLimits_Impl> impl)
+ConvergenceLimits::ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl)
   : ModelObject(impl)
 {}
 

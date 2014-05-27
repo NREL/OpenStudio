@@ -85,7 +85,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
-#include <boost/bind.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlDriver>
@@ -121,7 +120,7 @@ namespace detail {
     OS_ASSERT(database.isValid());
     database.setDatabaseName(toQString(path));
     OS_ASSERT(database.open());
-    m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
+    m_qSqlDatabase = std::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     { 
       // do it in a new scope to make sure the query is finalized before we start anything else
@@ -851,7 +850,7 @@ namespace detail {
     }
   }
 
-  boost::shared_ptr<QSqlDatabase> ProjectDatabase_Impl::qSqlDatabase() const
+  std::shared_ptr<QSqlDatabase> ProjectDatabase_Impl::qSqlDatabase() const
   {
     return m_qSqlDatabase;
   }
@@ -1018,7 +1017,7 @@ namespace detail {
     while (query.next()) {
       int parentId = query.value(AttributeRecordColumns::parentAttributeRecordId).toInt();
       auto rit = std::find_if(
-          currentIndices.rbegin(),currentIndices.rend(),boost::bind(firstOfPairEqual<int,int>,_1,parentId));
+          currentIndices.rbegin(),currentIndices.rend(),std::bind(firstOfPairEqual<int,int>,std::placeholders::_1,parentId));
       if (rit == currentIndices.rend()) {
         currentIndices.push_back(std::pair<int,int>(parentId,-1));
         rit = currentIndices.rbegin();
@@ -2463,7 +2462,7 @@ std::vector<std::pair<UUID, RemoveUndo::RemoveSource> > RemoveUndo::removedObjec
 ProjectDatabase::ProjectDatabase(const openstudio::path& path,
                                  const openstudio::runmanager::RunManager& runManager,
                                  bool forceNew)
-  : m_impl(boost::shared_ptr<detail::ProjectDatabase_Impl>(
+  : m_impl(std::shared_ptr<detail::ProjectDatabase_Impl>(
                new detail::ProjectDatabase_Impl(completeAndNormalize(path),
                                                 runManager,
                                                 forceNew)))
@@ -2475,7 +2474,7 @@ ProjectDatabase::ProjectDatabase(const openstudio::path& path,
                                  bool forceNew,
                                  bool pauseRunManager,
                                  bool initializeRunManagerUI)
-  : m_impl(boost::shared_ptr<detail::ProjectDatabase_Impl>(
+  : m_impl(std::shared_ptr<detail::ProjectDatabase_Impl>(
                new detail::ProjectDatabase_Impl(
                    completeAndNormalize(path),
                    runmanager::RunManager(setFileExtension(path,"db",true,false),
@@ -2499,7 +2498,7 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
   boost::optional<ProjectDatabaseRecord> projectDatabaseRecord;
   assertExec(query);
   if (query.first()) {
-    boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(query, other));
+    std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(query, other));
     projectDatabaseRecord = ProjectDatabaseRecord(impl);
   }
   query.clear();
@@ -2528,7 +2527,7 @@ void ProjectDatabase::initialize(const openstudio::path& path) {
     }
   }
   else {
-    boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(openStudioVersion(), runManager.dbPath(), other));
+    std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl(new detail::ProjectDatabaseRecord_Impl(openStudioVersion(), runManager.dbPath(), other));
     projectDatabaseRecord = ProjectDatabaseRecord(impl);
     m_impl->setProjectDatabaseRecord(*projectDatabaseRecord);
     m_impl->addCleanRecord(*projectDatabaseRecord);
@@ -2548,7 +2547,7 @@ ProjectDatabase::ProjectDatabase(const ProjectDatabase& other)
   OS_ASSERT(m_impl->qSqlDatabase()->isOpen());
 }
 
-ProjectDatabase::ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl)
+ProjectDatabase::ProjectDatabase(std::shared_ptr<detail::ProjectDatabase_Impl> impl)
   : m_impl(impl)
 {
   OS_ASSERT(m_impl);
@@ -2779,7 +2778,7 @@ bool ProjectDatabase::isRemovedRecord(const Record& record) const
   return m_impl->isRemovedRecord(record);
 }
 
-boost::shared_ptr<QSqlDatabase> ProjectDatabase::qSqlDatabase() const
+std::shared_ptr<QSqlDatabase> ProjectDatabase::qSqlDatabase() const
 {
   return m_impl->qSqlDatabase();
 }

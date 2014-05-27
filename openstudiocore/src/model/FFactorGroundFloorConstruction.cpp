@@ -270,7 +270,7 @@ bool FFactorGroundFloorConstruction::setPerimeterExposed(const Quantity& perimet
 
 /// @cond
 FFactorGroundFloorConstruction::FFactorGroundFloorConstruction(
-    boost::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
+    std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
   : ConstructionBase(impl)
 {}
 /// @endcond

@@ -42,8 +42,6 @@
 #include <QDateTime>
 #include <QMutexLocker>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -84,7 +82,7 @@ namespace detail {
     return "Null Job";
   }
 
-  void NullJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void NullJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     LOG(Info, "Null starting");
 

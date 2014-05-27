@@ -219,13 +219,13 @@ namespace openstudio{
     //@{
 
       template<typename T>
-        boost::shared_ptr<T> getImpl() const
-      {  return boost::dynamic_pointer_cast<T>(m_impl); }
+        std::shared_ptr<T> getImpl() const
+      {  return std::dynamic_pointer_cast<T>(m_impl); }
 
       /// cast to type T, can throw std::bad_cast
       template<typename T>
       T cast() const{
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+        std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
         if (!impl){
           throw(std::bad_cast());
         }
@@ -236,7 +236,7 @@ namespace openstudio{
       template<typename T>
       boost::optional<T> optionalCast() const{
         boost::optional<T> result;
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+        std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
         if (impl){
           result = T(impl);
         }
@@ -247,11 +247,11 @@ namespace openstudio{
 
   protected:
 
-    OSServer(const boost::shared_ptr<detail::OSServer_Impl>& impl);
+    OSServer(const std::shared_ptr<detail::OSServer_Impl>& impl);
 
   private:
 
-    boost::shared_ptr<detail::OSServer_Impl> m_impl;
+    std::shared_ptr<detail::OSServer_Impl> m_impl;
     
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

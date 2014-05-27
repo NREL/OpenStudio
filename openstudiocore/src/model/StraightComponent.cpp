@@ -492,7 +492,7 @@ StraightComponent::StraightComponent(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::StraightComponent_Impl>());
 }     
 
-StraightComponent::StraightComponent(boost::shared_ptr<detail::StraightComponent_Impl> p)
+StraightComponent::StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> p)
   : HVACComponent(p)
 {}
 

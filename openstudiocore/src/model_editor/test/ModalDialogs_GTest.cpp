@@ -49,12 +49,12 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
-  boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+  std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
 
   ModelObjectSelectorDialogWatcher watcher(modelObjectSelectorDialog);
   EXPECT_FALSE(watcher.selectedModelObject());
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     modelObjectSelectorDialog.get(), SLOT(onPushButtonCancel(bool)));
@@ -73,12 +73,12 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
-  boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+  std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
 
   ModelObjectSelectorDialogWatcher watcher(modelObjectSelectorDialog);
   EXPECT_FALSE(watcher.selectedModelObject());
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     modelObjectSelectorDialog.get(), SLOT(onPushButtonOK(bool)));
@@ -99,13 +99,13 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
-  boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+  std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
 
   ModelObjectSelectorDialogWatcher watcher(modelObjectSelectorDialog);
   ASSERT_TRUE(watcher.selectedModelObject());
   EXPECT_EQ(space1.handle(), watcher.selectedModelObject()->handle());
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     modelObjectSelectorDialog.get(), SLOT(onPushButtonCancel(bool)));
@@ -126,13 +126,13 @@ TEST_F(ModelEditorFixture, ModalDialogs_Ok)
   std::vector<IddObjectType> typesToDisplay;
   typesToDisplay.push_back(Space::iddObjectType());
 
-  boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+  std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog(new ModelObjectSelectorDialog(typesToDisplay, model));
 
   ModelObjectSelectorDialogWatcher watcher(modelObjectSelectorDialog);
   ASSERT_TRUE(watcher.selectedModelObject());
   EXPECT_EQ(space1.handle(), watcher.selectedModelObject()->handle());
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     modelObjectSelectorDialog.get(), SLOT(onPushButtonOK(bool)));

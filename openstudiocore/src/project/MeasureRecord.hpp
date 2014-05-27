@@ -25,8 +25,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 namespace analysis {
   class Measure;
@@ -143,10 +141,10 @@ class PROJECT_API MeasureRecord : public ObjectRecord {
   friend class detail::MeasureGroupRecord_Impl;
 
   /// from impl
-  MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl,ProjectDatabase database);
+  MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl,ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl);
+  explicit MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl);
 
   /// @endcond
  private:

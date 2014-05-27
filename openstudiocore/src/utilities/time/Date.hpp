@@ -29,7 +29,6 @@
 #include <ostream>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/date_defs.hpp>
@@ -175,7 +174,7 @@ namespace openstudio{
 
     /// impl type is boost::gregorian::date
     typedef boost::gregorian::date ImplType;
-    typedef boost::shared_ptr<ImplType> ImplPtr;
+    typedef std::shared_ptr<ImplType> ImplPtr;
 
     REGISTER_LOGGER("utilities.time.Date");
 

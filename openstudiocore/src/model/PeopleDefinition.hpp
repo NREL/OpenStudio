@@ -158,7 +158,7 @@ class MODEL_API PeopleDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit PeopleDefinition(boost::shared_ptr<detail::PeopleDefinition_Impl> impl);
+  explicit PeopleDefinition(std::shared_ptr<detail::PeopleDefinition_Impl> impl);
 
   /// @endcond
  private:

@@ -101,7 +101,7 @@ namespace detail {
   }
 
   AnalysisDriver AnalysisDriver_Impl::getAnalysisDriver() const {
-    AnalysisDriver result(boost::const_pointer_cast<AnalysisDriver_Impl>(shared_from_this()));
+    AnalysisDriver result(std::const_pointer_cast<AnalysisDriver_Impl>(shared_from_this()));
     return result;
   }
 
@@ -986,7 +986,7 @@ namespace detail {
 } // detail
 
 AnalysisDriver::AnalysisDriver(project::ProjectDatabase& database)
-  : m_impl(boost::shared_ptr<detail::AnalysisDriver_Impl>(new detail::AnalysisDriver_Impl(database)))
+  : m_impl(std::shared_ptr<detail::AnalysisDriver_Impl>(new detail::AnalysisDriver_Impl(database)))
 {}
 
 project::ProjectDatabase AnalysisDriver::database() const {
@@ -1005,7 +1005,7 @@ void AnalysisDriver::moveToThread(QThread* targetThread) {
   getImpl()->moveToThread(targetThread);
 }
 
-boost::shared_ptr<detail::AnalysisDriver_Impl> AnalysisDriver::getImpl() const {
+std::shared_ptr<detail::AnalysisDriver_Impl> AnalysisDriver::getImpl() const {
   return m_impl;
 }
 
@@ -1047,7 +1047,7 @@ bool AnalysisDriver::connect(const std::string& signal,
 }
 
 /// @cond
-AnalysisDriver::AnalysisDriver(boost::shared_ptr<detail::AnalysisDriver_Impl> impl)
+AnalysisDriver::AnalysisDriver(std::shared_ptr<detail::AnalysisDriver_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

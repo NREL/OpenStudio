@@ -624,7 +624,7 @@ AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const Co
 }
 
 AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(
-    boost::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
+    std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
   : HVACComponent(impl)
 {
 }

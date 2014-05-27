@@ -249,7 +249,7 @@ void SizingParameters::resetTimestepsinAveragingWindow() {
 }
 
 /// @cond
-SizingParameters::SizingParameters(boost::shared_ptr<detail::SizingParameters_Impl> impl)
+SizingParameters::SizingParameters(std::shared_ptr<detail::SizingParameters_Impl> impl)
   : ModelObject(impl)
 {}
 

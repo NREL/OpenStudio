@@ -862,7 +862,7 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName,"");
 }
 
-CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(boost::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
+CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
   : StraightComponent(p)
 {}
 

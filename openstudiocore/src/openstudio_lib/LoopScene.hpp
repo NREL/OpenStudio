@@ -69,9 +69,9 @@ class LoopScene : public GridScene
 
   public slots:
 
-  void addedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
 
-  void removedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
   
   void layout();
 

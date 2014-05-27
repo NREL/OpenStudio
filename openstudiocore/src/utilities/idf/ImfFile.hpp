@@ -31,7 +31,6 @@
 #include <utilities/core/Containers.hpp>
 
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <ostream>
 #include <vector>
 #include <map>

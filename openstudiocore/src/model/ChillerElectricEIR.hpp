@@ -296,7 +296,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ChillerElectricEIR(boost::shared_ptr<detail::ChillerElectricEIR_Impl> impl);
+  explicit ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl);
 
   /// @endcond
  private:

@@ -540,7 +540,7 @@ CoilHeatingWater::CoilHeatingWater(const Model& model, Schedule & availableSched
   setAvailableSchedule( availableSchedule );
 }
 
-CoilHeatingWater::CoilHeatingWater(boost::shared_ptr<detail::CoilHeatingWater_Impl> p)
+CoilHeatingWater::CoilHeatingWater(std::shared_ptr<detail::CoilHeatingWater_Impl> p)
   : WaterToAirComponent(p)
 {}
 

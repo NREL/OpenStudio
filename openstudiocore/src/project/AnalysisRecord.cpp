@@ -129,7 +129,7 @@ namespace detail {
     return result;
   }
 
-  void AnalysisRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void AnalysisRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AnalysisRecord>(query);
@@ -574,7 +574,7 @@ namespace detail {
 } // detail
 
 AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AnalysisRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AnalysisRecord_Impl>(
         new detail::AnalysisRecord_Impl(analysis, database)),
         database)
 {
@@ -721,14 +721,14 @@ AnalysisRecord::AnalysisRecord(const analysis::Analysis& analysis, ProjectDataba
 }
 
 AnalysisRecord::AnalysisRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AnalysisRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AnalysisRecord_Impl>(
         new detail::AnalysisRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AnalysisRecord_Impl>());
 }
 
-AnalysisRecord::AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl,
+AnalysisRecord::AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl,
                                ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -907,7 +907,7 @@ void AnalysisRecord::setDataPointsAreInvalid(bool value) {
 }
 
 /// @cond
-AnalysisRecord::AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl)
+AnalysisRecord::AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

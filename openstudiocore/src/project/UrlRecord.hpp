@@ -94,14 +94,14 @@ class PROJECT_API UrlRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  explicit UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl);
+  explicit UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl);
 
   friend class detail::UrlRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl,
+  UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl,
             ProjectDatabase database);
 
   /// @endcond

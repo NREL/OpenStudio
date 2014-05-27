@@ -430,7 +430,7 @@ bool HotWaterEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 }
 
 /// @cond
-HotWaterEquipmentDefinition::HotWaterEquipmentDefinition(boost::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl)
+HotWaterEquipmentDefinition::HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

@@ -297,7 +297,7 @@ void CoilHeatingDesuperheater::resetParasiticElectricLoad() {
 }
 
 /// @cond
-CoilHeatingDesuperheater::CoilHeatingDesuperheater(boost::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl)
+CoilHeatingDesuperheater::CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

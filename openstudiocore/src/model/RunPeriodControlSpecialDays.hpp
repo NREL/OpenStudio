@@ -92,7 +92,7 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit RunPeriodControlSpecialDays(boost::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
+  explicit RunPeriodControlSpecialDays(std::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl);
 
  private:
 

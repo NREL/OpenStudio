@@ -124,7 +124,7 @@ namespace detail {
   }
 
   AnalysisObject OptimizationProblem_Impl::clone() const {
-    boost::shared_ptr<OptimizationProblem_Impl> impl(new OptimizationProblem_Impl(*this));
+    std::shared_ptr<OptimizationProblem_Impl> impl(new OptimizationProblem_Impl(*this));
     OptimizationProblem result(impl);
     FunctionVector objectives = result.objectives();
     for (Function& objective : objectives) {
@@ -224,7 +224,7 @@ namespace detail {
     auto it = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective));
     if (it == m_objectives.end()) {
       return false;
     }
@@ -244,11 +244,11 @@ namespace detail {
     auto it1 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective1));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective1));
     auto it2 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective2));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective2));
     if ((it1 == m_objectives.end()) || it2 == m_objectives.end()) {
       return false;
     }
@@ -312,7 +312,7 @@ namespace detail {
       objectives = deserializeOrderedVector(
             map["objectives"].toList(),
             "objective_index",
-            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+            std::function<Function (const QVariant&)>(std::bind(analysis::detail::Function_Impl::factoryFromVariant,std::placeholders::_1,version)));
     }
 
     return OptimizationProblem(slice.uuid(),
@@ -346,7 +346,7 @@ namespace detail {
 OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      workflow)))
@@ -364,7 +364,7 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow,
                                          const std::vector<Function>& responses)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      workflow,
@@ -387,7 +387,7 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Variable>& variables,
                                          const std::vector<Function>& responses,
                                          const runmanager::Workflow& simulationWorkflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      variables,
@@ -410,7 +410,7 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<Variable>& variables,
                                          const runmanager::Workflow& simulationWorkflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      variables,
@@ -433,7 +433,7 @@ OptimizationProblem::OptimizationProblem(const UUID& uuid,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow,
                                          const std::vector<Function>& responses)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(uuid,
                                                      versionUUID,
                                                      name,
@@ -490,7 +490,7 @@ void OptimizationProblem::clearObjectiveFunctions() {
 }
 
 /// @cond
-OptimizationProblem::OptimizationProblem(boost::shared_ptr<detail::OptimizationProblem_Impl> impl)
+OptimizationProblem::OptimizationProblem(std::shared_ptr<detail::OptimizationProblem_Impl> impl)
   : Problem(impl)
 {}
 /// @endcond

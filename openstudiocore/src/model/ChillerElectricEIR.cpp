@@ -1245,7 +1245,7 @@ boost::optional<Schedule> ChillerElectricEIR::basinHeaterSchedule() const
 }
 
 /// @cond
-ChillerElectricEIR::ChillerElectricEIR(boost::shared_ptr<detail::ChillerElectricEIR_Impl> impl)
+ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl)
   : WaterToWaterComponent(impl)
 {}
 

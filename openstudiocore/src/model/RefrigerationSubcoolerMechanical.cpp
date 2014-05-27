@@ -160,7 +160,7 @@ void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
 }
 
 /// @cond
-RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(boost::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl)
+RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

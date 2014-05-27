@@ -71,7 +71,7 @@ class ANALYSIS_API ParameterStudyAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::ParameterStudyAlgorithm_Impl ImplType;
 
-  explicit ParameterStudyAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl);
+  explicit ParameterStudyAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl);
 
   friend class detail::ParameterStudyAlgorithm_Impl;
   friend class AnalysisObject;

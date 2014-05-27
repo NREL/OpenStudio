@@ -92,7 +92,7 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   friend class detail::ConstructionWithInternalSource_Impl;
 
   explicit ConstructionWithInternalSource(
-      boost::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);  
+      std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);  
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ConstructionWithInternalSource");

@@ -86,7 +86,7 @@ class ANALYSIS_API Algorithm : public AnalysisObject {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit Algorithm(boost::shared_ptr<detail::Algorithm_Impl> impl);
+  explicit Algorithm(std::shared_ptr<detail::Algorithm_Impl> impl);
 
   /** To be called by all concrete constructors. */
   void createCallbackForOptions() const;

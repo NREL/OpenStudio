@@ -524,7 +524,7 @@ void ShadingSurfaceGroup::resetShadedObject()
 }
 
 /// @cond
-ShadingSurfaceGroup::ShadingSurfaceGroup(boost::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl)
+ShadingSurfaceGroup::ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl)
   : PlanarSurfaceGroup(impl)
 {}
 /// @endcond

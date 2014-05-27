@@ -125,7 +125,7 @@ class MODEL_API ElectricEquipment : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ElectricEquipment(boost::shared_ptr<detail::ElectricEquipment_Impl> impl);
+  explicit ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl);
 
   /// @endcond
  private:

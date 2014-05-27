@@ -561,7 +561,7 @@ namespace resultsviewer{
       if (pd.ts) // create plot widget only if timeseries data available
       {
         auto fp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
-        fp->plotViewData(pd, boost::function<bool ()>());
+        fp->plotViewData(pd, std::function<bool ()>());
         fp->show();
         emit (signalAddPlot(fp));
       }
@@ -577,7 +577,7 @@ namespace resultsviewer{
     {
       resultsviewer::PlotViewData pd = plotViewDataFromResultsViewerPlotData(*ipVecIt);
       auto ip = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_ILLUMINANCEPLOT);
-      ip->plotViewData(pd, boost::function<bool ()>());
+      ip->plotViewData(pd, std::function<bool ()>());
       ip->show();
       emit (signalAddPlot(ip));
     }
@@ -632,7 +632,7 @@ namespace resultsviewer{
 
     if (pdVec.size() > 0)
     {
-      boost::function<bool ()> canceledfunc = boost::bind(&QProgressDialog::wasCanceled, progressdialog);
+      std::function<bool ()> canceledfunc = std::bind(&QProgressDialog::wasCanceled, progressdialog);
       auto lp = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
       std::vector<resultsviewer::PlotViewData>::iterator pdVecIt;
       for (pdVecIt = pdVec.begin(); pdVecIt != pdVec.end() && !progressdialog->wasCanceled(); ++pdVecIt)
@@ -671,7 +671,7 @@ namespace resultsviewer{
     {
       resultsviewer::PlotViewData plotViewData = plotViewDataDifference(pd0, pd1);
       auto fp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_FLOODPLOT);
-      fp0minus1->plotViewData(plotViewData, boost::function<bool ()>());
+      fp0minus1->plotViewData(plotViewData, std::function<bool ()>());
       fp0minus1->show();
       emit (signalAddPlot(fp0minus1));
 
@@ -692,7 +692,7 @@ namespace resultsviewer{
     {
       resultsviewer::PlotViewData plotViewData = plotViewDataDifference(pd0, pd1);
       auto lp0minus1 = new resultsviewer::PlotView(m_lastImageSavedPath, RVPV_LINEPLOT);
-      lp0minus1->plotViewData(plotViewData, boost::function<bool ()>());
+      lp0minus1->plotViewData(plotViewData, std::function<bool ()>());
       lp0minus1->show();
       emit (signalAddPlot(lp0minus1));
 
@@ -1395,7 +1395,7 @@ namespace resultsviewer{
         {
           openstudio::path basename = openstudio::toPath(QFileInfo(file).baseName());
           openstudio::path fullpath = openstudio::toPath(file);
-          boost::shared_ptr<openstudio::TemporaryDirectory> temporaryDirectory(new openstudio::TemporaryDirectory());
+          std::shared_ptr<openstudio::TemporaryDirectory> temporaryDirectory(new openstudio::TemporaryDirectory());
           openstudio::path newpath = temporaryDirectory->path() / basename;
           QFile::copy(openstudio::toQString(fullpath), openstudio::toQString(newpath));
 

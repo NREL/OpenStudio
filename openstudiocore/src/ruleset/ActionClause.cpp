@@ -53,7 +53,7 @@ namespace detail {
 } // detail
 
 /// @cond
-ActionClause::ActionClause(boost::shared_ptr<detail::ActionClause_Impl> impl)
+ActionClause::ActionClause(std::shared_ptr<detail::ActionClause_Impl> impl)
   : Clause(impl)
 {
   OS_ASSERT(getImpl<detail::ActionClause_Impl>());

@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 WeibullDistribution::WeibullDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(WeibullDistribution::type())))
 {}
 
 WeibullDistribution::WeibullDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(WeibullDistribution::type())))
 {
   setAlpha(alpha);
@@ -72,7 +72,7 @@ bool WeibullDistribution::setBeta(double value) {
   }  
 }
 
-WeibullDistribution::WeibullDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+WeibullDistribution::WeibullDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == WeibullDistribution::type());

@@ -229,7 +229,7 @@ openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const
 
 
 /// @cond
-PlanarSurfaceGroup::PlanarSurfaceGroup(boost::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
+PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

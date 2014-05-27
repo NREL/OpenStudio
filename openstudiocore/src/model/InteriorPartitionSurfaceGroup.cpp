@@ -347,7 +347,7 @@ InteriorPartitionSurfaceVector InteriorPartitionSurfaceGroup::interiorPartitionS
 }
 
 /// @cond
-InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(boost::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
+InteriorPartitionSurfaceGroup::InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl)
   : PlanarSurfaceGroup(impl)
 {}
 /// @endcond

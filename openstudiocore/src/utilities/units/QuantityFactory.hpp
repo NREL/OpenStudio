@@ -28,8 +28,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 #include <set>
 #include <map>
 

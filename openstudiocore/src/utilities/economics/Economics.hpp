@@ -20,12 +20,11 @@
 #ifndef ECONOMICS_H
 #define ECONOMICS_H
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/core/Optional.hpp>
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
 
@@ -67,7 +66,7 @@ public:
   void cashFlowsCapitalInflation( BuildingType buildingType, std::vector< double >& resArray );
 
   double firstCosts( BuildingType buildingType );
-  boost::shared_ptr<openstudio::CostObject> getBuildingObject( BuildingType buildingType );
+  std::shared_ptr<openstudio::CostObject> getBuildingObject( BuildingType buildingType );
   double getCapitalAnalysisEnergyCost( BuildingType buildingType );
   double getCapitalCost( BuildingType buildingType );
   void getDistrictCool( BuildingType buildingType, double& use, double& cost );
@@ -244,8 +243,8 @@ private:
   // Have the above variables been set by the user?
   bool m_variablesSet;
 
-  boost::shared_ptr<CostObject> m_refBuilding;
-  boost::shared_ptr<CostObject> m_selBuilding;
+  std::shared_ptr<CostObject> m_refBuilding;
+  std::shared_ptr<CostObject> m_selBuilding;
   std::vector< double > m_cashFlowSavings;
   std::vector< double > m_discountedCashFlowSavings;
   

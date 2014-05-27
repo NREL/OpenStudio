@@ -133,7 +133,7 @@ class MODEL_API GlareSensor : public SpaceItem {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit GlareSensor(boost::shared_ptr<detail::GlareSensor_Impl> impl);
+  explicit GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl);
 
   /// @endcond
  private:

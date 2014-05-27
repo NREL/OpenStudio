@@ -147,7 +147,7 @@ class MODEL_API CurveBiquadratic : public Curve {
   /// @cond
   typedef detail::CurveBiquadratic_Impl ImplType;
 
-  explicit CurveBiquadratic(boost::shared_ptr<detail::CurveBiquadratic_Impl> impl);
+  explicit CurveBiquadratic(std::shared_ptr<detail::CurveBiquadratic_Impl> impl);
 
   friend class detail::CurveBiquadratic_Impl;
   friend class Model;

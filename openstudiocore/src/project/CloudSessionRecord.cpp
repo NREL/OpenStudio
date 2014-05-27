@@ -100,7 +100,7 @@ namespace detail {
     return result;
   }
 
-  void CloudSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void CloudSessionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSessionRecord>(query);
     this->bindValues(query);
@@ -335,7 +335,7 @@ CloudSessionRecord CloudSessionRecord::factoryFromCloudSession(const CloudSessio
   }
 
   OS_ASSERT(false);
-  return CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl>());
+  return CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl>());
 }
 
 std::vector<CloudSessionRecord> CloudSessionRecord::getCloudSessionRecords(ProjectDatabase& database) {
@@ -385,11 +385,11 @@ CloudSession CloudSessionRecord::cloudSession() const {
 }
 
 /// @cond
-CloudSessionRecord::CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl)
+CloudSessionRecord::CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-CloudSessionRecord::CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl,
+CloudSessionRecord::CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl,
                                        ProjectDatabase database)
   : ObjectRecord(impl, database)
 {

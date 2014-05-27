@@ -111,7 +111,7 @@ SkyTemperature::SkyTemperature(const Model& model)
 }
 
 // constructor
-SkyTemperature::SkyTemperature(boost::shared_ptr<detail::SkyTemperature_Impl> impl)
+SkyTemperature::SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl)
   : ModelObject(impl)
 {}
 

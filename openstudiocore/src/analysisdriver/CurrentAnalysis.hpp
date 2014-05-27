@@ -24,7 +24,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -123,7 +122,7 @@ class ANALYSISDRIVER_API CurrentAnalysis {
   //@}
  protected:
   /** Get the impl pointer. */
-  boost::shared_ptr<detail::CurrentAnalysis_Impl> getImpl() const;
+  std::shared_ptr<detail::CurrentAnalysis_Impl> getImpl() const;
 
   /// @cond
   typedef detail::CurrentAnalysis_Impl ImplType;
@@ -131,11 +130,11 @@ class ANALYSISDRIVER_API CurrentAnalysis {
   friend class detail::CurrentAnalysis_Impl;
   friend class detail::AnalysisDriver_Impl;
 
-  explicit CurrentAnalysis(boost::shared_ptr<detail::CurrentAnalysis_Impl> impl);
+  explicit CurrentAnalysis(std::shared_ptr<detail::CurrentAnalysis_Impl> impl);
   /// @endcond
 
  private:
-  boost::shared_ptr<detail::CurrentAnalysis_Impl> m_impl;
+  std::shared_ptr<detail::CurrentAnalysis_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysisdriver.CurrentAnalysis");
 };

@@ -701,7 +701,7 @@ PlantLoop::PlantLoop(Model& model)
   setString(OS_PlantLoopFields::PressureSimulationType,"");
 }
 
-PlantLoop::PlantLoop(boost::shared_ptr<detail::PlantLoop_Impl> impl)
+PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
   : Loop(impl)
 {}
 

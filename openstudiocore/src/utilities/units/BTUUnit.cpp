@@ -64,7 +64,7 @@ namespace detail {
 
   Unit BTUUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::BTU);
-    boost::shared_ptr<BTUUnit_Impl> impl(new BTUUnit_Impl(*this));
+    std::shared_ptr<BTUUnit_Impl> impl(new BTUUnit_Impl(*this));
     return BTUUnit(impl).cast<Unit>();
   }
 
@@ -84,20 +84,20 @@ namespace detail {
 BTUUnit::BTUUnit(const BTUExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 BTUUnit::BTUUnit(const std::string& scaleAbbreviation,
                  const BTUExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::BTUUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-BTUUnit::BTUUnit(boost::shared_ptr<detail::BTUUnit_Impl> impl)
-  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
+BTUUnit::BTUUnit(std::shared_ptr<detail::BTUUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

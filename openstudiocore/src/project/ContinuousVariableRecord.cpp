@@ -105,7 +105,7 @@ namespace detail {
 
   }
 
-  void ContinuousVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ContinuousVariableRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ContinuousVariableRecord>(query);
@@ -278,7 +278,7 @@ namespace detail {
 
 } // detail
 
-ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
+ContinuousVariableRecord::ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
                                                    ProjectDatabase database,
                                                    const boost::optional<analysis::ContinuousVariable>& variable)
   : InputVariableRecord(impl, database, (variable) ? *variable : analysis::OptionalInputVariable())
@@ -319,7 +319,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
   }
 
   OS_ASSERT(false);
-  return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
+  return ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
 ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable(
@@ -337,7 +337,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
   }
 
   OS_ASSERT(false);
-  return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
+  return ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
 std::vector<ContinuousVariableRecord> ContinuousVariableRecord::getContinuousVariableRecords(
@@ -401,7 +401,7 @@ analysis::ContinuousVariable ContinuousVariableRecord::continuousVariable() cons
 }
 
 /// @cond
-ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl)
+ContinuousVariableRecord::ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
 {}
 /// @endcond

@@ -48,7 +48,7 @@ class MODEL_API WeatherFileDays : public SizingPeriod {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit WeatherFileDays(boost::shared_ptr<detail::WeatherFileDays_Impl> impl);
+  explicit WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl);
 
  private:
 

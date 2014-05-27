@@ -141,7 +141,7 @@ namespace detail {
 
 
       /// Used to watch the local filesystem for updates
-      boost::shared_ptr<QFileSystemWatcher> m_fswatcher;
+      std::shared_ptr<QFileSystemWatcher> m_fswatcher;
 
       /// List of files that are known about
       FileSet m_outfiles;

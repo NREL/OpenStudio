@@ -79,7 +79,7 @@ class MODEL_API CoilHeatingDXVariableRefrigerantFlow : public HVACComponent {
   /// @cond
   typedef detail::CoilHeatingDXVariableRefrigerantFlow_Impl ImplType;
 
-  explicit CoilHeatingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl);
+  explicit CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::CoilHeatingDXVariableRefrigerantFlow_Impl;
   friend class Model;

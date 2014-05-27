@@ -74,7 +74,7 @@ class ANALYSIS_API SamplingAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::SamplingAlgorithm_Impl ImplType;
 
-  explicit SamplingAlgorithm(boost::shared_ptr<detail::SamplingAlgorithm_Impl> impl);
+  explicit SamplingAlgorithm(std::shared_ptr<detail::SamplingAlgorithm_Impl> impl);
 
   friend class detail::SamplingAlgorithm_Impl;
   friend class AnalysisObject;

@@ -762,7 +762,7 @@ std::vector<bool> ScheduleRule::containsDates(const std::vector<openstudio::Date
 
 
 /// @cond
-ScheduleRule::ScheduleRule(boost::shared_ptr<detail::ScheduleRule_Impl> impl)
+ScheduleRule::ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

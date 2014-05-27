@@ -28,9 +28,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QVariant>
 #include <QMetaType>
 
@@ -40,7 +37,7 @@ class QDomDocument;
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API Attribute_Impl : public QObject, public boost::enable_shared_from_this<Attribute_Impl>
+  class UTILITIES_API Attribute_Impl : public QObject, public std::enable_shared_from_this<Attribute_Impl>
   {
 
     Q_OBJECT;

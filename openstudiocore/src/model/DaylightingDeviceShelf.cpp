@@ -213,7 +213,7 @@ SubSurface DaylightingDeviceShelf::subSurface() const
 }
 
 /// @cond
-DaylightingDeviceShelf::DaylightingDeviceShelf(boost::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl)
+DaylightingDeviceShelf::DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

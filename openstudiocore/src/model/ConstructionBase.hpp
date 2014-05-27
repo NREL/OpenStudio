@@ -144,7 +144,7 @@ class MODEL_API ConstructionBase : public ResourceObject {
 
   ConstructionBase(IddObjectType type,const Model& model);
 
-  explicit ConstructionBase(boost::shared_ptr<detail::ConstructionBase_Impl> impl);
+  explicit ConstructionBase(std::shared_ptr<detail::ConstructionBase_Impl> impl);
 
   /// @endcond
  private:

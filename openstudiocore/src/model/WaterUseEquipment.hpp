@@ -66,7 +66,7 @@ class MODEL_API WaterUseEquipment : public SpaceLoadInstance {
 
   typedef detail::WaterUseEquipment_Impl ImplType;
 
-  explicit WaterUseEquipment(boost::shared_ptr<detail::WaterUseEquipment_Impl> impl);
+  explicit WaterUseEquipment(std::shared_ptr<detail::WaterUseEquipment_Impl> impl);
 
   friend class detail::WaterUseEquipment_Impl;
   friend class Model;

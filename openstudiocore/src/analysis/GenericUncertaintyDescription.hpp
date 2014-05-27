@@ -88,7 +88,7 @@ class ANALYSIS_API GenericUncertaintyDescription : public UncertaintyDescription
 
   //@}
  protected:
-  explicit GenericUncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit GenericUncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class UncertaintyDescription;
  private:

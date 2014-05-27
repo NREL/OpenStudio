@@ -26,8 +26,6 @@
 #include <utilities/idf/WorkspaceObject.hpp>
 #include <utilities/idf/ObjectOrderBase.hpp>
 
-#include <boost/function.hpp>
-
 namespace openstudio {
 
 class IddObjectType;
@@ -39,7 +37,7 @@ namespace detail {
   /** Implementation of WorkspaceObjectOrder. */
   class UTILITIES_API WorkspaceObjectOrder_Impl : public ObjectOrderBase {
    public:
-    typedef boost::function<boost::optional<WorkspaceObject> (const Handle&)> ObjectGetter;
+    typedef std::function<boost::optional<WorkspaceObject> (const Handle&)> ObjectGetter;
 
     WorkspaceObjectOrder_Impl(const ObjectGetter& objectGetter);
 
@@ -143,7 +141,7 @@ namespace detail {
 
   };
 
-  typedef boost::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
+  typedef std::shared_ptr<WorkspaceObjectOrder_Impl> WorkspaceObjectOrder_ImplPtr;
 } // detail
 
 class Workspace; // forward declaration
@@ -243,10 +241,10 @@ class UTILITIES_API WorkspaceObjectOrder {
   friend class detail::Workspace_Impl;
 
   // Workspace constructs the public interface of the orderer when it is requested.
-  WorkspaceObjectOrder(const boost::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl);
+  WorkspaceObjectOrder(const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl);
 
  private:
-  boost::shared_ptr<detail::WorkspaceObjectOrder_Impl> m_impl;
+  std::shared_ptr<detail::WorkspaceObjectOrder_Impl> m_impl;
 
   REGISTER_LOGGER("utilities.idf.WorkspaceObjectOrder");
 };

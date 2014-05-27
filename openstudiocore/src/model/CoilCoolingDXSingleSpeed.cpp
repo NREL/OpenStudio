@@ -841,7 +841,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
   setCondenserType("AirCooled");
 }
 
-CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(boost::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p)
+CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p)
   : StraightComponent(p)
 {}
 

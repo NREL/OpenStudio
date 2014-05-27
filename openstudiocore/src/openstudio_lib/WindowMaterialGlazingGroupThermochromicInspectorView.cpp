@@ -122,8 +122,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   //m_opticalDataTemperature->bind( // TODO
   //  m_isIP,
   //  thermochromicGlazing,
-  //  DoubleGetter(boost::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
-  //  DoubleSetterVoidReturn(boost::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
+  //  DoubleGetter(std::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
+  //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 

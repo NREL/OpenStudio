@@ -98,7 +98,7 @@ class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject {
   /// @cond
   typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
 
-  explicit DesignSpecificationZoneAirDistribution(boost::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
+  explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
 
   friend class detail::DesignSpecificationZoneAirDistribution_Impl;
   friend class Model;

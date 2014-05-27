@@ -48,4 +48,4 @@ void SqlFileLargeFixture::TearDownTestCase() {
 
 // define static storage
 openstudio::SqlFile SqlFileLargeFixture::sqlFile;
-boost::shared_ptr<openstudio::TextLogType> SqlFileLargeFixture::logFile;
+std::shared_ptr<openstudio::TextLogType> SqlFileLargeFixture::logFile;

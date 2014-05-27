@@ -1116,7 +1116,7 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 }
 
 /// @cond
-SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
+SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

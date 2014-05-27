@@ -27,8 +27,6 @@
 #include <QProcess>
 #include <QTemporaryFile>
 
-#include <boost/function.hpp>
-
 namespace openstudio{
 
   struct AWSComputerInformation;
@@ -499,7 +497,7 @@ namespace detail{
 
   private:
     
-    bool waitForFinished(int msec, const boost::function<bool ()>& f);
+    bool waitForFinished(int msec, const std::function<bool ()>& f);
     bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;

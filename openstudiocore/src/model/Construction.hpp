@@ -71,7 +71,7 @@ class MODEL_API Construction : public LayeredConstruction {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::Construction_Impl;
 
-  explicit Construction(boost::shared_ptr<detail::Construction_Impl> impl);  
+  explicit Construction(std::shared_ptr<detail::Construction_Impl> impl);  
 
   /// @endcond
  private:

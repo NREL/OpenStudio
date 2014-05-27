@@ -26,7 +26,7 @@ namespace model {
 // PROTECTED
 
 /// @cond
-ModelExtensibleGroup::ModelExtensibleGroup(boost::shared_ptr<detail::ModelObject_Impl> impl,
+ModelExtensibleGroup::ModelExtensibleGroup(std::shared_ptr<detail::ModelObject_Impl> impl,
                                            unsigned index) 
   : WorkspaceExtensibleGroup(impl,index) {}
 /// @endcond

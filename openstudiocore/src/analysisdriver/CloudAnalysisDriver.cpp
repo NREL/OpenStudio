@@ -2110,7 +2110,7 @@ namespace detail {
 
 CloudAnalysisDriver::CloudAnalysisDriver(const CloudSession& session,
                                          const SimpleProject& project)
-  : m_impl(boost::shared_ptr<detail::CloudAnalysisDriver_Impl>(
+  : m_impl(std::shared_ptr<detail::CloudAnalysisDriver_Impl>(
              new detail::CloudAnalysisDriver_Impl(session,project)))
 {}
 
@@ -2228,7 +2228,7 @@ void CloudAnalysisDriver::moveToThread(QThread* targetThread) {
 }
 
 /// @cond
-CloudAnalysisDriver::CloudAnalysisDriver(boost::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
+CloudAnalysisDriver::CloudAnalysisDriver(std::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

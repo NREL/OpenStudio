@@ -162,7 +162,7 @@ class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
   /// @cond
   typedef detail::GroundHeatExchangerVertical_Impl ImplType;
 
-  explicit GroundHeatExchangerVertical(boost::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl);
+  explicit GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl);
 
   friend class detail::GroundHeatExchangerVertical_Impl;
   friend class Model;

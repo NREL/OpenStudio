@@ -117,7 +117,7 @@ namespace detail {
      *  following the \\field slash code, or, if that is absent, the 'A' or 'N' identifier, 
      *  should be sent in as name. objectName is the IddObject.name() to which this field 
      *  belongs. */
-    static boost::shared_ptr<IddField_Impl> load(const std::string& name, 
+    static std::shared_ptr<IddField_Impl> load(const std::string& name, 
                                                  const std::string& text, 
                                                  const std::string& objectName);
 

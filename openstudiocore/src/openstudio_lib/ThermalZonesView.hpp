@@ -157,13 +157,13 @@ private:
 
   QWidget * m_zoneNameWidget;
 
-  boost::shared_ptr<OSObjectListCBDS> m_scheduleDataSource;
+  std::shared_ptr<OSObjectListCBDS> m_scheduleDataSource;
 
   bool m_dirty;
 
-  boost::shared_ptr<ZoneEquipmentVectorController> m_equipmentVectorController;
+  std::shared_ptr<ZoneEquipmentVectorController> m_equipmentVectorController;
 
-  boost::shared_ptr<ZoneEquipmentVectorController> m_spacesVectorController;
+  std::shared_ptr<ZoneEquipmentVectorController> m_spacesVectorController;
 
   CoolingScheduleVectorController * m_coolingThermostatVectorController;
 

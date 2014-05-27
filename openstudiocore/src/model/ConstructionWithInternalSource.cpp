@@ -318,7 +318,7 @@ ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructi
 
 /// @cond
 ConstructionWithInternalSource::ConstructionWithInternalSource(
-    boost::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl)
+    std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl)
   : LayeredConstruction(impl)
 {}
 /// @endcond

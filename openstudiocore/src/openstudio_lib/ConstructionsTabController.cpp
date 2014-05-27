@@ -34,9 +34,9 @@ namespace openstudio {
 ConstructionsTabController::ConstructionsTabController(bool isIP, const model::Model& model)
   : MainTabController(new ConstructionsTabView(model, "Constructions"))
 {
-  m_defaultConstructionSetsController = boost::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(model));
-  m_constructionsController = boost::shared_ptr<ConstructionsController>(new ConstructionsController(isIP, model));
-  m_materialsController = boost::shared_ptr<MaterialsController>(new MaterialsController(isIP, model));
+  m_defaultConstructionSetsController = std::shared_ptr<DefaultConstructionSetsController>(new DefaultConstructionSetsController(model));
+  m_constructionsController = std::shared_ptr<ConstructionsController>(new ConstructionsController(isIP, model));
+  m_materialsController = std::shared_ptr<MaterialsController>(new MaterialsController(isIP, model));
 
   this->mainContentWidget()->addSubTab("Construction Sets", m_defaultConstructionSetsController->subTabView(),DEFAULT_CONSTRUCTIONS);
   this->mainContentWidget()->addSubTab("Constructions", m_constructionsController->subTabView(),CONSTRUCTIONS);

@@ -433,7 +433,7 @@ void InspectorDialog::onTableWidgetSelectionChanged()
   setSelectedObjectHandles(selectedObjectHandles, true);
 }
 
-void InspectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   m_workspaceObjectAdded = true;
   m_workspaceChanged = true;
@@ -483,7 +483,7 @@ void InspectorDialog::onTimeout()
   }
 }
 
-void InspectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   m_workspaceObjectRemoved = true;
   m_workspaceChanged = true;
@@ -979,9 +979,9 @@ void InspectorDialog::connectModelSignalsAndSlots()
   bool connected;
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
@@ -991,9 +991,9 @@ void InspectorDialog::connectModelSignalsAndSlots()
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 }
 

@@ -188,7 +188,7 @@ class MODEL_API Meter : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Meter(boost::shared_ptr<detail::Meter_Impl> impl);
+  explicit Meter(std::shared_ptr<detail::Meter_Impl> impl);
 
   /// @endcond
  private:

@@ -28,7 +28,6 @@
 #include <utilities/core/Optional.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -84,7 +83,7 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
 
   friend class IdfExtensibleGroup;
 
-  WorkspaceExtensibleGroup(boost::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index);
+  WorkspaceExtensibleGroup(std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index);
 
  private:
 

@@ -87,7 +87,7 @@ class MODEL_API DaylightingDeviceShelf : public ModelObject {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit DaylightingDeviceShelf(boost::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
+  explicit DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
 
   /// @endcond
  private:

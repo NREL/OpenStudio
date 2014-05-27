@@ -51,7 +51,7 @@ class BusyWidget : public QWidget
 
   private:
 
-  boost::shared_ptr<QPixmap> m_pixmap;
+  std::shared_ptr<QPixmap> m_pixmap;
 
   float m_rotation;
 

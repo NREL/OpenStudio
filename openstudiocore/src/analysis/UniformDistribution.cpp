@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 UniformDistribution::UniformDistribution()
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
   new detail::UncertaintyDescription_Impl(UniformDistribution::type())))
 {}
 
 UniformDistribution::UniformDistribution(double lowerBound, double upperBound) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(UniformDistribution::type())))
 {
   setLowerBound(lowerBound);
@@ -58,7 +58,7 @@ void UniformDistribution::setUpperBound(double value) {
   impl()->setAttribute(Attribute("upper_bounds",value),false);
 }
 
-UniformDistribution::UniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+UniformDistribution::UniformDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == UniformDistribution::type());

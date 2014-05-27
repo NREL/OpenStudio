@@ -27,8 +27,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/data/Attribute.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 #include <QObject> 
 
 class QDomElement;

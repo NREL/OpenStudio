@@ -115,7 +115,7 @@ std::string ModelObjectFilterRelationship::xmlElementName() {
 }
 
 ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& relationshipName)
-  : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
+  : ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
                                 new detail::ModelObjectFilterRelationship_Impl(relationshipName)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
@@ -124,14 +124,14 @@ ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& 
 ModelObjectFilterRelationship::ModelObjectFilterRelationship(const std::string& relationshipName, 
                                                              const UUID& uuid, 
                                                              const UUID& versionUUID)
-  : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
+  : ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
         new detail::ModelObjectFilterRelationship_Impl(relationshipName,uuid,versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
 }
 
 ModelObjectFilterRelationship::ModelObjectFilterRelationship(const QDomElement& element)
-: ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
+: ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterRelationship_Impl>(
         new detail::ModelObjectFilterRelationship_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterRelationship_Impl>());
@@ -142,7 +142,7 @@ std::string ModelObjectFilterRelationship::relationshipName() const {
 }
 
 /// @cond
-ModelObjectFilterRelationship::ModelObjectFilterRelationship(boost::shared_ptr<detail::ModelObjectFilterRelationship_Impl> impl)
+ModelObjectFilterRelationship::ModelObjectFilterRelationship(std::shared_ptr<detail::ModelObjectFilterRelationship_Impl> impl)
   : ModelObjectFilterClause(impl)
 {}
 /// @endcond

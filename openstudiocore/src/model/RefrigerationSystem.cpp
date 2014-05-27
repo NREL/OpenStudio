@@ -963,7 +963,7 @@ void RefrigerationSystem::resetShellandCoilIntercoolerEffectiveness() {
 }
 
 /// @cond
-RefrigerationSystem::RefrigerationSystem(boost::shared_ptr<detail::RefrigerationSystem_Impl> impl)
+RefrigerationSystem::RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -51,9 +51,9 @@ class ServiceWaterScene : public GridScene
 
   private slots:
 
-  void onAddedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
 
-  void onRemovedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
+  void onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
 
   private:
 
@@ -84,9 +84,9 @@ class WaterUseConnectionsDetailScene : public GridScene
 
   private slots:
 
-  void onAddedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
 
-  void onRemovedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
+  void onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
 
   private:
 

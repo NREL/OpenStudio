@@ -357,7 +357,7 @@ void CurveCubic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveCubic::CurveCubic(boost::shared_ptr<detail::CurveCubic_Impl> impl)
+CurveCubic::CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

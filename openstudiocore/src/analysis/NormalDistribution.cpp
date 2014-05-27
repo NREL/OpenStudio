@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 NormalDistribution::NormalDistribution()
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
   new detail::UncertaintyDescription_Impl(NormalDistribution::type())))
 {}
 
 NormalDistribution::NormalDistribution(double mean, double standardDeviation) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(NormalDistribution::type())))
 {
   setMean(mean);
@@ -95,7 +95,7 @@ void NormalDistribution::resetUpperBound() {
   impl()->clearAttribute("upper_bounds",false);
 }
 
-NormalDistribution::NormalDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+NormalDistribution::NormalDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == NormalDistribution::type());

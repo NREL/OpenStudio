@@ -73,7 +73,7 @@ class MODEL_API SpaceLoad : public SpaceItem {
   friend class openstudio::IdfObject;
   friend class detail::SpaceLoad_Impl;
 
-  explicit SpaceLoad(boost::shared_ptr<detail::SpaceLoad_Impl> impl);
+  explicit SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl);
 
  private:
 

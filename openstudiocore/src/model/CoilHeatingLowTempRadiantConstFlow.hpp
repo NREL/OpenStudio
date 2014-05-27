@@ -103,7 +103,7 @@ class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
   /// @cond
   typedef detail::CoilHeatingLowTempRadiantConstFlow_Impl ImplType;
 
-  explicit CoilHeatingLowTempRadiantConstFlow(boost::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
+  explicit CoilHeatingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
 
   friend class detail::CoilHeatingLowTempRadiantConstFlow_Impl;
   friend class Model;

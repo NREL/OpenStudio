@@ -71,7 +71,7 @@ namespace detail {
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
 
       virtual void basePathChanged();
 

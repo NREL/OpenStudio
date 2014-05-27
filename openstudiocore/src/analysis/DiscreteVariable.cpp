@@ -103,7 +103,7 @@ int DiscreteVariable::numValidValues(bool selectedOnly) const {
 }
 
 /// @cond
-DiscreteVariable::DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl)
+DiscreteVariable::DiscreteVariable(std::shared_ptr<detail::DiscreteVariable_Impl> impl)
   : InputVariable(impl)
 {}
 /// @endcond

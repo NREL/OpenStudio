@@ -107,7 +107,7 @@ class MODEL_API ComponentData : public ModelObject {
   explicit ComponentData(const Model& model);
 
   // constructor
-  explicit ComponentData(boost::shared_ptr<detail::ComponentData_Impl> impl);
+  explicit ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl);
 
   /// @endcond
  private:

@@ -69,7 +69,7 @@ namespace detail {
   {}
 
   AnalysisObject FSUDaceAlgorithm_Impl::clone() const {
-    boost::shared_ptr<FSUDaceAlgorithm_Impl> impl(new FSUDaceAlgorithm_Impl(*this));
+    std::shared_ptr<FSUDaceAlgorithm_Impl> impl(new FSUDaceAlgorithm_Impl(*this));
     return FSUDaceAlgorithm(impl);
   }
 
@@ -172,7 +172,7 @@ namespace detail {
 } // detail
 
 FSUDaceAlgorithm::FSUDaceAlgorithm(const FSUDaceAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::FSUDaceAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::FSUDaceAlgorithm_Impl>(
         new detail::FSUDaceAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -189,7 +189,7 @@ FSUDaceAlgorithm::FSUDaceAlgorithm(const UUID& uuid,
                                    const boost::optional<FileReference>& restartFileReference,
                                    const boost::optional<FileReference>& outFileReference,
                                    const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::FSUDaceAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::FSUDaceAlgorithm_Impl>(
         new detail::FSUDaceAlgorithm_Impl(uuid,
                                           versionUUID,
                                           displayName,
@@ -210,7 +210,7 @@ FSUDaceAlgorithmOptions FSUDaceAlgorithm::fsudaceAlgorithmOptions() const {
 }
 
 /// @cond
-FSUDaceAlgorithm::FSUDaceAlgorithm(boost::shared_ptr<detail::FSUDaceAlgorithm_Impl> impl)
+FSUDaceAlgorithm::FSUDaceAlgorithm(std::shared_ptr<detail::FSUDaceAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

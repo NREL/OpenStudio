@@ -259,7 +259,7 @@ double InternalMass::getSurfaceAreaPerPerson(double floorArea, double numPeople)
 }
 
 /// @cond
-InternalMass::InternalMass(boost::shared_ptr<detail::InternalMass_Impl> impl)
+InternalMass::InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

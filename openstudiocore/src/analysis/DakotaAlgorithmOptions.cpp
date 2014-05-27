@@ -36,7 +36,7 @@ namespace detail {
 } // detail
 
 /// @cond
-DakotaAlgorithmOptions::DakotaAlgorithmOptions(boost::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl)
+DakotaAlgorithmOptions::DakotaAlgorithmOptions(std::shared_ptr<detail::DakotaAlgorithmOptions_Impl> impl)
   : AlgorithmOptions(impl)
 {}
 /// @endcond

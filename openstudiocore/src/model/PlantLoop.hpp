@@ -198,7 +198,7 @@ class MODEL_API PlantLoop : public Loop {
 
   typedef detail::PlantLoop_Impl ImplType;
 
-  explicit PlantLoop(boost::shared_ptr<ImplType> impl);
+  explicit PlantLoop(std::shared_ptr<ImplType> impl);
 
   private:
 

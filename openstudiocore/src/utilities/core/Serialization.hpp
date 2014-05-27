@@ -72,21 +72,21 @@
 friend class boost::serialization::access; \
 virtual std::ostream& toText(std::ostream& os) const { \
   boost::archive::text_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << ptr; \
   return os; \
 } \
 virtual std::string toText() const { std::stringstream os; toText(os); return os.str();} \
 virtual std::ostream& toXml(std::ostream& os) const { \
   boost::archive::xml_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << boost::serialization::make_nvp(#__T__, ptr); \
   return os; \
 } \
 virtual std::string toXml() const { std::stringstream os; toXml(os); return os.str();} \
 virtual std::ostream& toBinary(std::ostream& os) const { \
   boost::archive::binary_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << ptr; \
   return os; \
 } \

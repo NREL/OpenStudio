@@ -29,8 +29,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/FileLogSink.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 class DocumentFixture : public ::testing::Test {
  protected:
   // initialize for each test

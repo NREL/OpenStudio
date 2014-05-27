@@ -29,8 +29,6 @@
 #include <utilities/time/DateTime.hpp>
 #include <utilities/core/Path.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 class QSqlQuery;
 class QSqlDatabase;
 
@@ -108,11 +106,11 @@ class PROJECT_API ObjectRecord : public Record {
   friend class Record;
 
   /// constructor
-  ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl,
+  ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl,
                ProjectDatabase projectDatabase);
 
   /// constructor, does not register in database, use with caution
-  ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl);
+  ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl);
 
  private:
 

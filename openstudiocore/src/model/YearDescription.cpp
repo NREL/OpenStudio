@@ -410,7 +410,7 @@ openstudio::Date YearDescription::makeDate(unsigned dayOfYear)
 }
 
 /// @cond
-YearDescription::YearDescription(boost::shared_ptr<detail::YearDescription_Impl> impl)
+YearDescription::YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl)
   : ParentObject(impl)
 {}
 YearDescription::YearDescription(Model& model)

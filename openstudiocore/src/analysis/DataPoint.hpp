@@ -293,7 +293,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::DataPoint_Impl;
 
-  explicit DataPoint(boost::shared_ptr<detail::DataPoint_Impl> impl);
+  explicit DataPoint(std::shared_ptr<detail::DataPoint_Impl> impl);
   /// @endcond
 
   friend class detail::Problem_Impl;

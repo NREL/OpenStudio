@@ -305,7 +305,7 @@ ConstructionBase::ConstructionBase(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ConstructionBase_Impl>());
 }
 
-ConstructionBase::ConstructionBase(boost::shared_ptr<detail::ConstructionBase_Impl> impl)
+ConstructionBase::ConstructionBase(std::shared_ptr<detail::ConstructionBase_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

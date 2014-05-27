@@ -387,7 +387,7 @@ class MODEL_API AirLoopHVACUnitarySystem : public WaterToAirComponent {
   /// @cond
   typedef detail::AirLoopHVACUnitarySystem_Impl ImplType;
 
-  explicit AirLoopHVACUnitarySystem(boost::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
+  explicit AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl);
 
   friend class detail::AirLoopHVACUnitarySystem_Impl;
   friend class Model;

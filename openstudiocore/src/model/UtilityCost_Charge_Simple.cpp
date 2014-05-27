@@ -147,7 +147,7 @@ UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(const Model& model)
 }
 
 // constructor
-UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(boost::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl)
+UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl)
   : ParentObject(impl)
 {}
 

@@ -74,7 +74,7 @@ class ANALYSIS_API DDACEAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::DDACEAlgorithm_Impl ImplType;
 
-  explicit DDACEAlgorithm(boost::shared_ptr<detail::DDACEAlgorithm_Impl> impl);
+  explicit DDACEAlgorithm(std::shared_ptr<detail::DDACEAlgorithm_Impl> impl);
 
   friend class detail::DDACEAlgorithm_Impl;
   friend class AnalysisObject;

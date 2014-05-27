@@ -113,7 +113,7 @@ class ANALYSIS_API SequentialSearch : public OpenStudioAlgorithm {
   friend class detail::AnalysisObject_Impl;
   friend class detail::SequentialSearch_Impl;
 
-  explicit SequentialSearch(boost::shared_ptr<detail::SequentialSearch_Impl> impl);
+  explicit SequentialSearch(std::shared_ptr<detail::SequentialSearch_Impl> impl);
 
   /// @endcond
  private:

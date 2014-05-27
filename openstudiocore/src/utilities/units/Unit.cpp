@@ -28,8 +28,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/bind.hpp>
-
 #include <algorithm>
 #include <sstream>
 
@@ -96,12 +94,12 @@ namespace detail {
 
   Unit Unit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Mixed);
-    boost::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
+    std::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
     return Unit(impl);
   }
 
   Unit Unit_Impl::cloneToMixed() const {
-    boost::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
+    std::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
     impl->m_system = UnitSystem::Mixed;
     return Unit(impl);
   }
@@ -521,7 +519,7 @@ namespace detail {
   {
     auto result = std::find_if(m_units.begin(),
                                m_units.end(),
-                               boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
     return result;
   }
 
@@ -530,7 +528,7 @@ namespace detail {
   {
     auto result = std::find_if(m_units.begin(),
                                m_units.end(),
-                               boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
     return result;
   }
 
@@ -620,7 +618,7 @@ Unit& Unit::pow(int expNum,int expDenom,bool okToCallFactory) {
 }
 
 /// @cond
-Unit::Unit(boost::shared_ptr<detail::Unit_Impl> impl)
+Unit::Unit(std::shared_ptr<detail::Unit_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

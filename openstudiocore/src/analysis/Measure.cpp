@@ -115,7 +115,7 @@ runmanager::WorkItem Measure::createWorkItem(
 }
 
 /// @cond
-Measure::Measure(boost::shared_ptr<detail::Measure_Impl> impl)
+Measure::Measure(std::shared_ptr<detail::Measure_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

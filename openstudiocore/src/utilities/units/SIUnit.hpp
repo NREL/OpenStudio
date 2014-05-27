@@ -114,7 +114,7 @@ class UTILITIES_API SIUnit : public Unit {
   /// @cond
   typedef detail::SIUnit_Impl ImplType;
 
-  explicit SIUnit(boost::shared_ptr<detail::SIUnit_Impl> impl);
+  explicit SIUnit(std::shared_ptr<detail::SIUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::SIUnit_Impl;

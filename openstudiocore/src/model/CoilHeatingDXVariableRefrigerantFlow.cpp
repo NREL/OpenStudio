@@ -318,7 +318,7 @@ bool CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofF
 }
 
 /// @cond
-CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
+CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

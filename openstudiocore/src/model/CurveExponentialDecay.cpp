@@ -335,7 +335,7 @@ void CurveExponentialDecay::resetOutputUnitType() {
 }
 
 /// @cond
-CurveExponentialDecay::CurveExponentialDecay(boost::shared_ptr<detail::CurveExponentialDecay_Impl> impl)
+CurveExponentialDecay::CurveExponentialDecay(std::shared_ptr<detail::CurveExponentialDecay_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

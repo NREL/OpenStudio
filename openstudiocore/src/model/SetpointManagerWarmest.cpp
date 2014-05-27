@@ -237,7 +237,7 @@ bool SetpointManagerWarmest::setStrategy(std::string strategy) {
 }
 
 /// @cond
-SetpointManagerWarmest::SetpointManagerWarmest(boost::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
+SetpointManagerWarmest::SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

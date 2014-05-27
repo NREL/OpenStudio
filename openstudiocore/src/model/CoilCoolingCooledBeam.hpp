@@ -139,7 +139,7 @@ class MODEL_API CoilCoolingCooledBeam : public StraightComponent {
   /// @cond
   typedef detail::CoilCoolingCooledBeam_Impl ImplType;
 
-  explicit CoilCoolingCooledBeam(boost::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl);
+  explicit CoilCoolingCooledBeam(std::shared_ptr<detail::CoilCoolingCooledBeam_Impl> impl);
 
   friend class detail::CoilCoolingCooledBeam_Impl;
   friend class Model;

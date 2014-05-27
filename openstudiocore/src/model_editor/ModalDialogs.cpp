@@ -148,7 +148,7 @@ void ModelObjectSelectorDialog::onPushButtonCancel(bool)
   emit closed(modelObject);
 }
 
-void ModelObjectSelectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -156,7 +156,7 @@ void ModelObjectSelectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudi
   }
 }
 
-void ModelObjectSelectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -239,15 +239,15 @@ void ModelObjectSelectorDialog::connectSignalsAndSlots()
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 }
 
@@ -301,7 +301,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
 }
 
 
-ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog)
+ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog)
   : m_modelObjectSelectorDialog(modelObjectSelectorDialog)
 {
   OS_ASSERT(modelObjectSelectorDialog);
@@ -351,7 +351,7 @@ void ensureThermalZone(openstudio::model::Space& space)
     std::vector<IddObjectType> typesToDisplay;
     typesToDisplay.push_back(thermalZoneType);
 
-    boost::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+    std::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
     dialog->setWindowTitle("Select ThermalZone");
     dialog->setUserText("Select an existing ThermalZone or press New to create a new one.");
     dialog->setOKButtonText("Select");
@@ -437,7 +437,7 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
     std::vector<IddObjectType> typesToDisplay;
     typesToDisplay.push_back(definitionType);
 
-    boost::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+    std::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
     dialog->setWindowTitle("Select " + instance.iddObjectType().valueDescription() + "Definition");
     dialog->setUserText("Select an existing " + instance.iddObjectType().valueDescription() + "Definition or press New to create a new definition.");
     dialog->setOKButtonText("Select");

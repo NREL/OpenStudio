@@ -29,7 +29,6 @@
 #include <model/SpaceLoadInstance.hpp>
 #include <model/SpaceType.hpp>
 
-#include <boost/shared_ptr.hpp>
 
 #include <QWidget>
 
@@ -174,9 +173,9 @@ private slots:
 
   void onSpaceRelationshipChange(int index, Handle, Handle);
 
-  void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
-  void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
   
   void refresh();
 

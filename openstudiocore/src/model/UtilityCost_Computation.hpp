@@ -91,7 +91,7 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Computation(boost::shared_ptr<detail::UtilityCost_Computation_Impl> impl);
+  explicit UtilityCost_Computation(std::shared_ptr<detail::UtilityCost_Computation_Impl> impl);
 
 private:
 

@@ -30,7 +30,7 @@ namespace openstudio {
 BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& model)
   : MainTabController(new BuildingStoriesTabView())
 {
-  m_buildingStoriesController = boost::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
+  m_buildingStoriesController = std::shared_ptr<BuildingStoriesController>(new BuildingStoriesController(model));
   this->mainContentWidget()->addTabWidget(m_buildingStoriesController->subTabView());
 
   bool isConnected = false;

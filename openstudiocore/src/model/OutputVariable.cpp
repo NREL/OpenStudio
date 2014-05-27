@@ -218,7 +218,7 @@ OutputVariable::OutputVariable(const std::string& variableName, const Model& mod
   OS_ASSERT(test);
 }
 
-OutputVariable::OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl)
+OutputVariable::OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl)
   : ModelObject(impl)
 {}
 

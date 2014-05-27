@@ -224,7 +224,7 @@ class MODEL_API Screen : public ShadingMaterial {
   /// @cond
   typedef detail::Screen_Impl ImplType;
 
-  explicit Screen(boost::shared_ptr<detail::Screen_Impl> impl);
+  explicit Screen(std::shared_ptr<detail::Screen_Impl> impl);
 
   friend class detail::Screen_Impl;
   friend class Model;

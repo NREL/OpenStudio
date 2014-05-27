@@ -98,7 +98,7 @@ namespace detail{
     //@{
 
     /// parse text from input stream to construct an IddFile_Impl
-    static boost::shared_ptr<IddFile_Impl> load(std::istream& is);
+    static std::shared_ptr<IddFile_Impl> load(std::istream& is);
 
     /// print
     std::ostream& print(std::ostream& os) const;

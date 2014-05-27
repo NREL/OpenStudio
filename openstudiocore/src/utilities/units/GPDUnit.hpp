@@ -110,7 +110,7 @@ class UTILITIES_API GPDUnit : public Unit {
   /// @cond
   typedef detail::GPDUnit_Impl ImplType;
 
-  explicit GPDUnit(boost::shared_ptr<detail::GPDUnit_Impl> impl);
+  explicit GPDUnit(std::shared_ptr<detail::GPDUnit_Impl> impl);
 
   friend class detail::GPDUnit_Impl;
   friend class Unit;

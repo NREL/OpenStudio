@@ -31,8 +31,6 @@
 #include <ostream>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio{
 
 // forward declarations
@@ -134,9 +132,9 @@ class UTILITIES_API IddFile {
 
  private:
   // impl
-  boost::shared_ptr<detail::IddFile_Impl> m_impl;
+  std::shared_ptr<detail::IddFile_Impl> m_impl;
 
-  IddFile(const boost::shared_ptr<detail::IddFile_Impl>& impl);
+  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl);
 
   // configure logging
   REGISTER_LOGGER("utilities.idd.IddFile");

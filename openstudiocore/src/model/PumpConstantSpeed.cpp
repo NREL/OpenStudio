@@ -958,7 +958,7 @@ void PumpConstantSpeed::resetSkinLossRadiativeFraction() {
 }
 
 /// @cond
-PumpConstantSpeed::PumpConstantSpeed(boost::shared_ptr<detail::PumpConstantSpeed_Impl> impl)
+PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

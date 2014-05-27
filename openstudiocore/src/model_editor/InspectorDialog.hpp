@@ -144,10 +144,10 @@ private slots:
   //void onCheckBox(bool checked);
   void onListWidgetSelectionChanged();
   void onTableWidgetSelectionChanged();
-  void onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
   void onWorkspaceChange();
   void onTimeout();
-  void onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
 
 private:
 

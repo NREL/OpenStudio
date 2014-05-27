@@ -188,7 +188,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
     EDIT 
   };
 
-  boost::shared_ptr<MainRightColumnController> mainRightColumnController() const;
+  std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
  signals:
 
@@ -296,41 +296,41 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   BuildingComponentDialog * m_localLibraryDialog;
 
-  //boost::shared_ptr<OSConsoleWidget> m_consoleWidget;
+  //std::shared_ptr<OSConsoleWidget> m_consoleWidget;
 
-  boost::shared_ptr<HVACSystemsTabController> m_hvacSystemsTabController;
+  std::shared_ptr<HVACSystemsTabController> m_hvacSystemsTabController;
 
-  boost::shared_ptr<ThermalZonesTabController> m_thermalZonesTabController;
+  std::shared_ptr<ThermalZonesTabController> m_thermalZonesTabController;
 
-  boost::shared_ptr<SchedulesTabController> m_schedulesTabController;
+  std::shared_ptr<SchedulesTabController> m_schedulesTabController;
 
-  boost::shared_ptr<InspectorController> m_inspectorController;
+  std::shared_ptr<InspectorController> m_inspectorController;
 
-  boost::shared_ptr<LocationTabController> m_locationTabController;
+  std::shared_ptr<LocationTabController> m_locationTabController;
 
-  boost::shared_ptr<ConstructionsTabController> m_constructionsTabController;
+  std::shared_ptr<ConstructionsTabController> m_constructionsTabController;
 
-  boost::shared_ptr<LoadsTabController> m_loadsTabController;
+  std::shared_ptr<LoadsTabController> m_loadsTabController;
 
-  boost::shared_ptr<SpaceTypesTabController> m_spaceTypesTabController;
+  std::shared_ptr<SpaceTypesTabController> m_spaceTypesTabController;
 
-  boost::shared_ptr<FacilityTabController> m_facilityTabController;
+  std::shared_ptr<FacilityTabController> m_facilityTabController;
 
-  boost::shared_ptr<SummaryTabController> m_summaryTabController;
+  std::shared_ptr<SummaryTabController> m_summaryTabController;
 
-  boost::shared_ptr<VariablesTabController> m_variablesTabController;
+  std::shared_ptr<VariablesTabController> m_variablesTabController;
 
-  boost::shared_ptr<SimSettingsTabController> m_simSettingsTabController;
+  std::shared_ptr<SimSettingsTabController> m_simSettingsTabController;
 
-  boost::shared_ptr<ScriptsTabController> m_scriptsTabController;
+  std::shared_ptr<ScriptsTabController> m_scriptsTabController;
 
-  boost::shared_ptr<RunTabController> m_runTabController;
+  std::shared_ptr<RunTabController> m_runTabController;
 
-  boost::shared_ptr<ResultsTabController> m_resultsTabController;
+  std::shared_ptr<ResultsTabController> m_resultsTabController;
 
-  boost::shared_ptr<BuildingStoriesTabController> m_buildingStoriesTabController;
+  std::shared_ptr<BuildingStoriesTabController> m_buildingStoriesTabController;
 
-  boost::shared_ptr<MainRightColumnController> m_mainRightColumnController;
+  std::shared_ptr<MainRightColumnController> m_mainRightColumnController;
 
   boost::optional<analysisdriver::SimpleProject> m_simpleProject;
 

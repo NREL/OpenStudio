@@ -57,7 +57,7 @@ class ANALYSIS_API OpenStudioAlgorithm : public Algorithm {
   /// @cond
   typedef detail::OpenStudioAlgorithm_Impl ImplType;
 
-  explicit OpenStudioAlgorithm(boost::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl);
+  explicit OpenStudioAlgorithm(std::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl);
 
   friend class detail::OpenStudioAlgorithm_Impl;
   friend class AnalysisObject;

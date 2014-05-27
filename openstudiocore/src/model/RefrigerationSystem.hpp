@@ -221,7 +221,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   /// @cond
   typedef detail::RefrigerationSystem_Impl ImplType;
 
-  explicit RefrigerationSystem(boost::shared_ptr<detail::RefrigerationSystem_Impl> impl);
+  explicit RefrigerationSystem(std::shared_ptr<detail::RefrigerationSystem_Impl> impl);
 
   friend class detail::RefrigerationSystem_Impl;
   friend class Model;

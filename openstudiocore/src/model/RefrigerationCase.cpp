@@ -1396,7 +1396,7 @@ void RefrigerationCase::removeFromSystem() {
 }
 
 /// @cond
-RefrigerationCase::RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl)
+RefrigerationCase::RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

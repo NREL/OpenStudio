@@ -183,7 +183,7 @@ class MODEL_API BoilerSteam : public StraightComponent {
   /// @cond
   typedef detail::BoilerSteam_Impl ImplType;
 
-  explicit BoilerSteam(boost::shared_ptr<detail::BoilerSteam_Impl> impl);
+  explicit BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl);
 
   friend class detail::BoilerSteam_Impl;
   friend class Model;

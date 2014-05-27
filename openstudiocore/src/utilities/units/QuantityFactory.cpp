@@ -23,12 +23,11 @@
 #include <utilities/core/Exception.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/pointer_cast.hpp>
 #include <boost/lexical_cast.hpp>
 
-using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
+using std::shared_ptr;
+using std::dynamic_pointer_cast;
 
 namespace openstudio{
 

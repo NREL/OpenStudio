@@ -226,7 +226,7 @@ namespace runmanager {
       try {
         diritr begin(root);
         diritr end;
-        m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
+        m_thread = std::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
       } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());
@@ -239,7 +239,7 @@ namespace runmanager {
       try {
         diritr begin(root);
         diritr end;
-        m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
+        m_thread = std::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
       } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());

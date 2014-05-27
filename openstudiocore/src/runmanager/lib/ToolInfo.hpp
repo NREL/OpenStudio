@@ -26,7 +26,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Logger.hpp>
 #include <boost/regex.hpp>
-#include <boost/function.hpp>
 #include <algorithm>
 
 namespace openstudio {
@@ -321,7 +320,7 @@ namespace runmanager {
           m_tools.insert(m_tools.end(), begin, end);
         }
 
-      ToolInfo getLast(const boost::function<bool (const ToolInfo &)> &f) const
+      ToolInfo getLast(const std::function<bool (const ToolInfo &)> &f) const
       {
         auto itr = std::find_if(m_tools.rbegin(), m_tools.rend(), f);
 
@@ -333,7 +332,7 @@ namespace runmanager {
         throw std::out_of_range("ToolInfo not found");
       }
 
-      Tools getAll(const boost::function<bool (const ToolInfo &)> &f) const
+      Tools getAll(const std::function<bool (const ToolInfo &)> &f) const
       {
         auto itr = m_tools.begin();
         const std::vector<openstudio::runmanager::ToolInfo>::const_iterator end = m_tools.end();

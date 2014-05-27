@@ -258,7 +258,7 @@ ControllerOutdoorAir ControllerMechanicalVentilation::controllerOutdoorAir() con
 }
 
 /// @cond
-ControllerMechanicalVentilation::ControllerMechanicalVentilation(boost::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl)
+ControllerMechanicalVentilation::ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

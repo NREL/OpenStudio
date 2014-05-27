@@ -119,7 +119,7 @@ class MODEL_API ZoneHVACUnitHeater : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACUnitHeater_Impl ImplType;
 
-  explicit ZoneHVACUnitHeater(boost::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl);
+  explicit ZoneHVACUnitHeater(std::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl);
 
   friend class detail::ZoneHVACUnitHeater_Impl;
   friend class Model;

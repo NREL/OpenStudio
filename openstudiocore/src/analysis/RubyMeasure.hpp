@@ -203,7 +203,7 @@ class ANALYSIS_API RubyMeasure : public Measure {
   friend class detail::AnalysisObject_Impl;
   friend class detail::RubyMeasure_Impl;
 
-  explicit RubyMeasure(boost::shared_ptr<detail::RubyMeasure_Impl> impl);
+  explicit RubyMeasure(std::shared_ptr<detail::RubyMeasure_Impl> impl);
 
   friend class RubyContinuousVariable; // to call setParent
   friend class detail::RubyContinuousVariable_Impl; // to call setParent

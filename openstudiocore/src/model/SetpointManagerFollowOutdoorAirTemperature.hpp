@@ -99,7 +99,7 @@ class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public HVACComponen
 
   typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
 
-  explicit SetpointManagerFollowOutdoorAirTemperature(boost::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
+  explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
 
   private:
 

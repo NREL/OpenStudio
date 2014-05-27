@@ -51,7 +51,7 @@ private:
 
   typedef detail::WorkspaceObjectDiff_Impl ImplType;
 
-  WorkspaceObjectDiff(const boost::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl);
+  WorkspaceObjectDiff(const std::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl);
 
 };
 

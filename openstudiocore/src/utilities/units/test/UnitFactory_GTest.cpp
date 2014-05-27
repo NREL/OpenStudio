@@ -38,7 +38,6 @@
 
 #include <utilities/core/Exception.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/pointer_cast.hpp>
 
 using openstudio::Unit;

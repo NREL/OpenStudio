@@ -94,7 +94,7 @@ SpaceLoadDefinition::SpaceLoadDefinition(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceLoadDefinition_Impl>());
 }
 
-SpaceLoadDefinition::SpaceLoadDefinition(boost::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)
+SpaceLoadDefinition::SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl)
   : ResourceObject(impl)
 {}
 

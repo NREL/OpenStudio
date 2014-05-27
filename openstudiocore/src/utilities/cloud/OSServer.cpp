@@ -1762,7 +1762,7 @@ namespace openstudio{
   }
 
   OSServer::OSServer(const QUrl& url)
-    : m_impl(boost::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
+    : m_impl(std::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
   {
   }
 

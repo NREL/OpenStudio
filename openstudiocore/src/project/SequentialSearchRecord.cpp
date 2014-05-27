@@ -62,7 +62,7 @@ namespace detail {
     return result;
   }
 
-  void SequentialSearchRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void SequentialSearchRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<SequentialSearchRecord>(query);
@@ -124,7 +124,7 @@ namespace detail {
 
 SequentialSearchRecord::SequentialSearchRecord(const analysis::SequentialSearch& sequentialSearch, 
                                                AnalysisRecord& analysisRecord)
-  : OpenStudioAlgorithmRecord(boost::shared_ptr<detail::SequentialSearchRecord_Impl>(
+  : OpenStudioAlgorithmRecord(std::shared_ptr<detail::SequentialSearchRecord_Impl>(
         new detail::SequentialSearchRecord_Impl(sequentialSearch, analysisRecord)),
         analysisRecord.projectDatabase(),
         sequentialSearch)
@@ -133,7 +133,7 @@ SequentialSearchRecord::SequentialSearchRecord(const analysis::SequentialSearch&
 }
 
 SequentialSearchRecord::SequentialSearchRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : OpenStudioAlgorithmRecord(boost::shared_ptr<detail::SequentialSearchRecord_Impl>(
+  : OpenStudioAlgorithmRecord(std::shared_ptr<detail::SequentialSearchRecord_Impl>(
         new detail::SequentialSearchRecord_Impl(query, database)),
         database,
         boost::optional<analysis::OpenStudioAlgorithm>())
@@ -142,7 +142,7 @@ SequentialSearchRecord::SequentialSearchRecord(const QSqlQuery& query, ProjectDa
 }
 
 SequentialSearchRecord::SequentialSearchRecord(
-    boost::shared_ptr<detail::SequentialSearchRecord_Impl> impl,
+    std::shared_ptr<detail::SequentialSearchRecord_Impl> impl,
     ProjectDatabase database)
     : OpenStudioAlgorithmRecord(impl, database, boost::optional<analysis::OpenStudioAlgorithm>())
 {
@@ -208,7 +208,7 @@ analysis::SequentialSearch SequentialSearchRecord::sequentialSearch() const {
 }
 
 /// @cond
-SequentialSearchRecord::SequentialSearchRecord(boost::shared_ptr<detail::SequentialSearchRecord_Impl> impl)
+SequentialSearchRecord::SequentialSearchRecord(std::shared_ptr<detail::SequentialSearchRecord_Impl> impl)
   : OpenStudioAlgorithmRecord(impl)
 {}
 /// @endcond

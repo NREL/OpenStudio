@@ -85,7 +85,7 @@ namespace detail {
        virtual ~ToolBasedJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_pc);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc);
       virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
       virtual Files outputFilesImpl() const;
       virtual std::string getOutput() const;
@@ -270,9 +270,9 @@ namespace detail {
       std::vector<std::pair<QUrl, openstudio::path> > m_required_files;
       std::map<std::string, std::vector<std::string> > m_parameters;
       std::set<openstudio::path> m_expectedOutputFiles;
-      boost::shared_ptr<ProcessCreator> m_process_creator;
-      std::map<ToolInfo, boost::shared_ptr<Process> > m_processes;
-      boost::shared_ptr<Process> m_currentprocess;
+      std::shared_ptr<ProcessCreator> m_process_creator;
+      std::map<ToolInfo, std::shared_ptr<Process> > m_processes;
+      std::shared_ptr<Process> m_currentprocess;
       std::vector<boost::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
 
       std::set<std::pair<openstudio::path, openstudio::path> > m_addedRequiredFiles;

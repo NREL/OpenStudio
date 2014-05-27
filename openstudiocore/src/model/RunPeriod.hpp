@@ -106,7 +106,7 @@ class MODEL_API RunPeriod : public ParentObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit RunPeriod(boost::shared_ptr<detail::RunPeriod_Impl> impl);
+  explicit RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl);
 
   /** Constructor adds a new RunPeriod object to model. */
   explicit RunPeriod(const Model& model);

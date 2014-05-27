@@ -27,8 +27,6 @@
 
 #include <utilities/core/Path.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 #include <string>
 #include <ostream>
 #include <vector>

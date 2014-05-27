@@ -85,7 +85,7 @@ class ANALYSIS_API Measure : public AnalysisObject {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit Measure(boost::shared_ptr<detail::Measure_Impl> impl);
+  explicit Measure(std::shared_ptr<detail::Measure_Impl> impl);
 
   friend class MeasureGroup; // to call setParent
   friend class detail::MeasureGroup_Impl; // to call setParent

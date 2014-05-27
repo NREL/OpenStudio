@@ -83,7 +83,7 @@ class MODEL_API DistrictCooling : public StraightComponent {
   /// @cond
   typedef detail::DistrictCooling_Impl ImplType;
 
-  explicit DistrictCooling(boost::shared_ptr<detail::DistrictCooling_Impl> impl);
+  explicit DistrictCooling(std::shared_ptr<detail::DistrictCooling_Impl> impl);
 
   friend class detail::DistrictCooling_Impl;
   friend class Model;

@@ -89,7 +89,7 @@ class MODEL_API LightingSimulationZone : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit LightingSimulationZone(boost::shared_ptr<detail::LightingSimulationZone_Impl> impl);
+  explicit LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl);
 
   /// @endcond
  private:

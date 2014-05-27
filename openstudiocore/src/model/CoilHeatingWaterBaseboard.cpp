@@ -303,7 +303,7 @@ void CoilHeatingWaterBaseboard::resetConvergenceTolerance() {
   getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetConvergenceTolerance();
 }
 
-CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(boost::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
+CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

@@ -97,7 +97,7 @@ class MODEL_API SetpointManagerSingleZoneReheat : public HVACComponent {
 
   typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneReheat(boost::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
+  explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
 
   private:
 

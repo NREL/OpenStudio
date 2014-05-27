@@ -50,7 +50,7 @@ Glazing::Glazing(IddObjectType type,const Model& model)
 }
 
 /// @cond
-Glazing::Glazing(boost::shared_ptr<detail::Glazing_Impl> impl)
+Glazing::Glazing(std::shared_ptr<detail::Glazing_Impl> impl)
   : FenestrationMaterial(impl)
 {}
 /// @endcond

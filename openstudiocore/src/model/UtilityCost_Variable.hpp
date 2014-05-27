@@ -131,7 +131,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Variable(boost::shared_ptr<detail::UtilityCost_Variable_Impl> impl);
+  explicit UtilityCost_Variable(std::shared_ptr<detail::UtilityCost_Variable_Impl> impl);
 
 private:
 

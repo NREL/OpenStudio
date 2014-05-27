@@ -26,7 +26,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Path.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -124,14 +123,14 @@ class ANALYSIS_API AnalysisObject {
 
   /** Get the impl pointer */
   template<typename T>
-  boost::shared_ptr<T> getImpl() const {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Cast to type T. Throws std::bad_cast if object is not a T. */
   template<typename T>
   T cast() const {
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl) {
       throw(std::bad_cast());
     }
@@ -143,7 +142,7 @@ class ANALYSIS_API AnalysisObject {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -157,7 +156,7 @@ class ANALYSIS_API AnalysisObject {
 
   friend class detail::AnalysisObject_Impl;
 
-  explicit AnalysisObject(boost::shared_ptr<detail::AnalysisObject_Impl> impl);
+  explicit AnalysisObject(std::shared_ptr<detail::AnalysisObject_Impl> impl);
 
   // Method is const because parent data is mutable. Not ideal programming style, but preserves
   // constructor interfaces, and parent data is not directly serialized.
@@ -185,7 +184,7 @@ class ANALYSIS_API AnalysisObject {
   /// @endcond
  private:
 
-  boost::shared_ptr<detail::AnalysisObject_Impl> m_impl;
+  std::shared_ptr<detail::AnalysisObject_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysis.AnalysisObject");
 };

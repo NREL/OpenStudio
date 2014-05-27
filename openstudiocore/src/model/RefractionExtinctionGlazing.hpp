@@ -200,7 +200,7 @@ class MODEL_API RefractionExtinctionGlazing : public Glazing {
   /// @cond
   typedef detail::RefractionExtinctionGlazing_Impl ImplType;
 
-  explicit RefractionExtinctionGlazing(boost::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl);
+  explicit RefractionExtinctionGlazing(std::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl);
 
   friend class detail::RefractionExtinctionGlazing_Impl;
   friend class Model;

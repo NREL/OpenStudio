@@ -766,7 +766,7 @@ void RadianceParameters::resetKlemsSamplingDensity() {
 }
 
 /// @cond
-RadianceParameters::RadianceParameters(boost::shared_ptr<detail::RadianceParameters_Impl> impl)
+RadianceParameters::RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl)
   : ModelObject(impl)
 {
 }

@@ -99,7 +99,7 @@ class MODEL_API Splitter : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  explicit Splitter(boost::shared_ptr<ImplType> impl);
+  explicit Splitter(std::shared_ptr<ImplType> impl);
 
   private:
 

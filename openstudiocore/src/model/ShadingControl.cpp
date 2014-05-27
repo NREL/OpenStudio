@@ -256,7 +256,7 @@ void ShadingControl::resetSchedule(){
 
 
 /// @cond
-ShadingControl::ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl)
+ShadingControl::ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

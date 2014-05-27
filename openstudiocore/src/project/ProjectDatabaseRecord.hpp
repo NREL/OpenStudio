@@ -95,7 +95,7 @@ class PROJECT_API ProjectDatabaseRecord : public ObjectRecord {
   friend class detail::ProjectDatabase_Impl;
 
   /// constructor, does not register in database, use with caution
-  ProjectDatabaseRecord(boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl);
+  ProjectDatabaseRecord(std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl);
 
   void setVersion(const std::string& version);
 

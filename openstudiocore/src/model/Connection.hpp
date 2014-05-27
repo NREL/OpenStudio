@@ -66,7 +66,7 @@ class MODEL_API Connection : public ModelObject {
   friend class detail::ModelObject_Impl;
 
   // constructor
-  explicit Connection(boost::shared_ptr<detail::Connection_Impl> impl);
+  explicit Connection(std::shared_ptr<detail::Connection_Impl> impl);
 
  private:
 

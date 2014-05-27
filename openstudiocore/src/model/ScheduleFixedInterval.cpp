@@ -334,7 +334,7 @@ void ScheduleFixedInterval::resetOutOfRangeValue() {
 }
 
 /// @cond
-ScheduleFixedInterval::ScheduleFixedInterval(boost::shared_ptr<detail::ScheduleFixedInterval_Impl> impl)
+ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl)
   : ScheduleInterval(impl)
 {}
 /// @endcond

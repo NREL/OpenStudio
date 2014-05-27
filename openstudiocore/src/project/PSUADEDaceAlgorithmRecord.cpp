@@ -63,7 +63,7 @@ namespace detail {
     return result;
   }
 
-  void PSUADEDaceAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void PSUADEDaceAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<PSUADEDaceAlgorithmRecord>(query);
@@ -150,7 +150,7 @@ namespace detail {
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
     const analysis::PSUADEDaceAlgorithm& psuadedaceAlgorithm,
     AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
         new detail::PSUADEDaceAlgorithmRecord_Impl(psuadedaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         psuadedaceAlgorithm)
@@ -161,7 +161,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
 }
 
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
         new detail::PSUADEDaceAlgorithmRecord_Impl(query, database)),
         database,
         boost::optional<analysis::DakotaAlgorithm>())
@@ -170,7 +170,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(const QSqlQuery& query, Pro
 }
 
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
-    boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
+    std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
@@ -234,7 +234,7 @@ analysis::PSUADEDaceAlgorithm PSUADEDaceAlgorithmRecord::psuadedaceAlgorithm() c
 }
 
 /// @cond
-PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl)
+PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

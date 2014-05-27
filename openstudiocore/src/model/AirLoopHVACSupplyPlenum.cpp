@@ -373,7 +373,7 @@ bool AirLoopHVACSupplyPlenum::addBranchForZone(openstudio::model::ThermalZone & 
 
 
 /// @cond
-AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(boost::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)
+AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)
   : Splitter(impl)
 {}
 /// @endcond

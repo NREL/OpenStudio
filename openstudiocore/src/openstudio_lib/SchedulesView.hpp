@@ -184,9 +184,9 @@ class SchedulesView : public QWidget
 
   void addScheduleRule( model::ScheduleRule & scheduleRule );
 
-  void onModelAdd( boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID& );
+  void onModelAdd( std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID& );
 
-  void removeSchedule( boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID& );
+  void removeSchedule( std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID& );
 
   void onScheduleRuleRemoved(Handle handle);
 
@@ -1134,7 +1134,7 @@ class YearOverview : public QWidget
 
   void scheduleRefresh();
 
-  void onModelAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
   private:
 

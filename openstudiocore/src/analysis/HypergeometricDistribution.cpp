@@ -26,13 +26,13 @@ namespace openstudio {
 namespace analysis {
 
 HypergeometricDistribution::HypergeometricDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HypergeometricDistribution::type())))
 {}
 
 HypergeometricDistribution::HypergeometricDistribution(
   int totalPopulation, int selectedPopulation, int numDrawn) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HypergeometricDistribution::type())))
 {
   setTotalPopulation(totalPopulation);
@@ -89,7 +89,7 @@ bool HypergeometricDistribution::setNumDrawn(int value) {
   }
 }
 
-HypergeometricDistribution::HypergeometricDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+HypergeometricDistribution::HypergeometricDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == HypergeometricDistribution::type());

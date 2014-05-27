@@ -157,7 +157,7 @@ ScheduleConstant::ScheduleConstant(const Model& model)
 }
 
 // constructor
-ScheduleConstant::ScheduleConstant(boost::shared_ptr<detail::ScheduleConstant_Impl> impl)
+ScheduleConstant::ScheduleConstant(std::shared_ptr<detail::ScheduleConstant_Impl> impl)
   : Schedule(impl)
 {}
 

@@ -109,7 +109,7 @@ double Function::getValue(const DataPoint& dataPoint) const {
 }
 
 /// @cond
-Function::Function(boost::shared_ptr<detail::Function_Impl> impl)
+Function::Function(std::shared_ptr<detail::Function_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

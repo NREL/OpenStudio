@@ -795,7 +795,7 @@ double SpaceInfiltrationDesignFlowRate::getAirChangesPerHour(double floorArea,
 }
 
 /// @cond
-SpaceInfiltrationDesignFlowRate::SpaceInfiltrationDesignFlowRate(boost::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl)
+SpaceInfiltrationDesignFlowRate::SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl)
   : SpaceLoad(impl)
 {}
 /// @endcond

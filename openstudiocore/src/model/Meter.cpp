@@ -630,7 +630,7 @@ bool MeterFuelTypeEquals(const Meter& meter,const FuelType& ft) {
 }
 
 /// @cond
-Meter::Meter(boost::shared_ptr<detail::Meter_Impl> impl)
+Meter::Meter(std::shared_ptr<detail::Meter_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -27,8 +27,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-
 class QSqlDatabase;
 class QWidget;
 
@@ -44,7 +42,7 @@ namespace openstudio{
   ///       of static initialize and destruction order problems caused by statics used in the QDatabase stuff
   class UTILITIES_API LocalBCL : public BCL {
 
-  static boost::shared_ptr<LocalBCL> ptr;
+  static std::shared_ptr<LocalBCL> ptr;
 
     Q_OBJECT
 
@@ -182,7 +180,7 @@ namespace openstudio{
     QString m_libraryPath;
     const QString m_dbName;
     QString dbVersion;
-    boost::shared_ptr<QSqlDatabase> m_qSqlDatabase;
+    std::shared_ptr<QSqlDatabase> m_qSqlDatabase;
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
   };

@@ -254,7 +254,7 @@ bool SizingPlant::setLoopDesignTemperatureDifference(const Quantity& loopDesignT
 }
 
 /// @cond
-SizingPlant::SizingPlant(boost::shared_ptr<detail::SizingPlant_Impl> impl)
+SizingPlant::SizingPlant(std::shared_ptr<detail::SizingPlant_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

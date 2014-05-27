@@ -64,7 +64,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   modules.push_back("openstudioruleset");
 
   // Initialize the embedded Ruby interpreter
-  boost::shared_ptr<openstudio::detail::RubyInterpreter>
+  std::shared_ptr<openstudio::detail::RubyInterpreter>
     ri(new openstudio::detail::RubyInterpreter(getOpenStudioRubyPath(),
                                                getOpenStudioRubyScriptsPath(),
                                                modules));
@@ -105,7 +105,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   EXPECT_EQ(v[2], 3*2+8);
 
   // Initialize the argument getter
-  boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
+  std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
     rsc(new openstudio::ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(ri));
 
   // Test calling the actual function we are concerned about

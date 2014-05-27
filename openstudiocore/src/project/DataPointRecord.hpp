@@ -203,12 +203,12 @@ class PROJECT_API DataPointRecord : public ObjectRecord {
   friend class detail::DataPointRecord_Impl;
 
   /** Construct from impl. */
-  DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
+  DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl,
                   ProjectDatabase database);
 
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl);
+  explicit DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl);
 
   /// @endcond
 

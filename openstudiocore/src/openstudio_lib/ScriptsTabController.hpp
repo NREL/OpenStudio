@@ -23,8 +23,6 @@
 #include <openstudio_lib/MainTabController.hpp>
 #include <utilities/core/Path.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 #include <openstudio_lib/MainTabController.hpp>
 #include "ScriptsTabView.hpp"
 #include <QPointer>

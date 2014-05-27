@@ -168,7 +168,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeCooledBeam : public StraightC
   /// @cond
   typedef detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl ImplType;
 
-  explicit AirTerminalSingleDuctConstantVolumeCooledBeam(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
+  explicit AirTerminalSingleDuctConstantVolumeCooledBeam(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl> impl);
 
   friend class detail::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl;
   friend class Model;

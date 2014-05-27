@@ -22,8 +22,6 @@
 #include "PrjReader.hpp"
 #include "ContamAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 namespace contam {
 
@@ -130,7 +128,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::WeatherDataImpl> m_impl;
+  std::shared_ptr<detail::WeatherDataImpl> m_impl;
 };
 
 /** The Icon object contains basic information about sketchpad icons. This object
@@ -202,7 +200,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::IconImpl> m_impl;
+  std::shared_ptr<detail::IconImpl> m_impl;
 };
 
 /** FanDataPoint is an object for defining fan characteristics. It contains a single

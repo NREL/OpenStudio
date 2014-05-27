@@ -103,7 +103,7 @@ namespace detail {
     return result;
   }
 
-  void DakotaAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DakotaAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DakotaAlgorithmRecord>(query);
@@ -289,7 +289,7 @@ namespace detail {
 
 } // detail
 
-DakotaAlgorithmRecord::DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
+DakotaAlgorithmRecord::DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl,
                                              ProjectDatabase database,
                                              const boost::optional<analysis::DakotaAlgorithm>& algorithm)
   : AlgorithmRecord(impl, database, boost::optional<analysis::Algorithm>(algorithm))
@@ -353,7 +353,7 @@ DakotaAlgorithmRecord DakotaAlgorithmRecord::factoryFromDakotaAlgorithm(
   }
 
   OS_ASSERT(false);
-  return DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl>());
+  return DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl>());
 }
 
 std::vector<DakotaAlgorithmRecord> DakotaAlgorithmRecord::getDakotaAlgorithmRecords(ProjectDatabase& database) {
@@ -407,7 +407,7 @@ analysis::DakotaAlgorithm DakotaAlgorithmRecord::dakotaAlgorithm() const {
 }
 
 /// @cond
-DakotaAlgorithmRecord::DakotaAlgorithmRecord(boost::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl)
+DakotaAlgorithmRecord::DakotaAlgorithmRecord(std::shared_ptr<detail::DakotaAlgorithmRecord_Impl> impl)
   : AlgorithmRecord(impl)
 {}
 /// @endcond

@@ -117,7 +117,7 @@ class MODEL_API ScheduleDay : public ScheduleBase {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::ScheduleDay_Impl;
 
-  explicit ScheduleDay(boost::shared_ptr<detail::ScheduleDay_Impl> impl);
+  explicit ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl);
 
   /// @endcond
  private:

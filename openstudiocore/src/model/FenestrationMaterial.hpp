@@ -113,7 +113,7 @@ class MODEL_API FenestrationMaterial : public Material {
 
   FenestrationMaterial(IddObjectType type,const Model& model);
 
-  explicit FenestrationMaterial(boost::shared_ptr<detail::FenestrationMaterial_Impl> impl);
+  explicit FenestrationMaterial(std::shared_ptr<detail::FenestrationMaterial_Impl> impl);
 
   /// @endcond
  private:

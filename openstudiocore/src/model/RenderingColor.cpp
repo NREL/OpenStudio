@@ -205,7 +205,7 @@ void RenderingColor::resetRenderingAlphaValue() {
 }
 
 /// @cond
-RenderingColor::RenderingColor(boost::shared_ptr<detail::RenderingColor_Impl> impl)
+RenderingColor::RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl)
   : ResourceObject(impl)
 {}
 

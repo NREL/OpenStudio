@@ -409,7 +409,7 @@ class ANALYSIS_API Problem : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::Problem_Impl;
 
-  explicit Problem(boost::shared_ptr<detail::Problem_Impl> impl);
+  explicit Problem(std::shared_ptr<detail::Problem_Impl> impl);
 
   friend class Analysis;              // for calling setParent
   friend class detail::Analysis_Impl; // for calling setParent

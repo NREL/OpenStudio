@@ -28,8 +28,6 @@
 
 #include <QAbstractItemModel>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio{
   namespace model
   {
@@ -61,12 +59,12 @@ namespace detail {
       }
 
     private:
-      RunManagerStatusHandle(const boost::shared_ptr<RunManagerStatus> &t_statusUI)
+      RunManagerStatusHandle(const std::shared_ptr<RunManagerStatus> &t_statusUI)
         : m_statusUI(t_statusUI)
       {
       }
 
-      boost::shared_ptr<RunManagerStatus> m_statusUI;
+      std::shared_ptr<RunManagerStatus> m_statusUI;
   };
 
   /// A handle to an underlying RunManager_Impl object, can be copied and passed
@@ -311,7 +309,7 @@ namespace detail {
     private:
       REGISTER_LOGGER("openstudio.runmanager.RunManager");
 
-      boost::shared_ptr<detail::RunManager_Impl> m_impl;
+      std::shared_ptr<detail::RunManager_Impl> m_impl;
       RunManagerStatusHandle m_handle;
 
       struct DB_Handler;

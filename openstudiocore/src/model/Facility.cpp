@@ -1604,7 +1604,7 @@ namespace detail {
 
 }// detail
 
-Facility::Facility(boost::shared_ptr<detail::Facility_Impl> impl)
+Facility::Facility(std::shared_ptr<detail::Facility_Impl> impl)
   : ParentObject(impl)
 {}
 

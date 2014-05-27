@@ -19,7 +19,6 @@
 
 #include "ToolInfo.hpp"
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
 #include <QtGlobal>
 
 namespace openstudio {
@@ -175,22 +174,22 @@ namespace runmanager {
 
   ToolInfo Tools::getLastByName(const std::string &t_name) const
   {
-    return getLast(boost::bind(&Tools::nameCompare, t_name, _1));
+    return getLast(std::bind(&Tools::nameCompare, t_name, std::placeholders::_1));
   }
 
   Tools Tools::getAllByName(const std::string &t_name) const
   {
-    return getAll(boost::bind(&Tools::nameCompare, t_name, _1));
+    return getAll(std::bind(&Tools::nameCompare, t_name, std::placeholders::_1));
   }
 
   ToolInfo Tools::getLastByVersion(const ToolVersion &t_version) const
   {
-    return getLast(boost::bind(&Tools::versionCompare, t_version, _1));
+    return getLast(std::bind(&Tools::versionCompare, t_version, std::placeholders::_1));
   }
 
   Tools Tools::getAllByVersion(const ToolVersion &t_version) const
   {
-    return getAll(boost::bind(&Tools::versionCompare, t_version, _1));
+    return getAll(std::bind(&Tools::versionCompare, t_version, std::placeholders::_1));
   }
 
 }

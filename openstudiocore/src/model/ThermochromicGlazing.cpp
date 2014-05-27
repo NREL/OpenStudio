@@ -257,7 +257,7 @@ IddObjectType ThermochromicGlazing::iddObjectType() {
 }
 
 /// @cond
-ThermochromicGlazing::ThermochromicGlazing(boost::shared_ptr<detail::ThermochromicGlazing_Impl> impl)
+ThermochromicGlazing::ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

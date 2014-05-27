@@ -105,7 +105,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   /// @cond
   typedef detail::EvaporativeCoolerDirectResearchSpecial_Impl ImplType;
 
-  explicit EvaporativeCoolerDirectResearchSpecial(boost::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> impl);
+  explicit EvaporativeCoolerDirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> impl);
  private:
   REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");
   /// @endcond

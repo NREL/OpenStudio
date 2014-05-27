@@ -121,7 +121,7 @@ SpaceLoad::SpaceLoad(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceLoad_Impl>());
 }
 
-SpaceLoad::SpaceLoad(boost::shared_ptr<detail::SpaceLoad_Impl> impl)
+SpaceLoad::SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl)
   : SpaceItem(impl)
 {}
 

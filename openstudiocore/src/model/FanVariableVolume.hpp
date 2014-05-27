@@ -225,7 +225,7 @@ class MODEL_API FanVariableVolume : public StraightComponent {
 
   friend class openstudio::IdfObject;
 
-  explicit FanVariableVolume(boost::shared_ptr<detail::FanVariableVolume_Impl> impl);
+  explicit FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl);
 
   /// @endcond
  private:

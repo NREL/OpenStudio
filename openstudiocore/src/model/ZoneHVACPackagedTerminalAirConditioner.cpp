@@ -782,7 +782,7 @@ void ZoneHVACPackagedTerminalAirConditioner::resetFanPlacement() {
   getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->resetFanPlacement();
 }
 
-ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner(boost::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl)
+ZoneHVACPackagedTerminalAirConditioner::ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 

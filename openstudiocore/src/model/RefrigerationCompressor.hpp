@@ -127,7 +127,7 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
   /// @cond
   typedef detail::RefrigerationCompressor_Impl ImplType;
 
-  explicit RefrigerationCompressor(boost::shared_ptr<detail::RefrigerationCompressor_Impl> impl);
+  explicit RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl);
 
   friend class detail::RefrigerationCompressor_Impl;
   friend class Model;

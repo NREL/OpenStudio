@@ -105,7 +105,7 @@ class MODEL_API ScheduleTypeLimits : public ResourceObject {
   /// @cond
   typedef detail::ScheduleTypeLimits_Impl ImplType;
 
-  explicit ScheduleTypeLimits(boost::shared_ptr<detail::ScheduleTypeLimits_Impl> impl);
+  explicit ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl);
 
   friend class detail::ScheduleTypeLimits_Impl;
   friend class Model;

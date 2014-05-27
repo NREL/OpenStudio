@@ -67,7 +67,7 @@ class QWriteLocker;
 
 namespace openstudio{
 
-  /// convienience function for SWIG, prefer macros in C++
+  /// convenience function for SWIG, prefer macros in C++
   UTILITIES_API void logFree(LogLevel level, const std::string& channel, const std::string& message);
 
   /** Singleton logger class.  Singleton Logger object maintains logging state throughout

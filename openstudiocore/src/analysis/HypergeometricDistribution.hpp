@@ -69,7 +69,7 @@ class ANALYSIS_API HypergeometricDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit HypergeometricDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit HypergeometricDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

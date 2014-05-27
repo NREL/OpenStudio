@@ -1182,7 +1182,7 @@ void FanVariableVolume::resetEndUseSubcategory() {
 }
 
 /// @cond
-FanVariableVolume::FanVariableVolume(boost::shared_ptr<detail::FanVariableVolume_Impl> impl)
+FanVariableVolume::FanVariableVolume(std::shared_ptr<detail::FanVariableVolume_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

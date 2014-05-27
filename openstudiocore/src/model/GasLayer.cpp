@@ -63,7 +63,7 @@ GasLayer::GasLayer(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::GasLayer_Impl>());
 }
 
-GasLayer::GasLayer(boost::shared_ptr<detail::GasLayer_Impl> impl)
+GasLayer::GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl)
   : FenestrationMaterial(impl)
 {}
 /// @endcond

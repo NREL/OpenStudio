@@ -116,7 +116,7 @@ ConnectorSplitter::ConnectorSplitter(const Model& model)
   OS_ASSERT(getImpl<detail::ConnectorSplitter_Impl>());
 }
 
-ConnectorSplitter::ConnectorSplitter(boost::shared_ptr<detail::ConnectorSplitter_Impl> p)
+ConnectorSplitter::ConnectorSplitter(std::shared_ptr<detail::ConnectorSplitter_Impl> p)
   : Splitter(p)
 {}
 

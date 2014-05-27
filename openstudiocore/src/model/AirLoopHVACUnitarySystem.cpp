@@ -1839,7 +1839,7 @@ void AirLoopHVACUnitarySystem::resetAncilliaryOffCycleElectricPower() {
 // }
 
 /// @cond
-AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(boost::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
+AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLoopHVACUnitarySystem_Impl> impl)
   : WaterToAirComponent(impl)
 {}
 /// @endcond

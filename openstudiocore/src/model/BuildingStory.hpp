@@ -125,7 +125,7 @@ class MODEL_API BuildingStory : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit BuildingStory(boost::shared_ptr<detail::BuildingStory_Impl> impl);
+  explicit BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl);
 
   /// @endcond
  private:

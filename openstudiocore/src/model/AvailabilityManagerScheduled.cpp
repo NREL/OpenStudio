@@ -153,7 +153,7 @@ bool AvailabilityManagerScheduled::setSchedule(Schedule& schedule) {
 }
 
 /// @cond
-AvailabilityManagerScheduled::AvailabilityManagerScheduled(boost::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl)
+AvailabilityManagerScheduled::AvailabilityManagerScheduled(std::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

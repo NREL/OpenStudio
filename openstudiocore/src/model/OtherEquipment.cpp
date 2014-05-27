@@ -313,7 +313,7 @@ double OtherEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 }
 
 /// @cond
-OtherEquipment::OtherEquipment(boost::shared_ptr<detail::OtherEquipment_Impl> impl)
+OtherEquipment::OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

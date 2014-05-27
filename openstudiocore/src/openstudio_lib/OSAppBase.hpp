@@ -46,7 +46,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual ~OSAppBase();
 
-  virtual boost::shared_ptr<OSDocument> currentDocument() const = 0;
+  virtual std::shared_ptr<OSDocument> currentDocument() const = 0;
 
   static OSAppBase * instance();
 

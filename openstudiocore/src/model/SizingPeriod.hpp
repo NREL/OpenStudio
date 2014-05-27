@@ -48,7 +48,7 @@ class MODEL_API SizingPeriod : public ParentObject {
   SizingPeriod(IddObjectType type,const Model& model);
 
   // constructor
-  explicit SizingPeriod(boost::shared_ptr<detail::SizingPeriod_Impl> impl);
+  explicit SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl);
 
  private:
 

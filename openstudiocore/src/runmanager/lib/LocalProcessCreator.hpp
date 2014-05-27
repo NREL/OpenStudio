@@ -2,7 +2,6 @@
 #define OPENSTUDIO_RUNMANAGER_LOCALPROCESSCREATOR_HPP__
 
 #include "ProcessCreator.hpp"
-#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
 #include <utilities/core/Path.hpp>
@@ -32,7 +31,7 @@ namespace runmanager {
       ///                       is a relative path and does not reside in the tool path
       /// \param[in] t_remoteId optional remote id for recreating remote process. Throws exception if set
       /// \returns the created Process
-      virtual boost::shared_ptr<Process> createProcess(
+      virtual std::shared_ptr<Process> createProcess(
           const openstudio::runmanager::ToolInfo &t_tool,
           const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles,
           const std::vector<std::string> &t_parameters,

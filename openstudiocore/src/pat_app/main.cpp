@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     cont = false;
 
     // Initialize the embedded Ruby interpreter
-    boost::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
+    std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(openstudio::getOpenStudioRubyPath(),
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));

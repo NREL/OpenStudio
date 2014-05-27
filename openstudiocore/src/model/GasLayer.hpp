@@ -52,7 +52,7 @@ class MODEL_API GasLayer : public FenestrationMaterial {
 
   GasLayer(IddObjectType type,const Model& model);
 
-  explicit GasLayer(boost::shared_ptr<detail::GasLayer_Impl> impl);  
+  explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);  
 
   /// @endcond
  private:

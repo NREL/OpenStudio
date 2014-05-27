@@ -83,7 +83,7 @@ double Variable::getValue(const DataPoint& dataPoint) const {
 }
 
 /// @cond
-Variable::Variable(boost::shared_ptr<detail::Variable_Impl> impl)
+Variable::Variable(std::shared_ptr<detail::Variable_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

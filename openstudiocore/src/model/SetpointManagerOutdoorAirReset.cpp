@@ -811,7 +811,7 @@ boost::optional<Node> SetpointManagerOutdoorAirReset::setpointNode() const
 }
 
 /// @cond
-SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(boost::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl)
+SetpointManagerOutdoorAirReset::SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

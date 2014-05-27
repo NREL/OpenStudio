@@ -97,7 +97,7 @@ bool ExteriorLightsDefinition::setDesignLevel(double designLevel) {
 }
 
 /// @cond
-ExteriorLightsDefinition::ExteriorLightsDefinition(boost::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
+ExteriorLightsDefinition::ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

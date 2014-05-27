@@ -24,13 +24,13 @@ namespace openstudio {
 namespace analysis {
 
 GenericUncertaintyDescription::GenericUncertaintyDescription(const UncertaintyDescriptionType& type)
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(type)))
 {}
 
 GenericUncertaintyDescription::GenericUncertaintyDescription(const UncertaintyDescriptionType& type,
                                                              const std::vector<Attribute>& attributes)
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(type,attributes)))
 {}
 
@@ -70,7 +70,7 @@ bool GenericUncertaintyDescription::clearAttribute(const std::string& attributeN
   return impl()->clearAttribute(attributeName,true);
 }
 
-GenericUncertaintyDescription::GenericUncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+GenericUncertaintyDescription::GenericUncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {}
 

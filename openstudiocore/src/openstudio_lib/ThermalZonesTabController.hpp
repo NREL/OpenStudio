@@ -43,7 +43,7 @@ class ThermalZonesTabController : public MainTabController
 
   private:
 
-  boost::shared_ptr<ThermalZonesController> m_thermalZonesController;
+  std::shared_ptr<ThermalZonesController> m_thermalZonesController;
 };
 
 } // openstudio

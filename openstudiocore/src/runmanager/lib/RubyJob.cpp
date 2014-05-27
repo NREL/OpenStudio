@@ -37,7 +37,6 @@
 #include <QDateTime>
 #include <QUrl>
 
-#include <boost/bind.hpp>
 #include <boost/tuple/tuple_comparison.hpp>
 
 namespace openstudio {
@@ -115,12 +114,12 @@ namespace detail {
   {
   }
 
-  void RubyJob::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job) 
+  void RubyJob::mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job) 
   {
 
     // only work on UserScriptJobs
-    boost::shared_ptr<UserScriptJob> usjob = boost::dynamic_pointer_cast<UserScriptJob>(t_job);
-    boost::shared_ptr<UserScriptJob> usparentjob = boost::dynamic_pointer_cast<UserScriptJob>(t_parent);
+    std::shared_ptr<UserScriptJob> usjob = std::dynamic_pointer_cast<UserScriptJob>(t_job);
+    std::shared_ptr<UserScriptJob> usparentjob = std::dynamic_pointer_cast<UserScriptJob>(t_parent);
 
     if (!usjob || !usparentjob)
     {
@@ -149,8 +148,8 @@ namespace detail {
     LOG(Info, "Merging Job " << openstudio::toString(t_job->uuid()) << " into " << openstudio::toString(uuid()));
     
     removeChild(t_job);
-    std::vector<boost::shared_ptr<Job_Impl> > children = t_job->children();
-    std::for_each(children.begin(), children.end(), boost::bind(&Job_Impl::addChild, t_parent, _1));
+    std::vector<std::shared_ptr<Job_Impl> > children = t_job->children();
+    std::for_each(children.begin(), children.end(), std::bind(&Job_Impl::addChild, t_parent, std::placeholders::_1));
 
     std::vector<JobParams> existing_merged_jobs = usjob->m_mergedJobs;
     JobParams job_to_merge = usjob->params();

@@ -44,7 +44,6 @@
 #include <vector>
 #include <algorithm>
 
-#include <boost/bind.hpp>
 #include <model_editor/ClassViewWidget.hpp>
 #include <model_editor/TableView.hpp>
 #include <model/Model.hpp>
@@ -118,27 +117,27 @@ void TableModel::sort(openstudio::WorkspaceObjectVector& objects, int column, Qt
   {
     case 0:
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIddName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIddName,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIddName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIddName,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
     case 1:
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIdfName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIdfName,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIdfName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIdfName,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
     case 2:
       mModel = mClassViewWidget->getModel();
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIndex,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIndex,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIndex,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIndex,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
   }

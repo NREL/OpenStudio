@@ -87,7 +87,7 @@ class MODEL_API AirTerminalSingleDuctUncontrolled : public StraightComponent {
   /// @cond 
   typedef detail::AirTerminalSingleDuctUncontrolled_Impl ImplType;
 
-  explicit AirTerminalSingleDuctUncontrolled(boost::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
+  explicit AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctUncontrolled");

@@ -361,7 +361,7 @@ bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(const Quantity& w
 
 /// @cond
 SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(
-    boost::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
+    std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
   : SpaceLoad(impl)
 {}
 /// @endcond

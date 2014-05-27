@@ -303,7 +303,7 @@ void ZoneHVACBaseboardConvectiveWater::removeFromThermalZone()
   return getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>()->removeFromThermalZone();
 }
 /// @cond
-ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(boost::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
+ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

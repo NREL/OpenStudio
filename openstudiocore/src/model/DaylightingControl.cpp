@@ -677,7 +677,7 @@ bool DaylightingControl::aimAt(const Point3d& target)
 }
 
 /// @cond
-DaylightingControl::DaylightingControl(boost::shared_ptr<detail::DaylightingControl_Impl> impl)
+DaylightingControl::DaylightingControl(std::shared_ptr<detail::DaylightingControl_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

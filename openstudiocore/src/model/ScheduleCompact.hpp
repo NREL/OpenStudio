@@ -90,7 +90,7 @@ class MODEL_API ScheduleCompact : public Schedule {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit ScheduleCompact(boost::shared_ptr<detail::ScheduleCompact_Impl> impl);
+  explicit ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl);
 
  private:
 

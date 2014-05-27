@@ -265,7 +265,7 @@ class MODEL_API SizingZone : public ModelObject {
   /// @cond
   typedef detail::SizingZone_Impl ImplType;
 
-  explicit SizingZone(boost::shared_ptr<detail::SizingZone_Impl> impl);
+  explicit SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl);
 
   friend class detail::SizingZone_Impl;
   friend class Model;

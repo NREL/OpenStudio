@@ -90,7 +90,7 @@ class MODEL_API ConvergenceLimits : public ModelObject {
   /// @cond
   typedef detail::ConvergenceLimits_Impl ImplType;
 
-  explicit ConvergenceLimits(boost::shared_ptr<detail::ConvergenceLimits_Impl> impl);
+  explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
 
   friend class detail::ConvergenceLimits_Impl;
   friend class Model;

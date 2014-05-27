@@ -107,7 +107,7 @@ class MODEL_API ShadingSurfaceGroup : public PlanarSurfaceGroup {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ShadingSurfaceGroup(boost::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
+  explicit ShadingSurfaceGroup(std::shared_ptr<detail::ShadingSurfaceGroup_Impl> impl);
 
   /// @endcond
  private:

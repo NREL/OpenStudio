@@ -41,7 +41,7 @@ class HVACSystemsTabController : public MainTabController
 
   private:
 
-  boost::shared_ptr<HVACSystemsController> m_hvacSystemsController;
+  std::shared_ptr<HVACSystemsController> m_hvacSystemsController;
 
   bool m_isIP;
 

@@ -974,7 +974,7 @@ AirLoopHVAC::AirLoopHVAC(Model& model)
   SizingSystem sizingSystem(model,*this);
 }
 
-AirLoopHVAC::AirLoopHVAC(boost::shared_ptr<detail::AirLoopHVAC_Impl> impl)
+AirLoopHVAC::AirLoopHVAC(std::shared_ptr<detail::AirLoopHVAC_Impl> impl)
   : Loop(impl)
 {}
 

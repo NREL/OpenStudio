@@ -98,7 +98,7 @@ class MODEL_API AvailabilityManagerNightCycle : public ModelObject {
   /// @cond
   typedef detail::AvailabilityManagerNightCycle_Impl ImplType;
 
-  explicit AvailabilityManagerNightCycle(boost::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
+  explicit AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
 
   friend class detail::AvailabilityManagerNightCycle_Impl;
   friend class Model;

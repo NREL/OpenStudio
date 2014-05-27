@@ -1709,7 +1709,7 @@ void CoolingTowerSingleSpeed::resetSizingFactor() {
 }
 
 /// @cond
-CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(boost::shared_ptr<detail::CoolingTowerSingleSpeed_Impl> impl)
+CoolingTowerSingleSpeed::CoolingTowerSingleSpeed(std::shared_ptr<detail::CoolingTowerSingleSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

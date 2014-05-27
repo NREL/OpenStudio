@@ -683,7 +683,7 @@ ControllerOutdoorAir::ControllerOutdoorAir(const Model& model)
   
 }
 
-ControllerOutdoorAir::ControllerOutdoorAir(boost::shared_ptr<detail::ControllerOutdoorAir_Impl> impl)
+ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl)
   : ParentObject(impl)
 {
 }

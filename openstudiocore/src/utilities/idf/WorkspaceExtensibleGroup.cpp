@@ -26,8 +26,8 @@
 
 #include <boost/lexical_cast.hpp>
 
-using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
+using std::shared_ptr;
+using std::dynamic_pointer_cast;
 
 namespace openstudio {
 
@@ -86,7 +86,7 @@ bool WorkspaceExtensibleGroup::canBeSource() const {
 
 // PROTECTED
 WorkspaceExtensibleGroup::WorkspaceExtensibleGroup(
-    boost::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
+    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
   : IdfExtensibleGroup(impl,index) {}
 
 } // openstudio

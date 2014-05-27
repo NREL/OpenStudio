@@ -160,10 +160,10 @@ class PROJECT_API FileReferenceRecord : public ObjectRecord {
   friend class detail::FileReferenceRecord_Impl;
 
   // from impl
-  FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl, 
+  FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl, 
                       ProjectDatabase database);
 
-  explicit FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl);
+  explicit FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl);
 
   /// @endcond
  private:

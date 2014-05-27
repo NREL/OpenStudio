@@ -120,7 +120,7 @@ class SchedulesTabController : public MainTabController
 
   SchedulesView * m_schedulesView;
 
-  boost::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
+  std::shared_ptr<ScheduleSetsController> m_scheduleSetsController;
 
   YearSettingsWidget * m_yearSettingsWidget;
 

@@ -352,7 +352,7 @@ void CoilHeatingLowTempRadiantVarFlow::resetHeatingControlTemperatureSchedule()
 }
 
 /// @cond
-CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(boost::shared_ptr<detail::CoilHeatingLowTempRadiantVarFlow_Impl> impl)
+CoilHeatingLowTempRadiantVarFlow::CoilHeatingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantVarFlow_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

@@ -25,8 +25,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 
 namespace detail {
@@ -175,7 +173,7 @@ namespace detail {
 
   std::vector<Handle> WorkspaceObjectOrder_Impl::sort(const std::vector<Handle>& handles) const {
     HandleVector result(handles);
-    std::sort(result.begin(),result.end(),boost::bind(&WorkspaceObjectOrder_Impl::less_Handle,this,_1,_2));
+    std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_Handle, this, std::placeholders::_1, std::placeholders::_2));
     return result;
   }
 
@@ -183,7 +181,7 @@ namespace detail {
       const std::vector<WorkspaceObject>& objects) const 
   {
     WorkspaceObjectVector result(objects);
-    std::sort(result.begin(),result.end(),boost::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject,this,_1,_2));
+    std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject, this, std::placeholders::_1, std::placeholders::_2));
     return result;
   }
 
@@ -314,7 +312,7 @@ namespace detail {
     return objects;
   }
 
-  // ETH@20100409 boost::bind seems to need non-overloaded functions
+  // ETH@20100409 std::bind seems to need non-overloaded functions
   // These are (ugly) wrappers to accommodate.
   bool WorkspaceObjectOrder_Impl::less_Handle(const Handle& left, const Handle& right) const {
     return less(left,right);
@@ -444,7 +442,7 @@ boost::optional<unsigned> WorkspaceObjectOrder::indexInOrder(const Handle& handl
 // CONSTRUCTORS
 
 WorkspaceObjectOrder::WorkspaceObjectOrder(
-    const boost::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl) 
+    const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl) 
   : m_impl(impl) {}
 
 } // openstudio

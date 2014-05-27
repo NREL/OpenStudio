@@ -1037,7 +1037,7 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
 }
 
 /// @cond
-RefrigerationSecondarySystem::RefrigerationSecondarySystem(boost::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
+RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

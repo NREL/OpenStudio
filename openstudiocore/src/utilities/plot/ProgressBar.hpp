@@ -26,6 +26,8 @@
 
 #include <QProgressBar>
 
+#include <memory>
+
 namespace openstudio{
 
   /** ProgressBar wraps a QProgressBar and provides virtual methods setRange, setValue, and setWindowTitle(QString)
@@ -33,7 +35,7 @@ namespace openstudio{
    *
    *  ProgressBar an atypical QObject because it is designed to be stack allocated.  In many cases it 
    *  would be preferred to connect your own heap allocated QObject to the signals directly rather
-   *  than using this convienience class.
+   *  than using this convenience class.
    **/
   class UTILITIES_API ProgressBar : public QObject {
   
@@ -48,7 +50,7 @@ namespace openstudio{
     ProgressBar(bool visible, QWidget* parent = nullptr);
 
     /// constructor from impl
-    //ProgressBar(const boost::shared_ptr<QProgressBar>& impl);
+    //ProgressBar(const std::shared_ptr<QProgressBar>& impl);
 
     /// virtual destructor
     virtual ~ProgressBar();
@@ -105,11 +107,11 @@ namespace openstudio{
   protected:
 
     /// return the impl
-    //boost::shared_ptr<QProgressBar> impl() const;
+    //std::shared_ptr<QProgressBar> impl() const;
 
   private:
     /// impl
-    boost::shared_ptr<QProgressBar> m_impl;
+    std::shared_ptr<QProgressBar> m_impl;
 
     void updatePercentage();
 

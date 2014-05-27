@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 GammaDistribution::GammaDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GammaDistribution::type())))
 {}
 
 GammaDistribution::GammaDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GammaDistribution::type())))
 {
   setAlpha(alpha);
@@ -73,7 +73,7 @@ bool GammaDistribution::setBeta(double value) {
   }  
 }
 
-GammaDistribution::GammaDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+GammaDistribution::GammaDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == GammaDistribution::type());

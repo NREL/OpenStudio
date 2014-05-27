@@ -21,7 +21,6 @@
 #define OPENSTUDIO_HORIZONTALTABWIDGET_H
 
 #include <QWidget>
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 class QStackedWidget;

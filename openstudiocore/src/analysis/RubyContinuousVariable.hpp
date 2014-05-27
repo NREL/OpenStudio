@@ -99,7 +99,7 @@ class ANALYSIS_API RubyContinuousVariable : public ContinuousVariable {
   friend class detail::AnalysisObject_Impl;
   friend class detail::RubyContinuousVariable_Impl;
 
-  explicit RubyContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl> impl);
+  explicit RubyContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl> impl);
 
   friend class detail::RubyMeasure_Impl;
 

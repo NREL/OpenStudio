@@ -75,7 +75,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit CurrencyType(boost::shared_ptr<detail::CurrencyType_Impl> impl);
+  explicit CurrencyType(std::shared_ptr<detail::CurrencyType_Impl> impl);
 
 private:
 

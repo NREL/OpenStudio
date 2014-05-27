@@ -37,8 +37,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -72,7 +70,7 @@ namespace detail {
   {}
 
   AnalysisObject SequentialSearch_Impl::clone() const {
-    boost::shared_ptr<SequentialSearch_Impl> impl(new SequentialSearch_Impl(*this));
+    std::shared_ptr<SequentialSearch_Impl> impl(new SequentialSearch_Impl(*this));
     return SequentialSearch(impl);
   }
 
@@ -107,7 +105,7 @@ namespace detail {
     DataPointVector incompletePoints = analysis.dataPointsToQueue();
     DataPointVector::const_iterator it = std::find_if(incompletePoints.begin(),
                                                       incompletePoints.end(),
-                                                      boost::bind(&DataPoint::isTag,_1,"ss"));
+                                                      std::bind(&DataPoint::isTag,std::placeholders::_1,"ss"));
     if (it != incompletePoints.end()) {
       LOG(Info,"Returning because the last iteration has not yet been run.");
       return numAdded;
@@ -589,7 +587,7 @@ namespace detail {
 } // detail
 
 SequentialSearch::SequentialSearch(const SequentialSearchOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::SequentialSearch_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::SequentialSearch_Impl>(
         new detail::SequentialSearch_Impl(options)))
 {
   createCallbackForOptions();
@@ -603,7 +601,7 @@ SequentialSearch::SequentialSearch(const UUID& uuid,
                                    bool failed,
                                    int iter,
                                    const SequentialSearchOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::SequentialSearch_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::SequentialSearch_Impl>(
         new detail::SequentialSearch_Impl(uuid,
                                           versionUUID,
                                           displayName,
@@ -647,7 +645,7 @@ std::vector< std::vector<QVariant> > SequentialSearch::getCandidateCombinations(
 }
 
 /// @cond
-SequentialSearch::SequentialSearch(boost::shared_ptr<detail::SequentialSearch_Impl> impl)
+SequentialSearch::SequentialSearch(std::shared_ptr<detail::SequentialSearch_Impl> impl)
   : OpenStudioAlgorithm(impl)
 {}
 /// @endcond

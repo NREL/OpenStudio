@@ -151,7 +151,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   friend class detail::WorkspaceObject_Impl;
   friend class WorkspaceExtensibleGroup;
 
-  WorkspaceObject(boost::shared_ptr<detail::WorkspaceObject_Impl> impl);
+  WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl);
 
  private:
  

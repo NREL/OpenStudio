@@ -100,7 +100,7 @@ class MODEL_API ZoneCapacitanceMultiplierResearchSpecial : public ModelObject {
   /// @cond
   typedef detail::ZoneCapacitanceMultiplierResearchSpecial_Impl ImplType;
 
-  explicit ZoneCapacitanceMultiplierResearchSpecial(boost::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
+  explicit ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
 
   friend class detail::ZoneCapacitanceMultiplierResearchSpecial_Impl;
   friend class Model;

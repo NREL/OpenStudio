@@ -97,7 +97,7 @@ WeatherFileDays::WeatherFileDays(const Model& model)
 }
 
 // constructor
-WeatherFileDays::WeatherFileDays(boost::shared_ptr<detail::WeatherFileDays_Impl> impl)
+WeatherFileDays::WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl)
   : SizingPeriod(impl)
 {}
 

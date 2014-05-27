@@ -100,7 +100,7 @@ class ANALYSIS_API LognormalDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit LognormalDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit LognormalDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

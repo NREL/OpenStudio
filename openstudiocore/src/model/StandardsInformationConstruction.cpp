@@ -438,7 +438,7 @@ void StandardsInformationConstruction::resetPerturbableLayerType() {
 
 /// @cond
 StandardsInformationConstruction::StandardsInformationConstruction(
-    boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
+    std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

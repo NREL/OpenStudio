@@ -26,7 +26,6 @@
 
 #include <utilities/document/DocumentEnums.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <string>

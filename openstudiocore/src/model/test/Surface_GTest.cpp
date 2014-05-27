@@ -744,20 +744,20 @@ TEST_F(ModelFixture,Surface_IddAssumptions) {
   // if this test starts failing, please re-map the standardsinterface
   StringVector keys = Surface::validOutsideBoundaryConditionValues();
   EXPECT_EQ(14u, keys.size());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Adiabatic",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Surface",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Outdoors",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Ground",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundFCfactorMethod",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"OtherSideCoefficients",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"OtherSideConditionsModel",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorAverage",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorCore",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorPerimeter",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorAverageWall",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorAverageFloor",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorUpperWall",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorLowerWall",_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Adiabatic",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Surface",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Outdoors",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Ground",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundFCfactorMethod",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideCoefficients",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideConditionsModel",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorAverage",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorCore",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorPerimeter",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageWall",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageFloor",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorUpperWall",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorLowerWall",std::placeholders::_1)) == keys.end());
 }
 
 void expect_point_eq(const Point3d& p1, const Point3d& p2)
@@ -3345,10 +3345,10 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
       std::set<Handle> intersectedSpace1Surfaces;
 
       double expectedArea = 200.0;
-      BOOST_FOREACH(unsigned i, indices){
+      for (const unsigned i : indices){
 
         double totalGrossArea = 0.0;
-        BOOST_FOREACH(Surface s, space1.surfaces()){
+        for (const Surface& s : space1.surfaces()){
           if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
             totalGrossArea += s.grossArea();
           }
@@ -3358,7 +3358,7 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
 
         // one of the non-intersected surfaces should intersect
         boost::optional<Surface> intersectedSurface;
-        BOOST_FOREACH(Surface s, space1.surfaces()){
+        for (Surface& s : space1.surfaces()){
           if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
             if (s.intersect(surfaces[i])){
               intersectedSurface = s;
@@ -3374,13 +3374,13 @@ TEST_F(ModelFixture, Surface_Intersect_OneToFour){
       }
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      BOOST_FOREACH(Surface s, space1.surfaces()){
+      for (const Surface& s : space1.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      BOOST_FOREACH(Surface s, space2.surfaces()){
+      for (const Surface& s : space2.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
       }

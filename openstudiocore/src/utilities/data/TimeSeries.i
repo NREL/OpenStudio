@@ -11,13 +11,13 @@
 
 %ignore openstudio::detail;
 
-%template(TimeSeriesPtr) boost::shared_ptr<openstudio::TimeSeries>;
+%template(TimeSeriesPtr) std::shared_ptr<openstudio::TimeSeries>;
 
 // create an instantiation of the optional class
 %template(OptionalTimeSeries) boost::optional<openstudio::TimeSeries>;
 
 // create an instantiation of the vector class
-%template(TimeSeriesPtrVector) std::vector< boost::shared_ptr<openstudio::TimeSeries> >;
+%template(TimeSeriesPtrVector) std::vector< std::shared_ptr<openstudio::TimeSeries> >;
 %template(TimeSeriesVector) std::vector< openstudio::TimeSeries >;
 
 %template(TimeSeriesFromTimeSeriesVectorFunctor) boost::function1<openstudio::TimeSeries, const std::vector<openstudio::TimeSeries>&>;

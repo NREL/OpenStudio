@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 HistogramBinDistribution::HistogramBinDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HistogramBinDistribution::type())))
 {}
 
 HistogramBinDistribution::HistogramBinDistribution(std::vector<double> abscissas, std::vector<double> counts) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HistogramBinDistribution::type())))
 {
   setAbscissas(abscissas);
@@ -123,7 +123,7 @@ void HistogramBinDistribution::resetOrdinates() {
   impl()->clearAttribute("ordinates",false);
 }
 
-HistogramBinDistribution::HistogramBinDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+HistogramBinDistribution::HistogramBinDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == HistogramBinDistribution::type());

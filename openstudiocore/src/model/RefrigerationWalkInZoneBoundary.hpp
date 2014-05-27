@@ -154,7 +154,7 @@ class MODEL_API RefrigerationWalkInZoneBoundary : public ModelObject {
   /// @cond
   typedef detail::RefrigerationWalkInZoneBoundary_Impl ImplType;
 
-  explicit RefrigerationWalkInZoneBoundary(boost::shared_ptr<detail::RefrigerationWalkInZoneBoundary_Impl> impl);
+  explicit RefrigerationWalkInZoneBoundary(std::shared_ptr<detail::RefrigerationWalkInZoneBoundary_Impl> impl);
 
   friend class detail::RefrigerationWalkInZoneBoundary_Impl;
   friend class Model;

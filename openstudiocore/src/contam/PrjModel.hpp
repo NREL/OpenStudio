@@ -24,8 +24,6 @@
 #include "PrjObjects.hpp"
 #include "PrjAirflowElements.hpp"
 
-#include <boost/shared_ptr.hpp>
-
 #include <utilities/core/Path.hpp>
 #include <utilities/data/TimeSeries.hpp>
 
@@ -422,7 +420,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::IndexModelImpl> m_impl;
+  std::shared_ptr<detail::IndexModelImpl> m_impl;
 };
 
 } // contam

@@ -148,7 +148,7 @@ boost::optional<double> OpaqueMaterial::heatCapacity() const {
 }
 
 /// @cond
-OpaqueMaterial::OpaqueMaterial(boost::shared_ptr<detail::OpaqueMaterial_Impl> impl)
+OpaqueMaterial::OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

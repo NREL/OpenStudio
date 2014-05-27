@@ -53,7 +53,7 @@ int OpenStudioAlgorithm::createNextIteration(Analysis& analysis) {
 }
 
 /// @cond
-OpenStudioAlgorithm::OpenStudioAlgorithm(boost::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl)
+OpenStudioAlgorithm::OpenStudioAlgorithm(std::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl)
   : Algorithm(impl)
 {}
 /// @endcond

@@ -157,7 +157,7 @@ IddObjectType Construction::iddObjectType() {
 }
 
 /// @cond
-Construction::Construction(boost::shared_ptr<detail::Construction_Impl> impl)
+Construction::Construction(std::shared_ptr<detail::Construction_Impl> impl)
   : LayeredConstruction(impl)
 {}
 /// @endcond

@@ -252,7 +252,7 @@ class MODEL_API DesignDay : public SizingPeriod {
   typedef detail::DesignDay_Impl ImplType;
 
   // constructor
-  explicit DesignDay(boost::shared_ptr<detail::DesignDay_Impl> impl);
+  explicit DesignDay(std::shared_ptr<detail::DesignDay_Impl> impl);
 
  private:
 

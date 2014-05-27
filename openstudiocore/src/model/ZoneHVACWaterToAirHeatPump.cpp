@@ -1111,7 +1111,7 @@ void ZoneHVACWaterToAirHeatPump::resetSupplyAirFanOperatingModeSchedule() {
 }
 
 /// @cond
-ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(boost::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl)
+ZoneHVACWaterToAirHeatPump::ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

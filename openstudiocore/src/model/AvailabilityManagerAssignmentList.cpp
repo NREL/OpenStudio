@@ -150,7 +150,7 @@ IddObjectType AvailabilityManagerAssignmentList::iddObjectType() {
 }
 
 /// @cond
-AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(boost::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl)
+AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

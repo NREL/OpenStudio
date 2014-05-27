@@ -101,7 +101,7 @@ Version::Version(const Model& model)
 }
 
 // constructor
-Version::Version(boost::shared_ptr<detail::Version_Impl> impl)
+Version::Version(std::shared_ptr<detail::Version_Impl> impl)
   : ModelObject(impl)
 {}
 

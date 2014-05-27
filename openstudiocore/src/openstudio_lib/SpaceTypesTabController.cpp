@@ -30,7 +30,7 @@ namespace openstudio {
 SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
   : MainTabController(new SpaceTypesTabView())
 {
-  m_spaceTypesController = boost::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
+  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
 
   bool isConnected = false;
 

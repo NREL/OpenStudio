@@ -63,7 +63,7 @@ namespace detail {
 
   Unit SIUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::SI);
-    boost::shared_ptr<SIUnit_Impl> impl(new SIUnit_Impl(*this));
+    std::shared_ptr<SIUnit_Impl> impl(new SIUnit_Impl(*this));
     return SIUnit(impl).cast<Unit>();
   }
 
@@ -83,20 +83,20 @@ namespace detail {
 SIUnit::SIUnit(const SIExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 SIUnit::SIUnit(const std::string& scaleAbbreviation,
        const SIExpnt& exponents,
        const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::SIUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-SIUnit::SIUnit(boost::shared_ptr<detail::SIUnit_Impl> impl)
-  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
+SIUnit::SIUnit(std::shared_ptr<detail::SIUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

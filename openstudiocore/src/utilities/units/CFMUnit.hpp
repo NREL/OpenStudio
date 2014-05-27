@@ -110,7 +110,7 @@ class UTILITIES_API CFMUnit : public Unit {
   /// @cond
   typedef detail::CFMUnit_Impl ImplType;
 
-  explicit CFMUnit(boost::shared_ptr<detail::CFMUnit_Impl> impl);
+  explicit CFMUnit(std::shared_ptr<detail::CFMUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::CFMUnit_Impl;

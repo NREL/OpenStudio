@@ -59,7 +59,7 @@ namespace openstudio{
 
       /// impl type is boost::posix_time::time_duration
       typedef boost::posix_time::time_duration ImplType;
-      typedef boost::shared_ptr<ImplType> ImplPtr;
+      typedef std::shared_ptr<ImplType> ImplPtr;
 
 
       /// get current time of day

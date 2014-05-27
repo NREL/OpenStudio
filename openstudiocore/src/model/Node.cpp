@@ -537,7 +537,7 @@ Node::Node(const Model& model)
   OS_ASSERT(getImpl<detail::Node_Impl>());
 }
 
-Node::Node(boost::shared_ptr<detail::Node_Impl> p)
+Node::Node(std::shared_ptr<detail::Node_Impl> p)
   : StraightComponent(p)
 {}
 

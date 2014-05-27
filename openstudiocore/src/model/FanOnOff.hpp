@@ -128,7 +128,7 @@ class MODEL_API FanOnOff : public StraightComponent {
   /// @cond
   typedef detail::FanOnOff_Impl ImplType;
 
-  explicit FanOnOff(boost::shared_ptr<detail::FanOnOff_Impl> impl);
+  explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
 
   friend class detail::FanOnOff_Impl;
   friend class Model;

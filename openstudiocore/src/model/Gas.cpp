@@ -1303,7 +1303,7 @@ void Gas::resetSpecificHeatRatio() {
 }
 
 /// @cond
-Gas::Gas(boost::shared_ptr<detail::Gas_Impl> impl)
+Gas::Gas(std::shared_ptr<detail::Gas_Impl> impl)
   : GasLayer(impl)
 {}
 /// @endcond

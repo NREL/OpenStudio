@@ -22,7 +22,6 @@
 #include <utilities/core/Application.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
-#include <boost/bind.hpp>
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
 #include "Workflow.hpp"
@@ -45,7 +44,6 @@
 #include "JSONWorkflowOptions.hpp"
 #include "JobFactory.hpp"
 #include <ruleset/OSArgument.hpp>
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -192,7 +190,7 @@ namespace detail {
         // at worst its shared_ptr will be swapped out inside of
         // setConfigOptions. Therefore we can safely get our own copy of the shared_ptr
         // and return a copy of the object
-        boost::shared_ptr<ConfigOptions> co = m_configOptions;
+        std::shared_ptr<ConfigOptions> co = m_configOptions;
 
         return *m_configOptions;
       }
@@ -215,7 +213,7 @@ namespace detail {
         QMutexLocker l(&m_mutex);
         updateConfiguration(m_db, m_config, t_co);
         m_db.commit();
-        m_configOptions = boost::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
+        m_configOptions = std::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
       }
 
       void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
@@ -663,7 +661,7 @@ namespace detail {
       RunManagerDB::ConfigOptions m_config;
       bool m_loading;
       openstudio::path m_dbPath;
-      boost::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
+      std::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
 
       std::vector<openstudio::runmanager::Job> loadJobsImpl(bool isWorkflow, const std::string &workflowkey)
       {
@@ -725,12 +723,12 @@ namespace detail {
           std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
           std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles)));
 
           std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
           std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(boost::bind(&loadJobParams, boost::ref(params)));
+          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(std::bind(&loadJobParams, boost::ref(params)));
 
           std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
           std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
@@ -738,7 +736,7 @@ namespace detail {
           std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
           std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles)));
 
           LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
 
@@ -1606,15 +1604,15 @@ namespace detail {
     processQueue();
   }
 
-  boost::shared_ptr<RunManagerStatus> RunManager_Impl::getStatusDialog(const RunManager &t_rm)
+  std::shared_ptr<RunManagerStatus> RunManager_Impl::getStatusDialog(const RunManager &t_rm)
   {
     LOG(Info, "Getting status dialog");
 
-    boost::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
+    std::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
 
     if (!ui)
     {
-      ui = boost::shared_ptr<RunManagerStatus>(new RunManagerStatus(nullptr,nullptr,t_rm));
+      ui = std::shared_ptr<RunManagerStatus>(new RunManagerStatus(nullptr,nullptr,t_rm));
     }
 
     ui->open();
@@ -1629,7 +1627,7 @@ namespace detail {
   {
     LOG(Info, "Hiding status dialog");
 
-    boost::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
+    std::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
 
     if (ui)
     {
@@ -2008,7 +2006,7 @@ namespace detail {
     bool addedSignal = false;
 
     UUID uuid = job.uuid();
-    LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
+    LOG(Info, "Enqueuing Job: " << toString(uuid) << " " << job.description());
 
     if (job.getBasePath().empty() || job.getBasePath() == boost::filesystem::initial_path<openstudio::path>())
     {
@@ -2026,7 +2024,7 @@ namespace detail {
       if (!key.empty() && m_workflowkeys.find(key) != m_workflowkeys.end())
       {
         // ETH@20121107 - This seems like an inefficient search. Is the most-parental job in the queue
-        // with the same workflow key guranteed to have the same uuid as job? If so, could just search
+        // with the same workflow key guaranteed to have the same uuid as job? If so, could just search
         // in m_queue for uuid.
         for(auto & job : m_queue)
         {
@@ -2285,7 +2283,7 @@ namespace detail {
 
     auto itr = std::find_if(m_queue.begin(),
                             m_queue.end(),
-                            boost::bind(uuidEquals<Job,UUID>,_1,t_uuid));
+                            std::bind(uuidEquals<Job,UUID>,std::placeholders::_1,t_uuid));
     if (itr != m_queue.end()) {
       return *itr;
     }
@@ -2346,7 +2344,7 @@ namespace detail {
 
     // now we need to sort them based on index()
     std::sort(ret.begin(), ret.end(),
-      boost::function<bool (const Job &, const Job &)>(&RunManager_Impl::jobIndexLessThan));
+      std::function<bool (const Job &, const Job &)>(&RunManager_Impl::jobIndexLessThan));
 
     return ret;
   }
@@ -2834,9 +2832,9 @@ namespace detail {
         m_processingQueue = true;
 
 
-        int running = std::count_if(queue.begin(), queue.end(), boost::bind(&openstudio::runmanager::Job::running, _1));
+        int running = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::running, std::placeholders::_1));
         int runningRemotely
-          = std::count_if(queue.begin(), queue.end(), boost::bind(&openstudio::runmanager::Job::runningRemotely, _1));
+          = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::runningRemotely, std::placeholders::_1));
         int runningLocally = running - runningRemotely;
 
         //LOG(Info, boost::posix_time::microsec_clock::local_time() << " kicking off new jobs runningremotely: " << runningRemotely << " runningLocally " << runningLocally);

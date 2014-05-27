@@ -101,7 +101,7 @@ namespace detail {
     return std::vector<JoinRecord>();
   }
 
-  void ProjectDatabaseRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ProjectDatabaseRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ProjectDatabaseRecord>(query);
@@ -260,7 +260,7 @@ void ProjectDatabaseRecord::updatePathData(ProjectDatabase database,
 ProjectDatabaseRecord::ProjectDatabaseRecord(const std::string& version,
                                              const openstudio::path& runManagerDBPath,
                                              ProjectDatabase projectDatabase)
-  : ObjectRecord(boost::shared_ptr<detail::ProjectDatabaseRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProjectDatabaseRecord_Impl>(
                      new detail::ProjectDatabaseRecord_Impl(version,
                                                             runManagerDBPath,
                                                             projectDatabase)),
@@ -269,7 +269,7 @@ ProjectDatabaseRecord::ProjectDatabaseRecord(const std::string& version,
   OS_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());
 }
 
-ProjectDatabaseRecord::ProjectDatabaseRecord(boost::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl)
+ProjectDatabaseRecord::ProjectDatabaseRecord(std::shared_ptr<detail::ProjectDatabaseRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::ProjectDatabaseRecord_Impl>());

@@ -84,10 +84,10 @@ class UTILITIES_API IddKey {
  private:
   ///@cond
   // pointer to implementation
-  boost::shared_ptr<detail::IddKey_Impl> m_impl;
+  std::shared_ptr<detail::IddKey_Impl> m_impl;
 
   // construct from impl
-  IddKey(const boost::shared_ptr<detail::IddKey_Impl>& impl);
+  IddKey(const std::shared_ptr<detail::IddKey_Impl>& impl);
   ///@endcond
 
   // configure logging

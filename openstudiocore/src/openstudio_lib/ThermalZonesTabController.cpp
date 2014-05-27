@@ -27,7 +27,7 @@ namespace openstudio {
 ThermalZonesTabController::ThermalZonesTabController(bool isIP, const model::Model& model)
   : MainTabController(new ThermalZonesTabView())
 {
-  m_thermalZonesController = boost::shared_ptr<ThermalZonesController>(new ThermalZonesController(isIP,model));
+  m_thermalZonesController = std::shared_ptr<ThermalZonesController>(new ThermalZonesController(isIP,model));
 
   this->mainContentWidget()->addTabWidget(m_thermalZonesController->subTabView());
 

@@ -72,7 +72,7 @@ class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
   friend class detail::CFactorUndergroundWallConstruction_Impl;
 
   explicit CFactorUndergroundWallConstruction(
-      boost::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
+      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
 
   /// @endcond
  private:

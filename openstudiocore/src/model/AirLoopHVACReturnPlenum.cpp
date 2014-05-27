@@ -347,7 +347,7 @@ bool AirLoopHVACReturnPlenum::addBranchForZone(openstudio::model::ThermalZone & 
 }
 
 /// @cond
-AirLoopHVACReturnPlenum::AirLoopHVACReturnPlenum(boost::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl)
+AirLoopHVACReturnPlenum::AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl)
   : Mixer(impl)
 {}
 /// @endcond

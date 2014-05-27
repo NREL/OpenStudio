@@ -285,7 +285,7 @@ IddObjectType ScheduleYear::iddObjectType() {
 }
 
 /// @cond
-ScheduleYear::ScheduleYear(boost::shared_ptr<detail::ScheduleYear_Impl> impl)
+ScheduleYear::ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl)
   : Schedule(impl)
 {}
 /// @endcond

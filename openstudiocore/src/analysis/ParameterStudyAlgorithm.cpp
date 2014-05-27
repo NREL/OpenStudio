@@ -69,7 +69,7 @@ namespace detail {
   {}
 
   AnalysisObject ParameterStudyAlgorithm_Impl::clone() const {
-    boost::shared_ptr<ParameterStudyAlgorithm_Impl> impl(new ParameterStudyAlgorithm_Impl(*this));
+    std::shared_ptr<ParameterStudyAlgorithm_Impl> impl(new ParameterStudyAlgorithm_Impl(*this));
     return ParameterStudyAlgorithm(impl);
   }
 
@@ -194,7 +194,7 @@ namespace detail {
 } // detail
 
 ParameterStudyAlgorithm::ParameterStudyAlgorithm(const ParameterStudyAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
         new detail::ParameterStudyAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -211,7 +211,7 @@ ParameterStudyAlgorithm::ParameterStudyAlgorithm(const UUID& uuid,
                                                  const boost::optional<FileReference>& restartFileReference,
                                                  const boost::optional<FileReference>& outFileReference,
                                                  const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
         new detail::ParameterStudyAlgorithm_Impl(uuid,
                                                  versionUUID,
                                                  displayName,
@@ -232,7 +232,7 @@ ParameterStudyAlgorithmOptions ParameterStudyAlgorithm::parameterStudyAlgorithmO
 }
 
 /// @cond
-ParameterStudyAlgorithm::ParameterStudyAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl)
+ParameterStudyAlgorithm::ParameterStudyAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

@@ -28,11 +28,11 @@ void ContamFixture::TearDown() {}
 void ContamFixture::SetUpTestCase() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
-  logFile = boost::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ContamFixture.log")));
+  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ContamFixture.log")));
 }
 
 void ContamFixture::TearDownTestCase() {
   logFile->disable();
 }
 
-boost::shared_ptr<openstudio::FileLogSink> ContamFixture::logFile;
+std::shared_ptr<openstudio::FileLogSink> ContamFixture::logFile;

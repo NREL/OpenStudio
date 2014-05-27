@@ -206,7 +206,7 @@ bool CFactorUndergroundWallConstruction::setHeight(const Quantity& height) {
 
 /// @cond
 CFactorUndergroundWallConstruction::CFactorUndergroundWallConstruction(
-    boost::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl)
+    std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl)
   : ConstructionBase(impl)
 {}
 /// @endcond

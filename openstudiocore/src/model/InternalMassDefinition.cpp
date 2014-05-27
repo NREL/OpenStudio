@@ -393,7 +393,7 @@ bool InternalMassDefinition::setDesignLevelCalculationMethod(const std::string& 
 }
 
 /// @cond
-InternalMassDefinition::InternalMassDefinition(boost::shared_ptr<detail::InternalMassDefinition_Impl> impl)
+InternalMassDefinition::InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

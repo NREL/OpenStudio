@@ -92,7 +92,7 @@ class MODEL_API ThermostatSetpointDualSetpoint : public ModelObject {
 
   typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
 
-  explicit ThermostatSetpointDualSetpoint(boost::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
+  explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
 
  private:
 

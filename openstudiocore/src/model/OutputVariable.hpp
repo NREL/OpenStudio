@@ -104,7 +104,7 @@ class MODEL_API OutputVariable : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl);
+  explicit OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl);
 
  private:
 

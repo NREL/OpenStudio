@@ -107,7 +107,7 @@ class MODEL_API ShadowCalculation : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit ShadowCalculation(boost::shared_ptr<detail::ShadowCalculation_Impl> impl);
+  explicit ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl);
 
  private:
 

@@ -249,7 +249,7 @@ SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTempe
   setMinimumSetpointTemperature(6.0);
 }
 
-SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(boost::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
+SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
   : HVACComponent(p)
 {
 }

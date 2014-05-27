@@ -37,8 +37,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -299,7 +297,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
   }
 
   OS_ASSERT(false);
-  return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
+  return InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
 InputVariableRecord InputVariableRecord::factoryFromInputVariable(
@@ -324,7 +322,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
   }
 
   OS_ASSERT(false);
-  return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
+  return InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
 std::vector<InputVariableRecord> InputVariableRecord::getInputVariableRecords(ProjectDatabase& database) {
@@ -378,11 +376,11 @@ analysis::InputVariable InputVariableRecord::inputVariable() const {
 }
 
 /// @cond
-InputVariableRecord::InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl)
+InputVariableRecord::InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl)
   : VariableRecord(impl)
 {}
 
-InputVariableRecord::InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl,
+InputVariableRecord::InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl,
                                          ProjectDatabase database,
                                          const boost::optional<analysis::InputVariable>& inputVariable)
   : VariableRecord(impl, database)
@@ -408,7 +406,7 @@ void InputVariableRecord::constructRelatedRecords(const analysis::InputVariable&
   for (const Attribute& attribute : attributes) {
     // find in dbOptions
     auto dbIt = std::find_if(dbAttributes.begin(),dbAttributes.end(),
-                             boost::bind(uuidsEqual<Attribute,Attribute>,_1,attribute));
+                             std::bind(uuidsEqual<Attribute,Attribute>,std::placeholders::_1,attribute));
     // if not there, or if different versionUUID, save it
     if ((dbIt == dbAttributes.end()) || (attribute.versionUUID() != dbIt->versionUUID())) {
       AttributeRecord udescAttributeRecord(attribute,copyOfThis);

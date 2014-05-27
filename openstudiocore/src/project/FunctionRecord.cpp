@@ -103,7 +103,7 @@ namespace detail {
     return result;
   }
 
-  void FunctionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void FunctionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FunctionRecord>(query);
@@ -238,7 +238,7 @@ namespace detail {
 
 } // detail
 
-FunctionRecord::FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl,
+FunctionRecord::FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl,
                                ProjectDatabase database)
   : ObjectRecord(impl,database)
 {
@@ -332,7 +332,7 @@ FunctionRecord FunctionRecord::factoryFromFunction(const analysis::Function& fun
   }
 
   OS_ASSERT(false);
-  return FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl>());
+  return FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl>());
 }
 
 std::vector<FunctionRecord> FunctionRecord::getFunctionRecords(ProjectDatabase& database) {
@@ -386,7 +386,7 @@ analysis::Function FunctionRecord::function() const {
 }
 
 /// @cond
-FunctionRecord::FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl)
+FunctionRecord::FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

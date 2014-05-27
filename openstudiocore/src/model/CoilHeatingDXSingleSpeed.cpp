@@ -1047,7 +1047,7 @@ void CoilHeatingDXSingleSpeed::resetDefrostEnergyInputRatioFunctionofTemperature
 
 
 /// @cond
-CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(boost::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
+CoilHeatingDXSingleSpeed::CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 

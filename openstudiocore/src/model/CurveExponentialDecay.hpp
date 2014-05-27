@@ -117,7 +117,7 @@ class MODEL_API CurveExponentialDecay : public Curve {
   /// @cond
   typedef detail::CurveExponentialDecay_Impl ImplType;
 
-  explicit CurveExponentialDecay(boost::shared_ptr<detail::CurveExponentialDecay_Impl> impl);
+  explicit CurveExponentialDecay(std::shared_ptr<detail::CurveExponentialDecay_Impl> impl);
 
   friend class detail::CurveExponentialDecay_Impl;
   friend class Model;

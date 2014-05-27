@@ -63,7 +63,7 @@ class ANALYSIS_API NegativeBinomialDistribution : public UncertaintyDescription 
 
   //@}
  protected:
-  explicit NegativeBinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit NegativeBinomialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

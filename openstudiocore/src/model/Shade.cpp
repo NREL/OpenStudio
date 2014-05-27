@@ -1013,7 +1013,7 @@ void Shade::resetAirflowPermeability() {
 }
 
 /// @cond
-Shade::Shade(boost::shared_ptr<detail::Shade_Impl> impl)
+Shade::Shade(std::shared_ptr<detail::Shade_Impl> impl)
   : ShadingMaterial(impl)
 {}
 /// @endcond

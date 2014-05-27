@@ -175,7 +175,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctVAVReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
+  explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
  private:
 

@@ -697,7 +697,7 @@ LayeredConstruction::LayeredConstruction(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::LayeredConstruction_Impl>());
 }
 
-LayeredConstruction::LayeredConstruction(boost::shared_ptr<detail::LayeredConstruction_Impl> impl)
+LayeredConstruction::LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl)
   : ConstructionBase(impl)
 {}
 

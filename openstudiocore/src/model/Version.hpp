@@ -64,7 +64,7 @@ class MODEL_API Version : public ModelObject {
   friend class Model;
 
   // constructor
-  explicit Version(boost::shared_ptr<detail::Version_Impl> impl);
+  explicit Version(std::shared_ptr<detail::Version_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.RunPeriod");

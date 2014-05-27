@@ -76,7 +76,7 @@ namespace detail {
     return result;
   }
 
-  void FSUDaceAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void FSUDaceAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FSUDaceAlgorithmRecord>(query);
@@ -206,7 +206,7 @@ namespace detail {
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const analysis::FSUDaceAlgorithm& fsudaceAlgorithm,
                                                AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
         new detail::FSUDaceAlgorithmRecord_Impl(fsudaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         fsudaceAlgorithm)
@@ -217,7 +217,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const analysis::FSUDaceAlgorithm&
 }
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
         new detail::FSUDaceAlgorithmRecord_Impl(query, database)),
         database,
         boost::none)
@@ -226,7 +226,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const QSqlQuery& query, ProjectDa
 }
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(
-  boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
+  std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
@@ -290,7 +290,7 @@ analysis::FSUDaceAlgorithm FSUDaceAlgorithmRecord::fsudaceAlgorithm() const {
 }
 
 /// @cond
-FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl)
+FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

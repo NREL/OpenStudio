@@ -85,7 +85,7 @@ ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
 
 void ModelSubTabView::dropZoneItemClicked(OSItem* item)
 { 
-  boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
   if (currentDocument){
     boost::optional<model::ModelObject> modelObject = currentDocument->getModelObject(item->itemId());
     bool readOnly = item->itemId().isDefaulted();

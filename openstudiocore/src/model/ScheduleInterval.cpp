@@ -129,7 +129,7 @@ ScheduleInterval::ScheduleInterval(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
 }
 
-ScheduleInterval::ScheduleInterval(boost::shared_ptr<detail::ScheduleInterval_Impl> impl)
+ScheduleInterval::ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl)
   : Schedule(impl)
 {
   OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());

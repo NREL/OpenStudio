@@ -97,7 +97,7 @@ Schedule::Schedule(IddObjectType type,const Model& model)
 }
 
 // constructor from impl
-Schedule::Schedule(boost::shared_ptr<detail::Schedule_Impl> impl)
+Schedule::Schedule(std::shared_ptr<detail::Schedule_Impl> impl)
   : ScheduleBase(impl)
 {
   OS_ASSERT(getImpl<detail::Schedule_Impl>());

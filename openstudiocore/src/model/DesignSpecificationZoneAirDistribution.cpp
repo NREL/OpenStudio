@@ -348,7 +348,7 @@ void DesignSpecificationZoneAirDistribution::resetZoneSecondaryRecirculationFrac
 }
 
 /// @cond
-DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(boost::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl)
+DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

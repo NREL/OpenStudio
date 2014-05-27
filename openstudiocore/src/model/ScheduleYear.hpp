@@ -91,7 +91,7 @@ class MODEL_API ScheduleYear : public Schedule {
   friend class openstudio::IdfObject;
   friend class detail::ScheduleYear_Impl;
 
-  explicit ScheduleYear(boost::shared_ptr<detail::ScheduleYear_Impl> impl);
+  explicit ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl);
 
   /// @endcond
  private:

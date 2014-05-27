@@ -137,10 +137,10 @@ class UTILITIES_API IddField {
  private:
   ///@cond
   // pointer to impl
-  boost::shared_ptr<detail::IddField_Impl> m_impl;
+  std::shared_ptr<detail::IddField_Impl> m_impl;
 
   // construct from impl
-  IddField(const boost::shared_ptr<detail::IddField_Impl>& impl);
+  IddField(const std::shared_ptr<detail::IddField_Impl>& impl);
   ///@endcond
 
   // configure logging

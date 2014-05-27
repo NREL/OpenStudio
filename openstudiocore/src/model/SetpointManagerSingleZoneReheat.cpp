@@ -223,7 +223,7 @@ SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& mo
   setMaximumSupplyAirTemperature(99.0);
 }
 
-SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(boost::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
+SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
   : HVACComponent(p)
 {
 }

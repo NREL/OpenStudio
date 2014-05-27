@@ -141,7 +141,7 @@ class MODEL_API GasEquipmentDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit GasEquipmentDefinition(boost::shared_ptr<detail::GasEquipmentDefinition_Impl> impl);
+  explicit GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl);
 
   /// @endcond
  private:

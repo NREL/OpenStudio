@@ -59,7 +59,7 @@ IddObjectType GenericModelObject_Impl::iddObjectType() const
 
 }// detail
 
-GenericModelObject::GenericModelObject(boost::shared_ptr<detail::GenericModelObject_Impl> p)
+GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> p)
   :  ModelObject(p)
 {}
 

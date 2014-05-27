@@ -111,7 +111,7 @@ CurrencyType::CurrencyType(const Model& model)
 }
 
 // constructor
-CurrencyType::CurrencyType(boost::shared_ptr<detail::CurrencyType_Impl> impl)
+CurrencyType::CurrencyType(std::shared_ptr<detail::CurrencyType_Impl> impl)
   : ParentObject(impl)
 {}
 

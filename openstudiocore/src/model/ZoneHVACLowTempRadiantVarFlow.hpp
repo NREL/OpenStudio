@@ -137,7 +137,7 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACLowTempRadiantVarFlow_Impl ImplType;
 
-  explicit ZoneHVACLowTempRadiantVarFlow(boost::shared_ptr<detail::ZoneHVACLowTempRadiantVarFlow_Impl> impl);
+  explicit ZoneHVACLowTempRadiantVarFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantVarFlow_Impl> impl);
 
   friend class detail::ZoneHVACLowTempRadiantVarFlow_Impl;
   friend class Model;

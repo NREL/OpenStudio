@@ -63,7 +63,7 @@ class ANALYSIS_API WeibullDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit WeibullDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit WeibullDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

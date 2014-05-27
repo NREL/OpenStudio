@@ -152,7 +152,7 @@ class MODEL_API DefaultScheduleSet : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DefaultScheduleSet(boost::shared_ptr<detail::DefaultScheduleSet_Impl> impl);
+  explicit DefaultScheduleSet(std::shared_ptr<detail::DefaultScheduleSet_Impl> impl);
 
   /// @endcond
  private:

@@ -517,7 +517,7 @@ boost::optional<std::string> WeatherFile::environmentName() const {
 }
 
 /// @cond
-WeatherFile::WeatherFile(boost::shared_ptr<detail::WeatherFile_Impl> impl)
+WeatherFile::WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl)
   : ModelObject(impl)
 {}
 WeatherFile::WeatherFile(Model& model)

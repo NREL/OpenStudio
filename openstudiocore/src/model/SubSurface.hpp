@@ -176,7 +176,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl);
+  explicit SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl);
 
   /// @endcond
  private:

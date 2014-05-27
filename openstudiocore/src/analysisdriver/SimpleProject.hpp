@@ -27,7 +27,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -382,7 +381,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   //@}
  protected:
-  boost::shared_ptr<detail::SimpleProject_Impl> getImpl() const;
+  std::shared_ptr<detail::SimpleProject_Impl> getImpl() const;
 
   /// @cond
   typedef detail::SimpleProject_Impl ImplType;
@@ -390,12 +389,12 @@ class ANALYSISDRIVER_API SimpleProject {
   friend class openstudio::pat::PatApp;
   friend class openstudio::pat::RunTabController;
 
-  explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
+  explicit SimpleProject(std::shared_ptr<detail::SimpleProject_Impl> impl);
 
   /// @endcond
  private:
 
-  boost::shared_ptr<detail::SimpleProject_Impl> m_impl;
+  std::shared_ptr<detail::SimpleProject_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");
 };

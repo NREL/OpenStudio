@@ -1001,7 +1001,7 @@ namespace detail {
   }
 
 /// @cond
-CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(boost::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
+CoilCoolingWaterToAirHeatPumpEquationFit::CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl)
   : WaterToAirComponent(impl)
 {}
 /// @endcond

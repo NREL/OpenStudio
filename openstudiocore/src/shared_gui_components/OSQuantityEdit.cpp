@@ -30,8 +30,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 

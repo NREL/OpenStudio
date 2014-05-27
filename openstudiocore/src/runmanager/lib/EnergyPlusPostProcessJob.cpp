@@ -49,8 +49,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -111,7 +109,7 @@ namespace detail {
     return m_description;
   }
 
-  void EnergyPlusPostProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void EnergyPlusPostProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir();
     QWriteLocker l(&m_mutex);

@@ -218,7 +218,7 @@ class MODEL_API GasMixture : public GasLayer {
   /// @cond
   typedef detail::GasMixture_Impl ImplType;
 
-  explicit GasMixture(boost::shared_ptr<detail::GasMixture_Impl> impl);
+  explicit GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl);
 
   friend class detail::GasMixture_Impl;
   friend class Model;

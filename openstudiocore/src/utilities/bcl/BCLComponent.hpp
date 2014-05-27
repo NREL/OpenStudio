@@ -26,7 +26,6 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/UtilitiesAPI.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 // Add more methods for editing components, opening local component constructor

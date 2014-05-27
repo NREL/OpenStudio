@@ -106,7 +106,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
 
   typedef detail::WaterToWaterComponent_Impl ImplType;
 
-  explicit WaterToWaterComponent(boost::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
+  explicit WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
 
   private:
 

@@ -258,7 +258,7 @@ void AirGap::resetThermalResistance() {
 }
 
 /// @cond
-AirGap::AirGap(boost::shared_ptr<detail::AirGap_Impl> impl)
+AirGap::AirGap(std::shared_ptr<detail::AirGap_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

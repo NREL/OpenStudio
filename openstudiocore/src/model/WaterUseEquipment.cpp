@@ -247,7 +247,7 @@ bool WaterUseEquipment::setWaterUseEquipmentDefinition(const WaterUseEquipmentDe
 }
 
 /// @cond
-WaterUseEquipment::WaterUseEquipment(boost::shared_ptr<detail::WaterUseEquipment_Impl> impl)
+WaterUseEquipment::WaterUseEquipment(std::shared_ptr<detail::WaterUseEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

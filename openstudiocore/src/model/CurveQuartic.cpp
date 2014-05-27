@@ -378,7 +378,7 @@ void CurveQuartic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveQuartic::CurveQuartic(boost::shared_ptr<detail::CurveQuartic_Impl> impl)
+CurveQuartic::CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

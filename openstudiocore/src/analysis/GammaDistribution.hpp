@@ -63,7 +63,7 @@ class ANALYSIS_API GammaDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit GammaDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit GammaDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

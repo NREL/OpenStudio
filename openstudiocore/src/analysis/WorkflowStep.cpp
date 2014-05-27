@@ -86,7 +86,7 @@ namespace detail {
   }
 
   AnalysisObject WorkflowStep_Impl::clone() const {
-    boost::shared_ptr<WorkflowStep_Impl> impl(new WorkflowStep_Impl(*this));
+    std::shared_ptr<WorkflowStep_Impl> impl(new WorkflowStep_Impl(*this));
     WorkflowStep result(impl);
     if (result.isInputVariable()) {
       result.inputVariable().setParent(result);
@@ -271,13 +271,13 @@ WorkflowStep::WorkflowStep(const InputVariable& inputVariable)
 {}
 
 WorkflowStep::WorkflowStep(const runmanager::WorkItem& workItem)
-  : AnalysisObject(boost::shared_ptr<detail::WorkflowStep_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::WorkflowStep_Impl>(
                      new detail::WorkflowStep_Impl(workItem)))
 {}
 
 WorkflowStep::WorkflowStep(const boost::optional<InputVariable>& inputVariable,
                            const boost::optional<runmanager::WorkItem>& workItem)
-  : AnalysisObject(boost::shared_ptr<detail::WorkflowStep_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::WorkflowStep_Impl>(
                      new detail::WorkflowStep_Impl(inputVariable,workItem)))
 {
   if (isInputVariable()) {
@@ -330,7 +330,7 @@ bool WorkflowStep::set(const runmanager::WorkItem& workItem) {
 }
 
 /// @cond
-WorkflowStep::WorkflowStep(boost::shared_ptr<detail::WorkflowStep_Impl> impl)
+WorkflowStep::WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

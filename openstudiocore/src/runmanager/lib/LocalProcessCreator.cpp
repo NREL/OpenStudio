@@ -9,7 +9,7 @@ namespace runmanager {
   {
   }
 
-  boost::shared_ptr<Process> LocalProcessCreator::createProcess(
+  std::shared_ptr<Process> LocalProcessCreator::createProcess(
       const openstudio::runmanager::ToolInfo &t_tool,
       const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles,
       const std::vector<std::string> &t_parameters,
@@ -21,7 +21,7 @@ namespace runmanager {
   {
     if (t_remoteId) { throw std::runtime_error("remote id set when creating local process"); }
 
-    return boost::shared_ptr<Process>(
+    return std::shared_ptr<Process>(
         new detail::LocalProcess(
           t_tool,
           t_requiredFiles,

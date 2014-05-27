@@ -95,8 +95,8 @@ Economics::Economics():
   m_remainingUsefulLifeProjectEnd(0),
   m_variablesSet(false),
 
-  m_refBuilding(boost::shared_ptr<CostObject>(new CostObject)),
-  m_selBuilding(boost::shared_ptr<CostObject>(new CostObject))
+  m_refBuilding(std::shared_ptr<CostObject>(new CostObject)),
+  m_selBuilding(std::shared_ptr<CostObject>(new CostObject))
 {
 }
 
@@ -494,9 +494,9 @@ void Economics::getDistrictCool( BuildingType buildingType, double& use, double&
   } //case
 }
 
-boost::shared_ptr<CostObject> Economics::getBuildingObject( BuildingType buildingType )
+std::shared_ptr<CostObject> Economics::getBuildingObject( BuildingType buildingType )
 {
-  boost::shared_ptr<CostObject> result;
+  std::shared_ptr<CostObject> result;
   switch ( buildingType )
   {
     case btReference:

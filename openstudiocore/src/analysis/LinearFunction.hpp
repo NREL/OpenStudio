@@ -76,7 +76,7 @@ class ANALYSIS_API LinearFunction : public Function {
   friend class detail::AnalysisObject_Impl;
   friend class detail::LinearFunction_Impl;
 
-  explicit LinearFunction(boost::shared_ptr<detail::LinearFunction_Impl> impl);
+  explicit LinearFunction(std::shared_ptr<detail::LinearFunction_Impl> impl);
 
   /// @endcond
  private:

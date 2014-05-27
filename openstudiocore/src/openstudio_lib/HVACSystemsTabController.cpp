@@ -28,7 +28,7 @@ HVACSystemsTabController::HVACSystemsTabController(bool isIP, const model::Model
   : MainTabController(new HVACSystemsTabView()),
   m_isIP(isIP)
 {
-  m_hvacSystemsController = boost::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
+  m_hvacSystemsController = std::shared_ptr<HVACSystemsController>(new HVACSystemsController(isIP, model));
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                              m_hvacSystemsController.get(), SIGNAL(toggleUnitsClicked(bool)));

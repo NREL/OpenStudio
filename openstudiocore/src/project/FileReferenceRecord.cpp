@@ -154,7 +154,7 @@ namespace detail {
     return result;
   }
 
-  void FileReferenceRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) 
+  void FileReferenceRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) 
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FileReferenceRecord>(query);
@@ -407,7 +407,7 @@ namespace detail {
 
 FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference, 
                                          ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(fileReference, database)),
         database)
 {
@@ -416,7 +416,7 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
 
 FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference, 
                                          ObjectRecord& parentRecord)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(fileReference, parentRecord)),
         parentRecord.projectDatabase())
 {
@@ -424,14 +424,14 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
 }
 
 FileReferenceRecord::FileReferenceRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
-FileReferenceRecord::FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl,
+FileReferenceRecord::FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl,
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -625,7 +625,7 @@ boost::optional<TagRecord> FileReferenceRecord::getTagRecord(const std::string& 
 }
 
 /// @cond
-FileReferenceRecord::FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl)
+FileReferenceRecord::FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

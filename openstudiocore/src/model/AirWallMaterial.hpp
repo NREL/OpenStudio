@@ -62,7 +62,7 @@ class MODEL_API AirWallMaterial : public ModelPartitionMaterial {
   /// @cond
   typedef detail::AirWallMaterial_Impl ImplType;
 
-  explicit AirWallMaterial(boost::shared_ptr<detail::AirWallMaterial_Impl> impl);
+  explicit AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl);
 
   friend class detail::AirWallMaterial_Impl;
   friend class Model;

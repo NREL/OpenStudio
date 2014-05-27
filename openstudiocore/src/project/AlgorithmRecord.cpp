@@ -37,8 +37,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace project {
 
@@ -238,7 +236,7 @@ namespace detail {
 
 } // detail
 
-AlgorithmRecord::AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl,
+AlgorithmRecord::AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl,
                                  ProjectDatabase database,
                                  const boost::optional<analysis::Algorithm>& algorithm)
 : ObjectRecord(impl, database)
@@ -256,7 +254,7 @@ void AlgorithmRecord::constructRelatedRecords(const analysis::Algorithm& algorit
   for (const Attribute& option : options) {
     // find in dbOptions
     auto dbIt = std::find_if(dbOptions.begin(),dbOptions.end(),
-                             boost::bind(uuidsEqual<Attribute,Attribute>,_1,option));
+                             std::bind(uuidsEqual<Attribute,Attribute>,std::placeholders::_1,option));
     // if not there, or if different versionUUID, save it
     if ((dbIt == dbOptions.end()) || (option.versionUUID() != dbIt->versionUUID())) {
       AttributeRecord algOptionRecord(option,copyOfThis);
@@ -431,7 +429,7 @@ void AlgorithmRecord::reset() {
 }
 
 /// @cond
-AlgorithmRecord::AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl)
+AlgorithmRecord::AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

@@ -117,9 +117,9 @@ HVACSystemsController::HVACSystemsController(bool isIP, const model::Model & mod
 {
   m_hvacSystemsView = new HVACSystemsView();
 
-  m_hvacLayoutController = boost::shared_ptr<HVACLayoutController>(new HVACLayoutController(this));
+  m_hvacLayoutController = std::shared_ptr<HVACLayoutController>(new HVACLayoutController(this));
 
-  m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+  m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
   bool bingo;
 
@@ -288,7 +288,7 @@ void HVACSystemsController::update()
 
       if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
       {
-        m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
+        m_refrigerationController = std::shared_ptr<RefrigerationController>(new RefrigerationController());
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_refrigerationController->refrigerationView());
       }  
@@ -302,7 +302,7 @@ void HVACSystemsController::update()
         m_hvacSystemsView->hvacToolbarView->addButton->hide();
         m_hvacSystemsView->hvacToolbarView->deleteButton->hide();
 
-        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
+        m_refrigerationGridController = std::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
 
         bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                                    m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
@@ -316,7 +316,7 @@ void HVACSystemsController::update()
       }
       else
       {
-          m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+          m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
           m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
       }
@@ -328,13 +328,13 @@ void HVACSystemsController::update()
 
       if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
       {
-        m_vrfController = boost::shared_ptr<VRFController>(new VRFController());
+        m_vrfController = std::shared_ptr<VRFController>(new VRFController());
 
         m_hvacSystemsView->mainViewSwitcher->setView(m_vrfController->vrfView());
       }
       else
       {
-          m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+          m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
           m_hvacSystemsView->mainViewSwitcher->setView(m_hvacControlsController->noControlsView());
       }
@@ -343,7 +343,7 @@ void HVACSystemsController::update()
     {
       if( m_hvacSystemsView->hvacToolbarView->topologyViewButton->isChecked() )
       {
-        m_hvacLayoutController = boost::shared_ptr<HVACLayoutController>(new HVACLayoutController(this));
+        m_hvacLayoutController = std::shared_ptr<HVACLayoutController>(new HVACLayoutController(this));
         m_hvacSystemsView->mainViewSwitcher->setView(m_hvacLayoutController->hvacGraphicsView());
 
         m_hvacSystemsView->hvacToolbarView->zoomInButton->setEnabled(true);
@@ -354,7 +354,7 @@ void HVACSystemsController::update()
       else if( m_hvacSystemsView->hvacToolbarView->gridViewButton->isChecked() )
       {
         // TODO
-        m_refrigerationGridController = boost::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
+        m_refrigerationGridController = std::shared_ptr<RefrigerationGridController>(new RefrigerationGridController(m_isIP, m_model));
 
         bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                                    m_refrigerationGridController.get()->refrigerationGridView(), SIGNAL(toggleUnitsClicked(bool)));
@@ -368,7 +368,7 @@ void HVACSystemsController::update()
       }
       else
       {
-        m_hvacControlsController = boost::shared_ptr<HVACControlsController>(new HVACControlsController(this));
+        m_hvacControlsController = std::shared_ptr<HVACControlsController>(new HVACControlsController(this));
 
         if( currentLoop() && currentLoop()->optionalCast<model::AirLoopHVAC>() )
         {
@@ -404,12 +404,12 @@ HVACSystemsView * HVACSystemsController::hvacSystemsView() const
   return m_hvacSystemsView;
 }
 
-boost::shared_ptr<HVACLayoutController> HVACSystemsController::hvacLayoutController() const
+std::shared_ptr<HVACLayoutController> HVACSystemsController::hvacLayoutController() const
 {
   return m_hvacLayoutController;
 }
 
-boost::shared_ptr<HVACControlsController> HVACSystemsController::hvacControlsController() const
+std::shared_ptr<HVACControlsController> HVACSystemsController::hvacControlsController() const
 {
   return m_hvacControlsController;
 }
@@ -1346,7 +1346,7 @@ HVACLayoutController::HVACLayoutController(HVACSystemsController * hvacSystemsCo
 {
   m_hvacGraphicsView = new HVACGraphicsView();
 
-  //m_refrigerationController = boost::shared_ptr<RefrigerationController>(new RefrigerationController());
+  //m_refrigerationController = std::shared_ptr<RefrigerationController>(new RefrigerationController());
 
   bool bingo;
 
@@ -1369,7 +1369,7 @@ HVACLayoutController::~HVACLayoutController()
   }
 }
 
-//boost::shared_ptr<RefrigerationController> HVACLayoutController::refrigerationController() const
+//std::shared_ptr<RefrigerationController> HVACLayoutController::refrigerationController() const
 //{
 //  return m_refrigerationController;
 //}

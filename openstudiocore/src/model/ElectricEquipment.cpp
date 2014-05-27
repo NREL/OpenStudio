@@ -414,7 +414,7 @@ double ElectricEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 }
 
 /// @cond
-ElectricEquipment::ElectricEquipment(boost::shared_ptr<detail::ElectricEquipment_Impl> impl)
+ElectricEquipment::ElectricEquipment(std::shared_ptr<detail::ElectricEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

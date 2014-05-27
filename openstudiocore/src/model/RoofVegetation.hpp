@@ -301,7 +301,7 @@ class MODEL_API RoofVegetation : public OpaqueMaterial {
   /// @cond
   typedef detail::RoofVegetation_Impl ImplType;
 
-  explicit RoofVegetation(boost::shared_ptr<detail::RoofVegetation_Impl> impl);
+  explicit RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl);
 
   friend class detail::RoofVegetation_Impl;
   friend class Model;

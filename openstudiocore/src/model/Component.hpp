@@ -91,7 +91,7 @@ class MODEL_API Component : public Model {
   friend class detail::ParentObject_Impl;
 
   /** Protected contructor from impl. */
-  Component(boost::shared_ptr<detail::Component_Impl> impl);
+  Component(std::shared_ptr<detail::Component_Impl> impl);
 
   /// @endcond
 

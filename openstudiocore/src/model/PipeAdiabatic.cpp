@@ -106,7 +106,7 @@ unsigned PipeAdiabatic::outletPort()
   return getImpl<detail::PipeAdiabatic_Impl>()->outletPort();
 }
 
-PipeAdiabatic::PipeAdiabatic(boost::shared_ptr<detail::PipeAdiabatic_Impl> p)
+PipeAdiabatic::PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> p)
   : StraightComponent(p)
 {}
 

@@ -24,7 +24,6 @@
 
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/vector.hpp>
-#include <boost/function.hpp>
 
 namespace openstudio {
 
@@ -143,27 +142,27 @@ UTILITIES_API double variance(const Vector& vector);
 /** Returns the standard deviation of vector's values. */
 UTILITIES_API double stdDev(const Vector& vector);
 
-/** Returns boost::function pointer to sum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> sumVectorFunctor();
+/** Returns std::function pointer to sum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> sumVectorFunctor();
 
-/** Returns boost::function pointer to maxiumum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> maximumVectorFunctor();
+/** Returns std::function pointer to maxiumum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> maximumVectorFunctor();
 
-/** Returns boost::function pointer to miniumum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> minimumVectorFunctor();
+/** Returns std::function pointer to miniumum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> minimumVectorFunctor();
 
-/** Returns boost::function pointer to mean(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> meanVectorFunctor();
+/** Returns std::function pointer to mean(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> meanVectorFunctor();
 
-/** Returns boost::function pointer to variance(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> varianceVectorFunctor();
+/** Returns std::function pointer to variance(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> varianceVectorFunctor();
 
-/** Returns boost::function pointer to stdDev(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> stdDevVectorFunctor();
+/** Returns std::function pointer to stdDev(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> stdDevVectorFunctor();
 
 /** Evaluates functor(vector). For use in SWIG bindings. */
 UTILITIES_API double evaluateDoubleFromVectorFunctor(
-    const boost::function<double (const Vector&)>& functor,
+    const std::function<double (const Vector&)>& functor,
     const Vector& vector);
 
 //@}

@@ -72,7 +72,7 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
 
   typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
 
-  explicit AirLoopHVACZoneMixer(boost::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
+  explicit AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
 
   private:
 

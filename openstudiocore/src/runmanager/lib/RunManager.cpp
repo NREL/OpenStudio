@@ -49,8 +49,6 @@
 #include <QMutex>
 #include <QMutexLocker>
 
-#include <boost/weak_ptr.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
 
 namespace openstudio {
@@ -60,7 +58,7 @@ namespace runmanager {
   /// \todo may need to make this thread save soon it was designed so only one mutex would be needed for that
   struct RunManager::DB_Handler
   {
-    typedef std::map<openstudio::path, boost::weak_ptr<detail::RunManager_Impl> > DB_Map;
+    typedef std::map<openstudio::path, std::weak_ptr<detail::RunManager_Impl> > DB_Map;
 
     DB_Map m_dbs;
     QMutex m_mutex;
@@ -85,7 +83,7 @@ namespace runmanager {
       }
     }
 
-    boost::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
+    std::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
     {
       // use complete path
       openstudio::path wDB = completeAndNormalize(DB);
@@ -101,14 +99,14 @@ namespace runmanager {
       if (itr != m_dbs.end())
       {
         try {
-          boost::shared_ptr<detail::RunManager_Impl> founddb = boost::shared_ptr<detail::RunManager_Impl>(itr->second);
+          std::shared_ptr<detail::RunManager_Impl> founddb = std::shared_ptr<detail::RunManager_Impl>(itr->second);
           if (t_new)
           {
             throw std::runtime_error("Unable to make new DB " + toString(wDB) + " file is already open");
           }
 
           return founddb;
-        } catch ( const boost::bad_weak_ptr & ) {
+        } catch ( const std::bad_weak_ptr & ) {
           m_dbs.erase(itr); // the current one is bad
           itr = m_dbs.end();
         }
@@ -128,8 +126,8 @@ namespace runmanager {
 
       // We were unable to construct a valid shared_ptr from what we
       // did or did not have, so make a new one
-      boost::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb, t_useStatusGUI));
-      m_dbs.insert(std::make_pair(wDB, boost::weak_ptr<detail::RunManager_Impl>(impl)));
+      std::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb, t_useStatusGUI));
+      m_dbs.insert(std::make_pair(wDB, std::weak_ptr<detail::RunManager_Impl>(impl)));
       return impl;
 
     }

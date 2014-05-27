@@ -482,7 +482,7 @@ void CurveQuadraticLinear::resetOutputUnitType() {
 }
 
 /// @cond
-CurveQuadraticLinear::CurveQuadraticLinear(boost::shared_ptr<detail::CurveQuadraticLinear_Impl> impl)
+CurveQuadraticLinear::CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadraticLinear_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

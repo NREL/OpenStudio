@@ -3028,7 +3028,7 @@ std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableR
 }
 
 /// @cond
-AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(boost::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl)
+AirConditionerVariableRefrigerantFlow::AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

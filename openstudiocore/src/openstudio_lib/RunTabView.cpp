@@ -321,7 +321,7 @@ void RunView::runFinished(const openstudio::path &t_sqlFile, const openstudio::p
   //if (exists(t_sqlFile)){
   //  SqlFile sqlFile(t_sqlFile);
   //  if (sqlFile.connectionOpen()){
-  //    boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  //    std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
   //    osdocument->model().setSqlFile(sqlFile);
   //  }
   //}
@@ -407,7 +407,7 @@ void RunView::playButtonClicked(bool t_checked)
 {
   LOG(Debug, "playButtonClicked " << t_checked);
 
-  boost::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
 
   if(osdocument->modified())
   {

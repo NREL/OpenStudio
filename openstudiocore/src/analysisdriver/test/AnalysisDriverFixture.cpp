@@ -79,7 +79,7 @@ using namespace openstudio::analysisdriver;
 
 // static variables
 boost::optional<openstudio::FileLogSink> AnalysisDriverFixture::logFile;
-boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> AnalysisDriverFixture::argumentGetter;
+std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> AnalysisDriverFixture::argumentGetter;
 
 void AnalysisDriverFixture::SetUp() {}
 
@@ -108,12 +108,12 @@ void AnalysisDriverFixture::SetUpTestCase() {
   modules.push_back("openstudioruleset");
 
   // Initialize the embedded Ruby interpreter
-  boost::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
+  std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(getOpenStudioRubyPath(),
                                                 getOpenStudioRubyScriptsPath(),
                                                 modules));
   // Initialize the argument getter
-  argumentGetter = boost::shared_ptr<RubyUserScriptArgumentGetter>(
+  argumentGetter = std::shared_ptr<RubyUserScriptArgumentGetter>(
       new ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 }
 

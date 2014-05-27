@@ -88,7 +88,7 @@ class MODEL_API RenderingColor : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit RenderingColor(boost::shared_ptr<detail::RenderingColor_Impl> impl);
+  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
 
   /// @endcond
  private:

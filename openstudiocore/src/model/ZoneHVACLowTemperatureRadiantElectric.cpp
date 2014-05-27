@@ -585,7 +585,7 @@ void ZoneHVACLowTemperatureRadiantElectric::removeFromThermalZone()
 }
 
 /// @cond
-ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(boost::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl)
+ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

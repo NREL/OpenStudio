@@ -113,8 +113,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -2783,8 +2781,11 @@ namespace detail {
       for (const BoostRing& boostInner : boostResult[0].inners()){
 
         std::vector<Point3d> innerLoop;
-        BOOST_REVERSE_FOREACH(const BoostPoint& boostPoint, boostInner){
-          Point3d point(boostPoint.x(), boostPoint.y(), *z);
+        for (auto boostPoint = boostInner.rbegin();
+             boostPoint != boostInner.rend();
+             ++boostPoint)
+        {
+          Point3d point(boostPoint->x(), boostPoint->y(), *z);
           innerLoop.push_back(point);
         }
 
@@ -3373,7 +3374,7 @@ bool Space::isPlenum() const
 }
 
 /// @cond
-Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
+Space::Space(std::shared_ptr<detail::Space_Impl> impl)
   : PlanarSurfaceGroup(impl)
 {}
 /// @endcond
@@ -3381,7 +3382,7 @@ Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
 void intersectSurfaces(std::vector<Space>& spaces)
 {
   std::vector<BoundingBox> bounds;
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());
   }
 

@@ -112,7 +112,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Charge_Block(boost::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl);
+  explicit UtilityCost_Charge_Block(std::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl);
 
 private:
 

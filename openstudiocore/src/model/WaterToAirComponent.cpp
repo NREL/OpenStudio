@@ -522,7 +522,7 @@ WaterToAirComponent::WaterToAirComponent(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::WaterToAirComponent_Impl>());
 }     
 
-WaterToAirComponent::WaterToAirComponent(boost::shared_ptr<detail::WaterToAirComponent_Impl> p)
+WaterToAirComponent::WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> p)
   : HVACComponent(p)
 {}
 

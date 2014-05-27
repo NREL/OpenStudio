@@ -487,7 +487,7 @@ bool GasEquipmentDefinition::setDesignLevelCalculationMethod(const std::string& 
 }
 
 /// @cond
-GasEquipmentDefinition::GasEquipmentDefinition(boost::shared_ptr<detail::GasEquipmentDefinition_Impl> impl)
+GasEquipmentDefinition::GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

@@ -35,7 +35,7 @@ namespace detail {
   template<typename RubyInterpreterType>
   class RubyUserScriptArgumentGetter_Impl : public RubyUserScriptArgumentGetter {
    public:
-    RubyUserScriptArgumentGetter_Impl(const boost::shared_ptr<RubyInterpreterType>& rubyInterpreter)
+    RubyUserScriptArgumentGetter_Impl(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
       : m_rubyInterpreter(rubyInterpreter)
     {
       m_rubyInterpreter->template registerType<openstudio::BCLMeasure>("openstudio::BCLMeasure");
@@ -73,7 +73,7 @@ namespace detail {
     }
 
    private:
-    boost::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
+    std::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
   };
 
 } // detail

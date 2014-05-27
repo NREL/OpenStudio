@@ -34,8 +34,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 #ifdef Q_OS_WIN
 #include <Windows.h>
 #else
@@ -203,7 +201,7 @@ namespace detail {
     connect(&m_fileCheckTimer, SIGNAL(timeout()), this, SLOT(directoryChanged()));
 //    m_outfiles = dirFiles(openstudio::toQString(m_outdir));
 
-//    m_fswatcher = boost::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher());
+//    m_fswatcher = std::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher());
 
 //    connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)),
 //         this, SLOT(directoryChanged(const QString &)));
@@ -365,7 +363,7 @@ namespace detail {
 
 //    monitorFiles(diff.begin(), diff.end());
 
-    std::for_each(diff.begin(), diff.end(), boost::bind(&LocalProcess::emitUpdatedFileInfo, this, _1));
+    std::for_each(diff.begin(), diff.end(), std::bind(&LocalProcess::emitUpdatedFileInfo, this, std::placeholders::_1));
 
     m_process.checkProcessStatus();
   }

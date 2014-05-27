@@ -1452,7 +1452,7 @@ void PumpVariableSpeed::resetMaximumRPMSchedule() {
 }
 
 /// @cond
-PumpVariableSpeed::PumpVariableSpeed(boost::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
+PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

@@ -167,7 +167,7 @@ ComponentCostAdjustments::ComponentCostAdjustments(const Model& model)
 }
 
 // constructor
-ComponentCostAdjustments::ComponentCostAdjustments(boost::shared_ptr<detail::ComponentCostAdjustments_Impl> impl)
+ComponentCostAdjustments::ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl)
   : ParentObject(impl)
 {}
 

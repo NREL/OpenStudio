@@ -155,7 +155,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
   /// @cond
   typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
 
-  explicit SetpointManagerOutdoorAirReset(boost::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
+  explicit SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
 
   friend class detail::SetpointManagerOutdoorAirReset_Impl;
   friend class Model;

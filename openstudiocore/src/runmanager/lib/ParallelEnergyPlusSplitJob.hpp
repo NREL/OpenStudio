@@ -67,7 +67,7 @@ namespace detail {
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
       static std::vector<openstudio::path> generateFileNames(const openstudio::path &t_outdir, int t_num);
 
       virtual void basePathChanged();

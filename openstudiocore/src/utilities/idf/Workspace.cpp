@@ -36,7 +36,6 @@
 #include <utilities/core/StringHelpers.hpp>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/bind.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -59,8 +58,8 @@ namespace detail {
       m_strictnessLevel(level),
       m_iddFileAndFactoryWrapper(iddFileType),
       m_fastNaming(false),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(HandleVector(),boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {}
 
   Workspace_Impl::Workspace_Impl(const IdfFile& idfFile,
@@ -69,8 +68,8 @@ namespace detail {
       m_header(idfFile.header()),
       m_iddFileAndFactoryWrapper(idfFile.iddFileAndFactoryWrapper()),
       m_fastNaming(false),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(HandleVector(),boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {}
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,bool keepHandles) :
@@ -78,8 +77,8 @@ namespace detail {
     m_header(other.m_header),
     m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
     m_fastNaming(other.fastNaming()),
-    m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(boost::bind(&Workspace_Impl::getObject,this,_1))))
+    m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
@@ -100,8 +99,8 @@ namespace detail {
       m_header(), // subset of original data--discard header
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(hs,boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(hs,std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
@@ -121,7 +120,7 @@ namespace detail {
 
   Workspace Workspace_Impl::clone(bool keepHandles) const {
     // copy everything but objects
-    boost::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,keepHandles));
+    std::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,keepHandles));
     // clone objects
     createAndAddClonedObjects(workspace().getImpl<Workspace_Impl>(),cloneImpl,keepHandles);
     // wrap impl and return
@@ -134,7 +133,7 @@ namespace detail {
                                         StrictnessLevel level) const
   {
     // copy everything but objects
-    boost::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,handles,keepHandles,level));
+    std::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,handles,keepHandles,level));
     // clone objects
     createAndAddSubsetClonedObjects(workspace().getImpl<Workspace_Impl>(),cloneImpl,handles,keepHandles);
     // wrap impl and return
@@ -143,7 +142,7 @@ namespace detail {
   }
 
   void Workspace_Impl::swap(Workspace& other) {
-    boost::shared_ptr<Workspace_Impl> otherImpl = other.getImpl<Workspace_Impl>();
+    std::shared_ptr<Workspace_Impl> otherImpl = other.getImpl<Workspace_Impl>();
 
     StrictnessLevel tsl = m_strictnessLevel;
     m_strictnessLevel = otherImpl->m_strictnessLevel;
@@ -465,7 +464,7 @@ namespace detail {
   }
 
   // Helper function to start the process of adding an object to the workspace.
-  boost::shared_ptr<WorkspaceObject_Impl> Workspace_Impl::createObject(const IdfObject& object,
+  std::shared_ptr<WorkspaceObject_Impl> Workspace_Impl::createObject(const IdfObject& object,
                                                                        bool keepHandle)
   {
     return WorkspaceObject_ImplPtr(new WorkspaceObject_Impl(object,this,keepHandle));
@@ -473,7 +472,7 @@ namespace detail {
 
   // Helper function to start the process of adding a cloned object to the workspace.
   WorkspaceObject_ImplPtr Workspace_Impl::createObject(
-        const boost::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,
+        const std::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,
         bool keepHandle)
   {
     OS_ASSERT(originalObjectImplPtr);
@@ -483,7 +482,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::addObjects(
-      std::vector<boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+      std::vector<std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
       const std::vector<UHPointer>& pointersIntoWorkspace,
       const std::vector<HUPointer>& pointersFromWorkspace,
       bool driverMethod,
@@ -575,7 +574,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::addClones(
-      std::vector< boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+      std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
       const HandleMap& oldNewHandleMap,
       bool collectionClone,
       const std::vector<UHPointer>& pointersIntoWorkspace,
@@ -1427,7 +1426,7 @@ namespace detail {
     WorkspaceObjectVector addResult = Workspace_Impl::addObjects(newObjectPtrs,targets,sources,false);
     if (!addResult.empty()) {
       OS_ASSERT(addResult.size() == 1);
-      // sucessful add, prepare to swap data by preserving current object
+      // successful add, prepare to swap data by preserving current object
       IdfObject idfCurrentObject = currentObject.idfObject();
       // preserve order if directOrder
       if (order().isDirectOrder()) {
@@ -1588,7 +1587,7 @@ namespace detail {
             OS_ASSERT(sourceIddField);
             StringVector sourceFieldRefs = sourceIddField->properties().references;
             if (std::find_if(sourceFieldRefs.begin(),sourceFieldRefs.end(),
-                boost::bind(istringEqual,_1,referenceName)) != sourceFieldRefs.end()) {
+                std::bind(istringEqual,std::placeholders::_1,referenceName)) != sourceFieldRefs.end()) {
               found = true;
               break;
             }
@@ -1726,8 +1725,8 @@ namespace detail {
     // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
     // Accumulate information about names for later name checking
-    map<string,pair<bool,boost::shared_ptr<WorkspaceObject_Impl> > > mapOfNames;
-    map<string,list <boost::shared_ptr<WorkspaceObject_Impl> > > objectsRepeatNames;
+    map<string,pair<bool,std::shared_ptr<WorkspaceObject_Impl> > > mapOfNames;
+    map<string,list <std::shared_ptr<WorkspaceObject_Impl> > > objectsRepeatNames;
 
     // by-object items
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap)
@@ -1745,7 +1744,7 @@ namespace detail {
           if( !itr->second.first )
           {
             itr->second.first=true;
-            list<boost::shared_ptr<WorkspaceObject_Impl> > l;
+            list<std::shared_ptr<WorkspaceObject_Impl> > l;
             l.push_front(itr->second.second);
             l.push_front(p.second);
             objectsRepeatNames[itr->first] = l;
@@ -1760,7 +1759,7 @@ namespace detail {
         }
         else
         {
-          mapOfNames[*oName] = pair<bool,boost::shared_ptr<WorkspaceObject_Impl> >(false,p.second);
+          mapOfNames[*oName] = pair<bool,std::shared_ptr<WorkspaceObject_Impl> >(false,p.second);
         }
       }
 
@@ -1799,7 +1798,7 @@ namespace detail {
     //however, that is so unlikely its not even funny
     for(const auto & objectsRepeatName : objectsRepeatNames)
     {
-      boost::shared_ptr<WorkspaceObject_Impl> obj;
+      std::shared_ptr<WorkspaceObject_Impl> obj;
       list<StringVector> checkList;
       for(const auto & elem : objectsRepeatName.second)
       {
@@ -2007,7 +2006,7 @@ namespace detail {
     }
   }
 
-  bool Workspace_Impl::nominallyAddObject(boost::shared_ptr<WorkspaceObject_Impl>& ptr) {
+  bool Workspace_Impl::nominallyAddObject(std::shared_ptr<WorkspaceObject_Impl>& ptr) {
 
     Handle h = ptr->handle();
     if (h.isNull()) { return false; }
@@ -2032,19 +2031,19 @@ namespace detail {
   }
 
   void Workspace_Impl::insertIntoObjectMap(
-      const Handle& handle, const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
     m_workspaceObjectMap[handle] = objectImplPtr;
   }
 
   void Workspace_Impl::insertIntoIddObjectTypeMap(
-      const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
     m_iddObjectTypeMap[objectImplPtr->iddObject().type()].insert(std::make_pair(objectImplPtr->handle(),objectImplPtr));
   }
 
   void Workspace_Impl::insertIntoIdfReferencesMap(
-      const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
     StringVector references = objectImplPtr->iddObject().references();
     for (const std::string& referenceName : references) {
@@ -2276,7 +2275,7 @@ namespace detail {
     return sources;
   }
 
-  void Workspace_Impl::registerRemovalOfObject(boost::shared_ptr<WorkspaceObject_Impl> ptr,
+  void Workspace_Impl::registerRemovalOfObject(std::shared_ptr<WorkspaceObject_Impl> ptr,
                                                const std::vector<WorkspaceObject>& sources,
                                                const std::vector<Handle>& removedHandles)
   {
@@ -2602,8 +2601,8 @@ namespace detail {
   }
 
   void Workspace_Impl::createAndAddClonedObjects(
-      const boost::shared_ptr<detail::Workspace_Impl>& thisImpl,
-      boost::shared_ptr<detail::Workspace_Impl> cloneImpl,
+      const std::shared_ptr<detail::Workspace_Impl>& thisImpl,
+      std::shared_ptr<detail::Workspace_Impl> cloneImpl,
       bool keepHandles) const
   {
     detail::WorkspaceObject_ImplPtrVector newObjectImplPtrs;
@@ -2619,8 +2618,8 @@ namespace detail {
   }
 
   void Workspace_Impl::createAndAddSubsetClonedObjects(
-      const boost::shared_ptr<detail::Workspace_Impl>& thisImpl,
-      boost::shared_ptr<detail::Workspace_Impl> cloneImpl,
+      const std::shared_ptr<detail::Workspace_Impl>& thisImpl,
+      std::shared_ptr<detail::Workspace_Impl> cloneImpl,
       const std::vector<Handle>& handles,
       bool keepHandles) const
   {
@@ -3032,7 +3031,7 @@ std::vector<std::pair<QUrl, openstudio::path> > Workspace::locateUrls(
 
 // PROTECTED
 
-Workspace::Workspace(boost::shared_ptr<detail::Workspace_Impl> impl)
+Workspace::Workspace(std::shared_ptr<detail::Workspace_Impl> impl)
   : m_impl(impl)
 {}
 

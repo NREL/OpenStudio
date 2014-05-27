@@ -238,7 +238,7 @@ class MODEL_API Shade : public ShadingMaterial {
   /// @cond
   typedef detail::Shade_Impl ImplType;
 
-  explicit Shade(boost::shared_ptr<detail::Shade_Impl> impl);
+  explicit Shade(std::shared_ptr<detail::Shade_Impl> impl);
 
   friend class detail::Shade_Impl;
   friend class Model;

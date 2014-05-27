@@ -576,7 +576,7 @@ boost::optional<DakotaParametersFile> DakotaParametersFile::load(const openstudi
 
   try {
     boost::filesystem::ifstream is(p);
-    boost::shared_ptr<detail::DakotaParametersFile_Impl> impl(new detail::DakotaParametersFile_Impl(is));
+    std::shared_ptr<detail::DakotaParametersFile_Impl> impl(new detail::DakotaParametersFile_Impl(is));
     result = DakotaParametersFile(impl);
   }
   catch (...) {}
@@ -689,7 +689,7 @@ bool DakotaParametersFile::getFunctionValueRequired(int i) const {
 }
 
 /// @cond
-DakotaParametersFile::DakotaParametersFile(boost::shared_ptr<detail::DakotaParametersFile_Impl> impl)
+DakotaParametersFile::DakotaParametersFile(std::shared_ptr<detail::DakotaParametersFile_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

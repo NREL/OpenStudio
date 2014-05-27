@@ -108,7 +108,7 @@ class MODEL_API WaterToAirComponent : public HVACComponent
 
   typedef detail::WaterToAirComponent_Impl ImplType;
 
-  explicit WaterToAirComponent(boost::shared_ptr<detail::WaterToAirComponent_Impl> impl);
+  explicit WaterToAirComponent(std::shared_ptr<detail::WaterToAirComponent_Impl> impl);
 
   WaterToAirComponent(IddObjectType type,const Model& model);
 

@@ -63,7 +63,7 @@ namespace detail {
 
   Unit MPHUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::MPH);
-    boost::shared_ptr<MPHUnit_Impl> impl(new MPHUnit_Impl(*this));
+    std::shared_ptr<MPHUnit_Impl> impl(new MPHUnit_Impl(*this));
     return MPHUnit(impl).cast<Unit>();
   }
 
@@ -83,20 +83,20 @@ namespace detail {
 MPHUnit::MPHUnit(const MPHExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 MPHUnit::MPHUnit(const std::string& scaleAbbreviation,
                  const MPHExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::MPHUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-MPHUnit::MPHUnit(boost::shared_ptr<detail::MPHUnit_Impl> impl)
-  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
+MPHUnit::MPHUnit(std::shared_ptr<detail::MPHUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

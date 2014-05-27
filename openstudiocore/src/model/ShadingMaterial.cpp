@@ -52,7 +52,7 @@ ShadingMaterial::ShadingMaterial(IddObjectType type,const Model& model)
 }
 
 /// @cond
-ShadingMaterial::ShadingMaterial(boost::shared_ptr<detail::ShadingMaterial_Impl> impl)
+ShadingMaterial::ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl)
   : FenestrationMaterial(impl)
 {}
 /// @endcond

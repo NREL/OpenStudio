@@ -294,7 +294,7 @@ void ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultipl
 }
 
 /// @cond
-ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(boost::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
+ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
   : ModelObject(impl)
 {}
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(Model& model)

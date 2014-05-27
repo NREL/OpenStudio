@@ -27,17 +27,16 @@
  */
 
 #include <vector>
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 /** Typedefs for shared pointers and vector of shared pointers, const and
  *  non-const variants. */
 #define COMMON_PTR_TYPEDEFS(__T__) \
-  typedef boost::shared_ptr<__T__> Ptr; \
-  typedef boost::weak_ptr<__T__> WeakPtr; \
+  typedef std::shared_ptr<__T__> Ptr; \
+  typedef std::weak_ptr<__T__> WeakPtr; \
   typedef std::vector<Ptr> Vec; \
-  typedef boost::shared_ptr<const __T__> ConstPtr; \
-  typedef boost::weak_ptr<const __T__> ConstWeakPtr; \
+  typedef std::shared_ptr<const __T__> ConstPtr; \
+  typedef std::weak_ptr<const __T__> ConstWeakPtr; \
   typedef std::vector<ConstPtr> ConstVec;
 
 #endif // UTILITIES_CORE_MACRO_HPP

@@ -200,7 +200,7 @@ namespace detail {
     return result;
   }
 
-  void OSArgumentRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OSArgumentRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OSArgumentRecord>(query);
@@ -581,7 +581,7 @@ namespace detail {
 OSArgumentRecord::OSArgumentRecord(
     const ruleset::OSArgument& osArgument,
     RubyMeasureRecord& rubyMeasureRecord)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(osArgument, rubyMeasureRecord)),
         rubyMeasureRecord.projectDatabase())
 {
@@ -591,7 +591,7 @@ OSArgumentRecord::OSArgumentRecord(
 OSArgumentRecord::OSArgumentRecord(
     const ruleset::OSArgument& osArgument,
     RubyContinuousVariableRecord& rubyContinuousVariableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(osArgument, rubyContinuousVariableRecord)),
         rubyContinuousVariableRecord.projectDatabase())
 {
@@ -599,14 +599,14 @@ OSArgumentRecord::OSArgumentRecord(
 }
 
 OSArgumentRecord::OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
-OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl,
+OSArgumentRecord::OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl,
                                                    ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -762,7 +762,7 @@ openstudio::path OSArgumentRecord::defaultValueAsPath() const {
 }
 
 /// @cond
-OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl)
+OSArgumentRecord::OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

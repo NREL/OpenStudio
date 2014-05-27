@@ -138,7 +138,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
   /// @cond
   typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(boost::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
+  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
   friend class Model;

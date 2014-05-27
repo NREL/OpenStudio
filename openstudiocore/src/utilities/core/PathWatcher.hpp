@@ -95,8 +95,8 @@ namespace openstudio {
     private:
 
       /// impl
-      boost::shared_ptr<QFileSystemWatcher> m_impl;
-      boost::shared_ptr<QTimer> m_timer;
+      std::shared_ptr<QFileSystemWatcher> m_impl;
+      std::shared_ptr<QTimer> m_timer;
 
       bool m_enabled;
       bool m_isDirectory;

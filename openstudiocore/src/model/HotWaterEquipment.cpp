@@ -364,7 +364,7 @@ double HotWaterEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 }
 
 /// @cond
-HotWaterEquipment::HotWaterEquipment(boost::shared_ptr<detail::HotWaterEquipment_Impl> impl)
+HotWaterEquipment::HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

@@ -79,7 +79,7 @@ class MODEL_API ZoneAirContaminantBalance : public ModelObject {
   /// @cond
   typedef detail::ZoneAirContaminantBalance_Impl ImplType;
 
-  explicit ZoneAirContaminantBalance(boost::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl);
+  explicit ZoneAirContaminantBalance(std::shared_ptr<detail::ZoneAirContaminantBalance_Impl> impl);
 
   friend class detail::ZoneAirContaminantBalance_Impl;
   friend class Model;

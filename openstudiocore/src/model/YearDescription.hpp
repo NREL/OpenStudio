@@ -109,7 +109,7 @@ class MODEL_API YearDescription : public ParentObject {
   friend class IdfObject;
   friend class detail::YearDescription_Impl;
 
-  explicit YearDescription(boost::shared_ptr<detail::YearDescription_Impl> impl);
+  explicit YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl);
 
   explicit YearDescription(Model& model);
 

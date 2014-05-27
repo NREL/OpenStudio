@@ -381,7 +381,7 @@ void CurveSigmoid::resetOutputUnitType() {
 }
 
 /// @cond
-CurveSigmoid::CurveSigmoid(boost::shared_ptr<detail::CurveSigmoid_Impl> impl)
+CurveSigmoid::CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

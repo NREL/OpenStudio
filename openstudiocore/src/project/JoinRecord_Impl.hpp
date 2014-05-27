@@ -26,9 +26,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QObject>
 
 class QSqlQuery;

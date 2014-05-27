@@ -50,7 +50,7 @@ namespace openstudio {
       m_impl->addPath(openstudio::toQString(p));
 
     }else{
-      m_timer = boost::shared_ptr<QTimer>(new QTimer());
+      m_timer = std::shared_ptr<QTimer>(new QTimer());
       bool connected = this->connect(m_timer.get(), SIGNAL(timeout()), SLOT(checkFile()));
       OS_ASSERT(connected);
       m_timer->start(m_msec);

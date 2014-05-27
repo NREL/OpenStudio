@@ -118,7 +118,7 @@ class MODEL_API DefaultSubSurfaceConstructions : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DefaultSubSurfaceConstructions(boost::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl);
+  explicit DefaultSubSurfaceConstructions(std::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl);
 
   /// @endcond
  private:

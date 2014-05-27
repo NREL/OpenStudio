@@ -164,7 +164,7 @@ class MODEL_API People : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit People(boost::shared_ptr<detail::People_Impl> impl);
+  explicit People(std::shared_ptr<detail::People_Impl> impl);
 
   /// @endcond
  private:

@@ -375,7 +375,7 @@ void SiteWaterMainsTemperature::resetMaximumDifferenceInMonthlyAverageOutdoorAir
 }
 
 /// @cond
-SiteWaterMainsTemperature::SiteWaterMainsTemperature(boost::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl)
+SiteWaterMainsTemperature::SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

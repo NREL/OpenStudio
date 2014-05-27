@@ -72,7 +72,7 @@ class MODEL_API ScheduleConstant : public Schedule {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit ScheduleConstant(boost::shared_ptr<detail::ScheduleConstant_Impl> impl);
+  explicit ScheduleConstant(std::shared_ptr<detail::ScheduleConstant_Impl> impl);
 
  private:
 

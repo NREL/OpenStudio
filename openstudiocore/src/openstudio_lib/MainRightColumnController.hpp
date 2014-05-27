@@ -119,7 +119,7 @@ class MainRightColumnController : public OSQObjectController
 
   HorizontalTabWidget * m_horizontalTabWidget; 
 
-  boost::shared_ptr<InspectorController> m_inspectorController;
+  std::shared_ptr<InspectorController> m_inspectorController;
 
 
   QStackedWidget * m_myModelView;

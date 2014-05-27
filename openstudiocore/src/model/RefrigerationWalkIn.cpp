@@ -115,7 +115,7 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
-    boost::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
+    std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
     t_model->blockSignals(true);
 
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
@@ -1103,7 +1103,7 @@ void RefrigerationWalkIn::resetZoneBoundaryStockingDoorOpeningScheduleFacingZone
 }
 
 /// @cond
-RefrigerationWalkIn::RefrigerationWalkIn(boost::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
+RefrigerationWalkIn::RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

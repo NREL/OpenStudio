@@ -237,7 +237,7 @@ UtilityCost_Tariff::UtilityCost_Tariff(const Model& model)
 }
 
 // constructor
-UtilityCost_Tariff::UtilityCost_Tariff(boost::shared_ptr<detail::UtilityCost_Tariff_Impl> impl)
+UtilityCost_Tariff::UtilityCost_Tariff(std::shared_ptr<detail::UtilityCost_Tariff_Impl> impl)
   : ParentObject(impl)
 {}
 

@@ -757,16 +757,16 @@ void SpaceLoadInstancesWidget::attach(const model::Space& space)
 
   bool isConnected = false;
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -804,16 +804,16 @@ void SpaceLoadInstancesWidget::attach(const model::SpaceType& spaceType)
 
   bool isConnected = false;
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_model->getImpl<openstudio::model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -872,7 +872,7 @@ void SpaceLoadInstancesWidget::onSpaceRelationshipChange(int index, Handle newHa
   }
 }
 
-void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void SpaceLoadInstancesWidget::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == IddObjectType::OS_SpaceType){
     bool isConnected = connect(impl.get(),
@@ -883,7 +883,7 @@ void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail:
     return;
   }
 
-  boost::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = boost::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
+  std::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = std::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
   if (spaceLoadInstanceImpl){
 
     boost::optional<model::SpaceType> spaceType = m_spaceType;
@@ -911,9 +911,9 @@ void SpaceLoadInstancesWidget::objectAdded(boost::shared_ptr<openstudio::detail:
   }
 }
 
-void SpaceLoadInstancesWidget::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void SpaceLoadInstancesWidget::objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
-  boost::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = boost::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
+  std::shared_ptr<model::detail::SpaceLoadInstance_Impl> spaceLoadInstanceImpl = std::dynamic_pointer_cast<model::detail::SpaceLoadInstance_Impl>(impl);
   if (spaceLoadInstanceImpl){
     m_dirty = true;
     QTimer::singleShot(0, this, SLOT(refresh()));

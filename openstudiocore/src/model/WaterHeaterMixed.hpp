@@ -414,7 +414,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
   /// @cond
   typedef detail::WaterHeaterMixed_Impl ImplType;
 
-  explicit WaterHeaterMixed(boost::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
+  explicit WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
 
   friend class detail::WaterHeaterMixed_Impl;
   friend class Model;

@@ -670,7 +670,7 @@ bool AirTerminalSingleDuctVAVReheat::setAvailabilitySchedule(Schedule& schedule)
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
+AirTerminalSingleDuctVAVReheat::AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> p)
   : StraightComponent(p)
 {}
 

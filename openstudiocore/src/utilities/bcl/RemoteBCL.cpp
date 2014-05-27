@@ -602,7 +602,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -613,12 +613,12 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-	QUrlQuery query;
-	query.addQueryItem("uids", toQString(uid));
-	//query.addQueryItem("api_version", toQString(m_apiVersion));
-	url.setQuery(query);
+    QUrlQuery query;
+    query.addQueryItem("uids", toQString(uid));
+    //query.addQueryItem("api_version", toQString(m_apiVersion));
+    url.setQuery(query);
 
-	data.append(url.query());
+    data.append(url.query());
     LOG(Warn, url.toString().toStdString());
 
     QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));
@@ -702,7 +702,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;

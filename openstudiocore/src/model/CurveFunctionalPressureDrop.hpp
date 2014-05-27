@@ -100,7 +100,7 @@ class MODEL_API CurveFunctionalPressureDrop : public Curve {
   /// @cond
   typedef detail::CurveFunctionalPressureDrop_Impl ImplType;
 
-  explicit CurveFunctionalPressureDrop(boost::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl);
+  explicit CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl);
 
   friend class detail::CurveFunctionalPressureDrop_Impl;
   friend class Model;

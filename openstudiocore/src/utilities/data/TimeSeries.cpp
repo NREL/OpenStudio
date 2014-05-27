@@ -545,9 +545,9 @@ namespace openstudio{
     }
 
     /// add timeseries
-    boost::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator+(const TimeSeries_Impl& other) const
+    std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator+(const TimeSeries_Impl& other) const
     {
-      boost::shared_ptr<TimeSeries_Impl> result(new TimeSeries_Impl());
+      std::shared_ptr<TimeSeries_Impl> result(new TimeSeries_Impl());
 
       // if same units
       if (m_units == other.units()){
@@ -574,7 +574,7 @@ namespace openstudio{
         }
 
         // make new result
-        result = boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
+        result = std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
 
       }
       else{
@@ -585,9 +585,9 @@ namespace openstudio{
     }
 
     /// subtract timeseries
-    boost::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator-(const TimeSeries_Impl& other) const
+    std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator-(const TimeSeries_Impl& other) const
     {
-      boost::shared_ptr<TimeSeries_Impl> result(new TimeSeries_Impl());
+      std::shared_ptr<TimeSeries_Impl> result(new TimeSeries_Impl());
 
       // if same units
       if (m_units == other.units()){
@@ -614,7 +614,7 @@ namespace openstudio{
         }
 
         // make new result
-        result = boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
+        result = std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(dateTimes, values, m_units));
 
       }
       else{
@@ -624,9 +624,9 @@ namespace openstudio{
       return result;
     }
 
-    boost::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
+    std::shared_ptr<TimeSeries_Impl> TimeSeries_Impl::operator*(double d) const {
 
-      return boost::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime, 
+      return std::shared_ptr<TimeSeries_Impl>(new TimeSeries_Impl(m_firstReportDateTime, 
         m_secondsFromFirstReport,
         m_values*d, 
         m_units));
@@ -636,43 +636,43 @@ namespace openstudio{
   /// default constructor 
   TimeSeries::TimeSeries()
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl());
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl());
   }
 
   /// constructor from start date, interval length, values, and units
   TimeSeries::TimeSeries(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDate, intervalLength, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDate, intervalLength, values, units));
   }
 
   /// constructor from start date and time, interval length, values, and units
   TimeSeries::TimeSeries(const DateTime& startDateTime, const Time& intervalLength, const Vector& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDateTime, intervalLength, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(startDateTime, intervalLength, values, units));
   }
 
   /// constructor from first report date and time, days from first report vector, values, and units
   TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const Vector& daysFromFirstReport, const Vector& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
   }
 
   /// constructor from first report date and time, days from first report , values, and units
   TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<double>& daysFromFirstReport, const std::vector<double>& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, daysFromFirstReport, values, units));
   }
 
   /// constructor from date times, values, and units
   TimeSeries::TimeSeries(const DateTimeVector& dateTimes, const Vector& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(dateTimes, values, units));
   }
 
   /// constructor from first report date and time, seconds from first report vector, values, and units
   TimeSeries::TimeSeries(const DateTime& firstReportDateTime, const std::vector<long>& secondsFromFirstReport, const Vector& values, const std::string& units)
   {
-    m_impl = boost::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units));
+    m_impl = std::shared_ptr<detail::TimeSeries_Impl>(new detail::TimeSeries_Impl(firstReportDateTime, secondsFromFirstReport, values, units));
   }
 
   /// interval length if any
@@ -769,29 +769,29 @@ namespace openstudio{
   /// add timeseries
   TimeSeries TimeSeries::operator+(const TimeSeries& other) const
   {
-    boost::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) + *(other.m_impl);
+    std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) + *(other.m_impl);
     return TimeSeries(impl);
   }
 
   /// subtract timeseries
   TimeSeries TimeSeries::operator-(const TimeSeries& other) const
   {
-    boost::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) - *(other.m_impl);
+    std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl) - *(other.m_impl);
     return TimeSeries(impl);
   }
 
   TimeSeries TimeSeries::operator*(double d) const {
-    boost::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl)*d;
+    std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl)*d;
     return TimeSeries(impl);
   }
 
   TimeSeries TimeSeries::operator/(double d) const {
-    boost::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl)*(1.0/d);
+    std::shared_ptr<detail::TimeSeries_Impl> impl = (*m_impl)*(1.0/d);
     return TimeSeries(impl);
   }
 
   // constructor from impl
-  TimeSeries::TimeSeries(boost::shared_ptr<detail::TimeSeries_Impl> impl)
+  TimeSeries::TimeSeries(std::shared_ptr<detail::TimeSeries_Impl> impl)
     : m_impl(impl)
   {}
 
@@ -817,7 +817,7 @@ namespace openstudio{
 
   boost::function1<TimeSeries, const std::vector<TimeSeries>&> sumTimeSeriesFunctor() { 
     typedef TimeSeries (*functype)(const std::vector<TimeSeries>&);
-    return boost::function<TimeSeries (const std::vector<TimeSeries>&) > (functype(&sum));
+    return std::function<TimeSeries (const std::vector<TimeSeries>&) > (functype(&sum));
   }
 
   TimeSeries evaluateTimeSeriesFromTimeSeriesVectorFunctor(

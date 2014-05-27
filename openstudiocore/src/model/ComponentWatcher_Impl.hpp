@@ -26,8 +26,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QObject>
 
 namespace openstudio {
@@ -37,7 +35,7 @@ class ComponentWatcher;
 
 namespace detail {
 
-  class MODEL_API ComponentWatcher_Impl : public QObject, public boost::enable_shared_from_this<ComponentWatcher_Impl> {
+  class MODEL_API ComponentWatcher_Impl : public QObject, public std::enable_shared_from_this<ComponentWatcher_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */

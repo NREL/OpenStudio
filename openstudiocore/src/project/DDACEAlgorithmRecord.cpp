@@ -70,7 +70,7 @@ namespace detail {
     return result;
   }
 
-  void DDACEAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DDACEAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DDACEAlgorithmRecord>(query);
@@ -174,7 +174,7 @@ namespace detail {
 
 DDACEAlgorithmRecord::DDACEAlgorithmRecord(const analysis::DDACEAlgorithm& ddaceAlgorithm,
                                            AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
         new detail::DDACEAlgorithmRecord_Impl(ddaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         ddaceAlgorithm)
@@ -185,7 +185,7 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const analysis::DDACEAlgorithm& ddace
 }
 
 DDACEAlgorithmRecord::DDACEAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
         new detail::DDACEAlgorithmRecord_Impl(query, database)),
         database,
         boost::optional<analysis::DakotaAlgorithm>())
@@ -193,7 +193,7 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const QSqlQuery& query, ProjectDataba
   OS_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
 }
 
-DDACEAlgorithmRecord::DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
+DDACEAlgorithmRecord::DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
                                            ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
@@ -257,7 +257,7 @@ analysis::DDACEAlgorithm DDACEAlgorithmRecord::ddaceAlgorithm() const {
 }
 
 /// @cond
-DDACEAlgorithmRecord::DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl)
+DDACEAlgorithmRecord::DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

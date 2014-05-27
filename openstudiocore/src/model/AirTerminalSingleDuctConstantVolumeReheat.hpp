@@ -126,7 +126,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   /// @cond
   typedef detail::AirTerminalSingleDuctConstantVolumeReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctConstantVolumeReheat(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
+  explicit AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
 
   friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
   friend class Model;

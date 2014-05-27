@@ -29,7 +29,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -318,7 +317,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   explicit ModelObject(IddObjectType type,const Model& model);
 
   // constructor
-  explicit ModelObject(boost::shared_ptr<detail::ModelObject_Impl> impl);
+  explicit ModelObject(std::shared_ptr<detail::ModelObject_Impl> impl);
 
  private:
 

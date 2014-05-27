@@ -207,7 +207,7 @@ void ScheduleBase::ensureNoLeapDays()
 }
 
 /// @cond
-ScheduleBase::ScheduleBase(boost::shared_ptr<detail::ScheduleBase_Impl> impl)
+ScheduleBase::ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl)
   : ResourceObject(impl)
 {}
 

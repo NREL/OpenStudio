@@ -90,7 +90,7 @@ class MODEL_API RunPeriodControlDaylightSavingTime : public ModelObject {
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit RunPeriodControlDaylightSavingTime(boost::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl);
+  explicit RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl);
 
   explicit RunPeriodControlDaylightSavingTime(Model& model);
 

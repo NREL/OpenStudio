@@ -81,8 +81,8 @@ private slots:
 
   void onPushButtonOK(bool);
   void onPushButtonCancel(bool);
-  void onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
-  void onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
 
 private:
 
@@ -110,7 +110,7 @@ class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject
   
 public:
 
-  ModelObjectSelectorDialogWatcher(boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog);
+  ModelObjectSelectorDialogWatcher(std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog);
   
   /// get the selected object
   boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
@@ -124,7 +124,7 @@ private slots:
 
 private:
 
-  boost::shared_ptr<ModelObjectSelectorDialog> m_modelObjectSelectorDialog;
+  std::shared_ptr<ModelObjectSelectorDialog> m_modelObjectSelectorDialog;
   mutable boost::optional<openstudio::model::ModelObject> m_selectedModelObject;
 };
 

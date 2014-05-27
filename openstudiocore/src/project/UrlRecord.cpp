@@ -97,7 +97,7 @@ namespace detail {
     return result;
   }
 
-  void UrlRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void UrlRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<UrlRecord>(query);
     this->bindValues(query);
@@ -181,7 +181,7 @@ namespace detail {
 } // detail
 
 UrlRecord::UrlRecord(const openstudio::Url& url, ObjectRecord& parentRecord)
-  : ObjectRecord(boost::shared_ptr<detail::UrlRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::UrlRecord_Impl>(
         new detail::UrlRecord_Impl(url, parentRecord)),
         parentRecord.projectDatabase())
 {
@@ -189,7 +189,7 @@ UrlRecord::UrlRecord(const openstudio::Url& url, ObjectRecord& parentRecord)
 }
 
 UrlRecord::UrlRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::UrlRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::UrlRecord_Impl>(
         new detail::UrlRecord_Impl(query, database)),
         database)
 {
@@ -300,11 +300,11 @@ openstudio::Url UrlRecord::url() const {
 }
 
 /// @cond
-UrlRecord::UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl)
+UrlRecord::UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-UrlRecord::UrlRecord(boost::shared_ptr<detail::UrlRecord_Impl> impl,
+UrlRecord::UrlRecord(std::shared_ptr<detail::UrlRecord_Impl> impl,
                      ProjectDatabase database)
   : ObjectRecord(impl, database)
 {

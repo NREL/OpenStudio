@@ -29,6 +29,7 @@
 
 #include <utilities/core/Path.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 

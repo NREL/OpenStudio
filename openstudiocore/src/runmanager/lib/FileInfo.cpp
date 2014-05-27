@@ -19,8 +19,6 @@
 
 #include "FileInfo.hpp"
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 
@@ -180,7 +178,7 @@ const FileInfo &Files::getLastByKey(const std::string &t_key) const
   // we're going to try and work around what seems to be a bug in the stdlib used
   // by apple. We're going to save the error, then
   try {
-    return getLast(boost::bind(&Files::keyCompare, t_key, _1));
+    return getLast(std::bind(&Files::keyCompare, t_key, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByKey: " + std::string(e.what()) + ": " + t_key);
   }
@@ -189,7 +187,7 @@ const FileInfo &Files::getLastByKey(const std::string &t_key) const
 const FileInfo &Files::getLastByRegex(const std::string &t_regex) const
 {
   try {
-    return getLast(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
+    return getLast(std::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
@@ -198,7 +196,7 @@ const FileInfo &Files::getLastByRegex(const std::string &t_regex) const
 Files Files::getAllByRegex(const std::string &t_regex) const
 {
   try {
-    return getAll(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
+    return getAll(std::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
@@ -207,7 +205,7 @@ Files Files::getAllByRegex(const std::string &t_regex) const
 Files Files::getAllByKey(const std::string &t_key) const
 {
   try {
-    return getAll(boost::bind(&Files::keyCompare, t_key, _1));
+    return getAll(std::bind(&Files::keyCompare, t_key, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByKey: " + std::string(e.what()) + ": " + t_key);
   }
@@ -216,7 +214,7 @@ Files Files::getAllByKey(const std::string &t_key) const
 const FileInfo &Files::getLastByFilename(const std::string &t_filename) const
 {
   try {
-    return getLast(boost::bind(&Files::filenameCompare, t_filename, _1));
+    return getLast(std::bind(&Files::filenameCompare, t_filename, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
@@ -225,7 +223,7 @@ const FileInfo &Files::getLastByFilename(const std::string &t_filename) const
 Files Files::getAllByFilename(const std::string &t_filename) const
 {
   try {
-    return getAll(boost::bind(&Files::filenameCompare, t_filename, _1));
+    return getAll(std::bind(&Files::filenameCompare, t_filename, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
@@ -234,7 +232,7 @@ Files Files::getAllByFilename(const std::string &t_filename) const
 FileInfo &Files::getLastByRegex(const std::string &t_regex)
 {
   try {
-    return getLast(boost::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), _1));
+    return getLast(std::bind(&Files::regexCompare, QRegExp(toQString(t_regex), Qt::CaseInsensitive), std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByRegex: " + std::string(e.what()) + ": " + t_regex);
   }
@@ -243,7 +241,7 @@ FileInfo &Files::getLastByRegex(const std::string &t_regex)
 const FileInfo &Files::getLastByExtension(const std::string &t_ext) const
 {
   try {
-    return getLast(boost::bind(&Files::extensionCompare, t_ext, _1));
+    return getLast(std::bind(&Files::extensionCompare, t_ext, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByExtension: " + std::string(e.what()) + ": " + t_ext);
   }
@@ -252,7 +250,7 @@ const FileInfo &Files::getLastByExtension(const std::string &t_ext) const
 Files Files::getAllByExtension(const std::string &t_ext) const
 {
   try {
-    return getAll(boost::bind(&Files::extensionCompare, t_ext, _1));
+    return getAll(std::bind(&Files::extensionCompare, t_ext, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getAllByExtension: " + std::string(e.what()) + ": " + t_ext);
   }
@@ -261,7 +259,7 @@ Files Files::getAllByExtension(const std::string &t_ext) const
 FileInfo &Files::getLastByKey(const std::string &t_key) 
 {
   try {
-    return getLast(boost::bind(&Files::keyCompare, t_key, _1));
+    return getLast(std::bind(&Files::keyCompare, t_key, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByKey: " + std::string(e.what()) + ": " + t_key);
   }
@@ -270,7 +268,7 @@ FileInfo &Files::getLastByKey(const std::string &t_key)
 FileInfo &Files::getLastByFilename(const std::string &t_filename)
 {
   try {
-    return getLast(boost::bind(&Files::filenameCompare, t_filename, _1));
+    return getLast(std::bind(&Files::filenameCompare, t_filename, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByFilename: " + std::string(e.what()) + ": " + t_filename);
   }
@@ -279,7 +277,7 @@ FileInfo &Files::getLastByFilename(const std::string &t_filename)
 FileInfo &Files::getLastByExtension(const std::string &t_ext) 
 {
   try {
-    return getLast(boost::bind(&Files::extensionCompare, t_ext, _1));
+    return getLast(std::bind(&Files::extensionCompare, t_ext, std::placeholders::_1));
   } catch (const std::runtime_error &e) {
     throw std::runtime_error("getLastByExtension: " + std::string(e.what()) + ": " + t_ext);
   }

@@ -22,7 +22,6 @@
 
 #include "ISOModelAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/data/Vector.hpp>
 #include <utilities/data/Matrix.hpp>
@@ -73,14 +72,14 @@ namespace isomodel {
 
   class ISOMODEL_API SimModel {
   public:
-    void setPop(boost::shared_ptr<Population> value){pop=value;}
-    void setLocation(boost::shared_ptr<Location> value){location=value;}
-    void setLights(boost::shared_ptr<Lighting> value){lights=value;}
-    void setBuilding(boost::shared_ptr<Building> value){building=value;}
-    void setStructure(boost::shared_ptr<Structure> value){structure=value;}
-    void setHeating(boost::shared_ptr<Heating> value){heating=value;}
-    void setCooling(boost::shared_ptr<Cooling> value){cooling=value;}
-    void setVentilation(boost::shared_ptr<Ventilation> value){ventilation=value;}
+    void setPop(std::shared_ptr<Population> value){pop=value;}
+    void setLocation(std::shared_ptr<Location> value){location=value;}
+    void setLights(std::shared_ptr<Lighting> value){lights=value;}
+    void setBuilding(std::shared_ptr<Building> value){building=value;}
+    void setStructure(std::shared_ptr<Structure> value){structure=value;}
+    void setHeating(std::shared_ptr<Heating> value){heating=value;}
+    void setCooling(std::shared_ptr<Cooling> value){cooling=value;}
+    void setVentilation(std::shared_ptr<Ventilation> value){ventilation=value;}
 
     /*
      *  Runs the ISO Model cacluations for the given set of input parameters.
@@ -90,14 +89,14 @@ namespace isomodel {
     REGISTER_LOGGER("openstudio.isomodel.SimModel");
 
   private:      
-    boost::shared_ptr<Population> pop;
-    boost::shared_ptr<Location> location;
-    boost::shared_ptr<Lighting> lights;
-    boost::shared_ptr<Building> building;
-    boost::shared_ptr<Structure> structure;
-    boost::shared_ptr<Heating> heating;
-    boost::shared_ptr<Cooling> cooling;
-    boost::shared_ptr<Ventilation> ventilation;  
+    std::shared_ptr<Population> pop;
+    std::shared_ptr<Location> location;
+    std::shared_ptr<Lighting> lights;
+    std::shared_ptr<Building> building;
+    std::shared_ptr<Structure> structure;
+    std::shared_ptr<Heating> heating;
+    std::shared_ptr<Cooling> cooling;
+    std::shared_ptr<Ventilation> ventilation;  
 
     void scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds, 
             Vector& weekdayUnoccupiedMegaseconds,

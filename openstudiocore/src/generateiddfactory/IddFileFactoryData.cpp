@@ -99,7 +99,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
   std::string line,trimLine;
   boost::smatch matches;
   int lineNum = 1;
-  boost::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
+  std::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
 
   // get version
   std::getline(iddFile,line);

@@ -26,8 +26,6 @@
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/Json.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -531,7 +529,7 @@ namespace detail {
 } // detail
 
 UncertaintyDescription UncertaintyDescription::clone() const {
-  boost::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
+  std::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
       new detail::UncertaintyDescription_Impl(*impl()));
   return UncertaintyDescription(cloneImpl);
 }
@@ -605,11 +603,11 @@ void UncertaintyDescription::restoreDefaults() {
   return impl()->restoreDefaults();
 }
 
-UncertaintyDescription::UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
+UncertaintyDescription::UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
   : m_impl(impl)
 {}
 
-boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
+std::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
   return m_impl;
 }
 
@@ -638,7 +636,7 @@ namespace detail {
 
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
 
     GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
                                          attributes);

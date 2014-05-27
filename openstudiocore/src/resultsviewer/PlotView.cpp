@@ -653,7 +653,7 @@ namespace resultsviewer{
   }
 
 
-  void PlotView::plotViewData(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::plotViewData(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled)
   {
     switch(m_plotType)
     {
@@ -1106,7 +1106,7 @@ namespace resultsviewer{
 
 
 
-  void PlotView::linePlotItem(resultsviewer::PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::linePlotItem(resultsviewer::PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled)
   {
     if (m_plotViewTimeAxis == nullptr)
     {
@@ -1264,7 +1264,7 @@ namespace resultsviewer{
   }
 
 
-  void PlotView::scaleCurves(LinePlotCurve *curve, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::scaleCurves(LinePlotCurve *curve, const std::function<bool ()> &t_workCanceled)
   {
 
     /// multiple curves based on units
@@ -1453,13 +1453,13 @@ namespace resultsviewer{
         case RVPV_LINEPLOT:
           for (plotViewDataVecIt = plotViewDataVec.begin(); plotViewDataVecIt != plotViewDataVec.end(); ++plotViewDataVecIt)
           {
-            plotViewData((*plotViewDataVecIt), boost::function<bool ()>());
+            plotViewData((*plotViewDataVecIt), std::function<bool ()>());
           }
           m_legend->update();
           break;
         case RVPV_FLOODPLOT:
           // replace floodplot data with last selected
-          plotViewData(plotViewDataVec.back(), boost::function<bool()>());
+          plotViewData(plotViewDataVec.back(), std::function<bool()>());
           break;
         }
       }

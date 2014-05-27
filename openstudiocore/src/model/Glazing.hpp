@@ -50,7 +50,7 @@ class MODEL_API Glazing : public FenestrationMaterial {
 
   Glazing(IddObjectType type,const Model& model);
 
-  explicit Glazing(boost::shared_ptr<detail::Glazing_Impl> impl);  
+  explicit Glazing(std::shared_ptr<detail::Glazing_Impl> impl);  
 
   /// @endcond
  private:

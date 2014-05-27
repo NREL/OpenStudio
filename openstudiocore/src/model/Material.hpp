@@ -86,7 +86,7 @@ class MODEL_API Material : public ResourceObject {
 
   Material(IddObjectType type,const Model& model);
 
-  explicit Material(boost::shared_ptr<detail::Material_Impl> impl);  
+  explicit Material(std::shared_ptr<detail::Material_Impl> impl);  
 
   /// @endcond
  private:

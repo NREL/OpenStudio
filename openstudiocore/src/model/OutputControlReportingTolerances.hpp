@@ -88,7 +88,7 @@ class MODEL_API OutputControlReportingTolerances : public ModelObject {
   /// @cond
   typedef detail::OutputControlReportingTolerances_Impl ImplType;
 
-  explicit OutputControlReportingTolerances(boost::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl);
+  explicit OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl);
 
   friend class detail::OutputControlReportingTolerances_Impl;
   friend class Model;

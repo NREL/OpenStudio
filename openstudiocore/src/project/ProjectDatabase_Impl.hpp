@@ -32,9 +32,6 @@
 
 #include <runmanager/lib/RunManager.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QSqlQuery>
 #include <QObject>
 
@@ -56,7 +53,7 @@ namespace project {
 
     class Record_Impl;
 
-    class PROJECT_API ProjectDatabase_Impl : public QObject, public boost::enable_shared_from_this<ProjectDatabase_Impl>
+    class PROJECT_API ProjectDatabase_Impl : public QObject, public std::enable_shared_from_this<ProjectDatabase_Impl>
     {
 
       Q_OBJECT;
@@ -161,7 +158,7 @@ namespace project {
         bool isRemovedRecord(const Record& record) const;
 
         /// get the qSql database
-        boost::shared_ptr<QSqlDatabase> qSqlDatabase() const;
+        std::shared_ptr<QSqlDatabase> qSqlDatabase() const;
 
         // find record by handle, will check all maps
         boost::optional<Record> findLoadedRecord(const UUID& handle) const;
@@ -260,7 +257,7 @@ namespace project {
 
         // members
         openstudio::runmanager::RunManager m_runManager;
-        boost::shared_ptr<QSqlDatabase> m_qSqlDatabase;
+        std::shared_ptr<QSqlDatabase> m_qSqlDatabase;
         boost::optional<openstudio::project::ProjectDatabaseRecord> m_projectDatabaseRecord;
         openstudio::path m_path;
         openstudio::path m_originalBasePath;

@@ -166,7 +166,7 @@ AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVACZoneSplitter_Impl>());
 }
 
-AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(boost::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)
+AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)
   : Splitter(p)
 {}
 

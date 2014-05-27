@@ -250,9 +250,9 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
       *m_standardsInformation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues,
-      boost::function<boost::optional<std::string> ()>(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1),
-      NoFailAction(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
   bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
   OS_ASSERT(test);

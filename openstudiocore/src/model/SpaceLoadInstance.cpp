@@ -113,7 +113,7 @@ SpaceLoadInstance::SpaceLoadInstance(IddObjectType type,const SpaceLoadDefinitio
   OS_ASSERT(this->setPointer(getImpl<detail::SpaceLoadInstance_Impl>()->definitionIndex(), definition.handle()));
 }
 
-SpaceLoadInstance::SpaceLoadInstance(boost::shared_ptr<detail::SpaceLoadInstance_Impl> impl)
+SpaceLoadInstance::SpaceLoadInstance(std::shared_ptr<detail::SpaceLoadInstance_Impl> impl)
   : SpaceLoad(impl)
 {}
 

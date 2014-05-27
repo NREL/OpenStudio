@@ -44,7 +44,7 @@ namespace detail {
 } // detail
 
 /// @cond
-OutputVariable::OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl)
+OutputVariable::OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl)
   : Variable(impl)
 {}
 /// @endcond

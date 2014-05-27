@@ -90,7 +90,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit LifeCycleCostUsePriceEscalation(boost::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
+  explicit LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl);
 
 private:
 

@@ -46,7 +46,7 @@ namespace detail {
   }
 
   AlgorithmOptions AlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
+    std::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
     return AlgorithmOptions(impl);
   }
 
@@ -157,7 +157,7 @@ namespace detail {
 } // detail
 
 AlgorithmOptions::AlgorithmOptions()
-  : m_impl(boost::shared_ptr<detail::AlgorithmOptions_Impl>(
+  : m_impl(std::shared_ptr<detail::AlgorithmOptions_Impl>(
         new detail::AlgorithmOptions_Impl()))
 {}
 
@@ -194,7 +194,7 @@ void AlgorithmOptions::clearMaxSims() {
 }
 
 /// @cond
-AlgorithmOptions::AlgorithmOptions(boost::shared_ptr<detail::AlgorithmOptions_Impl> impl)
+AlgorithmOptions::AlgorithmOptions(std::shared_ptr<detail::AlgorithmOptions_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

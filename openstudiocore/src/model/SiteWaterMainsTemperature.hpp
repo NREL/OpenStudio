@@ -104,7 +104,7 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteWaterMainsTemperature_Impl;
 
-  explicit SiteWaterMainsTemperature(boost::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
+  explicit SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
 
   explicit SiteWaterMainsTemperature(const Model& model);
 

@@ -57,7 +57,7 @@ class ANALYSIS_API ExponentialDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit ExponentialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit ExponentialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

@@ -28,8 +28,6 @@
 #include <model/Model_Impl.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <iostream>
 
 namespace openstudio {
@@ -50,9 +48,11 @@ ModelObjectTypeListView::ModelObjectTypeListView(const std::vector<std::pair<Idd
     m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
     m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
 { 
-  typedef std::vector<std::pair<IddObjectType, std::string> >::value_type PairType;
-  BOOST_REVERSE_FOREACH(PairType modelObjectTypeAndName, m_modelObjectTypesAndNames){
-    addModelObjectType(modelObjectTypeAndName.first, modelObjectTypeAndName.second);
+  for(auto modelObjectTypeAndName = m_modelObjectTypesAndNames.rbegin();
+      modelObjectTypeAndName != m_modelObjectTypesAndNames.rend();
+      ++modelObjectTypeAndName)
+  {
+    addModelObjectType(modelObjectTypeAndName->first, modelObjectTypeAndName->second);
   }
 }
 

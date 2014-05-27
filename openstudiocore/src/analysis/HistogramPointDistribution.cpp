@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 HistogramPointDistribution::HistogramPointDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HistogramPointDistribution::type())))
 {}
 
 HistogramPointDistribution::HistogramPointDistribution(std::vector<double> abscissas, std::vector<double> counts) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(HistogramPointDistribution::type())))
 {
   setAbscissas(abscissas);
@@ -86,7 +86,7 @@ bool HistogramPointDistribution::setCounts(const std::vector<double>& value) {
   }
 }
 
-HistogramPointDistribution::HistogramPointDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+HistogramPointDistribution::HistogramPointDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == HistogramPointDistribution::type());

@@ -92,7 +92,7 @@ class MODEL_API ZoneHVACBaseboardConvectiveWater : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACBaseboardConvectiveWater_Impl ImplType;
 
-  explicit ZoneHVACBaseboardConvectiveWater(boost::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
+  explicit ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
 
   friend class detail::ZoneHVACBaseboardConvectiveWater_Impl;
   friend class Model;

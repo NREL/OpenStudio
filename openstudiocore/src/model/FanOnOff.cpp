@@ -695,7 +695,7 @@ void FanOnOff::resetEndUseSubcategory()
 }
 
 /// @cond
-FanOnOff::FanOnOff(boost::shared_ptr<detail::FanOnOff_Impl> impl)
+FanOnOff::FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

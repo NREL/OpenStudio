@@ -191,7 +191,7 @@ class MODEL_API DaylightingControl : public SpaceItem {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DaylightingControl(boost::shared_ptr<detail::DaylightingControl_Impl> impl);
+  explicit DaylightingControl(std::shared_ptr<detail::DaylightingControl_Impl> impl);
 
   /// @endcond
  private:

@@ -26,8 +26,6 @@
 #include <utilities/core/Enum.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 namespace analysis {
   class Problem;
@@ -158,11 +156,11 @@ class PROJECT_API ProblemRecord : public ObjectRecord {
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
+  ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl,
                 ProjectDatabase database);
 
   /// from impl
-  ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl);
+  ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl);
   /// @endcond
 
   void constructRelatedRecords(const analysis::Problem& problem);

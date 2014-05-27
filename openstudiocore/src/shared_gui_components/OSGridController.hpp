@@ -226,7 +226,7 @@ protected:
 
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
-  // This provides a mechinism to easily manage
+  // This provides a mechanism to easily manage
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal

@@ -183,7 +183,7 @@ class MODEL_API RefrigerationTranscriticalSystem : public ModelObject {
   /// @cond
   typedef detail::RefrigerationTranscriticalSystem_Impl ImplType;
 
-  explicit RefrigerationTranscriticalSystem(boost::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
+  explicit RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl);
 
   friend class detail::RefrigerationTranscriticalSystem_Impl;
   friend class Model;

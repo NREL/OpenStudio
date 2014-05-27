@@ -110,12 +110,12 @@ class PROJECT_API ContinuousVariableRecord : public InputVariableRecord {
   friend class detail::ContinuousVariableRecord_Impl;
 
   /** Construct from impl. */
-  ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
+  ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
                            ProjectDatabase database,
                            const boost::optional<analysis::ContinuousVariable>& variable);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl);
+  explicit ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl);
 
   /// @endcond
  private:

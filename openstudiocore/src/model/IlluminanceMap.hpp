@@ -159,7 +159,7 @@ class MODEL_API IlluminanceMap : public SpaceItem {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit IlluminanceMap(boost::shared_ptr<detail::IlluminanceMap_Impl> impl);
+  explicit IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl);
 
   /// @endcond
  private:

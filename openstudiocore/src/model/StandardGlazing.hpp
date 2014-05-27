@@ -256,7 +256,7 @@ class MODEL_API StandardGlazing : public Glazing {
   /// @cond
   typedef detail::StandardGlazing_Impl ImplType;
 
-  explicit StandardGlazing(boost::shared_ptr<detail::StandardGlazing_Impl> impl);
+  explicit StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> impl);
 
   friend class detail::StandardGlazing_Impl;
   friend class Model;

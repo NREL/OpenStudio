@@ -75,7 +75,7 @@ ResourceObject::ResourceObject(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ResourceObject_Impl>());
 }
 
-ResourceObject::ResourceObject(boost::shared_ptr<detail::ResourceObject_Impl> impl)
+ResourceObject::ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl)
   : ParentObject(impl)
 {}
 

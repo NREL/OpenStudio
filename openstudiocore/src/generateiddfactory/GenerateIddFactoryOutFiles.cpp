@@ -72,7 +72,7 @@ GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
     m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
 {
   for (const IddFileFactoryData& iddFile : iddFiles) {
-    boost::shared_ptr<IddFactoryOutFile> cxxFile(new 
+    std::shared_ptr<IddFactoryOutFile> cxxFile(new 
         IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx",
                           outPath,
                           outFileHeader));
@@ -88,7 +88,7 @@ void GenerateIddFactoryOutFiles::finalize() {
   finalizeIddFactoryOutFile(iddFieldEnumsIxx);
   finalizeIddFactoryOutFile(iddFactoryHxx);
   finalizeIddFactoryOutFile(iddFactoryCxx);
-  for (boost::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
     finalizeIddFactoryOutFile(*cxxFile);
   }
 

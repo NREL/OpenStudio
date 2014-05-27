@@ -77,11 +77,11 @@ class PROJECT_API DesignOfExperimentsRecord : public OpenStudioAlgorithmRecord {
   friend class detail::DesignOfExperimentsRecord_Impl;
 
   /** Construct from impl. */
-  DesignOfExperimentsRecord(boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl,
+  DesignOfExperimentsRecord(std::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl,
                             ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit DesignOfExperimentsRecord(boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl);
+  explicit DesignOfExperimentsRecord(std::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl);
 
   /// @endcond
  private:

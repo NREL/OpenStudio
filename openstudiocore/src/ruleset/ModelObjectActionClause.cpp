@@ -56,7 +56,7 @@ namespace detail {
 } // detail
 
 /// @cond
-ModelObjectActionClause::ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionClause_Impl> impl)
+ModelObjectActionClause::ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionClause_Impl> impl)
   : ActionClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectActionClause_Impl>());

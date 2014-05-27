@@ -276,7 +276,7 @@ void LightingDesignDay::ensureNoLeapDays()
 }
 
 /// @cond
-LightingDesignDay::LightingDesignDay(boost::shared_ptr<detail::LightingDesignDay_Impl> impl)
+LightingDesignDay::LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

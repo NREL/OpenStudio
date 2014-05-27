@@ -602,7 +602,7 @@ PlanarSurface::PlanarSurface(IddObjectType type, const std::vector<Point3d>& ver
   }
 }
 
-PlanarSurface::PlanarSurface(boost::shared_ptr<detail::PlanarSurface_Impl> p)
+PlanarSurface::PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> p)
   : ParentObject(p)
 {}
 

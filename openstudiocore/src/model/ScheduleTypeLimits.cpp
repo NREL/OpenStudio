@@ -526,7 +526,7 @@ void ScheduleTypeLimits::resetUnitType() {
 }
 
 /// @cond
-ScheduleTypeLimits::ScheduleTypeLimits(boost::shared_ptr<detail::ScheduleTypeLimits_Impl> impl)
+ScheduleTypeLimits::ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

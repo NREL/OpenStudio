@@ -1032,7 +1032,7 @@ void GasMixture::resetGas4Fraction() {
 }
 
 /// @cond
-GasMixture::GasMixture(boost::shared_ptr<detail::GasMixture_Impl> impl)
+GasMixture::GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl)
   : GasLayer(impl)
 {}
 /// @endcond

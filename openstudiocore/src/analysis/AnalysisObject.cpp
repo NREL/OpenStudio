@@ -306,7 +306,7 @@ bool AnalysisObject::disconnect(const char* signal,
 }
 
 /// @cond
-AnalysisObject::AnalysisObject(boost::shared_ptr<detail::AnalysisObject_Impl> impl)
+AnalysisObject::AnalysisObject(std::shared_ptr<detail::AnalysisObject_Impl> impl)
   : m_impl(impl)
 {}
 

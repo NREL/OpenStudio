@@ -337,7 +337,7 @@ void CurveRectangularHyperbola2::resetOutputUnitType() {
 }
 
 /// @cond
-CurveRectangularHyperbola2::CurveRectangularHyperbola2(boost::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl)
+CurveRectangularHyperbola2::CurveRectangularHyperbola2(std::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

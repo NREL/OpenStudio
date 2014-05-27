@@ -115,7 +115,7 @@ ConnectorMixer::ConnectorMixer(const Model& model)
 }
 
 ConnectorMixer::ConnectorMixer(
-    boost::shared_ptr<detail::ConnectorMixer_Impl> p)
+    std::shared_ptr<detail::ConnectorMixer_Impl> p)
   : Mixer(p)
 {}
 

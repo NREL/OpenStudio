@@ -91,7 +91,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
 
   typedef detail::ZoneHVACEquipmentList_Impl ImplType;
 
-  explicit ZoneHVACEquipmentList(boost::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
+  explicit ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
 
   friend class detail::ZoneHVACEquipmentList_Impl;
   friend class Model;

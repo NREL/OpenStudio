@@ -22,8 +22,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 
 // CONSTRUCTORS

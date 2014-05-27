@@ -148,7 +148,7 @@ class MODEL_API CurveQuadraticLinear : public Curve {
   /// @cond
   typedef detail::CurveQuadraticLinear_Impl ImplType;
 
-  explicit CurveQuadraticLinear(boost::shared_ptr<detail::CurveQuadraticLinear_Impl> impl);
+  explicit CurveQuadraticLinear(std::shared_ptr<detail::CurveQuadraticLinear_Impl> impl);
 
   friend class detail::CurveQuadraticLinear_Impl;
   friend class Model;

@@ -117,7 +117,7 @@ class MODEL_API CurveExponent : public Curve {
   /// @cond
   typedef detail::CurveExponent_Impl ImplType;
 
-  explicit CurveExponent(boost::shared_ptr<detail::CurveExponent_Impl> impl);
+  explicit CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl);
 
   friend class detail::CurveExponent_Impl;
   friend class Model;

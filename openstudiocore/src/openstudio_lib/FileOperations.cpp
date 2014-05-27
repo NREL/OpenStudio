@@ -657,7 +657,7 @@ namespace openstudio {
             OS_ASSERT(isConnected);
           }
 
-          boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+          std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
           if (currentDocument){         
             bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
               currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));

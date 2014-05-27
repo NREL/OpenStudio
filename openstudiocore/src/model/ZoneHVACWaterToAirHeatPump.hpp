@@ -221,7 +221,7 @@ class MODEL_API ZoneHVACWaterToAirHeatPump : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACWaterToAirHeatPump_Impl ImplType;
 
-  explicit ZoneHVACWaterToAirHeatPump(boost::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl);
+  explicit ZoneHVACWaterToAirHeatPump(std::shared_ptr<detail::ZoneHVACWaterToAirHeatPump_Impl> impl);
 
   friend class detail::ZoneHVACWaterToAirHeatPump_Impl;
   friend class Model;

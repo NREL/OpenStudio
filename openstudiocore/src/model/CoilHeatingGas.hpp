@@ -128,7 +128,7 @@ class MODEL_API CoilHeatingGas : public StraightComponent {
 
   typedef detail::CoilHeatingGas_Impl ImplType;
 
-  explicit CoilHeatingGas(boost::shared_ptr<detail::CoilHeatingGas_Impl> impl);
+  explicit CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> impl);
 
  private:
 

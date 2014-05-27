@@ -72,11 +72,11 @@ class PROJECT_API SamplingAlgorithmRecord : public DakotaAlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  SamplingAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
+  SamplingAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// @cond
-  explicit SamplingAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl);
+  explicit SamplingAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl);
 
   friend class detail::SamplingAlgorithmRecord_Impl;
   friend class Record;

@@ -64,7 +64,7 @@ class ANALYSIS_API Variable : public AnalysisObject {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit Variable(boost::shared_ptr<detail::Variable_Impl> impl);
+  explicit Variable(std::shared_ptr<detail::Variable_Impl> impl);
 
   friend class detail::Function_Impl; // calls Variable::onChange
   friend class LinearFunction; // calls Variable::setParent

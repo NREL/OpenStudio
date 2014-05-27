@@ -75,7 +75,7 @@ class ANALYSIS_API DesignOfExperiments : public OpenStudioAlgorithm {
   friend class detail::AnalysisObject_Impl;
   friend class detail::DesignOfExperiments_Impl;
 
-  explicit DesignOfExperiments(boost::shared_ptr<detail::DesignOfExperiments_Impl> impl);
+  explicit DesignOfExperiments(std::shared_ptr<detail::DesignOfExperiments_Impl> impl);
 
   /// @endcond
  private:

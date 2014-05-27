@@ -58,7 +58,7 @@ class ANALYSIS_API GeometricDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit GeometricDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit GeometricDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

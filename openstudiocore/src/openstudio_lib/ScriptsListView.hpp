@@ -43,7 +43,7 @@ class ScriptsVectorController : public OSVectorController {
  public:
   ScriptsVectorController(
       const openstudio::path &t_path,
-      const boost::shared_ptr<QFileSystemWatcher> &t_fswatcher = boost::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher()));
+      const std::shared_ptr<QFileSystemWatcher> &t_fswatcher = std::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher()));
 
   virtual ~ScriptsVectorController();
 
@@ -58,7 +58,7 @@ class ScriptsVectorController : public OSVectorController {
   REGISTER_LOGGER("ScriptsVectorController");
 
   openstudio::path m_path;
-  boost::shared_ptr<QFileSystemWatcher> m_fswatcher;
+  std::shared_ptr<QFileSystemWatcher> m_fswatcher;
   std::vector<OSItemId> m_items;
 };
 
@@ -70,7 +70,7 @@ class ScriptsListView : public OSItemList {
       bool addScrollArea,
       bool draggable,
       bool removeable,
-      const boost::shared_ptr<QFileSystemWatcher> &fswatcher = boost::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher()),
+      const std::shared_ptr<QFileSystemWatcher> &fswatcher = std::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher()),
       QWidget* parent = 0);
 
   virtual ~ScriptsListView() {}

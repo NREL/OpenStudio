@@ -189,13 +189,13 @@ namespace project {
 
   } // detail
 
-  JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
+  JoinRecord::JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl, ProjectDatabase projectDatabase)
     : Record(impl, projectDatabase)
   {
     OS_ASSERT(getImpl<detail::JoinRecord_Impl>());
   }
 
-  JoinRecord::JoinRecord(boost::shared_ptr<detail::JoinRecord_Impl> impl)
+  JoinRecord::JoinRecord(std::shared_ptr<detail::JoinRecord_Impl> impl)
     : Record(impl)
   {
     OS_ASSERT(getImpl<detail::JoinRecord_Impl>());

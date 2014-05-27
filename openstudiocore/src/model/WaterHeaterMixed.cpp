@@ -2279,7 +2279,7 @@ void WaterHeaterMixed::resetIndirectWaterHeatingRecoveryTime() {
 }
 
 /// @cond
-WaterHeaterMixed::WaterHeaterMixed(boost::shared_ptr<detail::WaterHeaterMixed_Impl> impl)
+WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl)
   : WaterToWaterComponent(impl)
 {}
 /// @endcond

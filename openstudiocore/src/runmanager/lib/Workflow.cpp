@@ -39,7 +39,7 @@ namespace runmanager {
   {
     if (t_wf.m_job)
     {
-      m_job = boost::shared_ptr<Workflow::WorkflowJob>(new Workflow::WorkflowJob(*t_wf.m_job));
+      m_job = std::shared_ptr<Workflow::WorkflowJob>(new Workflow::WorkflowJob(*t_wf.m_job));
     }
   }
 
@@ -147,8 +147,8 @@ namespace runmanager {
   {
     if (t_wf.m_job)
     {
-      boost::shared_ptr<Workflow::WorkflowJob> job(new Workflow::WorkflowJob(*t_wf.m_job));
-      boost::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob();
+      std::shared_ptr<Workflow::WorkflowJob> job(new Workflow::WorkflowJob(*t_wf.m_job));
+      std::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob();
 
       if (lastjob)
       {
@@ -179,7 +179,7 @@ namespace runmanager {
       const openstudio::runmanager::JobParams &params,
       const openstudio::runmanager::Files &files)
   {
-    boost::shared_ptr<Workflow::WorkflowJob> newjob(new Workflow::WorkflowJob(type, tools, params, files));
+    std::shared_ptr<Workflow::WorkflowJob> newjob(new Workflow::WorkflowJob(type, tools, params, files));
     replaceJobs(jobkeyname, newjob);
   }
 
@@ -191,7 +191,7 @@ namespace runmanager {
       throw std::runtime_error("Workflow does not contain any jobs, cannot be used for the replaceJobs command");
     }
 
-    boost::shared_ptr<Workflow::WorkflowJob> newjob(new Workflow::WorkflowJob(*t_wf.m_job));
+    std::shared_ptr<Workflow::WorkflowJob> newjob(new Workflow::WorkflowJob(*t_wf.m_job));
     replaceJobs(jobkeyname, newjob);
   }
 
@@ -202,14 +202,14 @@ namespace runmanager {
   }
 
   void Workflow::replaceJobs(const std::string &jobkeyname,
-      const boost::shared_ptr<Workflow::WorkflowJob> &t_job)
+      const std::shared_ptr<Workflow::WorkflowJob> &t_job)
   {
     replaceJobs(jobkeyname, t_job, m_job);
   }
 
   void Workflow::replaceJobs(const std::string &jobkeyname,
-      const boost::shared_ptr<Workflow::WorkflowJob> &t_newjob,
-      boost::shared_ptr<Workflow::WorkflowJob> &t_oldjob)
+      const std::shared_ptr<Workflow::WorkflowJob> &t_newjob,
+      std::shared_ptr<Workflow::WorkflowJob> &t_oldjob)
   {
 
     if (!t_oldjob)
@@ -221,8 +221,8 @@ namespace runmanager {
     try {
       if (t_oldjob->params.get("workflowjobkey").children.at(0).value == jobkeyname)
       {
-        boost::shared_ptr<Workflow::WorkflowJob> newjobcopy(new Workflow::WorkflowJob(*t_newjob));
-        boost::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob(newjobcopy);
+        std::shared_ptr<Workflow::WorkflowJob> newjobcopy(new Workflow::WorkflowJob(*t_newjob));
+        std::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob(newjobcopy);
         lastjob->children = t_oldjob->children;
         lastjob->finishedJob = t_oldjob->finishedJob;
 
@@ -282,8 +282,8 @@ namespace runmanager {
       const openstudio::runmanager::JobParams &params,
       const Files &files)
   {
-    boost::shared_ptr<Workflow::WorkflowJob> job(new Workflow::WorkflowJob(type, tools, params, files));
-    boost::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob();
+    std::shared_ptr<Workflow::WorkflowJob> job(new Workflow::WorkflowJob(type, tools, params, files));
+    std::shared_ptr<Workflow::WorkflowJob> lastjob = getLastJob();
 
     if (lastjob)
     {
@@ -298,7 +298,7 @@ namespace runmanager {
     m_last_job = job;
   }
 
-  boost::shared_ptr<Workflow::WorkflowJob> Workflow::getLastJob(const boost::shared_ptr<Workflow::WorkflowJob> &t_job)
+  std::shared_ptr<Workflow::WorkflowJob> Workflow::getLastJob(const std::shared_ptr<Workflow::WorkflowJob> &t_job)
   {
     if (t_job)
     {
@@ -314,11 +314,11 @@ namespace runmanager {
         }
       }
     } else {
-      return boost::shared_ptr<Workflow::WorkflowJob>();
+      return std::shared_ptr<Workflow::WorkflowJob>();
     }
   }
 
-  boost::shared_ptr<Workflow::WorkflowJob> Workflow::getLastJob()
+  std::shared_ptr<Workflow::WorkflowJob> Workflow::getLastJob()
   {
     if (m_last_job)
     {
@@ -329,7 +329,7 @@ namespace runmanager {
     }
   }
 
-  boost::shared_ptr<Workflow::WorkflowJob> Workflow::getFirstJob() const {
+  std::shared_ptr<Workflow::WorkflowJob> Workflow::getFirstJob() const {
     if (m_job) {
       return m_job;
     } else {
@@ -568,7 +568,7 @@ namespace runmanager {
     }
   }
 
-  void Workflow::hash(const boost::shared_ptr<Workflow::WorkflowJob> &t_job, QCryptographicHash &t_hash) const
+  void Workflow::hash(const std::shared_ptr<Workflow::WorkflowJob> &t_job, QCryptographicHash &t_hash) const
   {
     if (t_job)
     {
@@ -611,7 +611,7 @@ namespace runmanager {
     return getFirstJob()->type;
   }
 
-  Job Workflow::createJob(const boost::shared_ptr<Workflow::WorkflowJob> &t_job,
+  Job Workflow::createJob(const std::shared_ptr<Workflow::WorkflowJob> &t_job,
       const std::vector<openstudio::URLSearchPath> &t_url_search_paths)
   {
     Job j = JobFactory::createJob(t_job->type, t_job->tools, t_job->params, t_job->files,
@@ -864,7 +864,7 @@ namespace runmanager {
 
   std::vector<WorkItem> Workflow::toWorkItems() const
   {
-    boost::shared_ptr<WorkflowJob> wfi = m_job;
+    std::shared_ptr<WorkflowJob> wfi = m_job;
 
     std::vector<WorkItem> retval;
 

@@ -53,8 +53,6 @@
 #include <utilities/core/Finder.hpp>
 #include <utilities/core/PathHelpers.hpp>
 
-#include <boost/bind.hpp>
-
 using namespace openstudio::analysis;
 
 // DLM: I believe this will work cross-platform, I don't think ';' is allowed in a path on any system?
@@ -210,7 +208,7 @@ namespace detail {
     return result;
   }
 
-  void DataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPointRecord>(query);
@@ -303,7 +301,7 @@ namespace detail {
         auto it = std::find_if(
             measureRecords.begin(),
             measureRecords.end(),
-            boost::bind(variableRecordIdEquals,_1,ivr.id()));
+            std::bind(variableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != measureRecords.end());
         OS_ASSERT(it->measureVectorIndex());
         result.push_back(QVariant(it->measureVectorIndex().get()));
@@ -313,7 +311,7 @@ namespace detail {
         auto it = std::find_if(
             cvValueRecords.begin(),
             cvValueRecords.end(),
-            boost::bind(continuousVariableRecordIdEquals,_1,ivr.id()));
+            std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != cvValueRecords.end());
         result.push_back(QVariant(it->dataPointValue()));
         cvValueRecords.erase(it);
@@ -355,7 +353,7 @@ namespace detail {
       auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(variableRecordIdEquals,_1,mgr.id()));
+          std::bind(variableRecordIdEquals,std::placeholders::_1,mgr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -392,7 +390,7 @@ namespace detail {
       auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(continuousVariableRecordIdEquals,_1,cvr.id()));
+          std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,cvr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -911,7 +909,7 @@ namespace detail {
 DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
                                  AnalysisRecord& analysisRecord,
                                  const ProblemRecord& problemRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(dataPoint,
                                          DataPointRecordType::DataPointRecord,
                                          analysisRecord,
@@ -924,14 +922,14 @@ DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
 }
 
 DataPointRecord::DataPointRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 }
 
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl,
                                  ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -1047,7 +1045,7 @@ DataPointRecord DataPointRecord::factoryFromDataPoint(const analysis::DataPoint&
   }
 
   OS_ASSERT(false);
-  return DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl>());
+  return DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl>());
 }
 
 std::vector<DataPointRecord> DataPointRecord::getDataPointRecords(ProjectDatabase& database) {
@@ -1175,7 +1173,7 @@ void DataPointRecord::clearResults() {
 }
 
 /// @cond
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl)
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond
@@ -1328,7 +1326,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
 
   // Delete obsolete tag records
   for (const TagRecord& tagRecord : tagRecords()) {
-    if (std::find_if(tags.begin(),tags.end(),boost::bind(uuidEquals<Tag,UUID>,_1,tagRecord.handle())) == tags.end()) {
+    if (std::find_if(tags.begin(),tags.end(),std::bind(uuidEquals<Tag,UUID>,std::placeholders::_1,tagRecord.handle())) == tags.end()) {
       Record record = tagRecord.cast<Record>();
       analysisRecord.projectDatabase().removeRecord(record);
     }
@@ -1411,7 +1409,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
       auto it = std::find_if(
             oldFileReferenceRecords.begin(),
             oldFileReferenceRecords.end(),
-            boost::bind(handleEquals<ObjectRecord,UUID>,_1,childFileReference.uuid()));
+            std::bind(handleEquals<ObjectRecord,UUID>,std::placeholders::_1,childFileReference.uuid()));
       if (it != oldFileReferenceRecords.end()) {
         // found, see if has changed
         if (it->uuidLast() == childFileReference.versionUUID()) {

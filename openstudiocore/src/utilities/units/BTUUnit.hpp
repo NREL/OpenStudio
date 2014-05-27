@@ -109,7 +109,7 @@ class UTILITIES_API BTUUnit : public Unit {
   /// @cond
   typedef detail::BTUUnit_Impl ImplType;
 
-  explicit BTUUnit(boost::shared_ptr<detail::BTUUnit_Impl> impl);
+  explicit BTUUnit(std::shared_ptr<detail::BTUUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::BTUUnit_Impl;

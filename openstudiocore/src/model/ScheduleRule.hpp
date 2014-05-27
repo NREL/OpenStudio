@@ -152,7 +152,7 @@ class MODEL_API ScheduleRule : public ParentObject {
   /// @cond
   typedef detail::ScheduleRule_Impl ImplType;
 
-  explicit ScheduleRule(boost::shared_ptr<detail::ScheduleRule_Impl> impl);
+  explicit ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl);
 
   friend class detail::ScheduleRule_Impl;
   friend class Model;

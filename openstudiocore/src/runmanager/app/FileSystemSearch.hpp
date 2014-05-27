@@ -8,7 +8,6 @@
 #include <QStandardItemModel>
 #include <boost/regex.hpp>
 #include <utilities/core/Logger.hpp>
-#include <boost/bind.hpp>
 #include <QThread>
 #include <boost/filesystem.hpp>
 
@@ -28,7 +27,7 @@ namespace runmanager {
               const InItr &end,
               const QRegExp &regex, const std::string &extension)
             : m_canceled(false),
-              m_fileBuilder(boost::bind(&FileSystemSearchThread::buildFileList<InItr>,
+              m_fileBuilder(std::bind(&FileSystemSearchThread::buildFileList<InItr>,
                   this, rootpath, begin, end, regex, extension))
           {
           }
@@ -165,7 +164,7 @@ namespace runmanager {
           }
 
         volatile bool m_canceled;
-        boost::function<void ()> m_fileBuilder;
+        std::function<void ()> m_fileBuilder;
     };
   }
 
@@ -252,7 +251,7 @@ namespace runmanager {
       openstudio::path m_rootPath;
       bool m_recursive;
       std::string m_fileExtension;
-      boost::shared_ptr<detail::FileSystemSearchThread> m_thread;
+      std::shared_ptr<detail::FileSystemSearchThread> m_thread;
 
       QRegExp m_regex;
 

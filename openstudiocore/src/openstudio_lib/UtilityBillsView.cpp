@@ -43,8 +43,6 @@
 #include <utilities/core/Assert.hpp>
 #include <utilities/time/Date.hpp>
 
-#include <boost/bind.hpp>
-
 #include <QBoxLayout>
 #include <QButtonGroup>
 #include <QDate>
@@ -395,15 +393,15 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
 
   m_name->bind(
     *m_utilityBill,
-    OptionalStringGetter(boost::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
-    boost::optional<StringSetter>(boost::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),_1)));
+    OptionalStringGetter(std::bind(&model::UtilityBill::name,m_utilityBill.get_ptr(),true)),
+    boost::optional<StringSetter>(std::bind(&model::UtilityBill::setName,m_utilityBill.get_ptr(),std::placeholders::_1)));
 
   m_consumptionUnits->bind<std::string>(
       *m_utilityBill,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
-      OptionalStringGetter(boost::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
-      boost::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),_1));
+      std::bind(&model::UtilityBill::consumptionUnitValues,m_utilityBill.get_ptr()),
+      OptionalStringGetter(std::bind(&model::UtilityBill::consumptionUnit,m_utilityBill.get_ptr())),
+      std::bind(&model::UtilityBill::setConsumptionUnit,m_utilityBill.get_ptr(),std::placeholders::_1));
 
   if (m_utilityBill->fuelType() == FuelType::Electricity){
     m_peakDemandUnitsLabel->setVisible(true);
@@ -411,16 +409,16 @@ void UtilityBillsInspectorView::attach(openstudio::model::UtilityBill & utilityB
     m_peakDemandUnits->bind<std::string>(
         *m_utilityBill,
         static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-        boost::bind(&model::UtilityBill::peakDemandUnitValues,m_utilityBill.get_ptr()),
-        OptionalStringGetter(boost::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
-        boost::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),_1));
+        std::bind(&model::UtilityBill::peakDemandUnitValues,m_utilityBill.get_ptr()),
+        OptionalStringGetter(std::bind(&model::UtilityBill::peakDemandUnit,m_utilityBill.get_ptr())),
+        std::bind(&model::UtilityBill::setPeakDemandUnit,m_utilityBill.get_ptr(),std::placeholders::_1));
 
     m_windowTimestepsLabel->setVisible(true);
     m_windowTimesteps->setVisible(true);
     m_windowTimesteps->bind(
       *m_utilityBill,
-      OptionalUnsignedGetter(boost::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
-      boost::optional<UnsignedSetter>(boost::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),_1)));
+      OptionalUnsignedGetter(std::bind(&model::UtilityBill::timestepsInPeakDemandWindow,m_utilityBill.get_ptr())),
+      boost::optional<UnsignedSetter>(std::bind(&model::UtilityBill::setTimestepsInPeakDemandWindow,m_utilityBill.get_ptr(),std::placeholders::_1)));
   }else{
     m_peakDemandUnitsLabel->setVisible(false);
     m_peakDemandUnits->setVisible(false);
@@ -871,32 +869,32 @@ void BillingPeriodWidget::attach(openstudio::model::BillingPeriod & billingPerio
   if(m_billingPeriodIntEdit){
     m_billingPeriodIntEdit->bind(
       *m_billingPeriod,
-      OptionalIntGetter(boost::bind(&model::BillingPeriod::numberOfDays,m_billingPeriod.get_ptr())),
-      boost::optional<IntSetter>(boost::bind(&model::BillingPeriod::setNumberOfDays,m_billingPeriod.get_ptr(),_1)));
+      OptionalIntGetter(std::bind(&model::BillingPeriod::numberOfDays,m_billingPeriod.get_ptr())),
+      boost::optional<IntSetter>(std::bind(&model::BillingPeriod::setNumberOfDays,m_billingPeriod.get_ptr(),std::placeholders::_1)));
   }
 
   if(m_energyUseDoubleEdit){
     m_energyUseDoubleEdit->bind(
       *m_billingPeriod,
-      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::consumption,m_billingPeriod.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setConsumption,m_billingPeriod.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetConsumption,m_billingPeriod.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::BillingPeriod::consumption,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::BillingPeriod::setConsumption,m_billingPeriod.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::BillingPeriod::resetConsumption,m_billingPeriod.get_ptr())));
   }
 
   if(m_peakDoubleEdit){
       m_peakDoubleEdit->bind(
       *m_billingPeriod,
-      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::peakDemand,m_billingPeriod.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setPeakDemand,m_billingPeriod.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetPeakDemand,m_billingPeriod.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::BillingPeriod::peakDemand,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::BillingPeriod::setPeakDemand,m_billingPeriod.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::BillingPeriod::resetPeakDemand,m_billingPeriod.get_ptr())));
   }
 
   if(m_costDoubleEdit){
     m_costDoubleEdit->bind(
       *m_billingPeriod,
-      OptionalDoubleGetter(boost::bind(&model::BillingPeriod::totalCost,m_billingPeriod.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::BillingPeriod::setTotalCost,m_billingPeriod.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::BillingPeriod::resetTotalCost,m_billingPeriod.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::BillingPeriod::totalCost,m_billingPeriod.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::BillingPeriod::setTotalCost,m_billingPeriod.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::BillingPeriod::resetTotalCost,m_billingPeriod.get_ptr())));
   }
 
   model::ModelObject modelObject = m_billingPeriod->getObject<openstudio::model::ModelObject>();

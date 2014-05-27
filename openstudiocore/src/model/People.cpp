@@ -671,7 +671,7 @@ double People::getFloorAreaPerPerson(double floorArea) const {
 }
 
 /// @cond
-People::People(boost::shared_ptr<detail::People_Impl> impl)
+People::People(std::shared_ptr<detail::People_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

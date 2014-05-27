@@ -340,7 +340,7 @@ Facility ExteriorLights::facility() const {
 }
 
 /// @cond
-ExteriorLights::ExteriorLights(boost::shared_ptr<detail::ExteriorLights_Impl> impl)
+ExteriorLights::ExteriorLights(std::shared_ptr<detail::ExteriorLights_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

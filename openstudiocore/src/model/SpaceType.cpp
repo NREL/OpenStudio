@@ -1707,7 +1707,7 @@ double SpaceType::floorArea() const
 }
 
 /// @cond
-SpaceType::SpaceType(boost::shared_ptr<detail::SpaceType_Impl> impl)
+SpaceType::SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

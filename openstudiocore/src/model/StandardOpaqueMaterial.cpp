@@ -717,7 +717,7 @@ void StandardOpaqueMaterial::resetVisibleAbsorptance() {
 }
 
 /// @cond
-StandardOpaqueMaterial::StandardOpaqueMaterial(boost::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl)
+StandardOpaqueMaterial::StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

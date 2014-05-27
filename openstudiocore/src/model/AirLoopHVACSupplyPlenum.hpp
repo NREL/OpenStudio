@@ -76,7 +76,7 @@ class MODEL_API AirLoopHVACSupplyPlenum : public Splitter {
   /// @cond
   typedef detail::AirLoopHVACSupplyPlenum_Impl ImplType;
 
-  explicit AirLoopHVACSupplyPlenum(boost::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
+  explicit AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl);
 
   friend class detail::AirLoopHVACSupplyPlenum_Impl;
   friend class Model;

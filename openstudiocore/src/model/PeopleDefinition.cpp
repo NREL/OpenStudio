@@ -580,7 +580,7 @@ bool PeopleDefinition::setNumberOfPeopleCalculationMethod(const std::string& met
 }
 
 /// @cond
-PeopleDefinition::PeopleDefinition(boost::shared_ptr<detail::PeopleDefinition_Impl> impl)
+PeopleDefinition::PeopleDefinition(std::shared_ptr<detail::PeopleDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

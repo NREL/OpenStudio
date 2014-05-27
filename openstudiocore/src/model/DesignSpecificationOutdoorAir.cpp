@@ -461,7 +461,7 @@ void DesignSpecificationOutdoorAir::resetOutdoorAirFlowRateFractionSchedule() {
 }
 
 /// @cond
-DesignSpecificationOutdoorAir::DesignSpecificationOutdoorAir(boost::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl)
+DesignSpecificationOutdoorAir::DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

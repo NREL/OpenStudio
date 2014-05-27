@@ -38,7 +38,7 @@
 namespace openstudio {
 
   ScriptsVectorController::ScriptsVectorController(const openstudio::path &t_path,
-      const boost::shared_ptr<QFileSystemWatcher> &t_fswatcher)
+      const std::shared_ptr<QFileSystemWatcher> &t_fswatcher)
     : m_path(t_path), m_fswatcher(t_fswatcher)
   {
     connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)), this, SLOT(directoryChanged(const QString &)));
@@ -129,7 +129,7 @@ ScriptsListView::ScriptsListView(const openstudio::path &t_path,
       bool addScrollArea,
       bool draggable,
       bool removeable,
-      const boost::shared_ptr<QFileSystemWatcher> &t_fswatcher,
+      const std::shared_ptr<QFileSystemWatcher> &t_fswatcher,
       QWidget* parent )
   : OSItemList(new ScriptsVectorController(t_path, t_fswatcher), addScrollArea, parent)
 {

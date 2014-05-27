@@ -180,7 +180,7 @@ FenestrationMaterial::FenestrationMaterial(IddObjectType type,const Model& model
 }
 
 FenestrationMaterial::FenestrationMaterial(
-    boost::shared_ptr<detail::FenestrationMaterial_Impl> impl)
+    std::shared_ptr<detail::FenestrationMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

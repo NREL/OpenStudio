@@ -68,7 +68,7 @@ class MODEL_API ProgramControl : public ModelObject {
   /// @cond
   typedef detail::ProgramControl_Impl ImplType;
 
-  explicit ProgramControl(boost::shared_ptr<detail::ProgramControl_Impl> impl);
+  explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
 
   friend class detail::ProgramControl_Impl;
   friend class Model;

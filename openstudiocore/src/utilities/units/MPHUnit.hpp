@@ -107,7 +107,7 @@ class UTILITIES_API MPHUnit : public Unit {
   /// @cond
   typedef detail::MPHUnit_Impl ImplType;
 
-  explicit MPHUnit(boost::shared_ptr<detail::MPHUnit_Impl> impl);
+  explicit MPHUnit(std::shared_ptr<detail::MPHUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::MPHUnit_Impl;

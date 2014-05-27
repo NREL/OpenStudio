@@ -302,7 +302,7 @@ void EvaporativeCoolerDirectResearchSpecial::setBlowdownConcentrationRatio( doub
 }
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(
-  boost::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> p)
+  std::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> p)
   : StraightComponent(p)
 {}
 

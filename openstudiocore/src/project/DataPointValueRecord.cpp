@@ -109,7 +109,7 @@ namespace detail {
     return result;
   }
 
-  void DataPointValueRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPointValueRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPointValueRecord>(query);
@@ -264,7 +264,7 @@ namespace detail {
 DataPointValueRecord::DataPointValueRecord(double dataPointValue, 
                                            DataPointRecord& dataPointRecord,
                                            FunctionRecord& functionRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(dataPointValue, dataPointRecord, functionRecord)),
         dataPointRecord.projectDatabase())
 {
@@ -274,7 +274,7 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
 DataPointValueRecord::DataPointValueRecord(double dataPointValue, 
                                            DataPointRecord& dataPointRecord,
                                            ContinuousVariableRecord& continuousVariableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(dataPointValue, 
                                               dataPointRecord, 
                                               continuousVariableRecord)),
@@ -284,14 +284,14 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
 }
 
 DataPointValueRecord::DataPointValueRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
-DataPointValueRecord::DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl,
+DataPointValueRecord::DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl,
                                            ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -433,7 +433,7 @@ double DataPointValueRecord::dataPointValue() const {
 }
 
 /// @cond
-DataPointValueRecord::DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl)
+DataPointValueRecord::DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

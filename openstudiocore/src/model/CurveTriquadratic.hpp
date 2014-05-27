@@ -318,7 +318,7 @@ class MODEL_API CurveTriquadratic : public Curve {
   /// @cond
   typedef detail::CurveTriquadratic_Impl ImplType;
 
-  explicit CurveTriquadratic(boost::shared_ptr<detail::CurveTriquadratic_Impl> impl);
+  explicit CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl);
 
   friend class detail::CurveTriquadratic_Impl;
   friend class Model;

@@ -116,7 +116,7 @@ OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(const Model
 
 // constructor
 OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(
-    boost::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl)
+    std::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl)
   : ModelObject(impl)
 {}
 

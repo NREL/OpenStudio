@@ -168,7 +168,7 @@ class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
   /// @cond
   typedef detail::RefrigerationGasCoolerAirCooled_Impl ImplType;
 
-  explicit RefrigerationGasCoolerAirCooled(boost::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
+  explicit RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
 
   friend class detail::RefrigerationGasCoolerAirCooled_Impl;
   friend class Model;

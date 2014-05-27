@@ -61,7 +61,7 @@ class ANALYSIS_API NullMeasure : public Measure {
   friend class detail::AnalysisObject_Impl;
   friend class detail::NullMeasure_Impl;
 
-  explicit NullMeasure(boost::shared_ptr<detail::NullMeasure_Impl> impl);
+  explicit NullMeasure(std::shared_ptr<detail::NullMeasure_Impl> impl);
 
   /// @endcond
  private:

@@ -712,7 +712,7 @@ class MODEL_API Facility : public ParentObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Facility(boost::shared_ptr<detail::Facility_Impl> impl);
+  explicit Facility(std::shared_ptr<detail::Facility_Impl> impl);
 
   /// @endcond
  private:

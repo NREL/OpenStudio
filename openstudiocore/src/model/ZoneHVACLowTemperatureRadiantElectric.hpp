@@ -118,7 +118,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACLowTemperatureRadiantElectric_Impl ImplType;
 
-  explicit ZoneHVACLowTemperatureRadiantElectric(boost::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
+  explicit ZoneHVACLowTemperatureRadiantElectric(std::shared_ptr<detail::ZoneHVACLowTemperatureRadiantElectric_Impl> impl);
 
   friend class detail::ZoneHVACLowTemperatureRadiantElectric_Impl;
   friend class Model;

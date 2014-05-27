@@ -56,8 +56,6 @@
 #include <utilities/core/Compare.hpp>
 #include <utilities/units/Unit.hpp>
 
-#include <boost/bind.hpp>
-
 namespace openstudio{
 namespace model{
 
@@ -528,7 +526,7 @@ namespace detail{
       for (const RunPeriod& runPeriod : runPeriods) {
         if (runPeriod.isAnnual() && !runPeriod.isRepeated()) {
           std::string rpName = runPeriod.name().get();
-          StringVector::const_iterator it = std::find_if(environmentPeriods.begin(),environmentPeriods.end(),boost::bind(istringEqual,rpName,_1));
+          StringVector::const_iterator it = std::find_if(environmentPeriods.begin(),environmentPeriods.end(),std::bind(istringEqual,rpName,std::placeholders::_1));
           if (it != environmentPeriods.end()) {
             result.push_back(*it);
           }
@@ -541,7 +539,7 @@ namespace detail{
           OptionalString os = oWeatherFile->environmentName();
           if (os) {
             std::string candidate = *os;
-            StringVector::const_iterator it = std::find_if(environmentPeriods.begin(),environmentPeriods.end(),boost::bind(istringEqual,candidate,_1));
+            StringVector::const_iterator it = std::find_if(environmentPeriods.begin(),environmentPeriods.end(),std::bind(istringEqual,candidate,std::placeholders::_1));
             if (it != environmentPeriods.end()) {
               result.push_back(*it);
             }
@@ -598,7 +596,7 @@ SimulationControl::SimulationControl( const Model& model ):
   OS_ASSERT(getImpl<detail::SimulationControl_Impl>());
 }
 
-SimulationControl::SimulationControl(boost::shared_ptr<detail::SimulationControl_Impl> impl)
+SimulationControl::SimulationControl(std::shared_ptr<detail::SimulationControl_Impl> impl)
   : ParentObject(impl)
 {}
 

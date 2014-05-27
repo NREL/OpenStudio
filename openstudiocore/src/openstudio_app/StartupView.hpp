@@ -76,7 +76,7 @@ class StartupView : public QWidget
 
   bool _move;
 
-  boost::shared_ptr<TemplateListModel> m_templateListModel;
+  std::shared_ptr<TemplateListModel> m_templateListModel;
 
   QWidget * m_projectDetailView;
 

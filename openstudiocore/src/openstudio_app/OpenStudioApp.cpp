@@ -138,7 +138,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   #ifdef Q_OS_MAC
     setQuitOnLastWindowClosed( false );
 
-    m_startupMenu = boost::shared_ptr<StartupMenu>(new StartupMenu());
+    m_startupMenu = std::shared_ptr<StartupMenu>(new StartupMenu());
 
     connect( m_startupMenu.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
     connect( m_startupMenu.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
@@ -152,7 +152,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   this->buildCompLibraries();
 
-  m_startupView = boost::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
+  m_startupView = std::shared_ptr<openstudio::StartupView>(new openstudio::StartupView());
 
   connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newFromTemplateSlot( NewFromTemplateEnum ) ) ) ;
   connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( open() ) ) ;
@@ -173,7 +173,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
     if( model ){
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model,
@@ -255,7 +255,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
         processEvents();
       }
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model, 
@@ -337,7 +337,7 @@ void OpenStudioApp::quit()
 
 void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum )
 {
-  m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
+  m_osDocument = std::shared_ptr<OSDocument>( new OSDocument( componentLibrary(), hvacComponentLibrary(), resourcesPath() ) );
 
   connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
   connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -353,7 +353,7 @@ void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum
   m_startupView->hide();
 }
 
-boost::shared_ptr<OSDocument> OpenStudioApp::currentDocument() const
+std::shared_ptr<OSDocument> OpenStudioApp::currentDocument() const
 {
   return m_osDocument;
 }
@@ -411,7 +411,7 @@ void OpenStudioApp::importIdf()
           processEvents();
         }
 
-        m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+        m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                      hvacComponentLibrary(), 
                                                                      resourcesPath(), 
                                                                      model) );
@@ -500,7 +500,7 @@ void OpenStudioApp::importSDD()
         processEvents();
       }
 
-      m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    *model) );
@@ -604,7 +604,7 @@ bool OpenStudioApp::closeDocument()
         m_osDocument->save();
         //m_startupView->show();
         m_osDocument->mainWindow()->hide();
-        m_osDocument = boost::shared_ptr<OSDocument>();
+        m_osDocument = std::shared_ptr<OSDocument>();
         return true;
 
       case QMessageBox::Discard:
@@ -612,7 +612,7 @@ bool OpenStudioApp::closeDocument()
         // Don't Save was clicked
         //m_startupView->show();
         m_osDocument->mainWindow()->hide();
-        m_osDocument = boost::shared_ptr<OSDocument>();
+        m_osDocument = std::shared_ptr<OSDocument>();
         return true;
 
       case QMessageBox::Cancel:
@@ -631,7 +631,7 @@ bool OpenStudioApp::closeDocument()
   else
   {
     m_osDocument->mainWindow()->hide();
-    m_osDocument = boost::shared_ptr<OSDocument>();
+    m_osDocument = std::shared_ptr<OSDocument>();
     //m_startupView->show();
 
     return true;

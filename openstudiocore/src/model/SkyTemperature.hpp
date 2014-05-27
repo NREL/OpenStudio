@@ -48,7 +48,7 @@ class MODEL_API SkyTemperature : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit SkyTemperature(boost::shared_ptr<detail::SkyTemperature_Impl> impl);
+  explicit SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl);
 
  private:
 

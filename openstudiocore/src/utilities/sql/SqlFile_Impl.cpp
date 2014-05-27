@@ -2482,7 +2482,7 @@ namespace openstudio{
           std::string envName = envId.name().get();
           // check validity of name
           StringVector::const_iterator it = std::find_if(envNames.begin(),envNames.end(),
-              boost::bind(istringEqual,envName,_1));
+            std::bind(istringEqual, envName, std::placeholders::_1));
           if (it != envNames.end()) { keepers.push_back(*it); }
         }
       }
@@ -2938,7 +2938,7 @@ namespace openstudio{
         LOG(Error, "Unknown illuminance map '" << name << "'");
     }
 
-    /// minimum and maximim of map
+    /// minimum and maximum of map
     void SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const
     {
       std::stringstream s;
@@ -3381,7 +3381,7 @@ namespace openstudio{
       while (code == SQLITE_ROW)
       {
         if (i >= M){
-          LOG(Error, "Too much illiminance map data retrieved at time index " << hourlyReportIndex <<
+          LOG(Error, "Too much illuminance map data retrieved at time index " << hourlyReportIndex <<
               " for map name = '" << hourlyReportIndex << "'.  Size is " << M << "x" << N <<
               ", current i is " << i << ", current j is " << j);
           break;
@@ -3447,7 +3447,7 @@ namespace openstudio{
         }
         ReportingFrequencySet rfSet;
         if (envName && rf) {
-          // check compatibilty
+          // check compatibility
           rfSet = availableReportingFrequencySet(*this,*envName);
           if (rfSet.find(*rf) == rfSet.end()) {
             queryIt = queries.erase(queryIt);
@@ -3505,7 +3505,7 @@ namespace openstudio{
             kvAvail = availableKeyValues(*envName,rf->valueDescription(),*tsName);
             for (const std::string& kv : keyValueNames) {
               StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                  boost::bind(istringEqual,kv,_1));
+                  std::bind(istringEqual,kv,std::placeholders::_1));
               if (it != kvAvail.end()) { keepers.insert(*it); }
             }
           }
@@ -3515,7 +3515,7 @@ namespace openstudio{
               kvAvail = availableKeyValues(*envName,rf.valueDescription(),*tsName);
               for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                    boost::bind(istringEqual,kv,_1));
+                    std::bind(istringEqual,kv,std::placeholders::_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
               }
             }
@@ -3526,7 +3526,7 @@ namespace openstudio{
               kvAvail = availableKeyValues(envName,rf->valueDescription(),*tsName);
               for (const std::string& kv : keyValueNames) {
                 StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                    boost::bind(istringEqual,kv,_1));
+                    std::bind(istringEqual,kv,std::placeholders::_1));
                 if (it != kvAvail.end()) { keepers.insert(*it); }
               }
             }
@@ -3539,7 +3539,7 @@ namespace openstudio{
                 kvAvail = availableKeyValues(envName,rf.valueDescription(),*tsName);
                 for (const std::string& kv : keyValueNames) {
                   StringVector::const_iterator it = std::find_if(kvAvail.begin(),kvAvail.end(),
-                      boost::bind(istringEqual,kv,_1));
+                      std::bind(istringEqual,kv,std::placeholders::_1));
                   if (it != kvAvail.end()) { 
                     keepers.insert(*it); 
                     if (keepers.size() == keyValueNames.size()) { break; }

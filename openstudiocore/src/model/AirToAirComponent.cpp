@@ -533,7 +533,7 @@ AirToAirComponent::AirToAirComponent(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
 }     
 
-AirToAirComponent::AirToAirComponent(boost::shared_ptr<detail::AirToAirComponent_Impl> p)
+AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> p)
   : HVACComponent(p)
 {}
 

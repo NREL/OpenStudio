@@ -755,7 +755,7 @@ void SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 }
 
 /// @cond
-SizingSystem::SizingSystem(boost::shared_ptr<detail::SizingSystem_Impl> impl)
+SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

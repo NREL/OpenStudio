@@ -84,7 +84,7 @@ class OpenStudioApp : public OSAppBase
 
   virtual ~OpenStudioApp() {}
 
-  virtual boost::shared_ptr<OSDocument> currentDocument() const;
+  virtual std::shared_ptr<OSDocument> currentDocument() const;
 
   static OpenStudioApp * instance();
 
@@ -139,11 +139,11 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model m_hvacCompLibrary;
 
-  boost::shared_ptr<StartupView> m_startupView;
+  std::shared_ptr<StartupView> m_startupView;
 
-  boost::shared_ptr<OSDocument> m_osDocument;
+  std::shared_ptr<OSDocument> m_osDocument;
 
-  boost::shared_ptr<StartupMenu> m_startupMenu;
+  std::shared_ptr<StartupMenu> m_startupMenu;
 };
 
 } // openstudio

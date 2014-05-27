@@ -48,7 +48,7 @@ namespace detail {
     OS_ASSERT(query.isSelect());
   }
 
-  void VagrantSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void VagrantSessionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<VagrantSessionRecord>(query);
     this->bindValues(query);
@@ -109,7 +109,7 @@ namespace detail {
 
 VagrantSessionRecord::VagrantSessionRecord(const VagrantSession& vagrantSession, 
                                            ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl>(
         new detail::VagrantSessionRecord_Impl(vagrantSession, database)),
         database)
 {
@@ -118,7 +118,7 @@ VagrantSessionRecord::VagrantSessionRecord(const VagrantSession& vagrantSession,
 }
 
 VagrantSessionRecord::VagrantSessionRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl>(
         new detail::VagrantSessionRecord_Impl(query, database)),
         database)
 {
@@ -174,11 +174,11 @@ VagrantSession VagrantSessionRecord::vagrantSession() const {
 }
 
 /// @cond
-VagrantSessionRecord::VagrantSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl> impl)
+VagrantSessionRecord::VagrantSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl> impl)
   : CloudSessionRecord(impl)
 {}
 
-VagrantSessionRecord::VagrantSessionRecord(boost::shared_ptr<detail::VagrantSessionRecord_Impl> impl,
+VagrantSessionRecord::VagrantSessionRecord(std::shared_ptr<detail::VagrantSessionRecord_Impl> impl,
                                            ProjectDatabase database)
   : CloudSessionRecord(impl, database)
 {

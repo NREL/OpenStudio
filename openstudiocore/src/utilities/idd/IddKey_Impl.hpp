@@ -51,7 +51,7 @@ namespace detail {
     const IddKeyProperties& properties() const;
 
     /// load by parsing text
-    static boost::shared_ptr<IddKey_Impl> load(const std::string& name, const std::string& text);
+    static std::shared_ptr<IddKey_Impl> load(const std::string& name, const std::string& text);
 
     /// print idd 
     std::ostream& print(std::ostream& os) const;

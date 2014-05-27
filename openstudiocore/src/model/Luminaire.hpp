@@ -198,7 +198,7 @@ class MODEL_API Luminaire : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Luminaire(boost::shared_ptr<detail::Luminaire_Impl> impl);
+  explicit Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl);
 
   /// @endcond
  private:

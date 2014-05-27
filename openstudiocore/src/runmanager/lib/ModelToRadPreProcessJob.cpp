@@ -76,8 +76,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -136,7 +134,7 @@ namespace detail {
     return m_description;
   }
 
-  void ModelToRadPreProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelToRadPreProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 

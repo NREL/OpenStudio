@@ -29,24 +29,24 @@ namespace contam {
 
 IndexModel::IndexModel()
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
 }
 
 IndexModel::IndexModel(openstudio::path path)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(path);
 }
 
 IndexModel::IndexModel(std::string filename)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(filename);
 }
 
 IndexModel::IndexModel(Reader &input)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(input);
 }
 

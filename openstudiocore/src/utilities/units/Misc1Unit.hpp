@@ -110,7 +110,7 @@ class UTILITIES_API Misc1Unit : public Unit {
   /// @cond
   typedef detail::Misc1Unit_Impl ImplType;
 
-  explicit Misc1Unit(boost::shared_ptr<detail::Misc1Unit_Impl> impl);
+  explicit Misc1Unit(std::shared_ptr<detail::Misc1Unit_Impl> impl);
 
   friend class Unit;
   friend class detail::Misc1Unit_Impl;

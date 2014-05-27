@@ -151,7 +151,7 @@ void LightingSimulationControl::resetRunSimulationforWeatherFileRunPeriods() {
 }
 
 /// @cond
-LightingSimulationControl::LightingSimulationControl(boost::shared_ptr<detail::LightingSimulationControl_Impl> impl)
+LightingSimulationControl::LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl)
   : ModelObject(impl)
 {}
 LightingSimulationControl::LightingSimulationControl(Model& model)

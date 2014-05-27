@@ -144,7 +144,7 @@ class PROJECT_API WorkflowRecord : public ObjectRecord {
   friend class ProjectDatabase;
 
   // from impl, does not register in database, use with caution
-  WorkflowRecord(boost::shared_ptr<detail::WorkflowRecord_Impl> impl);
+  WorkflowRecord(std::shared_ptr<detail::WorkflowRecord_Impl> impl);
 
   /// @endcond
  private:

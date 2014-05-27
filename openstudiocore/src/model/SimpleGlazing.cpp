@@ -262,7 +262,7 @@ void SimpleGlazing::resetVisibleTransmittance() {
 }
 
 /// @cond
-SimpleGlazing::SimpleGlazing(boost::shared_ptr<detail::SimpleGlazing_Impl> impl)
+SimpleGlazing::SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

@@ -163,7 +163,7 @@ class ANALYSIS_API ParameterStudyAlgorithmOptions : public DakotaAlgorithmOption
   /// @cond
   typedef detail::ParameterStudyAlgorithmOptions_Impl ImplType;
 
-  explicit ParameterStudyAlgorithmOptions(boost::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> impl);
+  explicit ParameterStudyAlgorithmOptions(std::shared_ptr<detail::ParameterStudyAlgorithmOptions_Impl> impl);
 
   friend class detail::ParameterStudyAlgorithmOptions_Impl;
   friend class AlgorithmOptions;

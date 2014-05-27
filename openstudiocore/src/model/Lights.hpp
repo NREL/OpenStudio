@@ -132,7 +132,7 @@ class MODEL_API Lights : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Lights(boost::shared_ptr<detail::Lights_Impl> impl);
+  explicit Lights(std::shared_ptr<detail::Lights_Impl> impl);
 
   /// @endcond
  private:

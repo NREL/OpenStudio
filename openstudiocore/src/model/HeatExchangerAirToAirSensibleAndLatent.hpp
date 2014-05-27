@@ -194,7 +194,7 @@ class MODEL_API HeatExchangerAirToAirSensibleAndLatent : public AirToAirComponen
   /// @cond
   typedef detail::HeatExchangerAirToAirSensibleAndLatent_Impl ImplType;
 
-  explicit HeatExchangerAirToAirSensibleAndLatent(boost::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
+  explicit HeatExchangerAirToAirSensibleAndLatent(std::shared_ptr<detail::HeatExchangerAirToAirSensibleAndLatent_Impl> impl);
 
   friend class detail::HeatExchangerAirToAirSensibleAndLatent_Impl;
   friend class Model;

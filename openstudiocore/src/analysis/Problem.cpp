@@ -199,7 +199,7 @@ namespace detail {
   }
 
   AnalysisObject Problem_Impl::clone() const {
-    boost::shared_ptr<Problem_Impl> impl(new Problem_Impl(*this));
+    std::shared_ptr<Problem_Impl> impl(new Problem_Impl(*this));
     Problem result(impl);
     WorkflowStepVector workflow = result.workflow();
     for (WorkflowStep& step : workflow) {
@@ -699,7 +699,7 @@ namespace detail {
     auto it = std::find_if(
           candidates.begin(),
           candidates.end(),
-          boost::bind(uuidsEqual<WorkflowStep,WorkflowStep>,_1,step));
+          std::bind(uuidsEqual<WorkflowStep,WorkflowStep>,std::placeholders::_1,step));
     if (it == candidates.end()) {
       return false;
     }
@@ -730,11 +730,11 @@ namespace detail {
     auto it1 = std::find_if(
           candidates.begin(),
           candidates.end(),
-          boost::bind(uuidsEqual<WorkflowStep,WorkflowStep>,_1,step1));
+          std::bind(uuidsEqual<WorkflowStep,WorkflowStep>,std::placeholders::_1,step1));
     auto it2 = std::find_if(
           candidates.begin(),
           candidates.end(),
-          boost::bind(uuidsEqual<WorkflowStep,WorkflowStep>,_1,step2));
+          std::bind(uuidsEqual<WorkflowStep,WorkflowStep>,std::placeholders::_1,step2));
     if ((it1 == candidates.end()) || (it2 == candidates.end())) {
       return false;
     }
@@ -824,7 +824,7 @@ namespace detail {
     auto it = std::find_if(
           m_responses.begin(),
           m_responses.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,response));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,response));
     if (it == m_responses.end()) {
       return false;
     }
@@ -842,11 +842,11 @@ namespace detail {
     auto it1 = std::find_if(
           m_responses.begin(),
           m_responses.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,response1));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,response1));
     auto it2 = std::find_if(
           m_responses.begin(),
           m_responses.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,response2));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,response2));
     if ((it1 == m_responses.end()) || it2 == m_responses.end()) {
       return false;
     }
@@ -1414,7 +1414,7 @@ namespace detail {
         if (step.isInputVariable()) {
           if (OptionalRubyContinuousVariable rcv = step.inputVariable().optionalCast<RubyContinuousVariable>()) {
             if (rcv->measure() == *originalCompoundRubyMeasure) {
-              // add argument to existing pertubation
+              // add argument to existing perturbation
               OSArgument arg = rcv->argument();
               arg.setValue(values[i].toDouble());
               compoundRubyMeasure->addArgument(arg);
@@ -1935,7 +1935,7 @@ namespace detail {
         InputVariableVector vars = deserializeOrderedVector(
               stepMap["variables"].toList(),
               "variable_index",
-              boost::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
+              std::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
         for (const InputVariable& var : vars) {
           workflowIntermediate.push_back(std::make_pair(index,WorkflowStep(var,boost::optional<runmanager::WorkItem>())));
           ++index;
@@ -1963,7 +1963,7 @@ namespace detail {
       responses = deserializeOrderedVector(
             map["responses"].toList(),
             "response_index",
-            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+            std::function<Function (const QVariant&)>(std::bind(analysis::detail::Function_Impl::factoryFromVariant,std::placeholders::_1,version)));
     }
 
     return Problem(toUUID(map["uuid"].toString().toStdString()),
@@ -2273,7 +2273,7 @@ boost::optional<runmanager::Files> WorkflowStepJob::outputFiles() const {
 
 Problem::Problem(const std::string& name,
                  const std::vector<WorkflowStep>& workflow)
-  : AnalysisObject(boost::shared_ptr<detail::Problem_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Problem_Impl>(
         new detail::Problem_Impl(name,workflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
@@ -2285,7 +2285,7 @@ Problem::Problem(const std::string& name,
 Problem::Problem(const std::string& name,
                  const std::vector<WorkflowStep>& workflow,
                  const std::vector<Function>& responses)
-  : AnalysisObject(boost::shared_ptr<detail::Problem_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Problem_Impl>(
         new detail::Problem_Impl(name,workflow,responses)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
@@ -2301,7 +2301,7 @@ Problem::Problem(const std::string& name,
                  const std::vector<Variable>& variables,
                  const std::vector<Function>& responses,
                  const runmanager::Workflow& simulationWorkflow)
-  : AnalysisObject(boost::shared_ptr<detail::Problem_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Problem_Impl>(
         new detail::Problem_Impl(name,variables,responses,simulationWorkflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
@@ -2316,7 +2316,7 @@ Problem::Problem(const std::string& name,
 Problem::Problem(const std::string& name,
                  const std::vector<Variable>& variables,
                  const runmanager::Workflow& simulationWorkflow)
-  : AnalysisObject(boost::shared_ptr<detail::Problem_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Problem_Impl>(
         new detail::Problem_Impl(name,variables,simulationWorkflow)))
 {
   Problem copyOfThis(getImpl<detail::Problem_Impl>());
@@ -2332,7 +2332,7 @@ Problem::Problem(const UUID& uuid,
                  const std::string& description,
                  const std::vector<WorkflowStep>& workflow,
                  const std::vector<Function>& responses)
-  : AnalysisObject(boost::shared_ptr<detail::Problem_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Problem_Impl>(
         new detail::Problem_Impl(uuid,
                                  versionUUID,
                                  name,
@@ -2594,7 +2594,7 @@ std::map<UncertaintyDescriptionType,std::vector<int> > Problem::getUncertainVari
 }
 
 /// @cond
-Problem::Problem(boost::shared_ptr<detail::Problem_Impl> impl)
+Problem::Problem(std::shared_ptr<detail::Problem_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

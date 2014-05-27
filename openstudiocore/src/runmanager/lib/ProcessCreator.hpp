@@ -25,7 +25,7 @@ namespace runmanager {
        *                        is a relative path and does not reside in the tool path
        *  \param[in] t_remoteId integer identifier
        *  \returns the created Process */
-      virtual boost::shared_ptr<Process> createProcess(
+      virtual std::shared_ptr<Process> createProcess(
           const ToolInfo &t_tooltoexecute,
           const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles,
           const std::vector<std::string> &t_parameters,

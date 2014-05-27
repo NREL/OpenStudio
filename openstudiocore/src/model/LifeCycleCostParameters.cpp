@@ -835,7 +835,7 @@ LifeCycleCostParameters::LifeCycleCostParameters(const Model& model)
 }
 
 // constructor
-LifeCycleCostParameters::LifeCycleCostParameters(boost::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
+LifeCycleCostParameters::LifeCycleCostParameters(std::shared_ptr<detail::LifeCycleCostParameters_Impl> impl)
   : ParentObject(impl)
 {}
 

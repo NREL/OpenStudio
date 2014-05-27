@@ -306,7 +306,7 @@ RunPeriod::RunPeriod(const Model& model)
 }
 
 // constructor
-RunPeriod::RunPeriod(boost::shared_ptr<detail::RunPeriod_Impl> impl)
+RunPeriod::RunPeriod(std::shared_ptr<detail::RunPeriod_Impl> impl)
   : ParentObject(impl)
 {}
 

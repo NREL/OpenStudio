@@ -106,7 +106,7 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
 
   typedef detail::SetpointManagerMixedAir_Impl ImplType;
 
-  explicit SetpointManagerMixedAir(boost::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
+  explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
   private:
 

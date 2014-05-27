@@ -87,7 +87,7 @@ namespace detail {
     m_workerInstanceType = value.toString().toStdString();
   }
 
-  void AWSSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
+  void AWSSessionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase>& database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AWSSessionRecord>(query);
     this->bindValues(query);
@@ -244,7 +244,7 @@ namespace detail {
 } // detail
 
 AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl>(
         new detail::AWSSessionRecord_Impl(awsSession, database)),
         database)
 {
@@ -253,7 +253,7 @@ AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase
 }
 
 AWSSessionRecord::AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl>(
         new detail::AWSSessionRecord_Impl(query, database)),
         database)
 {
@@ -308,11 +308,11 @@ AWSSession AWSSessionRecord::awsSession() const {
 }
 
 /// @cond
-AWSSessionRecord::AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl)
+AWSSessionRecord::AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl)
   : CloudSessionRecord(impl)
 {}
 
-AWSSessionRecord::AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl,
+AWSSessionRecord::AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl,
                                    ProjectDatabase database)
   : CloudSessionRecord(impl, database)
 {

@@ -33,8 +33,6 @@
 
 #include <QSqlQuery>
 
-#include <boost/shared_ptr.hpp>
-
 #include <sstream>
 
 class QSqlDatabase;
@@ -303,7 +301,7 @@ class PROJECT_API ProjectDatabase {
 
   // DLM@20110615: can this be protected?
   /// Returns the QSqlDatabase.
-  boost::shared_ptr<QSqlDatabase> qSqlDatabase() const;
+  std::shared_ptr<QSqlDatabase> qSqlDatabase() const;
 
   /// Finds Record by handle, will check all maps but does not query database.
   boost::optional<Record> findLoadedRecord(const UUID& handle) const;
@@ -322,7 +320,7 @@ class PROJECT_API ProjectDatabase {
  protected:
 
   /// Constructor from implementation object.
-  ProjectDatabase(boost::shared_ptr<detail::ProjectDatabase_Impl> impl);
+  ProjectDatabase(std::shared_ptr<detail::ProjectDatabase_Impl> impl);
 
   /// Add a new Record, will set id on the object record.
   void addNewRecord(Record& record);
@@ -348,7 +346,7 @@ class PROJECT_API ProjectDatabase {
   /// @cond
   REGISTER_LOGGER("openstudio.project.ProjectDatabase");
 
-  boost::shared_ptr<detail::ProjectDatabase_Impl> m_impl;
+  std::shared_ptr<detail::ProjectDatabase_Impl> m_impl;
   /// @endcond
 
   void initialize(const openstudio::path& path);

@@ -184,17 +184,17 @@ SchedulesView::SchedulesView(bool isIP,
   mainHLayout->addLayout(m_contentLayout,100);
 
   connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
+          SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
                                     const openstudio::IddObjectType&, const openstudio::UUID&)),
           this,
-          SLOT(onModelAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+          SLOT(onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
           Qt::QueuedConnection);
  
   connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, 
+          SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, 
                                        const openstudio::IddObjectType&, const openstudio::UUID&)),
           this,
-          SLOT(removeSchedule(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, 
+          SLOT(removeSchedule(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, 
                               const openstudio::UUID&)),
           Qt::QueuedConnection);
 
@@ -314,7 +314,7 @@ void SchedulesView::addScheduleRule( model::ScheduleRule & rule )
 
 }
 
-void SchedulesView::onModelAdd( boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> workspaceObjectImpl,
+void SchedulesView::onModelAdd( std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> workspaceObjectImpl,
                                 const openstudio::IddObjectType&, 
                                 const openstudio::UUID& )
 {
@@ -331,7 +331,7 @@ void SchedulesView::onModelAdd( boost::shared_ptr<openstudio::detail::WorkspaceO
   }
 }
 
-void SchedulesView::removeSchedule( boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> workspaceObjectImpl, 
+void SchedulesView::removeSchedule( std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> workspaceObjectImpl, 
                                     const openstudio::IddObjectType&, 
                                     const openstudio::UUID& )
 {
@@ -753,8 +753,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_sundayButton->setText("S");
   m_sundayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applySunday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplySunday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applySunday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySunday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_sundayButton);
 
   weekHLayout->addSpacing(10);
@@ -763,8 +763,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_mondayButton->setText("M");
   m_mondayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applyMonday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyMonday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applyMonday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyMonday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_mondayButton);
 
   weekHLayout->addSpacing(10);
@@ -773,8 +773,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_tuesdayButton->setText("T");
   m_tuesdayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applyTuesday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyTuesday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applyTuesday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyTuesday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_tuesdayButton);
 
   weekHLayout->addSpacing(10);
@@ -783,8 +783,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_wednesdayButton->setText("W");
   m_wednesdayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applyWednesday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyWednesday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applyWednesday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyWednesday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_wednesdayButton);
 
   weekHLayout->addSpacing(10);
@@ -793,8 +793,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_thursdayButton->setText("T");
   m_thursdayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applyThursday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyThursday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applyThursday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyThursday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_thursdayButton);
 
   weekHLayout->addSpacing(10);
@@ -803,8 +803,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_fridayButton->setText("F");
   m_fridayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applyFriday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplyFriday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applyFriday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplyFriday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_fridayButton);
 
   weekHLayout->addSpacing(10);
@@ -813,8 +813,8 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
   m_saturdayButton->setText("S");
   m_saturdayButton->bind(
       m_scheduleRule,
-      boost::bind(&model::ScheduleRule::applySaturday,&m_scheduleRule),
-      boost::optional<BoolSetter>(boost::bind(&model::ScheduleRule::setApplySaturday,&m_scheduleRule,_1)));
+      std::bind(&model::ScheduleRule::applySaturday,&m_scheduleRule),
+      boost::optional<BoolSetter>(std::bind(&model::ScheduleRule::setApplySaturday,&m_scheduleRule,std::placeholders::_1)));
   weekHLayout->addWidget(m_saturdayButton);
 
   ruleVLayout->addLayout(weekHLayout);
@@ -2606,7 +2606,7 @@ void DayScheduleScene::refresh()
     double minvalue = * std::min_element(realvalues.begin(),realvalues.end());
     double maxvalue = * std::max_element(realvalues.begin(),realvalues.end());
 
-    // The upper and lower limt are the limits input from the user input fields.
+    // The upper and lower limit are the limits input from the user input fields.
     double upperLimit = m_scheduleDayView->upperLimit();
     double lowerLimit = m_scheduleDayView->lowerLimit();
 
@@ -3057,10 +3057,10 @@ YearOverview::YearOverview( const model::ScheduleRuleset & scheduleRuleset, QWid
   mainLayout->addStretch(10);
 
   connect(m_scheduleRuleset.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-          SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
+          SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
                                     const openstudio::IddObjectType&, const openstudio::UUID&)),
           this,
-          SLOT(onModelAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+          SLOT(onModelAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
           Qt::QueuedConnection);
 
   std::vector<model::ScheduleRule> scheduleRules = m_scheduleRuleset.scheduleRules();
@@ -3097,7 +3097,7 @@ void YearOverview::refreshActiveRuleIndices()
   m_dirty = false;
 }
 
-void YearOverview::onModelAdd( boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo, 
+void YearOverview::onModelAdd( std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo, 
                                const openstudio::IddObjectType& iddType, 
                                const openstudio::UUID& uuid )
 {

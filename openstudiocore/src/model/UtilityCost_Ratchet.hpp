@@ -100,7 +100,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Ratchet(boost::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl);
+  explicit UtilityCost_Ratchet(std::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl);
 
 private:
 

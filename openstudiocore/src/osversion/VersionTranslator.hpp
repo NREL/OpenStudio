@@ -188,13 +188,13 @@ class OSVERSION_API VersionTranslator {
     virtual ~InterobjectIssueInformation() {}
   };
 
-  std::vector< boost::shared_ptr<InterobjectIssueInformation> > fixInterobjectIssuesStage1(
+  std::vector< std::shared_ptr<InterobjectIssueInformation> > fixInterobjectIssuesStage1(
       model::Model& model,
       const VersionString& startVersion);
 
   void fixInterobjectIssuesStage2(
       model::Model& model,
-      std::vector<boost::shared_ptr<InterobjectIssueInformation> >& stage1Information);
+      std::vector<std::shared_ptr<InterobjectIssueInformation> >& stage1Information);
 
   struct InterobjectIssueInformation_0_8_3_to_0_8_4 : public InterobjectIssueInformation {
     std::vector<model::Schedule> schedules;
@@ -211,12 +211,12 @@ class OSVERSION_API VersionTranslator {
     virtual ~InterobjectIssueInformation_0_8_3_to_0_8_4() {}
   };
 
-  boost::shared_ptr<InterobjectIssueInformation> fixInterobjectIssuesStage1_0_8_3_to_0_8_4(
+  std::shared_ptr<InterobjectIssueInformation> fixInterobjectIssuesStage1_0_8_3_to_0_8_4(
       model::Model& model);
 
   void fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
       model::Model& model,
-      boost::shared_ptr<InterobjectIssueInformation>& info);
+      std::shared_ptr<InterobjectIssueInformation>& info);
 };
 
 } // osversion

@@ -21,7 +21,6 @@
 #define OPENSTUDIO_FACILITYTABCONTROLLER_H
 
 #include <openstudio_lib/MainTabController.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -39,7 +38,7 @@ class FacilityTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<FacilityController> m_facilityController;
+    std::shared_ptr<FacilityController> m_facilityController;
 
   public slots:
 

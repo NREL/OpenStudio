@@ -81,11 +81,11 @@ class PROJECT_API LinearFunctionRecord : public FunctionRecord {
   friend class detail::LinearFunctionRecord_Impl;
 
   /** Construct from impl. */
-  LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
+  LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
                        ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl);
+  explicit LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl);
 
   /// @endcond
  private:

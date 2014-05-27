@@ -180,7 +180,7 @@ namespace runmanager {
     {
       std::vector<FileInfo> fis = m_job.outputFiles();
 
-      std::for_each(fis.begin(), fis.end(), boost::bind(&JobItem::updateOutputFile, this, _1));
+      std::for_each(fis.begin(), fis.end(), std::bind(&JobItem::updateOutputFile, this, std::placeholders::_1));
     }
 
     void JobItem::updateOutputFile(const openstudio::runmanager::FileInfo &t_fi)
@@ -578,7 +578,7 @@ namespace runmanager {
 
     // now we need to sort them based on index()
     std::sort(ret.begin(), ret.end(), 
-      boost::function<bool (const Job &, const Job &)>(&JobStatusWidget::jobIndexLessThan));
+      std::function<bool (const Job &, const Job &)>(&JobStatusWidget::jobIndexLessThan));
 
     return ret;
   }

@@ -28,9 +28,6 @@
 #include <utilities/core/UUID.hpp>
 #include <utilities/time/DateTime.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QObject>
 #include <QSqlQuery>
 #include <QVariant>
@@ -48,7 +45,7 @@ namespace project {
 
     class ProjectDatabase_Impl;
 
-    class PROJECT_API Record_Impl : public QObject, public boost::enable_shared_from_this<Record_Impl>
+    class PROJECT_API Record_Impl : public QObject, public std::enable_shared_from_this<Record_Impl>
     {
 
       Q_OBJECT;
@@ -96,7 +93,7 @@ namespace project {
         virtual std::vector<JoinRecord> joinRecords() const = 0;
 
         /// save the row for just this object in the database
-        virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database) = 0;
+        virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database) = 0;
 
         /// revert just this object then save in the database
         /// requires ProjectDatabase as called in ProjectDatabase ctor/dtor
@@ -106,8 +103,8 @@ namespace project {
         template<typename T>
         T getObject() const
         {
-          T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                     boost::const_pointer_cast<Record_Impl>(shared_from_this())));
+          T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                     std::const_pointer_cast<Record_Impl>(shared_from_this())));
           return result;
         }
 
@@ -148,10 +145,10 @@ namespace project {
         boost::optional<int> findIdByHandle() const;
 
         /// insert row for just this object in the database and set id
-        void insertRow(const boost::shared_ptr<QSqlDatabase> &database);
+        void insertRow(const std::shared_ptr<QSqlDatabase> &database);
 
         /// remove just this object from the database
-        void removeRow(const boost::shared_ptr<QSqlDatabase> &database);
+        void removeRow(const std::shared_ptr<QSqlDatabase> &database);
 
         /// set the last state of just this object from the database (including id)
         /// requires ProjectDatabase as called in ProjectDatabase ctor/dtor
@@ -201,7 +198,7 @@ namespace project {
 
         REGISTER_LOGGER("openstudio.project.Record");
 
-        boost::weak_ptr<detail::ProjectDatabase_Impl> m_projectDatabaseWeakImpl;
+        std::weak_ptr<detail::ProjectDatabase_Impl> m_projectDatabaseWeakImpl;
 
         int m_id;
         UUID m_handle;

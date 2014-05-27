@@ -185,7 +185,7 @@ bool Algorithm::isCompatibleProblemType(const Problem& problem) const {
 }
 
 /// @cond
-Algorithm::Algorithm(boost::shared_ptr<detail::Algorithm_Impl> impl)
+Algorithm::Algorithm(std::shared_ptr<detail::Algorithm_Impl> impl)
   : AnalysisObject(impl)
 {}
 

@@ -179,7 +179,7 @@ ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint( const Model& mod
   OS_ASSERT(getImpl<detail::ThermostatSetpointDualSetpoint_Impl>());
 }
 
-ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint(boost::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl):
+ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl):
   ModelObject(impl)
 {}
 

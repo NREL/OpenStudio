@@ -93,14 +93,14 @@ class PROJECT_API DiscreteVariableRecord : public InputVariableRecord {
   //@}
  protected:
   /// @cond
-  explicit DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl);
+  explicit DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl);
 
   friend class detail::DiscreteVariableRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
+  DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
                          ProjectDatabase database,
                          const boost::optional<analysis::DiscreteVariable>& discreteVariable);
 

@@ -1455,7 +1455,7 @@ void RoofVegetation::resetMoistureDiffusionCalculationMethod() {
 }
 
 /// @cond
-RoofVegetation::RoofVegetation(boost::shared_ptr<detail::RoofVegetation_Impl> impl)
+RoofVegetation::RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

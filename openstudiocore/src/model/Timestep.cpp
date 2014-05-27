@@ -112,7 +112,7 @@ Timestep::Timestep(const Model& model)
 }
 
 // constructor
-Timestep::Timestep(boost::shared_ptr<detail::Timestep_Impl> impl)
+Timestep::Timestep(std::shared_ptr<detail::Timestep_Impl> impl)
   : ModelObject(impl)
 {}
 

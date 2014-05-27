@@ -24,7 +24,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/UtilitiesAPI.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace openstudio{

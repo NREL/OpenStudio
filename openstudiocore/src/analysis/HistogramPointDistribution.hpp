@@ -63,7 +63,7 @@ class ANALYSIS_API HistogramPointDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit HistogramPointDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit HistogramPointDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

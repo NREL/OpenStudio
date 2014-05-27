@@ -27,8 +27,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Path.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 #include <string>
 #include <ostream>
 #include <vector>
@@ -453,7 +451,7 @@ class UTILITIES_API Workspace {
   /** Cast to type T. Throws std::bad_cast() if this is not a T. */
   template <typename T>
   T cast() const {
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -464,7 +462,7 @@ class UTILITIES_API Workspace {
   template <typename T>
   boost::optional<T> optionalCast() const {
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl) {
       result = T(impl);
     }
@@ -473,8 +471,8 @@ class UTILITIES_API Workspace {
 
   // get the impl
   template<typename T>
-  boost::shared_ptr<T> getImpl() const {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   //@}
@@ -487,7 +485,7 @@ class UTILITIES_API Workspace {
   friend class detail::Workspace_Impl;
 
   /** Protected contructor from impl. */
-  Workspace(boost::shared_ptr<detail::Workspace_Impl> impl);
+  Workspace(std::shared_ptr<detail::Workspace_Impl> impl);
 
   /** Returns all objects, including the versionObject. Protected in public class. */
   std::vector<WorkspaceObject> allObjects() const;
@@ -500,7 +498,7 @@ class UTILITIES_API Workspace {
   REGISTER_LOGGER("utilities.idf.Workspace");
 
   // pointer to implementation
-  boost::shared_ptr<detail::Workspace_Impl> m_impl;
+  std::shared_ptr<detail::Workspace_Impl> m_impl;
 };
 
 /** \relates Workspace */

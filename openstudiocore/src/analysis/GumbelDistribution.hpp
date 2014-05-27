@@ -62,7 +62,7 @@ class ANALYSIS_API GumbelDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit GumbelDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit GumbelDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

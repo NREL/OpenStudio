@@ -73,7 +73,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
 
   std::vector<ruleset::UserScriptInfo> folderUserScripts(const openstudio::path& folder) const;
 
-  boost::shared_ptr<QFileSystemWatcher> fsWatcher() const;
+  std::shared_ptr<QFileSystemWatcher> fsWatcher() const;
 
  signals:
   void scriptListChanged();
@@ -91,7 +91,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
   bool m_draggable;
   bool m_removeable;
 
-  boost::shared_ptr<QFileSystemWatcher> m_fswatcher;
+  std::shared_ptr<QFileSystemWatcher> m_fswatcher;
 };
 
 

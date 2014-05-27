@@ -94,14 +94,14 @@ namespace detail {
       /// Check isRunning or handle the started() signal to know when the job state has changed
       ///
       /// \param[in] t_pc ProcessCreator to use if any process needs to be executed by the job
-      void start(const boost::shared_ptr<ProcessCreator> &t_pc);
+      void start(const std::shared_ptr<ProcessCreator> &t_pc);
 
       /** Begin execution of the job, used for restarting a job that was left running on a remote 
        *  server.
        *  \param[in] t_pc process creator
        *  \param[in] t_remoteid the id of the process which should already be running on a remote 
        *  server */
-      void start(const boost::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskNumber);
+      void start(const std::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskNumber);
 
       /// Synchronously block until the Job has been finished. 
       /// \param[in] t_msecs Number of milliseconds to wait for
@@ -384,10 +384,10 @@ namespace detail {
       std::vector<MergedJobResults> mergedJobResults() const;
 
     protected:
-      Job(const boost::shared_ptr<detail::Job_Impl> &t_impl);
+      Job(const std::shared_ptr<detail::Job_Impl> &t_impl);
 
     private:
-      boost::shared_ptr<detail::Job_Impl> m_impl;
+      std::shared_ptr<detail::Job_Impl> m_impl;
   };
 
   /** \relates Job */

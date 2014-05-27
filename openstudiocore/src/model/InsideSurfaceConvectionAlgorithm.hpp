@@ -86,7 +86,7 @@ class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject {
 
   // constructor
   explicit InsideSurfaceConvectionAlgorithm(
-      boost::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
+      std::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
 
  private:
 

@@ -163,7 +163,7 @@ namespace detail {
     //@{
 
     /** Load from name, group, type, and text. */
-    static boost::shared_ptr<IddObject_Impl> load(const std::string& name, 
+    static std::shared_ptr<IddObject_Impl> load(const std::string& name, 
                                                   const std::string& group,
                                                   const std::string& text, 
                                                   IddObjectType type);

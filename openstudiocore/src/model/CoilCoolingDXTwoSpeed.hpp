@@ -372,7 +372,7 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   /// @cond
   typedef detail::CoilCoolingDXTwoSpeed_Impl ImplType;
 
-  explicit CoilCoolingDXTwoSpeed(boost::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
+  explicit CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");

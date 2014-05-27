@@ -74,12 +74,12 @@ class PROJECT_API ParameterStudyAlgorithmRecord : public DakotaAlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  ParameterStudyAlgorithmRecord(boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl,
+  ParameterStudyAlgorithmRecord(std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// @cond
   explicit ParameterStudyAlgorithmRecord(
-      boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl);
+      std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl);
 
   friend class detail::ParameterStudyAlgorithmRecord_Impl;
   friend class Record;

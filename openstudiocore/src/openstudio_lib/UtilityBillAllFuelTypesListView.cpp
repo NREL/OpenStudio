@@ -34,8 +34,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/foreach.hpp>
-
 #include <iostream>
 
 namespace openstudio {
@@ -58,9 +56,11 @@ UtilityBillAllFuelTypesListView::UtilityBillAllFuelTypesListView(const std::vect
     m_model(model),
     m_headerType(headerType)
 { 
-  typedef std::vector<std::pair<FuelType, std::string> >::value_type PairType;
-  BOOST_REVERSE_FOREACH(PairType utilityBillFuelTypesAndName, m_utilityBillFuelTypesAndNames){
-    addUtilityBillFuelType(utilityBillFuelTypesAndName.first, utilityBillFuelTypesAndName.second);
+  for(auto utilityBillFuelTypesAndName = m_utilityBillFuelTypesAndNames.rbegin();
+      utilityBillFuelTypesAndName != m_utilityBillFuelTypesAndNames.rend();
+      ++utilityBillFuelTypesAndName)
+  {
+    addUtilityBillFuelType(utilityBillFuelTypesAndName->first, utilityBillFuelTypesAndName->second);
   }
 }
 

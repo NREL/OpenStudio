@@ -667,7 +667,7 @@ DesignDay::DesignDay(const Model& model)
 }
 
 // constructor
-DesignDay::DesignDay(boost::shared_ptr<detail::DesignDay_Impl> impl)
+DesignDay::DesignDay(std::shared_ptr<detail::DesignDay_Impl> impl)
   : SizingPeriod(impl)
 {}
 

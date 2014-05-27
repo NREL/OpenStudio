@@ -126,7 +126,7 @@ class MODEL_API ScheduleWeek : public ResourceObject {
   friend class openstudio::IdfObject;
   friend class detail::ScheduleWeek_Impl;
 
-  explicit ScheduleWeek(boost::shared_ptr<detail::ScheduleWeek_Impl> impl);
+  explicit ScheduleWeek(std::shared_ptr<detail::ScheduleWeek_Impl> impl);
 
   /// @endcond
  private:

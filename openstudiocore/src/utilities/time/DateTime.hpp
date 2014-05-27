@@ -29,7 +29,6 @@
 
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/date_time/gregorian/greg_date.hpp>
 
 #include <ctime>

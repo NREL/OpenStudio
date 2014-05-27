@@ -289,52 +289,52 @@ std::string ModelObjectFilterNumericAttribute::xmlElementName()
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, unsigned testValue)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, unsigned testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, int testValue)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, int testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, double testValue)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::string& attributeName, const RulesetNumericalPredicate& predicate, double testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const QDomElement& element)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(element)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>(new detail::ModelObjectFilterNumericAttribute_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());
 }
 
 /// @cond
-ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const boost::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>& impl)
+ModelObjectFilterNumericAttribute::ModelObjectFilterNumericAttribute(const std::shared_ptr<detail::ModelObjectFilterNumericAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterNumericAttribute_Impl>());

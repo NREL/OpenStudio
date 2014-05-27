@@ -152,13 +152,13 @@ namespace detail {
 
     // Overriding this from WorkspaceObject_Impl is how all objects in the model end up
     // as model objects
-    virtual boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
+    virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
         const IdfObject& object,
         bool keepHandle);
 
     // Helper function to start the process of adding a cloned object to the workspace.
-    virtual boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
-        const boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
+    virtual std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> createObject(
+        const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
         bool keepHandle);
 
     /// set the sql file
@@ -218,7 +218,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.Model");
 
     // Make this a shared_ptr to avoid having to #include SqlFile.hpp in all Model objects
-    boost::shared_ptr<openstudio::SqlFile> m_sqlFile;
+    std::shared_ptr<openstudio::SqlFile> m_sqlFile;
 
     std::vector<ComponentWatcher> m_componentWatchers;
 

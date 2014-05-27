@@ -35,8 +35,6 @@
 #include <utilities/math/FloatCompare.hpp>
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 #include <sstream>
 
 #include <QSqlQuery>
@@ -363,7 +361,7 @@ VariableRecord VariableRecord::factoryFromVariable(const analysis::Variable& var
   }
 
   OS_ASSERT(false);
-  return VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl>());
+  return VariableRecord(std::shared_ptr<detail::VariableRecord_Impl>());
 }
 
 std::vector<VariableRecord> VariableRecord::getVariableRecords(ProjectDatabase& database)
@@ -413,14 +411,14 @@ analysis::Variable VariableRecord::variable() const {
   return getImpl<detail::VariableRecord_Impl>()->variable();
 }
 
-VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl,
+VariableRecord::VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl,
                                ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::VariableRecord_Impl>());
 }
 
-VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl)
+VariableRecord::VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::VariableRecord_Impl>());

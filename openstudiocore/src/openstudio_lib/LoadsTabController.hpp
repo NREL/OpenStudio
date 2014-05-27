@@ -22,8 +22,6 @@
 
 #include <openstudio_lib/MainTabController.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 class LoadsController;
@@ -40,7 +38,7 @@ class LoadsTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<LoadsController> m_LoadsController;
+    std::shared_ptr<LoadsController> m_LoadsController;
 
   public slots:
 

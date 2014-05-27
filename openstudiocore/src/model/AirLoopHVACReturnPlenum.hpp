@@ -72,7 +72,7 @@ class MODEL_API AirLoopHVACReturnPlenum : public Mixer {
   /// @cond
   typedef detail::AirLoopHVACReturnPlenum_Impl ImplType;
 
-  explicit AirLoopHVACReturnPlenum(boost::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
+  explicit AirLoopHVACReturnPlenum(std::shared_ptr<detail::AirLoopHVACReturnPlenum_Impl> impl);
 
   friend class detail::AirLoopHVACReturnPlenum_Impl;
   friend class Model;

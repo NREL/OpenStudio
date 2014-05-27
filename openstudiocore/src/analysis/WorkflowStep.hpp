@@ -117,7 +117,7 @@ class ANALYSIS_API WorkflowStep : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::WorkflowStep_Impl;
 
-  explicit WorkflowStep(boost::shared_ptr<detail::WorkflowStep_Impl> impl);
+  explicit WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl);
 
   friend class OptimizationProblem; // calls setParent
   friend class Problem; // calls setParent

@@ -102,7 +102,7 @@ protected:
   explicit ComponentCostAdjustments(const Model& model);
   
   // constructor
-  explicit ComponentCostAdjustments(boost::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
+  explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.ComponentCostAdjustments");

@@ -121,7 +121,7 @@ class MODEL_API CurveCubic : public Curve {
   /// @cond
   typedef detail::CurveCubic_Impl ImplType;
 
-  explicit CurveCubic(boost::shared_ptr<detail::CurveCubic_Impl> impl);
+  explicit CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl);
 
   friend class detail::CurveCubic_Impl;
   friend class Model;

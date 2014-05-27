@@ -374,7 +374,7 @@ boost::optional<ModelObject> PortList::airLoopHVACModelObject()
 }
 
 /// @cond
-PortList::PortList(boost::shared_ptr<detail::PortList_Impl> impl)
+PortList::PortList(std::shared_ptr<detail::PortList_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

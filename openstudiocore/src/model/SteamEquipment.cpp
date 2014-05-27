@@ -342,7 +342,7 @@ double SteamEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 }
 
 /// @cond
-SteamEquipment::SteamEquipment(boost::shared_ptr<detail::SteamEquipment_Impl> impl)
+SteamEquipment::SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

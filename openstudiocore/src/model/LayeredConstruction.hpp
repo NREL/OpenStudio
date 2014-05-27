@@ -165,7 +165,7 @@ class MODEL_API LayeredConstruction : public ConstructionBase {
 
   LayeredConstruction(IddObjectType type,const Model& model);
 
-  explicit LayeredConstruction(boost::shared_ptr<detail::LayeredConstruction_Impl> impl);
+  explicit LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl);
   
   /// @endcond
  private:

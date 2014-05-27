@@ -22,8 +22,6 @@
 
 #include <openstudio_lib/MainTabController.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 class BuildingStoriesController;
@@ -40,7 +38,7 @@ class BuildingStoriesTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<BuildingStoriesController> m_buildingStoriesController;
+    std::shared_ptr<BuildingStoriesController> m_buildingStoriesController;
  
 };
 

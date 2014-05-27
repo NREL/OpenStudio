@@ -325,31 +325,31 @@ namespace openstudio{
     return sqrt(variance(vector));
   }
 
-  boost::function<double (const Vector&)> sumVectorFunctor() { 
-    return boost::function<double (const Vector&)> (&sum); 
+  std::function<double (const Vector&)> sumVectorFunctor() { 
+    return std::function<double (const Vector&)> (&sum); 
   }
 
-  boost::function<double (const Vector&)> maximumVectorFunctor() {
-    return boost::function<double (const Vector&)> (&maximum);
+  std::function<double (const Vector&)> maximumVectorFunctor() {
+    return std::function<double (const Vector&)> (&maximum);
   }
 
-  boost::function<double (const Vector&)> minimumVectorFunctor() {
-    return boost::function<double (const Vector&)> (&minimum);
+  std::function<double (const Vector&)> minimumVectorFunctor() {
+    return std::function<double (const Vector&)> (&minimum);
   }
 
-  boost::function<double (const Vector&)> meanVectorFunctor() {
-    return boost::function<double (const Vector&)> (&mean);
+  std::function<double (const Vector&)> meanVectorFunctor() {
+    return std::function<double (const Vector&)> (&mean);
   }
 
-  boost::function<double (const Vector&)> varianceVectorFunctor() {
-    return boost::function<double (const Vector&)> (&variance);
+  std::function<double (const Vector&)> varianceVectorFunctor() {
+    return std::function<double (const Vector&)> (&variance);
   }
 
-  boost::function<double (const Vector&)> stdDevVectorFunctor() {
-    return boost::function<double (const Vector&)> (&stdDev);
+  std::function<double (const Vector&)> stdDevVectorFunctor() {
+    return std::function<double (const Vector&)> (&stdDev);
   }
 
-  double evaluateDoubleFromVectorFunctor(const boost::function<double (const Vector&)>& functor,
+  double evaluateDoubleFromVectorFunctor(const std::function<double (const Vector&)>& functor,
                                          const Vector& vector)
   {
     return functor(vector);

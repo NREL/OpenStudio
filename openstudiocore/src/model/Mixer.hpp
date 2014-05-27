@@ -99,7 +99,7 @@ class MODEL_API Mixer : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  explicit Mixer(boost::shared_ptr<ImplType> impl);
+  explicit Mixer(std::shared_ptr<ImplType> impl);
 
   private:
 

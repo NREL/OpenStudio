@@ -71,7 +71,7 @@ class ANALYSIS_API PSUADEDaceAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::PSUADEDaceAlgorithm_Impl ImplType;
 
-  explicit PSUADEDaceAlgorithm(boost::shared_ptr<detail::PSUADEDaceAlgorithm_Impl> impl);
+  explicit PSUADEDaceAlgorithm(std::shared_ptr<detail::PSUADEDaceAlgorithm_Impl> impl);
 
   friend class detail::PSUADEDaceAlgorithm_Impl;
   friend class AnalysisObject;

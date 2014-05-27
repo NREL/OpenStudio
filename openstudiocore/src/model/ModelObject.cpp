@@ -1199,7 +1199,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model)
   }
 }
 
-ModelObject::ModelObject(boost::shared_ptr<detail::ModelObject_Impl> p)
+ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(p)
 {}
 

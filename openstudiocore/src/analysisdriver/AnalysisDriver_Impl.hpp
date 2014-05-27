@@ -31,8 +31,6 @@
 
 #include <QObject>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
 
 namespace openstudio {
@@ -52,7 +50,7 @@ namespace detail {
   /** AnalysisDriver_Impl is the implementation class for AnalysisDriver.*/
   class ANALYSISDRIVER_API AnalysisDriver_Impl
       : public QObject,
-        public boost::enable_shared_from_this<AnalysisDriver_Impl>
+        public std::enable_shared_from_this<AnalysisDriver_Impl>
   {
     Q_OBJECT;
    public:

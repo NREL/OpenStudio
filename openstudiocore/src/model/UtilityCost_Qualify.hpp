@@ -103,7 +103,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Qualify(boost::shared_ptr<detail::UtilityCost_Qualify_Impl> impl);
+  explicit UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.UtilityCost_Qualify");

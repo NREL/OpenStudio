@@ -68,12 +68,12 @@ namespace detail {
         return false;
       }
 
-      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_creator);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_creator);
 
       /// Executes the required manipulation of the model and returns a new copy.
       /// 
@@ -98,7 +98,7 @@ namespace detail {
 
       std::string m_description; //< Description of job
 
-      std::vector<boost::shared_ptr<ModelInModelOutJob> > m_mergedJobs; //< List of jobs merged into this one.
+      std::vector<std::shared_ptr<ModelInModelOutJob> > m_mergedJobs; //< List of jobs merged into this one.
 
   }; 
 

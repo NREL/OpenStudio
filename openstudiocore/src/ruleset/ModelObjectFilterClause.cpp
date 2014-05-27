@@ -56,7 +56,7 @@ namespace detail {
 } // detail
 
 /// @cond
-ModelObjectFilterClause::ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterClause_Impl> impl)
+ModelObjectFilterClause::ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterClause_Impl> impl)
   : FilterClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterClause_Impl>());

@@ -1303,7 +1303,7 @@ void ZoneHVACFourPipeFanCoil::resetHeatingConvergenceTolerance() {
 }
 
 /// @cond
-ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(boost::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
+ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

@@ -151,7 +151,7 @@ class MODEL_API CoilHeatingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   /// @cond
   typedef detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl ImplType;
 
-  explicit CoilHeatingWaterToAirHeatPumpEquationFit(boost::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl);
+  explicit CoilHeatingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl> impl);
 
   friend class detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl;
   friend class Model;

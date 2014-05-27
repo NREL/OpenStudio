@@ -323,7 +323,7 @@ void RunPeriodControlDaylightSavingTime::ensureNoLeapDays()
 }
 
 /// @cond
-RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(boost::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl)
+RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl)
   : ModelObject(impl)
 {}
 

@@ -395,7 +395,7 @@ std::vector<Space> BuildingStory::spaces() const
 }
 
 /// @cond
-BuildingStory::BuildingStory(boost::shared_ptr<detail::BuildingStory_Impl> impl)
+BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

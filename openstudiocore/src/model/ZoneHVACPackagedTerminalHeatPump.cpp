@@ -1068,7 +1068,7 @@ HVACComponent ZoneHVACPackagedTerminalHeatPump::coolingCoil() const
 }
 
 /// @cond
-ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(boost::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl)
+ZoneHVACPackagedTerminalHeatPump::ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

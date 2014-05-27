@@ -75,7 +75,7 @@ class MODEL_API ClimateZone : public ModelExtensibleGroup {
   friend class IdfExtensibleGroup;
   friend class detail::ClimateZones_Impl;
 
-  ClimateZone(boost::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index);
+  ClimateZone(std::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index);
 
   /// @endcond
  private:
@@ -239,7 +239,7 @@ class MODEL_API ClimateZones : public ModelObject {
 
   explicit ClimateZones(Model& model);
 
-  explicit ClimateZones(boost::shared_ptr<detail::ClimateZones_Impl> impl);
+  explicit ClimateZones(std::shared_ptr<detail::ClimateZones_Impl> impl);
 
   /// @endcond
  private:

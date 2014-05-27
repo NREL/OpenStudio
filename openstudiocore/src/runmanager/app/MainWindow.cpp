@@ -65,8 +65,8 @@ namespace runmanager {
   setWindowIcon(icon);
 #endif
 
-    m_selectedMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
-    m_regexMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
+    m_selectedMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
+    m_regexMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
 
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateToolbar(int)));
 

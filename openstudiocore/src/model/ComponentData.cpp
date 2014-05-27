@@ -204,7 +204,7 @@ ComponentData::ComponentData(const Model& model)
   createVersionUUID();
 }
 
-ComponentData::ComponentData(boost::shared_ptr<detail::ComponentData_Impl> impl)
+ComponentData::ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

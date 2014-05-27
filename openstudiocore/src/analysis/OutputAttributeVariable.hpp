@@ -79,7 +79,7 @@ class ANALYSIS_API OutputAttributeVariable : public OutputVariable {
   friend class detail::AnalysisObject_Impl;
   friend class detail::OutputAttributeVariable_Impl;
 
-  explicit OutputAttributeVariable(boost::shared_ptr<detail::OutputAttributeVariable_Impl> impl);
+  explicit OutputAttributeVariable(std::shared_ptr<detail::OutputAttributeVariable_Impl> impl);
 
   /// @endcond
  private:

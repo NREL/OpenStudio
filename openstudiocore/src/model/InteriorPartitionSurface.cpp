@@ -396,7 +396,7 @@ boost::optional<DaylightingDeviceShelf> InteriorPartitionSurface::daylightingDev
 }
 
 /// @cond
-InteriorPartitionSurface::InteriorPartitionSurface(boost::shared_ptr<detail::InteriorPartitionSurface_Impl> impl)
+InteriorPartitionSurface::InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

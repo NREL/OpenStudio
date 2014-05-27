@@ -137,7 +137,7 @@ namespace detail {
     }
   }
 
-  void Job_Impl::mergeJob(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job)
+  void Job_Impl::mergeJob(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)
   {
     if (t_job->parent() != t_parent)
     {
@@ -157,9 +157,9 @@ namespace detail {
 
     if (t_job->jobType() == JobType::Null)
     {
-      std::vector<boost::shared_ptr<Job_Impl> > children = t_job->children();
+      std::vector<std::shared_ptr<Job_Impl> > children = t_job->children();
 
-      std::for_each(children.begin(), children.end(), boost::bind(&Job_Impl::addChild, t_parent, _1));
+      std::for_each(children.begin(), children.end(), std::bind(&Job_Impl::addChild, t_parent, std::placeholders::_1));
 
       removeChild(t_job);
 
@@ -173,7 +173,7 @@ namespace detail {
     }
   }
 
-  void Job_Impl::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job)
+  void Job_Impl::mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)
   {
     throw MergeJobError("mergeJob not implemented for types " + jobType().valueName() + " and " + t_job->jobType().valueName());
   }
@@ -190,7 +190,7 @@ namespace detail {
     }
 
 
-    boost::shared_ptr<Job_Impl> p = m_parent.lock();
+    std::shared_ptr<Job_Impl> p = m_parent.lock();
     Tools t = tools();
 
     QReadLocker l(&m_mutex);
@@ -319,7 +319,7 @@ namespace detail {
 
   void Job_Impl::doCleanUp()
   {
-    boost::shared_ptr<Job_Impl> p = parent();
+    std::shared_ptr<Job_Impl> p = parent();
     TreeStatusEnum treestatus = treeStatus();
 
     if (treestatus == TreeStatusEnum::Finished)
@@ -513,7 +513,7 @@ namespace detail {
     }
   }
 
-  void Job_Impl::setProcessCreator(const boost::shared_ptr<ProcessCreator> &t_pc)
+  void Job_Impl::setProcessCreator(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     QWriteLocker l(&m_mutex);
     m_processCreator = t_pc;
@@ -551,7 +551,7 @@ namespace detail {
     } 
 
     QReadLocker l(&m_mutex);
-    boost::shared_ptr<Job_Impl> p = m_parent.lock();
+    std::shared_ptr<Job_Impl> p = m_parent.lock();
     if (p)
     {
       if (p->finishedJob() && p->finishedJob()->uuid() == m_id)
@@ -615,7 +615,7 @@ namespace detail {
 
     JobParams myparams = params();
     QReadLocker l(&m_mutex);
-    boost::shared_ptr<Job_Impl> p = m_parent.lock();
+    std::shared_ptr<Job_Impl> p = m_parent.lock();
 
     JobParams ret;
 
@@ -660,7 +660,7 @@ namespace detail {
     Files inputfiles = inputFiles();
 
     QReadLocker l(&m_mutex);
-    boost::shared_ptr<Job_Impl> p = m_parent.lock();
+    std::shared_ptr<Job_Impl> p = m_parent.lock();
 
     Files ret;
     if (p)
@@ -876,7 +876,7 @@ namespace detail {
     return outOfDateInternal(parent(), lastRun());
   }
 
-  bool Job_Impl::outOfDateInternal(const boost::shared_ptr<Job_Impl> &t_parent, const boost::optional<QDateTime> &t_lastrun) const
+  bool Job_Impl::outOfDateInternal(const std::shared_ptr<Job_Impl> &t_parent, const boost::optional<QDateTime> &t_lastrun) const
   {
     if (m_force || outOfDateImpl(t_lastrun))
     {
@@ -935,7 +935,7 @@ namespace detail {
   }
 
 
-  void Job_Impl::addChildInternal(const boost::shared_ptr<Job_Impl> &t_child)
+  void Job_Impl::addChildInternal(const std::shared_ptr<Job_Impl> &t_child)
   {
     QWriteLocker l(&m_mutex);
     m_children.push_back(t_child);
@@ -943,9 +943,9 @@ namespace detail {
     connect(t_child.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
   }
 
-  void Job_Impl::addChild(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job)
+  void Job_Impl::addChild(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)
   {
-    boost::shared_ptr<Job_Impl> jobparent(t_job->parent());
+    std::shared_ptr<Job_Impl> jobparent(t_job->parent());
     if (jobparent)
     {
       jobparent->removeChild(t_job);
@@ -956,9 +956,9 @@ namespace detail {
     t_parent->emitChildrenChanged();
   }
 
-  bool Job_Impl::removeChild(const boost::shared_ptr<Job_Impl> &t_job)
+  bool Job_Impl::removeChild(const std::shared_ptr<Job_Impl> &t_job)
   {
-    boost::shared_ptr<Job_Impl> jobparent = t_job->parent();
+    std::shared_ptr<Job_Impl> jobparent = t_job->parent();
     QWriteLocker l(&m_mutex);
     if (jobparent.get() == this)
     {
@@ -977,7 +977,7 @@ namespace detail {
         {
           LOG(Trace, "Child removed: " + toString(m_id) + " " + toString(t_job->m_id) + " num children " );
 
-          (*itr)->setParent(boost::shared_ptr<Job_Impl>());
+          (*itr)->setParent(std::shared_ptr<Job_Impl>());
           m_children.erase(itr);
           disconnect(t_job.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
           emitChildrenChanged();
@@ -989,7 +989,7 @@ namespace detail {
     return false;
   }
 
-  std::vector<boost::shared_ptr<Job_Impl> > Job_Impl::children() const
+  std::vector<std::shared_ptr<Job_Impl> > Job_Impl::children() const
   {
     QReadLocker l(&m_mutex);
     return m_children;
@@ -1023,25 +1023,25 @@ namespace detail {
     return false;
   }
 
-  boost::shared_ptr<Job_Impl> Job_Impl::finishedJob() const
+  std::shared_ptr<Job_Impl> Job_Impl::finishedJob() const
   {
     QReadLocker l(&m_mutex);
     return m_finishedJob;
   }
 
-  void Job_Impl::setFinishedJobInternal(const boost::shared_ptr<Job_Impl> &t_job)
+  void Job_Impl::setFinishedJobInternal(const std::shared_ptr<Job_Impl> &t_job)
   {
     QWriteLocker l(&m_mutex);
     m_finishedJob = t_job;
     connect(t_job.get(), SIGNAL(treeChanged(const openstudio::UUID &)), this, SIGNAL(treeChanged(const openstudio::UUID &)));
   }
 
-  void Job_Impl::setFinishedJob(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job)
+  void Job_Impl::setFinishedJob(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job)
   {
-    boost::shared_ptr<Job_Impl> parent = t_job->parent();
+    std::shared_ptr<Job_Impl> parent = t_job->parent();
     if (parent)
     {
-      t_job->setParent(boost::shared_ptr<Job_Impl>());
+      t_job->setParent(std::shared_ptr<Job_Impl>());
       parent->removeChild(t_job);
     }
 
@@ -1051,13 +1051,13 @@ namespace detail {
     t_parent->emitChildrenChanged();
   }
 
-  boost::shared_ptr<Job_Impl> Job_Impl::parent() const
+  std::shared_ptr<Job_Impl> Job_Impl::parent() const
   {
     QReadLocker l(&m_mutex);
     return m_parent.lock();
   }
 
-  void Job_Impl::setParent(const boost::shared_ptr<Job_Impl> &t_parent)
+  void Job_Impl::setParent(const std::shared_ptr<Job_Impl> &t_parent)
   {
     QWriteLocker l(&m_mutex);
     QWriteLocker l2(&m_cacheMutex);
@@ -1157,13 +1157,13 @@ namespace detail {
 
     openstudio::UUID id = m_id;
     boost::optional<QDateTime> lastrun = lastRunInternal();
-    boost::shared_ptr<Job_Impl> p = m_parent.lock();
+    std::shared_ptr<Job_Impl> p = m_parent.lock();
 
     l.unlock();
 
     // We are runnable if:
     //   status forced
-    //   m_runnable and out ofdate and not canceled and not currently running
+    //   m_runnable and out of date and not canceled and not currently running
     //   and our parent is !outofdate, and if we are the finishedJob, all parent's
     //   children are not out of date. Also, none of those deps can be running themselves
     //
@@ -1332,7 +1332,7 @@ namespace detail {
   {
     setRunnable(force);
 
-    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = m_children.begin();
+    for (std::vector<std::shared_ptr<Job_Impl> >::const_iterator itr = m_children.begin();
          itr != m_children.end();
          ++itr)
     {
@@ -1699,7 +1699,7 @@ namespace detail {
   }
 
 
-  void Job_Impl::updateJob(const boost::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate)
+  void Job_Impl::updateJob(const std::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate)
   {
 
     if (t_other.get() == this)
@@ -1731,14 +1731,14 @@ namespace detail {
       throw std::runtime_error("Jobs types do not match, unable to updateJob");
     }
 
-    std::vector<boost::shared_ptr<Job_Impl> > myChildren = m_children;
-    std::vector<boost::shared_ptr<Job_Impl> > otherChildren = t_other->children();
+    std::vector<std::shared_ptr<Job_Impl> > myChildren = m_children;
+    std::vector<std::shared_ptr<Job_Impl> > otherChildren = t_other->children();
 
     if (!t_allowUUIDUpdate)
     {
       std::set<openstudio::UUID> myChildrenIds;
 
-      for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = myChildren.begin();
+      for (std::vector<std::shared_ptr<Job_Impl> >::const_iterator itr = myChildren.begin();
           itr != myChildren.end();
           ++itr)
       {
@@ -1747,7 +1747,7 @@ namespace detail {
 
       std::set<openstudio::UUID> otherChildrenIds;
 
-      for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = otherChildren.begin();
+      for (std::vector<std::shared_ptr<Job_Impl> >::const_iterator itr = otherChildren.begin();
           itr != otherChildren.end();
           ++itr)
       {
@@ -1777,11 +1777,11 @@ namespace detail {
       }
     }
 
-    boost::shared_ptr<Job_Impl> myFinishedJob = m_finishedJob;
-	bool myHasFinishedJob = (myFinishedJob ? true : false);
+    std::shared_ptr<Job_Impl> myFinishedJob = m_finishedJob;
+  bool myHasFinishedJob = (myFinishedJob ? true : false);
 
-    boost::shared_ptr<Job_Impl> otherFinishedJob = t_other->finishedJob();
-	bool otherHasFinishedJob = (otherFinishedJob ? true : false);
+    std::shared_ptr<Job_Impl> otherFinishedJob = t_other->finishedJob();
+  bool otherHasFinishedJob = (otherFinishedJob ? true : false);
 
     if (myHasFinishedJob != otherHasFinishedJob)
     {
@@ -1926,7 +1926,7 @@ namespace detail {
     }
 
     LOG(Debug, "updateJob: emitOutputFileChanged()");
-    std::for_each(diffFiles.begin(), diffFiles.end(), boost::bind(&Job_Impl::emitOutputFileChanged, this, _1));
+    std::for_each(diffFiles.begin(), diffFiles.end(), std::bind(&Job_Impl::emitOutputFileChanged, this, std::placeholders::_1));
 
     if (sendFinished)
     {

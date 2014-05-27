@@ -91,7 +91,7 @@ class MODEL_API ShadingControl : public ResourceObject {
   /// @cond
   typedef detail::ShadingControl_Impl ImplType;
 
-  explicit ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl);
+  explicit ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl);
 
   friend class detail::ShadingControl_Impl;
   friend class Model;

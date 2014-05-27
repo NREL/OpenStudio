@@ -66,7 +66,7 @@ class ANALYSIS_API Function : public AnalysisObject {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit Function(boost::shared_ptr<detail::Function_Impl> impl);
+  explicit Function(std::shared_ptr<detail::Function_Impl> impl);
 
   friend class Problem; // to call setParent
   friend class OptimizationProblem; // to call setParent

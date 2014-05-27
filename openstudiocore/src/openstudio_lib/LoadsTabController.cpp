@@ -31,7 +31,7 @@ namespace openstudio {
 LoadsTabController::LoadsTabController(bool isIP, const model::Model& model)
   : MainTabController(new LoadsTabView(model, "Loads"))
 {
-  m_LoadsController = boost::shared_ptr<LoadsController>(new LoadsController(isIP, model));
+  m_LoadsController = std::shared_ptr<LoadsController>(new LoadsController(isIP, model));
   this->mainContentWidget()->addTabWidget(m_LoadsController->subTabView());
 
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),

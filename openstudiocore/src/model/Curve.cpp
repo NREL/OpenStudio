@@ -103,7 +103,7 @@ Curve::Curve(IddObjectType type, const Model& model)
   OS_ASSERT(getImpl<detail::Curve_Impl>());
 }
 
-Curve::Curve(boost::shared_ptr<detail::Curve_Impl> impl)
+Curve::Curve(std::shared_ptr<detail::Curve_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

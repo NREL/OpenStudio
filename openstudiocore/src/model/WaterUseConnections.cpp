@@ -322,7 +322,7 @@ bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment & waterUseEq
 }
 
 /// @cond
-WaterUseConnections::WaterUseConnections(boost::shared_ptr<detail::WaterUseConnections_Impl> impl)
+WaterUseConnections::WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

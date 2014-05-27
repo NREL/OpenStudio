@@ -93,7 +93,7 @@ namespace detail {
   }
 
   AnalysisObject RubyContinuousVariable_Impl::clone() const {
-    boost::shared_ptr<RubyContinuousVariable_Impl> impl(new RubyContinuousVariable_Impl(*this));
+    std::shared_ptr<RubyContinuousVariable_Impl> impl(new RubyContinuousVariable_Impl(*this));
     RubyContinuousVariable result(impl);
     RubyMeasure measure = result.measure();
     measure.setParent(result);
@@ -251,7 +251,7 @@ namespace detail {
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,
                                                const ruleset::UserScriptArgument& argument,
                                                const RubyMeasure& measure)
-  : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
+  : ContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl>(
         new detail::RubyContinuousVariable_Impl(name,argument,measure)))
 {
   RubyContinuousVariable copyOfThis(getImpl<detail::RubyContinuousVariable_Impl>());
@@ -270,7 +270,7 @@ RubyContinuousVariable::RubyContinuousVariable(const UUID& uuid,
                                                boost::optional<int> nSteps,
                                                const ruleset::UserScriptArgument& argument,
                                                const RubyMeasure& measure)
-  : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
+  : ContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl>(
         new detail::RubyContinuousVariable_Impl(uuid,
                                                 versionUUID,
                                                 name,
@@ -313,7 +313,7 @@ bool RubyContinuousVariable::setRubyPerturbation(const RubyMeasure& measure) {
 }
 
 /// @cond
-RubyContinuousVariable::RubyContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl> impl)
+RubyContinuousVariable::RubyContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl> impl)
   : ContinuousVariable(impl)
 {}
 

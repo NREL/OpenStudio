@@ -83,7 +83,7 @@ namespace detail {
     return result;
   }
 
-  void CloudSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void CloudSettingsRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSettingsRecord>(query);
     this->bindValues(query);
@@ -228,7 +228,7 @@ CloudSettingsRecord CloudSettingsRecord::factoryFromCloudSettings(const CloudSet
   }
 
   OS_ASSERT(false);
-  return CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl>());
+  return CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl>());
 }
 
 std::vector<CloudSettingsRecord> CloudSettingsRecord::getCloudSettingsRecords(ProjectDatabase& database) {
@@ -266,11 +266,11 @@ CloudSettings CloudSettingsRecord::cloudSettings() const {
 }
 
 /// @cond
-CloudSettingsRecord::CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl)
+CloudSettingsRecord::CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-CloudSettingsRecord::CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
+CloudSettingsRecord::CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {

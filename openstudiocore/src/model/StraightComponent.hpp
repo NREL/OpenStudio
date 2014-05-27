@@ -81,7 +81,7 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   typedef detail::StraightComponent_Impl ImplType;
 
-  explicit StraightComponent(boost::shared_ptr<detail::StraightComponent_Impl> impl);
+  explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
 
   private:
 

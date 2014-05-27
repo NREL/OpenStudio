@@ -78,7 +78,7 @@ class MODEL_API ParentObject : public ModelObject {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::ParentObject_Impl;
 
-  explicit ParentObject(boost::shared_ptr<detail::ParentObject_Impl> impl);
+  explicit ParentObject(std::shared_ptr<detail::ParentObject_Impl> impl);
 
  private:
 

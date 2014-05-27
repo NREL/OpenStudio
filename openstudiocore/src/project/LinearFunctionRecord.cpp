@@ -59,7 +59,7 @@ namespace detail {
     OS_ASSERT(query.isSelect());
   }
 
-  void LinearFunctionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void LinearFunctionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<LinearFunctionRecord>(query);
@@ -128,7 +128,7 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
                                            ProblemRecord& problemRecord,
                                            const FunctionType& functionType,
                                            int functionVectorIndex)
-  : FunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl>(
+  : FunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl>(
         new detail::LinearFunctionRecord_Impl(linearFunction,
                                               problemRecord,
                                               functionType,
@@ -167,14 +167,14 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
 }
 
 LinearFunctionRecord::LinearFunctionRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : FunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl>(
+  : FunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl>(
         new detail::LinearFunctionRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
 }
 
-LinearFunctionRecord::LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
+LinearFunctionRecord::LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
                                            ProjectDatabase database)
   : FunctionRecord(impl, database)
 {
@@ -231,7 +231,7 @@ analysis::LinearFunction LinearFunctionRecord::linearFunction() const {
 }
 
 /// @cond
-LinearFunctionRecord::LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl)
+LinearFunctionRecord::LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl)
   : FunctionRecord(impl)
 {}
 /// @endcond

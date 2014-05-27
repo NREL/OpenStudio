@@ -54,7 +54,7 @@ class MODEL_API ModelPartitionMaterial : public Material {
 
   ModelPartitionMaterial(IddObjectType type, const Model& model);
 
-  explicit ModelPartitionMaterial(boost::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);  
+  explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);  
 
   /// @endcond
  private:

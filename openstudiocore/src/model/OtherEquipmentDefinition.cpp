@@ -417,7 +417,7 @@ bool OtherEquipmentDefinition::setDesignLevelCalculationMethod(const std::string
 }
 
 /// @cond
-OtherEquipmentDefinition::OtherEquipmentDefinition(boost::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
+OtherEquipmentDefinition::OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

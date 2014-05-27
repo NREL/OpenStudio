@@ -876,7 +876,7 @@ namespace detail {
 
     // non-zero intersection
     // could match here but will save that for other discrete operation
-    Surface surface(boost::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
+    Surface surface(std::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
     std::vector<Surface> newSurfaces;
     std::vector<Surface> newOtherSurfaces;
 
@@ -2115,7 +2115,7 @@ std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 }
 
 /// @cond
-Surface::Surface(boost::shared_ptr<detail::Surface_Impl> impl)
+Surface::Surface(std::shared_ptr<detail::Surface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

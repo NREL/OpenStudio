@@ -27,8 +27,6 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <boost/bind.hpp>
-
 #include <QDomDocument>
 #include <QDomElement>
 
@@ -211,7 +209,7 @@ namespace detail {
 
   bool Rule_Impl::containsEquivalentData(const FilterClause& filter) const {
     return (std::find_if(m_filters.begin(),m_filters.end(),
-        boost::bind(&FilterClause::equivalentData,&filter,_1)) != m_filters.end());
+        std::bind(&FilterClause::equivalentData,&filter,_1)) != m_filters.end());
   }
 
   bool Rule_Impl::contains(const ActionClause& action) const {
@@ -220,7 +218,7 @@ namespace detail {
 
   bool Rule_Impl::containsEquivalentData(const ActionClause& action) const {
     return (std::find_if(m_actions.begin(),m_actions.end(),
-        boost::bind(&ActionClause::equivalentData,&action,_1)) != m_actions.end());
+        std::bind(&ActionClause::equivalentData,&action,_1)) != m_actions.end());
   }
 
   void Rule_Impl::writeValues(QDomDocument& doc, QDomElement& element) const
@@ -274,7 +272,7 @@ namespace detail {
       FilterClauseVector otherFilters = rule->filters();
       for (const FilterClause& filter : m_filters) {
         FilterClauseVector::const_iterator it = std::find_if(otherFilters.begin(),
-            otherFilters.end(),boost::bind(&FilterClause::equivalentData,&filter,_1));
+            otherFilters.end(),std::bind(&FilterClause::equivalentData,&filter,_1));
         if (it == otherFilters.end()) { 
           return false; 
         }
@@ -283,7 +281,7 @@ namespace detail {
       ActionClauseVector otherActions = rule->actions();
       for (const ActionClause& action : m_actions) {
         ActionClauseVector::const_iterator it = std::find_if(otherActions.begin(),
-            otherActions.end(),boost::bind(&ActionClause::equivalentData,&action,_1));
+            otherActions.end(),std::bind(&ActionClause::equivalentData,&action,_1));
         if (it == otherActions.end()) { 
           return false; 
         }
@@ -389,7 +387,7 @@ bool Rule::containsEquivalentData(const ActionClause& action) const {
 }
 
 /// @cond
-Rule::Rule(const boost::shared_ptr<detail::Rule_Impl>& impl)
+Rule::Rule(const std::shared_ptr<detail::Rule_Impl>& impl)
   : RulesetObject(impl)
 {
   OS_ASSERT(getImpl<detail::Rule_Impl>());

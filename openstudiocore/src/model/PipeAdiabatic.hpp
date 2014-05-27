@@ -64,7 +64,7 @@ class MODEL_API PipeAdiabatic : public StraightComponent {
 
   typedef detail::PipeAdiabatic_Impl ImplType;
 
-  explicit PipeAdiabatic(boost::shared_ptr<detail::PipeAdiabatic_Impl> impl);
+  explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
 
  private:
 

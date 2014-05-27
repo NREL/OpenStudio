@@ -1228,7 +1228,7 @@ void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
 }
 
 /// @cond
-SizingZone::SizingZone(boost::shared_ptr<detail::SizingZone_Impl> impl)
+SizingZone::SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -515,7 +515,7 @@ void SiteGroundTemperatureBuildingSurface::resetDecemberGroundTemperature() {
 }
 
 /// @cond
-SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(boost::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl)
+SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl)
   : ModelObject(impl)
 {}
 SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(Model& model)

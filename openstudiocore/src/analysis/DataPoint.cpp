@@ -39,9 +39,6 @@
 #include <utilities/core/Json.hpp>
 #include <utilities/core/UnzipFile.hpp>
 
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace analysis {
 
@@ -182,7 +179,7 @@ namespace detail {
   }
 
   AnalysisObject DataPoint_Impl::clone() const {
-    boost::shared_ptr<DataPoint_Impl> impl(new DataPoint_Impl(*this));
+    std::shared_ptr<DataPoint_Impl> impl(new DataPoint_Impl(*this));
     return DataPoint(impl);
   }
 
@@ -876,7 +873,7 @@ namespace detail {
             map["response_values"].toList(),
             "value",
             "response_value_index",
-            boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+            std::function<double (QVariant*)>(std::bind(&QVariant::toDouble,std::placeholders::_1,&ok)));
     }
 
     // tags
@@ -884,7 +881,7 @@ namespace detail {
     if (map.contains("tags")) {
       tags = deserializeUnorderedVector<Tag>(
             map["tags"].toList(),
-            boost::function<Tag (const QVariant&)>(boost::bind(openstudio::detail::toTag,_1,version)));
+            std::function<Tag (const QVariant&)>(std::bind(openstudio::detail::toTag,std::placeholders::_1,version)));
     }
 
     // output attributes
@@ -892,7 +889,7 @@ namespace detail {
     if (map.contains("output_attributes")) {
       outputAttributes = deserializeUnorderedVector<Attribute>(
             map["output_attributes"].toList(),
-            boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+            std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     }
 
     FileReferenceVector xmlOutputData;
@@ -903,7 +900,7 @@ namespace detail {
       else {
         xmlOutputData = deserializeUnorderedVector<FileReference>(
               map["xml_output_data"].toList(),
-              boost::function<FileReference (const QVariant&)>(boost::bind(openstudio::detail::toFileReference,_1,version)));
+              std::function<FileReference (const QVariant&)>(std::bind(openstudio::detail::toFileReference,std::placeholders::_1,version)));
       }
     }
 
@@ -913,7 +910,7 @@ namespace detail {
       openstudio::path (*fToPath)(const QString&) = openstudio::toPath;
       dakotaParametersFiles = deserializeUnorderedVector<openstudio::path>(
             map["dakota_parameters_files"].toList(),
-            boost::function<openstudio::path (QVariant*)>(boost::bind(fToPath,boost::bind(&QVariant::toString,_1))));
+            std::function<openstudio::path (QVariant*)>(std::bind(fToPath,std::bind(&QVariant::toString,std::placeholders::_1))));
     }
 
     return DataPoint(toUUID(map["uuid"].toString().toStdString()),
@@ -944,7 +941,7 @@ namespace detail {
 
 DataPoint::DataPoint(const Problem& problem,
                      const std::vector<QVariant>& variableValues)
-  : AnalysisObject(boost::shared_ptr<detail::DataPoint_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::DataPoint_Impl>(
         new detail::DataPoint_Impl(problem,variableValues)))
 {}
 
@@ -969,7 +966,7 @@ DataPoint::DataPoint(const UUID& uuid,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
                      const std::vector<Attribute>& outputAttributes)
-  : AnalysisObject(boost::shared_ptr<detail::DataPoint_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::DataPoint_Impl>(
         new detail::DataPoint_Impl(uuid,
                                    versionUUID,
                                    name,
@@ -1015,7 +1012,7 @@ DataPoint::DataPoint(const UUID& uuid,
                      const std::vector<openstudio::path>& dakotaParametersFiles,
                      const std::vector<Tag>& tags,
                      const std::vector<Attribute>& outputAttributes)
-  : AnalysisObject(boost::shared_ptr<detail::DataPoint_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::DataPoint_Impl>(
         new detail::DataPoint_Impl(uuid,
                                    versionUUID,
                                    name,
@@ -1232,7 +1229,7 @@ boost::optional<DataPoint> DataPoint::loadJSON(const std::string& json)
 }
 
 /// @cond
-DataPoint::DataPoint(boost::shared_ptr<detail::DataPoint_Impl> impl)
+DataPoint::DataPoint(std::shared_ptr<detail::DataPoint_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond
@@ -1300,7 +1297,7 @@ std::vector<DataPoint> toDataPointVector(const openstudio::path& jsonFilepath) {
       result = deserializeOrderedVector<DataPoint>(
                    map["data_points"].toList(),
                    "data_point_batch_index",
-                   boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
+                   std::function<DataPoint (const QVariant&)>(std::bind(detail::DataPoint_Impl::factoryFromVariant,std::placeholders::_1,version,boost::none)));
     }
     else {
       LOG_FREE(Error,"openstudio.analysis.DataPoint",
@@ -1333,7 +1330,7 @@ std::vector<DataPoint> toDataPointVector(const std::string& json) {
       result = deserializeOrderedVector<DataPoint>(
                    map["data_points"].toList(),
                    "data_point_batch_index",
-                   boost::function<DataPoint (const QVariant&)>(boost::bind(detail::DataPoint_Impl::factoryFromVariant,_1,version,boost::none)));
+                   std::function<DataPoint (const QVariant&)>(std::bind(detail::DataPoint_Impl::factoryFromVariant,std::placeholders::_1,version,boost::none)));
     }
     else {
       LOG_FREE(Error,"openstudio.analysis.DataPoint",

@@ -62,8 +62,6 @@
 #include <utilities/plot/FloodPlot.hpp>
 #include <utilities/plot/LinePlot.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace resultsviewer{
 
   // int or enum
@@ -289,7 +287,7 @@ signals:
 
 
     // plot view data handler
-    void plotViewData(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled);
+    void plotViewData(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled);
 
     // plot view difference data handler
     void plotViewDataDifference(PlotViewData &_plotViewData1, PlotViewData &_plotViewData2);
@@ -394,7 +392,7 @@ signals:
     QwtPlotPanner *m_panner;
 
     // line plot specific
-    void linePlotItem(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled);
+    void linePlotItem(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled);
     // flood plot specific
     void floodPlotItem(PlotViewData &_plotViewData);
     // illuminance plot specific
@@ -416,7 +414,7 @@ signals:
     void setPlotCursor(const QCursor& _cursor);
 
     // scale curves when multiple with different units
-    void scaleCurves(LinePlotCurve *curve, const boost::function<bool ()> &t_workCanceled);
+    void scaleCurves(LinePlotCurve *curve, const std::function<bool ()> &t_workCanceled);
 
     // set curve color
     QPen curvePen(QColor &color);

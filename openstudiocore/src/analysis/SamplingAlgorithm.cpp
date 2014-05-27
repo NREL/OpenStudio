@@ -68,7 +68,7 @@ namespace detail {
   {}
 
   AnalysisObject SamplingAlgorithm_Impl::clone() const {
-    boost::shared_ptr<SamplingAlgorithm_Impl> impl(new SamplingAlgorithm_Impl(*this));
+    std::shared_ptr<SamplingAlgorithm_Impl> impl(new SamplingAlgorithm_Impl(*this));
     return SamplingAlgorithm(impl);
   }
 
@@ -149,7 +149,7 @@ namespace detail {
 } // detail
 
 SamplingAlgorithm::SamplingAlgorithm(const SamplingAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::SamplingAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::SamplingAlgorithm_Impl>(
         new detail::SamplingAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -166,7 +166,7 @@ SamplingAlgorithm::SamplingAlgorithm(const UUID& uuid,
                                    const boost::optional<FileReference>& restartFileReference,
                                    const boost::optional<FileReference>& outFileReference,
                                    const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::SamplingAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::SamplingAlgorithm_Impl>(
         new detail::SamplingAlgorithm_Impl(uuid,
                                           versionUUID,
                                           displayName,
@@ -187,7 +187,7 @@ SamplingAlgorithmOptions SamplingAlgorithm::samplingAlgorithmOptions() const {
 }
 
 /// @cond
-SamplingAlgorithm::SamplingAlgorithm(boost::shared_ptr<detail::SamplingAlgorithm_Impl> impl)
+SamplingAlgorithm::SamplingAlgorithm(std::shared_ptr<detail::SamplingAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

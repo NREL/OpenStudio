@@ -601,7 +601,7 @@ void AirTerminalSingleDuctVAVNoReheat::resetDesignSpecificationOutdoorAirObject(
 }
 
 /// @cond
-AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl)
+AirTerminalSingleDuctVAVNoReheat::AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

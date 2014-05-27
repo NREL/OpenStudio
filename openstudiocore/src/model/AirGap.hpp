@@ -77,7 +77,7 @@ class MODEL_API AirGap : public OpaqueMaterial {
   /// @cond
   typedef detail::AirGap_Impl ImplType;
 
-  explicit AirGap(boost::shared_ptr<detail::AirGap_Impl> impl);
+  explicit AirGap(std::shared_ptr<detail::AirGap_Impl> impl);
 
   friend class detail::AirGap_Impl;
   friend class Model;

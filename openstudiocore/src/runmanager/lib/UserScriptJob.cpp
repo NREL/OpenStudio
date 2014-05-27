@@ -31,8 +31,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {

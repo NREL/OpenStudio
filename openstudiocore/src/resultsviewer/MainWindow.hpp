@@ -71,7 +71,7 @@ private:
   REGISTER_LOGGER("resultsviewer.MainWindow");
 
   // list of files to be auto cleaned up when the process exits
-  std::list<boost::shared_ptr<openstudio::TemporaryDirectory> > m_temporaryDirectories;
+  std::list<std::shared_ptr<openstudio::TemporaryDirectory> > m_temporaryDirectories;
 
   Ui::MainWindowClass ui;
 

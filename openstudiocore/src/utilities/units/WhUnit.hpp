@@ -111,7 +111,7 @@ class UTILITIES_API WhUnit : public Unit {
   /// @cond
   typedef detail::WhUnit_Impl ImplType;
 
-  explicit WhUnit(boost::shared_ptr<detail::WhUnit_Impl> impl);
+  explicit WhUnit(std::shared_ptr<detail::WhUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::WhUnit_Impl;

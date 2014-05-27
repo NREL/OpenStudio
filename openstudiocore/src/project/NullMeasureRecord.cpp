@@ -53,7 +53,7 @@ namespace detail{
     : MeasureRecord_Impl(query, database)
   {}
 
-  void NullMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void NullMeasureRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<NullMeasureRecord>(query);
@@ -104,7 +104,7 @@ namespace detail{
 NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
                                      MeasureGroupRecord& measureGroupRecord,
                                      int measureVectorIndex)
-  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl>(
         new detail::NullMeasureRecord_Impl(nullMeasure,
                                            measureGroupRecord,
                                            measureVectorIndex)),
@@ -114,14 +114,14 @@ NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
 }
 
 NullMeasureRecord::NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl>(
         new detail::NullMeasureRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
-NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
+NullMeasureRecord::NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
   : MeasureRecord(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
@@ -177,7 +177,7 @@ analysis::NullMeasure NullMeasureRecord::nullMeasure() const {
 }
 
 /// @cond
-NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl)
+NullMeasureRecord::NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());

@@ -155,7 +155,7 @@ bool DistrictHeating::setNominalCapacity(const Quantity& nominalCapacity) {
 
 /// @cond
 
-DistrictHeating::DistrictHeating(boost::shared_ptr<detail::DistrictHeating_Impl> impl)
+DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

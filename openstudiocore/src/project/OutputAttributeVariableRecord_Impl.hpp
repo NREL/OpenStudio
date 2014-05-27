@@ -60,7 +60,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> resources() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Variable variable() const;
 

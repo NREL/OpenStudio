@@ -43,7 +43,7 @@ class ContamFixture : public ::testing::Test {
   /// tear down static members
   static void TearDownTestCase();
 
-  static boost::shared_ptr<openstudio::FileLogSink> logFile;
+  static std::shared_ptr<openstudio::FileLogSink> logFile;
 
   REGISTER_LOGGER("contam");
 };

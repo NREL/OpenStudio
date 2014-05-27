@@ -314,13 +314,13 @@ namespace detail {
 
 } // detail
 
-ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl, ProjectDatabase projectDatabase)
+ObjectRecord::ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl, ProjectDatabase projectDatabase)
   : Record(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());
 }
 
-ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl)
+ObjectRecord::ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl)
   : Record(impl)
 {
   OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());

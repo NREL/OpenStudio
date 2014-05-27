@@ -70,7 +70,7 @@ namespace detail {
     return result;
   }
 
-  void ParameterStudyAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ParameterStudyAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ParameterStudyAlgorithmRecord>(query);
@@ -178,7 +178,7 @@ namespace detail {
 ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
     const analysis::ParameterStudyAlgorithm& parameterStudyAlgorithm,
     AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl>(
         new detail::ParameterStudyAlgorithmRecord_Impl(parameterStudyAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         parameterStudyAlgorithm)
@@ -190,7 +190,7 @@ ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
 
 ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(const QSqlQuery& query,
                                                              ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl>(
         new detail::ParameterStudyAlgorithmRecord_Impl(query, database)),
         database,
         boost::none)
@@ -199,7 +199,7 @@ ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(const QSqlQuery& qu
 }
 
 ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(
-    boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl,
+    std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
@@ -264,7 +264,7 @@ analysis::ParameterStudyAlgorithm ParameterStudyAlgorithmRecord::parameterStudyA
 }
 
 /// @cond
-ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(boost::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl)
+ParameterStudyAlgorithmRecord::ParameterStudyAlgorithmRecord(std::shared_ptr<detail::ParameterStudyAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

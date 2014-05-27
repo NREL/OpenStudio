@@ -240,7 +240,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACFourPipeFanCoil_Impl ImplType;
 
-  explicit ZoneHVACFourPipeFanCoil(boost::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
+  explicit ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
 
   friend class detail::ZoneHVACFourPipeFanCoil_Impl;
   friend class Model;

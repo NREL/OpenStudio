@@ -214,7 +214,7 @@ class ANALYSIS_API FSUDaceAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::FSUDaceAlgorithmOptions_Impl ImplType;
 
-  explicit FSUDaceAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl);
+  explicit FSUDaceAlgorithmOptions(std::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl);
 
   friend class detail::FSUDaceAlgorithmOptions_Impl;
   friend class AnalysisObject;

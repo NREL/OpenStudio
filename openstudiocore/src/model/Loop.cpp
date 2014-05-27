@@ -842,7 +842,7 @@ Loop::Loop(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::Loop_Impl>());
 }     
 
-Loop::Loop(boost::shared_ptr<detail::Loop_Impl> p)
+Loop::Loop(std::shared_ptr<detail::Loop_Impl> p)
   : ParentObject(p)
 {}
 

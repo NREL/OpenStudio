@@ -196,7 +196,7 @@ class MODEL_API CoilCoolingWater : public WaterToAirComponent {
   /// @cond
   typedef detail::CoilCoolingWater_Impl ImplType;
 
-  explicit CoilCoolingWater(boost::shared_ptr<detail::CoilCoolingWater_Impl> impl);
+  explicit CoilCoolingWater(std::shared_ptr<detail::CoilCoolingWater_Impl> impl);
 
  private:
 

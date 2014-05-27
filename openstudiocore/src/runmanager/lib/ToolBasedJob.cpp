@@ -33,8 +33,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -638,7 +636,7 @@ namespace detail {
     QWriteLocker l(&m_mutex);
 	std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
 	//m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
-    boost::shared_ptr<Process> process = m_process_creator->createProcess(ti,
+    std::shared_ptr<Process> process = m_process_creator->createProcess(ti,
         requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
         getBasePath(),
@@ -708,7 +706,7 @@ namespace detail {
     startTool(nextToolName);
   }
 
-  void ToolBasedJob::startImpl(const boost::shared_ptr<ProcessCreator> &t_pc)
+  void ToolBasedJob::startImpl(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     // This means there's no reason to start up
     if (stopRequested())

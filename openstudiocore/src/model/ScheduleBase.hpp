@@ -79,7 +79,7 @@ class MODEL_API ScheduleBase : public ResourceObject {
   /// @cond
   typedef detail::ScheduleBase_Impl ImplType;
 
-  explicit ScheduleBase(boost::shared_ptr<detail::ScheduleBase_Impl> impl);
+  explicit ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl);
 
   ScheduleBase(IddObjectType type,const Model& model);
 

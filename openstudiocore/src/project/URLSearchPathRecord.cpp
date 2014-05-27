@@ -96,7 +96,7 @@ namespace detail {
     return std::vector<JoinRecord>();
   }
 
-  void URLSearchPathRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void URLSearchPathRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<URLSearchPathRecord>(query);
@@ -240,24 +240,24 @@ void URLSearchPathRecord::updatePathData(ProjectDatabase database,
 {}
 
 URLSearchPathRecord::URLSearchPathRecord(const openstudio::URLSearchPath& uRLSearchPath, ProjectDatabase& projectDatabase)
-  : ObjectRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(uRLSearchPath, projectDatabase)), projectDatabase)
+  : ObjectRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(uRLSearchPath, projectDatabase)), projectDatabase)
 {
   OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
 URLSearchPathRecord::URLSearchPathRecord(const QSqlQuery& query, ProjectDatabase& projectDatabase)
-  : ObjectRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(query, projectDatabase)), projectDatabase)
+  : ObjectRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl>(new detail::URLSearchPathRecord_Impl(query, projectDatabase)), projectDatabase)
 {
   OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
-URLSearchPathRecord::URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl, ProjectDatabase projectDatabase)
+URLSearchPathRecord::URLSearchPathRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl> impl, ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());
 }
 
-URLSearchPathRecord::URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl)
+URLSearchPathRecord::URLSearchPathRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::URLSearchPathRecord_Impl>());

@@ -534,7 +534,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   /// @cond
   typedef detail::AirConditionerVariableRefrigerantFlow_Impl ImplType;
 
-  explicit AirConditionerVariableRefrigerantFlow(boost::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl);
+  explicit AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::AirConditionerVariableRefrigerantFlow_Impl;
   friend class Model;

@@ -79,7 +79,7 @@ class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
   friend class detail::FFactorGroundFloorConstruction_Impl;
 
   explicit FFactorGroundFloorConstruction(
-      boost::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);  
+      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);  
 
   /// @endcond
  private:

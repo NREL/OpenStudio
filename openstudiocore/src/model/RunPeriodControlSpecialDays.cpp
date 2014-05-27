@@ -297,7 +297,7 @@ void RunPeriodControlSpecialDays::ensureNoLeapDays()
   getImpl<detail::RunPeriodControlSpecialDays_Impl>()->ensureNoLeapDays();
 }
 
-RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(boost::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl)
+RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(std::shared_ptr<detail::RunPeriodControlSpecialDays_Impl> impl)
   : ModelObject(impl)
 {}
 

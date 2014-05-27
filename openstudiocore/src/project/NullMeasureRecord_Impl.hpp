@@ -26,7 +26,6 @@
 #include <utilities/core/Enum.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 namespace openstudio {
@@ -61,7 +60,7 @@ namespace detail {
     //@}
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Measure measure() const;
 

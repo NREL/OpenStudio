@@ -65,7 +65,7 @@ class ANALYSIS_API TriangularDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit TriangularDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit TriangularDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

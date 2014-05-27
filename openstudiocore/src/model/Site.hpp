@@ -148,7 +148,7 @@ class MODEL_API Site : public ParentObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Site(boost::shared_ptr<detail::Site_Impl> impl);
+  explicit Site(std::shared_ptr<detail::Site_Impl> impl);
 
   explicit Site(Model& model);
 

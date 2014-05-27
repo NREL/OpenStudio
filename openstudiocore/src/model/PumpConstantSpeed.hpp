@@ -177,7 +177,7 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
   /// @cond
   typedef detail::PumpConstantSpeed_Impl ImplType;
 
-  explicit PumpConstantSpeed(boost::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
+  explicit PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl);
 
   friend class detail::PumpConstantSpeed_Impl;
   friend class Model;

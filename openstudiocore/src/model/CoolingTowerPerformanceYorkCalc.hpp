@@ -207,7 +207,7 @@ class MODEL_API CoolingTowerPerformanceYorkCalc : public ModelObject {
   /// @cond
   typedef detail::CoolingTowerPerformanceYorkCalc_Impl ImplType;
 
-  explicit CoolingTowerPerformanceYorkCalc(boost::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
+  explicit CoolingTowerPerformanceYorkCalc(std::shared_ptr<detail::CoolingTowerPerformanceYorkCalc_Impl> impl);
 
   friend class detail::CoolingTowerPerformanceYorkCalc_Impl;
   friend class Model;

@@ -204,7 +204,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "  REGISTER_LOGGER(\"utilities.idd.IddFactory\");" << std::endl
     << std::endl
-    << "  typedef boost::function<IddObject ()> CreateIddObjectCallback;" << std::endl
+    << "  typedef std::function<IddObject ()> CreateIddObjectCallback;" << std::endl
     << "  typedef std::map<IddObjectType,CreateIddObjectCallback> IddObjectCallbackMap;" << std::endl
     << "  IddObjectCallbackMap m_callbackMap;" << std::endl
     << "  mutable QMutex m_callbackmutex;" << std::endl
@@ -245,8 +245,6 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl
     << std::endl
-    << "#include <boost/bind.hpp>" << std::endl
-    << std::endl
     << "#include <QMutexLocker>" << std::endl
     << "#include <QMetaType>" << std::endl
     << std::endl
@@ -265,14 +263,13 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "}" << std::endl;
 
   // start other IddFactory cxx files
-  for (boost::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile
       << "#include <utilities/idd/IddFactory.hxx>" << std::endl
       << std::endl
       << "#include <utilities/core/Assert.hpp>" << std::endl
       << "#include <utilities/core/Compare.hpp>" << std::endl
       << std::endl
-      << "#include <boost/bind.hpp>" << std::endl
       << "#include <QMutexLocker>" << std::endl
       << std::endl
       << "namespace openstudio {" << std::endl;
@@ -887,7 +884,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "} // openstudio" << std::endl;
 
   // close out other IddFactory cxx files
-  for (boost::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile
       << std::endl
       << "} // openstudio" << std::endl;

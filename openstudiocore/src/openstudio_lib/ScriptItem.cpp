@@ -63,7 +63,7 @@ ScriptItem::ScriptItem(const openstudio::path& path,
   }
 
 
-  boost::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
   connect(this,SIGNAL(argChanged()),osDoc.get(),SLOT(markAsModified()));
 }
 

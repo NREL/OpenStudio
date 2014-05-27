@@ -76,14 +76,14 @@ class PROJECT_API VagrantSettingsRecord : public CloudSettingsRecord {
   //@}
  protected:
   /// @cond
-  explicit VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl> impl);
+  explicit VagrantSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl> impl);
 
   friend class detail::VagrantSettingsRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl> impl,
+  VagrantSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl> impl,
                         ProjectDatabase database);
 
   /// @endcond

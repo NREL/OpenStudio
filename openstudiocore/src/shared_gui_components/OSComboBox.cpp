@@ -189,7 +189,7 @@ bool OSComboBox2::event( QEvent * e )
   }
 }
 
-void OSComboBox2::bind(boost::shared_ptr<OSComboBoxDataSource> dataSource)
+void OSComboBox2::bind(std::shared_ptr<OSComboBoxDataSource> dataSource)
 {
   m_dataSource = dataSource;
 
@@ -557,7 +557,7 @@ void OSComboBox::onDataSourceRemove(int i)
   this->removeItem(i);
 }
 
-void OSComboBox::setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource)
+void OSComboBox::setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource)
 {
   unbind();
 

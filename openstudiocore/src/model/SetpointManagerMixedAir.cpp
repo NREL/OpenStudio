@@ -217,7 +217,7 @@ SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
 }
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(
-    boost::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
+    std::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
   : HVACComponent(p)
 {}
 

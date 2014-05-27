@@ -267,7 +267,7 @@ namespace detail {
 
 } // detail
 
-HVACComponent::HVACComponent(boost::shared_ptr<detail::HVACComponent_Impl> p)
+HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
   : ParentObject(p)
 {}
 

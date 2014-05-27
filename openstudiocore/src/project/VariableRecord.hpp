@@ -29,8 +29,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 namespace analysis {
@@ -192,11 +190,11 @@ class PROJECT_API VariableRecord : public ObjectRecord {
   friend class detail::VariableRecord_Impl;
 
   /** Construct from impl. */
-  VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl,
+  VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl,
                  ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl);
+  explicit VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl);
 
   /// @endcond
  private:

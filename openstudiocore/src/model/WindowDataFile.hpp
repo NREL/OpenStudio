@@ -56,7 +56,7 @@ class MODEL_API WindowDataFile : public ConstructionBase {
   friend class openstudio::IdfObject;
   friend class detail::WindowDataFile_Impl;
 
-  explicit WindowDataFile(boost::shared_ptr<detail::WindowDataFile_Impl> impl);  
+  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);  
 
   /// @endcond
  private:

@@ -106,15 +106,15 @@ class OSComboBox2 : public QComboBox {
   // interface for direct bind
   template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,
-            boost::function<std::string (ChoiceType)> toString,
-            boost::function<std::vector<ChoiceType> ()> choices,
-            boost::function<ChoiceType ()> getter,
-            boost::function<bool (ChoiceType)> setter,
+            std::function<std::string (ChoiceType)> toString,
+            std::function<std::vector<ChoiceType> ()> choices,
+            std::function<ChoiceType ()> getter,
+            std::function<bool (ChoiceType)> setter,
             boost::optional<NoFailAction> reset=boost::none,
             boost::optional<BasicQuery> isDefaulted=boost::none)
   {
     m_modelObject = modelObject;
-    m_choiceConcept = boost::shared_ptr<ChoiceConcept>(
+    m_choiceConcept = std::shared_ptr<ChoiceConcept>(
           new RequiredChoiceConceptImpl<ChoiceType>(toString,
                                                     choices,
                                                     getter,
@@ -128,14 +128,14 @@ class OSComboBox2 : public QComboBox {
   // interface for direct bind
   template<typename ChoiceType>
   void bind(model::ModelObject& modelObject,
-            boost::function<std::string (ChoiceType)> toString,
-            boost::function<std::vector<ChoiceType> ()> choices,
-            boost::function<boost::optional<ChoiceType> ()> getter,
-            boost::function<bool (ChoiceType)> setter,
+            std::function<std::string (ChoiceType)> toString,
+            std::function<std::vector<ChoiceType> ()> choices,
+            std::function<boost::optional<ChoiceType> ()> getter,
+            std::function<bool (ChoiceType)> setter,
             boost::optional<NoFailAction> reset=boost::none)
   {
     m_modelObject = modelObject;
-    m_choiceConcept = boost::shared_ptr<ChoiceConcept>(
+    m_choiceConcept = std::shared_ptr<ChoiceConcept>(
           new OptionalChoiceConceptImpl<ChoiceType>(toString,
                                                     choices,
                                                     getter,
@@ -147,7 +147,7 @@ class OSComboBox2 : public QComboBox {
 
   // interface for OSGridController bind
   void bind(model::ModelObject& modelObject,
-            boost::shared_ptr<ChoiceConcept> choiceConcept)
+            std::shared_ptr<ChoiceConcept> choiceConcept)
   {
     m_modelObject = modelObject;
     m_choiceConcept = choiceConcept;
@@ -156,7 +156,7 @@ class OSComboBox2 : public QComboBox {
   }
 
   // Bind to an OSComboBoxDataSource
-  void bind(boost::shared_ptr<OSComboBoxDataSource> dataSource);
+  void bind(std::shared_ptr<OSComboBoxDataSource> dataSource);
 
   void unbind();
 
@@ -181,10 +181,10 @@ class OSComboBox2 : public QComboBox {
   void onDataSourceRemove(int);
 
  private:
-  boost::shared_ptr<OSComboBoxDataSource> m_dataSource;
+  std::shared_ptr<OSComboBoxDataSource> m_dataSource;
 
   boost::optional<model::ModelObject> m_modelObject;
-  boost::shared_ptr<ChoiceConcept> m_choiceConcept;
+  std::shared_ptr<ChoiceConcept> m_choiceConcept;
   std::vector<std::string> m_values;
 
   void completeBind();
@@ -209,7 +209,7 @@ class OSComboBox : public QComboBox {
 
   void unbind();
 
-  void setDataSource(boost::shared_ptr<OSComboBoxDataSource> dataSource);
+  void setDataSource(std::shared_ptr<OSComboBoxDataSource> dataSource);
 
  protected:
 
@@ -231,7 +231,7 @@ class OSComboBox : public QComboBox {
 
  private:
 
-  boost::shared_ptr<OSComboBoxDataSource> m_dataSource;
+  std::shared_ptr<OSComboBoxDataSource> m_dataSource;
 
   boost::optional<model::ModelObject> m_modelObject;
 

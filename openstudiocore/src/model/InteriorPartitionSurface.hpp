@@ -113,7 +113,7 @@ class MODEL_API InteriorPartitionSurface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit InteriorPartitionSurface(boost::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
+  explicit InteriorPartitionSurface(std::shared_ptr<detail::InteriorPartitionSurface_Impl> impl);
 
   /// @endcond
  private:

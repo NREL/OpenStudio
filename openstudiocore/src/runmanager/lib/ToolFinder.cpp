@@ -325,7 +325,7 @@ namespace runmanager {
   std::vector<openstudio::path> ToolFinder::findExecutables(
       const openstudio::path &t_path,
       const std::vector<std::string> &t_names,
-      const boost::shared_ptr<QProgressDialog> &t_dlg,
+      const std::shared_ptr<QProgressDialog> &t_dlg,
       std::map<openstudio::path, int> &t_searchedPaths) const
   {
     std::vector<openstudio::path> results;
@@ -469,11 +469,11 @@ namespace runmanager {
   {
     std::set<openstudio::path> files;
 
-    boost::shared_ptr<QProgressDialog> dlg;
+    std::shared_ptr<QProgressDialog> dlg;
 
     if (t_showProgressDialog)
     {
-      dlg = boost::shared_ptr<QProgressDialog>(new QProgressDialog(nullptr, Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint)));
+      dlg = std::shared_ptr<QProgressDialog>(new QProgressDialog(nullptr, Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint)));
       dlg->setWindowTitle("Scanning For Tools");
       if (Application::instance().isDefaultInstance()){
         QIcon icon = QIcon(":/images/rm_16.png");

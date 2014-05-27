@@ -28,7 +28,6 @@
 #include <QMetaType>
 #include <QRegExp>
 #include <QUrl>
-#include <boost/bind.hpp>
 #include <algorithm>
 
 namespace openstudio {
@@ -298,7 +297,7 @@ class RUNMANAGER_API Files
       return fi.filename == t_filename;
     }
 
-    const FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) const
+    const FileInfo &getLast(const std::function<bool (const FileInfo &)> &f) const
     {
       auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
@@ -310,7 +309,7 @@ class RUNMANAGER_API Files
       throw std::runtime_error("FileInfo not found");
     }
 
-    FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) 
+    FileInfo &getLast(const std::function<bool (const FileInfo &)> &f) 
     {
       auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
@@ -322,7 +321,7 @@ class RUNMANAGER_API Files
       throw std::runtime_error("FileInfo not found");
     }
 
-    Files getAll(const boost::function<bool (const FileInfo &)> &f) const
+    Files getAll(const std::function<bool (const FileInfo &)> &f) const
     {
       auto itr = m_files.begin();
       auto end = m_files.end();

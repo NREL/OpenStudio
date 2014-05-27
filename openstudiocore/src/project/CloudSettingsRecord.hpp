@@ -120,14 +120,14 @@ class PROJECT_API CloudSettingsRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  explicit CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl);
+  explicit CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl);
 
   friend class detail::CloudSettingsRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  CloudSettingsRecord(boost::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
+  CloudSettingsRecord(std::shared_ptr<detail::CloudSettingsRecord_Impl> impl,
                       ProjectDatabase database);
 
   /// @endcond

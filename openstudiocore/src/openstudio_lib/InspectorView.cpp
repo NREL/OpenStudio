@@ -665,7 +665,7 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
 
   mainVLayout->addSpacing(20);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model model = doc->model();
 
   std::vector<model::ThermalZone> allZones = model.getModelObjects<model::ThermalZone>();
@@ -958,8 +958,8 @@ void ThermalZoneInspectorView::update()
   boost::optional<model::AirLoopHVAC> t_airLoopHVAC = t_zone->airLoopHVAC();
   OS_ASSERT(t_airLoopHVAC);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   SystemItem * systemItem = mrc->systemItem(t_airLoopHVAC->handle());
 
   QPointF supplyPoints[4] = {

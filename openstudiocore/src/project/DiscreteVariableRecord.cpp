@@ -163,7 +163,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
   }
 
   OS_ASSERT(false);
-  return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
+  return DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
 DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
@@ -180,7 +180,7 @@ DiscreteVariableRecord DiscreteVariableRecord::factoryFromDiscreteVariable(
   }
 
   OS_ASSERT(false);
-  return DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl>());
+  return DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl>());
 }
 
 std::vector<DiscreteVariableRecord> DiscreteVariableRecord::getDiscreteVariableRecords(
@@ -229,11 +229,11 @@ analysis::DiscreteVariable DiscreteVariableRecord::discreteVariable() const {
 }
 
 /// @cond
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
+DiscreteVariableRecord::DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
 {}
 
-DiscreteVariableRecord::DiscreteVariableRecord(boost::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
+DiscreteVariableRecord::DiscreteVariableRecord(std::shared_ptr<detail::DiscreteVariableRecord_Impl> impl,
                                                ProjectDatabase database,
                                                const boost::optional<analysis::DiscreteVariable>& discreteVariable)
   : InputVariableRecord(impl, database, discreteVariable ? discreteVariable->cast<analysis::InputVariable>() : analysis::OptionalInputVariable())

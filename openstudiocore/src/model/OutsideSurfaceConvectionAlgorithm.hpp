@@ -84,7 +84,7 @@ class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit OutsideSurfaceConvectionAlgorithm(boost::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl);
+  explicit OutsideSurfaceConvectionAlgorithm(std::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl);
 
  private:
 

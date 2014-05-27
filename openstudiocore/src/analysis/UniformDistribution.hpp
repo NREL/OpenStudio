@@ -61,7 +61,7 @@ class ANALYSIS_API UniformDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit UniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit UniformDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

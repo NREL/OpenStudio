@@ -434,7 +434,7 @@ double Lights::getPowerPerPerson(double floorArea, double numPeople) const {
 }
 
 /// @cond
-Lights::Lights(boost::shared_ptr<detail::Lights_Impl> impl)
+Lights::Lights(std::shared_ptr<detail::Lights_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

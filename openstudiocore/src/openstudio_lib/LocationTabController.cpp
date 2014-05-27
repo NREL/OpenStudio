@@ -48,7 +48,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-  m_utilityBillsController = boost::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
+  m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
 
   m_utilityBillsStackedWidget = new QStackedWidget();
   m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);

@@ -79,7 +79,7 @@ WeatherFileConditionType::WeatherFileConditionType(const Model& model)
 
 // constructor
 WeatherFileConditionType::WeatherFileConditionType(
-    boost::shared_ptr<detail::WeatherFileConditionType_Impl> impl)
+    std::shared_ptr<detail::WeatherFileConditionType_Impl> impl)
   : SizingPeriod(impl)
 {}
 

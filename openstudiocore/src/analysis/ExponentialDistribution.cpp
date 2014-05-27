@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 ExponentialDistribution::ExponentialDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(ExponentialDistribution::type())))
 {}
 
 ExponentialDistribution::ExponentialDistribution(double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(ExponentialDistribution::type())))
 {
   setBeta(beta);
@@ -49,7 +49,7 @@ void ExponentialDistribution::setBeta(double value) {
   impl()->setAttribute(Attribute("betas",value),false);
 }
 
-ExponentialDistribution::ExponentialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+ExponentialDistribution::ExponentialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == ExponentialDistribution::type());

@@ -343,7 +343,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   typedef detail::CoilCoolingDXSingleSpeed_Impl ImplType;
 
-  explicit CoilCoolingDXSingleSpeed(boost::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
+  explicit CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
 
   private:
 

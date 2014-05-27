@@ -25,8 +25,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/function.hpp>
-
 #include <QVariant>
 
 #include <string>
@@ -57,7 +55,7 @@ template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& valueKey,
                                         const std::string& indexKey,
-                                        boost::function<T (QVariant*)> typeConverter)
+                                        std::function<T (QVariant*)> typeConverter)
 {
   unsigned n = list.size();
   std::vector<T> result(n,T());
@@ -73,7 +71,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
 template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& indexKey,
-                                        boost::function<T (QVariant*)> typeConverter)
+                                        std::function<T (QVariant*)> typeConverter)
 {
   unsigned n = list.size();
   std::vector<T> result(n,T());
@@ -93,7 +91,7 @@ template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& valueKey,
                                         const std::string& indexKey,
-                                        boost::function<T (const QVariant&)> typeConverter)
+                                        std::function<T (const QVariant&)> typeConverter)
 {
   std::vector<std::pair<int,T> > data;
   for (const QVariant& listItem : list) {
@@ -115,7 +113,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
 template<typename T>
 std::vector<T> deserializeOrderedVector(const QVariantList& list,
                                         const std::string& indexKey,
-                                        boost::function<T (const QVariant&)> typeConverter)
+                                        std::function<T (const QVariant&)> typeConverter)
 {
   std::vector<std::pair<int,T> > data;
   for (const QVariant& listItem : list) {
@@ -134,7 +132,7 @@ std::vector<T> deserializeOrderedVector(const QVariantList& list,
 
 template<typename T>
 std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          boost::function<T (QVariant*)> typeConverter)
+                                          std::function<T (QVariant*)> typeConverter)
 {
   std::vector<T> result;
   for (const QVariant& listItem : list) {
@@ -147,7 +145,7 @@ std::vector<T> deserializeUnorderedVector(const QVariantList& list,
 
 template<typename T>
 std::vector<T> deserializeUnorderedVector(const QVariantList& list,
-                                          boost::function<T (const QVariant&)> typeConverter)
+                                          std::function<T (const QVariant&)> typeConverter)
 {
   std::vector<T> result;
   for (const QVariant& listItem : list) {

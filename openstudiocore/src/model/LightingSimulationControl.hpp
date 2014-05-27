@@ -80,7 +80,7 @@ class MODEL_API LightingSimulationControl : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::LightingSimulationControl_Impl;
 
-  explicit LightingSimulationControl(boost::shared_ptr<detail::LightingSimulationControl_Impl> impl);
+  explicit LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl);
 
   explicit LightingSimulationControl(Model& model);
 

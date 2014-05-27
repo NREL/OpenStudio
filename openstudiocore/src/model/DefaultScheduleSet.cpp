@@ -798,7 +798,7 @@ void DefaultScheduleSet::merge(const DefaultScheduleSet& other)
 }
 
 /// @cond
-DefaultScheduleSet::DefaultScheduleSet(boost::shared_ptr<detail::DefaultScheduleSet_Impl> impl)
+DefaultScheduleSet::DefaultScheduleSet(std::shared_ptr<detail::DefaultScheduleSet_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

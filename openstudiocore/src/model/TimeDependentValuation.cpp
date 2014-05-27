@@ -247,7 +247,7 @@ namespace detail {
     MeterVector meters = model().getUniqueModelObject<Facility>().meters();
     for (const auto & ft : fts) {
       MeterVector::const_iterator meterIt = std::find_if(meters.begin(),meters.end(),
-          boost::bind(MeterFuelTypeEquals,_1,ft));
+          std::bind(MeterFuelTypeEquals,std::placeholders::_1,ft));
       if (meterIt == meters.end()) {
         std::string urlString;
         OptionalString oUrlString = this->url();
@@ -406,7 +406,7 @@ namespace detail {
     // find meter
     MeterVector meters = model().getUniqueModelObject<Facility>().meters();
     MeterVector::const_iterator meterIt = std::find_if(meters.begin(),meters.end(),
-        boost::bind(MeterFuelTypeEquals,_1,fuelType));
+        std::bind(MeterFuelTypeEquals,std::placeholders::_1,fuelType));
     if (meterIt == meters.end()) {
       std::string urlString;
       OptionalString oUrlString = this->url();
@@ -669,7 +669,7 @@ TimeDependentValuation::TimeDependentValuation(const Model& model)
 }
 
 TimeDependentValuation::TimeDependentValuation(
-    boost::shared_ptr<detail::TimeDependentValuation_Impl> impl)
+    std::shared_ptr<detail::TimeDependentValuation_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

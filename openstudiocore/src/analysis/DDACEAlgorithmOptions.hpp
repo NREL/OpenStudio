@@ -159,7 +159,7 @@ class ANALYSIS_API DDACEAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::DDACEAlgorithmOptions_Impl ImplType;
 
-  explicit DDACEAlgorithmOptions(boost::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl);
+  explicit DDACEAlgorithmOptions(std::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl);
 
   friend class detail::DDACEAlgorithmOptions_Impl;
   friend class AlgorithmOptions;

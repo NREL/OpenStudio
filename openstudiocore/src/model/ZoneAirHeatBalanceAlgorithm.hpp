@@ -70,7 +70,7 @@ class MODEL_API ZoneAirHeatBalanceAlgorithm : public ModelObject {
   /// @cond
   typedef detail::ZoneAirHeatBalanceAlgorithm_Impl ImplType;
 
-  explicit ZoneAirHeatBalanceAlgorithm(boost::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
+  explicit ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
 
   friend class detail::ZoneAirHeatBalanceAlgorithm_Impl;
   friend class Model;

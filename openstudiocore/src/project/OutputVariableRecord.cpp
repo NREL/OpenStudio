@@ -151,7 +151,7 @@ OutputVariableRecord OutputVariableRecord::factoryFromOutputVariable(const analy
   }
 
   OS_ASSERT(false);
-  return OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl>());
+  return OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl>());
 }
 
 std::vector<OutputVariableRecord> OutputVariableRecord::getOutputVariableRecords(ProjectDatabase& database) {
@@ -193,11 +193,11 @@ analysis::OutputVariable OutputVariableRecord::outputVariable() const {
 }
 
 /// @cond
-OutputVariableRecord::OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl)
+OutputVariableRecord::OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl)
   : VariableRecord(impl)
 {}
 
-OutputVariableRecord::OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl,
+OutputVariableRecord::OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl,
                                            ProjectDatabase database)
   : VariableRecord(impl, database)
 {

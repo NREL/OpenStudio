@@ -39,7 +39,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/regex.hpp>
-#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/filter/newline.hpp>
@@ -204,7 +203,7 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
 
 bool IdfFile::removeObject(const IdfObject& object) {
   auto it = std::find_if(m_objects.begin(),m_objects.end(),
-                         boost::bind(handleEquals<IdfObject,Handle>,_1,object.handle()));
+    std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, object.handle()));
   if (it != m_objects.end()) {
     unsigned index(it - m_objects.begin());
     if (it->iddObject().isVersionObject() || 
@@ -770,7 +769,7 @@ IdfObjectVector IdfFile::m_objectsWithConflictingNames(const std::string& name,b
     for (unsigned j = 0; j < n; ++j) {
       if (j == i) { continue; }
       for (const std::string& ref : candidates[j].iddObject().references()) {
-        if (std::find_if(refs.begin(),refs.end(),boost::bind(openstudio::istringEqual,_1,ref)) != refs.end()) {
+        if (std::find_if(refs.begin(), refs.end(), std::bind(openstudio::istringEqual, std::placeholders::_1, ref)) != refs.end()) {
           hasConflict[i] = true;
           hasConflict[j] = true;
           break;

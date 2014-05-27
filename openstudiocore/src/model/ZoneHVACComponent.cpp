@@ -244,7 +244,7 @@ namespace detail {
 
 } // detail
 
-ZoneHVACComponent::ZoneHVACComponent(boost::shared_ptr<detail::ZoneHVACComponent_Impl> p)
+ZoneHVACComponent::ZoneHVACComponent(std::shared_ptr<detail::ZoneHVACComponent_Impl> p)
   : ParentObject(p)
 {}
 

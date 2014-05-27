@@ -70,14 +70,14 @@ class PROJECT_API AWSSessionRecord : public CloudSessionRecord {
   //@}
  protected:
   /// @cond
-  explicit AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl);
+  explicit AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl);
 
   friend class detail::AWSSessionRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl,
+  AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl,
                    ProjectDatabase database);
 
   /// @endcond

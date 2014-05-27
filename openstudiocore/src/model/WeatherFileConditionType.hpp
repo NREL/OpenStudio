@@ -48,7 +48,7 @@ class MODEL_API WeatherFileConditionType : public SizingPeriod {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit WeatherFileConditionType(boost::shared_ptr<detail::WeatherFileConditionType_Impl> impl);
+  explicit WeatherFileConditionType(std::shared_ptr<detail::WeatherFileConditionType_Impl> impl);
 
  private:
 

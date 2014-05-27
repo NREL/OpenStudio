@@ -492,7 +492,7 @@ void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory(
 }
 
 /// @cond
-RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(boost::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl)
+RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(std::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

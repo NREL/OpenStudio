@@ -183,7 +183,7 @@ class MODEL_API BoilerHotWater : public StraightComponent {
   friend class openstudio::detail::IdfObject_Impl;
   friend class IdfObject;
 
-  explicit BoilerHotWater(boost::shared_ptr<detail::BoilerHotWater_Impl> impl);
+  explicit BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl);
 
   /// @endcond
  private:

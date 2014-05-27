@@ -172,7 +172,7 @@ bool Splitter_Impl::isRemovable() const
 
 } // detail
 
-Splitter::Splitter(boost::shared_ptr<detail::Splitter_Impl> p)
+Splitter::Splitter(std::shared_ptr<detail::Splitter_Impl> p)
   : HVACComponent(p)
 {}
 

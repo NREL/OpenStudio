@@ -131,7 +131,7 @@ class MODEL_API DefaultConstructionSet : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DefaultConstructionSet(boost::shared_ptr<detail::DefaultConstructionSet_Impl> impl);
+  explicit DefaultConstructionSet(std::shared_ptr<detail::DefaultConstructionSet_Impl> impl);
 
   /// @endcond
  private:

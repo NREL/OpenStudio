@@ -43,7 +43,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 namespace openstudio {
@@ -118,7 +117,7 @@ namespace detail {
     return m_description;
   }
 
-  void ModelToIdfJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelToIdfJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 

@@ -44,7 +44,7 @@ namespace runmanager {
 
           if (fj)
           {
-            finishedJob = boost::shared_ptr<WorkflowJob>(new WorkflowJob(*fj));
+            finishedJob = std::shared_ptr<WorkflowJob>(new WorkflowJob(*fj));
           }
 
           std::vector<Job> c = t_job.children();
@@ -53,7 +53,7 @@ namespace runmanager {
                itr != c.end();
                ++itr)
           {
-            children.push_back(boost::shared_ptr<WorkflowJob>(new WorkflowJob(*itr)));
+            children.push_back(std::shared_ptr<WorkflowJob>(new WorkflowJob(*itr)));
           }
         }
 
@@ -62,12 +62,12 @@ namespace runmanager {
         {
           if (t_wfjob.finishedJob)
           {
-            finishedJob = boost::shared_ptr<WorkflowJob>(new WorkflowJob(*t_wfjob.finishedJob));
+            finishedJob = std::shared_ptr<WorkflowJob>(new WorkflowJob(*t_wfjob.finishedJob));
           }
 
           for (const auto & workflowJob : t_wfjob.children)
           {
-            children.push_back(boost::shared_ptr<WorkflowJob>(new WorkflowJob(*workflowJob.get())));
+            children.push_back(std::shared_ptr<WorkflowJob>(new WorkflowJob(*workflowJob.get())));
           }
         }
 
@@ -112,8 +112,8 @@ namespace runmanager {
         openstudio::runmanager::JobParams params;
         openstudio::runmanager::Files files;
 
-        std::vector<boost::shared_ptr<WorkflowJob> > children;
-        boost::shared_ptr<WorkflowJob> finishedJob;
+        std::vector<std::shared_ptr<WorkflowJob> > children;
+        std::shared_ptr<WorkflowJob> finishedJob;
       };
 
     public:
@@ -397,18 +397,18 @@ namespace runmanager {
     private:
       REGISTER_LOGGER("openstudio.runmanager.Workflow");
 
-      boost::shared_ptr<WorkflowJob> getLastJob(const boost::shared_ptr<Workflow::WorkflowJob> &t_job);
-      boost::shared_ptr<WorkflowJob> getLastJob();
-      boost::shared_ptr<WorkflowJob> getFirstJob() const;
+      std::shared_ptr<WorkflowJob> getLastJob(const std::shared_ptr<Workflow::WorkflowJob> &t_job);
+      std::shared_ptr<WorkflowJob> getLastJob();
+      std::shared_ptr<WorkflowJob> getFirstJob() const;
 
-      Job createJob(const boost::shared_ptr<Workflow::WorkflowJob> &t_job, const std::vector<openstudio::URLSearchPath> &t_url_search_paths);
-
-      void replaceJobs(const std::string &jobkeyname,
-          const boost::shared_ptr<Workflow::WorkflowJob> &t_job);
+      Job createJob(const std::shared_ptr<Workflow::WorkflowJob> &t_job, const std::vector<openstudio::URLSearchPath> &t_url_search_paths);
 
       void replaceJobs(const std::string &jobkeyname,
-          const boost::shared_ptr<Workflow::WorkflowJob> &t_newjob,
-          boost::shared_ptr<Workflow::WorkflowJob> &t_oldjob);
+          const std::shared_ptr<Workflow::WorkflowJob> &t_job);
+
+      void replaceJobs(const std::string &jobkeyname,
+          const std::shared_ptr<Workflow::WorkflowJob> &t_newjob,
+          std::shared_ptr<Workflow::WorkflowJob> &t_oldjob);
 
       bool addScripts(const openstudio::path &t_scriptsPath,
                       const std::vector<std::pair<openstudio::path,std::vector<ruleset::OSArgument> > > &t_userScripts,
@@ -430,12 +430,12 @@ namespace runmanager {
       void hash(const openstudio::runmanager::Files &t_files, QCryptographicHash &t_hash) const;
       void hash(const openstudio::runmanager::JobParam &t_param, QCryptographicHash &t_hash) const;
       void hash(const openstudio::runmanager::JobParams &t_params, QCryptographicHash &t_hash) const;
-      void hash(const boost::shared_ptr<Workflow::WorkflowJob> &t_job, QCryptographicHash &t_hash) const;
+      void hash(const std::shared_ptr<Workflow::WorkflowJob> &t_job, QCryptographicHash &t_hash) const;
 
       openstudio::UUID m_uuid; // for ProjectDatabase persistence
       std::string m_workflowName;
-      boost::shared_ptr<WorkflowJob> m_job;
-      boost::shared_ptr<WorkflowJob> m_last_job;
+      std::shared_ptr<WorkflowJob> m_job;
+      std::shared_ptr<WorkflowJob> m_last_job;
   };
 
   /** \relates Workflow */

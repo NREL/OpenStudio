@@ -131,7 +131,7 @@ AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(const Model& model)
 }
 
 AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(
-    boost::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p)
+    std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p)
   : Mixer(p)
 {}
 

@@ -681,7 +681,7 @@ namespace openstudio{
       boost::optional<double> illuminanceMapMaxValue(const std::string& name) const;
       boost::optional<double> illuminanceMapMaxValue(const int& mapIndex) const;
 
-      /// minimum and maximim of map
+      /// minimum and maximum of map
       void illuminanceMapMaxValue(const std::string& name, double& minValue, double& maxValue) const;
       void illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const;
 
@@ -751,7 +751,7 @@ namespace openstudio{
       // execute a statement and return the error code, used for create/drop tables
       int execute(const std::string& statement);
 
-      /// Returns the summary data for each installlocation and fuel type found in report variables
+      /// Returns the summary data for each install location and fuel type found in report variables
       std::vector<openstudio::SummaryData> getSummaryData() const;
 
       void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,

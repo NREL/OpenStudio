@@ -299,7 +299,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   // Main Right Column
 
   m_mainRightColumnController = 
-    boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
+    std::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_mainRightColumnController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
@@ -310,7 +310,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Location
 
-  m_locationTabController = boost::shared_ptr<LocationTabController>( new LocationTabController(m_model, m_modelTempDir) );
+  m_locationTabController = std::shared_ptr<LocationTabController>( new LocationTabController(m_model, m_modelTempDir) );
   m_mainWindow->addVerticalTab( m_locationTabController->mainContentWidget(),
                                 SITE,
                                 "Site",
@@ -321,7 +321,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Schedules
 
-  m_schedulesTabController = boost::shared_ptr<SchedulesTabController>( new SchedulesTabController(isIP, m_model) );
+  m_schedulesTabController = std::shared_ptr<SchedulesTabController>( new SchedulesTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_schedulesTabController->mainContentWidget(),
                                 SCHEDULES,
                                 "Schedules",
@@ -344,7 +344,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Constructions
 
-  m_constructionsTabController = boost::shared_ptr<ConstructionsTabController>( new ConstructionsTabController(isIP, m_model) );
+  m_constructionsTabController = std::shared_ptr<ConstructionsTabController>( new ConstructionsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_constructionsTabController->mainContentWidget(),
                                 CONSTRUCTIONS,
                                 "Constructions",
@@ -367,7 +367,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Loads
 
-  m_loadsTabController = boost::shared_ptr<LoadsTabController>( new LoadsTabController(isIP, m_model) );
+  m_loadsTabController = std::shared_ptr<LoadsTabController>( new LoadsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_loadsTabController->mainContentWidget(),
                                 LOADS,
                                 "Loads",
@@ -390,7 +390,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Space Types
 
-  m_spaceTypesTabController = boost::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
+  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_spaceTypesTabController->mainContentWidget(),
                                 SPACE_TYPES,
                                 "Space Types",
@@ -414,7 +414,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Building Stories
 
-  m_buildingStoriesTabController = boost::shared_ptr<BuildingStoriesTabController>( new BuildingStoriesTabController(m_model) );
+  m_buildingStoriesTabController = std::shared_ptr<BuildingStoriesTabController>( new BuildingStoriesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_buildingStoriesTabController->mainContentWidget(),
                                 BUILDING_STORIES,
                                 "Building Stories",
@@ -433,7 +433,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Facility
 
-  m_facilityTabController = boost::shared_ptr<FacilityTabController>( new FacilityTabController(isIP, m_model) );
+  m_facilityTabController = std::shared_ptr<FacilityTabController>( new FacilityTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_facilityTabController->mainContentWidget(),
                                 FACILITY,
                                 "Facility",
@@ -461,7 +461,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Thermal Zones 
 
-  m_thermalZonesTabController = boost::shared_ptr<ThermalZonesTabController>( new ThermalZonesTabController(isIP, m_model) );
+  m_thermalZonesTabController = std::shared_ptr<ThermalZonesTabController>( new ThermalZonesTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_thermalZonesTabController->mainContentWidget(),
                                 THERMAL_ZONES,
                                 "Thermal Zones",
@@ -481,7 +481,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // HVAC Systems
 
-  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
+  m_hvacSystemsTabController = std::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_hvacSystemsTabController->mainContentWidget(),
                                 HVAC_SYSTEMS,
                                 "HVAC Systems",
@@ -500,7 +500,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   //
   //// Summary
   //
-  //m_summaryTabController = boost::shared_ptr<SummaryTabController>( new SummaryTabController(m_model) );
+  //m_summaryTabController = std::shared_ptr<SummaryTabController>( new SummaryTabController(m_model) );
   //m_mainWindow->addVerticalTab( m_summaryTabController->mainContentWidget(),
   //                              BUILDING_SUMMARY,
   //                              "Building Summary",
@@ -513,7 +513,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Variables
 
-  m_variablesTabController = boost::shared_ptr<VariablesTabController>( new VariablesTabController(m_model) );
+  m_variablesTabController = std::shared_ptr<VariablesTabController>( new VariablesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_variablesTabController->mainContentWidget(),
                                 OUTPUT_VARIABLES,
                                 "Output Variables",
@@ -524,7 +524,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Sim Settings
 
-  m_simSettingsTabController = boost::shared_ptr<SimSettingsTabController>( new SimSettingsTabController(isIP, m_model) );
+  m_simSettingsTabController = std::shared_ptr<SimSettingsTabController>( new SimSettingsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_simSettingsTabController->mainContentWidget(),
                                 SIMULATION_SETTINGS,
                                 "Simulation Settings",
@@ -539,7 +539,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Scripts
 
-  m_scriptsTabController = boost::shared_ptr<ScriptsTabController>( new ScriptsTabController() );
+  m_scriptsTabController = std::shared_ptr<ScriptsTabController>( new ScriptsTabController() );
   m_mainWindow->addVerticalTab( m_scriptsTabController->mainContentWidget(),
                                 RUBY_SCRIPTS,
                                 "Measures",
@@ -561,7 +561,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   // Run
 
-  m_runTabController = boost::shared_ptr<RunTabController>( new RunTabController(m_model, 
+  m_runTabController = std::shared_ptr<RunTabController>( new RunTabController(m_model, 
         openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager()));
         
   m_mainWindow->addVerticalTab( m_runTabController->mainContentWidget(),
@@ -585,7 +585,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   
   // Results
 
-  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController() );
+  m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
@@ -704,7 +704,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 //{
 //  if (!m_consoleWidget)
 //  {
-//    m_consoleWidget = boost::shared_ptr<OSConsoleWidget>(new OSConsoleWidget(m_model));
+//    m_consoleWidget = std::shared_ptr<OSConsoleWidget>(new OSConsoleWidget(m_model));
 //  }
 //
 //  m_consoleWidget->show();
@@ -1263,7 +1263,7 @@ void OSDocument::openLibDlg()
   }
 }
 
-boost::shared_ptr<MainRightColumnController> OSDocument::mainRightColumnController() const
+std::shared_ptr<MainRightColumnController> OSDocument::mainRightColumnController() const
 {
   return m_mainRightColumnController;
 }

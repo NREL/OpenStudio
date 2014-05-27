@@ -136,7 +136,7 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  explicit ControllerWaterCoil(boost::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
+  explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
 
   /// @endcond
   private:

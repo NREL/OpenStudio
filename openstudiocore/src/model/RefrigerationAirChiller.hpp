@@ -252,7 +252,7 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
   /// @cond
   typedef detail::RefrigerationAirChiller_Impl ImplType;
 
-  explicit RefrigerationAirChiller(boost::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
+  explicit RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
 
   friend class detail::RefrigerationAirChiller_Impl;
   friend class Model;

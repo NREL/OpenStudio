@@ -136,12 +136,12 @@ class PROJECT_API AlgorithmRecord : public ObjectRecord {
   friend class detail::AlgorithmRecord_Impl;
 
   /** Construct from impl. */
-  AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl,
+  AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl,
                   ProjectDatabase database,
                   const boost::optional<analysis::Algorithm>& algorithm);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl);
+  explicit AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl);
 
   /// @endcond
 

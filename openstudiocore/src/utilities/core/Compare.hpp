@@ -29,7 +29,6 @@
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -159,12 +158,12 @@ struct UTILITIES_API BCLComponentNameGreater {
 
 /** Test equality between objects in two vectors of pointers */
 template <class T>
-bool checkPtrVecEqual(const std::vector<boost::shared_ptr<T> >& a,
-                      const std::vector<boost::shared_ptr<T> >& b)
+bool checkPtrVecEqual(const std::vector<std::shared_ptr<T> >& a,
+                      const std::vector<std::shared_ptr<T> >& b)
 {
   bool result((a.size()) == (b.size()));
   if (result) {
-    typename std::vector<boost::shared_ptr<T> >::const_iterator aIt, bIt, aItend;
+    typename std::vector<std::shared_ptr<T> >::const_iterator aIt, bIt, aItend;
     for (aIt = a.begin(), bIt = b.begin(), aItend = a.end(); aIt < aItend; ++aIt, ++bIt){
       if ((*aIt) && (*bIt) && (**aIt==**bIt)) {
       }

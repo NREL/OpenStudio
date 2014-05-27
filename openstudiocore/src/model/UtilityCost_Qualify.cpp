@@ -167,7 +167,7 @@ UtilityCost_Qualify::UtilityCost_Qualify(const Model& model)
 }
 
 // constructor
-UtilityCost_Qualify::UtilityCost_Qualify(boost::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
+UtilityCost_Qualify::UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl)
   : ParentObject(impl)
 {}
 

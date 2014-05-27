@@ -102,26 +102,26 @@ std::string ModelObjectFilterType::xmlElementName()
 }
 
 ModelObjectFilterType::ModelObjectFilterType(const openstudio::IddObjectType& iddObjectType)
-  : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(iddObjectType)))
+  : ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(iddObjectType)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterType_Impl>());
 }
 
 ModelObjectFilterType::ModelObjectFilterType(const openstudio::IddObjectType& iddObjectType,
                                              const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(iddObjectType,uuid,versionUUID)))
+  : ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(iddObjectType,uuid,versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterType_Impl>());
 }
 
 ModelObjectFilterType::ModelObjectFilterType(const QDomElement& element)
-  : ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(element)))
+  : ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterType_Impl>(new detail::ModelObjectFilterType_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterType_Impl>());
 }
 
 /// @cond
-ModelObjectFilterType::ModelObjectFilterType(const boost::shared_ptr<detail::ModelObjectFilterType_Impl>& impl)
+ModelObjectFilterType::ModelObjectFilterType(const std::shared_ptr<detail::ModelObjectFilterType_Impl>& impl)
   : ModelObjectFilterClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterType_Impl>());

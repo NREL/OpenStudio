@@ -124,7 +124,7 @@ class MODEL_API GasEquipment : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit GasEquipment(boost::shared_ptr<detail::GasEquipment_Impl> impl);
+  explicit GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl);
 
   /// @endcond
  private:

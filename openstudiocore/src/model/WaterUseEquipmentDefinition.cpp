@@ -336,7 +336,7 @@ void WaterUseEquipmentDefinition::resetLatentFractionSchedule() {
 }
 
 /// @cond
-WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(boost::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
+WaterUseEquipmentDefinition::WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

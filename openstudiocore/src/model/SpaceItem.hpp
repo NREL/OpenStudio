@@ -65,7 +65,7 @@ class MODEL_API SpaceItem : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SpaceItem_Impl;
 
-  explicit SpaceItem(boost::shared_ptr<detail::SpaceItem_Impl> impl);
+  explicit SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl);
 
  private:
 

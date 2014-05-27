@@ -101,8 +101,8 @@ namespace runmanager {
     QFileSystemModel m_fsmodel;
     FileSystemSearch m_fss;
     
-    boost::shared_ptr<StatusBarMessage> m_selectedMessage;
-    boost::shared_ptr<StatusBarMessage> m_regexMessage;
+    std::shared_ptr<StatusBarMessage> m_selectedMessage;
+    std::shared_ptr<StatusBarMessage> m_regexMessage;
 
     QCompleter m_completer;
 

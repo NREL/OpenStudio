@@ -73,7 +73,7 @@ class MODEL_API ControllerMechanicalVentilation : public ModelObject {
   /// @cond
   typedef detail::ControllerMechanicalVentilation_Impl ImplType;
 
-  explicit ControllerMechanicalVentilation(boost::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
+  explicit ControllerMechanicalVentilation(std::shared_ptr<detail::ControllerMechanicalVentilation_Impl> impl);
 
   friend class detail::ControllerMechanicalVentilation_Impl;
   friend class Model;

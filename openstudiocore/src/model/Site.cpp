@@ -484,7 +484,7 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
 }
 */
 /// @cond
-Site::Site(boost::shared_ptr<detail::Site_Impl> impl)
+Site::Site(std::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(impl)
 {}
 

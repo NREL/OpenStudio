@@ -294,7 +294,7 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
   friend class IdfObject;
 
   // constructor
-  explicit LifeCycleCostParameters(boost::shared_ptr<detail::LifeCycleCostParameters_Impl> impl);
+  explicit LifeCycleCostParameters(std::shared_ptr<detail::LifeCycleCostParameters_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.LifeCycleCostParameters");

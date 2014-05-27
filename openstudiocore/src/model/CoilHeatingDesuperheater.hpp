@@ -112,7 +112,7 @@ class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
   /// @cond
   typedef detail::CoilHeatingDesuperheater_Impl ImplType;
 
-  explicit CoilHeatingDesuperheater(boost::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
+  explicit CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
 
   friend class detail::CoilHeatingDesuperheater_Impl;
   friend class Model;

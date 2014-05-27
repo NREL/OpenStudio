@@ -104,7 +104,7 @@ class MODEL_API PortList : public ModelObject {
   /// @cond
   typedef detail::PortList_Impl ImplType;
 
-  explicit PortList(boost::shared_ptr<detail::PortList_Impl> impl);
+  explicit PortList(std::shared_ptr<detail::PortList_Impl> impl);
 
   friend class detail::PortList_Impl;
   friend class Model;

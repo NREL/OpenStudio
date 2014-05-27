@@ -137,7 +137,7 @@ class MODEL_API HotWaterEquipmentDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit HotWaterEquipmentDefinition(boost::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl);
+  explicit HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl);
 
   /// @endcond
  private:

@@ -197,7 +197,7 @@ void OSItem::createLayout()
 
   mainHLayout->addLayout(leftVBoxLayout);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   if(doc){
     boost::optional<IddObjectType> iddObjectType = doc->getIddObjectType(m_itemId);
     if(iddObjectType){

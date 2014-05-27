@@ -139,7 +139,7 @@ void ZoneAirHeatBalanceAlgorithm::resetAlgorithm() {
 }
 
 /// @cond
-ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(boost::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl)
+ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl)
   : ModelObject(impl)
 {
 }

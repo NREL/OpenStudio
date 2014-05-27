@@ -27,7 +27,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -75,7 +74,7 @@ class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup {
 
   friend class IdfExtensibleGroup;
 
-  ModelExtensibleGroup(boost::shared_ptr<detail::ModelObject_Impl> impl,unsigned index);
+  ModelExtensibleGroup(std::shared_ptr<detail::ModelObject_Impl> impl,unsigned index);
 
   /// @endcond
  private:

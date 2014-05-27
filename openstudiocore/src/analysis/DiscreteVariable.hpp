@@ -60,7 +60,7 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl);
+  explicit DiscreteVariable(std::shared_ptr<detail::DiscreteVariable_Impl> impl);
 
   /// @endcond
  private:

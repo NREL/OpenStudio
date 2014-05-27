@@ -248,7 +248,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
   /// @cond
   typedef detail::RefrigerationWalkIn_Impl ImplType;
 
-  explicit RefrigerationWalkIn(boost::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
+  explicit RefrigerationWalkIn(std::shared_ptr<detail::RefrigerationWalkIn_Impl> impl);
 
   friend class detail::RefrigerationWalkIn_Impl;
   friend class Model;

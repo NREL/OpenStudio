@@ -597,7 +597,7 @@ void RefrigerationGasCoolerAirCooled::resetGasCoolerOutletPipingRefrigerantInven
 }
 
 /// @cond
-RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(boost::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl)
+RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

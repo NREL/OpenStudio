@@ -109,7 +109,7 @@ class UTILITIES_API ThermUnit : public Unit {
   /// @cond
   typedef detail::ThermUnit_Impl ImplType;
 
-  explicit ThermUnit(boost::shared_ptr<detail::ThermUnit_Impl> impl);
+  explicit ThermUnit(std::shared_ptr<detail::ThermUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::ThermUnit_Impl;

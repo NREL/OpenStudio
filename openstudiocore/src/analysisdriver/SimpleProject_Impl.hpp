@@ -40,8 +40,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/FileLogSink.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -75,7 +73,7 @@ class AnalysisStatus;
 namespace detail {
 
   /** SimpleProject_Impl is the implementation class for SimpleProject. */
-  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject, public boost::enable_shared_from_this<SimpleProject_Impl> {
+  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject, public std::enable_shared_from_this<SimpleProject_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */

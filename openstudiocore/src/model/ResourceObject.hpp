@@ -74,7 +74,7 @@ class MODEL_API ResourceObject : public ParentObject {
   friend class openstudio::IdfObject;
   friend class detail::ResourceObject_Impl;
 
-  explicit ResourceObject(boost::shared_ptr<detail::ResourceObject_Impl> impl);  
+  explicit ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl);  
 
  private:
 

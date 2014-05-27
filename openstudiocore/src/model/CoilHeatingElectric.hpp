@@ -100,7 +100,7 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   friend class openstudio::IdfObject;
 
-  explicit CoilHeatingElectric(boost::shared_ptr<detail::CoilHeatingElectric_Impl> impl);
+  explicit CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElectric_Impl> impl);
 
   /// @endcond
 

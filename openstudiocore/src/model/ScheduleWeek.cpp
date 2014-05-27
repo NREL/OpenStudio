@@ -301,7 +301,7 @@ IddObjectType ScheduleWeek::iddObjectType() {
 }
 
 /// @cond
-ScheduleWeek::ScheduleWeek(boost::shared_ptr<detail::ScheduleWeek_Impl> impl)
+ScheduleWeek::ScheduleWeek(std::shared_ptr<detail::ScheduleWeek_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

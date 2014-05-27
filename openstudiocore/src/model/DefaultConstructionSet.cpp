@@ -817,7 +817,7 @@ void DefaultConstructionSet::merge(const DefaultConstructionSet& other){
 }
 
 /// @cond
-DefaultConstructionSet::DefaultConstructionSet(boost::shared_ptr<detail::DefaultConstructionSet_Impl> impl)
+DefaultConstructionSet::DefaultConstructionSet(std::shared_ptr<detail::DefaultConstructionSet_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

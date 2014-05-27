@@ -31,7 +31,6 @@
 #include <utilities/core/Json.hpp>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/bind.hpp>
 #include <boost/functional/value_factory.hpp>
 
 #include <sstream>
@@ -1175,9 +1174,9 @@ namespace detail {
         domain = deserializeOrderedVector(
               map["domain"].toList(),
               "domain_value_index",
-              boost::function<QVariant (QVariant*)>(boost::bind(
+              std::function<QVariant (QVariant*)>(std::bind(
                                                             toQuantityQVariant,
-                                                            boost::bind(&QVariant::toMap,_1),
+                                                            std::bind(&QVariant::toMap,std::placeholders::_1),
                                                             "value",
                                                             "units")));
       }
@@ -1186,7 +1185,7 @@ namespace detail {
               map["domain"].toList(),
               "value",
               "domain_value_index",
-              boost::function<QVariant (const QVariant&)>(boost::bind(boost::value_factory<QVariant>(),_1)));
+              std::function<QVariant (const QVariant&)>(std::bind(boost::value_factory<QVariant>(),std::placeholders::_1)));
       }
     }
 
@@ -1197,16 +1196,16 @@ namespace detail {
             choicesList,
             "value",
             "choice_index",
-            boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
-                                                                 boost::bind(&QVariant::toString,_1))));
+            std::function<std::string (QVariant*)>(std::bind(&QString::toStdString,
+                                                                 std::bind(&QVariant::toString,std::placeholders::_1))));
       if (!choicesList.empty() && choicesList[0].toMap().contains("display_name")) {
         try {
           choiceDisplayNames = deserializeOrderedVector(
                 choicesList,
                 "display_name",
                 "choice_index",
-                boost::function<std::string (QVariant*)>(boost::bind(&QString::toStdString,
-                                                                     boost::bind(&QVariant::toString,_1))));
+                std::function<std::string (QVariant*)>(std::bind(&QString::toStdString,
+                                                                     std::bind(&QVariant::toString,std::placeholders::_1))));
         }
         catch (...) {
           LOG_FREE(Warn,"openstudio.ruleset.OSArgument","Unable to deserialize partial list of choice display names.");

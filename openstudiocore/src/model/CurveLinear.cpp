@@ -315,7 +315,7 @@ void CurveLinear::resetOutputUnitType() {
 }
 
 /// @cond
-CurveLinear::CurveLinear(boost::shared_ptr<detail::CurveLinear_Impl> impl)
+CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

@@ -28,7 +28,7 @@ namespace openstudio {
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
   : MainTabController(new FacilityTabView())
 {
-  m_facilityController = boost::shared_ptr<FacilityController>(new FacilityController(isIP, model));
+  m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
 
   bool isConnected = false;
 

@@ -133,7 +133,7 @@ namespace detail {
   }
 
   AnalysisObject RubyMeasure_Impl::clone() const {
-    boost::shared_ptr<RubyMeasure_Impl> impl(new RubyMeasure_Impl(*this));
+    std::shared_ptr<RubyMeasure_Impl> impl(new RubyMeasure_Impl(*this));
     return RubyMeasure(impl);
   }
 
@@ -517,7 +517,7 @@ namespace detail {
       arguments = deserializeOrderedVector(
             map["arguments"].toList(),
             "argument_index",
-            boost::function<OSArgument (const QVariant&)>(boost::bind(ruleset::detail::toOSArgument,_1,version)));
+            std::function<OSArgument (const QVariant&)>(std::bind(ruleset::detail::toOSArgument,std::placeholders::_1,version)));
     }
 
     return RubyMeasure(toUUID(map["uuid"].toString().toStdString()),
@@ -592,7 +592,7 @@ namespace detail {
 } // detail
 
 RubyMeasure::RubyMeasure(const BCLMeasure& bclMeasure, bool isSelected)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
                            new detail::RubyMeasure_Impl(bclMeasure,isSelected)))
 {}
 
@@ -601,7 +601,7 @@ RubyMeasure::RubyMeasure(const openstudio::path& perturbationScript,
                                    const FileReferenceType& outputFileType,
                                    bool isUserScript,
                                    bool isSelected)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
         new detail::RubyMeasure_Impl(perturbationScript,
                                      inputFileType,
                                      outputFileType,
@@ -621,7 +621,7 @@ RubyMeasure::RubyMeasure(const UUID& uuid,
                                    bool isUserScript,
                                    const std::vector<ruleset::OSArgument>& arguments,
                                    bool usesBCLMeasure)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
         new detail::RubyMeasure_Impl(uuid,
                                      versionUUID,
                                      name,
@@ -747,7 +747,7 @@ void RubyMeasure::clearArguments() {
 }
 
 /// @cond
-RubyMeasure::RubyMeasure(boost::shared_ptr<detail::RubyMeasure_Impl> impl)
+RubyMeasure::RubyMeasure(std::shared_ptr<detail::RubyMeasure_Impl> impl)
   : Measure(impl)
 {}
 /// @endcond

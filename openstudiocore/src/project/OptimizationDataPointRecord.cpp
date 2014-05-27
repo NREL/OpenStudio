@@ -71,7 +71,7 @@ namespace detail {
     return result;
   }
 
-  void OptimizationDataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OptimizationDataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OptimizationDataPointRecord>(query);
@@ -185,7 +185,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
     const analysis::OptimizationDataPoint& optimizationDataPoint,
     AnalysisRecord& analysisRecord,
     const OptimizationProblemRecord& problemRecord)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(optimizationDataPoint,
                                                      analysisRecord,
                                                      problemRecord)),
@@ -217,7 +217,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
                                                          ProjectDatabase& database)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(query, database)),
         database)
 {
@@ -225,7 +225,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
 }
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(
-    boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
+    std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
     ProjectDatabase database)
   : DataPointRecord(impl, database)
 {
@@ -293,7 +293,7 @@ analysis::OptimizationDataPoint OptimizationDataPointRecord::optimizationDataPoi
 }
 
 /// @cond
-OptimizationDataPointRecord::OptimizationDataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
+OptimizationDataPointRecord::OptimizationDataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
   : DataPointRecord(impl)
 {}
 /// @endcond

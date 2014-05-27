@@ -157,7 +157,7 @@ bool RulesetObject::operator<(const RulesetObject& other) const {
 }
 
 /// @cond
-RulesetObject::RulesetObject(boost::shared_ptr<detail::RulesetObject_Impl> impl)
+RulesetObject::RulesetObject(std::shared_ptr<detail::RulesetObject_Impl> impl)
   : m_impl(impl)
 {
   OS_ASSERT(impl);

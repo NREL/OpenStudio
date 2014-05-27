@@ -127,7 +127,7 @@ namespace detail {
   }
 
   SimpleProject SimpleProject_Impl::simpleProject() const {
-    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
+    return SimpleProject(std::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -809,7 +809,7 @@ namespace detail {
     }
     if ((!analysis().weatherFile()) || (!boost::filesystem::exists(analysis().weatherFile()->path()))) {
       // ETH@20130313 - Thought about not registering failure of setAnalysisWeatherFile, because not
-      // running EnergyPlus, and therefore not setting a weather file, is a legitamite workflow. However,
+      // running EnergyPlus, and therefore not setting a weather file, is a legitimate workflow. However,
       // in PAT there is no way to remove the EnergyPlus job, so not having a weather file really is a
       // problem.
       result = result && setAnalysisWeatherFile();
@@ -1220,7 +1220,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,alternativeModelMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,alternativeModelMeasureUUID()));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
@@ -1401,7 +1401,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,standardReportMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,standardReportMeasureUUID()));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1449,7 +1449,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,calibrationReportMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,calibrationReportMeasureUUID()));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1670,7 +1670,7 @@ namespace detail {
     openstudio::path newPath = destinationDirectory / modelPath.filename();
     boost::filesystem::copy_file(modelPath,newPath,boost::filesystem::copy_option::overwrite_if_exists);
 
-    // pick up auxillary data
+    // pick up auxiliary data
     openstudio::path companionFolder = modelPath.parent_path() / modelPath.stem();
     if (boost::filesystem::exists(companionFolder) &&
         boost::filesystem::is_directory(companionFolder))
@@ -2090,7 +2090,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
   {
     if (boost::filesystem::is_regular_file(it->status()))
     {
-      // check for osp extenstion
+      // check for osp extension
       openstudio::path p = it->path();
       std::string ext = getFileExtension(p);
       if (ext != "osp") {
@@ -2129,7 +2129,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
     return result;
   }
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           OptionalAnalysis(),
@@ -2197,7 +2197,7 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   saveAnalysis(analysis,analysisDriver);
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           analysis,
@@ -2401,12 +2401,12 @@ bool SimpleProject::saveAs(const openstudio::path& newProjectDir) const {
   return getImpl()->saveAs(newProjectDir);
 }
 
-boost::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
+std::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
   return m_impl;
 }
 
 /// @cond
-SimpleProject::SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl)
+SimpleProject::SimpleProject(std::shared_ptr<detail::SimpleProject_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond
@@ -2585,7 +2585,7 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
-  // however there seem to be intermittant failures when this is done (bug 1077)
+  // however there seem to be intermittent failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
   // ETH: changing back to standard, i think the bugs have been squashed
   runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);

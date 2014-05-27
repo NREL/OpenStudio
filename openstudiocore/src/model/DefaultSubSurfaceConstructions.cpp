@@ -562,7 +562,7 @@ void DefaultSubSurfaceConstructions::merge(const DefaultSubSurfaceConstructions&
 }
 
 /// @cond
-DefaultSubSurfaceConstructions::DefaultSubSurfaceConstructions(boost::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl)
+DefaultSubSurfaceConstructions::DefaultSubSurfaceConstructions(std::shared_ptr<detail::DefaultSubSurfaceConstructions_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

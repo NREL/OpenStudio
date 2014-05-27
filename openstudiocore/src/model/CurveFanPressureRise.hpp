@@ -112,7 +112,7 @@ class MODEL_API CurveFanPressureRise : public Curve {
   /// @cond
   typedef detail::CurveFanPressureRise_Impl ImplType;
 
-  explicit CurveFanPressureRise(boost::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
+  explicit CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl);
 
   friend class detail::CurveFanPressureRise_Impl;
   friend class Model;

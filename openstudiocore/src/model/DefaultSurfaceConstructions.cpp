@@ -266,7 +266,7 @@ void DefaultSurfaceConstructions::merge(const DefaultSurfaceConstructions& other
 }
 
 /// @cond
-DefaultSurfaceConstructions::DefaultSurfaceConstructions(boost::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl)
+DefaultSurfaceConstructions::DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

@@ -26,8 +26,6 @@
 #include <utilities/core/Checksum.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/bind.hpp>
-
 #include <QDomDocument>
 #include <QDomElement>
 #include <QFile>
@@ -124,7 +122,7 @@ boost::optional<Ruleset> Ruleset::factoryFromXml(const QDomElement& element)
 }
 
 /// @cond
-Ruleset::Ruleset(boost::shared_ptr<detail::Ruleset_Impl> impl)
+Ruleset::Ruleset(std::shared_ptr<detail::Ruleset_Impl> impl)
   : RulesetObject(impl)
 {
   OS_ASSERT(getImpl<detail::Ruleset_Impl>());

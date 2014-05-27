@@ -24,8 +24,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-
 #include "ContamAPI.hpp"
 
 namespace openstudio {
@@ -212,7 +210,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrOrfImpl> m_impl;
+  std::shared_ptr<detail::PlrOrfImpl> m_impl;
 };
 
 /** The PlrLeak object is the base class of the leakage area airflow elements. */
@@ -347,7 +345,7 @@ public:
   void setU_dP(const int u_dP);
   //@}
 private:
-  boost::shared_ptr<detail::PlrLeakImpl> m_impl;
+  std::shared_ptr<detail::PlrLeakImpl> m_impl;
 };
 
 /** The PlrLeak1 object is an airflow element representing a leakage area on a per-item basis. */
@@ -546,7 +544,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrConnImpl> m_impl;
+  std::shared_ptr<detail::PlrConnImpl> m_impl;
 };
 
 /** The PlrGeneral object is the base class for general power law elements. */
@@ -634,7 +632,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrGeneralImpl> m_impl;
+  std::shared_ptr<detail::PlrGeneralImpl> m_impl;
 };
 
 /** The PlrQcn object is an airflow element representing volume flow rate power law leakage. */
@@ -802,7 +800,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrTest1Impl> m_impl;
+  std::shared_ptr<detail::PlrTest1Impl> m_impl;
 };
 
 /** The PlrTest2 object is an airflow element representing 2-point test data power law leakage. */
@@ -932,7 +930,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrTest2Impl> m_impl;
+  std::shared_ptr<detail::PlrTest2Impl> m_impl;
 };
 
 /** The PlrCrack object is an airflow element representing power law leakage through a crack. */
@@ -1042,7 +1040,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrCrackImpl> m_impl;
+  std::shared_ptr<detail::PlrCrackImpl> m_impl;
 };
 
 /** The PlrStair object is an airflow element representing level-to-level power law leakage in stairwells. */
@@ -1162,7 +1160,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrStairImpl> m_impl;
+  std::shared_ptr<detail::PlrStairImpl> m_impl;
 };
 
 /** The PlrShaft object is an airflow element representing level-to-level power law leakage in shafts. */
@@ -1293,7 +1291,7 @@ public:
   //@}
 
 private:
-  boost::shared_ptr<detail::PlrShaftImpl> m_impl;
+  std::shared_ptr<detail::PlrShaftImpl> m_impl;
 };
 
 /** The PlrBackDamper object is the base class of backdraft damper airflow elements. */
@@ -1391,7 +1389,7 @@ public:
   bool setXn(const std::string &xn);
   //@}
 private:
-  boost::shared_ptr<detail::PlrBackDamperImpl> m_impl;
+  std::shared_ptr<detail::PlrBackDamperImpl> m_impl;
 };
 
 /** The PlrBdq object is a backdraft damper airflow element in volumetric flow form. */
@@ -1527,7 +1525,7 @@ public:
   bool setB(const std::string &b);
   //@}
 private:
-  boost::shared_ptr<detail::QfrQuadraticImpl> m_impl;
+  std::shared_ptr<detail::QfrQuadraticImpl> m_impl;
 };
 
 /** The QfrQab object is an airflow element representing volume flow rate quadratic leakage. */
@@ -1701,7 +1699,7 @@ public:
   void setU_D(const int u_D);
   //@}
 private:
-  boost::shared_ptr<detail::QfrCrackImpl> m_impl;
+  std::shared_ptr<detail::QfrCrackImpl> m_impl;
 };
 
 /** The QfrTest2 object is an airflow element representing 2-point test data quadratic leakage. */
@@ -1823,7 +1821,7 @@ public:
   void setU_F2(const int u_F);
   //@}
 private:
-  boost::shared_ptr<detail::QfrTest2Impl> m_impl;
+  std::shared_ptr<detail::QfrTest2Impl> m_impl;
 };
 
 /** The AfeDor object is an airflow element representing 2-way flow through a single opening. */
@@ -1947,7 +1945,7 @@ public:
   void setU_W(const int u_W);
   //@}
 private:
-  boost::shared_ptr<detail::AfeDorImpl> m_impl;
+  std::shared_ptr<detail::AfeDorImpl> m_impl;
 };
 
 /** The DrPl2 object is an airflow element representing 2-way flow through an opening using two power law models. */
@@ -2067,7 +2065,7 @@ public:
   void setU_W(const int u_W);
   //@}
 private:
-  boost::shared_ptr<detail::DrPl2Impl> m_impl;
+  std::shared_ptr<detail::DrPl2Impl> m_impl;
 };
 
 /** The AfeFlow object is the base class of constant flow rate airflow elements. */
@@ -2145,7 +2143,7 @@ public:
   void setU_F(const int u_F);
   //@}
 private:
-  boost::shared_ptr<detail::AfeFlowImpl> m_impl;
+  std::shared_ptr<detail::AfeFlowImpl> m_impl;
 };
 
 /** The AfeCmf object is an airflow element representing constant mass flow rate. */
@@ -2335,7 +2333,7 @@ public:
   void setData(const std::vector<FanDataPoint> &data);
   //@}
 private:
-  boost::shared_ptr<detail::AfeFanImpl> m_impl;
+  std::shared_ptr<detail::AfeFanImpl> m_impl;
 };
 
 /** The AfeCvf object is the base class of airflow element representing cubic spline leakage. */
@@ -2411,7 +2409,7 @@ public:
   void setData(const std::vector<XyDataPoint> &data);
   //@}
 private:
-  boost::shared_ptr<detail::AfeCsfImpl> m_impl;
+  std::shared_ptr<detail::AfeCsfImpl> m_impl;
 };
 
 /** The AfeFsp object is an airflow element representing cubic spline leakage with mass flow rate as a function of pressure drop. */
@@ -2602,7 +2600,7 @@ public:
   void setSubelements(const std::vector<AirflowSubelementData> &subelements);
   //@}
 private:
-  boost::shared_ptr<detail::AfeSupImpl> m_impl;
+  std::shared_ptr<detail::AfeSupImpl> m_impl;
 };
 
 } // contam

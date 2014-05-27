@@ -590,7 +590,7 @@ void ZoneHVACUnitHeater::resetHeatingConvergenceTolerance()
   getImpl<detail::ZoneHVACUnitHeater_Impl>()->resetHeatingConvergenceTolerance();
 }
 
-ZoneHVACUnitHeater::ZoneHVACUnitHeater(boost::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl)
+ZoneHVACUnitHeater::ZoneHVACUnitHeater(std::shared_ptr<detail::ZoneHVACUnitHeater_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 

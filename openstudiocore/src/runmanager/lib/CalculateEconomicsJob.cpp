@@ -34,8 +34,6 @@
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -81,7 +79,7 @@ namespace detail {
     return desc;
   }
 
-  void CalculateEconomicsJob::startImpl(const boost::shared_ptr<ProcessCreator> &t_pc)
+  void CalculateEconomicsJob::startImpl(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     assert(!"Not implemented");
   }

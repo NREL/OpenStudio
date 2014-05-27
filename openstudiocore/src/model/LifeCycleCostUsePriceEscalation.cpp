@@ -156,7 +156,7 @@ LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(const Model& mo
 }
 
 // constructor
-LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(boost::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl)
+LifeCycleCostUsePriceEscalation::LifeCycleCostUsePriceEscalation(std::shared_ptr<detail::LifeCycleCostUsePriceEscalation_Impl> impl)
   : ParentObject(impl)
 {}
 

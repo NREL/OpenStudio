@@ -198,7 +198,7 @@ namespace ruleset {
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
       const std::string& relationshipName, const openstudio::path& componentPath)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentPath)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
@@ -206,7 +206,7 @@ namespace ruleset {
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
       const std::string& relationshipName, const FileReference& componentReference)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentReference)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
@@ -217,7 +217,7 @@ namespace ruleset {
       const FileReference& componentReference,
       const UUID& uuid, 
       const UUID& versionUUID)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, 
                                                             componentReference, 
                                                             uuid, 
@@ -227,13 +227,13 @@ namespace ruleset {
   }
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(const QDomElement& element)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(new detail::ModelObjectActionSetRelationship_Impl(element)))
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(new detail::ModelObjectActionSetRelationship_Impl(element)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   /// @cond
-  ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl> impl)
+  ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl> impl)
     : ModelObjectActionClause(impl)
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());

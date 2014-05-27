@@ -26,7 +26,6 @@
 #include <utilities/idf/URLSearchPath.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 class QSqlDatabase;
@@ -69,7 +68,7 @@ namespace detail {
 
     /// save the row for just this object in the database
     /// requires ProjectDatabase as called in ProjectDatabase ctor/dtor
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     protected:
 

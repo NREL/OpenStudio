@@ -57,7 +57,7 @@ void CostObject::addCostInstance( std::string name, double matCost, double insta
     }
   }
 
-  boost::shared_ptr<CostLineItem> costLineItem = boost::shared_ptr<CostLineItem>(new CostLineItem);
+  std::shared_ptr<CostLineItem> costLineItem = std::shared_ptr<CostLineItem>(new CostLineItem);
   if ( iIndex < 0 ) 
   {
     costLineItem->setName(name);

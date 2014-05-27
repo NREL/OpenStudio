@@ -215,7 +215,7 @@ class MODEL_API CoilHeatingDXSingleSpeed : public StraightComponent {
 
   friend class openstudio::IdfObject;
 
-  explicit CoilHeatingDXSingleSpeed(boost::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl);
+  explicit CoilHeatingDXSingleSpeed(std::shared_ptr<detail::CoilHeatingDXSingleSpeed_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingDXSingleSpeed");

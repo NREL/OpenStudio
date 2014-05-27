@@ -82,7 +82,7 @@ IddObjectType AirWallMaterial::iddObjectType() {
 }
 
 /// @cond
-AirWallMaterial::AirWallMaterial(boost::shared_ptr<detail::AirWallMaterial_Impl> impl)
+AirWallMaterial::AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl)
   : ModelPartitionMaterial(impl)
 {}
 /// @endcond

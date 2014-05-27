@@ -403,7 +403,7 @@ bool SteamEquipmentDefinition::setDesignLevelCalculationMethod(const std::string
 }
 
 /// @cond
-SteamEquipmentDefinition::SteamEquipmentDefinition(boost::shared_ptr<detail::SteamEquipmentDefinition_Impl> impl)
+SteamEquipmentDefinition::SteamEquipmentDefinition(std::shared_ptr<detail::SteamEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

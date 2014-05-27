@@ -26,8 +26,6 @@
 #include <utilities/core/Path.hpp>
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 namespace analysis {
   class MeasureGroup;
@@ -73,7 +71,7 @@ namespace detail{
     virtual std::vector<ObjectRecord> resources() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Variable variable() const;
 

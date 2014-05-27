@@ -145,7 +145,7 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   friend class detail::AirTerminalSingleDuctParallelPIUReheat_Impl;
 
-  explicit AirTerminalSingleDuctParallelPIUReheat(boost::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
+  explicit AirTerminalSingleDuctParallelPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctParallelPIUReheat");

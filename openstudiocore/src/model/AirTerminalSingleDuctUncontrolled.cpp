@@ -312,7 +312,7 @@ bool AirTerminalSingleDuctUncontrolled::setAvailabilitySchedule(Schedule & sched
   return getImpl<detail::AirTerminalSingleDuctUncontrolled_Impl>()->setAvailabilitySchedule(schedule);
 }
 
-AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(boost::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
+AirTerminalSingleDuctUncontrolled::AirTerminalSingleDuctUncontrolled(std::shared_ptr<detail::AirTerminalSingleDuctUncontrolled_Impl> p)
   : StraightComponent(p)
 {}
 

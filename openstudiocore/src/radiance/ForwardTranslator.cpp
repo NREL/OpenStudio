@@ -52,7 +52,6 @@
 #include <QThread>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/bind.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/filesystem.hpp>

@@ -273,7 +273,7 @@ boost::optional<double> ContinuousVariable::truncate(double value) const {
 }
 
 /// @cond
-ContinuousVariable::ContinuousVariable(boost::shared_ptr<detail::ContinuousVariable_Impl> impl)
+ContinuousVariable::ContinuousVariable(std::shared_ptr<detail::ContinuousVariable_Impl> impl)
   : InputVariable(impl)
 {}
 /// @endcond

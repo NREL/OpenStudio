@@ -160,7 +160,7 @@ class MODEL_API SiteGroundTemperatureBuildingSurface : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteGroundTemperatureBuildingSurface_Impl;
 
-  explicit SiteGroundTemperatureBuildingSurface(boost::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
+  explicit SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl);
 
   explicit SiteGroundTemperatureBuildingSurface(Model& model);
 

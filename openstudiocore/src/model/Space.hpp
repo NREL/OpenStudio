@@ -564,7 +564,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit Space(boost::shared_ptr<detail::Space_Impl> impl);
+  explicit Space(std::shared_ptr<detail::Space_Impl> impl);
 
   /// @endcond
  private:

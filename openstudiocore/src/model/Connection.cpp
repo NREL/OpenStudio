@@ -139,7 +139,7 @@ Connection::Connection(const Model& model)
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }
 
-Connection::Connection(boost::shared_ptr<detail::Connection_Impl> p)
+Connection::Connection(std::shared_ptr<detail::Connection_Impl> p)
   : ModelObject(p)
 {}
 

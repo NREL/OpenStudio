@@ -141,7 +141,7 @@ class MODEL_API TimeDependentValuation : public ModelObject {
   explicit TimeDependentValuation(const Model& model);
 
   // constructor
-  explicit TimeDependentValuation(boost::shared_ptr<detail::TimeDependentValuation_Impl> impl);
+  explicit TimeDependentValuation(std::shared_ptr<detail::TimeDependentValuation_Impl> impl);
 
   /// @endcond
  private:

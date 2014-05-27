@@ -27,9 +27,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QObject>
 
 namespace openstudio {
@@ -37,7 +34,7 @@ namespace analysis {
 namespace detail {
 
   /** AnalysisObject_Impl is the implementation class for AnalysisObject.*/
-  class ANALYSIS_API AnalysisObject_Impl : public QObject, public boost::enable_shared_from_this<AnalysisObject_Impl>
+  class ANALYSIS_API AnalysisObject_Impl : public QObject, public std::enable_shared_from_this<AnalysisObject_Impl>
   {
     Q_OBJECT;
    public:
@@ -126,8 +123,8 @@ namespace detail {
     /** Get a public object that wraps this impl.*/
     template<typename T>
     T getPublicObject() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<AnalysisObject_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<AnalysisObject_Impl>(shared_from_this())));
       return result;
     }
 

@@ -22,8 +22,6 @@
 
 #include <openstudio_lib/MainTabController.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 class SpaceTypesController;
@@ -40,7 +38,7 @@ class SpaceTypesTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<SpaceTypesController> m_spaceTypesController;
+    std::shared_ptr<SpaceTypesController> m_spaceTypesController;
  
 };
 

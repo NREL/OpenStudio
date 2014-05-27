@@ -428,7 +428,7 @@ boost::optional<DaylightingDeviceShelf> ShadingSurface::daylightingDeviceShelf()
 }
 
 /// @cond
-ShadingSurface::ShadingSurface(boost::shared_ptr<detail::ShadingSurface_Impl> impl)
+ShadingSurface::ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

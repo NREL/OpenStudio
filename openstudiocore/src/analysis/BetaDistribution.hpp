@@ -70,7 +70,7 @@ class ANALYSIS_API BetaDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit BetaDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit BetaDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;

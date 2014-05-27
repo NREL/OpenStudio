@@ -117,7 +117,7 @@ class MODEL_API CurveRectangularHyperbola1 : public Curve {
   /// @cond
   typedef detail::CurveRectangularHyperbola1_Impl ImplType;
 
-  explicit CurveRectangularHyperbola1(boost::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
+  explicit CurveRectangularHyperbola1(std::shared_ptr<detail::CurveRectangularHyperbola1_Impl> impl);
 
   friend class detail::CurveRectangularHyperbola1_Impl;
   friend class Model;

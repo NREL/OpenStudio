@@ -74,7 +74,7 @@ namespace detail {
 
 /// @cond
 ModelObjectFilterAttribute::ModelObjectFilterAttribute(
-    boost::shared_ptr<detail::ModelObjectFilterAttribute_Impl> impl)
+    std::shared_ptr<detail::ModelObjectFilterAttribute_Impl> impl)
   : ModelObjectFilterClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterAttribute_Impl>());

@@ -397,7 +397,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ThermalZone(boost::shared_ptr<detail::ThermalZone_Impl> impl);
+  explicit ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl);
 
   /// @endcond
  private:

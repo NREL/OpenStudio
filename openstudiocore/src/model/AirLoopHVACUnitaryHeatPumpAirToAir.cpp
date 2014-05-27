@@ -850,7 +850,7 @@ HVACComponent AirLoopHVACUnitaryHeatPumpAirToAir::supplementalHeatingCoil() cons
 }
 
 /// @cond
-AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir(boost::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl)
+AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

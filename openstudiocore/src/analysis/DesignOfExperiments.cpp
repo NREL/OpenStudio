@@ -66,7 +66,7 @@ namespace detail {
   {}
 
   AnalysisObject DesignOfExperiments_Impl::clone() const {
-    boost::shared_ptr<DesignOfExperiments_Impl> impl(new DesignOfExperiments_Impl(*this));
+    std::shared_ptr<DesignOfExperiments_Impl> impl(new DesignOfExperiments_Impl(*this));
     return DesignOfExperiments(impl);
   }
 
@@ -191,7 +191,7 @@ namespace detail {
 } // detail
 
 DesignOfExperiments::DesignOfExperiments(const DesignOfExperimentsOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::DesignOfExperiments_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::DesignOfExperiments_Impl>(
         new detail::DesignOfExperiments_Impl(options)))
 {
   createCallbackForOptions();
@@ -205,7 +205,7 @@ DesignOfExperiments::DesignOfExperiments(const UUID& uuid,
                                          bool failed,
                                          int iter,
                                          const DesignOfExperimentsOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::DesignOfExperiments_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::DesignOfExperiments_Impl>(
         new detail::DesignOfExperiments_Impl(uuid,
                                              versionUUID,
                                              displayName,
@@ -227,7 +227,7 @@ DesignOfExperimentsOptions DesignOfExperiments::designOfExperimentsOptions() con
 }
 
 /// @cond
-DesignOfExperiments::DesignOfExperiments(boost::shared_ptr<detail::DesignOfExperiments_Impl> impl)
+DesignOfExperiments::DesignOfExperiments(std::shared_ptr<detail::DesignOfExperiments_Impl> impl)
   : OpenStudioAlgorithm(impl)
 {}
 /// @endcond

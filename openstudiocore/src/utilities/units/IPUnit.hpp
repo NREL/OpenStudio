@@ -125,7 +125,7 @@ class UTILITIES_API IPUnit : public Unit {
   /// @cond
   typedef detail::IPUnit_Impl ImplType;
 
-  explicit IPUnit(boost::shared_ptr<detail::IPUnit_Impl> impl);
+  explicit IPUnit(std::shared_ptr<detail::IPUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::IPUnit_Impl;

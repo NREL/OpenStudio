@@ -243,7 +243,7 @@ TEST_F(RunManagerTestFixture, JobCreateTest)
     epw,
     outdir);
 
-  boost::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
+  std::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
   
   j.start(lpc);
   j.waitForFinished();
@@ -282,7 +282,7 @@ TEST_F(RunManagerTestFixture, GenericJobCreateTest)
       params,
       files);
 
-  boost::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
+  std::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
 
   j.start(lpc);
   j.waitForFinished();

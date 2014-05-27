@@ -70,14 +70,14 @@ class PROJECT_API AWSSettingsRecord : public CloudSettingsRecord {
   //@}
  protected:
   /// @cond
-  explicit AWSSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl> impl);
+  explicit AWSSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl> impl);
 
   friend class detail::AWSSettingsRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  AWSSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl> impl,
+  AWSSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl> impl,
                     ProjectDatabase database);
 
   /// @endcond

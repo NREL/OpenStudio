@@ -556,7 +556,7 @@ bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method
 }
 
 /// @cond
-LightsDefinition::LightsDefinition(boost::shared_ptr<detail::LightsDefinition_Impl> impl)
+LightsDefinition::LightsDefinition(std::shared_ptr<detail::LightsDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

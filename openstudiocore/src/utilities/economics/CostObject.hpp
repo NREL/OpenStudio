@@ -20,11 +20,10 @@
 #ifndef COSTOBJECT_H
 #define COSTOBJECT_H
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <utilities/UtilitiesAPI.hpp>
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
 
@@ -111,7 +110,7 @@ private:
   double m_OMInflation;
   double m_inflation;
 
-  std::vector < boost::shared_ptr<CostLineItem> > m_RefCostObjsData;
+  std::vector < std::shared_ptr<CostLineItem> > m_RefCostObjsData;
   std::vector< double > m_cashFlows;
   std::vector< double > m_cashFlows_Inflation;
   std::vector< double > m_cashFlows_Gas_Inflation;

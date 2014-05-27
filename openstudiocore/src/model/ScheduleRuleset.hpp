@@ -139,7 +139,7 @@ class MODEL_API ScheduleRuleset : public Schedule {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::ScheduleRuleset_Impl;
 
-  explicit ScheduleRuleset(boost::shared_ptr<detail::ScheduleRuleset_Impl> impl);
+  explicit ScheduleRuleset(std::shared_ptr<detail::ScheduleRuleset_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ScheduleRuleset");

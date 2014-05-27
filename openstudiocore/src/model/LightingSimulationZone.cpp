@@ -162,7 +162,7 @@ void LightingSimulationZone::resetSpaces()
 }
 
 /// @cond
-LightingSimulationZone::LightingSimulationZone(boost::shared_ptr<detail::LightingSimulationZone_Impl> impl)
+LightingSimulationZone::LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

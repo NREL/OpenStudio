@@ -55,7 +55,6 @@
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 namespace openstudio {
@@ -303,7 +302,7 @@ boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is,
   Workspace finalWorkspace(finalModel);
   model::Model tempModel(finalWorkspace); // None-level strictness!
   OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
-  std::vector<boost::shared_ptr<InterobjectIssueInformation> > issueInfo = fixInterobjectIssuesStage1(
+  std::vector<std::shared_ptr<InterobjectIssueInformation> > issueInfo = fixInterobjectIssuesStage1(
       tempModel,
       m_originalVersion);
   if (!tempModel.isValid(StrictnessLevel::Draft)) {
@@ -724,7 +723,7 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
     }
     else
     {
-      // modify the object if neccesary
+      // modify the object if necessary
       if (istringEqual(object.iddObject().name(),"OS:Connection")) {
 
         // increment inlet port as other object's fields have shifted
@@ -769,15 +768,15 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
   return ss.str();
 }
 
-std::vector< boost::shared_ptr<VersionTranslator::InterobjectIssueInformation> >
+std::vector< std::shared_ptr<VersionTranslator::InterobjectIssueInformation> >
 VersionTranslator::fixInterobjectIssuesStage1(model::Model& model,
                                               const VersionString& startVersion)
 {
   OS_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
-  std::vector<boost::shared_ptr<InterobjectIssueInformation> > result;
+  std::vector<std::shared_ptr<InterobjectIssueInformation> > result;
 
   if (startVersion < VersionString("0.8.4")) {
-    boost::shared_ptr<InterobjectIssueInformation> info = fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model);
+    std::shared_ptr<InterobjectIssueInformation> info = fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model);
     result.push_back(info);
   }
 
@@ -786,20 +785,20 @@ VersionTranslator::fixInterobjectIssuesStage1(model::Model& model,
 
 void VersionTranslator::fixInterobjectIssuesStage2(
     model::Model& model,
-    std::vector<boost::shared_ptr<InterobjectIssueInformation> >& stage1Information)
+    std::vector<std::shared_ptr<InterobjectIssueInformation> >& stage1Information)
 {
   OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Draft);
 
-  for (boost::shared_ptr<InterobjectIssueInformation>& info : stage1Information) {
+  for (std::shared_ptr<InterobjectIssueInformation>& info : stage1Information) {
     if (info->endVersion == VersionString("0.8.4")) {
       fixInterobjectIssuesStage2_0_8_3_to_0_8_4(model,info);
     }
   }
 }
 
-boost::shared_ptr<VersionTranslator::InterobjectIssueInformation>
+std::shared_ptr<VersionTranslator::InterobjectIssueInformation>
 VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model) {
-  boost::shared_ptr<InterobjectIssueInformation_0_8_3_to_0_8_4> result(
+  std::shared_ptr<InterobjectIssueInformation_0_8_3_to_0_8_4> result(
       new InterobjectIssueInformation_0_8_3_to_0_8_4());
 
 
@@ -835,7 +834,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
         for (IdfObject& cd : thisSchedulesComponentData) {
           auto it = std::find_if(result->users.back().begin(),
                                  result->users.back().end(),
-                                 boost::bind(handleEquals<IdfObject,Handle>,_1,cd.handle()));
+                                 std::bind(handleEquals<IdfObject,Handle>,std::placeholders::_1,cd.handle()));
           if (it != result->users.back().end()) {
             result->users.back().erase(it);
           }
@@ -866,7 +865,7 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
           thisSchedulesKeys.push_back(thisUsersKeys);
           if (std::find_if(result->originalUsers.begin(),
                            result->originalUsers.end(),
-                           boost::bind(handleEquals<IdfObject,Handle>,_1,it->handle())) == result->originalUsers.end())
+                           std::bind(handleEquals<IdfObject,Handle>,std::placeholders::_1,it->handle())) == result->originalUsers.end())
           {
             result->originalUsers.push_back(it->idfObject());
           }
@@ -891,10 +890,10 @@ VersionTranslator::fixInterobjectIssuesStage1_0_8_3_to_0_8_4(model::Model& model
 
 void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
     model::Model& model,
-    boost::shared_ptr<InterobjectIssueInformation>& info)
+    std::shared_ptr<InterobjectIssueInformation>& info)
 {
-  boost::shared_ptr<InterobjectIssueInformation_0_8_3_to_0_8_4> schedulesToFixup =
-    boost::dynamic_pointer_cast<InterobjectIssueInformation_0_8_3_to_0_8_4>(info);
+  std::shared_ptr<InterobjectIssueInformation_0_8_3_to_0_8_4> schedulesToFixup =
+    std::dynamic_pointer_cast<InterobjectIssueInformation_0_8_3_to_0_8_4>(info);
 
   // make sure ScheduleDays are owned by their ScheduleRules and ScheduleRulesets
   model::ScheduleDayVector daySchedules = model.getConcreteModelObjects<model::ScheduleDay>();
@@ -1069,7 +1068,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
       Handle h = toUUID(*cd.getExtensibleGroup(i).getString(0));
       if (std::find_if(componentObjects.begin(),
                        componentObjects.end(),
-                       boost::bind(handleEquals<model::ModelObject,Handle>,_1,h)) != componentObjects.end())
+                       std::bind(handleEquals<model::ModelObject,Handle>,std::placeholders::_1,h)) != componentObjects.end())
       {
         cd.eraseExtensibleGroup(i);
         continue;
@@ -1159,7 +1158,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
   for (model::ModelObject& user : refactoredUsersVector) {
     IdfObjectVector::const_iterator it = std::find_if(schedulesToFixup->originalUsers.begin(),
                                                       schedulesToFixup->originalUsers.end(),
-                                                      boost::bind(handleEquals<IdfObject,Handle>,_1,user.handle()));
+                                                      std::bind(handleEquals<IdfObject,Handle>,std::placeholders::_1,user.handle()));
     OS_ASSERT(it != schedulesToFixup->originalUsers.end());
     m_refactored.push_back(std::pair<IdfObject,IdfObject>(*it,user.idfObject()));
   }

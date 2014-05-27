@@ -328,7 +328,7 @@ void AvailabilityManagerNightCycle::resetControlThermalZone() {
 }
 
 /// @cond
-AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(boost::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl)
+AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

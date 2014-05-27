@@ -62,7 +62,7 @@ class MODEL_API InfraredTransparentMaterial : public ModelPartitionMaterial {
   /// @cond
   typedef detail::InfraredTransparentMaterial_Impl ImplType;
 
-  explicit InfraredTransparentMaterial(boost::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
+  explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
 
   friend class detail::InfraredTransparentMaterial_Impl;
   friend class Model;

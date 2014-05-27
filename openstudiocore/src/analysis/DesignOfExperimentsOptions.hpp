@@ -73,7 +73,7 @@ class ANALYSIS_API DesignOfExperimentsOptions : public AlgorithmOptions {
   /// @cond
   typedef detail::DesignOfExperimentsOptions_Impl ImplType;
 
-  explicit DesignOfExperimentsOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl);
+  explicit DesignOfExperimentsOptions(std::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl);
 
   friend class detail::DesignOfExperimentsOptions_Impl;
   friend class AlgorithmOptions;

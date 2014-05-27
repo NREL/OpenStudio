@@ -44,7 +44,7 @@ ScriptFolderListView::ScriptFolderListView(const openstudio::path &folder,
   : OSCollapsibleItemList(addScrollArea, parent), m_rootPath(folder), m_headerType(headerType),
     m_draggable(draggable),
     m_removeable(removeable), 
-    m_fswatcher(boost::make_shared<QFileSystemWatcher>())
+    m_fswatcher(std::make_shared<QFileSystemWatcher>())
 { 
   setItemsDraggable(draggable);
   setItemsRemoveable(removeable);
@@ -197,7 +197,7 @@ std::vector<ruleset::UserScriptInfo> ScriptFolderListView::folderUserScripts(
   return it->second->userScripts();
 }
 
-boost::shared_ptr<QFileSystemWatcher> ScriptFolderListView::fsWatcher() const
+std::shared_ptr<QFileSystemWatcher> ScriptFolderListView::fsWatcher() const
 {
   return m_fswatcher;
 }

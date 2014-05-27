@@ -186,7 +186,7 @@ void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
 }
 
 /// @cond
-RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(boost::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
+RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

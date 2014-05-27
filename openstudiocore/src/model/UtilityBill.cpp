@@ -1316,7 +1316,7 @@ boost::optional<double> BillingPeriod::modelTotalCost() const
   return boost::none;
 }
 
-BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
+BillingPeriod::BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
   : ModelExtensibleGroup(impl, index)
 {}
 
@@ -1543,7 +1543,7 @@ boost::optional<double> UtilityBill::NMBE() const{
 }
 
 /// @cond
-UtilityBill::UtilityBill(boost::shared_ptr<detail::UtilityBill_Impl> impl)
+UtilityBill::UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

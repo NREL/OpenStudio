@@ -138,7 +138,7 @@ class MODEL_API OtherEquipmentDefinition : public SpaceLoadDefinition {
   friend class IdfObject;
   friend class Model;
 
-  explicit OtherEquipmentDefinition(boost::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl);
+  explicit OtherEquipmentDefinition(std::shared_ptr<detail::OtherEquipmentDefinition_Impl> impl);
 
   /// @endcond
  private:

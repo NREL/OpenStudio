@@ -170,7 +170,7 @@ ModelPartitionMaterial::ModelPartitionMaterial(IddObjectType type,const Model& m
 
 /// @cond
 ModelPartitionMaterial::ModelPartitionMaterial(
-    boost::shared_ptr<detail::ModelPartitionMaterial_Impl> impl)
+    std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

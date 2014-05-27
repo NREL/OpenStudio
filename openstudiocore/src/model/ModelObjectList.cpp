@@ -205,7 +205,7 @@ void ModelObjectList::removeAllModelObjects() {
 }
 
 /// @cond
-ModelObjectList::ModelObjectList(boost::shared_ptr<detail::ModelObjectList_Impl> impl)
+ModelObjectList::ModelObjectList(std::shared_ptr<detail::ModelObjectList_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

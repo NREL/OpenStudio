@@ -72,7 +72,7 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   addQObject(m_yearSettingsWidget);
   this->mainContentWidget()->addSubTab("Year Settings",m_yearSettingsWidget,YEAR_SETTINGS);
 
-  m_scheduleSetsController = boost::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
+  m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
   this->mainContentWidget()->addSubTab("Schedule Sets",m_scheduleSetsController->subTabView(),SCHEDULE_SETS);
 
   m_schedulesView = new SchedulesView(m_isIP,m_model);

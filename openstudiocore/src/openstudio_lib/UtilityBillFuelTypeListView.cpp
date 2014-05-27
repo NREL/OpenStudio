@@ -39,16 +39,16 @@ UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model
 {
   bool isConnected = false;
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -64,13 +64,13 @@ FuelType UtilityBillFuelTypeListController::fuelType() const
   return m_fuelType;
 }
 
-void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
     // however, in this case we need to also check the fuel type
-    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
-      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
+    if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
 
         std::vector<OSItemId> ids = this->makeVector();
         emit itemIds(ids);
@@ -86,13 +86,13 @@ void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio
   }
 }
 
-void UtilityBillFuelTypeListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
     // however, in this case we need to also check the fuel type
-    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
-      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
+    if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
 
         emit itemIds(makeVector());
       }

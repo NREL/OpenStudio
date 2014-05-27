@@ -135,7 +135,7 @@ class MODEL_API Node : public StraightComponent {
 
   typedef detail::Node_Impl ImplType;
 
-  explicit Node(boost::shared_ptr<detail::Node_Impl> impl);
+  explicit Node(std::shared_ptr<detail::Node_Impl> impl);
 
  private:
 

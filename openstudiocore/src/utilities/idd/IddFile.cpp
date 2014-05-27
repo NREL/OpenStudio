@@ -176,8 +176,8 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IddFile_Impl> IddFile_Impl::load(std::istream& is) {
-    boost::shared_ptr<IddFile_Impl> result;
+  std::shared_ptr<IddFile_Impl> IddFile_Impl::load(std::istream& is) {
+    std::shared_ptr<IddFile_Impl> result;
     IddFile_Impl iddFileImpl;
     
     try {
@@ -185,7 +185,7 @@ namespace detail {
     }
     catch (...) { return result; }
 
-    result = boost::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl)); 
+    result = std::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl)); 
     return result;
 
   }
@@ -365,7 +365,7 @@ namespace detail {
 
 IddFile::IddFile()
 {
-  m_impl = boost::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
+  m_impl = std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
 }
 
 IddFile::IddFile(const IddFile& other)
@@ -437,7 +437,7 @@ std::vector<IddObject> IddFile::uniqueObjects() const
 
 OptionalIddFile IddFile::load(std::istream& is)
 {
-  boost::shared_ptr<detail::IddFile_Impl> p = detail::IddFile_Impl::load(is);
+  std::shared_ptr<detail::IddFile_Impl> p = detail::IddFile_Impl::load(is);
   if (p) { return IddFile(p); }
   return boost::none;
 }
@@ -501,7 +501,7 @@ void IddFile::addObject(const IddObject& object)
 
 // PRIVATE
 
-IddFile::IddFile(const boost::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(impl) {}
+IddFile::IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

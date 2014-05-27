@@ -136,7 +136,7 @@ UtilityCost_Computation::UtilityCost_Computation(const Model& model)
 }
 
 // constructor
-UtilityCost_Computation::UtilityCost_Computation(boost::shared_ptr<detail::UtilityCost_Computation_Impl> impl)
+UtilityCost_Computation::UtilityCost_Computation(std::shared_ptr<detail::UtilityCost_Computation_Impl> impl)
   : ParentObject(impl)
 {}
 

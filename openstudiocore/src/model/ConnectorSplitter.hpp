@@ -75,7 +75,7 @@ class MODEL_API ConnectorSplitter : public Splitter
 
   friend class openstudio::IdfObject;
 
-  explicit ConnectorSplitter(boost::shared_ptr<detail::ConnectorSplitter_Impl> impl);
+  explicit ConnectorSplitter(std::shared_ptr<detail::ConnectorSplitter_Impl> impl);
 
   private:
 

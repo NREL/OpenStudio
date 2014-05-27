@@ -92,7 +92,7 @@ IddObjectType WindowDataFile::iddObjectType() {
 }
 
 /// @cond
-WindowDataFile::WindowDataFile(boost::shared_ptr<detail::WindowDataFile_Impl> impl)
+WindowDataFile::WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl)
   : ConstructionBase(impl)
 {}
 /// @endcond

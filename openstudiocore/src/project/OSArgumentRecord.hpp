@@ -110,7 +110,7 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   /** Construct from impl. */
-  OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl,
+  OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl,
                    ProjectDatabase database);
 
   virtual ~OSArgumentRecord() {}
@@ -159,7 +159,7 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  explicit OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl);
+  explicit OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl);
 
   friend class detail::OSArgumentRecord_Impl;
   friend class Record;

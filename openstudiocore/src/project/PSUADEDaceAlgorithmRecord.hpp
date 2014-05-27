@@ -72,11 +72,11 @@ class PROJECT_API PSUADEDaceAlgorithmRecord : public DakotaAlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  PSUADEDaceAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
+  PSUADEDaceAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// @cond
-  explicit PSUADEDaceAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl);
+  explicit PSUADEDaceAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl);
 
   friend class detail::PSUADEDaceAlgorithmRecord_Impl;
   friend class Record;

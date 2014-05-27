@@ -254,7 +254,7 @@ class MODEL_API Surface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::model::detail::Surface_Impl;
 
-  explicit Surface(boost::shared_ptr<detail::Surface_Impl> impl);
+  explicit Surface(std::shared_ptr<detail::Surface_Impl> impl);
 
   /// @endcond
  private:

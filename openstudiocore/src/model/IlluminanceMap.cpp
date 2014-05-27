@@ -473,7 +473,7 @@ std::vector<Point3d> IlluminanceMap::corners() const
 }
 
 /// @cond
-IlluminanceMap::IlluminanceMap(boost::shared_ptr<detail::IlluminanceMap_Impl> impl)
+IlluminanceMap::IlluminanceMap(std::shared_ptr<detail::IlluminanceMap_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

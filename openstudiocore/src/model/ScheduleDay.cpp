@@ -489,7 +489,7 @@ void ScheduleDay::clearValues()
 }
 
 /// @cond
-ScheduleDay::ScheduleDay(boost::shared_ptr<detail::ScheduleDay_Impl> impl)
+ScheduleDay::ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl)
   : ScheduleBase(impl)
 {}
 /// @endcond

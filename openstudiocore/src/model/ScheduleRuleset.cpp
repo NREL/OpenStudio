@@ -497,7 +497,7 @@ IddObjectType ScheduleRuleset::iddObjectType() {
 }
 
 /// @cond
-ScheduleRuleset::ScheduleRuleset(boost::shared_ptr<detail::ScheduleRuleset_Impl> impl)
+ScheduleRuleset::ScheduleRuleset(std::shared_ptr<detail::ScheduleRuleset_Impl> impl)
   : Schedule(impl)
 {}
 /// @endcond

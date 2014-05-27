@@ -89,7 +89,7 @@ SizingPeriod::SizingPeriod(IddObjectType type,const Model& model)
 }
 
 // constructor
-SizingPeriod::SizingPeriod(boost::shared_ptr<detail::SizingPeriod_Impl> impl)
+SizingPeriod::SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl)
   : ParentObject(impl)
 {}
 

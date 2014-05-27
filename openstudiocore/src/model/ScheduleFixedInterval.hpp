@@ -91,7 +91,7 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   friend class openstudio::IdfObject;
   friend class detail::ScheduleFixedInterval_Impl;
 
-  explicit ScheduleFixedInterval(boost::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
+  explicit ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
 
   /// @endcond
  private:

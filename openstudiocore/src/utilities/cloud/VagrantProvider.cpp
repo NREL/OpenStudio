@@ -33,8 +33,6 @@
 #include <QFile>
 #include <QDir>
 
-#include <boost/bind.hpp>
-
 namespace openstudio{
   namespace detail{
         
@@ -559,7 +557,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::internetAvailable(int msec)
     {
       if (requestInternetAvailable()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestInternetAvailableRequestFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestInternetAvailableRequestFinished, this))){
           return lastInternetAvailable();
         }
       }
@@ -574,7 +572,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::serviceAvailable(int msec)
     {
       if (requestServiceAvailable()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
       }
@@ -589,7 +587,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::validateCredentials(int msec)
     {
       if (requestValidateCredentials()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestValidateCredentialsFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestValidateCredentialsFinished, this))){
           return lastValidateCredentials();
         }
       }
@@ -600,7 +598,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
@@ -610,7 +608,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::waitForServer(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::serverStarted, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::serverStarted, this))){
         return m_serverStarted;
       }
       if (m_startServerProcess){
@@ -623,7 +621,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::waitForWorkers(int msec) 
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::workersStarted, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::workersStarted, this))){
         return m_workerStarted;
       }
       if (m_startWorkerProcess){
@@ -637,7 +635,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::serverRunning(int msec)
     {
       if (requestServerRunning()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
       }
@@ -652,7 +650,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::workersRunning(int msec)
     {
       if (requestWorkersRunning()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestWorkersRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestWorkersRunningFinished, this))){
           return lastWorkersRunning();
         }
       }
@@ -666,7 +664,7 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::waitForTerminated(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateFinished, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestTerminateFinished, this))){
         return (m_serverStopped && m_workerStopped);
       }
       if (m_stopServerProcess){
@@ -685,7 +683,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::terminateCompleted(int msec)
     {
       if (requestTerminateCompleted()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
       }
@@ -1245,7 +1243,7 @@ namespace openstudio{
       return;
     }
 
-    bool VagrantProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f)
+    bool VagrantProvider_Impl::waitForFinished(int msec, const std::function<bool ()>& f)
     {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
@@ -1313,7 +1311,7 @@ namespace openstudio{
   }// detail
 
   VagrantSettings::VagrantSettings()
-    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl()))
+    : CloudSettings(std::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl()))
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
@@ -1329,7 +1327,7 @@ namespace openstudio{
                                    const std::string& username, 
                                    bool terminationDelayEnabled, 
                                    unsigned terminationDelay)
-    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::VagrantSettings_Impl>(
                         new detail::VagrantSettings_Impl(uuid,
                                                          versionUUID,
                                                          userAgreementSigned,
@@ -1345,7 +1343,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
 
-  VagrantSettings::VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl)
+  VagrantSettings::VagrantSettings(const std::shared_ptr<detail::VagrantSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
@@ -1448,7 +1446,7 @@ namespace openstudio{
   VagrantSession::VagrantSession(const std::string& sessionId, 
                                  const boost::optional<Url>& serverUrl, 
                                  const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::VagrantSession_Impl>(
                        new detail::VagrantSession_Impl(sessionId, 
                                                        serverUrl, 
                                                        workerUrls)))
@@ -1461,7 +1459,7 @@ namespace openstudio{
                                  const std::string& sessionId, 
                                  const boost::optional<Url>& serverUrl, 
                                  const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::VagrantSession_Impl>(
                        new detail::VagrantSession_Impl(uuid,
                                                        versionUUID,
                                                        sessionId, 
@@ -1471,7 +1469,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
   }
 
-  VagrantSession::VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl)
+  VagrantSession::VagrantSession(const std::shared_ptr<detail::VagrantSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
@@ -1482,12 +1480,12 @@ namespace openstudio{
   }
 
   VagrantProvider::VagrantProvider()
-    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl()))
+    : CloudProvider(std::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl()))
   {
     OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());
   }
 
-  VagrantProvider::VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl)
+  VagrantProvider::VagrantProvider(const std::shared_ptr<detail::VagrantProvider_Impl>& impl)
     : CloudProvider(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());

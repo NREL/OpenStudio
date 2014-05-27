@@ -22,8 +22,6 @@
 
 #include <openstudio_lib/MainTabController.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 class DefaultConstructionSetsController;
@@ -49,9 +47,9 @@ class ConstructionsTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
-    boost::shared_ptr<ConstructionsController> m_constructionsController;
-    boost::shared_ptr<MaterialsController> m_materialsController;
+    std::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
+    std::shared_ptr<ConstructionsController> m_constructionsController;
+    std::shared_ptr<MaterialsController> m_materialsController;
 };
 
 } // openstudio

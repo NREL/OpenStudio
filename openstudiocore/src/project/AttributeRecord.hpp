@@ -29,8 +29,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/UUID.hpp>
 
-#include <boost/shared_ptr.hpp>
-
 namespace openstudio {
 
 class Attribute;
@@ -190,11 +188,11 @@ class PROJECT_API AttributeRecord : public ObjectRecord {
   friend class detail::AttributeRecord_Impl;
 
   // from impl
-  AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl,
+  AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl,
       ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl);
+  explicit AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl);
 
   /// @endcond
 

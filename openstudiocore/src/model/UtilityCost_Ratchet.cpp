@@ -167,7 +167,7 @@ UtilityCost_Ratchet::UtilityCost_Ratchet(const Model& model)
 }
 
 // constructor
-UtilityCost_Ratchet::UtilityCost_Ratchet(boost::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl)
+UtilityCost_Ratchet::UtilityCost_Ratchet(std::shared_ptr<detail::UtilityCost_Ratchet_Impl> impl)
   : ParentObject(impl)
 {}
 

@@ -346,7 +346,7 @@ void LuminaireDefinition::resetReturnAirFractionFunctionofPlenumTemperatureCoeff
 }
 
 /// @cond
-LuminaireDefinition::LuminaireDefinition(boost::shared_ptr<detail::LuminaireDefinition_Impl> impl)
+LuminaireDefinition::LuminaireDefinition(std::shared_ptr<detail::LuminaireDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

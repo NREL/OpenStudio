@@ -449,7 +449,7 @@ bool ElectricEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 }
 
 /// @cond
-ElectricEquipmentDefinition::ElectricEquipmentDefinition(boost::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
+ElectricEquipmentDefinition::ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

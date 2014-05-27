@@ -105,7 +105,7 @@ class MODEL_API OtherEquipment : public SpaceLoadInstance {
   friend class IdfObject;
   friend class Model;
 
-  explicit OtherEquipment(boost::shared_ptr<detail::OtherEquipment_Impl> impl);
+  explicit OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl);
 
   /// @endcond
  private:

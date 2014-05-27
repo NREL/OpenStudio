@@ -43,7 +43,7 @@ namespace detail {
 
   Unit FahrenheitUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Fahrenheit);
-    boost::shared_ptr<FahrenheitUnit_Impl> impl(new FahrenheitUnit_Impl(*this));
+    std::shared_ptr<FahrenheitUnit_Impl> impl(new FahrenheitUnit_Impl(*this));
     return FahrenheitUnit(impl).cast<Unit>();
   }
 
@@ -60,14 +60,14 @@ namespace detail {
 } // detail
 
 FahrenheitUnit::FahrenheitUnit(int FExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
                         new detail::FahrenheitUnit_Impl(FExp,scaleExponent,prettyString)))
 {}
 
 FahrenheitUnit::FahrenheitUnit(const std::string& scaleAbbreviation,
                                int FExp,
                                const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::FahrenheitUnit_Impl>(
                         new detail::FahrenheitUnit_Impl(scaleAbbreviation,FExp,prettyString)))
 {}
 
@@ -77,7 +77,7 @@ FahrenheitUnit& FahrenheitUnit::operator/=(const FahrenheitUnit& rUnit) {
 }
 
 /// @cond
-FahrenheitUnit::FahrenheitUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl> impl)
+FahrenheitUnit::FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl)
   : TemperatureUnit(impl)
 {}
 /// @endcond

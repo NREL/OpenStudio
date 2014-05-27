@@ -68,7 +68,7 @@ class MODEL_API ConnectorMixer : public Mixer {
 
   friend class openstudio::IdfObject;
 
-  explicit ConnectorMixer(boost::shared_ptr<detail::ConnectorMixer_Impl> impl);
+  explicit ConnectorMixer(std::shared_ptr<detail::ConnectorMixer_Impl> impl);
 
   private:
 

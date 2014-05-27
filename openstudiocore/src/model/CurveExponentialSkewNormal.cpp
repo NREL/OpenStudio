@@ -362,7 +362,7 @@ void CurveExponentialSkewNormal::resetOutputUnitType() {
 }
 
 /// @cond
-CurveExponentialSkewNormal::CurveExponentialSkewNormal(boost::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl)
+CurveExponentialSkewNormal::CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

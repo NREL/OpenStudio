@@ -271,7 +271,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit PumpVariableSpeed(boost::shared_ptr<detail::PumpVariableSpeed_Impl> impl);
+  explicit PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl);
 
   /// @endcond
  private:

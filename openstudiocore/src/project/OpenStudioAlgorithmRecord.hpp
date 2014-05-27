@@ -80,11 +80,11 @@ class PROJECT_API OpenStudioAlgorithmRecord : public AlgorithmRecord {
   /// @cond
 
   /** Construct from impl. */
-  OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl,
+  OpenStudioAlgorithmRecord(std::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl,
                             ProjectDatabase database,
                             const boost::optional<analysis::OpenStudioAlgorithm>& algorithm);
 
-  explicit OpenStudioAlgorithmRecord(boost::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl);
+  explicit OpenStudioAlgorithmRecord(std::shared_ptr<detail::OpenStudioAlgorithmRecord_Impl> impl);
 
   friend class detail::OpenStudioAlgorithmRecord_Impl;
   friend class Record;

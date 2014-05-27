@@ -1392,14 +1392,14 @@ TEST_F(ModelFixture, Space_Intersect_OneToFour){
       space1.matchSurfaces(space2);
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      BOOST_FOREACH(Surface s, space1.surfaces()){
+      for (const Surface& s : space1.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      BOOST_FOREACH(Surface s, space2.surfaces()){
+      for (const Surface& s : space2.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
@@ -1449,14 +1449,14 @@ TEST_F(ModelFixture, Space_Intersect_FourToOne){
       space2.matchSurfaces(space1);
 
       EXPECT_EQ(4u, space1.surfaces().size());
-      BOOST_FOREACH(Surface s, space1.surfaces()){
+      for (const Surface& s : space1.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());
       }
 
       EXPECT_EQ(4u, space2.surfaces().size());
-      BOOST_FOREACH(Surface s, space2.surfaces()){
+      for (const Surface& s : space2.surfaces()){
         EXPECT_EQ(4u, s.vertices().size());
         EXPECT_NEAR(50.0, s.grossArea(), areaTol);
         EXPECT_TRUE(s.adjacentSurface());

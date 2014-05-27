@@ -98,7 +98,7 @@ class MODEL_API SpaceInfiltrationEffectiveLeakageArea : public SpaceLoad {
   /// @cond
   typedef detail::SpaceInfiltrationEffectiveLeakageArea_Impl ImplType;
 
-  explicit SpaceInfiltrationEffectiveLeakageArea(boost::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl);
+  explicit SpaceInfiltrationEffectiveLeakageArea(std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl);
 
   friend class Model;
   friend class IdfObject;

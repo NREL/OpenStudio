@@ -195,7 +195,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   zoneEquipmentLabelHLayout->addStretch();
   vLayout->addLayout(zoneEquipmentLabelHLayout);
 
-  m_equipmentVectorController = boost::shared_ptr<ZoneEquipmentVectorController>(new ZoneEquipmentVectorController());
+  m_equipmentVectorController = std::shared_ptr<ZoneEquipmentVectorController>(new ZoneEquipmentVectorController());
 
   OSDropZone * equipmentDropZone = new OSDropZone(m_equipmentVectorController.get());
   equipmentDropZone->setUseLargeIcon(true);

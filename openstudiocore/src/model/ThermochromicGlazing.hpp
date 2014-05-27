@@ -71,7 +71,7 @@ class MODEL_API ThermochromicGlazing : public Glazing {
   /// @cond
   typedef detail::ThermochromicGlazing_Impl ImplType;
 
-  explicit ThermochromicGlazing(boost::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
+  explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
 
   friend class detail::ThermochromicGlazing_Impl;
   friend class Model;

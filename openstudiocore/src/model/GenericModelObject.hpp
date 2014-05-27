@@ -58,7 +58,7 @@ class MODEL_API GenericModelObject : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit GenericModelObject(boost::shared_ptr<detail::GenericModelObject_Impl> impl);
+  explicit GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> impl);
 
  private:
 

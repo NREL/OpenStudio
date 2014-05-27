@@ -24,7 +24,6 @@
 #include <QDialog>
 #include <QPixmap>
 #include <QString>
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 class QScrollArea;

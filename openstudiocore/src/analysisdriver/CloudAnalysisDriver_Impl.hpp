@@ -33,7 +33,6 @@
 #include <QObject>
 
 #include <boost/smart_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 #include <deque>
 
@@ -46,7 +45,7 @@ namespace analysisdriver {
 namespace detail {
 
   /** CloudAnalysisDriver_Impl is the implementation class for CloudAnalysisDriver.*/
-  class ANALYSISDRIVER_API CloudAnalysisDriver_Impl : public QObject, public boost::enable_shared_from_this<CloudAnalysisDriver_Impl> {
+  class ANALYSISDRIVER_API CloudAnalysisDriver_Impl : public QObject, public std::enable_shared_from_this<CloudAnalysisDriver_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -159,8 +158,8 @@ namespace detail {
     /** Get a public object that wraps this impl.*/
     template<typename T>
     T getPublicObject() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<CloudAnalysisDriver_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<CloudAnalysisDriver_Impl>(shared_from_this())));
       return result;
     }
 

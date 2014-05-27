@@ -50,7 +50,7 @@ namespace detail {
     return DataPoint_Measure_JoinRecord::databaseTableName();
   }
 
-  void DataPoint_Measure_JoinRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPoint_Measure_JoinRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPoint_Measure_JoinRecord>(query);
@@ -85,7 +85,7 @@ namespace detail {
 DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
     const DataPointRecord& dataPointRecord,
     const MeasureRecord& measureRecord)
-  : JoinRecord(boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl>(
+  : JoinRecord(std::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl>(
         new detail::DataPoint_Measure_JoinRecord_Impl(dataPointRecord, measureRecord)),
         dataPointRecord.projectDatabase())
 {
@@ -93,7 +93,7 @@ DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
 }
 
 DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
-    boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
+    std::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl,
     ProjectDatabase database)
   : JoinRecord(impl, database)
 {
@@ -222,7 +222,7 @@ MeasureRecord DataPoint_Measure_JoinRecord::measureRecord() const {
 
 /// @cond
 DataPoint_Measure_JoinRecord::DataPoint_Measure_JoinRecord(
-    boost::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl)
+    std::shared_ptr<detail::DataPoint_Measure_JoinRecord_Impl> impl)
   : JoinRecord(impl)
 {}
 /// @endcond

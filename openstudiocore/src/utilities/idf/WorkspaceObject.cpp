@@ -43,7 +43,7 @@
 using namespace std;
 
 using openstudio::detail::WorkspaceObject_Impl;
-using boost::dynamic_pointer_cast;
+using std::dynamic_pointer_cast;
 
 namespace openstudio {
 
@@ -1245,7 +1245,7 @@ namespace detail {
   {
     WorkspaceObjectMetaTypeInitializer()
     {
-      qRegisterMetaType<boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
+      qRegisterMetaType<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> >();
     }
   };
 
@@ -1343,7 +1343,7 @@ IdfObject WorkspaceObject::idfObject() const {
 
 // PROTECTED
 
-WorkspaceObject::WorkspaceObject(boost::shared_ptr<detail::WorkspaceObject_Impl> impl)
+WorkspaceObject::WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl)
   : IdfObject(impl)
 {}
 

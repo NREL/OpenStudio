@@ -5,7 +5,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/WorkspaceObject.hpp>

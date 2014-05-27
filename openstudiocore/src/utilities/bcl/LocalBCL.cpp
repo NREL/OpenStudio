@@ -47,7 +47,7 @@
 
 namespace openstudio{
 
-  boost::shared_ptr<LocalBCL> LocalBCL::ptr;
+  std::shared_ptr<LocalBCL> LocalBCL::ptr;
 
   LocalBCL::LocalBCL(const path& libraryPath):
     m_libraryPath(QDir().cleanPath(toQString(libraryPath))),
@@ -59,7 +59,7 @@ namespace openstudio{
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", m_libraryPath+m_dbName);
     database.setDatabaseName(m_libraryPath+m_dbName);
-    m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
+    m_qSqlDatabase = std::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     //Check for BCL directory
     if (!QDir(m_libraryPath).exists())
@@ -108,7 +108,7 @@ namespace openstudio{
     if (!ptr) {
       QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
         QDir::homePath().append("/BCL")).toString())));
     }
     return *ptr;
@@ -117,13 +117,13 @@ namespace openstudio{
   LocalBCL &LocalBCL::instance(const path& libraryPath)
   {
     if (!ptr) {
-      ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
     }
     else
     {
       if (ptr->libraryPath() != toQString(libraryPath)) {
         ptr.reset();
-        ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
+        ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
     }
     return *ptr;
@@ -867,7 +867,7 @@ namespace openstudio{
       QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", path+m_dbName);
       database.setDatabaseName(path+m_dbName);
       m_qSqlDatabase->close();
-      m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
+      m_qSqlDatabase = std::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
       bool success = initializeLocalDb();
       if (!success) return false;

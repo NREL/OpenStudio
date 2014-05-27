@@ -274,7 +274,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.ModelObject");
 
     // vector of connections to other ModelObject "ports"
-    std::vector<boost::shared_ptr<Connection> > m_connectionVector;
+    std::vector<std::shared_ptr<Connection> > m_connectionVector;
 
     boost::optional<ModelObject> parentAsModelObject() const;
 
@@ -289,7 +289,7 @@ namespace detail {
     boost::optional<std::string> getSpecificKeyValue(OptionalString keyValue) const;
   };
 
-  typedef boost::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
+  typedef std::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
 
 } // detail
 } // model

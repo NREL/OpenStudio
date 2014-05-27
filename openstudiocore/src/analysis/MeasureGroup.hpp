@@ -131,7 +131,7 @@ class ANALYSIS_API MeasureGroup : public DiscreteVariable {
   friend class detail::AnalysisObject_Impl;
   friend class detail::MeasureGroup_Impl;
 
-  explicit MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl);
+  explicit MeasureGroup(std::shared_ptr<detail::MeasureGroup_Impl> impl);
 
   friend class detail::Measure_Impl;
   friend class detail::RubyMeasure_Impl;

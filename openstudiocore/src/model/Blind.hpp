@@ -371,7 +371,7 @@ class MODEL_API Blind : public ShadingMaterial {
   /// @cond
   typedef detail::Blind_Impl ImplType;
 
-  explicit Blind(boost::shared_ptr<detail::Blind_Impl> impl);
+  explicit Blind(std::shared_ptr<detail::Blind_Impl> impl);
 
   friend class detail::Blind_Impl;
   friend class Model;

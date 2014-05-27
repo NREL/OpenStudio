@@ -500,7 +500,7 @@ WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& mod
   OS_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
 }     
 
-WaterToWaterComponent::WaterToWaterComponent(boost::shared_ptr<detail::WaterToWaterComponent_Impl> p)
+WaterToWaterComponent::WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> p)
   : HVACComponent(p)
 {}
 

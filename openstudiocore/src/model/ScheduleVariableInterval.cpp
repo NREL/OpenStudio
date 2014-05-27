@@ -303,7 +303,7 @@ void ScheduleVariableInterval::resetOutOfRangeValue() {
 }
 
 /// @cond
-ScheduleVariableInterval::ScheduleVariableInterval(boost::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
+ScheduleVariableInterval::ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl)
   : ScheduleInterval(impl)
 {}
 /// @endcond

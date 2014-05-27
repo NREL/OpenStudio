@@ -46,12 +46,12 @@ using namespace openstudio;
 
 TEST_F(ModelEditorFixture, InspectorDialog_EmptyModel)
 {
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog());
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog());
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
   EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     inspectorDialog.get(), SLOT(onPushButtonNew(bool)));
@@ -75,9 +75,9 @@ TEST_F(ModelEditorFixture, InspectorDialog_Remove1Object)
   Space space2(model);
   EXPECT_EQ(2u, model.numObjects());
 
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     inspectorDialog.get(), SLOT(onPushButtonDelete(bool)));
@@ -111,9 +111,9 @@ TEST_F(ModelEditorFixture, InspectorDialog_Copy1Object)
   EXPECT_EQ(space1.handle(), model.objects(true)[0].handle());
   EXPECT_EQ(space2.handle(), model.objects(true)[1].handle());
 
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     inspectorDialog.get(), SLOT(onPushButtonCopy(bool)));
@@ -150,9 +150,9 @@ TEST_F(ModelEditorFixture, InspectorDialog_ModelObjectRemove)
   EXPECT_EQ(definition.handle(), model.objects(true)[0].handle());
   EXPECT_EQ(lights.handle(), model.objects(true)[1].handle());
 
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
 
-  boost::shared_ptr<TestButton> button(new TestButton);
+  std::shared_ptr<TestButton> button(new TestButton);
 
   bool connected = QObject::connect(button.get(), SIGNAL(clicked(bool)),
                                     inspectorDialog.get(), SLOT(onPushButtonDelete(bool)));
@@ -183,7 +183,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   EXPECT_EQ(space.handle(), model.objects(true)[0].handle());
   EXPECT_EQ(thermalZone.handle(), model.objects(true)[1].handle());
 
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(model));
 
   EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
   EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
@@ -207,5 +207,5 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
 
 TEST_F(ModelEditorFixture, InspectorDialog_SketchUpPlugin)
 {
-  boost::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(InspectorDialogClient::SketchUpPlugin));
+  std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(InspectorDialogClient::SketchUpPlugin));
 }

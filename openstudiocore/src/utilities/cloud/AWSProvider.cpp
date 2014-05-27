@@ -41,8 +41,6 @@
 #include <QTextStream>
 #include <QUrl>
 
-#include <boost/bind.hpp>
-
 #include <algorithm>
 
 namespace openstudio{
@@ -908,7 +906,7 @@ namespace openstudio{
     bool AWSProvider_Impl::internetAvailable(int msec)
     {
       if (requestInternetAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
           return lastInternetAvailable();
         }
       }
@@ -923,7 +921,7 @@ namespace openstudio{
     bool AWSProvider_Impl::serviceAvailable(int msec)
     {
       if (requestServiceAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
       }
@@ -938,7 +936,7 @@ namespace openstudio{
     bool AWSProvider_Impl::validateCredentials(int msec)
     {
       if (requestValidateCredentials()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
           return lastValidateCredentials();
         }
       }
@@ -953,7 +951,7 @@ namespace openstudio{
     bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
@@ -967,7 +965,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
         return serverStarted();
       }
       if (m_startServerProcess){
@@ -980,7 +978,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
         return workersStarted();
       }
       if (m_startWorkerProcess){
@@ -994,7 +992,7 @@ namespace openstudio{
     bool AWSProvider_Impl::serverRunning(int msec)
     {
       if (requestServerRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
       }
@@ -1009,7 +1007,7 @@ namespace openstudio{
     bool AWSProvider_Impl::workersRunning(int msec)
     {
       if (requestWorkersRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
           return lastWorkersRunning();
         }
       }
@@ -1023,7 +1021,7 @@ namespace openstudio{
 
     bool AWSProvider_Impl::waitForTerminated(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
         return m_instancesStopped;
       }
       if (m_stopInstancesProcess){
@@ -1037,7 +1035,7 @@ namespace openstudio{
     bool AWSProvider_Impl::terminateCompleted(int msec)
     {
       if (requestTerminateCompleted()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
       }
@@ -1052,7 +1050,7 @@ namespace openstudio{
     double AWSProvider_Impl::estimatedCharges(int msec)
     {
       if (requestEstimatedCharges()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
           return lastEstimatedCharges();
         }
       }
@@ -1067,7 +1065,7 @@ namespace openstudio{
     unsigned AWSProvider_Impl::totalInstances(int msec)
     {
       if (requestTotalInstances()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
           return lastTotalInstances();
         }
       }
@@ -1378,7 +1376,7 @@ namespace openstudio{
       args << toQString(m_awsSettings.region());
     }
 
-    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
+    bool AWSProvider_Impl::waitForFinished(int msec, const std::function<bool ()>& f) {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
       int current = 0;
@@ -2134,7 +2132,7 @@ namespace openstudio{
   } // detail
 
   AWSSettings::AWSSettings()
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl()))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2149,7 +2147,7 @@ namespace openstudio{
                            std::string region,
                            std::string serverInstanceType,
                            std::string workerInstanceType)
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
                                                    userAgreementSigned,
@@ -2163,7 +2161,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
 
-  AWSSettings::AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl)
+  AWSSettings::AWSSettings(const std::shared_ptr<detail::AWSSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2257,7 +2255,7 @@ namespace openstudio{
   AWSSession::AWSSession(const std::string& sessionId,
                          const boost::optional<Url>& serverUrl,
                          const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(sessionId,
                                                  serverUrl,
                                                  workerUrls)))
@@ -2279,7 +2277,7 @@ namespace openstudio{
                          const std::string& region,
                          const std::string& serverInstanceType,
                          const std::string& workerInstanceType)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(uuid,
                                                  versionUUID,
                                                  sessionId,
@@ -2298,7 +2296,7 @@ namespace openstudio{
       OS_ASSERT(getImpl<detail::AWSSession_Impl>());
     }
 
-  AWSSession::AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl)
+  AWSSession::AWSSession(const std::shared_ptr<detail::AWSSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
@@ -2390,11 +2388,11 @@ namespace openstudio{
 
 
   AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
+    : CloudProvider(std::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
   {
   }
 
-  AWSProvider::AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl)
+  AWSProvider::AWSProvider(const std::shared_ptr<detail::AWSProvider_Impl>& impl)
     : CloudProvider(impl)
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());

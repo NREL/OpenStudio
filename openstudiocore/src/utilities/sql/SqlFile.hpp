@@ -37,7 +37,6 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Optional.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <string>
@@ -848,7 +847,7 @@ private:
 
   REGISTER_LOGGER("openstudio.sql.SqlFile");
 
-  boost::shared_ptr<detail::SqlFile_Impl> m_impl;
+  std::shared_ptr<detail::SqlFile_Impl> m_impl;
 
   /// returns datadictionary of available timeseries
   friend class ::resultsviewer::TableView;

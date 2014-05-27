@@ -54,7 +54,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> children() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     /** Resets algorithm back to its initial state. Provided for callers operating
      *  directly on the database, not holding a copy of this analysis in memory. Use

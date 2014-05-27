@@ -114,7 +114,7 @@ void ProgramControl::resetNumberofThreadsAllowed() {
 }
 
 /// @cond
-ProgramControl::ProgramControl(boost::shared_ptr<detail::ProgramControl_Impl> impl)
+ProgramControl::ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

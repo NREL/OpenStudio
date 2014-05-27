@@ -40,7 +40,7 @@ namespace openstudio {
 StartupView::StartupView( QWidget * parent ) 
   : QWidget( parent )
 {
-  m_templateListModel = boost::shared_ptr<TemplateListModel>( new TemplateListModel() );
+  m_templateListModel = std::shared_ptr<TemplateListModel>( new TemplateListModel() );
 
   setStyleSheet("openstudio--StartupView { background: #E6E6E6; }");
   

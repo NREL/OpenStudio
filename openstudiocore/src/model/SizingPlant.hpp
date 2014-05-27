@@ -83,7 +83,7 @@ class MODEL_API SizingPlant : public ModelObject {
   /// @cond
   typedef detail::SizingPlant_Impl ImplType;
 
-  explicit SizingPlant(boost::shared_ptr<detail::SizingPlant_Impl> impl);
+  explicit SizingPlant(std::shared_ptr<detail::SizingPlant_Impl> impl);
 
   friend class detail::SizingPlant_Impl;
   friend class Model;

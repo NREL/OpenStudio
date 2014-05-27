@@ -74,7 +74,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit {
   /// @cond
   typedef detail::FahrenheitUnit_Impl ImplType;
 
-  explicit FahrenheitUnit(boost::shared_ptr<detail::FahrenheitUnit_Impl> impl);
+  explicit FahrenheitUnit(std::shared_ptr<detail::FahrenheitUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::FahrenheitUnit_Impl;

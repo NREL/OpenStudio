@@ -175,7 +175,7 @@ ShadowCalculation::ShadowCalculation(const Model& model)
 }
 
 // constructor
-ShadowCalculation::ShadowCalculation(boost::shared_ptr<detail::ShadowCalculation_Impl> impl)
+ShadowCalculation::ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl)
   : ModelObject(impl)
 {}
 

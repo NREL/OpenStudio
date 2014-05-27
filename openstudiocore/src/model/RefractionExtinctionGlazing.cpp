@@ -762,7 +762,7 @@ void RefractionExtinctionGlazing::resetSolarDiffusing() {
 }
 
 /// @cond
-RefractionExtinctionGlazing::RefractionExtinctionGlazing(boost::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl)
+RefractionExtinctionGlazing::RefractionExtinctionGlazing(std::shared_ptr<detail::RefractionExtinctionGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

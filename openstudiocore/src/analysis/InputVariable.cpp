@@ -68,7 +68,7 @@ namespace detail {
       return parent()->cast<WorkflowStep>();
     }
     InputVariable copyOfThis = getPublicObject<InputVariable>();
-    boost::shared_ptr<detail::WorkflowStep_Impl> workflowStepImpl(new detail::WorkflowStep_Impl(copyOfThis));
+    std::shared_ptr<detail::WorkflowStep_Impl> workflowStepImpl(new detail::WorkflowStep_Impl(copyOfThis));
     WorkflowStep result(workflowStepImpl);
     copyOfThis.setParent(result);
     return result;
@@ -196,7 +196,7 @@ runmanager::WorkItem InputVariable::createWorkItem(const QVariant& value,
 }
 
 /// @cond
-InputVariable::InputVariable(boost::shared_ptr<detail::InputVariable_Impl> impl)
+InputVariable::InputVariable(std::shared_ptr<detail::InputVariable_Impl> impl)
   : Variable(impl)
 {}
 /// @endcond

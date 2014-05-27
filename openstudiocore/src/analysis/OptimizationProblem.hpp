@@ -118,7 +118,7 @@ class ANALYSIS_API OptimizationProblem : public Problem {
   friend class detail::AnalysisObject_Impl;
   friend class detail::OptimizationProblem_Impl;
 
-  explicit OptimizationProblem(boost::shared_ptr<detail::OptimizationProblem_Impl> impl);
+  explicit OptimizationProblem(std::shared_ptr<detail::OptimizationProblem_Impl> impl);
 
   /// @endcond
  private:

@@ -6,10 +6,10 @@
 %}
 
 // create an instantiation of the smart ptr class
-%template(AnnotatedTimelinePtr) boost::shared_ptr<openstudio::AnnotatedTimeline>;
+%template(AnnotatedTimelinePtr) std::shared_ptr<openstudio::AnnotatedTimeline>;
 
 // create an instantiation of the vector class
-%template(AnnotatedTimelineVector) std::vector< boost::shared_ptr<openstudio::AnnotatedTimeline> >;
+%template(AnnotatedTimelineVector) std::vector< std::shared_ptr<openstudio::AnnotatedTimeline> >;
 
 %include <utilities/plot/AnnotatedTimeline.hpp>
 

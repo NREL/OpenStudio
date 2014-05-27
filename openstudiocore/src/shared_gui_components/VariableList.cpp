@@ -55,8 +55,6 @@
 #include <QPushButton>
 #include <QRadioButton>
 
-#include <boost/bind.hpp>
-
 
 namespace openstudio{
 
@@ -705,7 +703,7 @@ void MeasureListController::addItemForDuplicateMeasure(const analysis::Measure& 
   analysis::RubyMeasureVector::const_iterator it = std::find_if(
       measuresInList.begin(),
       measuresInList.end(),
-      boost::bind(uuidsEqual<analysis::RubyMeasure,analysis::RubyMeasure>,duplicateMeasure,_1));
+      std::bind(uuidsEqual<analysis::RubyMeasure,analysis::RubyMeasure>,duplicateMeasure,std::placeholders::_1));
   emit itemInserted(int(it - measuresInList.begin()));
 }
 
@@ -951,7 +949,7 @@ void MeasureItem::setSelected(bool isSelected)
   OSListItem::setSelected(isSelected);
 
   // Ugly hack to prevent the controller from doing this for tab 2.
-  // Please someboday fix, perhaps be using a new signal from OSItemSelectionController.
+  // Please somebody fix, perhaps be using a new signal from OSItemSelectionController.
   if( ! controller()->selectionController()->allowMultipleSelections() )
   {
     if( isSelected )

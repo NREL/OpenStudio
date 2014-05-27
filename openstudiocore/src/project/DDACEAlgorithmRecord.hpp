@@ -72,11 +72,11 @@ class PROJECT_API DDACEAlgorithmRecord : public DakotaAlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
+  DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
                        ProjectDatabase database);
 
   /// @cond
-  explicit DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl);
+  explicit DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl);
 
   friend class detail::DDACEAlgorithmRecord_Impl;
   friend class Record;

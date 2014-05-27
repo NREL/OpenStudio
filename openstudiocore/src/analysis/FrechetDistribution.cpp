@@ -26,12 +26,12 @@ namespace openstudio {
 namespace analysis {
 
 FrechetDistribution::FrechetDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(FrechetDistribution::type())))
 {}
 
 FrechetDistribution::FrechetDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(FrechetDistribution::type())))
 {
   setAlpha(alpha);
@@ -65,7 +65,7 @@ void FrechetDistribution::setBeta(double value) {
   impl()->setAttribute(Attribute("betas",value),false);
 }
 
-FrechetDistribution::FrechetDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+FrechetDistribution::FrechetDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == FrechetDistribution::type());

@@ -78,7 +78,7 @@ bool Material::setThickness(double value) {
 }
 
 /// @cond
-Material::Material(boost::shared_ptr<detail::Material_Impl> impl)
+Material::Material(std::shared_ptr<detail::Material_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

@@ -102,7 +102,7 @@ namespace detail {
     return result;
   }
 
-  void TagRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void TagRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<TagRecord>(query);
@@ -208,7 +208,7 @@ namespace detail {
 } // detail
 
 TagRecord::TagRecord(const std::string& tag, const FileReferenceRecord& fileReferenceRecord)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(tag, fileReferenceRecord)), 
                  fileReferenceRecord.projectDatabase())
 {
@@ -216,7 +216,7 @@ TagRecord::TagRecord(const std::string& tag, const FileReferenceRecord& fileRefe
 }
 
 TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(tag, dataPointRecord)), 
                  dataPointRecord.projectDatabase())
 {
@@ -224,14 +224,14 @@ TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
 }
 
 TagRecord::TagRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(query,database)), 
                  database)
 {
   OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
-TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl, 
+TagRecord::TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl, 
                      ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
@@ -359,7 +359,7 @@ Tag TagRecord::tag() const {
 }
 
 /// @cond
-TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl)
+TagRecord::TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());

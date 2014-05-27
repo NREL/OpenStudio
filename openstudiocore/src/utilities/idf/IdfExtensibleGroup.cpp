@@ -251,7 +251,7 @@ bool IdfExtensibleGroup::operator!=(const IdfExtensibleGroup& other) const {
 
 // PRIVATE
 
-IdfExtensibleGroup::IdfExtensibleGroup(boost::shared_ptr<detail::IdfObject_Impl> impl,unsigned index)
+IdfExtensibleGroup::IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index)
     : m_impl(impl), m_index(index) {}
 
 unsigned IdfExtensibleGroup::mf_toIndex(unsigned fieldIndex) const {

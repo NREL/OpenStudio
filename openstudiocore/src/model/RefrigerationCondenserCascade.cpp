@@ -305,7 +305,7 @@ void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() 
 }
 
 /// @cond
-RefrigerationCondenserCascade::RefrigerationCondenserCascade(boost::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
+RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

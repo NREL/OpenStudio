@@ -107,7 +107,7 @@ namespace detail {
     return std::vector<JoinRecord>();
   }
 
-  void WorkflowRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void WorkflowRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<WorkflowRecord>(query);
@@ -219,7 +219,7 @@ namespace detail {
 WorkflowRecord::WorkflowRecord(const runmanager::Workflow& workflow,
                                ProblemRecord& problemRecord,
                                int workflowIndex)
-  : ObjectRecord(boost::shared_ptr<detail::WorkflowRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::WorkflowRecord_Impl>(
                    new detail::WorkflowRecord_Impl(workflow,
                                                    problemRecord,
                                                    workflowIndex)),
@@ -229,7 +229,7 @@ WorkflowRecord::WorkflowRecord(const runmanager::Workflow& workflow,
 }
 
 WorkflowRecord::WorkflowRecord(const QSqlQuery& query,ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::WorkflowRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::WorkflowRecord_Impl>(
                    new detail::WorkflowRecord_Impl(query,database)),
                    database)
 {
@@ -352,7 +352,7 @@ runmanager::Workflow WorkflowRecord::workflow() const {
 }
 
 /// @cond
-WorkflowRecord::WorkflowRecord(boost::shared_ptr<detail::WorkflowRecord_Impl> impl)
+WorkflowRecord::WorkflowRecord(std::shared_ptr<detail::WorkflowRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::WorkflowRecord_Impl>());

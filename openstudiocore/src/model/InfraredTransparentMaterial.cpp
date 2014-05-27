@@ -81,7 +81,7 @@ IddObjectType InfraredTransparentMaterial::iddObjectType() {
 }
 
 /// @cond
-InfraredTransparentMaterial::InfraredTransparentMaterial(boost::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
+InfraredTransparentMaterial::InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl)
   : ModelPartitionMaterial(impl)
 {}
 /// @endcond

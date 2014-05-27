@@ -36,8 +36,6 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <boost/bind.hpp>
-
 #include <sstream>
 
 #include <QSqlQuery>
@@ -130,7 +128,7 @@ namespace detail {
     return result;
   }
 
-  void RubyMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void RubyMeasureRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<RubyMeasureRecord>(query);
@@ -301,7 +299,7 @@ namespace detail {
 RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                MeasureGroupRecord& measureGroupRecord,
                                                int measureVectorIndex)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(rubyMeasure,
                                                 measureGroupRecord,
                                                 measureVectorIndex)),
@@ -314,7 +312,7 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
 
 RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(rubyMeasure,
                                                 database)),
         database)
@@ -325,20 +323,20 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
 }
 
 RubyMeasureRecord::RubyMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
+RubyMeasureRecord::RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
   : MeasureRecord(impl, database)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
+RubyMeasureRecord::RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());

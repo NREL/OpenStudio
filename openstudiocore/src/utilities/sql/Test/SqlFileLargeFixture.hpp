@@ -48,7 +48,7 @@ protected:
 public:
   // sql files
   static openstudio::SqlFile sqlFile;
-  static boost::shared_ptr<openstudio::TextLogType> logFile;
+  static std::shared_ptr<openstudio::TextLogType> logFile;
 };
 
 #endif // UTILITIES_SQL_TEST_SQLFILELARGEFIXTURE_HPP

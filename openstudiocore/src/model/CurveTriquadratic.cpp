@@ -1420,7 +1420,7 @@ void CurveTriquadratic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveTriquadratic::CurveTriquadratic(boost::shared_ptr<detail::CurveTriquadratic_Impl> impl)
+CurveTriquadratic::CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

@@ -136,7 +136,7 @@ class MODEL_API StandardsInformationConstruction : public ModelObject {
   explicit StandardsInformationConstruction(const ConstructionBase& construction);
 
   explicit StandardsInformationConstruction(
-      boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
+      std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl);  
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.StandardsInformationConstruction");

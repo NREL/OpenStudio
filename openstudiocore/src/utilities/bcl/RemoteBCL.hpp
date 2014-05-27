@@ -290,7 +290,7 @@ namespace openstudio{
 
     boost::optional<RemoteQueryResponse> m_queryResponse;
 
-    boost::shared_ptr<QFile> m_downloadFile;
+    std::shared_ptr<QFile> m_downloadFile;
 
     std::string m_downloadUid;
 

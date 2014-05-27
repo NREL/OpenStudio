@@ -77,7 +77,7 @@ namespace detail {
     return result;
   }
 
-  void SamplingAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void SamplingAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<SamplingAlgorithmRecord>(query);
@@ -222,7 +222,7 @@ namespace detail {
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(const analysis::SamplingAlgorithm& samplingAlgorithm,
                                                AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
         new detail::SamplingAlgorithmRecord_Impl(samplingAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         samplingAlgorithm)
@@ -233,7 +233,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const analysis::SamplingAlgorit
 }
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl>(
         new detail::SamplingAlgorithmRecord_Impl(query, database)),
         database,
         boost::none)
@@ -242,7 +242,7 @@ SamplingAlgorithmRecord::SamplingAlgorithmRecord(const QSqlQuery& query, Project
 }
 
 SamplingAlgorithmRecord::SamplingAlgorithmRecord(
-  boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
+  std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
@@ -306,7 +306,7 @@ analysis::SamplingAlgorithm SamplingAlgorithmRecord::samplingAlgorithm() const {
 }
 
 /// @cond
-SamplingAlgorithmRecord::SamplingAlgorithmRecord(boost::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl)
+SamplingAlgorithmRecord::SamplingAlgorithmRecord(std::shared_ptr<detail::SamplingAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

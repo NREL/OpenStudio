@@ -169,7 +169,7 @@ class MODEL_API OpaqueMaterial : public Material {
 
   OpaqueMaterial(IddObjectType type,const Model& model);
 
-  explicit OpaqueMaterial(boost::shared_ptr<detail::OpaqueMaterial_Impl> impl);  
+  explicit OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl);  
 
   /// @endcond
  private:

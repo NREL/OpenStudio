@@ -99,7 +99,7 @@ namespace openstudio {
           REGISTER_LOGGER("openstudio.runmanager.JSON");
 
           template<typename T>
-          friend std::vector<T> deserializeUnorderedVector(const QVariantList& list,boost::function<T (QVariant*)> typeConverter);
+          friend std::vector<T> deserializeUnorderedVector(const QVariantList& list,std::function<T (QVariant*)> typeConverter);
 
           /** @name toVariant overloads */
           //@{

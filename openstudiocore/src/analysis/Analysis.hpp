@@ -318,7 +318,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::Analysis_Impl;
 
-  explicit Analysis(boost::shared_ptr<detail::Analysis_Impl> impl);
+  explicit Analysis(std::shared_ptr<detail::Analysis_Impl> impl);
 
   /// @endcond
  private:

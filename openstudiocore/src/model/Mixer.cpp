@@ -163,7 +163,7 @@ bool Mixer_Impl::isRemovable() const
 
 } // detail
 
-Mixer::Mixer(boost::shared_ptr<detail::Mixer_Impl> p)
+Mixer::Mixer(std::shared_ptr<detail::Mixer_Impl> p)
   : HVACComponent(p)
 {}
 

@@ -83,7 +83,7 @@ class MODEL_API Timestep : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit Timestep(boost::shared_ptr<detail::Timestep_Impl> impl);
+  explicit Timestep(std::shared_ptr<detail::Timestep_Impl> impl);
 
   private:
 

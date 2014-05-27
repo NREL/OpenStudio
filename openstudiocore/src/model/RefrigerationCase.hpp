@@ -330,7 +330,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /// @cond
   typedef detail::RefrigerationCase_Impl ImplType;
 
-  explicit RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl);
+  explicit RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl);
 
   friend class detail::RefrigerationCase_Impl;
   friend class Model;

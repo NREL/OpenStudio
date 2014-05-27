@@ -436,7 +436,7 @@ bool GlareSensor::aimAt(const Point3d& target)
 }
 
 /// @cond
-GlareSensor::GlareSensor(boost::shared_ptr<detail::GlareSensor_Impl> impl)
+GlareSensor::GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

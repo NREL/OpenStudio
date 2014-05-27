@@ -281,7 +281,7 @@ namespace detail{
     return result;
   }
 
-  void AttributeRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void AttributeRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AttributeRecord>(query);
     this->bindValues(query);
@@ -768,7 +768,7 @@ namespace detail{
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const FileReferenceRecord& fileReferenceRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, fileReferenceRecord)),
         fileReferenceRecord.projectDatabase())
 {
@@ -779,7 +779,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const AttributeRecord& parentAttributeRecord,
                                  int attributeVectorIndex)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, parentAttributeRecord, attributeVectorIndex)),
         parentAttributeRecord.projectDatabase())
 {
@@ -789,7 +789,7 @@ AttributeRecord::AttributeRecord(const Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const AlgorithmRecord& algorithmRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, algorithmRecord)),
         algorithmRecord.projectDatabase())
 {
@@ -799,7 +799,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const VariableRecord& variableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute,variableRecord)),
         variableRecord.projectDatabase())
 {
@@ -820,20 +820,20 @@ void AttributeRecord::constructRelatedRecords(const Attribute& attribute) {
 }
 
 AttributeRecord::AttributeRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());

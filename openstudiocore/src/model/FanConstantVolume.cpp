@@ -441,7 +441,7 @@ FanConstantVolume::FanConstantVolume(const Model& model,
   setEndUseSubcategory("");
 }
 
-FanConstantVolume::FanConstantVolume(boost::shared_ptr<detail::FanConstantVolume_Impl> p)
+FanConstantVolume::FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> p)
   : StraightComponent(p)
 {}
 

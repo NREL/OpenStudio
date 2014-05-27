@@ -112,7 +112,7 @@ namespace detail {
     return result;
   }
 
-  void ProblemRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ProblemRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ProblemRecord>(query);
@@ -508,7 +508,7 @@ boost::optional<int> ProblemRecord::combinatorialSize(bool selectedMeasuresOnly)
   return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl,
                              ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -516,7 +516,7 @@ ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
 }
 
 /// @cond
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl)
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
@@ -601,7 +601,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
 }
 
 ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(problem, ProblemRecordType::ProblemRecord, database)),
         database)
 {
@@ -611,7 +611,7 @@ ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& 
 }
 
 ProblemRecord::ProblemRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(query, database)),
         database)
 {

@@ -421,7 +421,7 @@ CoilHeatingGas::CoilHeatingGas(const Model& model,
   setParasiticGasLoad(0);
 }
 
-CoilHeatingGas::CoilHeatingGas(boost::shared_ptr<detail::CoilHeatingGas_Impl> p)
+CoilHeatingGas::CoilHeatingGas(std::shared_ptr<detail::CoilHeatingGas_Impl> p)
   : StraightComponent(p)
 {}
 

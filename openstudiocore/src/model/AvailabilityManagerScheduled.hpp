@@ -55,7 +55,7 @@ class MODEL_API AvailabilityManagerScheduled : public ModelObject {
 
   typedef detail::AvailabilityManagerScheduled_Impl ImplType;
 
-  explicit AvailabilityManagerScheduled(boost::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl);
+  explicit AvailabilityManagerScheduled(std::shared_ptr<detail::AvailabilityManagerScheduled_Impl> impl);
 
   friend class detail::AvailabilityManagerScheduled_Impl;
   friend class Model;

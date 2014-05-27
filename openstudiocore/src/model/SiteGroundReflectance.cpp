@@ -514,7 +514,7 @@ void SiteGroundReflectance::resetDecemberGroundReflectance() {
 }
 
 /// @cond
-SiteGroundReflectance::SiteGroundReflectance(boost::shared_ptr<detail::SiteGroundReflectance_Impl> impl)
+SiteGroundReflectance::SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl)
   : ModelObject(impl)
 {}
 SiteGroundReflectance::SiteGroundReflectance(Model& model)

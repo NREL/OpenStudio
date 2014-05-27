@@ -71,7 +71,7 @@ class ANALYSIS_API SequentialSearchOptions : public AlgorithmOptions {
   /// @cond
   typedef detail::SequentialSearchOptions_Impl ImplType;
 
-  explicit SequentialSearchOptions(boost::shared_ptr<detail::SequentialSearchOptions_Impl> impl);
+  explicit SequentialSearchOptions(std::shared_ptr<detail::SequentialSearchOptions_Impl> impl);
 
   friend class detail::SequentialSearchOptions_Impl;
   friend class AlgorithmOptions;

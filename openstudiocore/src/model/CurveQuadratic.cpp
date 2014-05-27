@@ -336,7 +336,7 @@ void CurveQuadratic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveQuadratic::CurveQuadratic(boost::shared_ptr<detail::CurveQuadratic_Impl> impl)
+CurveQuadratic::CurveQuadratic(std::shared_ptr<detail::CurveQuadratic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

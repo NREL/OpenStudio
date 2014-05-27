@@ -114,7 +114,7 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   /// @cond
   typedef detail::FanConstantVolume_Impl ImplType;
-  explicit FanConstantVolume(boost::shared_ptr<detail::FanConstantVolume_Impl> impl);
+  explicit FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> impl);
  private:
   REGISTER_LOGGER("openstudio.model.FanConstantVolume");
   /// @endcond

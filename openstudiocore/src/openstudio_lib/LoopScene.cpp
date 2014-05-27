@@ -56,14 +56,14 @@ LoopScene::LoopScene( model::Loop loop,
     m_dirty(true)
 {
   connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
            this,
-           SLOT(addedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+           SLOT(addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
 
   connect( loop.model().getImpl<openstudio::model::detail::Model_Impl>().get(),
-           SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+           SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
            this,
-           SLOT(removedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
+           SLOT(removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)) );
 
   layout();
 }
@@ -127,7 +127,7 @@ model::Loop LoopScene::loop()
   return m_loop;
 }
 
-void LoopScene::addedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
+void LoopScene::addedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr )
 {
   model::detail::HVACComponent_Impl* hvac_impl = dynamic_cast<model::detail::HVACComponent_Impl*>(wPtr.get());
   if(hvac_impl)
@@ -138,7 +138,7 @@ void LoopScene::addedWorkspaceObject(boost::shared_ptr<openstudio::detail::Works
   }
 }
 
-void LoopScene::removedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> )
+void LoopScene::removedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> )
 {
   m_dirty = true;
 

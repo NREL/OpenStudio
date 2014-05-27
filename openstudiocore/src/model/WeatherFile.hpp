@@ -159,7 +159,7 @@ protected:
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit WeatherFile(boost::shared_ptr<detail::WeatherFile_Impl> impl);
+  explicit WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl);
 
   /// @endcond
  private:

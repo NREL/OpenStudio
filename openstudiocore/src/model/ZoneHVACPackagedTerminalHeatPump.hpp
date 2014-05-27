@@ -220,7 +220,7 @@ class MODEL_API ZoneHVACPackagedTerminalHeatPump : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACPackagedTerminalHeatPump_Impl ImplType;
 
-  explicit ZoneHVACPackagedTerminalHeatPump(boost::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl);
+  explicit ZoneHVACPackagedTerminalHeatPump(std::shared_ptr<detail::ZoneHVACPackagedTerminalHeatPump_Impl> impl);
 
   friend class detail::ZoneHVACPackagedTerminalHeatPump_Impl;
   friend class Model;

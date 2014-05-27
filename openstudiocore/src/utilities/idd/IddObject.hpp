@@ -30,7 +30,6 @@
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -203,10 +202,10 @@ class UTILITIES_API IddObject {
  private:
   ///@cond
   // pointer to impl
-  boost::shared_ptr<detail::IddObject_Impl> m_impl;
+  std::shared_ptr<detail::IddObject_Impl> m_impl;
 
   // construct from impl
-  IddObject(const boost::shared_ptr<detail::IddObject_Impl>& impl);
+  IddObject(const std::shared_ptr<detail::IddObject_Impl>& impl);
   ///@endcond
 
   // configure logging

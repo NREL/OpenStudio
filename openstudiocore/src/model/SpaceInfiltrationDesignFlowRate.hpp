@@ -181,7 +181,7 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit SpaceInfiltrationDesignFlowRate(boost::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
+  explicit SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
 
   /// @endcond
  private:

@@ -393,18 +393,18 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name, 
+  std::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name, 
                                                          const std::string& group,
                                                          const std::string& text, 
                                                          IddObjectType type) 
   {
-    boost::shared_ptr<IddObject_Impl> result;
-    result = boost::shared_ptr<IddObject_Impl>(new IddObject_Impl(name,group,type));
+    std::shared_ptr<IddObject_Impl> result;
+    result = std::shared_ptr<IddObject_Impl>(new IddObject_Impl(name,group,type));
 
     try {
       result->parse(text);
     }
-    catch (...) { return boost::shared_ptr<IddObject_Impl>(); }
+    catch (...) { return std::shared_ptr<IddObject_Impl>(); }
 
     return result;
   }
@@ -664,7 +664,7 @@ namespace detail {
 
 IddObject::IddObject()
 {
-  m_impl = boost::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl());
+  m_impl = std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl());
 }
 
 IddObject::IddObject(const IddObject& other)
@@ -801,7 +801,7 @@ boost::optional<IddObject> IddObject::load(const std::string& name,
                                            const std::string& group,
                                            const std::string& text,
                                            IddObjectType type) {
-  boost::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name,group,text,type);
+  std::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name,group,text,type);
   if (p) { return IddObject(p); }
   else { return boost::none; }
 }
@@ -820,7 +820,7 @@ std::ostream& IddObject::print(std::ostream& os) const
 
 // PRIVATE
 
-IddObject::IddObject(const boost::shared_ptr<detail::IddObject_Impl>& impl) : m_impl(impl) {}
+IddObject::IddObject(const std::shared_ptr<detail::IddObject_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

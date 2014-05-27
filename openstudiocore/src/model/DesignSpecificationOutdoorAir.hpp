@@ -128,7 +128,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
   /// @cond
   typedef detail::DesignSpecificationOutdoorAir_Impl ImplType;
 
-  explicit DesignSpecificationOutdoorAir(boost::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
+  explicit DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
 
   friend class detail::DesignSpecificationOutdoorAir_Impl;
 

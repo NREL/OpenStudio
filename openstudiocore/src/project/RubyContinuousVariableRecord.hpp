@@ -63,7 +63,7 @@ class PROJECT_API RubyContinuousVariableRecord : public ContinuousVariableRecord
   RubyContinuousVariableRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   /** Construct from impl. */
-  RubyContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl,
+  RubyContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl,
                                ProjectDatabase database);
 
   virtual ~RubyContinuousVariableRecord() {}
@@ -92,7 +92,7 @@ class PROJECT_API RubyContinuousVariableRecord : public ContinuousVariableRecord
   //@}
  protected:
   /// @cond
-  explicit RubyContinuousVariableRecord(boost::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl);
+  explicit RubyContinuousVariableRecord(std::shared_ptr<detail::RubyContinuousVariableRecord_Impl> impl);
 
   friend class detail::RubyContinuousVariableRecord_Impl;
   friend class Record;

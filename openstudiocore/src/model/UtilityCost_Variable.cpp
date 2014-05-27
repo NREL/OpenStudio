@@ -237,7 +237,7 @@ UtilityCost_Variable::UtilityCost_Variable(const Model& model)
 }
 
 // constructor
-UtilityCost_Variable::UtilityCost_Variable(boost::shared_ptr<detail::UtilityCost_Variable_Impl> impl)
+UtilityCost_Variable::UtilityCost_Variable(std::shared_ptr<detail::UtilityCost_Variable_Impl> impl)
   : ParentObject(impl)
 {}
 

@@ -114,7 +114,7 @@ class MODEL_API SteamEquipment : public SpaceLoadInstance {
   friend class IdfObject;
   friend class Model;
 
-  explicit SteamEquipment(boost::shared_ptr<detail::SteamEquipment_Impl> impl);
+  explicit SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl);
 
   /// @endcond
  private:

@@ -30,7 +30,6 @@
 #include <utilities/core/FileReference.hpp>
 #include <utilities/filetypes/EpwFile.hpp>
 
-#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 
 #include <QDir>
@@ -121,7 +120,7 @@ SimpleProject AnalysisDriverTestLibrarySingleton::createProject(
   std::vector<openstudio::path>::const_iterator it;
   it = std::find_if(m_baselineModels.begin(),
                     m_baselineModels.end(),
-                    boost::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,_1,baselineModelName));
+                    std::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,_1,baselineModelName));
   OS_ASSERT(it != m_baselineModels.end());
   bool test = result->setSeed(FileReference(*it)).first;
   OS_ASSERT(test);

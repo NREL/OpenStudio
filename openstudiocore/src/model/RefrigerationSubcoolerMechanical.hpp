@@ -77,7 +77,7 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
   /// @cond
   typedef detail::RefrigerationSubcoolerMechanical_Impl ImplType;
 
-  explicit RefrigerationSubcoolerMechanical(boost::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
+  explicit RefrigerationSubcoolerMechanical(std::shared_ptr<detail::RefrigerationSubcoolerMechanical_Impl> impl);
 
   friend class detail::RefrigerationSubcoolerMechanical_Impl;
   friend class Model;

@@ -800,7 +800,7 @@ void RefrigerationTranscriticalSystem::resetEndUseSubcategory() {
 }
 
 /// @cond
-RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(boost::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl)
+RefrigerationTranscriticalSystem::RefrigerationTranscriticalSystem(std::shared_ptr<detail::RefrigerationTranscriticalSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

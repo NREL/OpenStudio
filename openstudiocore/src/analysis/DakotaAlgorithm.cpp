@@ -184,7 +184,7 @@ boost::optional<DataPoint> DakotaAlgorithm::createNextDataPoint(
 }
 
 /// @cond
-DakotaAlgorithm::DakotaAlgorithm(boost::shared_ptr<detail::DakotaAlgorithm_Impl> impl)
+DakotaAlgorithm::DakotaAlgorithm(std::shared_ptr<detail::DakotaAlgorithm_Impl> impl)
   : Algorithm(impl)
 {}
 /// @endcond

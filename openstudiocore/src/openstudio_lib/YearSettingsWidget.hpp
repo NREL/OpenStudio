@@ -91,9 +91,9 @@ class YearSettingsWidget : public QWidget
 
   void onFirstDayofYearClicked();
 
-  void onWorkspaceObjectAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
+  void onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
 
-  void onWorkspaceObjectRemove(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
+  void onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo);
 
   void onDstStartDayWeekMonthChanged();
 
