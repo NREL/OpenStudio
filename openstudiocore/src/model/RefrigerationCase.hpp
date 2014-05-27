@@ -62,6 +62,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   static std::vector<std::string> defrostEnergyCorrectionCurveTypeValues();
 
+  static std::vector<std::string> unitTypeValues();
+
   /** @name Getters */
   //@{
 
@@ -178,6 +180,28 @@ class MODEL_API RefrigerationCase : public ParentObject {
   double averageRefrigerantChargeInventory() const;
 
   bool isAverageRefrigerantChargeInventoryDefaulted() const;
+
+  boost::optional<int> numberOfDoors() const;
+
+  boost::optional<double> ratedTotalCoolingCapacityperDoor() const;
+
+  boost::optional<double> standardCaseFanPowerperDoor() const;
+
+  boost::optional<double> operatingCaseFanPowerperDoor() const;
+
+  boost::optional<double> standardCaseLightingPowerperDoor() const;
+
+  boost::optional<double> installedCaseLightingPowerperDoor() const;
+
+  boost::optional<double> caseAntiSweatHeaterPowerperDoor() const;
+
+  boost::optional<double> minimumAntiSweatHeaterPowerperDoor() const;
+
+  boost::optional<double> caseDefrostPowerperDoor() const;
+
+  std::string unitType() const;
+
+  bool isUnitTypeDefaulted() const;
 
   boost::optional<int> durationofDefrostCycle() const;
 
@@ -338,6 +362,46 @@ class MODEL_API RefrigerationCase : public ParentObject {
   void setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
+
+  bool setNumberOfDoors(int numberOfDoors);
+
+  void resetNumberOfDoors();
+
+  bool setRatedTotalCoolingCapacityperDoor(double ratedTotalCoolingCapacityperDoor);
+
+  void resetRatedTotalCoolingCapacityperDoor();
+
+  bool setStandardCaseFanPowerperDoor(double standardCaseFanPowerperDoor);
+
+  void resetStandardCaseFanPowerperDoor();
+
+  bool setOperatingCaseFanPowerperDoor(double operatingCaseFanPowerperDoor);
+
+  void resetOperatingCaseFanPowerperDoor();
+
+  bool setStandardCaseLightingPowerperDoor(double standardCaseLightingPowerperDoor);
+
+  void resetStandardCaseLightingPowerperDoor();
+
+  bool setInstalledCaseLightingPowerperDoor(double installedCaseLightingPowerperDoor);
+
+  void resetInstalledCaseLightingPowerperDoor();
+
+  bool setCaseAntiSweatHeaterPowerperDoor(double caseAntiSweatHeaterPowerperDoor);
+
+  void resetCaseAntiSweatHeaterPowerperDoor();
+
+  bool setMinimumAntiSweatHeaterPowerperDoor(double minimumAntiSweatHeaterPowerperDoor);
+
+  void resetMinimumAntiSweatHeaterPowerperDoor();
+
+  bool setCaseDefrostPowerperDoor(double caseDefrostPowerperDoor);
+
+  void resetCaseDefrostPowerperDoor();
+
+  bool setUnitType(std::string unitType);
+
+  void resetUnitType();
 
   bool setDurationofDefrostCycle(int durationofDefrostCycle);
 

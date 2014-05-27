@@ -5858,26 +5858,25 @@ OS:Refrigeration:Case,
   N26,  \field Standard Case Lighting Power per Door
         \type real
         \units W
+        \minimum 0.0
   N27,  \field Installed Case Lighting Power per Door
         \type real
         \units W
+        \minimum 0.0
   N28,  \field Case Anti-Sweat Heater Power per Door
         \type real
         \units W
         \minimum 0.0
-        \default 0.0
   N29,  \field Minimum Anti-Sweat Heater Power per Door
         \type real
         \units W
         \minimum 0.0
-        \default 0.0
         \note This field is only applicable to the Linear, Dewpoint Method, and
         \note Heat Balance Method anti-sweat heater control types
   N30,  \field Case Defrost Power per Door
         \type real
         \units W
         \minimum 0.0
-        \default 0.0
         \note Used to evaluate load on case as well as power or heat consumption
   A16,  \field Unit Type
         \type choice

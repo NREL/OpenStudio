@@ -84,12 +84,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     object.setDouble(Refrigeration_CaseFields::RatedAmbientRelativeHumidity,d.get());
   }
 
-//RatedTotalCoolingCapacityperUnitLength
-  d = modelObject.ratedTotalCoolingCapacityperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,d.get());
-  }
-
 //RatedLatentHeatRatio
   d = modelObject.ratedLatentHeatRatio();
   if (d) {
@@ -133,30 +127,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     }
   }
 
-//StandardCaseFanPowerperUnitLength
-  d = modelObject.standardCaseFanPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,d.get());
-  }
-
-//OperatingCaseFanPowerperUnitLength
-  d = modelObject.operatingCaseFanPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,d.get());
-  }
-
-//StandardCaseLightingPowerperUnitLength
-  d = modelObject.standardCaseLightingPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,d.get());
-  }
-
-//InstalledCaseLightingPowerperUnitLength
-  d = modelObject.installedCaseLightingPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,d.get());
-  }
-
 //CaseLightingScheduleName
   boost::optional<Schedule> caseLightingSchedule = modelObject.caseLightingSchedule();
 
@@ -174,18 +144,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   d = modelObject.fractionofLightingEnergytoCase();
   if (d) {
     object.setDouble(Refrigeration_CaseFields::FractionofLightingEnergytoCase,d.get());
-  }
-
-//CaseAntiSweatHeaterPowerperUnitLength
-  d = modelObject.caseAntiSweatHeaterPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,d.get());
-  }
-
-//MinimumAntiSweatHeaterPowerperUnitLength
-  d = modelObject.minimumAntiSweatHeaterPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,d.get());
   }
 
 //AntiSweatHeaterControlType
@@ -210,12 +168,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   d = modelObject.fractionofAntiSweatHeaterEnergytoCase();
   if (d) {
     object.setDouble(Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase,d.get());
-  }
-
-//CaseDefrostPowerperUnitLength
-  d = modelObject.caseDefrostPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,d.get());
   }
 
 //CaseDefrostType
@@ -358,6 +310,103 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   d = modelObject.averageRefrigerantChargeInventory();
   if (d) {
     object.setDouble(Refrigeration_CaseFields::AverageRefrigerantChargeInventory,d.get());
+  }
+
+  boost::optional<double> ratedTotalCoolingCapacity;
+  boost::optional<double> standardCaseFanPower;
+  boost::optional<double> operatingCaseFanPower;
+  boost::optional<double> standardCaseLightingPower;
+  boost::optional<double> installedCaseLightingPower;
+  boost::optional<double> caseAntiSweatHeaterPower;
+  boost::optional<double> minimumAntiSweatHeaterPower;
+  boost::optional<double> caseDefrostPower;
+
+  std::string const unitType = modelObject.unitType();
+  if(istringEqual("UnitLength", unitType)) {
+    ratedTotalCoolingCapacity = modelObject.ratedTotalCoolingCapacityperUnitLength();
+    standardCaseFanPower = modelObject.standardCaseFanPowerperUnitLength();
+    operatingCaseFanPower = modelObject.operatingCaseFanPowerperUnitLength();
+    standardCaseLightingPower = modelObject.standardCaseLightingPowerperUnitLength();
+    installedCaseLightingPower = modelObject.installedCaseLightingPowerperUnitLength();
+    caseAntiSweatHeaterPower = modelObject.caseAntiSweatHeaterPowerperUnitLength();
+    minimumAntiSweatHeaterPower = modelObject.minimumAntiSweatHeaterPowerperUnitLength();
+    caseDefrostPower = modelObject.caseDefrostPowerperUnitLength();
+  }
+  else { // NumberOfDoors
+    boost::optional<int> numberOfDoors = modelObject.numberOfDoors();
+    boost::optional<double> caseLength = modelObject.caseLength();
+    if( !numberOfDoors ) {
+      LOG(Error, "Missing required input 'NumberOfDoors' for Refrigeration:Case named '" << modelObject.name().get() << "'");
+    }
+    if( !caseLength ) {
+      LOG(Error, "Missing required input 'CaseLength' for Refrigeration:Case named '" << modelObject.name().get() << "'");
+    }
+    double conversion = numberOfDoors.get() / caseLength.get();
+
+    if( ( ratedTotalCoolingCapacity = modelObject.ratedTotalCoolingCapacityperDoor() ) ) {
+      ratedTotalCoolingCapacity = ratedTotalCoolingCapacity.get() * conversion;
+    }
+    if( ( standardCaseFanPower = modelObject.standardCaseFanPowerperDoor() ) ) {
+      standardCaseFanPower = standardCaseFanPower.get() * conversion;
+    }
+    if( ( operatingCaseFanPower = modelObject.operatingCaseFanPowerperDoor() ) ) {
+      operatingCaseFanPower = operatingCaseFanPower.get() * conversion;
+    }
+    if( ( standardCaseLightingPower = modelObject.standardCaseLightingPowerperDoor() ) ) {
+      standardCaseLightingPower = standardCaseLightingPower.get() * conversion;
+    }
+    if( ( installedCaseLightingPower = modelObject.installedCaseLightingPowerperDoor() ) ) {
+      installedCaseLightingPower = installedCaseLightingPower.get() * conversion;
+    }
+    if( ( caseAntiSweatHeaterPower = modelObject.caseAntiSweatHeaterPowerperDoor() ) ) {
+      caseAntiSweatHeaterPower = caseAntiSweatHeaterPower.get() * conversion;
+    }
+    if( ( minimumAntiSweatHeaterPower = modelObject.minimumAntiSweatHeaterPowerperDoor() ) ) {
+      minimumAntiSweatHeaterPower = minimumAntiSweatHeaterPower.get() * conversion;
+    }
+    if( ( caseDefrostPower = modelObject.caseDefrostPowerperDoor() ) ) {
+      caseDefrostPower = caseDefrostPower.get() * conversion;
+    }
+  }
+
+//RatedTotalCoolingCapacityperUnitLength
+  if (ratedTotalCoolingCapacity) {
+    object.setDouble(Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,ratedTotalCoolingCapacity.get());
+  }
+
+//StandardCaseFanPowerperUnitLength
+  if (standardCaseFanPower) {
+    object.setDouble(Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,standardCaseFanPower.get());
+  }
+
+//OperatingCaseFanPowerperUnitLength
+  if (operatingCaseFanPower) {
+    object.setDouble(Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,operatingCaseFanPower.get());
+  }
+
+//StandardCaseLightingPowerperUnitLength
+  if (standardCaseLightingPower) {
+    object.setDouble(Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,standardCaseLightingPower.get());
+  }
+
+//InstalledCaseLightingPowerperUnitLength
+  if (installedCaseLightingPower) {
+    object.setDouble(Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,installedCaseLightingPower.get());
+  }
+
+//CaseAntiSweatHeaterPowerperUnitLength
+  if (caseAntiSweatHeaterPower) {
+    object.setDouble(Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,caseAntiSweatHeaterPower.get());
+  }
+
+//MinimumAntiSweatHeaterPowerperUnitLength
+  if (minimumAntiSweatHeaterPower) {
+    object.setDouble(Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,minimumAntiSweatHeaterPower.get());
+  }
+
+//CaseDefrostPowerperUnitLength
+  if (caseDefrostPower) {
+    object.setDouble(Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,caseDefrostPower.get());
   }
 
   return object;

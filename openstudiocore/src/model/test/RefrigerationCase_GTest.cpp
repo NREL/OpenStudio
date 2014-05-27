@@ -812,3 +812,68 @@ TEST_F(ModelFixture, RefrigerationCase_DefrostCycleParameters)
     refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
     EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
 }
+
+TEST_F(ModelFixture, RefrigerationCase_PerDoor)
+{
+    Model model;
+    ScheduleCompact cds(model);
+    RefrigerationCase testObject = RefrigerationCase(model, cds);
+
+    EXPECT_EQ("UnitLength", testObject.unitType());
+    EXPECT_TRUE(testObject.setUnitType("NumberOfDoors"));
+    EXPECT_EQ("NumberOfDoors", testObject.unitType());
+    
+    EXPECT_FALSE(testObject.numberOfDoors());
+    EXPECT_TRUE(testObject.setNumberOfDoors(5));
+    ASSERT_TRUE(testObject.numberOfDoors());
+    EXPECT_EQ(5, testObject.numberOfDoors().get());
+    EXPECT_FALSE(testObject.setNumberOfDoors(0));
+
+    EXPECT_FALSE(testObject.ratedTotalCoolingCapacityperDoor());
+    EXPECT_TRUE(testObject.setRatedTotalCoolingCapacityperDoor(999.9));
+    ASSERT_TRUE(testObject.ratedTotalCoolingCapacityperDoor());
+    EXPECT_EQ(999.9, testObject.ratedTotalCoolingCapacityperDoor().get());
+    EXPECT_FALSE(testObject.setRatedTotalCoolingCapacityperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.standardCaseFanPowerperDoor());
+    EXPECT_TRUE(testObject.setStandardCaseFanPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.standardCaseFanPowerperDoor());
+    EXPECT_EQ(999.9, testObject.standardCaseFanPowerperDoor().get());
+    EXPECT_FALSE(testObject.setStandardCaseFanPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.operatingCaseFanPowerperDoor());
+    EXPECT_TRUE(testObject.setOperatingCaseFanPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.operatingCaseFanPowerperDoor());
+    EXPECT_EQ(999.9, testObject.operatingCaseFanPowerperDoor().get());
+    EXPECT_FALSE(testObject.setOperatingCaseFanPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.standardCaseLightingPowerperDoor());
+    EXPECT_TRUE(testObject.setStandardCaseLightingPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.standardCaseLightingPowerperDoor());
+    EXPECT_EQ(999.9, testObject.standardCaseLightingPowerperDoor().get());
+    EXPECT_FALSE(testObject.setStandardCaseLightingPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.installedCaseLightingPowerperDoor());
+    EXPECT_TRUE(testObject.setInstalledCaseLightingPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.installedCaseLightingPowerperDoor());
+    EXPECT_EQ(999.9, testObject.installedCaseLightingPowerperDoor().get());
+    EXPECT_FALSE(testObject.setInstalledCaseLightingPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.caseAntiSweatHeaterPowerperDoor());
+    EXPECT_TRUE(testObject.setCaseAntiSweatHeaterPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.caseAntiSweatHeaterPowerperDoor());
+    EXPECT_EQ(999.9, testObject.caseAntiSweatHeaterPowerperDoor().get());
+    EXPECT_FALSE(testObject.setCaseAntiSweatHeaterPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.minimumAntiSweatHeaterPowerperDoor());
+    EXPECT_TRUE(testObject.setMinimumAntiSweatHeaterPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.minimumAntiSweatHeaterPowerperDoor());
+    EXPECT_EQ(999.9, testObject.minimumAntiSweatHeaterPowerperDoor().get());
+    EXPECT_FALSE(testObject.setMinimumAntiSweatHeaterPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.caseDefrostPowerperDoor());
+    EXPECT_TRUE(testObject.setCaseDefrostPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.caseDefrostPowerperDoor());
+    EXPECT_EQ(999.9, testObject.caseDefrostPowerperDoor().get());
+    EXPECT_FALSE(testObject.setCaseDefrostPowerperDoor(-1.0));   
+}
