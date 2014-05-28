@@ -844,6 +844,9 @@ SET( ${target_name}_src
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
+  ZoneControlHumidistat.hpp
+  ZoneControlHumidistat_Impl.hpp
+  ZoneControlHumidistat.cpp
   ZoneHVACBaseboardConvectiveElectric.hpp
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric.cpp

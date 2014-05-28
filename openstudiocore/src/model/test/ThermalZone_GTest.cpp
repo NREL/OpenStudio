@@ -44,6 +44,7 @@
 #include <model/ElectricEquipment.hpp>
 #include <model/LightsDefinition.hpp>
 #include <model/Lights.hpp>
+#include <model/ZoneControlHumidistat.hpp>
 
 #include <utilities/data/Attribute.hpp>
 #include <utilities/geometry/Point3d.hpp>
@@ -474,4 +475,18 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3)
   ASSERT_EQ(1u, newSpace->electricEquipment()[1].definition().lifeCycleCosts().size());
   EXPECT_EQ("CostPerEach", newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].costUnits());
   EXPECT_EQ(100, newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].totalCost());
+}
+
+TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
+{
+  Model m;
+  ThermalZone thermalZone(m);
+  ZoneControlHumidistat humidistat(m);
+
+  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
+  EXPECT_TRUE(thermalZone.setZoneControlHumidistat(humidistat));
+  ASSERT_TRUE(thermalZone.zoneControlHumidistat());
+  EXPECT_EQ(humidistat, thermalZone.zoneControlHumidistat().get());
+  thermalZone.resetZoneControlHumidistat();
+  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
 }
