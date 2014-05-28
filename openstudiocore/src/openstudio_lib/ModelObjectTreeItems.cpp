@@ -622,7 +622,7 @@ std::string SiteShadingTreeItem::itemName()
 std::vector<model::ModelObject> SiteShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Site", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -690,13 +690,13 @@ std::vector<model::ModelObject> BuildingTreeItem::modelObjectChildren() const
   std::vector<model::ModelObject> result;
 
   if (m_sortByType == IddObjectType::OS_BuildingStory){
-    std::vector<model::BuildingStory> buildingStories = model.getModelObjects<model::BuildingStory>();
+    std::vector<model::BuildingStory> buildingStories = model.getConcreteModelObjects<model::BuildingStory>();
     result.insert(result.end(), buildingStories.begin(), buildingStories.end());
   }else if (m_sortByType == IddObjectType::OS_ThermalZone){
-    std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     result.insert(result.end(), thermalZones.begin(), thermalZones.end());
   }else if (m_sortByType == IddObjectType::OS_SpaceType){
-    std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
+    std::vector<model::SpaceType> spaceTypes = model.getConcreteModelObjects<model::SpaceType>();
     result.insert(result.end(), spaceTypes.begin(), spaceTypes.end());
   }
 
@@ -775,7 +775,7 @@ std::string BuildingShadingTreeItem::itemName()
 std::vector<model::ModelObject> BuildingShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Building", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -841,7 +841,7 @@ std::vector<model::ModelObject> NoBuildingStoryTreeItem::modelObjectChildren() c
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
     if (!space.buildingStory()){
       result.push_back(space);
     }
@@ -922,7 +922,7 @@ std::vector<model::ModelObject> NoThermalZoneTreeItem::modelObjectChildren() con
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
     if (!space.thermalZone()){
       result.push_back(space);
     }
@@ -1021,7 +1021,7 @@ std::vector<model::ModelObject> NoSpaceTypeTreeItem::modelObjectChildren() const
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getModelObjects<model::Space>()){
+  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
     if (!space.spaceType()){
       result.push_back(space);
     }

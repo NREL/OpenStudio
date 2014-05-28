@@ -141,6 +141,13 @@ namespace detail {
     return result;
   }
 
+  double ThermochromicGlazing_Impl::opticalDataTemperature() const {
+    boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,false); // no default
+    //OS_ASSERT(value); TODO
+    //return value.get(); TODO
+    return 0;
+  }
+
   bool ThermochromicGlazing_Impl::setThickness(double value) {
     GlazingVector glazings = mf_glazings();
     DoubleVector rollbackValues;
@@ -224,9 +231,14 @@ namespace detail {
     return result;
   }
 
+  void ThermochromicGlazing_Impl::setOpticalDataTemperature(double value) {
+    bool result = setDouble(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::OpticalDataTemperature,value);
+    OS_ASSERT(result);
+  }
+
 } // detail
 
-ThermochromicGlazing::ThermochromicGlazing(const Model& model)
+ThermochromicGlazing::ThermochromicGlazing(const Model& model,double opticalDataTemperature)
   : Glazing(ThermochromicGlazing::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ThermochromicGlazing_Impl>());
@@ -235,6 +247,9 @@ ThermochromicGlazing::ThermochromicGlazing(const Model& model)
   bool ok = true;
   // ok = setHandle();
   OS_ASSERT(ok);
+
+  setOpticalDataTemperature(opticalDataTemperature);
+
 }
 
 IddObjectType ThermochromicGlazing::iddObjectType() {
@@ -246,6 +261,14 @@ ThermochromicGlazing::ThermochromicGlazing(boost::shared_ptr<detail::Thermochrom
   : Glazing(impl)
 {}
 /// @endcond
+
+double ThermochromicGlazing::opticalDataTemperature() const {
+  return getImpl<detail::ThermochromicGlazing_Impl>()->opticalDataTemperature();
+}
+
+void ThermochromicGlazing::setOpticalDataTemperature(double value) {
+  return getImpl<detail::ThermochromicGlazing_Impl>()->setOpticalDataTemperature(value);
+}
 
 } // model
 } // openstudio

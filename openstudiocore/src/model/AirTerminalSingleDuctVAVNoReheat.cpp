@@ -372,8 +372,6 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
                 AirTerminalSingleDuctVAVNoReheat mo = this->getObject<AirTerminalSingleDuctVAVNoReheat>();
 
                 thermalZone->addEquipment(mo);
-                thermalZone->setHeatingPriority(mo,1);
-                thermalZone->setCoolingPriority(mo,1);
               }
 
               return true; 
@@ -397,7 +395,7 @@ bool AirTerminalSingleDuctVAVNoReheat_Impl::addToNode(Node & node)
     boost::optional<ModelObject> targetModelObject = this->outletModelObject();
     boost::optional<unsigned> targetPort = this->connectedObjectPort(this->outletPort());
 
-    std::vector<ThermalZone> thermalZones = _model.getModelObjects<ThermalZone>();
+    std::vector<ThermalZone> thermalZones = _model.getConcreteModelObjects<ThermalZone>();
     for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
          it != thermalZones.end();
          ++it )

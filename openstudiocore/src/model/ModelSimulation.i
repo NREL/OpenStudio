@@ -2,7 +2,7 @@
 #define MODEL_SIMULATION_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelsimulation
+  %module openstudiomodelsimulation
 #endif
 
 
@@ -60,16 +60,16 @@ UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
 SWIG_UNIQUEMODELOBJECT(LightingSimulationControl);
-SWIG_MODELOBJECT(SizingParameters);
-SWIG_MODELOBJECT(SizingPeriod);
+SWIG_MODELOBJECT(SizingParameters, 1);
+SWIG_MODELOBJECT(SizingPeriod, 0);
 SWIG_UNIQUEMODELOBJECT(TimeDependentValuation);
 SWIG_UNIQUEMODELOBJECT(WeatherFile);
-SWIG_MODELOBJECT(WeatherFileConditionType);
-SWIG_MODELOBJECT(WeatherFileDays);
+SWIG_MODELOBJECT(WeatherFileConditionType, 1);
+SWIG_MODELOBJECT(WeatherFileDays, 1);
 SWIG_UNIQUEMODELOBJECT(ClimateZones);
 SWIG_MODELEXTENSIBLEGROUP(ClimateZone);
-SWIG_MODELOBJECT(DesignDay);
-SWIG_MODELOBJECT(LightingDesignDay);
+SWIG_MODELOBJECT(DesignDay, 1);
+SWIG_MODELOBJECT(LightingDesignDay, 1);
 SWIG_UNIQUEMODELOBJECT(ConvergenceLimits);
 SWIG_UNIQUEMODELOBJECT(RunPeriodControlDaylightSavingTime);
 SWIG_UNIQUEMODELOBJECT(HeatBalanceAlgorithm);
@@ -77,12 +77,12 @@ SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(ShadowCalculation);
-SWIG_MODELOBJECT(RunPeriodControlSpecialDays);
+SWIG_MODELOBJECT(RunPeriodControlSpecialDays, 1);
 SWIG_UNIQUEMODELOBJECT(Timestep);
 SWIG_UNIQUEMODELOBJECT(ZoneAirContaminantBalance);
 SWIG_UNIQUEMODELOBJECT(ZoneAirHeatBalanceAlgorithm);
 SWIG_UNIQUEMODELOBJECT(ZoneCapacitanceMultiplierResearchSpecial);
-SWIG_MODELOBJECT(SkyTemperature);
+SWIG_MODELOBJECT(SkyTemperature, 1);
 SWIG_UNIQUEMODELOBJECT(SiteGroundReflectance);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);

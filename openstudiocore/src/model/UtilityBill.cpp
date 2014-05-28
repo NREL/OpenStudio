@@ -708,7 +708,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+    BOOST_FOREACH(const Meter& meter, this->model().getConcreteModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Daily", meter.reportingFrequency()))){
         return meter;
@@ -754,7 +754,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getModelObjects<Meter>()){
+    BOOST_FOREACH(const Meter& meter, this->model().getConcreteModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Timestep", meter.reportingFrequency()))){
         return meter;

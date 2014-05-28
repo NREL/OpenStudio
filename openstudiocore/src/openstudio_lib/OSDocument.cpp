@@ -60,7 +60,13 @@
 
 #include <analysis/Analysis.hpp>
 
+#include <model/Building.hpp>
+#include <model/Building_Impl.hpp>
 #include <model/Component.hpp>
+#include <model/Facility.hpp>
+#include <model/Facility_Impl.hpp>
+#include <model/LifeCycleCostParameters.hpp>
+#include <model/LifeCycleCostParameters_Impl.hpp>
 #include <model/Model_Impl.hpp>
 #include <model/WeatherFile.hpp>
 #include <model/WeatherFile_Impl.hpp>
@@ -174,6 +180,12 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   modifiedOnLoad |= updateModelTempDir(m_model, modelTempDir);
 
+  // These objects used to be added to the model as you clicked through the App's tabs,
+  // resulting in a uncertain set of model changes.  With these changes, every model will
+  // always have the following objects.
+  openstudio::model::Building building = m_model.getUniqueModelObject<openstudio::model::Building>();
+  openstudio::model::Facility facility = m_model.getUniqueModelObject<openstudio::model::Facility>();
+  openstudio::model::LifeCycleCostParameters lifeCycleCostParameters = m_model.getUniqueModelObject<openstudio::model::LifeCycleCostParameters>();
 
   openstudio::analysisdriver::SimpleProjectOptions options;
   options.setPauseRunManagerQueue(true); // do not start running when opening

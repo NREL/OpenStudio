@@ -534,7 +534,7 @@ namespace detail{
 
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
 
-    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
     for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
     it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
@@ -558,7 +558,7 @@ namespace detail{
 
     std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
 
-    zoneHVACPackagedTerminalAirConditioners = this->model().getModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+    zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
     for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
     it < zoneHVACPackagedTerminalAirConditioners.end();
@@ -577,7 +577,7 @@ namespace detail{
 
     std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
 
-    zoneHVACPackagedTerminalHeatPumps = this->model().getModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+    zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
     for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
     it < zoneHVACPackagedTerminalHeatPumps.end();
@@ -1256,4 +1256,3 @@ void CoilCoolingDXSingleSpeed::autosizeRatedAirFlowRate() {
 
 } // model
 } // openstudio
-

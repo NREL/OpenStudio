@@ -128,7 +128,7 @@ namespace detail {
 
   boost::optional<WaterUseConnections> WaterUseEquipment_Impl::waterUseConnections() const
   {
-    std::vector<WaterUseConnections> connections = model().getModelObjects<WaterUseConnections>();
+    std::vector<WaterUseConnections> connections = model().getConcreteModelObjects<WaterUseConnections>();
 
     for( std::vector<WaterUseConnections>::iterator it = connections.begin();
          it != connections.end();

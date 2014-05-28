@@ -370,7 +370,7 @@ namespace detail {
   {
     OptionalAirLoopHVAC result;
 
-    AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>(); 
+    AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>(); 
     AirLoopHVACVector::iterator it;
     
     for( it = airLoops.begin();
