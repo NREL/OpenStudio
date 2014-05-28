@@ -199,6 +199,11 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   boost::optional<double> caseDefrostPowerperDoor() const;
 
+  /** Read the method for defining loads.
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
+  * from the *perDoor methods.
+  */
   std::string unitType() const;
 
   bool isUnitTypeDefaulted() const;
@@ -399,8 +404,14 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetCaseDefrostPowerperDoor();
 
+  /** Set the method for defining loads.
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
+  * from the *perDoor methods.
+  */
   bool setUnitType(std::string unitType);
 
+  /** Reset unit type to the default, "UnitLength" **/
   void resetUnitType();
 
   bool setDurationofDefrostCycle(int durationofDefrostCycle);
