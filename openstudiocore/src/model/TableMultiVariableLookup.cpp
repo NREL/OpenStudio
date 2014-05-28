@@ -20,6 +20,7 @@
 #include <model/TableMultiVariableLookup.hpp>
 #include <model/TableMultiVariableLookup_Impl.hpp>
 
+#include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Table_MultiVariableLookup_FieldEnums.hxx>
 
@@ -624,7 +625,83 @@ namespace detail {
 
   bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & xValues, const double & yValue)
   {
-    return false;
+    if( xValues.size() != numberofIndependentVariables() )
+    {
+      return false;
+    }
+    else
+    {
+      for(std::vector<double>::const_iterator it = xValues.begin();
+          it != xValues.end();
+          ++it)
+      {
+        IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
+        eg.setDouble(0,*it);  
+      }
+
+      IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
+      eg.setDouble(0,yValue);  
+    }
+
+    return true;
+  }
+
+  std::vector<double> TableMultiVariableLookup_Impl::xValues(int xIndex) const
+  {
+    std::vector<double> result;
+
+    int t_numberofIndependentVariables = numberofIndependentVariables();
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+    int numberOfPoints = groups.size() / (t_numberofIndependentVariables + 1);
+
+    for(int i = 0; i != numberOfPoints; ++i)
+    {
+      IdfExtensibleGroup g = groups[i * (t_numberofIndependentVariables + 1) + xIndex];
+      boost::optional<double> d = g.getDouble(OS_Table_MultiVariableLookupExtensibleFields::Data);
+      OS_ASSERT(d);
+      result.push_back(d.get());
+    }
+
+    return result;
+  }
+
+  boost::optional<double> TableMultiVariableLookup_Impl::yValue(const std::vector<double> & xValues) const
+  {
+    boost::optional<double> result;
+
+    int t_numberofIndependentVariables = numberofIndependentVariables();
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+    int numberOfPoints = groups.size() / (t_numberofIndependentVariables + 1);
+
+    for(int i = 0; i != numberOfPoints; ++i)
+    {
+      int xIndex = 0;
+      bool found = true;
+      for(std::vector<double>::const_iterator it = xValues.begin();
+          it != xValues.end();
+          ++it)
+      {
+        IdfExtensibleGroup g = groups[i * (t_numberofIndependentVariables + 1) + xIndex];
+        boost::optional<double> d = g.getDouble(OS_Table_MultiVariableLookupExtensibleFields::Data);
+        OS_ASSERT(d);
+        if(*it != d.get())
+        {
+          found = false;
+          break;
+        }
+        ++xIndex;
+      }
+      if(found)
+      {
+        IdfExtensibleGroup g = groups[i * (t_numberofIndependentVariables + 1) + t_numberofIndependentVariables];
+        result = g.getDouble(OS_Table_MultiVariableLookupExtensibleFields::Data);
+        break;
+      }
+    }
+
+    return result;
   }
 
 } // detail
@@ -1029,7 +1106,7 @@ double TableMultiVariableLookup::evaluate(const std::vector<double>& x) const
   return getImpl<detail::TableMultiVariableLookup_Impl>()->evaluate(x);
 }
 
-bool TableMultiVariableLookup::addPoint(const std::vector<double> & xValues, const double & yValue)
+bool TableMultiVariableLookup::addPoint(const std::vector<double> & xValues, double yValue)
 {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(xValues,yValue);
 }

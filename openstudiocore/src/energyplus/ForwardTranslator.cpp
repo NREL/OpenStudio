@@ -1514,6 +1514,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSubSurface(subSurface);
       break;
     }
+  case openstudio::IddObjectType::OS_Table_MultiVariableLookup :
+    {
+      model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
+      retVal = translateTableMultiVariableLookup(table);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermalZone :
     {
       model::ThermalZone zone = modelObject.cast<ThermalZone>();

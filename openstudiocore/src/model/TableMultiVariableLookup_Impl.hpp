@@ -254,6 +254,18 @@ namespace detail {
 
     int numVariables() const;
 
+    /** Return all of the x values for independent variable i
+      * in asscending order.
+      *
+      * The independent variables are indexed from 0.
+      */
+    std::vector<double> xValues(int i) const;
+
+    /** Return the y value corresponding to xValues.
+      * If no value then return boost::none
+      */
+    boost::optional<double> yValue(const std::vector<double> & xValues) const;
+
     double evaluate(const std::vector<double>& x) const;
 
     bool addPoint(const std::vector<double> & xValues, const double & yValue);

@@ -249,17 +249,17 @@ class MODEL_API TableMultiVariableLookup : public Curve {
    * of the independent variables. The size of the xValues vector must be
    * equal to the number of independent variables specified when the table was created.
    * If a y value already exists for a particular set of x values, then the y value
-   * will be replace.
+   * will be replaced.
    */
-  bool addPoint(const std::vector<double> & xValues, const double & yValue);
+  bool addPoint(const std::vector<double> & xValues, double yValue);
 
   /**
-  * Synonym for numberofIndependentVariables
+  * Synonym for numberofIndependentVariables.  This is inherited from the base class.
   */
   int numVariables() const;
 
   /**
-  * Not supported. 
+  * Not supported.  This is inherited from the base class.
   */
   double evaluate(const std::vector<double>& x) const;
 
