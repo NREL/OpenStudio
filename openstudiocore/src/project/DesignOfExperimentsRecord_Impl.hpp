@@ -20,10 +20,10 @@
 #ifndef PROJECT_DESIGNOFEXPERIMENTSRECORD_IMPL_HPP
 #define PROJECT_DESIGNOFEXPERIMENTSRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OpenStudioAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "OpenStudioAlgorithmRecord_Impl.hpp"
 
-#include <analysis/DesignOfExperimentsOptions.hpp>
+#include "../analysis/DesignOfExperimentsOptions.hpp"
 
 namespace openstudio {
 namespace analysis {

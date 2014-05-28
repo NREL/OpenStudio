@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_GENERICUNCERTAINTYDESCRIPTION_HPP
 #define ANALYSIS_GENERICUNCERTAINTYDESCRIPTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 

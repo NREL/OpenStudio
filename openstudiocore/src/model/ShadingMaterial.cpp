@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

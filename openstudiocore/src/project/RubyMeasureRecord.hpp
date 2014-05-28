@@ -21,9 +21,9 @@
 #define PROJECT_RUBYMEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/MeasureRecord.hpp>
+#include "MeasureRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional/optional.hpp>
 

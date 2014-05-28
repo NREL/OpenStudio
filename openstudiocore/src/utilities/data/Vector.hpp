@@ -20,7 +20,7 @@
 #ifndef UTILITIES_DATA_VECTOR_HPP
 #define UTILITIES_DATA_VECTOR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/vector.hpp>

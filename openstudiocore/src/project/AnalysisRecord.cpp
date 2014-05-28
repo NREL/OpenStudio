@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
+#include "AnalysisRecord.hpp"
+#include "AnalysisRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/TagRecord.hpp>
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
+#include "AlgorithmRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "FileReferenceRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "MeasureRecord.hpp"
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "TagRecord.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>

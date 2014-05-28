@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSCOMBOBOX_H
-#define OPENSTUDIO_OSCOMBOBOX_H
+#ifndef SHAREDGUICOMPONENTS_OSCOMBOBOX_HPP
+#define SHAREDGUICOMPONENTS_OSCOMBOBOX_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
-#include <shared_gui_components/OSConcepts.hpp>
+#include "FieldMethodTypedefs.hpp"
+#include "OSConcepts.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <QComboBox>
 #include <QList>
@@ -242,5 +242,5 @@ class OSComboBox : public QComboBox {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSCOMBOBOX_H
+#endif // SHAREDGUICOMPONENTS_OSCOMBOBOX_HPP
 

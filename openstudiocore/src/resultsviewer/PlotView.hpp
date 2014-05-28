@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_PLOTVIEW_H
-#define  RESULTSVIEWER_PLOTVIEW_H
+#ifndef RESULTSVIEWER_PLOTVIEW_HPP
+#define RESULTSVIEWER_PLOTVIEW_HPP
 
 #include <QWidget>
 #include <QAction>
@@ -57,10 +57,10 @@
 #include <qwt/qwt_color_map.h>
 #include <qwt/qwt_plot_spectrogram.h>
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/plot/LinePlot.hpp"
 
 namespace resultsviewer{
 
@@ -585,4 +585,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_PLOTVIEW_H
+#endif // RESULTSVIEWER_PLOTVIEW_HPP

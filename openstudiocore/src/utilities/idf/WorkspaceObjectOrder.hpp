@@ -20,11 +20,11 @@
 #ifndef UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECTORDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/Handle.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/ObjectOrderBase.hpp>
+#include "Handle.hpp"
+#include "WorkspaceObject.hpp"
+#include "ObjectOrderBase.hpp"
 
 namespace openstudio {
 

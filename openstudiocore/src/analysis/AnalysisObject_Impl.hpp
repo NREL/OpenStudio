@@ -20,9 +20,9 @@
 #ifndef ANALYSIS_ANALYSISOBJECT_IMPL_HPP
 #define ANALYSIS_ANALYSISOBJECT_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisObject.hpp"
 
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/UUID.hpp>

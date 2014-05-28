@@ -20,8 +20,8 @@
 #ifndef PROJECT_SEQUENTIALSEARCHRECORD_IMPL_HPP
 #define PROJECT_SEQUENTIALSEARCHRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OpenStudioAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "OpenStudioAlgorithmRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

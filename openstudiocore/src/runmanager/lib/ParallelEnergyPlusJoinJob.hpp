@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_PARALLELENERGYPLUSJOIN_HPP__
-#define OPENSTUDIO_PARALLELENERGYPLUSJOIN_HPP__
+#ifndef RUNMANAGER_LIB_PARALLELENERGYPLUSJOINJOB_HPP
+#define RUNMANAGER_LIB_PARALLELENERGYPLUSJOINJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
@@ -90,4 +90,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_PARALLELENERGYPLUSJOINJOB_HPP

@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_IDF_OBJECTWATCHER_HPP
-#define UTILITIES_IDF_OBJECTWATCHER_HPP
+#ifndef UTILITIES_IDF_IDFOBJECTWATCHER_HPP
+#define UTILITIES_IDF_IDFOBJECTWATCHER_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
 #include <utilities/idf/IdfObject.hpp>
@@ -99,4 +99,4 @@ class UTILITIES_API IdfObjectWatcher : public QObject {
 
 } // openstudio
 
-#endif //UTILITIES_IDF_OBJECTWATCHER_HPP
+#endif // UTILITIES_IDF_IDFOBJECTWATCHER_HPP

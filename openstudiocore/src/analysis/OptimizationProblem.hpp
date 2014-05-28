@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPTIMIZATIONPROBLEM_HPP
 #define ANALYSIS_OPTIMIZATIONPROBLEM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Problem.hpp>
+#include "AnalysisAPI.hpp"
+#include "Problem.hpp"
 
 namespace openstudio {
 namespace analysis {

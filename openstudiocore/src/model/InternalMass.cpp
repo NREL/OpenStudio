@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
 
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "InternalMassDefinition.hpp"
+#include "InternalMassDefinition_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_InternalMass_FieldEnums.hxx>
 

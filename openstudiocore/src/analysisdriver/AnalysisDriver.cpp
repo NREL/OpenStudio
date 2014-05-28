@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CurrentAnalysis_Impl.hpp>
+#include "AnalysisDriver.hpp"
+#include "AnalysisDriver_Impl.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "CurrentAnalysis.hpp"
+#include "CurrentAnalysis_Impl.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/Problem.hpp>

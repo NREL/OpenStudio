@@ -463,7 +463,7 @@ namespace detail {
     {
       if (requiredFile.second.is_complete())
       {
-        LOG(Debug, "Not completeing required file " << openstudio::toString(requiredFile.second) << " it is already complete");
+        LOG(Debug, "Not completing required file " << openstudio::toString(requiredFile.second) << " it is already complete");
       } else {
         ret.push_back(std::make_pair(requiredFile.first, dir / requiredFile.second));
       }
@@ -602,7 +602,7 @@ namespace detail {
                   {
                     m_addedRequiredFiles.insert(std::make_pair(p, relative));
 
-                    LOG(Info, "Adding OSM requesite file: " << openstudio::toString(p) 
+                    LOG(Info, "Adding OSM requisite file: " << openstudio::toString(p) 
                         << " to be installed at: " << openstudio::toString(relative));
                     retval.push_back(std::make_pair(p, url.second.parent_path() / relative));
                   }
@@ -634,8 +634,8 @@ namespace detail {
     openstudio::path outpath = outdir();
 
     QWriteLocker l(&m_mutex);
-	std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
-	//m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
+  std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
+  //m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
     std::shared_ptr<Process> process = m_process_creator->createProcess(ti,
         requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
@@ -880,7 +880,7 @@ namespace detail {
   void ToolBasedJob::copyRequiredFiles(const FileInfo &infile, const std::string &extin, const openstudio::path &filename)
   {
     QWriteLocker l(&m_mutex);
-    m_copyRequiredFiles.push_back(boost::make_tuple(infile, extin, filename));
+    m_copyRequiredFiles.push_back(std::make_tuple(infile, extin, filename));
   }
 
   Files ToolBasedJob::outputFilesImpl() const
@@ -900,7 +900,7 @@ namespace detail {
 
         for (auto & fi : fileinfos)
         {
-          if (openstudio::toString(fi.fullPath.extension()) == "." + copyRequiredFile.get<1>())
+          if (openstudio::toString(fi.fullPath.extension()) == "." + std::get<1>(copyRequiredFile))
           {
 
             // Copy the required files inherited from the input file to this found output file
@@ -915,17 +915,17 @@ namespace detail {
                 try {
                   fi.addRequiredFile(addedRequiredFile.first, addedRequiredFile.second);
                 } catch (const std::exception &e) {
-                  LOG(Info, "Requird file already existed, that's OK: " << e.what());
+                  LOG(Info, "Required file already existed, that's OK: " << e.what());
                 }
               }
             }
 
             std::vector<std::pair<QUrl, openstudio::path> > requiredFiles 
-              = copyRequiredFile.get<0>().requiredFiles;
+              = std::get<0>(copyRequiredFile).requiredFiles;
 
             for (const auto & requiredFile : requiredFiles)
             {
-              if (requiredFile.second == copyRequiredFile.get<2>() || copyRequiredFile.get<2>().empty())
+              if (requiredFile.second == std::get<2>(copyRequiredFile) || std::get<2>(copyRequiredFile).empty())
               {
                 fi.requiredFiles.push_back(requiredFile);
               }

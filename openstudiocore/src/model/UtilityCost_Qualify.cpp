@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Qualify.hpp>
-#include <model/UtilityCost_Qualify_Impl.hpp>
+#include "UtilityCost_Qualify.hpp"
+#include "UtilityCost_Qualify_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Qualify_FieldEnums.hxx>
 

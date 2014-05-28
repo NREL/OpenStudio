@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "WeatherFile.hpp"
+#include "WeatherFile_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 

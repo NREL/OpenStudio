@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_TriangularDistribution_HPP
-#define ANALYSIS_TriangularDistribution_HPP
+#ifndef ANALYSIS_TRIANGULARDISTRIBUTION_HPP
+#define ANALYSIS_TRIANGULARDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -76,4 +76,4 @@ class ANALYSIS_API TriangularDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_TriangularDistribution_HPP
+#endif // ANALYSIS_TRIANGULARDISTRIBUTION_HPP

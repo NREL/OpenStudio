@@ -21,7 +21,7 @@
 #define MODEL_OUTPUTVARIABLE_HPP
 
 #include "ModelAPI.hpp"
-#include <model/ModelObject.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
 

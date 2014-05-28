@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LocationTabView.hpp>
+#include "LocationTabView.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
 #include <openstudio_app/OpenStudioApp.hpp>
 

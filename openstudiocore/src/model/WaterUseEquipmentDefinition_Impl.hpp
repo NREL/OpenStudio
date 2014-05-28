@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERUSEEQUIPMENTDEFINITION_IMPL_HPP
 #define MODEL_WATERUSEEQUIPMENTDEFINITION_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 

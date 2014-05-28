@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSVIEW_H
-#define OPENSTUDIO_SCRIPTSVIEW_H
+#ifndef OPENSTUDIO_SCRIPTSVIEW_HPP
+#define OPENSTUDIO_SCRIPTSVIEW_HPP
 
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "SubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 #include <ruleset/OSArgument.hpp>
 
@@ -260,4 +260,4 @@ class OSArgumentPathEdit : public QWidget {
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSVIEW_H
+#endif // OPENSTUDIO_SCRIPTSVIEW_HPP

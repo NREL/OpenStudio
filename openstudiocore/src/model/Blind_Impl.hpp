@@ -20,8 +20,8 @@
 #ifndef MODEL_BLIND_IMPL_HPP
 #define MODEL_BLIND_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ShadingMaterial_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

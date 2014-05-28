@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CLOUDMONITOR_HPP
-#define OPENSTUDIO_CLOUDMONITOR_HPP
+#ifndef PATAPP_CLOUDMONITOR_HPP
+#define PATAPP_CLOUDMONITOR_HPP
 
 #include "PatConstants.hpp"
 #include "RunView.hpp"
@@ -26,9 +26,9 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Url.hpp"
 
 #include <map>
 #include <vector>
@@ -388,5 +388,5 @@ class CloudMonitorWorker : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_CLOUDMONITOR_HPP
+#endif // PATAPP_CLOUDMONITOR_HPP
 

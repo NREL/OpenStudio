@@ -20,7 +20,7 @@
 #ifndef UTILITIES_UNITS_SCALE_HPP
 #define UTILITIES_UNITS_SCALE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <functional>
 #include <ostream>

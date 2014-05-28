@@ -20,9 +20,9 @@
 #ifndef UTILITIES_PLOT_PROGRESSBAR_HPP
 #define UTILITIES_PLOT_PROGRESSBAR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/String.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Macro.hpp"
+#include "../core/String.hpp"
 
 #include <QProgressBar>
 

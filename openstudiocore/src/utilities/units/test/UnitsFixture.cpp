@@ -36,7 +36,7 @@ using openstudio::FileLogSink;
 using openstudio::path;
 using openstudio::toPath;
 
-// initiallize for each test
+// initialize for each test
 void UnitsFixture::SetUp() {
 }
 
@@ -44,7 +44,7 @@ void UnitsFixture::SetUp() {
 void UnitsFixture::TearDown() {
 }
 
-// initiallize static members
+// initialize static members
 void UnitsFixture::SetUpTestCase() 
 {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));

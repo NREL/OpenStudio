@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SchedulesTabController.hpp>
+#include "SchedulesTabController.hpp"
 
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/ScheduleDialog.hpp>
-#include <openstudio_lib/ScheduleSetsController.hpp>
-#include <openstudio_lib/SchedulesTabView.hpp>
-#include <openstudio_lib/SchedulesView.hpp>
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/YearSettingsWidget.hpp>
+#include "MainTabView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
+#include "OSItem.hpp"
+#include "ScheduleDialog.hpp"
+#include "ScheduleSetsController.hpp"
+#include "SchedulesTabView.hpp"
+#include "SchedulesView.hpp"
+#include "SubTabView.hpp"
+#include "YearSettingsWidget.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

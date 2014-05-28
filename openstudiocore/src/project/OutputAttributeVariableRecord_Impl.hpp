@@ -20,8 +20,8 @@
 #ifndef PROJECT_OUTPUTATTRIBUTEVARIABLERECORD_IMPL_HPP
 #define PROJECT_OUTPUTATTRIBUTEVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OutputVariableRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "OutputVariableRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

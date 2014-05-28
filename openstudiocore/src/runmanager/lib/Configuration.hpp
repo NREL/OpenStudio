@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP__
-#define OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP__
+#ifndef RUNMANAGER_LIB_CONFIGURATION_HPP
+#define RUNMANAGER_LIB_CONFIGURATION_HPP
 
 #include <string>
 #include <QTimer>
 #include <QItemDelegate>
 #include <boost/optional.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "RunManager.hpp"
 #include <runmanager/lib/ui_Configuration.h>
-#include <runmanager/lib/Job.hpp>
+#include "Job.hpp"
 #include <QStandardItemModel>
 
 class QFileDialog;
@@ -128,4 +128,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP_
+#endif // RUNMANAGER_LIB_CONFIGURATION_HPP

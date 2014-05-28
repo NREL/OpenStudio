@@ -21,9 +21,9 @@
 #define PROJECT_TAGRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
+#include "ObjectRecord_Impl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 

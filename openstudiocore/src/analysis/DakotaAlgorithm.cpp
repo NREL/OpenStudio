@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
+#include "DakotaAlgorithm.hpp"
+#include "DakotaAlgorithm_Impl.hpp"
 
-#include <analysis/DakotaAlgorithmOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DakotaParametersFile.hpp>
+#include "DakotaAlgorithmOptions.hpp"
+#include "Analysis.hpp"
+#include "Problem.hpp"
+#include "DataPoint.hpp"
+#include "DakotaParametersFile.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <runmanager/lib/JSON.hpp>

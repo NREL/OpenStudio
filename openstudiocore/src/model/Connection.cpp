@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/ModelObject.hpp>
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "ModelObject.hpp"
 
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 

@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_MEASUREGROUP_HPP
 #define ANALYSIS_MEASUREGROUP_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DiscreteVariable.hpp>
+#include "AnalysisAPI.hpp"
+#include "DiscreteVariable.hpp"
 
 namespace openstudio {
 namespace analysis {

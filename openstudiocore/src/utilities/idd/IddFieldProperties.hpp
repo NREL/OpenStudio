@@ -20,8 +20,8 @@
 #ifndef UTILITIES_IDD_IDDFIELDPROPERTIES_HPP
 #define UTILITIES_IDD_IDDFIELDPROPERTIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Enum.hpp"
 #include <boost/optional.hpp>
 
 #include <string>

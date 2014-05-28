@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_GeometricDISTRIBUTION_HPP
-#define ANALYSIS_GeometricDISTRIBUTION_HPP
+#ifndef ANALYSIS_GEOMETRICDISTRIBUTION_HPP
+#define ANALYSIS_GEOMETRICDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -69,4 +69,4 @@ class ANALYSIS_API GeometricDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_GeometricDISTRIBUTION_HPP
+#endif // ANALYSIS_GEOMETRICDISTRIBUTION_HPP

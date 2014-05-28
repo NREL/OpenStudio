@@ -20,8 +20,8 @@
 #ifndef MODEL_MODELOBJECT_IMPL_HPP
 #define MODEL_MODELOBJECT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp> // required for Q_PROPERTY
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp" // required for Q_PROPERTY
 
 #include <utilities/idf/WorkspaceObject_Impl.hpp>
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
 #define MODEL_HEATEXCHANGERAIRTOAIRSENSIBLEANDLATENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AirToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "AirToAirComponent.hpp"
 
 namespace openstudio {
 

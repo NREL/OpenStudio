@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectActionSetRelationship.hpp>
-#include <ruleset/ModelObjectActionSetRelationship_Impl.hpp>
+#include "ModelObjectActionSetRelationship.hpp"
+#include "ModelObjectActionSetRelationship_Impl.hpp"
 
 #include <osversion/VersionTranslator.hpp>
 

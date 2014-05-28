@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/WorkflowRecord.hpp>
+#include "FunctionRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "WorkflowRecord.hpp"
 
 #include <analysis/InputVariable.hpp>
 #include <analysis/OptimizationProblem.hpp>

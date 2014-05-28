@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
+#include "StandardGlazing.hpp"
+#include "StandardGlazing_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>

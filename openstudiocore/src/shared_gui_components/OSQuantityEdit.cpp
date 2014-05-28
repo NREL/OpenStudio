@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSQuantityEdit.hpp>
+#include "OSQuantityEdit.hpp"
 
 #include <model/ModelObject_Impl.hpp>
 

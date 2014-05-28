@@ -20,12 +20,12 @@
 #ifndef UTILITIES_DATA_TIMESERIES_HPP
 #define UTILITIES_DATA_TIMESERIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "Vector.hpp"
+#include "../time/Date.hpp"
+#include "../time/Time.hpp"
+#include "../time/DateTime.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/function.hpp>

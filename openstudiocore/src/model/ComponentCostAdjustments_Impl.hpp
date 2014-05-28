@@ -21,12 +21,12 @@
 #define MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
 
 
-#include <model/ComponentCostAdjustments.hpp>
+#include "ComponentCostAdjustments.hpp"
 
-#include <model/ParentObject_Impl.hpp>
-#include <model/ComponentCostAdjustments.hpp>
+#include "ParentObject_Impl.hpp"
+#include "ComponentCostAdjustments.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace model {

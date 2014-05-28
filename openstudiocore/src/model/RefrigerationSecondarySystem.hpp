@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
 #define MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 

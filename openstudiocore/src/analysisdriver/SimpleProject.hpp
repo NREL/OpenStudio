@@ -20,12 +20,12 @@
 #ifndef ANALYSISDRIVER_SIMPLEPROJECT_HPP
 #define ANALYSISDRIVER_SIMPLEPROJECT_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriver.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <boost/optional.hpp>
 

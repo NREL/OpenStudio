@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/VariableRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "FileReferenceRecord.hpp"
+#include "JoinRecord.hpp"
+#include "AlgorithmRecord.hpp"
+#include "VariableRecord.hpp"
 
 #include <utilities/units/UnitFactory.hpp>
 #include <utilities/units/Unit.hpp>

@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RESULTSTABCONTROLLER_H
-#define OPENSTUDIO_RESULTSTABCONTROLLER_H
+#ifndef PATAPP_RESULTSTABCONTROLLER_HPP
+#define PATAPP_RESULTSTABCONTROLLER_HPP
 
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
 
 #include <QObject>
 #include <QPointer>
@@ -215,4 +215,4 @@ class DataPointCalibrationListController : public OSListController
 
 } // openstudio
 
-#endif // OPENSTUDIO_RESULTSTABCONTROLLER_H
+#endif // PATAPP_RESULTSTABCONTROLLER_HPP

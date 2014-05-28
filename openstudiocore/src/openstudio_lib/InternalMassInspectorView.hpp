@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_INTERNALMASSINSPECTORVIEW_h
-#define OPENSTUDIO_INTERNALMASSINSPECTORVIEW_h
+#ifndef OPENSTUDIO_INTERNALMASSINSPECTORVIEW_HPP
+#define OPENSTUDIO_INTERNALMASSINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectVectorController.hpp"
 
 namespace openstudio {
 
@@ -109,5 +109,5 @@ class InternalMassDefinitionInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_INTERNALMASSINSPECTORVIEW_h
+#endif // OPENSTUDIO_INTERNALMASSINSPECTORVIEW_HPP
 

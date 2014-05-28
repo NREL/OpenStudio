@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_PREDICATES_FINDER_H
-#define UTILITIES_PREDICATES_FINDER_H
+#ifndef UTILITIES_CORE_FINDER_HPP
+#define UTILITIES_CORE_FINDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/String.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "String.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/optional.hpp>
@@ -232,4 +232,4 @@ namespace openstudio{
 
 } // openstudio
 
-#endif //UTILITIES_PREDICATES_FINDER_H
+#endif // UTILITIES_CORE_FINDER_HPP

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCALLIBRARYCONTROLLER_H
-#define OPENSTUDIO_LOCALLIBRARYCONTROLLER_H
+#ifndef SHAREDGUICOMPONENTS_LOCALLIBRARYCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_LOCALLIBRARYCONTROLLER_HPP
 
 #include "OSListView.hpp"
 #include "OSListController.hpp"
@@ -359,5 +359,5 @@ class LibraryListController : public OSListController
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOCALLIBRARYCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_LOCALLIBRARYCONTROLLER_HPP
 

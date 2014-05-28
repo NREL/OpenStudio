@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_BetaDISTRIBUTION_HPP
-#define ANALYSIS_BetaDISTRIBUTION_HPP
+#ifndef ANALYSIS_BETADISTRIBUTION_HPP
+#define ANALYSIS_BETADISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -81,4 +81,4 @@ class ANALYSIS_API BetaDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_BetaDISTRIBUTION_HPP
+#endif // ANALYSIS_BETADISTRIBUTION_HPP

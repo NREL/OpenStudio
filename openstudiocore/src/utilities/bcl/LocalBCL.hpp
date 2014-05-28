@@ -20,9 +20,9 @@
 #ifndef UTILITIES_BCL_LOCALBCL_HPP
 #define UTILITIES_BCL_LOCALBCL_HPP
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
+#include "BCL.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Path.hpp"
 
 #include <string>
 #include <vector>

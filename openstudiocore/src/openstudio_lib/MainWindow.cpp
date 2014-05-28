@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/LibraryTabWidget.hpp>
-#include <openstudio_lib/LoopLibraryDialog.hpp>
-#include <openstudio_lib/MainMenu.hpp>
-#include <openstudio_lib/VerticalTabWidget.hpp>
+#include "MainWindow.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "LibraryTabWidget.hpp"
+#include "LoopLibraryDialog.hpp"
+#include "MainMenu.hpp"
+#include "VerticalTabWidget.hpp"
 
 #include <utilities/core/Assert.hpp>
 

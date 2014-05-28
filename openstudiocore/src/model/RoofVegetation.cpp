@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
+#include "RoofVegetation.hpp"
+#include "RoofVegetation_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>

@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
+#include "Component.hpp"
+#include "Component_Impl.hpp"
 
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "Version.hpp"
+#include "Version_Impl.hpp"
+#include "ComponentData.hpp"
+#include "ComponentData_Impl.hpp"
 
 #include <utilities/idf/IdfFile.hpp>
 #include <utilities/idf/WorkspaceObject.hpp>

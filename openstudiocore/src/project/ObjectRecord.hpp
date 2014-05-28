@@ -21,13 +21,13 @@
 #define PROJECT_OBJECTRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/Record.hpp>
+#include "Record.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/core/Path.hpp"
 
 class QSqlQuery;
 class QSqlDatabase;

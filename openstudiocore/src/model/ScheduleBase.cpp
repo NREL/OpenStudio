@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleBase.hpp>
-#include <model/ScheduleBase_Impl.hpp>
+#include "ScheduleBase.hpp"
+#include "ScheduleBase_Impl.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idf/ValidityReport.hpp>
 

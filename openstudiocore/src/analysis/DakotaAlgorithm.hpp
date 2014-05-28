@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DAKOTAALGORITHM_HPP
 #define ANALYSIS_DAKOTAALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm.hpp"
 
 namespace openstudio {
 

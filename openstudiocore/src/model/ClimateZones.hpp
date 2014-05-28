@@ -20,9 +20,9 @@
 #ifndef MODEL_CLIMATEZONES_HPP
 #define MODEL_CLIMATEZONES_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {

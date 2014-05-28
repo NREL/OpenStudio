@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_FAHRENHEITUNIT_IMPL_HPP
 #define UTILITIES_UNITS_FAHRENHEITUNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "TemperatureUnit_Impl.hpp"
 
 namespace openstudio {
 namespace detail {

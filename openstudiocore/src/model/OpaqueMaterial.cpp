@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
+#include "OpaqueMaterial.hpp"
+#include "OpaqueMaterial_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

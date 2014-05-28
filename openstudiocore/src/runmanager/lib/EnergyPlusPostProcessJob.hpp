@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_ENERGYPLUSPOSTPROCESSJOB_HPP
-#define OPENSTUDIO_RUNMANAGER_ENERGYPLUSPOSTPROCESSJOB_HPP
+#ifndef RUNMANAGER_LIB_ENERGYPLUSPOSTPROCESSJOB_HPP
+#define RUNMANAGER_LIB_ENERGYPLUSPOSTPROCESSJOB_HPP
 
 
 #include <boost/filesystem.hpp>
@@ -97,4 +97,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_ENERGYPLUSPOSTPROCESSJOB_HPP

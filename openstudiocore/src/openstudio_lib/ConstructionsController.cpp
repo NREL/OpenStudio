@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionsController.hpp>
-#include <openstudio_lib/ConstructionsView.hpp>
+#include "ConstructionsController.hpp"
+#include "ConstructionsView.hpp"
 
 #include <model/CFactorUndergroundWallConstruction.hpp>
 #include <model/Component.hpp>

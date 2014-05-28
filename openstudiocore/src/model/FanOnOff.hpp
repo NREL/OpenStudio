@@ -20,9 +20,9 @@
 #ifndef MODEL_FANONOFF_HPP
 #define MODEL_FANONOFF_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 

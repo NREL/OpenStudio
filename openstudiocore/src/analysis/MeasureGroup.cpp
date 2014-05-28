@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "DataPoint.hpp"
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
+#include "Problem.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 #include <runmanager/lib/WorkItem.hpp>
 

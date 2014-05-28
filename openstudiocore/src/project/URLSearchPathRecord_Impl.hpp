@@ -21,10 +21,10 @@
 #define PROJECT_URLSEARCHPATHRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
+#include "ObjectRecord_Impl.hpp"
 
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/idf/URLSearchPath.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional/optional.hpp>
 

@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_FILEINFO_HPP__
-#define OPENSTUDIO_RUNMANAGER_FILEINFO_HPP__
+#ifndef RUNMANAGER_LIB_FILEINFO_HPP
+#define RUNMANAGER_LIB_FILEINFO_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <string>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/core/Path.hpp"
 #include <QMetaType>
 #include <QRegExp>
 #include <QUrl>
@@ -350,5 +350,5 @@ class RUNMANAGER_API Files
 
 Q_DECLARE_METATYPE(openstudio::runmanager::FileInfo);
 
-#endif
+#endif // RUNMANAGER_LIB_FILEINFO_HPP
 

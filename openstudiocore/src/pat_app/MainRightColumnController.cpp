@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/MainRightColumnController.hpp>
-#include <pat_app/HorizontalTabWidget.hpp>
+#include "MainRightColumnController.hpp"
+#include "HorizontalTabWidget.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"

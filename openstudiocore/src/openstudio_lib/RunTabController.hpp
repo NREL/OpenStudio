@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNTABCONTROLLER_H
-#define OPENSTUDIO_RUNTABCONTROLLER_H
+#ifndef OPENSTUDIO_RUNTABCONTROLLER_HPP
+#define OPENSTUDIO_RUNTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <utilities/core/Path.hpp>
+#include "MainTabController.hpp"
+#include "../utilities/core/Path.hpp"
 
 namespace openstudio {
 
@@ -75,4 +75,4 @@ class RunTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_RUNTABCONTROLLER_H
+#endif // OPENSTUDIO_RUNTABCONTROLLER_HPP

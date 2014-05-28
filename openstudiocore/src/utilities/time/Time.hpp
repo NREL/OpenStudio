@@ -20,10 +20,10 @@
 #ifndef UTILITIES_TIME_TIME_HPP
 #define UTILITIES_TIME_TIME_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../core/Macro.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 

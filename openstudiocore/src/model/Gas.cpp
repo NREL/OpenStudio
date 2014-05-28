@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Gas.hpp>
-#include <model/Gas_Impl.hpp>
+#include "Gas.hpp"
+#include "Gas_Impl.hpp"
 
 #include <utilities/idf/ValidityReport.hpp>
 

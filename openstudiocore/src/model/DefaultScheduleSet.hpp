@@ -20,10 +20,10 @@
 #ifndef MODEL_DEFAULTSCHEDULESET_HPP
 #define MODEL_DEFAULTSCHEDULESET_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace model {

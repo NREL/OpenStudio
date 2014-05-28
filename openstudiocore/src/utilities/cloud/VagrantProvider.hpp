@@ -20,10 +20,10 @@
 #ifndef UTILITIES_CLOUD_VAGRANTPROVIDER_HPP
 #define UTILITIES_CLOUD_VAGRANTPROVIDER_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "CloudProvider.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../core/Path.hpp"
+#include "../core/Url.hpp"
 
 namespace openstudio{
 

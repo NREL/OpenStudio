@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/FSUDaceAlgorithmRecord.hpp>
-#include <project/FSUDaceAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "FSUDaceAlgorithmRecord.hpp"
+#include "FSUDaceAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
 #include <analysis/FSUDaceAlgorithm.hpp>
 #include <analysis/FSUDaceAlgorithm_Impl.hpp>

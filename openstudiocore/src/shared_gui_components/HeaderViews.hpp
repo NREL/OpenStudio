@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HEADERVIEWS_H
-#define OPENSTUDIO_HEADERVIEWS_H
+#ifndef SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
+#define SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
 
 #include "OSCollapsibleView.hpp"
 #include <QPushButton>
@@ -88,5 +88,5 @@ class LightHeader : public OSHeader
 
 } // openstudio
 
-#endif // OPENSTUDIO_HEADERVIEWS_H
+#endif // SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
 

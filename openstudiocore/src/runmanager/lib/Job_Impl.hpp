@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_JOB_IMPL_HPP__
-#define OPENSTUDIO_JOB_IMPL_HPP__
+#ifndef RUNMANAGER_LIB_JOB_IMPL_HPP
+#define RUNMANAGER_LIB_JOB_IMPL_HPP
 
 #include <QObject>
 #include <QThread>
 #include <QFileInfo>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/String.hpp>
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/String.hpp"
 #include "FileInfo.hpp"
 #include "JobErrors.hpp"
 #include "JobParam.hpp"
@@ -555,4 +555,4 @@ namespace detail {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_JOB_IMPL_HPP

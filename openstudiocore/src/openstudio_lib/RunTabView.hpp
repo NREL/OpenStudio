@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNTABVIEW_H
-#define OPENSTUDIO_RUNTABVIEW_H
+#ifndef OPENSTUDIO_RUNTABVIEW_HPP
+#define OPENSTUDIO_RUNTABVIEW_HPP
 
 #include <model/Model.hpp>
 #include <utilities/idf/WorkspaceObject_Impl.hpp>
 #include <boost/smart_ptr.hpp>
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 #include <QComboBox>
 #include <QWidget>
 #include <runmanager/lib/ConfigOptions.hpp>
@@ -181,4 +181,4 @@ namespace openstudio {
 
 } // openstudio
 
-#endif // OPENSTUDIO_RUNTABVIEW_H
+#endif // OPENSTUDIO_RUNTABVIEW_HPP

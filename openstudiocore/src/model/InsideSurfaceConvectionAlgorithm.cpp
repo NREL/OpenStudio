@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InsideSurfaceConvectionAlgorithm.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "InsideSurfaceConvectionAlgorithm.hpp"
+#include "InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SurfaceConvectionAlgorithm_Inside_FieldEnums.hxx>

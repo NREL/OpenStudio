@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RESULTSVIEWER_MAINWINDOW_H
-#define RESULTSVIEWER_MAINWINDOW_H
+#ifndef RESULTSVIEWER_MAINWINDOW_HPP
+#define RESULTSVIEWER_MAINWINDOW_HPP
 
-#include <resultsviewer/TreeView.hpp>
-#include <resultsviewer/TableView.hpp>
-#include <resultsviewer/PlotView.hpp>
-#include <resultsviewer/ResultsViewerData.hpp>
-#include <resultsviewer/BrowserView.hpp>
-#include <resultsviewer/TabDropDock.hpp>
+#include "TreeView.hpp"
+#include "TableView.hpp"
+#include "PlotView.hpp"
+#include "ResultsViewerData.hpp"
+#include "BrowserView.hpp"
+#include "TabDropDock.hpp"
 
-#include <utilities/core/TemporaryDirectory.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
+#include "../utilities/core/TemporaryDirectory.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/plot/LinePlot.hpp"
 
 #include <QMainWindow>
 #include <QTabWidget>
@@ -249,4 +249,4 @@ private slots:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_MAINWINDOW_H
+#endif // RESULTSVIEWER_MAINWINDOW_HPP

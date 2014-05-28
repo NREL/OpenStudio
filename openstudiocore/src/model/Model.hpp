@@ -20,11 +20,11 @@
 #ifndef MODEL_MODEL_HPP
 #define MODEL_MODEL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <vector>
 

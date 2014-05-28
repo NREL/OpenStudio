@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurrencyType.hpp>
-#include <model/CurrencyType_Impl.hpp>
+#include "CurrencyType.hpp"
+#include "CurrencyType_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_CurrencyType_FieldEnums.hxx>
 

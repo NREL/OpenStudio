@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_RUBYCONTINUOUSVARIABLE_IMPL_HPP
 #define ANALYSIS_RUBYCONTINUOUSVARIABLE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
+#include "AnalysisAPI.hpp"
+#include "ContinuousVariable_Impl.hpp"
+#include "RubyMeasure.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -21,11 +21,11 @@
 #define PROJECT_WORKFLOWRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
+#include "ObjectRecord_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

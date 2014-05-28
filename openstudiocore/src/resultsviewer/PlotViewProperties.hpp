@@ -28,7 +28,7 @@
 #include <QMenu>
 #include <QMdiSubWindow>
 #include <string>
-#include <resultsviewer/PlotView.hpp>
+#include "PlotView.hpp"
 #include <resultsviewer/ui_PlotViewProperties.h>
 #include <qwt/qwt_plot_curve.h>
 

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/SequentialSearchOptions.hpp>
-#include <analysis/SequentialSearchOptions_Impl.hpp>
+#include "SequentialSearchOptions.hpp"
+#include "SequentialSearchOptions_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>

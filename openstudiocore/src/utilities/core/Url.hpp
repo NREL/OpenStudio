@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_URL_HPP
 #define UTILITIES_CORE_URL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <QUrl>
 #include <boost/optional.hpp>

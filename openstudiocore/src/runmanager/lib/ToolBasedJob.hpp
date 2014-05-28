@@ -17,11 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_TOOLBASEDJOB_HPP_
-#define OPENSTUDIO_TOOLBASEDJOB_HPP_
+#ifndef RUNMANAGER_LIB_TOOLBASEDJOB_HPP
+#define RUNMANAGER_LIB_TOOLBASEDJOB_HPP
 
 #include <boost/filesystem.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <string>
 #include <utilities/core/Logger.hpp>
 #include "Job_Impl.hpp"
@@ -273,7 +272,7 @@ namespace detail {
       std::shared_ptr<ProcessCreator> m_process_creator;
       std::map<ToolInfo, std::shared_ptr<Process> > m_processes;
       std::shared_ptr<Process> m_currentprocess;
-      std::vector<boost::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
+      std::vector<std::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
 
       std::set<std::pair<openstudio::path, openstudio::path> > m_addedRequiredFiles;
 
@@ -320,4 +319,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_TOOLBASEDJOB_HPP

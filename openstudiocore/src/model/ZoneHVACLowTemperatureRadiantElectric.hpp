@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_HPP
 #define MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 

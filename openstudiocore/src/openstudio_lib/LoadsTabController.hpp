@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOADSTABCONTROLLER_H
-#define OPENSTUDIO_LOADSTABCONTROLLER_H
+#ifndef OPENSTUDIO_LOADSTABCONTROLLER_HPP
+#define OPENSTUDIO_LOADSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -47,4 +47,4 @@ class LoadsTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOADSTABCONTROLLER_H
+#endif // OPENSTUDIO_LOADSTABCONTROLLER_HPP

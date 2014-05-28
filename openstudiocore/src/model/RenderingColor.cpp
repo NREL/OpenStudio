@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 

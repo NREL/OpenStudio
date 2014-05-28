@@ -1,4 +1,3 @@
-
 /**********************************************************************
 *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
@@ -17,10 +16,10 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef MODEL_EDITOR_BRIDGECLASSES
-#define MODEL_EDITOR_BRIDGECLASSES
+#ifndef MODELEDITOR_BRIDGECLASSES_HPP
+#define MODELEDITOR_BRIDGECLASSES_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
 #include <QObject>
 
@@ -49,4 +48,4 @@ class MODELEDITOR_API ComboHighlightBridge : public QObject
 
 
 
-#endif
+#endif // MODELEDITOR_BRIDGECLASSES_HPP

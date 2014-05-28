@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/OutputAttributeVariable_Impl.hpp>
+#include "OutputAttributeVariable.hpp"
+#include "OutputAttributeVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "DataPoint.hpp"
 
 #include <runmanager/lib/Job.hpp>
 

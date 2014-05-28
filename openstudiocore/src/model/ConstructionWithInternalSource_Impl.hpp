@@ -20,7 +20,7 @@
 #ifndef MODEL_CONSTRUCTIONWITHINTERNALSOURCE_IMPL_HPP
 #define MODEL_CONSTRUCTIONWITHINTERNALSOURCE_IMPL_HPP 
 
-#include <model/LayeredConstruction_Impl.hpp>
+#include "LayeredConstruction_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

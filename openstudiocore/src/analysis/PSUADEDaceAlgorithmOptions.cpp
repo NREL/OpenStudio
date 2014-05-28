@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
-#include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
+#include "PSUADEDaceAlgorithmOptions.hpp"
+#include "PSUADEDaceAlgorithmOptions_Impl.hpp"
 
 #include <runmanager/lib/JSON.hpp>
 

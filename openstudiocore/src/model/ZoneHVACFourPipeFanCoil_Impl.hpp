@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP
 #define MODEL_ZONEHVACFOURPIPEFANCOIL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

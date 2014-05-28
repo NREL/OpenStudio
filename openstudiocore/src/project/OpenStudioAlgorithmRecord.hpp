@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPENSTUDIOALGORITHMRECORD_HPP
 #define PROJECT_OPENSTUDIOALGORITHMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/AlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "AlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

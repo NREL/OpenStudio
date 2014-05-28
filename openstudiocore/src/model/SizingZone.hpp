@@ -20,8 +20,8 @@
 #ifndef MODEL_SIZINGZONE_HPP
 #define MODEL_SIZINGZONE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 

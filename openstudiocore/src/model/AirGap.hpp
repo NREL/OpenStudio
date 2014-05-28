@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRGAP_HPP
 #define MODEL_AIRGAP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial.hpp"
 
 namespace openstudio {
 

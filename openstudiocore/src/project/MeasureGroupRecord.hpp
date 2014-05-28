@@ -21,10 +21,10 @@
 #define PROJECT_MEASUREGROUPRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/DiscreteVariableRecord.hpp>
+#include "DiscreteVariableRecord.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

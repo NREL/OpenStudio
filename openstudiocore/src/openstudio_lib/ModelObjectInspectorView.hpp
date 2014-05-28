@@ -18,13 +18,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTINSPECTORVIEW_H
-#define OPENSTUDIO_MODELOBJECTINSPECTORVIEW_H
+#ifndef OPENSTUDIO_MODELOBJECTINSPECTORVIEW_HPP
+#define OPENSTUDIO_MODELOBJECTINSPECTORVIEW_HPP
 
-#include <model/ComponentData.hpp>
+#include "../model/ComponentData.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <boost/smart_ptr.hpp>
 #include <boost/optional.hpp>
@@ -102,5 +102,5 @@ class DefaultInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTINSPECTORVIEW_H
+#endif // OPENSTUDIO_MODELOBJECTINSPECTORVIEW_HPP
 

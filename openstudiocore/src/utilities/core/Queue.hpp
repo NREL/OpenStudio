@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef __UTILITIES_CORE_QUEUE_HPP__
-#define __UTILITIES_CORE_QUEUE_HPP__
+#ifndef UTILITIES_CORE_QUEUE_HPP
+#define UTILITIES_CORE_QUEUE_HPP
 
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
@@ -183,4 +183,4 @@ namespace openstudio
     };
 }
 
-#endif
+#endif // UTILITIES_CORE_QUEUE_HPP

@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTUNCONTROLLED_HPP
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
-#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
+#include "ModelAPI.hpp"
 
 namespace openstudio {
 

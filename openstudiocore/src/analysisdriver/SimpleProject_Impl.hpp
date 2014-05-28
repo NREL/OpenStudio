@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_SIMPLEPROJECT_IMPL_HPP
 #define ANALYSISDRIVER_SIMPLEPROJECT_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriver.hpp"
+#include "CloudAnalysisDriver.hpp"
 
 #include <analysis/Analysis.hpp>
 

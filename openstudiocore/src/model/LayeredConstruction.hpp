@@ -20,8 +20,8 @@
 #ifndef MODEL_LAYEREDCONSTRUCTION_HPP
 #define MODEL_LAYEREDCONSTRUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ConstructionBase.hpp>
+#include "ModelAPI.hpp"
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
 namespace model {

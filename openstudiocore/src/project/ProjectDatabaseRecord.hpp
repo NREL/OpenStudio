@@ -21,7 +21,7 @@
 #define PROJECT_PROJECTDATABASERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
 class QSqlQuery;
 

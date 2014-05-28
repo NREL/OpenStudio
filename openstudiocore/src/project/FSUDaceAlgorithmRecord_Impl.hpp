@@ -20,10 +20,10 @@
 #ifndef PROJECT_FSUDACEALGORITHMRECORD_IMPL_HPP
 #define PROJECT_FSUDACEALGORITHMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "DakotaAlgorithmRecord_Impl.hpp"
 
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
+#include "../analysis/FSUDaceAlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {

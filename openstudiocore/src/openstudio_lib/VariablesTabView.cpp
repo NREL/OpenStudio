@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/VariablesTabView.hpp>
+#include "VariablesTabView.hpp"
 
 #include <model/Model_Impl.hpp>
 #include <model/OutputVariable.hpp>

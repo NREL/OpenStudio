@@ -20,8 +20,8 @@
 #ifndef MODEL_DESIGNDAY_HPP
 #define MODEL_DESIGNDAY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SizingPeriod.hpp>
+#include "ModelAPI.hpp"
+#include "SizingPeriod.hpp"
 
 namespace openstudio {
 namespace model {

@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
+#include "CoilCoolingCooledBeam.hpp"
+#include "CoilCoolingCooledBeam_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/units/Unit.hpp>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>

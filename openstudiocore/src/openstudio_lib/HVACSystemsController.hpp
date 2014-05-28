@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
-#define OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
+#ifndef OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
+#define OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
 #include <model/Loop.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectVectorController.hpp"
 #include <boost/smart_ptr.hpp>
-#include <openstudio_lib/SOConstants.hpp>
+#include "SOConstants.hpp"
 #include "../shared_gui_components/OSQObjectController.hpp"
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 #include <QAbstractListModel>
 #include <QPointer>
@@ -338,5 +338,5 @@ class SupplyAirTempScheduleVectorController : public ModelObjectVectorController
 
 } // openstudio
 
-#endif // OPENSTUDIO_HVACSYSTEMSCONTROLLER_H
+#endif // OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
 

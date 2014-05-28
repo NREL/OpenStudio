@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVERECTANGULARHYPERBOLA1_HPP
 #define MODEL_CURVERECTANGULARHYPERBOLA1_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {

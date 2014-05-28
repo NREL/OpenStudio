@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/FacilityTabController.hpp>
-#include <openstudio_lib/FacilityTabView.hpp>
-#include <openstudio_lib/FacilityController.hpp>
+#include "FacilityTabController.hpp"
+#include "FacilityTabView.hpp"
+#include "FacilityController.hpp"
 
 #include <utilities/core/Assert.hpp>
 

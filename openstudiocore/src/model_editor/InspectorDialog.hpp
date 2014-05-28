@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef INSPECTORDIALOG_H
-#define INSPECTORDIALOG_H
+#ifndef MODELEDITOR_INSPECTORDIALOG_HPP
+#define MODELEDITOR_INSPECTORDIALOG_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Enum.hpp"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -191,4 +191,4 @@ private:
   void loadModel();
 };
 
-#endif
+#endif // MODELEDITOR_INSPECTORDIALOG_HPP

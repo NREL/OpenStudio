@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptsView.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "ScriptsView.hpp"
+#include "ScriptFolderListView.hpp"
+#include "BuildingStoryInspectorView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/ConfigOptions.hpp>

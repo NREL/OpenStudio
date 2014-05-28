@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MATERIALINSPECTORVIEW_H
-#define OPENSTUDIO_MATERIALINSPECTORVIEW_H
+#ifndef OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
+#define OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -91,5 +91,5 @@ class MaterialInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_MATERIALINSPECTORVIEW_H
+#endif // OPENSTUDIO_MATERIALINSPECTORVIEW_HPP
 

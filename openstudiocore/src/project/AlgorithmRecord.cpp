@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AlgorithmRecord.hpp>
-#include <project/AlgorithmRecord_Impl.hpp>
+#include "AlgorithmRecord.hpp"
+#include "AlgorithmRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/OpenStudioAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "OpenStudioAlgorithmRecord.hpp"
+#include "DakotaAlgorithmRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
 
 #include <analysis/Algorithm.hpp>
 #include <analysis/OpenStudioAlgorithm.hpp>

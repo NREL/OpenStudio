@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
+#include "SamplingAlgorithm.hpp"
+#include "SamplingAlgorithm_Impl.hpp"
 
-#include <analysis/SamplingAlgorithmOptions.hpp>
-#include <analysis/SamplingAlgorithmOptions_Impl.hpp>
+#include "SamplingAlgorithmOptions.hpp"
+#include "SamplingAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
 #include <runmanager/lib/JSON.hpp>
 

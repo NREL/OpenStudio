@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_DESIGNALTERNATIVESVIEW_H
-#define OPENSTUDIO_DESIGNALTERNATIVESVIEW_H
+#ifndef PATAPP_DESIGNALTERNATIVESVIEW_HPP
+#define PATAPP_DESIGNALTERNATIVESVIEW_HPP
 
-#include <pat_app/PatMainTabView.hpp>
+#include "PatMainTabView.hpp"
 #include "../shared_gui_components/OSCollapsibleView.hpp"
 #include <QAbstractButton>
 
@@ -188,4 +188,4 @@ class DesignAltItemView : public OSCollapsibleView
 
 } // openstudio
 
-#endif // OPENSTUDIO_DESIGNALTERNATIVESVIEW_H
+#endif // PATAPP_DESIGNALTERNATIVESVIEW_HPP

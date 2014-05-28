@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_CoilCoolingDXTwoSpeed_HPP
-#define MODEL_CoilCoolingDXTwoSpeed_HPP
+#ifndef MODEL_COILCOOLINGDXTWOSPEED_HPP
+#define MODEL_COILCOOLINGDXTWOSPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -388,4 +388,4 @@ typedef std::vector<CoilCoolingDXTwoSpeed> CoilCoolingDXTwoSpeedVector;
 } // model
 } // openstudio
 
-#endif // MODEL_CoilCoolingDXTwoSpeed_HPP
+#endif // MODEL_COILCOOLINGDXTWOSPEED_HPP

@@ -26,9 +26,9 @@
 #include <QFile>
 #include <QString>
 
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddObject.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 namespace openstudio
 {

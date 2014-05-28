@@ -20,11 +20,11 @@
 #ifndef UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP
 #define UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../idd/ExtensibleIndex.hpp"
+#include "Handle.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 namespace openstudio {
 

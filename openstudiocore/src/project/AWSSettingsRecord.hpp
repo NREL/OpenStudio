@@ -20,8 +20,8 @@
 #ifndef PROJECT_AWSSETTINGSRECORD_HPP
 #define PROJECT_AWSSETTINGSRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/CloudSettingsRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "CloudSettingsRecord.hpp"
 
 namespace openstudio {
 

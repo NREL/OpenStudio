@@ -20,9 +20,9 @@
 #ifndef MODEL_COMPONENTWATCHER_IMPL_HPP
 #define MODEL_COMPONENTWATCHER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ComponentData.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ComponentData.hpp"
 
 #include <utilities/core/Logger.hpp>
 

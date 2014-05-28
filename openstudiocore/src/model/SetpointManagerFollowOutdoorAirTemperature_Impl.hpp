@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP
 #define MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_IMPL_HPP
 
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 

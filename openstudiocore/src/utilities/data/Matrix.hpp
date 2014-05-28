@@ -20,9 +20,9 @@
 #ifndef UTILITIES_DATA_MATRIX_HPP
 #define UTILITIES_DATA_MATRIX_HPP
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Vector.hpp"
+#include "../UtilitiesAPI.hpp"
+#include "../core/Logger.hpp"
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>

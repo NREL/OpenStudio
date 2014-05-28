@@ -20,9 +20,9 @@
 #ifndef MODEL_WATERTOWATERCOMPONENT_HPP
 #define MODEL_WATERTOWATERCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {

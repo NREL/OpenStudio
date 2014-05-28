@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVEEXPONENT_HPP
 #define MODEL_CURVEEXPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {

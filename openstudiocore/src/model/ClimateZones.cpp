@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/Model.hpp>
+#include "ClimateZones.hpp"
+#include "ClimateZones_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_ClimateZones_FieldEnums.hxx>
 

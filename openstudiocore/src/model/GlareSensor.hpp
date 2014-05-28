@@ -20,8 +20,8 @@
 #ifndef MODEL_GLARESENSOR_HPP
 #define MODEL_GLARESENSOR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceItem.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceItem.hpp"
 
 namespace openstudio {
 

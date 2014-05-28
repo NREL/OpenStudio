@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_CURRENTANALYSIS_IMPL_HPP
 #define ANALYSISDRIVER_CURRENTANALYSIS_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>

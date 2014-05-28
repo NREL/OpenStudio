@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_ENERGYPLUS_FORWARDTRANSLATOR_HPP
-#define OPENSTUDIO_ENERGYPLUS_FORWARDTRANSLATOR_HPP
+#ifndef ENERGYPLUS_FORWARDTRANSLATOR_HPP
+#define ENERGYPLUS_FORWARDTRANSLATOR_HPP
 
-#include <energyplus/EnergyPlusAPI.hpp>
-#include <model/Model.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/HVACComponent.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "EnergyPlusAPI.hpp"
+#include "../model/Model.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
 
@@ -814,4 +814,4 @@ namespace detail
 
 } // openstudio
 
-#endif // OPENSTUDIO_ENERGYPLUS_FORWARDTRANSLATOR_HPP
+#endif // ENERGYPLUS_FORWARDTRANSLATOR_HPP

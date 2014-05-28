@@ -20,8 +20,8 @@
 #ifndef MODEL_DISTRICTHEATING_IMPL_HPP
 #define MODEL_DISTRICTHEATING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
 #include <utilities/units/Quantity.hpp>
 
 namespace openstudio {

@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/ServiceWaterGridItems.hpp>
-#include <openstudio_lib/ServiceWaterScene.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
+#include "ServiceWaterGridItems.hpp"
+#include "ServiceWaterScene.hpp"
+#include "IconLibrary.hpp"
 #include <model/WaterUseConnections.hpp>
 #include <model/WaterUseConnections_Impl.hpp>
 #include <model/WaterUseEquipment.hpp>

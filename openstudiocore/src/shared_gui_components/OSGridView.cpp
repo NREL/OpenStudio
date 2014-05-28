@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSGridView.hpp>
+#include "OSGridView.hpp"
 
-#include <shared_gui_components/HeaderViews.hpp>
-#include <shared_gui_components/OSCollapsibleView.hpp>
-#include <shared_gui_components/OSGridController.hpp>
+#include "HeaderViews.hpp"
+#include "OSCollapsibleView.hpp"
+#include "OSGridController.hpp"
 
 #include <openstudio_lib/OSDropZone.hpp>
 #include <openstudio_lib/OSItem.hpp>

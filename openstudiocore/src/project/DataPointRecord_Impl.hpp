@@ -20,12 +20,12 @@
 #ifndef PROJECT_DATAPOINTRECORD_IMPL_HPP
 #define PROJECT_DATAPOINTRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <project/DataPointRecord.hpp>
+#include "DataPointRecord.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
 namespace openstudio {
 namespace project {

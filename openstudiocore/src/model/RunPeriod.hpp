@@ -20,8 +20,8 @@
 #ifndef MODEL_RUNPERIOD_HPP
 #define MODEL_RUNPERIOD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {

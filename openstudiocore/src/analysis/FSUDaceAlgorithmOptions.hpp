@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_FSUDACEALGORITHMOPTIONS_HPP
 #define ANALYSIS_FSUDACEALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {

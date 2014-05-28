@@ -21,10 +21,10 @@
 #define PROJECT_PROBLEMRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace analysis {

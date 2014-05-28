@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_COMMENTREGEX_HPP
-#define UTILITIES_COMMENTREGEX_HPP
+#ifndef UTILITIES_IDD_COMMENTREGEX_HPP
+#define UTILITIES_IDD_COMMENTREGEX_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/StaticInitializer.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/StaticInitializer.hpp"
 
 #include <boost/regex.hpp>
 
@@ -89,4 +89,4 @@ namespace commentRegex {
 } // commentRegex
 } // openstudio
 
-#endif // UTILITIES_COMMENTREGEX_HPP
+#endif // UTILITIES_IDD_COMMENTREGEX_HPP

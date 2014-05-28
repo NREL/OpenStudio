@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VRFGRAPHICSITEMS_H
-#define OPENSTUDIO_VRFGRAPHICSITEMS_H
+#ifndef OPENSTUDIO_VRFGRAPHICSITEMS_HPP
+#define OPENSTUDIO_VRFGRAPHICSITEMS_HPP
 
 #include <QGraphicsObject>
 #include "OSItem.hpp"
@@ -269,5 +269,5 @@ class VRFSystemDropZoneView : public OSDropZoneItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_VRFGRAPHICSITEMS_H
+#endif // OPENSTUDIO_VRFGRAPHICSITEMS_HPP
 

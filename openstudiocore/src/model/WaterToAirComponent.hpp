@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERTOAIRCOMPONENT_HPP
 #define MODEL_WATERTOAIRCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 

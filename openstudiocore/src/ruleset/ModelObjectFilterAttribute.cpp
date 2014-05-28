@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterAttribute.hpp>
-#include <ruleset/ModelObjectFilterAttribute_Impl.hpp>
+#include "ModelObjectFilterAttribute.hpp"
+#include "ModelObjectFilterAttribute_Impl.hpp"
 
 namespace openstudio {
 namespace ruleset {

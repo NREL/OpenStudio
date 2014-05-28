@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
 #define MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 namespace model {

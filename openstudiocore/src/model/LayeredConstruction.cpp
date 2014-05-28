@@ -17,34 +17,34 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Model.hpp>
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/Material.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
-#include <model/GasLayer.hpp>
-#include <model/GasLayer_Impl.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "StandardsInformationConstruction.hpp"
+#include "Material.hpp"
+#include "OpaqueMaterial.hpp"
+#include "OpaqueMaterial_Impl.hpp"
+#include "AirGap.hpp"
+#include "AirGap_Impl.hpp"
+#include "RoofVegetation.hpp"
+#include "RoofVegetation_Impl.hpp"
+#include "FenestrationMaterial.hpp"
+#include "FenestrationMaterial_Impl.hpp"
+#include "SimpleGlazing.hpp"
+#include "SimpleGlazing_Impl.hpp"
+#include "StandardGlazing.hpp"
+#include "StandardGlazing_Impl.hpp"
+#include "RefractionExtinctionGlazing.hpp"
+#include "RefractionExtinctionGlazing_Impl.hpp"
+#include "GasLayer.hpp"
+#include "GasLayer_Impl.hpp"
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
+#include "ModelPartitionMaterial.hpp"
+#include "ModelPartitionMaterial_Impl.hpp"
 
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idf/ValidityReport.hpp>
 

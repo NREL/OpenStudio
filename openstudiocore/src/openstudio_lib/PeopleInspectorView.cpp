@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/PeopleInspectorView.hpp>
+#include "PeopleInspectorView.hpp"
 
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
+#include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"

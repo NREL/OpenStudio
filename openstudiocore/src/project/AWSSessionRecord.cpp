@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AWSSessionRecord.hpp>
-#include <project/AWSSessionRecord_Impl.hpp>
+#include "AWSSessionRecord.hpp"
+#include "AWSSessionRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/UrlRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "UrlRecord.hpp"
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>

@@ -20,12 +20,12 @@
 #ifndef MODEL_MODEL_IMPL_HPP
 #define MODEL_MODEL_IMPL_HPP
 
-#include <model/ComponentWatcher.hpp>
-#include <model/Building.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/YearDescription.hpp>
-#include <model/WeatherFile.hpp>
+#include "ComponentWatcher.hpp"
+#include "Building.hpp"
+#include "LifeCycleCostParameters.hpp"
+#include "RunPeriod.hpp"
+#include "YearDescription.hpp"
+#include "WeatherFile.hpp"
 
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/idf/Workspace_Impl.hpp>

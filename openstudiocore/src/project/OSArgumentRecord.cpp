@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OSArgumentRecord.hpp>
-#include <project/OSArgumentRecord_Impl.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyContinuousVariableRecord.hpp>
+#include "OSArgumentRecord.hpp"
+#include "OSArgumentRecord_Impl.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "RubyContinuousVariableRecord.hpp"
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
 #include <utilities/document/Table.hpp>
 

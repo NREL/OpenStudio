@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADINGSURFACE_HPP
 #define MODEL_SHADINGSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurface.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurface.hpp"
 
 namespace openstudio {
 namespace model {

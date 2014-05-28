@@ -1,10 +1,29 @@
-#ifndef __OPENSTUDIO_ENUM_HPP__
-#define __OPENSTUDIO_ENUM_HPP__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef UTILITIES_CORE_ENUM_HPP
+#define UTILITIES_CORE_ENUM_HPP
 
 #include <set>
 #include <map>
 #include <vector>
-#include <utilities/core/StaticInitializer.hpp>
+#include "StaticInitializer.hpp"
 #include <boost/preprocessor.hpp>
 #include <boost/optional.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -526,4 +545,4 @@ class _enum_name : public EnumBase<_enum_name> \
 
 
 
-#endif
+#endif // UTILITIES_CORE_ENUM_HPP

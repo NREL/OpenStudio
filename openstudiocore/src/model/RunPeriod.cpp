@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/Model.hpp>
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/SkyTemperature.hpp>
-#include <model/SkyTemperature_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "SkyTemperature.hpp"
+#include "SkyTemperature_Impl.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_RunPeriod_FieldEnums.hxx>
 

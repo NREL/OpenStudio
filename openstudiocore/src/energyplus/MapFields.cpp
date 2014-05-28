@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/MapFields.hpp>
+#include "MapFields.hpp"
 
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/core/Optional.hpp>

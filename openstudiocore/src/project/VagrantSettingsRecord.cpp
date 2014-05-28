@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/VagrantSettingsRecord.hpp>
-#include <project/VagrantSettingsRecord_Impl.hpp>
+#include "VagrantSettingsRecord.hpp"
+#include "VagrantSettingsRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/UrlRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "UrlRecord.hpp"
 
 #include <utilities/cloud/VagrantProvider.hpp>
 #include <utilities/cloud/VagrantProvider_Impl.hpp>

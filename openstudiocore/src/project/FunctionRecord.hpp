@@ -20,8 +20,8 @@
 #ifndef PROJECT_FUNCTIONRECORD_HPP
 #define PROJECT_FUNCTIONRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

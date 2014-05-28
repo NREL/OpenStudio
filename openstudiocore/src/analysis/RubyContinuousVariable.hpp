@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_RUBYCONTINUOUSVARIABLE_HPP
 #define ANALYSIS_RUBYCONTINUOUSVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/ContinuousVariable.hpp>
+#include "AnalysisAPI.hpp"
+#include "ContinuousVariable.hpp"
 
 namespace openstudio {
 

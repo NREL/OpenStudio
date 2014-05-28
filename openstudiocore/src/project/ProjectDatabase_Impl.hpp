@@ -21,8 +21,8 @@
 #define PROJECT_PROJECTDATABASE_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ProjectDatabaseRecord.hpp>
-#include <project/Record.hpp>
+#include "ProjectDatabaseRecord.hpp"
+#include "Record.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Logger.hpp>
@@ -166,7 +166,7 @@ namespace project {
         // unload any unused records from the clean record map
         void unloadUnusedCleanRecords();
 
-        // saves removal of removed objects, neccesary to do before importing objects with same uuid
+        // saves removal of removed objects, necessary to do before importing objects with same uuid
         // undo will no longer be possible
         void commitRemove(const RemoveUndo& removeUndo);
 

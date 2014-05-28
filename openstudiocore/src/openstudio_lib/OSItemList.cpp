@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/ScriptsListView.hpp>
+#include "OSItemList.hpp"
+#include "OSVectorController.hpp"
+#include "ScriptsListView.hpp"
 
 #include <utilities/core/Assert.hpp>
 

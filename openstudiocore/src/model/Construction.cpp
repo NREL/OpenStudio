@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Model.hpp>
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "OpaqueMaterial.hpp"
+#include "FenestrationMaterial.hpp"
+#include "ModelPartitionMaterial.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
 
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 

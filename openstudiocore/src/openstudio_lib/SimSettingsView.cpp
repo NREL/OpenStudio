@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SimSettingsView.hpp>
+#include "SimSettingsView.hpp"
 
-#include <openstudio_lib/CollapsibleInspector.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
+#include "CollapsibleInspector.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSAppBase.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
-#include <openstudio_lib/SchedulesView.hpp> // ScheduleCalendarWidget, MonthView
+#include "SchedulesView.hpp" // ScheduleCalendarWidget, MonthView
 
 #include <model/ConvergenceLimits.hpp>
 #include <model/ConvergenceLimits_Impl.hpp>

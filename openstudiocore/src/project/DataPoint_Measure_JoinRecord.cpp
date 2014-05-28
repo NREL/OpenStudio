@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/MeasureRecord.hpp>
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "DataPoint_Measure_JoinRecord_Impl.hpp"
+#include "DataPointRecord.hpp"
+#include "MeasureRecord.hpp"
 
 #include <utilities/core/Assert.hpp>
 

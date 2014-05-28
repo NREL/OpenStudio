@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_MEASURE_HPP
 #define ANALYSIS_MEASURE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 namespace openstudio {
 

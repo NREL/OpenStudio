@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/FunctionRecord.hpp>
+#include "JoinRecord.hpp"
+#include "FunctionRecord.hpp"
 
 #include <analysis/OptimizationProblem.hpp>
 #include <analysis/OptimizationProblem_Impl.hpp>

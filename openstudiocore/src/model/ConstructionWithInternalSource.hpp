@@ -20,8 +20,8 @@
 #ifndef MODEL_CONSTRUCTIONWITHINTERNALSOURCE_HPP
 #define MODEL_CONSTRUCTIONWITHINTERNALSOURCE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/LayeredConstruction.hpp>
+#include "ModelAPI.hpp"
+#include "LayeredConstruction.hpp"
 
 namespace openstudio {
 namespace model {

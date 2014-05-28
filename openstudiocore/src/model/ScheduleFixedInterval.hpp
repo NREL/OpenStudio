@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEFIXEDINTERVAL_HPP
 #define MODEL_SCHEDULEFIXEDINTERVAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ScheduleInterval.hpp>
+#include "ModelAPI.hpp"
+#include "ScheduleInterval.hpp"
 
 namespace openstudio {
 namespace model {

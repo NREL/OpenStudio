@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/Configuration.hpp>
-#include <runmanager/lib/AddTool.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "Configuration.hpp"
+#include "AddTool.hpp"
+#include "JobFactory.hpp"
 
 #include <utilities/core/Application.hpp>
 

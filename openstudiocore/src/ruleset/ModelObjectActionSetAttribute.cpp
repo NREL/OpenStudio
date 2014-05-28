@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectActionSetAttribute.hpp>
-#include <ruleset/ModelObjectActionSetAttribute_Impl.hpp>
+#include "ModelObjectActionSetAttribute.hpp"
+#include "ModelObjectActionSetAttribute_Impl.hpp"
 
 #include <model/Model.hpp>
 

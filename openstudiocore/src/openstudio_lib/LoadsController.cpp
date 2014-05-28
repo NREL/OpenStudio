@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LoadsController.hpp>
-#include <openstudio_lib/LoadsView.hpp>
+#include "LoadsController.hpp"
+#include "LoadsView.hpp"
 
 #include <model/SpaceLoadDefinition.hpp>
 #include <model/SpaceLoadDefinition_Impl.hpp>

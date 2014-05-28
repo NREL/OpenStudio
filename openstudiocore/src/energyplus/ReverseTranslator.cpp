@@ -18,8 +18,8 @@
  **********************************************************************/
 
 #include "EnergyPlusAPI.hpp"
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/GeometryTranslator.hpp>
+#include "ReverseTranslator.hpp"
+#include "GeometryTranslator.hpp"
 
 #include <model/ModelObject.hpp>
 

@@ -20,11 +20,11 @@
 #ifndef UTILITIES_DOCUMENT_DOCUMENTELEMENT_HPP
 #define UTILITIES_DOCUMENT_DOCUMENTELEMENT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Serialization.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Serialization.hpp"
 
-#include <utilities/document/DocumentEnums.hpp>
+#include "DocumentEnums.hpp"
 
 #include <boost/optional.hpp>
 

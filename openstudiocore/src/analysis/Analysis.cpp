@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
+#include "Analysis.hpp"
+#include "Analysis_Impl.hpp"
 
-#include <analysis/Algorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "Algorithm_Impl.hpp"
+#include "DakotaAlgorithm.hpp"
+#include "DakotaAlgorithm_Impl.hpp"
+#include "DataPoint_Impl.hpp"
+#include "Measure.hpp"
+#include "InputVariable.hpp"
+#include "OpenStudioAlgorithm.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
+#include "Problem_Impl.hpp"
 
 #include <runmanager/lib/Job.hpp>
 

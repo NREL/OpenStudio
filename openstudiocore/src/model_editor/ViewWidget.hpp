@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef VIEWWIDGET_H
-#define VIEWWIDGET_H
+#ifndef MODELEDITOR_VIEWWIDGET_HPP
+#define MODELEDITOR_VIEWWIDGET_HPP
 
 #include <QWidget>
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
 
 class IGPrecisionDialog;
 class InspectorGadget;
@@ -106,4 +106,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // VIEWWIDGET_H
+#endif // MODELEDITOR_VIEWWIDGET_HPP

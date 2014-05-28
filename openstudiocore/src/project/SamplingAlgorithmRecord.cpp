@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/SamplingAlgorithmRecord.hpp>
-#include <project/SamplingAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "SamplingAlgorithmRecord.hpp"
+#include "SamplingAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
 #include <analysis/SamplingAlgorithm.hpp>
 #include <analysis/SamplingAlgorithm_Impl.hpp>

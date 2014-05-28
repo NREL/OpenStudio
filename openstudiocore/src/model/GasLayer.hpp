@@ -20,8 +20,8 @@
 #ifndef MODEL_GASLAYER_HPP
 #define MODEL_GASLAYER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/FenestrationMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "FenestrationMaterial.hpp"
 
 namespace openstudio {
 namespace model {

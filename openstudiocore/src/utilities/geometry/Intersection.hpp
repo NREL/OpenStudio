@@ -20,9 +20,9 @@
 #ifndef UTILITIES_GEOMETRY_INTERSECTION_HPP
 #define UTILITIES_GEOMETRY_INTERSECTION_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
+#include "Point3d.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>

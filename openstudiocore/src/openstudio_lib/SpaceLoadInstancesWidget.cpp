@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
+#include "SpaceLoadInstancesWidget.hpp"
 
-#include <openstudio_lib/IconLibrary.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "IconLibrary.hpp"
+#include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
 
 #include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"

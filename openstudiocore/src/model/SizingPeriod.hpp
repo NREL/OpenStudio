@@ -20,8 +20,8 @@
 #ifndef MODEL_SIZINGPERIOD_HPP
 #define MODEL_SIZINGPERIOD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {

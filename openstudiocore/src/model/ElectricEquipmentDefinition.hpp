@@ -20,8 +20,8 @@
 #ifndef MODEL_ELECTRICEQUIPMENTDEFINITION_HPP
 #define MODEL_ELECTRICEQUIPMENTDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {

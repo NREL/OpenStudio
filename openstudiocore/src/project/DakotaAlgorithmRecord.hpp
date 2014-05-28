@@ -20,8 +20,8 @@
 #ifndef PROJECT_DAKOTAALGORITHMRECORD_HPP
 #define PROJECT_DAKOTAALGORITHMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/AlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "AlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

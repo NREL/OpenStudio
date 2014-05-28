@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveQuartic.hpp>
-#include <model/CurveQuartic_Impl.hpp>
+#include "CurveQuartic.hpp"
+#include "CurveQuartic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Quartic_FieldEnums.hxx>

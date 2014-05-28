@@ -20,12 +20,12 @@
 #ifndef UTILITIES_PLOT_LINEPLOT_HPP
 #define UTILITIES_PLOT_LINEPLOT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "Plot2D.hpp"
+#include "../data/TimeSeries.hpp"
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
  
 #include <QWidget>
 #include <QPushButton>

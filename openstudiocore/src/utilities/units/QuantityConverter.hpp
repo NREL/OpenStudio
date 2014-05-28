@@ -16,14 +16,14 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef UTILITIES_UNITS_QCONVERTER_HPP
-#define UTILITIES_UNITS_QCONVERTER_HPP
+#ifndef UTILITIES_UNITS_QUANTITYCONVERTER_HPP
+#define UTILITIES_UNITS_QUANTITYCONVERTER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Singleton.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Singleton.hpp"
+#include "../core/Logger.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "Unit.hpp"
 #include <string>
 #include <map>
 
@@ -126,5 +126,5 @@ UTILITIES_API OSQuantityVector convert(const OSQuantityVector& original, const U
 
 }// namespace openstudio
 
-#endif
+#endif // UTILITIES_UNITS_QUANTITYCONVERTER_HPP
 

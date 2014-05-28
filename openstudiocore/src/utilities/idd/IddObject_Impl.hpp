@@ -20,14 +20,14 @@
 #ifndef UTILITIES_IDD_IDDOBJECT_IMPL_HPP
 #define UTILITIES_IDD_IDDOBJECT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddField.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddObjectProperties.hpp"
+#include "IddFieldProperties.hpp"
+#include "IddField.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Containers.hpp"
 
 #include <string>
 #include <ostream>

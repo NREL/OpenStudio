@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCondenserCascade_Impl.hpp>
+#include "RefrigerationCondenserCascade.hpp"
+#include "RefrigerationCondenserCascade_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_Cascade_FieldEnums.hxx>

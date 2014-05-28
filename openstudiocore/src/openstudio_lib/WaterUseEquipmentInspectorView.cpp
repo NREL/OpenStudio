@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/WaterUseEquipmentInspectorView.hpp>
+#include "WaterUseEquipmentInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
 #include <model/WaterUseEquipmentDefinition.hpp>
 #include <model/WaterUseEquipmentDefinition_Impl.hpp>
 #include <model/Schedule.hpp>

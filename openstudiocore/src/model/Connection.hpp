@@ -20,9 +20,9 @@
 #ifndef MODEL_CONNECTION_HPP
 #define MODEL_CONNECTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <utilities/core/Logger.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {

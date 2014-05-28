@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OtherEquipmentInspectorView.hpp>
+#include "OtherEquipmentInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSDropZone.hpp>
+#include "OSDropZone.hpp"
 #include <model/OtherEquipmentDefinition.hpp>
 #include <model/OtherEquipmentDefinition_Impl.hpp>
 #include <utilities/core/Assert.hpp>

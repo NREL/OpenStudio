@@ -20,10 +20,10 @@
 #ifndef PROJECT_FUNCTIONRECORD_IMPL_HPP
 #define PROJECT_FUNCTIONRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
+#include "FunctionRecord.hpp"
 
 namespace openstudio {
 namespace project {

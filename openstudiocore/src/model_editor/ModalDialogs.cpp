@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model_editor/ModalDialogs.hpp>
+#include "ModalDialogs.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Luminaire.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceLoadDefinition.hpp"
+#include "../model/SpaceLoadDefinition_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/Lights.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/People.hpp"
+#include "../model/PeopleDefinition.hpp"
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/System.hpp>

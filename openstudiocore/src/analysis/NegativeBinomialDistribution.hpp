@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_NegativeBinomialDISTRIBUTION_HPP
-#define ANALYSIS_NegativeBinomialDISTRIBUTION_HPP
+#ifndef ANALYSIS_NEGATIVEBINOMIALDISTRIBUTION_HPP
+#define ANALYSIS_NEGATIVEBINOMIALDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -74,4 +74,4 @@ class ANALYSIS_API NegativeBinomialDistribution : public UncertaintyDescription 
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_NegativeBinomialDISTRIBUTION_HPP
+#endif // ANALYSIS_NEGATIVEBINOMIALDISTRIBUTION_HPP

@@ -18,7 +18,7 @@
 **********************************************************************/
 
 
-#include <model_editor/BridgeClasses.hpp>
+#include "BridgeClasses.hpp"
 
 
 

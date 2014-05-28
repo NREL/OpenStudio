@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneAirHeatBalanceAlgorithm.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ZoneAirHeatBalanceAlgorithm.hpp"
+#include "ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddFactory.hxx>

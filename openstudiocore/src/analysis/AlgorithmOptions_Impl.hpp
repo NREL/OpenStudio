@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_ALGORITHMOPTIONS_IMPL_HPP
 #define ANALYSIS_ALGORITHMOPTIONS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace analysis {

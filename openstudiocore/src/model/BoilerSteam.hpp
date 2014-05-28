@@ -20,8 +20,8 @@
 #ifndef MODEL_BOILERSTEAM_HPP
 #define MODEL_BOILERSTEAM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 

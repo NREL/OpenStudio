@@ -20,8 +20,8 @@
 #ifndef MODEL_PEOPLEDEFINITION_HPP
 #define MODEL_PEOPLEDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {

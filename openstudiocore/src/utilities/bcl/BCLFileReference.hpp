@@ -20,9 +20,9 @@
 #ifndef UTILITIES_BCL_BCLFILEREFERENCE_HPP
 #define UTILITIES_BCL_BCLFILEREFERENCE_HPP
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/UtilitiesAPI.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../UtilitiesAPI.hpp"
 
 #include <vector>
 

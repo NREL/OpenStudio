@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
+#include "LinearFunction.hpp"
+#include "LinearFunction_Impl.hpp"
 
-#include <analysis/Variable.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "Variable.hpp"
+#include "Variable_Impl.hpp"
 
 #include <utilities/data/Vector.hpp>
 

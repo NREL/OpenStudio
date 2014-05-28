@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "InputVariable_Impl.hpp"
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "Problem.hpp"
+#include "Problem_Impl.hpp"
 
 #include <runmanager/lib/JSON.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>

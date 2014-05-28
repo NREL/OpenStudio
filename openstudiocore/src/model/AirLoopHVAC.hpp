@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVAC_HPP
 #define MODEL_AIRLOOPHVAC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Loop.hpp>
+#include "ModelAPI.hpp"
+#include "Loop.hpp"
 
 namespace openstudio {
 

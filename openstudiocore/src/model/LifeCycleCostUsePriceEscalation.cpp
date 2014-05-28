@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LifeCycleCostUsePriceEscalation.hpp>
-#include <model/LifeCycleCostUsePriceEscalation_Impl.hpp>
+#include "LifeCycleCostUsePriceEscalation.hpp"
+#include "LifeCycleCostUsePriceEscalation_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/OS_LifeCycleCost_UsePriceEscalation_FieldEnums.hxx>

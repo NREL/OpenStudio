@@ -20,11 +20,11 @@
 #ifndef UTILITIES_TIME_DATE_HPP
 #define UTILITIES_TIME_DATE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Time.hpp"
+#include "../core/Macro.hpp"
+#include "../core/Logger.hpp"
 
 #include <ostream>
 #include <vector>
@@ -33,7 +33,7 @@
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/date_time/date_defs.hpp>
 #include <boost/date_time/gregorian/greg_calendar.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../core/Enum.hpp"
 
 namespace openstudio{
 

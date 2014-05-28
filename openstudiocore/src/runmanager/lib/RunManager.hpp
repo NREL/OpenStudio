@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_RUNMANAGER_HPP__
-#define OPENSTUDIO_RUNMANAGER_RUNMANAGER_HPP__
+#ifndef RUNMANAGER_LIB_RUNMANAGER_HPP
+#define RUNMANAGER_LIB_RUNMANAGER_HPP
 
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/RunManagerAPI.hpp>
+#include "ConfigOptions.hpp"
+#include "RunManagerAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/UUID.hpp"
 
 #include <QAbstractItemModel>
 
@@ -321,6 +321,6 @@ namespace detail {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_RUNMANAGER_HPP
 
 

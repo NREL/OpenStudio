@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Shade.hpp>
-#include <model/Shade_Impl.hpp>
+#include "Shade.hpp"
+#include "Shade_Impl.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_Shade_FieldEnums.hxx>
 

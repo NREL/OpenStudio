@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACELOAD_HPP
 #define MODEL_SPACELOAD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceItem.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceItem.hpp"
 
 namespace openstudio {
 namespace model {

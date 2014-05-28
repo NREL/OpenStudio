@@ -20,8 +20,8 @@
 #ifndef MODEL_CONTROLLERWATERCOIL_HPP
 #define MODEL_CONTROLLERWATERCOIL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 

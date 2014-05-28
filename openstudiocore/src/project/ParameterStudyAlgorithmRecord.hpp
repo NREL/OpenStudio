@@ -20,8 +20,8 @@
 #ifndef PROJECT_PARAMETERSTUDYALGORITHMRECORD_HPP
 #define PROJECT_PARAMETERSTUDYALGORITHMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "DakotaAlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

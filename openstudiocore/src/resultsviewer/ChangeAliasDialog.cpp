@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/ChangeAliasDialog.hpp>
+#include "ChangeAliasDialog.hpp"
 #include <QFile>
 #include <QFileDialog>
 #include <QVBoxLayout>

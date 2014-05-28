@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/WorkflowRecord.hpp>
-#include <project/WorkflowRecord_Impl.hpp>
+#include "WorkflowRecord.hpp"
+#include "WorkflowRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
 
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/Workflow.hpp>

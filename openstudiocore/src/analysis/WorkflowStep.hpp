@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_WORKFLOWSTEP_HPP
 #define ANALYSIS_WORKFLOWSTEP_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
 namespace openstudio {
 

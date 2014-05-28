@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ResultsTabController.hpp>
-#include <openstudio_lib/ResultsTabView.hpp>
+#include "ResultsTabController.hpp"
+#include "ResultsTabView.hpp"
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
 

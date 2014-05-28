@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMEST_HPP
 #define MODEL_SETPOINTMANAGERWARMEST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 

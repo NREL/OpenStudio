@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/ZoneChooserView.hpp>
+#include "ZoneChooserView.hpp"
 #include <model/AirLoopHVAC.hpp>
 #include <model/Model.hpp>
 #include <model/ThermalZone.hpp>

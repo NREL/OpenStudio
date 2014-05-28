@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/LoopScene.hpp>
-#include <openstudio_lib/GridItem.hpp>
+#include "LoopScene.hpp"
+#include "GridItem.hpp"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QApplication>

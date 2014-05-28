@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPTIMIZATIONPROBLEMRECORD_IMPL_HPP
 #define PROJECT_OPTIMIZATIONPROBLEMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ProblemRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveExponentialSkewNormal.hpp>
-#include <model/CurveExponentialSkewNormal_Impl.hpp>
+#include "CurveExponentialSkewNormal.hpp"
+#include "CurveExponentialSkewNormal_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_ExponentialSkewNormal_FieldEnums.hxx>

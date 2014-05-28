@@ -139,7 +139,7 @@ TEST_F(RunManagerTestFixture, JobRunOrder)
   kit.setPaused(false);
   kit.waitForFinished();
 
-  // successfull tree first
+  // successful tree first
   EXPECT_TRUE(successful11.errors().succeeded());
   EXPECT_TRUE(successful12.errors().succeeded());
   EXPECT_TRUE(successful13.errors().succeeded());

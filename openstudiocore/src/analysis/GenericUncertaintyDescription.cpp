@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/GenericUncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "GenericUncertaintyDescription.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

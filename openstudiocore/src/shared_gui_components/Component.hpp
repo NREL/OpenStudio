@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef SHAREDGUICOMPONENTS_COMPONENT_HPP
+#define SHAREDGUICOMPONENTS_COMPONENT_HPP
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/bcl/BCL.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 #include <QAbstractButton>
 
@@ -86,4 +86,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // COMPONENT_H
+#endif // SHAREDGUICOMPONENTS_COMPONENT_HPP

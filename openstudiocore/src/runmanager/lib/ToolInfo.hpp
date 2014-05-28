@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_TOOLINFO_HPP__
-#define OPENSTUDIO_RUNMANAGER_TOOLINFO_HPP__
+#ifndef RUNMANAGER_LIB_TOOLINFO_HPP
+#define RUNMANAGER_LIB_TOOLINFO_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <string>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <boost/regex.hpp>
 #include <algorithm>
 
@@ -359,5 +359,5 @@ namespace runmanager {
 } // runmanager
 } // openstudio
 
-#endif
+#endif // RUNMANAGER_LIB_TOOLINFO_HPP
 

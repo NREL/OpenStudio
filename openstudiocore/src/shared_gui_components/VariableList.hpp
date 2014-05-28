@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VARIABLELIST_HPP
-#define OPENSTUDIO_VARIABLELIST_HPP
+#ifndef SHAREDGUICOMPONENTS_VARIABLELIST_HPP
+#define SHAREDGUICOMPONENTS_VARIABLELIST_HPP
 
 #include "OSListController.hpp"
 #include "OSListView.hpp"
 #include "BaseApp.hpp"
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer>
@@ -296,4 +296,4 @@ class MeasureItemDelegate : public OSItemDelegate
 
 } // openstudio
 
-#endif // OPENSTUDIO_MEASURESTABCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_VARIABLELIST_HPP

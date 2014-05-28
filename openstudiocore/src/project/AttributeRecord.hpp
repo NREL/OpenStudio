@@ -21,13 +21,13 @@
 #define PROJECT_ATTRIBUTERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/UUID.hpp"
 
 namespace openstudio {
 

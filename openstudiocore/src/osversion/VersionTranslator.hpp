@@ -17,17 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
+#ifndef OSVERSION_VERSIONTRANSLATOR_HPP
+#define OSVERSION_VERSIONTRANSLATOR_HPP
+
 #include "OSVersionAPI.hpp"
 
-#include <model/Schedule.hpp>
+#include "../model/Schedule.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
 #include <boost/functional.hpp>
 
@@ -222,3 +225,4 @@ class OSVERSION_API VersionTranslator {
 } // osversion
 } // openstudio
 
+#endif // OSVERSION_VERSIONTRANSLATOR_HPP

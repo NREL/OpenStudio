@@ -20,8 +20,8 @@
 #ifndef MODEL_CONNECTORMIXER_HPP
 #define MODEL_CONNECTORMIXER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Mixer.hpp>
+#include "ModelAPI.hpp"
+#include "Mixer.hpp"
 
 namespace openstudio {
 

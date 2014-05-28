@@ -20,10 +20,10 @@
 #ifndef UTILITIES_DOCUMENT_DOCUMENT_HPP
 #define UTILITIES_DOCUMENT_DOCUMENT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/document/SectionElement.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "SectionElement.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../core/Path.hpp"
 
 namespace openstudio {
 

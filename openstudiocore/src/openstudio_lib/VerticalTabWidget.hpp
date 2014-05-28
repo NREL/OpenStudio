@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VERTICALTABWIDGET_H
-#define OPENSTUDIO_VERTICALTABWIDGET_H
+#ifndef OPENSTUDIO_VERTICALTABWIDGET_HPP
+#define OPENSTUDIO_VERTICALTABWIDGET_HPP
 
 #include <QWidget>
 #include <vector>
@@ -84,5 +84,5 @@ class VerticalTabWidget : public QWidget
 
 } // namespace openstudio
 
-#endif // OPENSTUDIO_VERTICALTABWIDGET_H
+#endif // OPENSTUDIO_VERTICALTABWIDGET_HPP
 

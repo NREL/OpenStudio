@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 

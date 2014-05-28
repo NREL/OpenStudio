@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Screen.hpp>
-#include <model/Screen_Impl.hpp>
+#include "Screen.hpp"
+#include "Screen_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Screen_FieldEnums.hxx>

@@ -18,14 +18,14 @@
  **********************************************************************/
 
 
-#include <pat_app/ExportXML.hpp>
+#include "ExportXML.hpp"
 #include <QFile>
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
-#include <pat_app/ExportXMLDialog.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/PatMainWindow.hpp>
+#include "ExportXMLDialog.hpp"
+#include "PatApp.hpp"
+#include "PatMainWindow.hpp"
 
 #include <analysisdriver/SimpleProject.hpp>
 

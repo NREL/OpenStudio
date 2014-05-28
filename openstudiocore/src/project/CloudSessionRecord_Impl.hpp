@@ -20,10 +20,10 @@
 #ifndef PROJECT_CLOUDSESSIONRECORD_IMPL_HPP
 #define PROJECT_CLOUDSESSIONRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <project/CloudSessionRecord.hpp>
+#include "CloudSessionRecord.hpp"
 
 namespace openstudio {
 

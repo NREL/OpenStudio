@@ -20,7 +20,7 @@
 #ifndef MODEL_SPACELOADDEFINITION_IMPL_HPP
 #define MODEL_SPACELOADDEFINITION_IMPL_HPP
 
-#include <model/ResourceObject_Impl.hpp>
+#include "ResourceObject_Impl.hpp"
 
 #include <QObject>
 

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_TIDITEMMODEL_H
-#define OPENSTUDIO_TIDITEMMODEL_H
+#ifndef SHAREDGUICOMPONENTS_TIDITEMMODEL_HPP
+#define SHAREDGUICOMPONENTS_TIDITEMMODEL_HPP
 
 #include <QAbstractItemModel>
 #include <QDomDocument>
@@ -66,4 +66,4 @@ class TIDItemModel : public QAbstractItemModel
 
 } // openstudio
 
-#endif // OPENSTUDIO_TIDITEMMODEL_H
+#endif // SHAREDGUICOMPONENTS_TIDITEMMODEL_HPP

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveBicubic.hpp>
-#include <model/CurveBicubic_Impl.hpp>
+#include "CurveBicubic.hpp"
+#include "CurveBicubic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Bicubic_FieldEnums.hxx>

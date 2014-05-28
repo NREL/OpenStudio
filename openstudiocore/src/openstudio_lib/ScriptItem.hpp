@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTITEM_H
-#define OPENSTUDIO_SCRIPTITEM_H
+#ifndef OPENSTUDIO_SCRIPTITEM_HPP
+#define OPENSTUDIO_SCRIPTITEM_HPP
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../ruleset/OSArgument.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <QWidget>
 
@@ -102,5 +102,5 @@ class ScriptItem : public OSItem {
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTITEM_H
+#endif // OPENSTUDIO_SCRIPTITEM_HPP
 

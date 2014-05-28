@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODALDIALOGS_H
-#define MODALDIALOGS_H
+#ifndef MODELEDITOR_MODALDIALOGS_HPP
+#define MODELEDITOR_MODALDIALOGS_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/UUID.hpp"
 
 #include <QDialog>
 
@@ -132,4 +132,4 @@ MODELEDITOR_API void ensureThermalZone(openstudio::model::Space& space);
 
 MODELEDITOR_API void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance);
 
-#endif //MODALDIALOGS_H
+#endif //MODELEDITOR_MODALDIALOGS_HPP

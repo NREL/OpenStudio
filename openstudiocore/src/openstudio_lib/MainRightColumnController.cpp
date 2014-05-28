@@ -17,25 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MainRightColumnController.hpp>
+#include "MainRightColumnController.hpp"
 
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/InspectorController.hpp>
-#include <openstudio_lib/InspectorView.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/LocationTabController.hpp>
-#include <openstudio_lib/SchedulesTabController.hpp>
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
-#include <openstudio_lib/SpaceTypeInspectorView.hpp>
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSCollapsibleItem.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/ConstructionsTabController.hpp>
+#include "HorizontalTabWidget.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "OSDocument.hpp"
+#include "OSAppBase.hpp"
+#include "LocationTabController.hpp"
+#include "SchedulesTabController.hpp"
+#include "BuildingStoryInspectorView.hpp"
+#include "SpaceTypeInspectorView.hpp"
+#include "ThermalZonesView.hpp"
+#include "OSItem.hpp"
+#include "OSItemList.hpp"
+#include "OSCollapsibleItem.hpp"
+#include "OSCollapsibleItemHeader.hpp"
+#include "ScriptFolderListView.hpp"
+#include "ConstructionsTabController.hpp"
 
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"

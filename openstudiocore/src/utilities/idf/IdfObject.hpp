@@ -20,11 +20,11 @@
 #ifndef UTILITIES_IDF_IDFOBJECT_HPP
 #define UTILITIES_IDF_IDFOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/Handle.hpp>
+#include "Handle.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

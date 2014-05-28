@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
-#include <model/ModelObject.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {

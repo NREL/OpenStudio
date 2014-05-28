@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
+#include "ParameterStudyAlgorithm.hpp"
+#include "ParameterStudyAlgorithm_Impl.hpp"
 
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions_Impl.hpp>
+#include "ParameterStudyAlgorithmOptions.hpp"
+#include "ParameterStudyAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
 #include <runmanager/lib/JSON.hpp>
 

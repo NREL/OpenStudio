@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/UrlRecord.hpp>
-#include <project/UrlRecord_Impl.hpp>
+#include "UrlRecord.hpp"
+#include "UrlRecord_Impl.hpp"
 
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSettingsRecord.hpp>
-#include <project/JoinRecord.hpp>
+#include "CloudSessionRecord.hpp"
+#include "CloudSettingsRecord.hpp"
+#include "JoinRecord.hpp"
 
 #include <utilities/core/Assert.hpp>
 

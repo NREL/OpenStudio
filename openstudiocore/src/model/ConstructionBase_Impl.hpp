@@ -20,7 +20,7 @@
 #ifndef MODEL_CONSTRUCTIONBASE_IMPL_HPP
 #define MODEL_CONSTRUCTIONBASE_IMPL_HPP
 
-#include <model/ResourceObject_Impl.hpp>
+#include "ResourceObject_Impl.hpp"
 
 #include <QObject>
 

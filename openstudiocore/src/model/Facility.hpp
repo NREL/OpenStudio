@@ -20,10 +20,10 @@
 #ifndef MODEL_FACILITY_HPP
 #define MODEL_FACILITY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 

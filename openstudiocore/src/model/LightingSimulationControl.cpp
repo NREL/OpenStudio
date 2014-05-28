@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightingSimulationControl.hpp>
-#include <model/LightingSimulationControl_Impl.hpp>
+#include "LightingSimulationControl.hpp"
+#include "LightingSimulationControl_Impl.hpp"
 
 #include <utilities/idd/OS_LightingSimulationControl_FieldEnums.hxx>
 

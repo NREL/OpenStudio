@@ -21,7 +21,7 @@
 #define MODEL_SCHEDULEINTERVAL_HPP
 
 #include "ModelAPI.hpp"
-#include <model/Schedule.hpp>
+#include "Schedule.hpp"
 
 namespace openstudio {
 

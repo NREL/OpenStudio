@@ -19,7 +19,7 @@
 #ifndef MODEL_SPLITTER_IMPL_HPP
 #define MODEL_SPLITTER_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 

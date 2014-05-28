@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PEOPLEINSPECTORVIEW_H
-#define OPENSTUDIO_PEOPLEINSPECTORVIEW_H
+#ifndef OPENSTUDIO_PEOPLEINSPECTORVIEW_HPP
+#define OPENSTUDIO_PEOPLEINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <model/PeopleDefinition.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "../model/PeopleDefinition.hpp"
 
 class QLabel;
 class QPushButton;
@@ -151,5 +151,5 @@ class PeopleDefinitionInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_BUILDINGSTORYINSPECTORVIEW_H
+#endif // OPENSTUDIO_PEOPLEINSPECTORVIEW_HPP
 

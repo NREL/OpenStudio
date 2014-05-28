@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP__
+#ifndef RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP
+#define RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
+#include "RunManager.hpp"
 #include <runmanager/lib/ui_JobErrorsDisplay.h>
 #include "JobErrors.hpp"
 
@@ -52,4 +52,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBERRORDISPLAY_HPP_
+#endif // RUNMANAGER_LIB_JOBERRORSDISPLAY_HPP

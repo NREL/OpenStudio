@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BCLCOMPONENTITEM_H
-#define OPENSTUDIO_BCLCOMPONENTITEM_H
+#ifndef OPENSTUDIO_BCLCOMPONENTITEM_HPP
+#define OPENSTUDIO_BCLCOMPONENTITEM_HPP
 
-#include <openstudio_lib/OSItem.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
+#include "OSItem.hpp"
+#include "../utilities/bcl/BCLComponent.hpp"
 
 namespace openstudio {
 
@@ -49,5 +49,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_BCLCOMPONENTITEM_H
+#endif // OPENSTUDIO_BCLCOMPONENTITEM_HPP
 

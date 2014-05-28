@@ -20,8 +20,8 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVERWATCHER_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVERWATCHER_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriver.hpp"
 
 #include <utilities/core/UUID.hpp>
 #include <utilities/core/Logger.hpp>

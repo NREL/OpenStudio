@@ -19,7 +19,7 @@
 
 #include <QVBoxLayout>
 
-#include <openstudio_lib/ScriptsTabView.hpp>
+#include "ScriptsTabView.hpp"
 #include <analysisdriver/SimpleProject.hpp>
 
 #include "OSAppBase.hpp"

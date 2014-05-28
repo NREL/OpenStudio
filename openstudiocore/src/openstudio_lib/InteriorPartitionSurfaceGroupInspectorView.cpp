@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/InteriorPartitionSurfaceGroupInspectorView.hpp>
+#include "InteriorPartitionSurfaceGroupInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
+#include "OSVectorController.hpp"
 
 #include <model/InteriorPartitionSurfaceGroup.hpp>
 #include <model/InteriorPartitionSurfaceGroup_Impl.hpp>

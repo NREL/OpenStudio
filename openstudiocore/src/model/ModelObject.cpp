@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/Relationship.hpp>
-#include <model/ParentObject.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Model_Impl.hpp"
+#include "Component.hpp"
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "Relationship.hpp"
+#include "ParentObject.hpp"
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
+#include "ScheduleTypeRegistry.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
 
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/data/Attribute.hpp>

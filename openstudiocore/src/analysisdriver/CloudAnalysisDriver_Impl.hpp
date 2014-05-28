@@ -20,10 +20,10 @@
 #ifndef ANALYSISDRIVER_CLOUDANALYSISDRIVER_IMPL_HPP
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriverEnums.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "SimpleProject.hpp"
 
 #include <analysis/DataPoint.hpp>
 

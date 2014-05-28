@@ -20,8 +20,8 @@
 #ifndef UTILITIES_SQL_SQLFILEENUMS_HPP
 #define UTILITIES_SQL_SQLFILEENUMS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Enum.hpp"
 
 #include <boost/optional.hpp>
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACWATERTOAIRHEATPUMP_HPP
 #define MODEL_ZONEHVACWATERTOAIRHEATPUMP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 

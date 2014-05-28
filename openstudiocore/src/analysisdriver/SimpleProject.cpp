@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "SimpleProject.hpp"
+#include "SimpleProject_Impl.hpp"
 
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "CurrentAnalysis.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "AnalysisDriverEnums.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
 #include <project/ProjectDatabase.hpp>
 #include <project/AnalysisRecord.hpp>

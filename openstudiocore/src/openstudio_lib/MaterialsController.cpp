@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MaterialsController.hpp>
+#include "MaterialsController.hpp"
 
-#include <openstudio_lib/MaterialsView.hpp>
+#include "MaterialsView.hpp"
 
 #include <model/AirGap.hpp>
 #include <model/AirWallMaterial.hpp>

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_GRAPHICSITEMS_H
-#define OPENSTUDIO_GRAPHICSITEMS_H
+#ifndef SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
+#define SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 
 #include <QGraphicsObject>
 #include <QSizeF>
@@ -208,5 +208,5 @@ class GridLayoutItem : public QGraphicsObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_GRAPHICSITEMS_H
+#endif // SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 

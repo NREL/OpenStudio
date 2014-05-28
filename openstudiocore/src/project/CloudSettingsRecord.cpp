@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/CloudSettingsRecord.hpp>
-#include <project/CloudSettingsRecord_Impl.hpp>
+#include "CloudSettingsRecord.hpp"
+#include "CloudSettingsRecord_Impl.hpp"
 
-#include <project/AWSSettingsRecord.hpp>
-#include <project/AWSSettingsRecord_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/VagrantSettingsRecord.hpp>
-#include <project/VagrantSettingsRecord_Impl.hpp>
+#include "AWSSettingsRecord.hpp"
+#include "AWSSettingsRecord_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "VagrantSettingsRecord.hpp"
+#include "VagrantSettingsRecord_Impl.hpp"
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>

@@ -40,13 +40,13 @@ using namespace openstudio;
 class IlluminanceMapFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp() {}
 
   // tear down after for each test
   virtual void TearDown() {}
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase()
   {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));

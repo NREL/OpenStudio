@@ -20,8 +20,8 @@
 #ifndef PROJECT_VAGRANTSETTINGSRECORD_HPP
 #define PROJECT_VAGRANTSETTINGSRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/CloudSettingsRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "CloudSettingsRecord.hpp"
 
 namespace openstudio {
 

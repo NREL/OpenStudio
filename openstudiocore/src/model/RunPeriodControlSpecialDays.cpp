@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "RunPeriodControlSpecialDays.hpp"
+#include "RunPeriodControlSpecialDays_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
 
 #include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
 

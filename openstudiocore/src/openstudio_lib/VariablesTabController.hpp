@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VARIABLESTABCONTROLLER_H
-#define OPENSTUDIO_VARIABLESTABCONTROLLER_H
+#ifndef OPENSTUDIO_VARIABLESTABCONTROLLER_HPP
+#define OPENSTUDIO_VARIABLESTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -37,4 +37,4 @@ class VariablesTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_VARIABLESTABCONTROLLER_H
+#endif // OPENSTUDIO_VARIABLESTABCONTROLLER_HPP

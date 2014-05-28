@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_TABDROPDOCK_H
-#define  RESULTSVIEWER_TABDROPDOCK_H
+#ifndef RESULTSVIEWER_TABDROPDOCK_HPP
+#define RESULTSVIEWER_TABDROPDOCK_HPP
 
 #include <QTabWidget>
 #include <QDropEvent>
@@ -56,4 +56,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TABDROPDOCK_H
+#endif // RESULTSVIEWER_TABDROPDOCK_HPP

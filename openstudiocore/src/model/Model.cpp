@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/ComponentWatcher_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Connection.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Component.hpp"
+#include "ComponentWatcher_Impl.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
+#include "Connection.hpp"
 
 // central list of all concrete ModelObject header files (_Impl and non-_Impl)
 // needed here for ::createObject
-#include <model/ConcreteModelObjects.hpp>
+#include "ConcreteModelObjects.hpp"
 
 #include <utilities/idf/IdfFile.hpp>
 

@@ -20,9 +20,9 @@
 #ifndef ANALYSIS_ALGORITHMOPTIONS_HPP
 #define ANALYSIS_ALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

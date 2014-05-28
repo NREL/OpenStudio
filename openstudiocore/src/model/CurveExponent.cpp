@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveExponent.hpp>
-#include <model/CurveExponent_Impl.hpp>
+#include "CurveExponent.hpp"
+#include "CurveExponent_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Exponent_FieldEnums.hxx>

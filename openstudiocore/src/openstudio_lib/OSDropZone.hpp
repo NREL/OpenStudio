@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSDROPZONE_H
-#define OPENSTUDIO_OSDROPZONE_H
+#ifndef OPENSTUDIO_OSDROPZONE_HPP
+#define OPENSTUDIO_OSDROPZONE_HPP
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
 #include <shared_gui_components/FieldMethodTypedefs.hpp>
 
@@ -321,4 +321,4 @@ class OSDropZoneItem : public QGraphicsObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSDROPZONE_H
+#endif // OPENSTUDIO_OSDROPZONE_HPP

@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 #define UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/core/Path.hpp>
+#include "CloudProvider_Impl.hpp"
+#include "AWSProvider.hpp"
+#include "../core/Path.hpp"
 
 #include <QProcess>
 #include <QTemporaryFile>

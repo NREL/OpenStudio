@@ -20,9 +20,9 @@
 #ifndef UTILITIES_BCL_REMOTEBCL_HPP
 #define UTILITIES_BCL_REMOTEBCL_HPP
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/core/Path.hpp>
+#include "BCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "../core/Path.hpp"
 
 #include <QDomDocument>
 

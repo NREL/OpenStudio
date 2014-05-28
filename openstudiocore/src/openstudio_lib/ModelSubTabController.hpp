@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELSUBTABCONTROLLER_H
-#define OPENSTUDIO_MODELSUBTABCONTROLLER_H
+#ifndef OPENSTUDIO_MODELSUBTABCONTROLLER_HPP
+#define OPENSTUDIO_MODELSUBTABCONTROLLER_HPP
 
-#include <openstudio_lib/SubTabController.hpp>
-#include <openstudio_lib/ModelSubTabView.hpp>
+#include "SubTabController.hpp"
+#include "ModelSubTabView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QObject>
 
@@ -101,4 +101,4 @@ class ModelSubTabController : public SubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELSUBTABCONTROLLER_H
+#endif // OPENSTUDIO_MODELSUBTABCONTROLLER_HPP

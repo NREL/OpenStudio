@@ -17,34 +17,34 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "Problem.hpp"
+#include "Problem_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaParametersFile.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Function_Impl.hpp>
-#include <analysis/GenericUncertaintyDescription.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "Analysis.hpp"
+#include "Analysis_Impl.hpp"
+#include "ContinuousVariable.hpp"
+#include "ContinuousVariable_Impl.hpp"
+#include "DakotaAlgorithm.hpp"
+#include "DakotaParametersFile.hpp"
+#include "DataPoint.hpp"
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
+#include "Measure.hpp"
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "Function_Impl.hpp"
+#include "GenericUncertaintyDescription.hpp"
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
+#include "OptimizationProblem.hpp"
+#include "OptimizationProblem_Impl.hpp"
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
+#include "RubyMeasure.hpp"
+#include "RubyMeasure_Impl.hpp"
+#include "UncertaintyDescription.hpp"
+#include "UncertaintyDescription_Impl.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 #include <runmanager/lib/WorkItem.hpp>
 #include <runmanager/lib/Workflow.hpp>

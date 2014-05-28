@@ -20,8 +20,8 @@
 #ifndef PROJECT_RUBYCONTINUOUSVARIABLERECORD_IMPL_HPP
 #define PROJECT_RUBYCONTINUOUSVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ContinuousVariableRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

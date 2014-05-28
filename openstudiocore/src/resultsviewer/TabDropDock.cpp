@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/TabDropDock.hpp>
-#include <resultsviewer/TabBarDrag.hpp>
-#include <resultsviewer/BrowserView.hpp>
-#include <resultsviewer/PlotView.hpp>
+#include "TabDropDock.hpp"
+#include "TabBarDrag.hpp"
+#include "BrowserView.hpp"
+#include "PlotView.hpp"
 #include <QApplication>
 #include <QDrag>
 

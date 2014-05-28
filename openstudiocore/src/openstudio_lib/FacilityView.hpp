@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_FACILITYVIEW_H
-#define OPENSTUDIO_FACILITYVIEW_H
+#ifndef OPENSTUDIO_FACILITYVIEW_HPP
+#define OPENSTUDIO_FACILITYVIEW_HPP
 
-#include <openstudio_lib/ModelSubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelSubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
 class QStackedWidget;
 
@@ -80,4 +80,4 @@ class FacilityInspectorView : public ModelObjectInspectorView
 
 } // namespace openstudio
 
-#endif // OPENSTUDIO_FACILITYVIEW_H
+#endif // OPENSTUDIO_FACILITYVIEW_HPP

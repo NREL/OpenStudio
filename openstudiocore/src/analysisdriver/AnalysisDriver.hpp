@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVER_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVER_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
+#include "AnalysisDriverAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

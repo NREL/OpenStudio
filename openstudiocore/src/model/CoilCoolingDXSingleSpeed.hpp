@@ -20,11 +20,11 @@
 #ifndef MODEL_COILCOOLINGDXSINGLESPEED_HPP
 #define MODEL_COILCOOLINGDXSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {

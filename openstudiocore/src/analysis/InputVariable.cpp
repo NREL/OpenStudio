@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
+#include "InputVariable.hpp"
+#include "InputVariable_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 #include <runmanager/lib/WorkItem.hpp>
 

@@ -17,38 +17,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OPENSTUDIOAPP_H
-#define OPENSTUDIO_OPENSTUDIOAPP_H
+#ifndef OPENSTUDIO_OPENSTUDIOAPP_HPP
+#define OPENSTUDIO_OPENSTUDIOAPP_HPP
 
-#include <openstudio_lib/SOConstants.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
+#include "../openstudio_lib/SOConstants.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
 
-#include <model/Model.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/PumpVariableSpeed.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/DistrictHeating.hpp>
-#include <model/DistrictCooling.hpp>
+#include "../model/Model.hpp"
+#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/FanConstantVolume.hpp"
+#include "../model/CurveQuadratic.hpp"
+#include "../model/CurveBiquadratic.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/ControllerOutdoorAir.hpp"
+#include "../model/AvailabilityManagerScheduled.hpp"
+#include "../model/ControllerOutdoorAir.hpp"
+#include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../model/ScheduleCompact.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/BoilerHotWater.hpp"
+#include "../model/PumpVariableSpeed.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/DistrictHeating.hpp"
+#include "../model/DistrictCooling.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <vector>
 #include <map>
@@ -148,5 +148,5 @@ class OpenStudioApp : public OSAppBase
 
 } // openstudio
 
-#endif // OPENSTUDIO_OPENSTUDIOAPP_H
+#endif // OPENSTUDIO_OPENSTUDIOAPP_HPP
 

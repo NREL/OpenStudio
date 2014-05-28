@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "ModelPartitionMaterial.hpp"
+#include "ModelPartitionMaterial_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

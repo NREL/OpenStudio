@@ -20,10 +20,10 @@
 #ifndef UTILITIES_BCL_ONDEMANDGENERATOR_HPP
 #define UTILITIES_BCL_ONDEMANDGENERATOR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../core/Enum.hpp"
+#include "../core/Path.hpp"
 
 #include <QVariant>
 

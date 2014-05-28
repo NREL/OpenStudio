@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_RUBYMEASURE_HPP
 #define ANALYSIS_RUBYMEASURE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Measure.hpp>
+#include "AnalysisAPI.hpp"
+#include "Measure.hpp"
 
 namespace openstudio {
 

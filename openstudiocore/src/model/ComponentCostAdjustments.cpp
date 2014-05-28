@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ComponentCostAdjustments.hpp>
-#include <model/ComponentCostAdjustments_Impl.hpp>
+#include "ComponentCostAdjustments.hpp"
+#include "ComponentCostAdjustments_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_ComponentCost_Adjustments_FieldEnums.hxx>
 

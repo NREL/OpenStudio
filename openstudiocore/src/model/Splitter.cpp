@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
 
 #include <utilities/core/Assert.hpp>
 

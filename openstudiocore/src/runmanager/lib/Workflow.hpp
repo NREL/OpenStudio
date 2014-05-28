@@ -1,14 +1,31 @@
-#ifndef OPENSTUDIO_RUNMANAGER_WORKFLOW_HPP__
-#define OPENSTUDIO_RUNMANAGER_WORKFLOW_HPP__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_LIB_WORKFLOW_HPP
+#define RUNMANAGER_LIB_WORKFLOW_HPP
 
 #include "RunManagerAPI.hpp"
 #include "JobFactory.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-
-#include <boost/tuple/tuple.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/idf/URLSearchPath.hpp"
 
 class QCryptographicHash;
 
@@ -21,7 +38,7 @@ namespace runmanager {
   class WorkItem;
 
 
-  /// Utility for constructing a reproducable Job tree.
+  /// Utility for constructing a reproducible Job tree.
   class RUNMANAGER_API Workflow
   {
     private:
@@ -452,4 +469,4 @@ namespace std {
   }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_WORKFLOW_HPP

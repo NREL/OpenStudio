@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEYEAR_HPP
 #define MODEL_SCHEDULEYEAR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Schedule.hpp>
+#include "ModelAPI.hpp"
+#include "Schedule.hpp"
 
 namespace openstudio {
 

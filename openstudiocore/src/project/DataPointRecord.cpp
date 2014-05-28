@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
-#include <project/DataPointValueRecord.hpp>
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "DataPoint_Measure_JoinRecord_Impl.hpp"
+#include "DataPointValueRecord.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
-#include <project/OptimizationDataPointRecord.hpp>
+#include "AnalysisRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ContinuousVariableRecord.hpp"
+#include "ContinuousVariableRecord_Impl.hpp"
+#include "FunctionRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "MeasureRecord.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
+#include "OptimizationDataPointRecord.hpp"
 
-#include <project/TagRecord.hpp>
+#include "TagRecord.hpp"
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/OptimizationDataPoint.hpp>

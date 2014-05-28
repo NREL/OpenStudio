@@ -31,9 +31,9 @@
 #include "OSDocument.hpp"
 #include "RefrigerationScene.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
-#include <openstudio_lib/ServiceWaterScene.hpp>
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/MainRightColumnController.hpp>
+#include "ServiceWaterScene.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "MainRightColumnController.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include <model/ModelObject.hpp>
 #include <model/HVACComponent.hpp>

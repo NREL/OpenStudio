@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/FacilityView.hpp>
-#include <openstudio_lib/FacilityTreeWidget.hpp>
-#include <openstudio_lib/BuildingInspectorView.hpp>
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
-#include <openstudio_lib/SpaceInspectorView.hpp>
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/SpaceTypeInspectorView.hpp>
-#include <openstudio_lib/SurfaceInspectorView.hpp>
-#include <openstudio_lib/SubSurfaceInspectorView.hpp>
-#include <openstudio_lib/ShadingSurfaceGroupInspectorView.hpp>
-#include <openstudio_lib/ShadingSurfaceInspectorView.hpp>
-#include <openstudio_lib/InteriorPartitionSurfaceGroupInspectorView.hpp>
-#include <openstudio_lib/InteriorPartitionSurfaceInspectorView.hpp>
-#include <openstudio_lib/DaylightingControlInspectorView.hpp>
-#include <openstudio_lib/IlluminanceMapInspectorView.hpp>
-#include <openstudio_lib/GlareSensorInspectorView.hpp>
-#include <openstudio_lib/PeopleInspectorView.hpp>
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
+#include "FacilityView.hpp"
+#include "FacilityTreeWidget.hpp"
+#include "BuildingInspectorView.hpp"
+#include "BuildingStoryInspectorView.hpp"
+#include "SpaceInspectorView.hpp"
+#include "ThermalZonesView.hpp"
+#include "SpaceTypeInspectorView.hpp"
+#include "SurfaceInspectorView.hpp"
+#include "SubSurfaceInspectorView.hpp"
+#include "ShadingSurfaceGroupInspectorView.hpp"
+#include "ShadingSurfaceInspectorView.hpp"
+#include "InteriorPartitionSurfaceGroupInspectorView.hpp"
+#include "InteriorPartitionSurfaceInspectorView.hpp"
+#include "DaylightingControlInspectorView.hpp"
+#include "IlluminanceMapInspectorView.hpp"
+#include "GlareSensorInspectorView.hpp"
+#include "PeopleInspectorView.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>

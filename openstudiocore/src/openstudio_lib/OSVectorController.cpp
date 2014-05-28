@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "OSVectorController.hpp"
+#include "OSItem.hpp"
 
 namespace openstudio {
 

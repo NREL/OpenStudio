@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <openstudio_lib/test/OpenStudioLibFixture.hpp>
+#include "OpenStudioLibFixture.hpp"
 
-#include <openstudio_lib/IconLibrary.hpp>
+#include "../IconLibrary.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 

@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ConnectorSplitter.hpp"
+#include "ConnectorSplitter_Impl.hpp"
+#include "Node.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_Connector_Splitter_FieldEnums.hxx>
 #include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>

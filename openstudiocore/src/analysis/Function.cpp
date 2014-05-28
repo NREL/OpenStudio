@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/Function.hpp>
-#include <analysis/Function_Impl.hpp>
+#include "Function.hpp"
+#include "Function_Impl.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "InputVariable.hpp"
+#include "InputVariable_Impl.hpp"
+#include "LinearFunction.hpp"
+#include "LinearFunction_Impl.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

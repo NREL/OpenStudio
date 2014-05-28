@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/GasLayer.hpp>
-#include <model/GasLayer_Impl.hpp>
+#include "GasLayer.hpp"
+#include "GasLayer_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

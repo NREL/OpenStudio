@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_DESIGNOFEXPERIMENTSOPTIONS_HPP
 #define ANALYSIS_DESIGNOFEXPERIMENTSOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "AlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {

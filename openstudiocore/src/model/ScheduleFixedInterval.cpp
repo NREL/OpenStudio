@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleFixedInterval.hpp>
-#include <model/ScheduleFixedInterval_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ScheduleFixedInterval.hpp"
+#include "ScheduleFixedInterval_Impl.hpp"
+#include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idd/OS_Schedule_FixedInterval_FieldEnums.hxx>
 

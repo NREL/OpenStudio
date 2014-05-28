@@ -20,13 +20,13 @@
 #ifndef UTILITIES_IDF_WORKSPACEEXTENSIBLEGROUP_HPP
 #define UTILITIES_IDF_WORKSPACEEXTENSIBLEGROUP_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../idd/ExtensibleIndex.hpp"
+#include "IdfExtensibleGroup.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/optional.hpp>
 

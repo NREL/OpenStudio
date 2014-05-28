@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
+#include "LifeCycleCostParameters.hpp"
+#include "LifeCycleCostParameters_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_LifeCycleCost_Parameters_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

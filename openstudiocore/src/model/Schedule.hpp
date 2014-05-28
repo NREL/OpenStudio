@@ -21,7 +21,7 @@
 #define MODEL_SCHEDULE_HPP
 
 #include "ModelAPI.hpp"
-#include <model/ScheduleBase.hpp>
+#include "ScheduleBase.hpp"
 
 namespace openstudio {
 namespace model {

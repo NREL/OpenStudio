@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_NULLMEASURE_IMPL_HPP
 #define ANALYSIS_NULLMEASURE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Measure_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Measure_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

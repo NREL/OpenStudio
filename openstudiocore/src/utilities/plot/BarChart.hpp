@@ -20,12 +20,12 @@
 #ifndef UTILITIES_PLOT_BARCHART_HPP
 #define UTILITIES_PLOT_BARCHART_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/plot/Chart.hpp>
-#include <utilities/core/Path.hpp>
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
+#include "Chart.hpp"
+#include "../core/Path.hpp"
 
 namespace openstudio{
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_OPAQUEMATERIAL_HPP
 #define MODEL_OPAQUEMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Material.hpp>
+#include "ModelAPI.hpp"
+#include "Material.hpp"
 
 namespace openstudio {
 namespace model {

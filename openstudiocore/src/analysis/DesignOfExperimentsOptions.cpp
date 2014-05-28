@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
+#include "DesignOfExperimentsOptions.hpp"
+#include "DesignOfExperimentsOptions_Impl.hpp"
 
 #include <utilities/core/Json.hpp>
 

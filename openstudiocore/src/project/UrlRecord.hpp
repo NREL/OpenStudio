@@ -20,10 +20,10 @@
 #ifndef PROJECT_URLRECORD_HPP
 #define PROJECT_URLRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Url.hpp>
+#include "../utilities/core/Url.hpp"
 
 namespace openstudio {
 namespace project {

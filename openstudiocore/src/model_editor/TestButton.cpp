@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model_editor/TestButton.hpp>
+#include "TestButton.hpp"
 
 #include <QTimer>
 

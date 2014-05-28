@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Lights_Definition_FieldEnums.hxx>

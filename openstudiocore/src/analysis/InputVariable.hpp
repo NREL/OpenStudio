@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_INPUTVARIABLE_HPP
 #define ANALYSIS_INPUTVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Variable.hpp>
+#include "AnalysisAPI.hpp"
+#include "Variable.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 

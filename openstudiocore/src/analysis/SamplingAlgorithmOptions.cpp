@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/SamplingAlgorithmOptions.hpp>
-#include <analysis/SamplingAlgorithmOptions_Impl.hpp>
+#include "SamplingAlgorithmOptions.hpp"
+#include "SamplingAlgorithmOptions_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Json.hpp>

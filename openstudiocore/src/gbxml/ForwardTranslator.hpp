@@ -22,12 +22,12 @@
 
 #include "gbXMLAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 #include <map>
 

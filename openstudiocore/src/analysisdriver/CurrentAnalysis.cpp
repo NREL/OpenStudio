@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CurrentAnalysis_Impl.hpp>
+#include "CurrentAnalysis.hpp"
+#include "CurrentAnalysis_Impl.hpp"
 
 #include <analysis/DataPoint_Impl.hpp>
 

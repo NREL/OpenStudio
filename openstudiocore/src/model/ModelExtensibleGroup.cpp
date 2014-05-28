@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelExtensibleGroup.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

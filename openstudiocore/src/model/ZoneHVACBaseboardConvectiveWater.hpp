@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP
 #define MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Model.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ThermalZone.hpp"
+#include "Model.hpp"
 
 namespace openstudio {
 namespace model {

@@ -20,10 +20,10 @@
 #ifndef UTILITIES_GEOMETRY_GEOMETRY_HPP
 #define UTILITIES_GEOMETRY_GEOMETRY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "Point3d.hpp"
+#include "Vector3d.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>

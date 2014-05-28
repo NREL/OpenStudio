@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SchedulesView.hpp>
+#include "SchedulesView.hpp"
 
 #include "../shared_gui_components/OSCheckBox.hpp"
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
+#include "OSItemSelectorButtons.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
 #include <model/Model.hpp>

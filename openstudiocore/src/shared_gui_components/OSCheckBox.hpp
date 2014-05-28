@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSCHECKBOX_H
-#define OPENSTUDIO_OSCHECKBOX_H
+#ifndef SHAREDGUICOMPONENTS_OSCHECKBOX_HPP
+#define SHAREDGUICOMPONENTS_OSCHECKBOX_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QPushButton>
 
@@ -91,5 +91,5 @@ class OSCheckBox : public QPushButton {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSCHECKBOX_H
+#endif // SHAREDGUICOMPONENTS_OSCHECKBOX_HPP
 

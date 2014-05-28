@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
-#define OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
+#ifndef OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_HPP
+#define OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_HPP
 
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "OSItemList.hpp"
+#include "OSVectorController.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 
@@ -87,5 +87,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_H
+#endif // OPENSTUDIO_UTILITYBILLFUELTYPELISTVIEW_HPP
 

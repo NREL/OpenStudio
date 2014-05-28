@@ -20,9 +20,9 @@
 #ifndef MODEL_LIFECYCLECOSTPARAMETERS_HPP
 #define MODEL_LIFECYCLECOSTPARAMETERS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 

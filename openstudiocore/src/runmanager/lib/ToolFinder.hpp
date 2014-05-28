@@ -18,13 +18,13 @@
 **********************************************************************/
 
 
-#ifndef OPENSTUDIO_RUNMANAGER_LIB_TOOLFINDER_HPP
-#define OPENSTUDIO_RUNMANAGER_LIB_TOOLFINDER_HPP
+#ifndef RUNMANAGER_LIB_TOOLFINDER_HPP
+#define RUNMANAGER_LIB_TOOLFINDER_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <vector>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <QProgressDialog>
 #include "ConfigOptions.hpp"
 
@@ -97,5 +97,5 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_TOOLFINDER_HPP
 

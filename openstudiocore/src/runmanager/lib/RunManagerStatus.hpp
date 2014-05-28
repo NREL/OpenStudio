@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP__
-#define OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP__
+#ifndef RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP
+#define RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP
 
 #include <string>
 #include <QTimer>
@@ -56,4 +56,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP_
+#endif // RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP

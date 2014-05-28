@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_ANALYSISDATA_HPP
-#define ANALYSIS_ANALYSISDATA_HPP
+#ifndef ANALYSIS_ANALYSIS_HPP
+#define ANALYSIS_ANALYSIS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 

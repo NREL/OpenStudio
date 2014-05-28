@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #define COMPILING_FROM_OSAPP
-#include <openstudio_lib/OpenStudioAPI.hpp>
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "../openstudio_lib/OpenStudioAPI.hpp"
+#include "OpenStudioApp.hpp"
 
-#include <openstudio_lib/MainWindow.hpp>
+#include "../openstudio_lib/MainWindow.hpp"
 #include <utilities/core/Application.hpp>
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/FileLogSink.hpp>

@@ -20,9 +20,9 @@
 #ifndef UTILITIES_IDD_IDDFILE_IMPL_HPP
 #define UTILITIES_IDD_IDDFILE_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddObject.hpp"
+#include "../core/Logger.hpp"
 
 #include <string>
 #include <ostream>

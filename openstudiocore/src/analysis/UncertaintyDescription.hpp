@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_UNCERTAINTYDESCRIPTION_HPP
 #define ANALYSIS_UNCERTAINTYDESCRIPTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisEnums.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisEnums.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 #include <boost/optional.hpp>
 

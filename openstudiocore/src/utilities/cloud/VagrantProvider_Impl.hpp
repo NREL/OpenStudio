@@ -20,12 +20,12 @@
 #ifndef UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
 #define UTILITIES_CLOUD_VAGRANTPROVIDER_IMPL_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
+#include "CloudProvider.hpp"
+#include "CloudProvider_Impl.hpp"
+#include "VagrantProvider.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../core/Path.hpp"
+#include "../core/Url.hpp"
 
 #include <QProcess>
 

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "OSItemSelectorButtons.hpp"
+#include "OSDropZone.hpp"
+#include "OSItem.hpp"
+#include "OSVectorController.hpp"
 
 #include <utilities/core/Assert.hpp>
 

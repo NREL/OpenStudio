@@ -22,7 +22,7 @@
 #include <QtXml/QXmlDefaultHandler>
 #include <QtXml/QXmlReader>
 
-#include <model/AccessPolicyStore.hpp>
+#include "AccessPolicyStore.hpp"
 
 #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
 

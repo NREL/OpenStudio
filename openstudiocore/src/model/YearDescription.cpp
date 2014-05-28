@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/ScheduleBase.hpp>
-#include <model/ScheduleBase_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/LightingDesignDay.hpp>
-#include <model/LightingDesignDay_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "RunPeriodControlDaylightSavingTime.hpp"
+#include "RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "RunPeriodControlSpecialDays.hpp"
+#include "RunPeriodControlSpecialDays_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "ScheduleBase.hpp"
+#include "ScheduleBase_Impl.hpp"
+#include "ScheduleRule.hpp"
+#include "ScheduleRule_Impl.hpp"
+#include "LightingDesignDay.hpp"
+#include "LightingDesignDay_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_YearDescription_FieldEnums.hxx>

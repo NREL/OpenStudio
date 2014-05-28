@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
-#define OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
+#ifndef SHAREDGUICOMPONENTS_FIELDMETHODTYPEDEFS_HPP
+#define SHAREDGUICOMPONENTS_FIELDMETHODTYPEDEFS_HPP
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
 #include <boost/optional.hpp>
 
@@ -59,4 +59,4 @@ typedef std::function<bool ()> BasicQuery;
 
 }
 
-#endif // OPENSTUDIO_FIELDMETHODTYPEDEFS_HPP
+#endif // SHAREDGUICOMPONENTS_FIELDMETHODTYPEDEFS_HPP

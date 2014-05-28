@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANARSURFACEGROUP_HPP
 #define MODEL_PLANARSURFACEGROUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial.hpp"
 
 namespace openstudio {
 

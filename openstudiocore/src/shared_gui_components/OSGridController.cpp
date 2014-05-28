@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSGridController.hpp>
+#include "OSGridController.hpp"
 
-#include <shared_gui_components/OSCheckBox.hpp>
-#include <shared_gui_components/OSComboBox.hpp>
-#include <shared_gui_components/OSDoubleEdit.hpp>
-#include <shared_gui_components/OSGridView.hpp>
-#include <shared_gui_components/OSIntegerEdit.hpp>
-#include <shared_gui_components/OSLineEdit.hpp>
-#include <shared_gui_components/OSQuantityEdit.hpp>
-#include <shared_gui_components/OSUnsignedEdit.hpp>
+#include "OSCheckBox.hpp"
+#include "OSComboBox.hpp"
+#include "OSDoubleEdit.hpp"
+#include "OSGridView.hpp"
+#include "OSIntegerEdit.hpp"
+#include "OSLineEdit.hpp"
+#include "OSQuantityEdit.hpp"
+#include "OSUnsignedEdit.hpp"
 
 #include <openstudio_lib/OSDropZone.hpp>
 #include <openstudio_lib/SchedulesView.hpp>

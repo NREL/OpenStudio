@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 #define PROJECT_DATAPOINT_MEASURE_JOINRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/JoinRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "JoinRecord.hpp"
 
 namespace openstudio {
 namespace project {

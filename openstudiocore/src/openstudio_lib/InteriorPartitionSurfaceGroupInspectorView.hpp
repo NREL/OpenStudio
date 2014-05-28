@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_INTERIORSURFACEPARTITIONGROUPINSPECTORVIEW_H
-#define OPENSTUDIO_INTERIORSURFACEPARTITIONGROUPINSPECTORVIEW_H
+#ifndef OPENSTUDIO_INTERIORPARTITIONSURFACEGROUPINSPECTORVIEW_HPP
+#define OPENSTUDIO_INTERIORPARTITIONSURFACEGROUPINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 
 namespace openstudio {
@@ -74,5 +74,5 @@ class InteriorPartitionSurfaceGroupInspectorView : public ModelObjectInspectorVi
 
 } // openstudio
 
-#endif // OPENSTUDIO_INTERIORSURFACEPARTITIONGROUPINSPECTORVIEW_H
+#endif // OPENSTUDIO_INTERIORPARTITIONSURFACEGROUPINSPECTORVIEW_HPP
 

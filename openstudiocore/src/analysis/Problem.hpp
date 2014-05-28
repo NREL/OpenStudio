@@ -20,15 +20,15 @@
 #ifndef ANALYSIS_PROBLEM_HPP
 #define ANALYSIS_PROBLEM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "Measure.hpp"
+#include "WorkflowStep.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 

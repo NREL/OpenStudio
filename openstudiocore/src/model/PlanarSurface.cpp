@@ -17,22 +17,22 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Model.hpp>
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/PlanarSurfaceGroup.hpp>
-#include <model/Space.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
+#include "PlanarSurfaceGroup.hpp"
+#include "Space.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Material.hpp"
+#include "AirWallMaterial.hpp"
+#include "AirWallMaterial_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 
 #include <utilities/sql/SqlFile.hpp>
 

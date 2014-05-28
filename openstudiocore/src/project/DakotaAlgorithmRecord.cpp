@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/DDACEAlgorithmRecord.hpp>
-#include <project/FSUDaceAlgorithmRecord.hpp>
-#include <project/PSUADEDaceAlgorithmRecord.hpp>
-#include <project/ParameterStudyAlgorithmRecord.hpp>
-#include <project/SamplingAlgorithmRecord.hpp>
+#include "DakotaAlgorithmRecord.hpp"
+#include "DakotaAlgorithmRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "DDACEAlgorithmRecord.hpp"
+#include "FSUDaceAlgorithmRecord.hpp"
+#include "PSUADEDaceAlgorithmRecord.hpp"
+#include "ParameterStudyAlgorithmRecord.hpp"
+#include "SamplingAlgorithmRecord.hpp"
 
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DDACEAlgorithm_Impl.hpp>
@@ -39,7 +39,7 @@
 #include <analysis/SamplingAlgorithm.hpp>
 #include <analysis/SamplingAlgorithm_Impl.hpp>
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
 #include <utilities/core/Assert.hpp>
 

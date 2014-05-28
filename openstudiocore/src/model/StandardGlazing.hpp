@@ -20,8 +20,8 @@
 #ifndef MODEL_STANDARDGLAZING_HPP
 #define MODEL_STANDARDGLAZING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
 
 namespace openstudio {
 

@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_APPLICATION_HPP
 #define UTILITIES_CORE_APPLICATION_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Singleton.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Singleton.hpp"
 
 #include <QApplication>
 

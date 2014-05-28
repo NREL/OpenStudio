@@ -22,13 +22,13 @@
 
 #include "SDDAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/ConstructionBase.hpp>
+#include "../model/Schedule.hpp"
+#include "../model/ConstructionBase.hpp"
 
 class QDomDocument;
 class QDomElement;

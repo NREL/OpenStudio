@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/MainWindow.hpp>
-#include <resultsviewer/AboutBox.hpp>
-#include <resultsviewer/ChangeAliasDialog.hpp>
+#include "MainWindow.hpp"
+#include "AboutBox.hpp"
+#include "ChangeAliasDialog.hpp"
 
 #include <utilities/core/String.hpp>
 #include <utilities/core/TemporaryDirectory.hpp>

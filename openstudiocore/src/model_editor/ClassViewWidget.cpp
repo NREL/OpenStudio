@@ -22,11 +22,11 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/ModelExplorer.hpp>
+#include "InspectorGadget.hpp"
+#include "ModelExplorer.hpp"
 #include <model_editor/tablemodel.h>
-#include <model_editor/TableView.hpp>
-#include <model_editor/ClassViewWidget.hpp>
+#include "TableView.hpp"
+#include "ClassViewWidget.hpp"
 
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 

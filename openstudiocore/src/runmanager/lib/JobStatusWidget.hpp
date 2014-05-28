@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP__
+#ifndef RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP
+#define RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
+#include "RunManager.hpp"
 #include <runmanager/lib/ui_JobStatusWidget.h>
 #include "JobErrors.hpp"
 #include "Job.hpp"
@@ -179,4 +179,4 @@ namespace openstudio {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP_
+#endif // RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP

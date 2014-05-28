@@ -20,8 +20,8 @@
 #ifndef MODEL_STANDARDGLAZING_IMPL_HPP
 #define MODEL_STANDARDGLAZING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

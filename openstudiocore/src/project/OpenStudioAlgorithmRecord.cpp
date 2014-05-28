@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OpenStudioAlgorithmRecord.hpp>
-#include <project/OpenStudioAlgorithmRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/DesignOfExperimentsRecord.hpp>
-#include <project/SequentialSearchRecord.hpp>
+#include "OpenStudioAlgorithmRecord.hpp"
+#include "OpenStudioAlgorithmRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "DesignOfExperimentsRecord.hpp"
+#include "SequentialSearchRecord.hpp"
 
 #include <analysis/DesignOfExperiments.hpp>
 #include <analysis/DesignOfExperiments_Impl.hpp>

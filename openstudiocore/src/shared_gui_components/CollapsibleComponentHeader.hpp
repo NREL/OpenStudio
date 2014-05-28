@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
-#define OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
+#ifndef SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTHEADER_HPP
+#define SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTHEADER_HPP
 
 #include <QAbstractButton>
 
-#include <shared_gui_components/Component.hpp>
+#include "Component.hpp"
 
 class QLabel;
 class QMouseEvent;
@@ -72,5 +72,5 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_COLLAPSIBLECOMPONENTHEADER_H
+#endif // SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTHEADER_HPP
 

@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_JOB_HPP__
-#define OPENSTUDIO_JOB_HPP__
+#ifndef RUNMANAGER_LIB_JOB_HPP
+#define RUNMANAGER_LIB_JOB_HPP
 
 #include "RunManagerAPI.hpp"
 #include "ProcessCreator.hpp"
 #include "AdvancedStatus.hpp"
 #include "TreeStatus.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 #include "FileInfo.hpp"
 #include "JobParam.hpp"
 #include "ToolInfo.hpp"
@@ -404,5 +404,5 @@ namespace std {
   }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_JOB_HPP
 

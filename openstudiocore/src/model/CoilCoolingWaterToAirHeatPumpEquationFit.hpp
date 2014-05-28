@@ -20,8 +20,8 @@
 #ifndef MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
 #define MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToAirComponent.hpp"
 
 namespace openstudio {
 

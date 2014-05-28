@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/ResultsView.hpp>
-#include <pat_app/ResultsTabController.hpp>
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
+#include "ResultsView.hpp"
+#include "ResultsTabController.hpp"
+#include "CloudMonitor.hpp"
+#include "PatApp.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"

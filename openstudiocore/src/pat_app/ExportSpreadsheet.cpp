@@ -18,7 +18,7 @@
  **********************************************************************/
 
 
-#include <pat_app/ExportSpreadsheet.hpp>
+#include "ExportSpreadsheet.hpp"
 
 #include <analysisdriver/SimpleProject.hpp>
 

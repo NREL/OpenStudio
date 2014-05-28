@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
+#include "SpaceLoadInstance.hpp"
+#include "SpaceLoadInstance_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "SpaceLoadDefinition.hpp"
+#include "SpaceLoadDefinition_Impl.hpp"
+#include "Space.hpp"
+#include "SpaceType.hpp"
 
 #include <utilities/core/Assert.hpp>
 

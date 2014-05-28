@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/OSAppBase.hpp>
+#include "OSAppBase.hpp"
 #include <analysisdriver/SimpleProject.hpp>
 #include "MainRightColumnController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"

@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/DesignAlternativesTabController.hpp>
-#include <pat_app/MeasuresTabController.hpp>
-#include <pat_app/DesignAlternativesView.hpp>
-#include <pat_app/PatApp.hpp>
+#include "DesignAlternativesTabController.hpp"
+#include "MeasuresTabController.hpp"
+#include "DesignAlternativesView.hpp"
+#include "PatApp.hpp"
 
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 
-#include <pat_app/PatMainWindow.hpp>
+#include "PatMainWindow.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>

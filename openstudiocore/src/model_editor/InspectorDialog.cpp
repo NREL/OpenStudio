@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/InspectorDialog.hpp>
+#include "InspectorGadget.hpp"
+#include "InspectorDialog.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/AccessPolicyStore.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ResourceObject.hpp"
+#include "../model/ResourceObject_Impl.hpp"
+#include "../model/AccessPolicyStore.hpp"
 
 #include <utilities/core/Application.hpp>
 #include <utilities/core/Assert.hpp>

@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_CELSIUSUNIT_HPP
 #define UTILITIES_UNITS_CELSIUSUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/TemperatureUnit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "TemperatureUnit.hpp"
 
 namespace openstudio {
 namespace detail {

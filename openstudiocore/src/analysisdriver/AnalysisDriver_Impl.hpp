@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "CurrentAnalysis.hpp"
+#include "AnalysisDriverEnums.hpp"
 
 #include <project/ProjectDatabase.hpp>
 

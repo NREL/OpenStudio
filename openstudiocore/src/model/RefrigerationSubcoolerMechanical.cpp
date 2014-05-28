@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
+#include "RefrigerationSubcoolerMechanical.hpp"
+#include "RefrigerationSubcoolerMechanical_Impl.hpp"
 
-#include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_Refrigeration_Subcooler_Mechanical_FieldEnums.hxx>
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_INTERIORPARTITIONSURFACEGROUP_HPP
 #define MODEL_INTERIORPARTITIONSURFACEGROUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurfaceGroup.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurfaceGroup.hpp"
 
 namespace openstudio {
 

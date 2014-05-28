@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULESVIEW_H
-#define OPENSTUDIO_SCHEDULESVIEW_H
+#ifndef OPENSTUDIO_SCHEDULESVIEW_HPP
+#define OPENSTUDIO_SCHEDULESVIEW_HPP
 
-#include <model/Model.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/smart_ptr.hpp>
@@ -1173,5 +1173,5 @@ class YearOverview : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCHEDULESVIEW_H
+#endif // OPENSTUDIO_SCHEDULESVIEW_HPP
 

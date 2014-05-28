@@ -20,8 +20,8 @@
 #ifndef MODEL_BLIND_HPP
 #define MODEL_BLIND_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ShadingMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "ShadingMaterial.hpp"
 
 namespace openstudio {
 

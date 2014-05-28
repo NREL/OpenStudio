@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionsView.hpp>
+#include "ConstructionsView.hpp"
 
-#include <openstudio_lib/ConstructionCfactorUndergroundWallInspectorView.hpp>
-#include <openstudio_lib/ConstructionFfactorGroundFloorInspectorView.hpp>
-#include <openstudio_lib/ConstructionInspectorView.hpp>
-#include <openstudio_lib/ConstructionInternalSourceInspectorView.hpp>
-#include <openstudio_lib/ConstructionWindowDataFileInspectorView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
+#include "ConstructionCfactorUndergroundWallInspectorView.hpp"
+#include "ConstructionFfactorGroundFloorInspectorView.hpp"
+#include "ConstructionInspectorView.hpp"
+#include "ConstructionInternalSourceInspectorView.hpp"
+#include "ConstructionWindowDataFileInspectorView.hpp"
+#include "ModelObjectTypeListView.hpp"
 
 #include <model/Model_Impl.hpp>
 

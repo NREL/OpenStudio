@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterBooleanAttribute.hpp>
-#include <ruleset/ModelObjectFilterBooleanAttribute_Impl.hpp>
+#include "ModelObjectFilterBooleanAttribute.hpp"
+#include "ModelObjectFilterBooleanAttribute_Impl.hpp"
 
 #include <model/ModelObject.hpp>
 

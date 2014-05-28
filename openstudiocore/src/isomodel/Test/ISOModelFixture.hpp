@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ISOMODELTEST_TEST_ISOMODELFIXTURE_HPP
-#define ISOMODELTEST_TEST_ISOMODELFIXTURE_HPP
+#ifndef ISOMODEL_TEST_ISOMODELFIXTURE_HPP
+#define ISOMODEL_TEST_ISOMODELFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/core/Path.hpp"
 
 #include <vector>
 #include <string>
@@ -37,7 +37,7 @@ class ISOModelFixture : public ::testing::Test {
   /// tear down after each test
   virtual void TearDown();
 
-  /// initiallize static members
+  /// initialize static members
   static void SetUpTestCase();
 
   /// tear down static members
@@ -48,5 +48,5 @@ class ISOModelFixture : public ::testing::Test {
   REGISTER_LOGGER("IsoModel");
 };
 
-#endif // ISOMODELTEST_TEST_ISOMODELFIXTURE_HPP
+#endif // ISOMODEL_TEST_ISOMODELFIXTURE_HPP
 

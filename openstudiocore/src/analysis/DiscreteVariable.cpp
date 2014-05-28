@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
+#include "DataPoint.hpp"
+#include "Problem.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>

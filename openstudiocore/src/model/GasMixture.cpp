@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GasMixture.hpp>
-#include <model/GasMixture_Impl.hpp>
+#include "GasMixture.hpp"
+#include "GasMixture_Impl.hpp"
 
 #include <utilities/idf/ValidityReport.hpp>
 

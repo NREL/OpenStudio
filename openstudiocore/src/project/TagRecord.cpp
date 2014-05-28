@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/TagRecord.hpp>
-#include <project/TagRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/JoinRecord.hpp>
+#include "TagRecord.hpp"
+#include "TagRecord_Impl.hpp"
+#include "FileReferenceRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "JoinRecord.hpp"
 
 #include <utilities/data/Tag.hpp>
 #include <utilities/core/Assert.hpp>

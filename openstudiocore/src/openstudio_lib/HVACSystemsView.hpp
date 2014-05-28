@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HVACSYSTEMSVIEW_H
-#define OPENSTUDIO_HVACSYSTEMSVIEW_H
+#ifndef OPENSTUDIO_HVACSYSTEMSVIEW_HPP
+#define OPENSTUDIO_HVACSYSTEMSVIEW_HPP
 
 #include <QWidget>
 #include <QScrollArea>
@@ -251,5 +251,5 @@ class NoControlsView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_HVACSYSTEMSVIEW_H
+#endif // OPENSTUDIO_HVACSYSTEMSVIEW_HPP
 

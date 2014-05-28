@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/PlotView.hpp>
-#include <resultsviewer/PlotViewProperties.hpp>
+#include "PlotView.hpp"
+#include "PlotViewProperties.hpp"
 #include <utilities/sql/SqlFile.hpp>
 #include <utilities/data/Vector.hpp>
 

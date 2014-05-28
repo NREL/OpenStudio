@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
+#include "Measure.hpp"
+#include "Measure_Impl.hpp"
 
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
+#include "RubyMeasure.hpp"
+#include "RubyMeasure_Impl.hpp"
 
 #include <utilities/core/FileReference.hpp>
 

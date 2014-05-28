@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectActionClause.hpp>
-#include <ruleset/ModelObjectActionClause_Impl.hpp>
+#include "ModelObjectActionClause.hpp"
+#include "ModelObjectActionClause_Impl.hpp"
 
 #include <model/ModelObject.hpp>
 

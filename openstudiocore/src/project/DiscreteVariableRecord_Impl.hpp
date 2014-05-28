@@ -20,10 +20,10 @@
 #ifndef PROJECT_DISCRETEVARIABLERECORD_IMPL_HPP
 #define PROJECT_DISCRETEVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/InputVariableRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "InputVariableRecord_Impl.hpp"
 
-#include <project/DiscreteVariableRecord.hpp>
+#include "DiscreteVariableRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

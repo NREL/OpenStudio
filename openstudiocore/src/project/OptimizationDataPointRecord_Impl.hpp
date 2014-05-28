@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPTIMIZATIONDATAPOINTRECORD_IMPL_HPP
 #define PROJECT_OPTIMIZATIONDATAPOINTRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "DataPointRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

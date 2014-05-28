@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_PREDICATES_COMPARE_HPP
-#define UTILITIES_PREDICATES_COMPARE_HPP
+#ifndef UTILITIES_CORE_COMPARE_HPP
+#define UTILITIES_CORE_COMPARE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <utility> // for std::pair
 #include <iostream>
@@ -258,4 +258,4 @@ bool handleEquals(const T& object, const U& handle) {
 
 }; // openstudio
 
-#endif //UTILITIES_PREDICATES_COMPARE_HPP
+#endif // UTILITIES_CORE_COMPARE_HPP

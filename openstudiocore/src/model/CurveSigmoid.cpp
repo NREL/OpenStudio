@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveSigmoid.hpp>
-#include <model/CurveSigmoid_Impl.hpp>
+#include "CurveSigmoid.hpp"
+#include "CurveSigmoid_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Sigmoid_FieldEnums.hxx>

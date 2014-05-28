@@ -22,14 +22,14 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <model/ParentObject_Impl.hpp>
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/ModelExplorer.hpp>
+#include "../model/ParentObject_Impl.hpp"
+#include "InspectorGadget.hpp"
+#include "ModelExplorer.hpp"
 #include <model_editor/modeltest.h>
 #include <model_editor/treemodel.h>
-#include <model_editor/TreeView.hpp>
+#include "TreeView.hpp"
 
-#include <model_editor/TreeViewWidget.hpp>
+#include "TreeViewWidget.hpp"
 
 #include <utilities/core/Assert.hpp>
 

@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/attributes.hpp>
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "attributes.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ElectricEquipment_Definition_FieldEnums.hxx>

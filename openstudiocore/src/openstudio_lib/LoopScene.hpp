@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_LOOPSCENE_H
-#define OPENSTUDIO_LOOPSCENE_H
+#ifndef OPENSTUDIO_LOOPSCENE_HPP
+#define OPENSTUDIO_LOOPSCENE_HPP
 
 #include <QPainter>
 #include <QRectF>
 #include <boost/smart_ptr.hpp>
-#include <model/Loop.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/GridScene.hpp>
+#include "../model/Loop.hpp"
+#include "OSItem.hpp"
+#include "GridScene.hpp"
 
 namespace openstudio {
 
@@ -100,5 +100,5 @@ class LoopScene : public GridScene
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOOPSCENE_H
+#endif // OPENSTUDIO_LOOPSCENE_HPP
 

@@ -20,11 +20,11 @@
 #ifndef UTILITIES_IDD_IDDOBJECT_HPP
 #define UTILITIES_IDD_IDDOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddField.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddObjectProperties.hpp"
+#include "IddField.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <ostream>
 #include <vector>

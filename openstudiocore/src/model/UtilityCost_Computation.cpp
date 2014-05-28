@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Computation.hpp>
-#include <model/UtilityCost_Computation_Impl.hpp>
+#include "UtilityCost_Computation.hpp"
+#include "UtilityCost_Computation_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/OS_UtilityCost_Computation_FieldEnums.hxx>

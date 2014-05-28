@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "TimeDependentValuation.hpp"
+#include "TimeDependentValuation_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Meter.hpp>
+#include "Model.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Meter.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/sql/SqlFile.hpp>

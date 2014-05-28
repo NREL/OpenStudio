@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
+#include "ContinuousVariable.hpp"
+#include "ContinuousVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "DataPoint.hpp"
 
 #include <utilities/math/FloatCompare.hpp>
 

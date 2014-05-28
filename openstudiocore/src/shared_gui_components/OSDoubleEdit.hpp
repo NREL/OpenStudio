@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSDOUBLEEDIT_HPP
-#define OPENSTUDIO_OSDOUBLEEDIT_HPP
+#ifndef SHAREDGUICOMPONENTS_OSDOUBLEEDIT_HPP
+#define SHAREDGUICOMPONENTS_OSDOUBLEEDIT_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QLineEdit>
 
@@ -183,5 +183,5 @@ class OSDoubleEdit: public QLineEdit {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSDOUBLEEDIT_HPP
+#endif // SHAREDGUICOMPONENTS_OSDOUBLEEDIT_HPP
 

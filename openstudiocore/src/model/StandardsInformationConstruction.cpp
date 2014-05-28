@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/StandardsInformationConstruction_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Material.hpp>
+#include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationConstruction_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Material.hpp"
 
-#include <model/Model.hpp>
+#include "Model.hpp"
 
 #include <utilities/idd/OS_StandardsInformation_Construction_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

@@ -20,11 +20,11 @@
 #ifndef PROJECT_NULLMEASURERECORD_IMPL_HPP
 #define PROJECT_NULLMEASURERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/MeasureRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "MeasureRecord_Impl.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional/optional.hpp>
 

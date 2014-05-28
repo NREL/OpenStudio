@@ -21,9 +21,9 @@
 #define PROJECT_URLSEARCHPATHRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional/optional.hpp>
 

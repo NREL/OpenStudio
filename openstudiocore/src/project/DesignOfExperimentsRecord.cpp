@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DesignOfExperimentsRecord.hpp>
-#include <project/DesignOfExperimentsRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
+#include "DesignOfExperimentsRecord.hpp"
+#include "DesignOfExperimentsRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
 
 #include <analysis/DesignOfExperiments.hpp>
 #include <analysis/DesignOfExperiments_Impl.hpp>

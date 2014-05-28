@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULEDLG_H
-#define OPENSTUDIO_SCHEDULEDLG_H
+#ifndef OPENSTUDIO_SCHEDULEDIALOG_HPP
+#define OPENSTUDIO_SCHEDULEDIALOG_HPP
 
-#include <model/Model.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "../model/Model.hpp"
+#include "../model/ScheduleTypeRegistry.hpp"
 
 #include "../shared_gui_components/OSDialog.hpp"
 
@@ -86,4 +86,4 @@ protected slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCHEDULEDLG_H
+#endif // OPENSTUDIO_SCHEDULEDIALOG_HPP

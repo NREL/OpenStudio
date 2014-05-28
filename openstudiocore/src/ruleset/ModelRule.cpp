@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelRule_Impl.hpp>
-#include <ruleset/ModelObjectFilterClause.hpp>
-#include <ruleset/ModelObjectFilterClause_Impl.hpp>
-#include <ruleset/ModelObjectActionClause.hpp>
-#include <ruleset/ModelObjectActionClause_Impl.hpp>
+#include "ModelRule.hpp"
+#include "ModelRule_Impl.hpp"
+#include "ModelObjectFilterClause.hpp"
+#include "ModelObjectFilterClause_Impl.hpp"
+#include "ModelObjectActionClause.hpp"
+#include "ModelObjectActionClause_Impl.hpp"
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>

@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/OutputVariable.hpp>
-#include <analysis/OutputVariable_Impl.hpp>
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

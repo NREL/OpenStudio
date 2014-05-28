@@ -20,8 +20,8 @@
 #ifndef UTILITIES_DOCUMENT_SECTIONHEADING_IMPL_HPP
 #define UTILITIES_DOCUMENT_SECTIONHEADING_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/document/DocumentElement_Impl.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "DocumentElement_Impl.hpp"
 
 namespace openstudio {
 

@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/CFactorUndergroundWallConstruction.hpp>
-#include <model/CFactorUndergroundWallConstruction_Impl.hpp>
+#include "CFactorUndergroundWallConstruction.hpp"
+#include "CFactorUndergroundWallConstruction_Impl.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Construction_CfactorUndergroundWall_FieldEnums.hxx>
 

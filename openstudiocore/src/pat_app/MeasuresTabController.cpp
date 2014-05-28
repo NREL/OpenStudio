@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/MeasuresTabController.hpp>
+#include "MeasuresTabController.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/EditController.hpp"
-#include <pat_app/HorizontalTabWidget.hpp>
-#include <pat_app/MainRightColumnController.hpp>
+#include "HorizontalTabWidget.hpp"
+#include "MainRightColumnController.hpp"
 #include "../shared_gui_components/MeasureDragData.hpp"
-#include <pat_app/MeasuresView.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/PatMainWindow.hpp>
+#include "MeasuresView.hpp"
+#include "PatApp.hpp"
+#include "PatMainWindow.hpp"
 
 #include <analysis/Analysis.hpp>
 #include <analysis/DataPoint.hpp>

@@ -20,8 +20,8 @@
 #ifndef MODEL_CONTROLLEROUTDOORAIR_HPP
 #define MODEL_CONTROLLEROUTDOORAIR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 

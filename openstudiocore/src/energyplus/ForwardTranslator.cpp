@@ -19,7 +19,7 @@
 
 #include "EnergyPlusAPI.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

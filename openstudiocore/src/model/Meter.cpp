@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
+#include "Meter.hpp"
+#include "Meter_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "Model.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>

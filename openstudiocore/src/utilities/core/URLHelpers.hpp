@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CORE_URLHELPERS_HPP
 #define UTILITIES_CORE_URLHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Path.hpp"
+#include "Url.hpp"
 #include <vector>
 
 namespace openstudio {

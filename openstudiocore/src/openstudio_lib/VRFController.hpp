@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VRFCONTROLLER_H
-#define OPENSTUDIO_VRFCONTROLLER_H
+#ifndef OPENSTUDIO_VRFCONTROLLER_HPP
+#define OPENSTUDIO_VRFCONTROLLER_HPP
 
 #include <QObject>
 #include <QSharedPointer>
@@ -180,5 +180,5 @@ class VRFSystemListItem : public OSListItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_VRFCONTROLLER_H
+#endif // OPENSTUDIO_VRFCONTROLLER_HPP
 

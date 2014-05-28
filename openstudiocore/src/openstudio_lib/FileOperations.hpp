@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_FILEOPERATIONS_H
-#define OPENSTUDIO_FILEOPERATIONS_H
+#ifndef OPENSTUDIO_FILEOPERATIONS_HPP
+#define OPENSTUDIO_FILEOPERATIONS_HPP
 
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include "OpenStudioAPI.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <boost/optional.hpp>
 
@@ -116,4 +116,4 @@ namespace openstudio {
 
 } // openstudio
 
-#endif // OPENSTUDIO_FILEOPERATIONS_H
+#endif // OPENSTUDIO_FILEOPERATIONS_HPP

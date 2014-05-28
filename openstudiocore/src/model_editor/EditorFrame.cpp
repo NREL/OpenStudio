@@ -37,10 +37,10 @@
 #include <QToolBar>
 
 #include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model_editor/AboutBox.hpp>
-#include <model_editor/ModelExplorer.hpp>
-#include <model_editor/InspectorGadget.hpp>
+#include "../model/Model.hpp"
+#include "AboutBox.hpp"
+#include "ModelExplorer.hpp"
+#include "InspectorGadget.hpp"
 #include <model_editor/tablemodel.h>
 #include <model_editor/treemodel.h>
 #include <utilities/idf/IdfFile.hpp>
@@ -49,7 +49,7 @@
 
 #include <utilities/core/Assert.hpp>
 
-#include <model_editor/EditorFrame.hpp>
+#include "EditorFrame.hpp"
 #include <boost/filesystem/fstream.hpp>
 
 namespace modeleditor

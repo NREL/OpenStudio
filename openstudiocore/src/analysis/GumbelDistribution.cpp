@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/GumbelDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "GumbelDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

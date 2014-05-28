@@ -20,7 +20,7 @@
 #include <QKeyEvent>
 #include <QTableView>
 
-#include <model_editor/TableView.hpp>
+#include "TableView.hpp"
 
 namespace modeleditor
 {

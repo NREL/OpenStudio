@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BCLMEASUREDIALOG_H
-#define OPENSTUDIO_BCLMEASUREDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP
+#define SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 class QLineEdit;
 class QTextEdit;
@@ -79,4 +79,4 @@ class BCLMeasureDialog : public OSDialog
 
 } // openstudio
 
-#endif // OPENSTUDIO_BCLMEASUREDIALOG_H
+#endif // SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/TranslationUserScript.hpp>
+#include "TranslationUserScript.hpp"
 
-#include <ruleset/OSArgument.hpp>
-#include <ruleset/OSRunner.hpp>
+#include "OSArgument.hpp"
+#include "OSRunner.hpp"
 
 #include <model/Model.hpp>
 

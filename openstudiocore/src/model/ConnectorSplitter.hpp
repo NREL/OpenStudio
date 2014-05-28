@@ -20,8 +20,8 @@
 #ifndef MODEL_CONNECTORSPLITTER_HPP
 #define MODEL_CONNECTORSPLITTER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Splitter.hpp>
+#include "ModelAPI.hpp"
+#include "Splitter.hpp"
 
 namespace openstudio {
 

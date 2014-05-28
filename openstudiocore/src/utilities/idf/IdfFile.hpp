@@ -20,12 +20,12 @@
 #ifndef UTILITIES_IDF_IDFFILE_HPP
 #define UTILITIES_IDF_IDFFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../idd/IddFileAndFactoryWrapper.hpp"
+#include "IdfObject.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../core/Path.hpp"
 
 #include <string>
 #include <ostream>

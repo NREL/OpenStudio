@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceTypeInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "SpaceTypeInspectorView.hpp"
+#include "ModelObjectItem.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
-#include <openstudio_lib/RenderingColorWidget.hpp>
+#include "OSVectorController.hpp"
+#include "OSDropZone.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
+#include "RenderingColorWidget.hpp"
 
 #include <model/SpaceType.hpp>
 #include <model/SpaceType_Impl.hpp>

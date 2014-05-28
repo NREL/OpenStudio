@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef TABLEVIEW_H
-#define TABLEVIEW_H
+#ifndef MODELEDITOR_TABLEVIEW_HPP
+#define MODELEDITOR_TABLEVIEW_HPP
 
 #include <QTableView>
 
@@ -53,4 +53,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // TABLEVIEW_H
+#endif // MODELEDITOR_TABLEVIEW_HPP

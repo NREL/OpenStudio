@@ -20,10 +20,10 @@
 #ifndef UTILITIES_IDD_IDDFIELD_HPP
 #define UTILITIES_IDD_IDDFIELD_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddFieldProperties.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <string>
 #include <ostream>

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/LinearFunctionRecord.hpp>
-#include <project/LinearFunctionRecord_Impl.hpp>
+#include "LinearFunctionRecord.hpp"
+#include "LinearFunctionRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/VariableRecord.hpp>
-#include <project/ProblemRecord.hpp>
+#include "JoinRecord.hpp"
+#include "VariableRecord.hpp"
+#include "ProblemRecord.hpp"
 
 #include <analysis/Function.hpp>
 #include <analysis/Function_Impl.hpp>

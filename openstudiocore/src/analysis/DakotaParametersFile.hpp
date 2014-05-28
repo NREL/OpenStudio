@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_DAKOTAPARAMETERSFILE_HPP
 #define ANALYSIS_DAKOTAPARAMETERSFILE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <boost/optional.hpp>
 

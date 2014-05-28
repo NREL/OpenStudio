@@ -20,10 +20,10 @@
 #ifndef UTILITIES_CORE_JSON_HPP
 #define UTILITIES_CORE_JSON_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Compare.hpp>
+#include "Path.hpp"
+#include "Compare.hpp"
 
 #include <QVariant>
 

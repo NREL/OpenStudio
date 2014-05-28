@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/GeometryTranslator.hpp>
-#include <energyplus/MapFields.hpp>
+#include "GeometryTranslator.hpp"
+#include "MapFields.hpp"
 
 #include <model/Building.hpp>
 #include <model/Space.hpp>

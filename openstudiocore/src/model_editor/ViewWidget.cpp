@@ -22,11 +22,11 @@
 #include <QSettings>
 #include <QSplitter>
 
-#include <model_editor/IGPrecisionDialog.hpp>
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/ModelExplorer.hpp>
+#include "IGPrecisionDialog.hpp"
+#include "InspectorGadget.hpp"
+#include "ModelExplorer.hpp"
 
-#include <model_editor/ViewWidget.hpp>
+#include "ViewWidget.hpp"
 
 #include <utilities/idd/IddFile.hpp>
 

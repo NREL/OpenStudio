@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ThermalZonesController.hpp>
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
+#include "ThermalZonesController.hpp"
+#include "ThermalZonesView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSItemSelectorButtons.hpp"
 
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>

@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_DATAPOINT_HPP
 #define ANALYSIS_DATAPOINT_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 #include <QDomDocument>

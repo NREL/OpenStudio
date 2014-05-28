@@ -20,10 +20,10 @@
 #ifndef MODEL_COMPONENTDATA_HPP
 #define MODEL_COMPONENTDATA_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/UUID.hpp"
 
 namespace openstudio {
 namespace model {

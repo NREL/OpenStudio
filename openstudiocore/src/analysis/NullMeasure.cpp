@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
 
 #include <runmanager/lib/WorkItem.hpp>
 

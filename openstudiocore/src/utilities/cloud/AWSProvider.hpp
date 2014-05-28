@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CLOUD_AWSPROVIDER_HPP
 #define UTILITIES_CLOUD_AWSPROVIDER_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "CloudProvider.hpp"
 
 namespace openstudio {
 namespace detail {

@@ -20,8 +20,8 @@
 #ifndef PROJECT_FILEREFERENCERECORD_HPP
 #define PROJECT_FILEREFERENCERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 

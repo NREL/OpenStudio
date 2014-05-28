@@ -168,7 +168,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       LOG(Info, "setting ruby include dir: " << openstudio::toString(getOpenStudioRubyIncludePath()));
       clearIncludeDir();
       setIncludeDir(getOpenStudioRubyIncludePath());
-      LOG(Info, "Rebuild of radiance job successfull, returning");
+      LOG(Info, "Rebuild of radiance job successful, returning");
 
       return;
     } else {
@@ -195,7 +195,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
 
   } catch (const std::exception &e) {
-    LOG(Info, "Exception occured while building job: " << e.what());
+    LOG(Info, "Exception occurred while building job: " << e.what());
     // carry on
   }
 
@@ -276,7 +276,7 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
     {
       try {
         m_inputfiles.push_back(
-          boost::make_tuple(FileSelection(child.value), FileSource(child.children.at(0).value),
+          std::make_tuple(FileSelection(child.value), FileSource(child.children.at(0).value),
             child.children.at(0).children.at(0).value,
             child.children.at(0).children.at(0).children.at(0).value));
       } catch (const std::exception &) { }
@@ -292,7 +292,7 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
     {
       try {
         m_copyRequiredFiles.push_back(
-          boost::make_tuple(child.value, child.children.at(0).value,
+          std::make_tuple(child.value, child.children.at(0).value,
             child.children.at(0).children.at(0).value));
       } catch (const std::exception &) { }
 
@@ -429,7 +429,7 @@ void RubyJobBuilder::copyRequiredFiles(const std::string &t_infileextension,
                                        const std::string &t_outextension,
                                        const std::string &t_requiredFilename)
 {
-  m_copyRequiredFiles.push_back(boost::make_tuple(t_infileextension, t_outextension, t_requiredFilename));
+  m_copyRequiredFiles.push_back(std::make_tuple(t_infileextension, t_outextension, t_requiredFilename));
 }
 
 void RubyJobBuilder::addScriptParameter(const std::string &name, const std::string &value)
@@ -477,7 +477,7 @@ void RubyJobBuilder::addToolArgument(const std::string &name)
 void RubyJobBuilder::addInputFile(const FileSelection &t_fileselection, const FileSource &t_filesource,
     const std::string &t_inputregex, const std::string &t_outputname)
 {
-  m_inputfiles.push_back(boost::make_tuple(t_fileselection, t_filesource, t_inputregex, t_outputname));
+  m_inputfiles.push_back(std::make_tuple(t_fileselection, t_filesource, t_inputregex, t_outputname));
 }
 
 WorkItem RubyJobBuilder::toWorkItem(const std::vector<openstudio::path> &t_requiredFiles) const
@@ -535,10 +535,10 @@ JobParams RubyJobBuilder::toParams() const
 
   for(const auto & inputFile : m_inputfiles)
   {
-    JobParam fileselection(inputFile.get<0>().valueName());
-    JobParam filesource(inputFile.get<1>().valueName());
-    JobParam inputregex(inputFile.get<2>());
-    JobParam outputname(inputFile.get<3>());
+    JobParam fileselection(std::get<0>(inputFile).valueName());
+    JobParam filesource(std::get<1>(inputFile).valueName());
+    JobParam inputregex(std::get<2>(inputFile));
+    JobParam outputname(std::get<3>(inputFile));
 
     inputregex.children.push_back(outputname);
     filesource.children.push_back(inputregex);
@@ -550,9 +550,9 @@ JobParams RubyJobBuilder::toParams() const
   JobParam copyrequiredfileslist("ruby_copyrequired");
   for (const auto & copyRequiredFile : m_copyRequiredFiles)
   {
-    JobParam fileextension(copyRequiredFile.get<0>());
-    JobParam fileoutextension(copyRequiredFile.get<1>());
-    JobParam requiredextension(copyRequiredFile.get<2>());
+    JobParam fileextension(std::get<0>(copyRequiredFile));
+    JobParam fileoutextension(std::get<1>(copyRequiredFile));
+    JobParam requiredextension(std::get<2>(copyRequiredFile));
 
     fileoutextension.children.push_back(requiredextension);
     fileextension.children.push_back(fileoutextension);
@@ -631,7 +631,7 @@ std::vector<std::string> RubyJobBuilder::getToolParameters() const
   return m_toolparams;
 }
 
-std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > RubyJobBuilder::inputFiles() const
+std::vector<std::tuple<FileSelection, FileSource, std::string, std::string> > RubyJobBuilder::inputFiles() const
 {
   return m_inputfiles;
 }
@@ -645,7 +645,7 @@ boost::optional<openstudio::UUID> RubyJobBuilder::bclMeasureUUID() const {
   return m_bclMeasureUUID;
 }
 
-std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
+std::vector<std::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
 {
   return m_copyRequiredFiles;
 }

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/OutputControlReportingTolerances.hpp>
-#include <model/OutputControlReportingTolerances_Impl.hpp>
+#include "OutputControlReportingTolerances.hpp"
+#include "OutputControlReportingTolerances_Impl.hpp"
 
 #include <utilities/idd/OS_OutputControl_ReportingTolerances_FieldEnums.hxx>
 

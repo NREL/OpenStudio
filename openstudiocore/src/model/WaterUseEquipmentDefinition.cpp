@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "WaterUseEquipmentDefinition.hpp"
+#include "WaterUseEquipmentDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_Definition_FieldEnums.hxx>
 #include <utilities/units/Unit.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

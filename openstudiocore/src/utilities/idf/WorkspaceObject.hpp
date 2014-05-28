@@ -20,8 +20,8 @@
 #ifndef UTILITIES_IDF_WORKSPACEOBJECT_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IdfObject.hpp"
 
 namespace openstudio {
 

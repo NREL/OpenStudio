@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSITEM_H
-#define OPENSTUDIO_OSITEM_H
+#ifndef OPENSTUDIO_OSITEM_HPP
+#define OPENSTUDIO_OSITEM_HPP
 
 #include <QVariant>
 #include <QWidget>
@@ -195,4 +195,4 @@ class OSItem : public QWidget
 Q_DECLARE_METATYPE(openstudio::OSItemId)
 Q_DECLARE_METATYPE(std::vector<openstudio::OSItemId>)
 
-#endif // OPENSTUDIO_OSITEM_H
+#endif // OPENSTUDIO_OSITEM_HPP

@@ -21,12 +21,12 @@
 #define PROJECT_JOINRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/Record.hpp> 
-#include <project/ProjectDatabase.hpp> 
+#include "Record.hpp" 
+#include "ProjectDatabase.hpp" 
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/UUID.hpp"
 
 class QSqlQuery;
 

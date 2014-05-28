@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSDLG_H
-#define OPENSTUDIO_OSDLG_H
+#ifndef SHAREDGUICOMPONENTS_OSDIALOG_HPP
+#define SHAREDGUICOMPONENTS_OSDIALOG_HPP
 
 #include <QDialog>
 
@@ -121,4 +121,4 @@ protected slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSDLG_H
+#endif // SHAREDGUICOMPONENTS_OSDIALOG_HPP

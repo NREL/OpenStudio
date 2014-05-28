@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/BuildingComponentDialogCentralWidget.hpp>
-#include <shared_gui_components/BuildingComponentDialog.hpp>
-#include <shared_gui_components/CollapsibleComponent.hpp>
-#include <shared_gui_components/CollapsibleComponentHeader.hpp>
-#include <shared_gui_components/CollapsibleComponentList.hpp>
-#include <shared_gui_components/Component.hpp>
-#include <shared_gui_components/ComponentList.hpp>
+#include "BuildingComponentDialogCentralWidget.hpp"
+#include "BuildingComponentDialog.hpp"
+#include "CollapsibleComponent.hpp"
+#include "CollapsibleComponentHeader.hpp"
+#include "CollapsibleComponentList.hpp"
+#include "Component.hpp"
+#include "ComponentList.hpp"
 
 #include <utilities/bcl/BCL.hpp>
 #include <utilities/bcl/LocalBCL.hpp>

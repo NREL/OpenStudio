@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCATIONTABVIEW_H
-#define OPENSTUDIO_LOCATIONTABVIEW_H
+#ifndef OPENSTUDIO_LOCATIONTABVIEW_HPP
+#define OPENSTUDIO_LOCATIONTABVIEW_HPP
 
-#include <model/Model.hpp>
-#include <openstudio_lib/MainTabView.hpp>
+#include "../model/Model.hpp"
+#include "MainTabView.hpp"
 #include <QWidget>
 
 class QDir;
@@ -85,4 +85,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOCATIONTABVIEW_H
+#endif // OPENSTUDIO_LOCATIONTABVIEW_HPP

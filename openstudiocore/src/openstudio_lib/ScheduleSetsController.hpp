@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULESETSCONTROLLER_H
-#define OPENSTUDIO_SCHEDULESETSCONTROLLER_H
+#ifndef OPENSTUDIO_SCHEDULESETSCONTROLLER_HPP
+#define OPENSTUDIO_SCHEDULESETSCONTROLLER_HPP
 
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -53,4 +53,4 @@ class ScheduleSetsController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONSCONTROLLER_H
+#endif // OPENSTUDIO_SCHEDULESETSCONTROLLER_HPP

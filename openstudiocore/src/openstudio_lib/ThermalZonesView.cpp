@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "ThermalZonesView.hpp"
+#include "MainTabView.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <openstudio_lib/IconLibrary.hpp>
+#include "IconLibrary.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/ModelObjectListView.hpp>
+#include "ModelObjectListView.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "ModelObjectItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
@@ -282,7 +282,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   hvacLine2->setFrameShadow(QFrame::Sunken);
   vLayout->addWidget(hvacLine2);
 
-  // Sizing Paramaters
+  // Sizing Parameters
 
   QWidget * sizingHeader = new QWidget();
   QHBoxLayout * sizingHeaderLayout = new QHBoxLayout();

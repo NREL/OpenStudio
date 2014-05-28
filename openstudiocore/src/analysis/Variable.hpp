@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_VARIABLE_HPP
 #define ANALYSIS_VARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
 namespace openstudio {
 namespace analysis {

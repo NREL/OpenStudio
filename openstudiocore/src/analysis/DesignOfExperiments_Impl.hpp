@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_DESIGNOFEXPERIMENTS_IMPL_HPP
 #define ANALYSIS_DESIGNOFEXPERIMENTS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
+#include "DesignOfExperiments.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MAINMENU_H
-#define OPENSTUDIO_MAINMENU_H
+#ifndef OPENSTUDIO_MAINMENU_HPP
+#define OPENSTUDIO_MAINMENU_HPP
 
 #include <QMenuBar>
 
@@ -108,5 +108,5 @@ class MainMenu : public QMenuBar
 
 } // openstudio
 
-#endif // OPENSTUDIO_MAINMENU_H
+#endif // OPENSTUDIO_MAINMENU_HPP
 

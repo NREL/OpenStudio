@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_PoissonDISTRIBUTION_HPP
-#define ANALYSIS_PoissonDISTRIBUTION_HPP
+#ifndef ANALYSIS_POISSONDISTRIBUTION_HPP
+#define ANALYSIS_POISSONDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -69,4 +69,4 @@ class ANALYSIS_API PoissonDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_PoissonDISTRIBUTION_HPP
+#endif // ANALYSIS_POISSONDISTRIBUTION_HPP

@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_NORMALDISTRIBUTION_HPP
 #define ANALYSIS_NORMALDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -34,11 +34,11 @@
 
 #include <resources.hxx>
 #include <energyplus/ReverseTranslator.hpp>
-#include <model/Model.hpp>
-#include <model_editor/ClassViewWidget.hpp>
-#include <model_editor/ObjectExplorer.hpp>
-#include <model_editor/TreeViewWidget.hpp>
-#include <model_editor/ViewWidget.hpp>
+#include "../model/Model.hpp"
+#include "ClassViewWidget.hpp"
+#include "ObjectExplorer.hpp"
+#include "TreeViewWidget.hpp"
+#include "ViewWidget.hpp"
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/idf/IdfFile.hpp>
@@ -47,7 +47,7 @@
 #include <utilities/plot/ProgressBar.hpp>
 #include <utilities/core/Compare.hpp>
 
-#include <model_editor/ModelExplorer.hpp>
+#include "ModelExplorer.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

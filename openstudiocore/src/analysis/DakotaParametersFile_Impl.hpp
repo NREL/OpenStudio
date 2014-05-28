@@ -20,9 +20,9 @@
 #ifndef ANALYSIS_DAKOTAPARAMETERSFILE_IMPL_HPP
 #define ANALYSIS_DAKOTAPARAMETERSFILE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <analysis/DakotaParametersFile.hpp>
+#include "DakotaParametersFile.hpp"
 
 #include <boost/regex.hpp>
 

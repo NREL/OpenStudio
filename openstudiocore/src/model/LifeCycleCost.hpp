@@ -20,11 +20,11 @@
 #ifndef MODEL_LIFECYCLECOST_HPP
 #define MODEL_LIFECYCLECOST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{

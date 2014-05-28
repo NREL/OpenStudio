@@ -19,7 +19,7 @@
 #ifndef MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 #define MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 
-#include <model/ModelObject.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {

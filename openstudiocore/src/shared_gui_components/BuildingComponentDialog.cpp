@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/BuildingComponentDialog.hpp>
-#include <shared_gui_components/BuildingComponentDialogCentralWidget.hpp>
-#include <shared_gui_components/BusyWidget.hpp>
-#include <shared_gui_components/Component.hpp>
-#include <shared_gui_components/TIDItemModel.hpp>
+#include "BuildingComponentDialog.hpp"
+#include "BuildingComponentDialogCentralWidget.hpp"
+#include "BusyWidget.hpp"
+#include "Component.hpp"
+#include "TIDItemModel.hpp"
 
 #include <utilities/core/Assert.hpp>
 

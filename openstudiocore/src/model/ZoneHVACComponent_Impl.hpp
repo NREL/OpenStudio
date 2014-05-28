@@ -19,7 +19,7 @@
 #ifndef MODEL_ZONEHVACCOMPONENT_IMPL_HPP
 #define MODEL_ZONEHVACCOMPONENT_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 

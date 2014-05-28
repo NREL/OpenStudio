@@ -20,11 +20,11 @@
 #ifndef UTILITIES_PLOT_PLOT2D_HPP
 #define UTILITIES_PLOT_PLOT2D_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Macro.hpp> 
-#include <utilities/data/TimeSeries.hpp> 
+#include "../core/Path.hpp"
+#include "../core/Macro.hpp"
+#include "../data/TimeSeries.hpp"
 
 #include <QWidget>
 #include <QAction>

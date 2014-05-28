@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/PlanarSurfaceGroup.hpp>
-#include <model/PlanarSurfaceGroup_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "PlanarSurfaceGroup.hpp"
+#include "PlanarSurfaceGroup_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 
 #include <utilities/geometry/Geometry.hpp>
 #include <utilities/geometry/Transformation.hpp>

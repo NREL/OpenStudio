@@ -21,7 +21,7 @@
 #define PROJECT_RECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/Record.hpp>
+#include "Record.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Logger.hpp>

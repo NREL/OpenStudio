@@ -21,10 +21,10 @@
 #define PROJECT_RUBYMEASURERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/MeasureRecord_Impl.hpp>
+#include "MeasureRecord_Impl.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional/optional.hpp>
 

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_DESIGNALTERNATIVESTABCONTROLLER_H
-#define OPENSTUDIO_DESIGNALTERNATIVESTABCONTROLLER_H
+#ifndef PATAPP_DESIGNALTERNATIVESTABCONTROLLER_HPP
+#define PATAPP_DESIGNALTERNATIVESTABCONTROLLER_HPP
 
 #include "../shared_gui_components/OSListView.hpp"
-#include <analysis/DataPoint.hpp>
-#include <analysis/Measure.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Measure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer>
@@ -247,4 +247,4 @@ class PerturbationItemDelegate : public OSItemDelegate
 
 } // openstudio
 
-#endif // OPENSTUDIO_DESIGNALTERNATIVESTABCONTROLLER_H
+#endif // PATAPP_DESIGNALTERNATIVESTABCONTROLLER_HPP

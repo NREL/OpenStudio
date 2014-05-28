@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MAINTABCONTROLLER_H
-#define OPENSTUDIO_MAINTABCONTROLLER_H
+#ifndef OPENSTUDIO_MAINTABCONTROLLER_HPP
+#define OPENSTUDIO_MAINTABCONTROLLER_HPP
 
 #include "../shared_gui_components/OSQObjectController.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -60,4 +60,4 @@ class MainTabController : public OSQObjectController
 
 } // openstudio
 
-#endif // OPENSTUDIO_MAINTABCONTROLLER_H
+#endif // OPENSTUDIO_MAINTABCONTROLLER_HPP

@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/DefaultConstructionSetInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "DefaultConstructionSetInspectorView.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/MainWindow.hpp>
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "MainWindow.hpp"
 
 #include <model/ConstructionBase.hpp>
 #include <model/ConstructionBase_Impl.hpp>

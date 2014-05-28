@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_ANALYSISOBJECT_HPP
 #define ANALYSIS_ANALYSISOBJECT_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <boost/optional.hpp>
 

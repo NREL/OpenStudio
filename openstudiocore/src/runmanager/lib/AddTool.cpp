@@ -20,7 +20,7 @@
 #include "AddTool.hpp"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <runmanager/lib/JobFactory.hpp>
+#include "JobFactory.hpp"
 
 namespace openstudio {
 namespace runmanager {

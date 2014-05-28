@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEDAY_HPP
 #define MODEL_SCHEDULEDAY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ScheduleBase.hpp>
+#include "ModelAPI.hpp"
+#include "ScheduleBase.hpp"
 
 namespace openstudio {
 

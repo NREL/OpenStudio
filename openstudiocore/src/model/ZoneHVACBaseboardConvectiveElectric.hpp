@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
 #define MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 

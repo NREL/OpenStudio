@@ -20,8 +20,8 @@
 #ifndef MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_HPP
 #define MODEL_COILHEATINGLOWTEMPRADIANTVARFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 

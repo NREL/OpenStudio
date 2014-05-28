@@ -20,11 +20,11 @@
 #ifndef MODEL_TIMEDEPENDENTVALUATION_HPP
 #define MODEL_TIMEDEPENDENTVALUATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/filetypes/TimeDependentValuationFile.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {

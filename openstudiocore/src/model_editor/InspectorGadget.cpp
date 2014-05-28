@@ -16,11 +16,11 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/IGLineEdit.hpp>
-#include <model_editor/IGSpinBoxes.hpp>
-#include <model_editor/BridgeClasses.hpp>
-#include <model_editor/IGPrecisionDialog.hpp>
+#include "InspectorGadget.hpp"
+#include "IGLineEdit.hpp"
+#include "IGSpinBoxes.hpp"
+#include "BridgeClasses.hpp"
+#include "IGPrecisionDialog.hpp"
 
 #include <iostream>
 #include <float.h>
@@ -43,9 +43,9 @@
 
 #include <boost/numeric/conversion/cast.hpp>  
 
-#include <model/Model.hpp>
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ParentObject.hpp"
+#include "../model/ParentObject_Impl.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 

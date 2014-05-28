@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RESULTSVIEWER_TREEVIEW_H
-#define RESULTSVIEWER_TREEVIEW_H
+#ifndef RESULTSVIEWER_TREEVIEW_HPP
+#define RESULTSVIEWER_TREEVIEW_HPP
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/plot/LinePlot.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <resultsviewer/ResultsViewerData.hpp>
+#include "../utilities/plot/Plot2D.hpp"
+#include "../utilities/plot/LinePlot.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "ResultsViewerData.hpp"
 
 #include <QMainWindow>
 #include <QList>
@@ -106,4 +106,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TREEVIEW_H
+#endif // RESULTSVIEWER_TREEVIEW_HPP

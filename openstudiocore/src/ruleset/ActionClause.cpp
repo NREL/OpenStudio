@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ActionClause.hpp>
-#include <ruleset/ActionClause_Impl.hpp>
+#include "ActionClause.hpp"
+#include "ActionClause_Impl.hpp"
 
-#include <ruleset/FilterClause.hpp>
+#include "FilterClause.hpp"
 
 namespace openstudio {
 namespace ruleset {

@@ -20,7 +20,7 @@
 #ifndef UTILITIES_SQL_SQLFILEDATADICTIONARY_HPP
 #define UTILITIES_SQL_SQLFILEDATADICTIONARY_HPP
 
-#include <utilities/data/TimeSeries.hpp>
+#include "../data/TimeSeries.hpp"
 
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/member.hpp>

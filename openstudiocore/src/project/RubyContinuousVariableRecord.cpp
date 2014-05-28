@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/RubyContinuousVariableRecord.hpp>
-#include <project/RubyContinuousVariableRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/OSArgumentRecord.hpp>
+#include "RubyContinuousVariableRecord.hpp"
+#include "RubyContinuousVariableRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProblemRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "OSArgumentRecord.hpp"
 
 #include <analysis/RubyContinuousVariable.hpp>
 #include <analysis/RubyContinuousVariable_Impl.hpp>

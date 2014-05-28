@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+#include "CloudAnalysisDriver.hpp"
+#include "CloudAnalysisDriver_Impl.hpp"
 
 #include <project/ProjectDatabase.hpp>
 #include <project/DataPointRecord.hpp>

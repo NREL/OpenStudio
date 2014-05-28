@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectVectorController.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "ModelObjectVectorController.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include <model/ModelObject_Impl.hpp>
 #include <model/Model.hpp>

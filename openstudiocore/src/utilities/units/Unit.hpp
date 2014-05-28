@@ -20,10 +20,10 @@
 #ifndef UTILITIES_UNITS_UNIT_HPP
 #define UTILITIES_UNITS_UNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Enum.hpp"
 
 #include <boost/smart_ptr.hpp>
 #include <boost/optional.hpp>

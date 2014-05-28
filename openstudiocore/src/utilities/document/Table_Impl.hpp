@@ -20,12 +20,12 @@
 #ifndef UTILITIES_DOCUMENT_TABLE_IMPL_HPP
 #define UTILITIES_DOCUMENT_TABLE_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/document/SectionElement_Impl.hpp>
-#include <utilities/document/Table.hpp> // needed for enums
+#include "SectionElement_Impl.hpp"
+#include "Table.hpp" // needed for enums
 
-#include <utilities/units/Unit.hpp>
+#include "../units/Unit.hpp"
 
 namespace openstudio {
 

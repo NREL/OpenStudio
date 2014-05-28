@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AWSSettingsRecord.hpp>
-#include <project/AWSSettingsRecord_Impl.hpp>
+#include "AWSSettingsRecord.hpp"
+#include "AWSSettingsRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
 #include <utilities/cloud/AWSProvider.hpp>
 #include <utilities/cloud/AWSProvider_Impl.hpp>

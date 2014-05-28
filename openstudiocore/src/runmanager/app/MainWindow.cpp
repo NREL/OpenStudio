@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/app/MainWindow.hpp>
-#include <runmanager/app/FileSystemSearch.hpp>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "MainWindow.hpp"
+#include "FileSystemSearch.hpp"
+#include "../lib/JobFactory.hpp"
+#include "../lib/Workflow.hpp"
 
 #include <utilities/core/Application.hpp>
 #include <utilities/plot/ProgressBar.hpp>

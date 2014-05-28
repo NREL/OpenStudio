@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_app/OpenStudioApp.hpp>
-#include <openstudio_app/AboutBox.hpp>
-#include <openstudio_app/StartupMenu.hpp>
-#include <openstudio_app/StartupView.hpp>
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/FileOperations.hpp>
+#include "OpenStudioApp.hpp"
+#include "AboutBox.hpp"
+#include "StartupMenu.hpp"
+#include "StartupView.hpp"
+#include "../openstudio_lib/MainWindow.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/FileOperations.hpp"
 
 #include "../shared_gui_components/MeasureManager.hpp"
 

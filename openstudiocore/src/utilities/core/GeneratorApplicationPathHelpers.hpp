@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
 #define UTILITIES_CORE_GENERATORAPPLICATIONPATHHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 #include <boost/filesystem/path.hpp>
 #include <vector>
 

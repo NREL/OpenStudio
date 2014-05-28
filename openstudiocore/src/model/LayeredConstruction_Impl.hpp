@@ -20,7 +20,7 @@
 #ifndef MODEL_LAYEREDCONSTRUCTION_IMPL_HPP
 #define MODEL_LAYEREDCONSTRUCTION_IMPL_HPP
 
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase_Impl.hpp"
 
 #include <QObject>
 

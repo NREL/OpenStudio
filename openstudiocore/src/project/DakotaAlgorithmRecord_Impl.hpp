@@ -20,10 +20,10 @@
 #ifndef PROJECT_DAKOTAALGORITHMRECORD_IMPL_HPP
 #define PROJECT_DAKOTAALGORITHMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/AlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "AlgorithmRecord_Impl.hpp"
 
-#include <project/DakotaAlgorithmRecord.hpp>
+#include "DakotaAlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace project {

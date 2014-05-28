@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceTypesController.hpp>
-#include <openstudio_lib/SpaceTypesView.hpp>
+#include "SpaceTypesController.hpp"
+#include "SpaceTypesView.hpp"
 
 #include <model/Model.hpp>
 #include <model/SpaceType.hpp>

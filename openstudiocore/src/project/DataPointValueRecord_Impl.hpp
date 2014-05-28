@@ -20,8 +20,8 @@
 #ifndef PROJECT_DATAPOINTVALUERECORD_IMPL_HPP
 #define PROJECT_DATAPOINTVALUERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
 namespace openstudio {
 namespace project {

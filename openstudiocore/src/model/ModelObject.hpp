@@ -20,14 +20,14 @@
 #ifndef MODEL_MODELOBJECT_HPP
 #define MODEL_MODELOBJECT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AccessPolicyStore.hpp>
+#include "ModelAPI.hpp"
+#include "AccessPolicyStore.hpp"
 
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ObjectRecord.hpp>
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectDatabase_Impl.hpp>
+#include "ObjectRecord.hpp"
+#include "ObjectRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProjectDatabase_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/String.hpp>

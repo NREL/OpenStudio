@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPointValueRecord.hpp>
-#include <project/DataPointValueRecord_Impl.hpp>
+#include "DataPointValueRecord.hpp"
+#include "DataPointValueRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
+#include "JoinRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "ContinuousVariableRecord.hpp"
 
 #include <utilities/math/FloatCompare.hpp>
 #include <utilities/core/Assert.hpp>

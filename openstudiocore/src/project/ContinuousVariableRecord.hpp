@@ -20,8 +20,8 @@
 #ifndef PROJECT_CONTINUOUSVARIABLERECORD_HPP
 #define PROJECT_CONTINUOUSVARIABLERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/InputVariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "InputVariableRecord.hpp"
 
 namespace openstudio {
 namespace analysis {

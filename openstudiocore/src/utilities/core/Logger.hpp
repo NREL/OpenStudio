@@ -20,12 +20,12 @@
 #ifndef UTILITIES_CORE_LOGGER_HPP
 #define UTILITIES_CORE_LOGGER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Singleton.hpp>
-#include <utilities/core/Exception.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/LogSink.hpp>
+#include "Singleton.hpp"
+#include "Exception.hpp"
+#include "Compare.hpp"
+#include "LogSink.hpp"
 
 #include <boost/shared_ptr.hpp>
 

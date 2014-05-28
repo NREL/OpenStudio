@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRuleset_Impl.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelRule_Impl.hpp>
+#include "ModelRuleset.hpp"
+#include "ModelRuleset_Impl.hpp"
+#include "ModelRule.hpp"
+#include "ModelRule_Impl.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

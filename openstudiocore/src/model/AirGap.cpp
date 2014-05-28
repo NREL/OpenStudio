@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
+#include "AirGap.hpp"
+#include "AirGap_Impl.hpp"
 
 #include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
 

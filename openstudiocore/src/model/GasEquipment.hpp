@@ -20,8 +20,8 @@
 #ifndef MODEL_GASEQUIPMENT_HPP
 #define MODEL_GASEQUIPMENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MEASUREMANAGER_HPP
-#define OPENSTUDIO_MEASUREMANAGER_HPP
+#ifndef SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
+#define SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
 
 #include "LocalLibraryController.hpp"
 #include <analysisdriver/SimpleProject.hpp>
@@ -138,4 +138,4 @@ class MeasureManager : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_MEASUREMANAGER_HPP
+#endif // SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP

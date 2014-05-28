@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PAT_LOCALLIBRARYVIEW_H
-#define OPENSTUDIO_PAT_LOCALLIBRARYVIEW_H
+#ifndef SHAREDGUICOMPONENTS_LOCALLIBRARYVIEW_HPP
+#define SHAREDGUICOMPONENTS_LOCALLIBRARYVIEW_HPP
 
 #include "OSDragableView.hpp"
 #include "HeaderViews.hpp"
@@ -124,5 +124,5 @@ class LibraryItemView : public OSDragableView
 
 } // openstudio
 
-#endif // OPENSTUDIO_PAT_LOCALLIBRARYVIEW_H
+#endif // SHAREDGUICOMPONENTS_LOCALLIBRARYVIEW_HPP
 

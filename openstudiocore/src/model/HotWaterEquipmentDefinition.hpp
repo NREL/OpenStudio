@@ -20,8 +20,8 @@
 #ifndef MODEL_HOTWATEREQUIPMENTDEFINITION_HPP
 #define MODEL_HOTWATEREQUIPMENTDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {

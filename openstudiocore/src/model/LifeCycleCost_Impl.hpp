@@ -20,8 +20,8 @@
 #ifndef MODEL_LIFECYCLECOST_IMPL_HPP
 #define MODEL_LIFECYCLECOST_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "ParentObject_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/core/Optional.hpp>
 

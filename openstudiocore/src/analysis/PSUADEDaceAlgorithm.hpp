@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_PSUADEDACEALGORITHM_HPP
 #define ANALYSIS_PSUADEDACEALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithm.hpp"
 
 namespace openstudio {
 namespace analysis {

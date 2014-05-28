@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/RunTabController.hpp>
-#include <pat_app/RunView.hpp>
-#include <pat_app/PatMainWindow.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
+#include "CloudMonitor.hpp"
+#include "PatApp.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+#include "PatMainWindow.hpp"
+#include "PatVerticalTabWidget.hpp"
 
 #include <analysis/DataPoint_Impl.hpp>
 #include <analysis/Measure.hpp>

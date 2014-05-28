@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/BCLComponentItem.hpp>
+#include "ModelObjectListView.hpp"
+#include "ModelObjectItem.hpp"
+#include "BCLComponentItem.hpp"
 
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>

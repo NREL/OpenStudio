@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSDOCUMENT_H
-#define OPENSTUDIO_OSDOCUMENT_H
+#ifndef OPENSTUDIO_OSDOCUMENT_HPP
+#define OPENSTUDIO_OSDOCUMENT_HPP
 
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include "OpenStudioAPI.hpp"
 #include "../shared_gui_components/OSQObjectController.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
 #include <QObject>
 #include <QString>
@@ -344,5 +344,5 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSDOCUMENT_H
+#endif // OPENSTUDIO_OSDOCUMENT_HPP
 

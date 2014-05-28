@@ -20,11 +20,11 @@
 #ifndef MODEL_UTILITYBILL_HPP
 #define MODEL_UTILITYBILL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
 

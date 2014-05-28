@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2011, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACEINFILTRATIONEFFECTIVELEAKAGEAREA_HPP
 #define MODEL_SPACEINFILTRATIONEFFECTIVELEAKAGEAREA_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoad.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoad.hpp"
 
 namespace openstudio {
 namespace model {

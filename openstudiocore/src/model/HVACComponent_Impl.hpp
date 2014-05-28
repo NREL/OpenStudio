@@ -20,10 +20,10 @@
 #define MODEL_HVACCOMPONENT_IMPL_HPP
 
 
-#include <model/ParentObject_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/PlantLoop.hpp>
+#include "ParentObject_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "PlantLoop.hpp"
 
 namespace openstudio {
 

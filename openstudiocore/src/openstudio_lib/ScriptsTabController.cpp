@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptsTabController.hpp>
-#include <openstudio_lib/ScriptsTabView.hpp>
-#include <openstudio_lib/ScriptsController.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
+#include "ScriptsTabController.hpp"
+#include "ScriptsTabView.hpp"
+#include "ScriptsController.hpp"
+#include "ScriptFolderListView.hpp"
 
 #include "../shared_gui_components/VariableList.hpp"
 #include "../shared_gui_components/VariableView.hpp"

@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RUNMANAGERUI_MAINWINDOW_H
-#define RUNMANAGERUI_MAINWINDOW_H
+#ifndef RUNMANAGER_APP_MAINWINDOW_HPP
+#define RUNMANAGER_APP_MAINWINDOW_HPP
 
-#include <runmanager/app/AboutBox.hpp>
-#include <runmanager/app/FileSystemSearch.hpp>
+#include "AboutBox.hpp"
+#include "FileSystemSearch.hpp"
 #include <runmanager/app/ui_MainWindow.h>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RunManagerStatusWidget.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../lib/Job.hpp"
+#include "../lib/JobStatusWidget.hpp"
+#include "../lib/RunManager.hpp"
+#include "../lib/RunManagerStatusWidget.hpp"
+#include "../lib/Workflow.hpp"
 
 #include <QCompleter>
 #include <QFileSystemModel>
@@ -166,4 +166,4 @@ namespace runmanager {
 } // runmanager namespace
 } // openstudio
 
-#endif // RUNMANAGERUI_MAINWINDOW_HPP
+#endif // RUNMANAGER_APP_MAINWINDOW_HPP

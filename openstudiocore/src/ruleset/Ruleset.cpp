@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/Ruleset.hpp>
-#include <ruleset/Ruleset_Impl.hpp>
-#include <ruleset/ModelRuleset.hpp>
+#include "Ruleset.hpp"
+#include "Ruleset_Impl.hpp"
+#include "ModelRuleset.hpp"
 
 #include <utilities/core/Path.hpp>
 #include <utilities/core/PathHelpers.hpp>

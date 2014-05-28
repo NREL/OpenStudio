@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSLISTCONTROLLER_H
-#define OPENSTUDIO_OSLISTCONTROLLER_H
+#ifndef SHAREDGUICOMPONENTS_OSLISTCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_OSLISTCONTROLLER_HPP
 
 #include <QObject>
 #include <QSharedPointer>
@@ -189,7 +189,7 @@ class OSItemSelectionController : public QObject
 /** The purpose of OSItemDelegate is to create a visual representation of an OSListItem and to connect the data provided by an 
  * OSListItem to the view.  OSItemDelegate should be subclassed, and the view() method should be reimplemented to provide a
  * QWidget that is not empty.  This class will be commonly subclassed and is a member of the controller logic.  It is particular
- * to the view and the data source.  If the view proivded by OSItemDelegate is used often or if the view has a signficant amount 
+ * to the view and the data source.  If the view provided by OSItemDelegate is used often or if the view has a significant amount 
  * of detail, a separate view class should be defined outside of the OSItemDelegate and merely instantiated here.  On the other hand 
  * if the view very specific with little opportunity for reuse, and if the design is simple, it is acceptable for OSItemDelegate::view()
  * to build up a widget conglomeration on the fly from primitive widget types like QLabel, QWidget, etc.
@@ -220,5 +220,5 @@ class OSGraphicsItemDelegate : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSLISTCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_OSLISTCONTROLLER_HPP
 

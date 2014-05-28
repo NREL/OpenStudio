@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveRectangularHyperbola2.hpp>
-#include <model/CurveRectangularHyperbola2_Impl.hpp>
+#include "CurveRectangularHyperbola2.hpp"
+#include "CurveRectangularHyperbola2_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_RectangularHyperbola2_FieldEnums.hxx>

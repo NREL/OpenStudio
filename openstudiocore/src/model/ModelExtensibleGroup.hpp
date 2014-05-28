@@ -20,12 +20,12 @@
 #ifndef MODEL_MODELEXTENSIBLEGROUP_HPP
 #define MODEL_MODELEXTENSIBLEGROUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

@@ -20,11 +20,11 @@
 #ifndef UTILITIES_IDD_IDDKEY_IMPL_HPP
 #define UTILITIES_IDD_IDDKEY_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddKeyProperties.hpp>
+#include "IddKeyProperties.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <string>
 #include <ostream>

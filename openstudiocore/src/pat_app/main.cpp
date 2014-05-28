@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/PatApp.hpp>
+#include "PatApp.hpp"
 
 #include <ruleset/OSArgument.hpp>
 

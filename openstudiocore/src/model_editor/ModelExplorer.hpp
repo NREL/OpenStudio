@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODELEXPLORER_H
-#define MODELEXPLORER_H
+#ifndef MODELEDITOR_MODELEXPLORER_HPP
+#define MODELEDITOR_MODELEXPLORER_HPP
 
 #include <QString>
 #include <QWidget>
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
-#include <utilities/idf/IdfFile.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
+#include "../utilities/idf/IdfFile.hpp"
 
 class QDialog;
 class QLabel;
@@ -139,4 +139,4 @@ namespace modeleditor
 
 } // namespace modeleditor
 
-#endif // MODELEXPLORER_H
+#endif // MODELEDITOR_MODELEXPLORER_HPP

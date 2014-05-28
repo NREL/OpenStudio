@@ -20,8 +20,8 @@
 #ifndef MODEL_GASMIXTURE_HPP
 #define MODEL_GASMIXTURE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/GasLayer.hpp>
+#include "ModelAPI.hpp"
+#include "GasLayer.hpp"
 
 namespace openstudio {
 

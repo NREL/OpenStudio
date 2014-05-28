@@ -20,12 +20,12 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMECOOLEDBEAM_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMECOOLEDBEAM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
-//#include <model/ThermalZone.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Connection.hpp>
-//#include <model/Model.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
+//#include "ThermalZone.hpp"
+#include "ModelObject.hpp"
+#include "Connection.hpp"
+//#include "Model.hpp"
 
 namespace openstudio {
 

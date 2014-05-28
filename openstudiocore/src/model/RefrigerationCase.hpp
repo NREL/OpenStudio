@@ -20,9 +20,9 @@
 #ifndef MODEL_REFRIGERATIONCASE_HPP
 #define MODEL_REFRIGERATIONCASE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <model/RefrigerationSystem.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "RefrigerationSystem.hpp"
 
 namespace openstudio {
 

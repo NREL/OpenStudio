@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
+#include "DDACEAlgorithm.hpp"
+#include "DDACEAlgorithm_Impl.hpp"
 
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithmOptions_Impl.hpp>
+#include "DDACEAlgorithmOptions.hpp"
+#include "DDACEAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
 #include <runmanager/lib/JSON.hpp>
 

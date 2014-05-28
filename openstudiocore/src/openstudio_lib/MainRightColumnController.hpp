@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
-#define OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
+#ifndef OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_HPP
+#define OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_HPP
 
 #include "../shared_gui_components/OSQObjectController.hpp"
 #include <boost/smart_ptr.hpp>
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 #include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 
@@ -140,5 +140,5 @@ class MainRightColumnController : public OSQObjectController
 
 } // openstudio
 
-#endif // OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
+#endif // OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_HPP
 

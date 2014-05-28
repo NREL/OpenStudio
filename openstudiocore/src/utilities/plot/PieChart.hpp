@@ -20,13 +20,13 @@
 #ifndef UTILITIES_PLOT_PIECHART_HPP
 #define UTILITIES_PLOT_PIECHART_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/plot/Chart.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Macro.hpp>
+#include "Chart.hpp"
+#include "../data/Vector.hpp"
+#include "../core/String.hpp"
+#include "../core/Path.hpp"
+#include "../core/Macro.hpp"
 
 namespace openstudio{
 

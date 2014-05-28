@@ -20,7 +20,7 @@
 #ifndef MODEL_HVACTEMPLATES_HPP
 #define MODEL_HVACTEMPLATES_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include <vector>
 
 namespace openstudio {

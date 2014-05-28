@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "OSInspectorView.hpp"
+#include "ModelObjectItem.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

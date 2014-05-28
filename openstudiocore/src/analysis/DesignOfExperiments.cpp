@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
+#include "DesignOfExperiments.hpp"
+#include "DesignOfExperiments_Impl.hpp"
 
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
+#include "DesignOfExperimentsOptions.hpp"
+#include "DesignOfExperimentsOptions_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include "Analysis.hpp"
+#include "Problem.hpp"
+#include "DataPoint.hpp"
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>

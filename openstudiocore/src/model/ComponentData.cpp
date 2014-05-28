@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "ComponentData.hpp"
+#include "ComponentData_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>

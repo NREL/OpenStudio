@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/FacilityTreeWidget.hpp>
-#include <openstudio_lib/ModelObjectTreeItems.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "FacilityTreeWidget.hpp"
+#include "ModelObjectTreeItems.hpp"
+#include "ModelObjectItem.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

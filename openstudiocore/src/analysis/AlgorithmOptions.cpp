@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/AlgorithmOptions.hpp>
-#include <analysis/AlgorithmOptions_Impl.hpp>
+#include "AlgorithmOptions.hpp"
+#include "AlgorithmOptions_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>

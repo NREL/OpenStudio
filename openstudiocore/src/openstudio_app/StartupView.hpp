@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_STARTUPVIEW_H
-#define OPENSTUDIO_STARTUPVIEW_H
+#ifndef OPENSTUDIO_STARTUPVIEW_HPP
+#define OPENSTUDIO_STARTUPVIEW_HPP
 
-#include <openstudio_lib/SOConstants.hpp>
+#include "../openstudio_lib/SOConstants.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QWidget>
 #include <QPoint>
@@ -102,5 +102,5 @@ class TemplateListModel : public QAbstractListModel
 
 } // openstudio
 
-#endif // OPENSTUDIO_STARTUPVIEW_H
+#endif // OPENSTUDIO_STARTUPVIEW_HPP
 

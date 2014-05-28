@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

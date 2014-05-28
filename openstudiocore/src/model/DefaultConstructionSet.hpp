@@ -20,8 +20,8 @@
 #ifndef MODEL_DEFAULTCONSTRUCTIONSET_HPP
 #define MODEL_DEFAULTCONSTRUCTIONSET_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {

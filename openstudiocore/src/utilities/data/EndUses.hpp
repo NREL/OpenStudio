@@ -21,8 +21,8 @@
 #define UTILITIES_DATA_ENDUSES_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "Attribute.hpp"
+#include "DataEnums.hpp"
 
 namespace openstudio {
 

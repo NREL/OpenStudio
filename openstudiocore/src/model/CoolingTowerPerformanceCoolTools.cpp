@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoolingTowerPerformanceCoolTools.hpp>
-#include <model/CoolingTowerPerformanceCoolTools_Impl.hpp>
+#include "CoolingTowerPerformanceCoolTools.hpp"
+#include "CoolingTowerPerformanceCoolTools_Impl.hpp"
 
 #include <utilities/idd/OS_CoolingTowerPerformance_CoolTools_FieldEnums.hxx>
 

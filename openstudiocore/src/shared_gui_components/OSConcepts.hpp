@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSCONCEPT_H
-#define OPENSTUDIO_OSCONCEPT_H
+#ifndef SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
+#define SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 
@@ -1062,5 +1062,5 @@ class DropZoneConceptImpl : public DropZoneConcept
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSCONCEPT_H
+#endif // SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
 

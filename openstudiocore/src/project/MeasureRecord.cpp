@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/MeasureRecord.hpp>
-#include <project/MeasureRecord_Impl.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/NullMeasureRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/JoinRecord.hpp>
+#include "MeasureRecord.hpp"
+#include "MeasureRecord_Impl.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "RubyMeasureRecord_Impl.hpp"
+#include "NullMeasureRecord.hpp"
+#include "NullMeasureRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "JoinRecord.hpp"
 
 #include <analysis/Measure.hpp>
 #include <analysis/NullMeasure.hpp>

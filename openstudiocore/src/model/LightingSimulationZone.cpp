@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightingSimulationZone.hpp>
-#include <model/LightingSimulationZone_Impl.hpp>
+#include "LightingSimulationZone.hpp"
+#include "LightingSimulationZone_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
 
 #include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelExtensibleGroup.hpp"
 #include <utilities/idd/OS_LightingSimulationZone_FieldEnums.hxx>
 
 #include <utilities/core/Assert.hpp>

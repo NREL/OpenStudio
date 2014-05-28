@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_STRINGHELPERS_HPP
 #define UTILITIES_CORE_STRINGHELPERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <string>
 

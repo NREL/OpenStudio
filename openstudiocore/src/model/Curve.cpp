@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 

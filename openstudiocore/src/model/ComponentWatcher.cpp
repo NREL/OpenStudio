@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ComponentWatcher.hpp>
-#include <model/ComponentWatcher_Impl.hpp>
+#include "ComponentWatcher.hpp"
+#include "ComponentWatcher_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
 
-#include <model/ComponentData_Impl.hpp>
+#include "ComponentData_Impl.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>

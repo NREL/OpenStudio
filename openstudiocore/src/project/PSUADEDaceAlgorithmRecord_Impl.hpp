@@ -20,10 +20,10 @@
 #ifndef PROJECT_PSUADEDACEALGORITHMRECORD_IMPL_HPP
 #define PROJECT_PSUADEDACEALGORITHMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "DakotaAlgorithmRecord_Impl.hpp"
 
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
+#include "../analysis/PSUADEDaceAlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {

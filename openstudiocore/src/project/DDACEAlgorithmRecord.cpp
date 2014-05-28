@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DDACEAlgorithmRecord.hpp>
-#include <project/DDACEAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "DDACEAlgorithmRecord.hpp"
+#include "DDACEAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
 #include <analysis/DDACEAlgorithm.hpp>
 #include <analysis/DDACEAlgorithm_Impl.hpp>

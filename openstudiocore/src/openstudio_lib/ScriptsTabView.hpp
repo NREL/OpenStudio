@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSTABVIEW_H
-#define OPENSTUDIO_SCRIPTSTABVIEW_H
+#ifndef OPENSTUDIO_SCRIPTSTABVIEW_HPP
+#define OPENSTUDIO_SCRIPTSTABVIEW_HPP
 
-#include <openstudio_lib/SubTabView.hpp>
+#include "SubTabView.hpp"
 
 namespace openstudio {
 
@@ -47,4 +47,4 @@ class ScriptsTabView : public MainTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSTABVIEW_H
+#endif // OPENSTUDIO_SCRIPTSTABVIEW_HPP

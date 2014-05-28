@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
+#include "ScriptItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "ScriptFolderListView.hpp"
 
 #include <runmanager/lib/RunManager.hpp>
 #include <runmanager/lib/RubyJobUtils.hpp>

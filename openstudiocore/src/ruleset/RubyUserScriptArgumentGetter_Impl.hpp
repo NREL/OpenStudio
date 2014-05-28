@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef RULESET_RUBYUSERSCRIPTARGUMENTGETTER_IMPL_HPP
 #define RULESET_RUBYUSERSCRIPTARGUMENTGETTER_IMPL_HPP
 
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "RubyUserScriptArgumentGetter.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 namespace openstudio {
 namespace ruleset {

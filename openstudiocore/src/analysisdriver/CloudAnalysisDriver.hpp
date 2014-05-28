@@ -20,10 +20,10 @@
 #ifndef ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 #define ANALYSISDRIVER_CLOUDANALYSISDRIVER_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriverEnums.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/smart_ptr.hpp>
 #include <boost/optional.hpp>

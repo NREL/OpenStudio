@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/VariableRecord.hpp>
-#include <project/VariableRecord_Impl.hpp>
+#include "VariableRecord.hpp"
+#include "VariableRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/OutputVariableRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "FunctionRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "OutputVariableRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
 
 #include <analysis/InputVariable.hpp>
 #include <analysis/InputVariable_Impl.hpp>

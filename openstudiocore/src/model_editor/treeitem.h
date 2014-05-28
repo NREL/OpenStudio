@@ -46,7 +46,7 @@
 #include <QVariant>
 
 #include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
 namespace modeleditor
 {

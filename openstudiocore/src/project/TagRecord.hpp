@@ -21,7 +21,7 @@
 #define PROJECT_TAGRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 

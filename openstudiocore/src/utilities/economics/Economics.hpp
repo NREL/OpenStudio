@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ECONOMICS_H
-#define ECONOMICS_H
+#ifndef UTILITIES_ECONOMICS_ECONOMICS_HPP
+#define UTILITIES_ECONOMICS_ECONOMICS_HPP
 
 #include <memory>
 #include <string>
 #include <vector>
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Optional.hpp"
 
 namespace openstudio{
 
@@ -314,4 +314,4 @@ private:
 
 }
 
-#endif // ECONOMICS_H
+#endif // UTILITIES_ECONOMICS_ECONOMICS_HPP

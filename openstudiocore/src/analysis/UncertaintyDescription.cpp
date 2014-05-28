@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "UncertaintyDescription.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <analysis/GenericUncertaintyDescription.hpp>
+#include "GenericUncertaintyDescription.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Finder.hpp>

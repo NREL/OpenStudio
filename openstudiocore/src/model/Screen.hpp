@@ -20,8 +20,8 @@
 #ifndef MODEL_SCREEN_HPP
 #define MODEL_SCREEN_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ShadingMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "ShadingMaterial.hpp"
 
 namespace openstudio {
 

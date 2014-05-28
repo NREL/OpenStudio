@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/ScheduleDialog.hpp>
-#include <openstudio_lib/SchedulesTabController.hpp>
+#include "ScheduleDialog.hpp"
+#include "SchedulesTabController.hpp"
 
 #include <model/ScheduleRuleset.hpp>
 #include <model/ScheduleTypeLimits.hpp>

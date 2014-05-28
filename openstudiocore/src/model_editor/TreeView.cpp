@@ -21,7 +21,7 @@
 #include <QModelIndex>
 #include <QTreeView>
 
-#include <model_editor/TreeView.hpp>
+#include "TreeView.hpp"
 
 namespace modeleditor
 {

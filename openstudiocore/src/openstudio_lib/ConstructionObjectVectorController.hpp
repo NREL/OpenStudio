@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_H
-#define OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_H
+#ifndef OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_HPP
+#define OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_HPP
 
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectVectorController.hpp"
 
 namespace openstudio {
 
@@ -67,5 +67,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_H
+#endif // OPENSTUDIO_CONSTRUCTIONOBJECTVECTORCONTROLLER_HPP
 

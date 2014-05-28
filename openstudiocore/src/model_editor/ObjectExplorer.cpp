@@ -23,9 +23,9 @@
 #include <QLineEdit>
 #include <QListWidget>
 
-#include <model_editor/ListWidget.hpp>
+#include "ListWidget.hpp"
 
-#include <model_editor/ObjectExplorer.hpp>
+#include "ObjectExplorer.hpp"
 
 #include <utilities/core/Assert.hpp>
 

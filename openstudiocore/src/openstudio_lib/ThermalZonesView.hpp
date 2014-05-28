@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_THERMALZONESVIEW_H
-#define OPENSTUDIO_THERMALZONESVIEW_H
+#ifndef OPENSTUDIO_THERMALZONESVIEW_HPP
+#define OPENSTUDIO_THERMALZONESVIEW_HPP
 
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelSubTabView.hpp>
+#include "OSVectorController.hpp"
+#include "ModelObjectVectorController.hpp"
+#include "ModelObjectInspectorView.hpp"
+#include "ModelSubTabView.hpp"
 #include <model/Model.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ZoneHVACComponent.hpp>
@@ -333,5 +333,5 @@ class ModelObjectPropertyView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_THERMALZONESVIEW_H
+#endif // OPENSTUDIO_THERMALZONESVIEW_HPP
 

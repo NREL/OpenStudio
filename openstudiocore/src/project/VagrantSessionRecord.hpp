@@ -20,8 +20,8 @@
 #ifndef PROJECT_VAGRANTSESSIONRECORD_HPP
 #define PROJECT_VAGRANTSESSIONRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/CloudSessionRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "CloudSessionRecord.hpp"
 
 namespace openstudio {
 

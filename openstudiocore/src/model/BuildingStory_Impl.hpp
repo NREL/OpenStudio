@@ -20,7 +20,7 @@
 #ifndef MODEL_BUILDINGSTORY_IMPL_HPP
 #define MODEL_BUILDINGSTORY_IMPL_HPP
 
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 #include <utilities/units/Quantity.hpp>
 #include <utilities/units/OSOptionalQuantity.hpp>

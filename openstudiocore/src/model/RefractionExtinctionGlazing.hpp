@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRACTIONEXTINCTIONGLAZING_HPP
 #define MODEL_REFRACTIONEXTINCTIONGLAZING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
 
 namespace openstudio {
 

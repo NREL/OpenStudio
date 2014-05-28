@@ -20,8 +20,8 @@
 #ifndef UTILITIES_DOCUMENT_SECTIONELEMENT_HPP
 #define UTILITIES_DOCUMENT_SECTIONELEMENT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/document/DocumentElement.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "DocumentElement.hpp"
 
 namespace openstudio {
 

@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
+#include "OptimizationProblem.hpp"
+#include "OptimizationProblem_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Function_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "DataPoint.hpp"
+#include "Function_Impl.hpp"
+#include "OptimizationDataPoint.hpp"
+#include "OptimizationDataPoint_Impl.hpp"
+#include "WorkflowStep.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Containers.hpp>

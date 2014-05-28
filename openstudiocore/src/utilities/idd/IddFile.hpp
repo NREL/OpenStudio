@@ -20,12 +20,12 @@
 #ifndef UTILITIES_IDD_IDDFILE_HPP
 #define UTILITIES_IDD_IDDFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "IddObject.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
 
 #include <string>
 #include <ostream>

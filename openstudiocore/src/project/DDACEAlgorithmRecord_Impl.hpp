@@ -20,10 +20,10 @@
 #ifndef PROJECT_DDACEALGORITHMRECORD_IMPL_HPP
 #define PROJECT_DDACEALGORITHMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "DakotaAlgorithmRecord_Impl.hpp"
 
-#include <analysis/DDACEAlgorithmOptions.hpp>
+#include "../analysis/DDACEAlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {

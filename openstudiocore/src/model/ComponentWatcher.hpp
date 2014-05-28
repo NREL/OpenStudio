@@ -20,7 +20,7 @@
 #ifndef MODEL_COMPONENTWATCHER_HPP
 #define MODEL_COMPONENTWATCHER_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
 #include <memory>
 #include <vector>

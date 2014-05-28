@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/ScriptsListView.hpp>
-#include <openstudio_lib/ScriptItem.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/OSCollapsibleItem.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "ScriptFolderListView.hpp"
+#include "ScriptsListView.hpp"
+#include "ScriptItem.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectListView.hpp"
+#include "OSCollapsibleItemHeader.hpp"
+#include "OSCollapsibleItem.hpp"
+#include "OSItem.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

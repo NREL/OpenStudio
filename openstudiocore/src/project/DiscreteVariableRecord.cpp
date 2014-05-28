@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/DiscreteVariableRecord_Impl.hpp>
+#include "DiscreteVariableRecord.hpp"
+#include "DiscreteVariableRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
+#include "JoinRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
 
 #include <analysis/MeasureGroup.hpp>
 #include <analysis/MeasureGroup_Impl.hpp>

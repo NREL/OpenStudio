@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionsTabController.hpp>
+#include "ConstructionsTabController.hpp"
 
-#include <openstudio_lib/ConstructionsController.hpp>
-#include <openstudio_lib/ConstructionsTabView.hpp>
-#include <openstudio_lib/DefaultConstructionSetsController.hpp>
-#include <openstudio_lib/MaterialsController.hpp>
+#include "ConstructionsController.hpp"
+#include "ConstructionsTabView.hpp"
+#include "DefaultConstructionSetsController.hpp"
+#include "MaterialsController.hpp"
 
 #include <model/Construction.hpp>
 #include <model/Model.hpp>

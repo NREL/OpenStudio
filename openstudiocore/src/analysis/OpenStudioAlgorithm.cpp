@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
+#include "OpenStudioAlgorithm.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

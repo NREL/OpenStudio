@@ -22,11 +22,11 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Enum.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Optional.hpp"
 
 #include <boost/optional.hpp>
 

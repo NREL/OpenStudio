@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatApp.hpp>
+#include "PatApp.hpp"
 
-#include <pat_app/AboutBox.hpp>
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/DesignAlternativesTabController.hpp>
-#include <pat_app/DesignAlternativesView.hpp>
-#include <pat_app/ExportXML.hpp>
-#include <pat_app/ExportSpreadsheet.hpp>
-#include <pat_app/HorizontalTabWidget.hpp>
-#include <pat_app/MainRightColumnController.hpp>
-#include <pat_app/MeasuresTabController.hpp>
-#include <pat_app/MeasuresView.hpp>
-#include <pat_app/PatMainMenu.hpp>
-#include <pat_app/PatMainWindow.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
-#include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
-#include <pat_app/RunTabController.hpp>
-#include <pat_app/RunView.hpp>
-#include <pat_app/StartupView.hpp>
+#include "AboutBox.hpp"
+#include "CloudMonitor.hpp"
+#include "DesignAlternativesTabController.hpp"
+#include "DesignAlternativesView.hpp"
+#include "ExportXML.hpp"
+#include "ExportSpreadsheet.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "MainRightColumnController.hpp"
+#include "MeasuresTabController.hpp"
+#include "MeasuresView.hpp"
+#include "PatMainMenu.hpp"
+#include "PatMainWindow.hpp"
+#include "PatVerticalTabWidget.hpp"
+#include "ResultsTabController.hpp"
+#include "ResultsView.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+#include "StartupView.hpp"
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"

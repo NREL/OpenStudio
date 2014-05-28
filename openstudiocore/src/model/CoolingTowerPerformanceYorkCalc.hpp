@@ -20,8 +20,8 @@
 #ifndef MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP
 #define MODEL_COOLINGTOWERPERFORMANCEYORKCALC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 

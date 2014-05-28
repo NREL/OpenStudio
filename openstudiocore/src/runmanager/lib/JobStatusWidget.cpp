@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "JobStatusWidget.hpp"
+#include "Job.hpp"
+#include "RunManager.hpp"
 
 #include <utilities/core/Application.hpp>
 

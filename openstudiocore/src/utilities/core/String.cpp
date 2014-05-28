@@ -22,7 +22,6 @@
 #include <sstream>
 #include <iomanip>
 #include <limits>
-#include <boost/static_assert.hpp>
 
 namespace openstudio {
 
@@ -78,7 +77,7 @@ std::string toString(std::istream& s) {
 std::wstring toWString(const QString& q)
 {
 #if defined(Q_OS_WIN)
-  BOOST_STATIC_ASSERT(sizeof(wchar_t) == sizeof(unsigned short));
+  static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
   std::wstring w(reinterpret_cast<const wchar_t *>(q.utf16()), q.length());
   return w;
 #else
@@ -97,7 +96,7 @@ QString toQString(const std::string& s)
 QString toQString(const std::wstring& w)
 {
 #if defined(Q_OS_WIN)
-  BOOST_STATIC_ASSERT(sizeof(wchar_t) == sizeof(unsigned short));
+  static_assert(sizeof(wchar_t) == sizeof(unsigned short), "Wide characters must have the same size as unsigned shorts");
   return QString::fromUtf16(reinterpret_cast<const unsigned short *>(w.data()), w.length());
 #else
   return QString::fromStdWString(w);

@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LoadsView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/PeopleInspectorView.hpp>
-#include <openstudio_lib/InternalMassInspectorView.hpp>
-#include <openstudio_lib/LightsInspectorView.hpp>
-#include <openstudio_lib/LuminaireInspectorView.hpp>
-#include <openstudio_lib/ElectricEquipmentInspectorView.hpp>
-#include <openstudio_lib/GasEquipmentInspectorView.hpp>
-#include <openstudio_lib/SteamEquipmentInspectorView.hpp>
-#include <openstudio_lib/OtherEquipmentInspectorView.hpp>
-#include <openstudio_lib/WaterUseEquipmentInspectorView.hpp>
+#include "LoadsView.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "PeopleInspectorView.hpp"
+#include "InternalMassInspectorView.hpp"
+#include "LightsInspectorView.hpp"
+#include "LuminaireInspectorView.hpp"
+#include "ElectricEquipmentInspectorView.hpp"
+#include "GasEquipmentInspectorView.hpp"
+#include "SteamEquipmentInspectorView.hpp"
+#include "OtherEquipmentInspectorView.hpp"
+#include "WaterUseEquipmentInspectorView.hpp"
 
 #include <model/Model_Impl.hpp>
 

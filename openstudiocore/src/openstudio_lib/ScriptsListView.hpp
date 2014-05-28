@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSLISTVIEW_H
-#define OPENSTUDIO_SCRIPTSLISTVIEW_H
+#ifndef OPENSTUDIO_SCRIPTSLISTVIEW_HPP
+#define OPENSTUDIO_SCRIPTSLISTVIEW_HPP
 
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "SubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 #include "OSVectorController.hpp"
 #include "OSItemList.hpp"
 
@@ -83,4 +83,4 @@ class ScriptsListView : public OSItemList {
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSLISTVIEW_H
+#endif // OPENSTUDIO_SCRIPTSLISTVIEW_HPP

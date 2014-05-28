@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SimSettingsTabController.hpp>
+#include "SimSettingsTabController.hpp"
 
-#include <openstudio_lib/SimSettingsTabView.hpp>
+#include "SimSettingsTabView.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

@@ -20,9 +20,9 @@
 #ifndef UTILITIES_IDD_IDDKEY_HPP
 #define UTILITIES_IDD_IDDKEY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

@@ -20,12 +20,12 @@
 #ifndef UTILITIES_BCL_BCL_HPP
 #define UTILITIES_BCL_BCL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "BCLComponent.hpp"
+#include "BCLMeasure.hpp"
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
+#include "../data/Attribute.hpp"
 
 #include <QObject> 
 

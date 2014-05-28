@@ -20,11 +20,11 @@
 #ifndef UTILITIES_CLOUD_CLOUDPROVIDER_HPP
 #define UTILITIES_CLOUD_CLOUDPROVIDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Optional.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Url.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Blind.hpp>
-#include <model/Blind_Impl.hpp>
+#include "Blind.hpp"
+#include "Blind_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx>

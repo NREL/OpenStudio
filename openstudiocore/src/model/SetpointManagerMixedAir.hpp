@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERMIXEDAIR_HPP
 
 #include "ModelAPI.hpp"
-#include <model/HVACComponent.hpp>
+#include "HVACComponent.hpp"
 #include <boost/optional.hpp>
 
 namespace openstudio {

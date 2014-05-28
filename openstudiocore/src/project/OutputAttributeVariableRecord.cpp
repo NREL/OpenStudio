@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OutputAttributeVariableRecord.hpp>
-#include <project/OutputAttributeVariableRecord_Impl.hpp>
+#include "OutputAttributeVariableRecord.hpp"
+#include "OutputAttributeVariableRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/FunctionRecord.hpp>
+#include "JoinRecord.hpp"
+#include "FunctionRecord.hpp"
 
 #include <analysis/OutputAttributeVariable.hpp>
 #include <analysis/OutputAttributeVariable_Impl.hpp>

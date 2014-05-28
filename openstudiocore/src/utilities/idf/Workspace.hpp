@@ -20,12 +20,12 @@
 #ifndef UTILITIES_IDF_WORKSPACE_HPP
 #define UTILITIES_IDF_WORKSPACE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idf/ValidityEnums.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "ValidityEnums.hpp"
+#include "Handle.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
 
 #include <string>
 #include <ostream>

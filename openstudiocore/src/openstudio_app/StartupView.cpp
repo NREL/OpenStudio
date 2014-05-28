@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_app/StartupView.hpp>
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "StartupView.hpp"
+#include "OpenStudioApp.hpp"
 #include <QBitmap>
 #include <QPainter>
 #include <QMouseEvent>

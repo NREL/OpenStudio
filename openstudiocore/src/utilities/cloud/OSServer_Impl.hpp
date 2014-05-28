@@ -20,11 +20,11 @@
 #ifndef UTILITIES_CLOUD_OSSERVER_IMPL_HPP
 #define UTILITIES_CLOUD_OSSERVER_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Url.hpp"
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
 
 #include <QObject>
 

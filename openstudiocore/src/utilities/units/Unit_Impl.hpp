@@ -20,10 +20,10 @@
 #ifndef UTILITIES_UNITS_UNIT_IMPL_HPP
 #define UTILITIES_UNITS_UNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Scale.hpp>
+#include "Unit.hpp"
+#include "Scale.hpp"
 
 #include <boost/smart_ptr.hpp>
 

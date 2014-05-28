@@ -20,13 +20,13 @@
 #ifndef PROJECT_ANALYSISRECORD_IMPL_HPP
 #define PROJECT_ANALYSISRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 

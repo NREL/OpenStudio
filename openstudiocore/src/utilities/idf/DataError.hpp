@@ -20,14 +20,14 @@
 #ifndef UTILITIES_IDF_DATAERROR_HPP
 #define UTILITIES_IDF_DATAERROR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/ValidityEnums.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "ValidityEnums.hpp"
+#include "Handle.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

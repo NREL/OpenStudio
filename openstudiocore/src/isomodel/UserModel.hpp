@@ -21,11 +21,11 @@
 #define ISOMODEL_USERMODEL_HPP
 
 #include "ISOModelAPI.hpp"
-#include <isomodel/EpwData.hpp>
-#include <isomodel/SimModel.hpp>
+#include "EpwData.hpp"
+#include "SimModel.hpp"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

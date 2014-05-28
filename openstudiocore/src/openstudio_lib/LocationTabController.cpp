@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LocationTabController.hpp>
+#include "LocationTabController.hpp"
 
-#include <openstudio_lib/LifeCycleCostsTabView.hpp>
-#include <openstudio_lib/LocationTabView.hpp>
-#include <openstudio_lib/UtilityBillsView.hpp>
-#include <openstudio_lib/UtilityBillsController.hpp>
+#include "LifeCycleCostsTabView.hpp"
+#include "LocationTabView.hpp"
+#include "UtilityBillsView.hpp"
+#include "UtilityBillsController.hpp"
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>

@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULESTABCONTROLLER_H
-#define OPENSTUDIO_SCHEDULESTABCONTROLLER_H
+#ifndef OPENSTUDIO_SCHEDULESTABCONTROLLER_HPP
+#define OPENSTUDIO_SCHEDULESTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <model/Model.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "MainTabController.hpp"
+#include "../model/Model.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QObject>
 
@@ -135,5 +135,5 @@ class SchedulesTabController : public MainTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCHEDULESTABCONTROLLER_H
+#endif // OPENSTUDIO_SCHEDULESTABCONTROLLER_HPP
 

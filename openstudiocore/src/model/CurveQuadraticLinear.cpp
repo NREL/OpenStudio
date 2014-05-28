@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveQuadraticLinear.hpp>
-#include <model/CurveQuadraticLinear_Impl.hpp>
+#include "CurveQuadraticLinear.hpp"
+#include "CurveQuadraticLinear_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_QuadraticLinear_FieldEnums.hxx>

@@ -1,5 +1,5 @@
-#ifndef __GBXML_API_HPP__
-#define __GBXML_API_HPP__
+#ifndef GBXML_GBXMLAPI_HPP
+#define GBXML_GBXMLAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

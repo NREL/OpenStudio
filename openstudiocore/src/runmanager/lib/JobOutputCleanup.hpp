@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP__
+#ifndef RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP
+#define RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
+#include "RunManager.hpp"
 #include <ui_JobOutputCleanup.h>
 
 
@@ -62,4 +62,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP_
+#endif // RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP

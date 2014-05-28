@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/ErrorFile.hpp>
+#include "ErrorFile.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>

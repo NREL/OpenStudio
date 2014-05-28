@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/UtilityBillsView.hpp>
+#include "UtilityBillsView.hpp"
 
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
-#include <openstudio_lib/UtilityBillAllFuelTypesListView.hpp>
+#include "OSItem.hpp"
+#include "ModelObjectItem.hpp"
+#include "UtilityBillFuelTypeListView.hpp"
+#include "UtilityBillAllFuelTypesListView.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"

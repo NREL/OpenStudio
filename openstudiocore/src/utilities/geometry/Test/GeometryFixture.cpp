@@ -55,7 +55,7 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
   return diff.length() <= 0.0001;
 }
 
-// initiallize for each test
+// initialize for each test
 void GeometryFixture::SetUp() {
 }
 
@@ -63,7 +63,7 @@ void GeometryFixture::SetUp() {
 void GeometryFixture::TearDown() {
 }
 
-// initiallize static members
+// initialize static members
 void GeometryFixture::SetUpTestCase() 
 {
   logFile = FileLogSink(toPath("./GeometryFixture.log"));

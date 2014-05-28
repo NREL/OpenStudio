@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSCollapsibleItem.hpp>
+#include "OSCollapsibleItem.hpp"
 
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
-#include <openstudio_lib/OSItemList.hpp>
+#include "OSCollapsibleItemHeader.hpp"
+#include "OSItemList.hpp"
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>

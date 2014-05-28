@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/SequentialSearchRecord.hpp>
-#include <project/SequentialSearchRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "SequentialSearchRecord.hpp"
+#include "SequentialSearchRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
 
 #include <analysis/SequentialSearch.hpp>
 #include <analysis/SequentialSearch_Impl.hpp>
 #include <analysis/SequentialSearchOptions.hpp>
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Optional.hpp>

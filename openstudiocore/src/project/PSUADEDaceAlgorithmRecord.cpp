@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/PSUADEDaceAlgorithmRecord.hpp>
-#include <project/PSUADEDaceAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "PSUADEDaceAlgorithmRecord.hpp"
+#include "PSUADEDaceAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
 #include <analysis/PSUADEDaceAlgorithm.hpp>
 #include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
