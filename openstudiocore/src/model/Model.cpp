@@ -426,6 +426,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(ZoneAirContaminantBalance);
     REGISTER_CONSTRUCTOR(ZoneAirHeatBalanceAlgorithm);
     REGISTER_CONSTRUCTOR(ZoneCapacitanceMultiplierResearchSpecial);
+    REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);  
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);  
@@ -714,6 +715,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(ZoneAirContaminantBalance);
     REGISTER_COPYCONSTRUCTORS(ZoneAirHeatBalanceAlgorithm);
     REGISTER_COPYCONSTRUCTORS(ZoneCapacitanceMultiplierResearchSpecial);
+    REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);

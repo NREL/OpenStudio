@@ -14657,10 +14657,32 @@ OS:ThermalZone,
   A14, \field Thermostat Name
        \type object-list
        \object-list ThermostatNames
-  A15; \field Use Ideal Air Loads
+  A15, \field Use Ideal Air Loads
        \type choice
        \key Yes
        \key No
+  A16; \field Humidistat Name
+       \type object-list
+       \object-list HumidistatNames
+
+OS:ZoneControl:Humidistat,
+       \memo Specifies zone relative humidity setpoint schedules for humidifying and dehumidifying.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference HumidistatNames
+  A3,  \field Humidifying Relative Humidity Setpoint Schedule Name
+       \required-field
+       \note hourly schedule values should be in Relative Humidity (percent)
+       \type object-list
+       \object-list ScheduleNames
+  A4;  \field Dehumidifying Relative Humidity Setpoint Schedule Name
+       \note hourly schedule values should be in Relative Humidity (percent)
+       \type object-list
+       \object-list ScheduleNames
 
 OS:ThermostatSetpoint:DualSetpoint,
        \min-fields 1
@@ -14673,7 +14695,6 @@ OS:ThermostatSetpoint:DualSetpoint,
        \reference ThermostatNames
   A3, \field Heating Setpoint Temperature Schedule Name
        \type object-list
-       \object-list ScheduleNames
        \object-list ScheduleNames
   A4; \field Cooling Setpoint Temperature Schedule Name
        \type object-list

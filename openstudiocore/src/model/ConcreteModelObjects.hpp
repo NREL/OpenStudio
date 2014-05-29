@@ -262,6 +262,7 @@
 #include <model/ZoneAirContaminantBalance.hpp>
 #include <model/ZoneAirHeatBalanceAlgorithm.hpp>
 #include <model/ZoneCapacitanceMultiplierResearchSpecial.hpp>
+#include <model/ZoneControlHumidistat.hpp>
 #include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
@@ -517,6 +518,7 @@
 #include <model/ZoneAirContaminantBalance_Impl.hpp>
 #include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
 #include <model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp>
+#include <model/ZoneControlHumidistat_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 #include <model/ZoneHVACEquipmentList_Impl.hpp>
