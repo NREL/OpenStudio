@@ -140,14 +140,93 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
     std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
 
-    for(std::vector<double>::iterator it = x1Values.begin();
-        it != x1Values.end();
-        ++it)
+    for(std::vector<double>::iterator it2 = x2Values.begin();
+        it2 != x2Values.end();
+        ++it2)
     {
+      for(std::vector<double>::iterator it1 = x1Values.begin();
+          it1 != x1Values.end();
+          ++it1)
+      {
+        std::vector<double> point;
+        point.push_back(*it1);
+        point.push_back(*it2);
+
+        boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(point);
+        if(yValue)
+        {
+          idfObject.setDouble(t_currentFieldIndex,yValue.get());
+        }
+        else
+        {
+          idfObject.setString(t_currentFieldIndex,"");
+        }
+        ++t_currentFieldIndex;
+      }
     }
   }
   else
   {
+    std::vector<multivariablelookup::Combination> combinations;
+    multivariablelookup::Combination combination;
+    
+    combinations = multivariablelookup::combinations(modelObject,
+                                                     combinations,
+                                                     combination,
+                                                     boost::none,
+                                                     2);
+
+    for(std::vector<multivariablelookup::Combination>::const_iterator it = combinations.begin();
+        it != combinations.end();
+        ++it)
+    {
+      std::vector<boost::optional<double> > yValues;
+
+      std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
+      std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
+
+      for(std::vector<double>::iterator it2 = x2Values.begin();
+          it2 != x2Values.end();
+          ++it2)
+      {
+        for(std::vector<double>::iterator it1 = x1Values.begin();
+            it1 != x1Values.end();
+            ++it1)
+        {
+          std::vector<double> point;
+          point.push_back(*it1);
+          point.push_back(*it2);
+
+          boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(point);
+          yValues.push_back(yValue);
+        }
+      }
+      if( ! yValues.empty() )
+      {
+        for(multivariablelookup::Combination::const_iterator combinationIt = it->begin();
+            combinationIt != it->end();
+            ++combinationIt)
+        {
+          idfObject.setDouble(t_currentFieldIndex,*combinationIt);
+          ++t_currentFieldIndex;
+        } 
+
+        for(std::vector<boost::optional<double> >::const_iterator yIt = yValues.begin();
+            yIt != yValues.end();
+            ++yIt)
+        {
+          if(*yIt)
+          {
+            idfObject.setDouble(t_currentFieldIndex,(*yIt).get());
+          }
+          else
+          {
+            idfObject.setString(t_currentFieldIndex,"");
+          }
+          ++t_currentFieldIndex;
+        }
+      }
+    }
   }
 
   return idfObject;
