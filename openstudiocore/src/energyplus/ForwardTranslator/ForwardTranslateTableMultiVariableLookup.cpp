@@ -210,6 +210,8 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
         }
       }
       // Only output this combination if there are y values
+      // TODO This would be simpler and faster to just find the unique combinations of x values above x2
+      // and iterate over that set.  Then no need to find all combinations and look for yvalues that might not exist.
       if( ! yValues.empty() )
       {
         for(multivariablelookup::Combination::const_iterator combinationIt = it->begin();
