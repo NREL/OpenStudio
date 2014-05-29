@@ -2716,11 +2716,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   // Daylighting
   QDomNodeList daylighting1CoordElements = thermalZoneElement.elementsByTagName("DayltgIllumRefPt1Coord");
-  QDomElement daylighting1SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetPt1");
+  QDomElement daylighting1SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetpt1");
   QDomElement daylighting1FractionElement = thermalZoneElement.firstChildElement("DayltgCtrlLtgFrac1");
 
   QDomNodeList daylighting2CoordElements = thermalZoneElement.elementsByTagName("DayltgIllumRefPt2Coord");
-  QDomElement daylighting2SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetPt2");
+  QDomElement daylighting2SetpointElement = thermalZoneElement.firstChildElement("DayltgIllumSetpt2");
   QDomElement daylighting2FractionElement = thermalZoneElement.firstChildElement("DayltgCtrlLtgFrac2");
 
   QDomElement daylightingMinLightingElement = thermalZoneElement.firstChildElement("DayltgMinDimLtgFrac");
@@ -3734,7 +3734,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"Scheduled") )
   {
-    QDomElement tempSetPtSchRefElement = fluidSysElement.firstChildElement("TempSetPtSchRef");
+    QDomElement tempSetPtSchRefElement = fluidSysElement.firstChildElement("TempSetptSchRef");
 
     boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(tempSetPtSchRefElement.text().toStdString());
 
