@@ -204,7 +204,7 @@ void ApplyMeasureNowDialog::createWidgets()
 
 void ApplyMeasureNowDialog::displayMeasure()
 {
-  this->okButton()->setText(ACCEPT_CHANGES);
+  this->okButton()->setText(APPLY_MEASURE);
   this->okButton()->show();
   this->okButton()->setEnabled(false);
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
