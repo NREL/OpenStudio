@@ -1342,32 +1342,64 @@ bool RefrigerationWalkIn::setDefrost1StartTime(const openstudio::Time& defrost1S
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost1StartTime(defrost1StartTime);
 }
 
+void RefrigerationWalkIn::resetDefrost1StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost1StartTime();
+}
+
 bool RefrigerationWalkIn::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost2StartTime(defrost2StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost2StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost2StartTime();
 }
 
 bool RefrigerationWalkIn::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost3StartTime(defrost3StartTime);
 }
 
+void RefrigerationWalkIn::resetDefrost3StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost3StartTime();
+}
+
 bool RefrigerationWalkIn::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost4StartTime(defrost4StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost4StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost4StartTime();
 }
 
 bool RefrigerationWalkIn::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost5StartTime(defrost5StartTime);
 }
 
+void RefrigerationWalkIn::resetDefrost5StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost5StartTime();
+}
+
 bool RefrigerationWalkIn::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost6StartTime(defrost6StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost6StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost6StartTime();
 }
 
 bool RefrigerationWalkIn::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost7StartTime(defrost7StartTime);
 }
 
+void RefrigerationWalkIn::resetDefrost7StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost7StartTime();
+}
+
 bool RefrigerationWalkIn::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost8StartTime(defrost8StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost8StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost8StartTime();
 }
 
 bool RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {

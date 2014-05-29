@@ -2024,32 +2024,64 @@ bool RefrigerationCase::setDefrost1StartTime(const openstudio::Time& defrost1Sta
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost1StartTime(defrost1StartTime);
 }
 
+void RefrigerationCase::resetDefrost1StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost1StartTime();
+}
+
 bool RefrigerationCase::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost2StartTime(defrost2StartTime);
+}
+
+void RefrigerationCase::resetDefrost2StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost2StartTime();
 }
 
 bool RefrigerationCase::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost3StartTime(defrost3StartTime);
 }
 
+void RefrigerationCase::resetDefrost3StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost3StartTime();
+}
+
 bool RefrigerationCase::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost4StartTime(defrost4StartTime);
+}
+
+void RefrigerationCase::resetDefrost4StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost4StartTime();
 }
 
 bool RefrigerationCase::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost5StartTime(defrost5StartTime);
 }
 
+void RefrigerationCase::resetDefrost5StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost5StartTime();
+}
+
 bool RefrigerationCase::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost6StartTime(defrost6StartTime);
+}
+
+void RefrigerationCase::resetDefrost6StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost6StartTime();
 }
 
 bool RefrigerationCase::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost7StartTime(defrost7StartTime);
 }
 
+void RefrigerationCase::resetDefrost7StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost7StartTime();
+}
+
 bool RefrigerationCase::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
   return getImpl<detail::RefrigerationCase_Impl>()->setDefrost8StartTime(defrost8StartTime);
+}
+
+void RefrigerationCase::resetDefrost8StartTime() {
+  getImpl<detail::RefrigerationCase_Impl>()->resetDefrost8StartTime();
 }
 
 bool RefrigerationCase::addToSystem(RefrigerationSystem & system) {
