@@ -140,7 +140,7 @@ SWIG_MODELOBJECT(SizingZone, 1);
 SWIG_MODELOBJECT(SizingSystem, 1);
 SWIG_MODELOBJECT(ThermalZone, 1);
 SWIG_MODELOBJECT(ThermostatSetpointDualSetpoint, 1);
-SWIG_MODELOBJECT(ZoneControlHumidistat);
+SWIG_MODELOBJECT(ZoneControlHumidistat,1);
 SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlow, 1);
 SWIG_MODELOBJECT(AirLoopHVAC, 1);
 SWIG_MODELOBJECT(SizingPlant, 1);
