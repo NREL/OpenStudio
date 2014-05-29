@@ -786,11 +786,18 @@ namespace radiance {
 
           LOG(Debug, "Site shading surface: " << shadingSurface_name );
 
-          // get reflectance
-          double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
-          double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
-          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+         // get reflectance
+          double interiorVisibleReflectance = 0.4; // default for site shading surfaces
+          if (shadingSurface->interiorVisibleAbsorbtance()){
+            double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
+            interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
+          }
+          
+          double exteriorVisibleReflectance = 0.4; // default
+          if (shadingSurface->exteriorVisibleAbsorbtance()){
+            double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
+            exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+          }
 
           // write material
           m_radMaterials.insert("void plastic refl_"
@@ -801,7 +808,7 @@ namespace radiance {
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*shadingSurface);
 
-          std::string shadingsurface = "refl_0.2 polygon " + shadingSurface_name + "\n";
+          std::string shadingsurface = "refl_" + formatString(interiorVisibleReflectance) + " polygon " + shadingSurface_name + "\n";
           shadingsurface += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (Point3dVector::const_iterator vertex = polygon.begin();
@@ -861,15 +868,23 @@ namespace radiance {
 
           LOG(Debug, "Building shading surface: " << shadingSurface_name);
 
-          // get reflectance
-          double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
-          double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
-          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+
+         // get reflectance
+          double interiorVisibleReflectance = 0.25; // default for building shading surfaces
+          if (shadingSurface->interiorVisibleAbsorbtance()){
+            double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
+            interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
+          }
+          
+          double exteriorVisibleReflectance = 0.25; // default
+          if (shadingSurface->exteriorVisibleAbsorbtance()){
+            double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
+            exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+          }
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n"
-              + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " "
+          m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance) + "\n0\n0\n5\n"
+              + formatString(interiorVisibleReflectance) + " " + formatString(exteriorVisibleReflectance) + " "
               + formatString(interiorVisibleReflectance) + " 0 0\n\n");
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*shadingSurface);
