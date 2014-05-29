@@ -43,8 +43,9 @@ void OSHeader::paintEvent(QPaintEvent *)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-OSCollapsibleView::OSCollapsibleView(QWidget * parent)
-  : QWidget(parent)
+OSCollapsibleView::OSCollapsibleView(bool alwaysExpanded, QWidget * parent)
+  : QWidget(parent),
+  m_alwaysExpanded(alwaysExpanded)
 {
   QVBoxLayout * mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,0);
@@ -90,7 +91,7 @@ void OSCollapsibleView::collapse()
 
 void OSCollapsibleView::setExpanded(bool expanded)
 {
-  if( expanded )
+  if( m_alwaysExpanded || expanded )
   {
     if( m_osHeader )
     {

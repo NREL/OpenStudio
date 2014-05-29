@@ -383,6 +383,7 @@ void ApplyMeasureNowDialog::displayResults()
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
+  m_jobItemView->setExpanded(true);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -558,7 +559,7 @@ void DataPointJobContentView::addStdErrorMessage(const std::string& message)
 }
 
 DataPointJobItemView::DataPointJobItemView()
-  : OSCollapsibleView(),
+  : OSCollapsibleView(true),
   m_dataPointJobHeaderView(0),
   m_dataPointJobContentView(0)
 {
