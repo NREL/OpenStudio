@@ -39,12 +39,12 @@
 
 namespace openstudio{
 
-EditController::EditController()
+EditController::EditController(bool applyMeasureNow)
   : QObject()
 {
   editView = new OSViewSwitcher();
   m_editNullView = new EditNullView();
-  editRubyMeasureView = new EditRubyMeasureView();
+  editRubyMeasureView = new EditRubyMeasureView(applyMeasureNow);
 
   reset();
 }

@@ -54,7 +54,7 @@ class EditRubyMeasureView : public QWidget
 
   public:
 
-  EditRubyMeasureView();
+  EditRubyMeasureView(bool applyMeasureNow);
   virtual ~EditRubyMeasureView() {}
 
   QLineEdit * nameLineEdit;

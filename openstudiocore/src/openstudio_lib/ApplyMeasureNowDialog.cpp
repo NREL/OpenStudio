@@ -111,7 +111,7 @@ void ApplyMeasureNowDialog::createWidgets()
   m_argumentsFailedTextEdit = new QTextEdit(FAILED_ARG_TEXT);
   m_argumentsFailedTextEdit->setReadOnly(true);
   
-  m_editController = QSharedPointer<EditController>( new EditController() );
+  m_editController = QSharedPointer<EditController>( new EditController(true) );
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance(),onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");

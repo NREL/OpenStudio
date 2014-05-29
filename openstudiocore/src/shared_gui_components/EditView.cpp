@@ -37,7 +37,7 @@
 
 namespace openstudio{
   
-EditRubyMeasureView::EditRubyMeasureView()
+EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   : QWidget()
 {
   QVBoxLayout * layout = new QVBoxLayout();
@@ -103,6 +103,13 @@ EditRubyMeasureView::EditRubyMeasureView()
   m_mainVLayout->addLayout(m_inputsVLayout);
 
   m_mainVLayout->addStretch();
+
+  if(applyMeasureNow){
+    measureOptionTitleLabel->hide();
+    nameLineEdit->hide();
+    descriptionTitleLabel->hide();
+    descriptionTextEdit->hide();
+  }
 }
 
 void EditRubyMeasureView::paintEvent(QPaintEvent *)
