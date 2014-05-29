@@ -183,11 +183,11 @@ namespace detail {
 
   boost::optional<double> ConstructionBase_Impl::heatCapacity() const { return boost::none; }
 
-  boost::optional<double> ConstructionBase_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> ConstructionBase_Impl::interiorVisibleAbsorptance() const {
     return boost::none;
   }
 
-  boost::optional<double> ConstructionBase_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> ConstructionBase_Impl::exteriorVisibleAbsorptance() const {
     return boost::none;
   }
 
@@ -274,12 +274,22 @@ boost::optional<double> ConstructionBase::heatCapacity() const {
   return getImpl<detail::ConstructionBase_Impl>()->heatCapacity();
 }
 
+boost::optional<double> ConstructionBase::interiorVisibleAbsorptance() const {
+  return getImpl<detail::ConstructionBase_Impl>()->interiorVisibleAbsorptance();
+}
+
 boost::optional<double> ConstructionBase::interiorVisibleAbsorbtance() const {
-  return getImpl<detail::ConstructionBase_Impl>()->interiorVisibleAbsorbtance();
+  LOG(Warn,"interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return interiorVisibleAbsorptance();
+}
+
+boost::optional<double> ConstructionBase::exteriorVisibleAbsorptance() const {
+  return getImpl<detail::ConstructionBase_Impl>()->exteriorVisibleAbsorptance();
 }
 
 boost::optional<double> ConstructionBase::exteriorVisibleAbsorbtance() const {
-  return getImpl<detail::ConstructionBase_Impl>()->exteriorVisibleAbsorbtance();
+  LOG(Warn,"exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return exteriorVisibleAbsorptance();
 }
 
 boost::optional<double> ConstructionBase::visibleTransmittance() const {

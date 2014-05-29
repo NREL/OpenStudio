@@ -529,7 +529,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<double> LayeredConstruction_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> LayeredConstruction_Impl::interiorVisibleAbsorptance() const {
     MaterialVector layers = this->layers();
     if (layers.size() > 0) {
       return layers.back().interiorVisibleAbsorptance();
@@ -537,7 +537,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<double> LayeredConstruction_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> LayeredConstruction_Impl::exteriorVisibleAbsorptance() const {
     MaterialVector layers = this->layers();
     if (layers.size() > 0) {
       return layers.front().exteriorVisibleAbsorptance();

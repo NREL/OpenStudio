@@ -317,9 +317,9 @@ namespace detail {
 
     double exteriorVisibleReflectance() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorbtance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
-    virtual boost::optional<double> exteriorVisibleAbsorbtance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /** Sets the conductance of the material in W/m^2*K, if possible. */
     bool setThermalConductance(double value);

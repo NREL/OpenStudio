@@ -332,7 +332,7 @@ namespace radiance {
 
 
 
-      // Hi Qual options (illumimance maps)
+      // Hi Qual options (illuminance maps)
       openstudio::path mapsoptpath = radDir / openstudio::toPath("options/maps.opt");
       outfiles.push_back(mapsoptpath);
       std::ofstream mapsopt(openstudio::toString(mapsoptpath).c_str());
@@ -865,10 +865,10 @@ namespace radiance {
         std::string constructionName = surface.getString(2).get();
         m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
-        double interiorVisibleAbsorbtance = surface.interiorVisibleAbsorbtance().get();
-        double exteriorVisibleAbsorbtance = surface.exteriorVisibleAbsorbtance().get();
-        double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-        double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+        double interiorVisibleAbsorptance = surface.interiorVisibleAbsorptance().get();
+        double exteriorVisibleAbsorptance = surface.exteriorVisibleAbsorptance().get();
+        double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
+        double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
 
         m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
         m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
@@ -912,7 +912,7 @@ namespace radiance {
           aperture_headings.push_back(aperture_heading);
         }
 
-// keep for future feature (offer auto-binning to window groups for highly tesselated facades)
+// keep for future feature (offer auto-binning to window groups for highly tessellated facades)
 //
 //         if (azi >= 352.50 && azi < 7.50)
 //         {
@@ -1036,10 +1036,10 @@ namespace radiance {
 
             LOG(Info, "found a door, using interior reflectance");
 
-            double interiorVisibleAbsorbtance = subSurface.interiorVisibleAbsorbtance().get();
-            double exteriorVisibleAbsorbtance = subSurface.exteriorVisibleAbsorbtance().get();
-            double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-            double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+            double interiorVisibleAbsorptance = subSurface.interiorVisibleAbsorptance().get();
+            double exteriorVisibleAbsorptance = subSurface.exteriorVisibleAbsorptance().get();
+            double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
+            double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
             //polygon header
             m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
             m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
@@ -1162,10 +1162,10 @@ namespace radiance {
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
           // get reflectance
-          double interiorVisibleAbsorbtance = interiorPartitionSurface.interiorVisibleAbsorbtance().get();
-          double exteriorVisibleAbsorbtance = interiorPartitionSurface.exteriorVisibleAbsorbtance().get();
-          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+          double interiorVisibleAbsorptance = interiorPartitionSurface.interiorVisibleAbsorptance().get();
+          double exteriorVisibleAbsorptance = interiorPartitionSurface.exteriorVisibleAbsorptance().get();
+          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
+          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
 
           // write material
           m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
@@ -1328,7 +1328,7 @@ namespace radiance {
       t_outfiles.push_back(modelfilename);
       std::ofstream modelfile(openstudio::toString(modelfilename).c_str());
 
-      // materials not included in model.rad (suport for 3-phase method)
+      // materials not included in model.rad (support for 3-phase method)
       // modelfile << "!xform materials/materials.rad\n";
 
       for (const auto & filename : m_radSceneFiles)

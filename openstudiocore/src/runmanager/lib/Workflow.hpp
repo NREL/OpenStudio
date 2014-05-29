@@ -135,7 +135,7 @@ namespace runmanager {
 
     public:
 
-      /// Default constuctor
+      /// Default constructor
       Workflow();
 
       /// Copy constructor
@@ -151,7 +151,7 @@ namespace runmanager {
       ///
       /// Example:
       /// \code
-      /// Worflow wf("NullJob->EnergyPlusJob");
+      /// Workflow wf("NullJob->EnergyPlusJob");
       /// \endcode
       ///
       /// Creates a Workflow with a NullJob at the head with a single child job

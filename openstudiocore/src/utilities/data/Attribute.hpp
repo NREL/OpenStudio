@@ -285,7 +285,7 @@ class UTILITIES_API Attribute {
   /// get value as string
   std::string valueAsString() const;
 
-  /// set value. throws if wront type.
+  /// set value. throws if wrong type.
   void setValue(const char* value);
 
   /// set value. throws if wrong type.
@@ -300,7 +300,7 @@ class UTILITIES_API Attribute {
   /// get value as qvariant
   QVariant valueAsQVariant() const;
 
-  // set value. throws if wront type.
+  // set value. throws if wrong type.
   void setValue(const QVariant& value);
 
   /// find child attribute by name
@@ -400,7 +400,7 @@ UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& 
 UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescription& description);
 
 /** Copies description's display name over to attribute. Will return false if
- *  !isConsistent(attribute,descripton). \relates Attribute */
+ *  !isConsistent(attribute,description). \relates Attribute */
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 

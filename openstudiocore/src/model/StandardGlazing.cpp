@@ -637,11 +637,11 @@ namespace detail {
     return *od;
   }
 
-  boost::optional<double> StandardGlazing_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> StandardGlazing_Impl::interiorVisibleAbsorptance() const {
     return 1.0 - (*(getVisibleTransmittance()) + interiorVisibleReflectance());
   }
 
-  boost::optional<double> StandardGlazing_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> StandardGlazing_Impl::exteriorVisibleAbsorptance() const {
     return 1.0 - (*(getVisibleTransmittance()) + exteriorVisibleReflectance());
   }
 
