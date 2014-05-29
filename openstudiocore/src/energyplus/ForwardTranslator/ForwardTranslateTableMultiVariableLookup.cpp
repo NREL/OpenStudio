@@ -37,6 +37,8 @@ namespace multivariablelookup
 {
   typedef std::vector<double> Combination;
   
+  // Return all combinations of the independent variables in table, 
+  // starting at variableIndex.
   std::vector<Combination> combinations(const TableMultiVariableLookup & table,
                                         std::vector<Combination> & allCombinations,
                                         Combination & thisCombination,
@@ -114,6 +116,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   // Set the table data
   if(t_numberofIndependentVariables == 1u)
   {
+    // If there is just one variable then we just make a list of the y values.
     std::vector<double> xValues = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
 
     for(std::vector<double>::iterator it = xValues.begin();
@@ -137,6 +140,8 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
   else if(t_numberofIndependentVariables == 2u)
   {
+    // If there are two variables we make a list of the y values corresponding to x1 and x2,
+    // iterating over x2 in the outer layer
     std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
     std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
 
@@ -167,6 +172,9 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
   else
   {
+    // If there are more than two variables we need to identify the values 
+    // of the variables above x2, and then follow the basic strategy when there
+    // are two variables.
     std::vector<multivariablelookup::Combination> combinations;
     multivariablelookup::Combination combination;
     
@@ -201,6 +209,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
           yValues.push_back(yValue);
         }
       }
+      // Only output this combination if there are y values
       if( ! yValues.empty() )
       {
         for(multivariablelookup::Combination::const_iterator combinationIt = it->begin();
