@@ -23,34 +23,34 @@
 #include "CurrentAnalysis.hpp"
 #include "CurrentAnalysis_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DakotaParametersFile.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/OpenStudioAlgorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm_Impl.hpp"
+#include "../analysis/DakotaAlgorithm.hpp"
+#include "../analysis/DakotaAlgorithm_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/DakotaParametersFile.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/AnalysisRecord.hpp"
+#include "../project/AlgorithmRecord.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/JobFactory.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 

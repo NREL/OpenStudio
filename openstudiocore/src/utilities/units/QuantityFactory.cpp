@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityRegex.hpp>
+#include "QuantityFactory.hpp"
+#include "QuantityRegex.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Exception.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/pointer_cast.hpp>
 #include <boost/lexical_cast.hpp>

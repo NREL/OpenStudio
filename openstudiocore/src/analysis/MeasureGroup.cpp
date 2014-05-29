@@ -27,14 +27,14 @@
 #include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {

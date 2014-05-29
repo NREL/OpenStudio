@@ -16,16 +16,16 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "LocalBCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "RemoteBCL.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/System.hpp"
+#include "../core/UnzipFile.hpp"
+#include "../core/ZipFile.hpp"
 
 #include <QDir>
 #include <QDomDocument>

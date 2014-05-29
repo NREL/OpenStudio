@@ -19,7 +19,7 @@
 
 #include "HeaderInfo.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>

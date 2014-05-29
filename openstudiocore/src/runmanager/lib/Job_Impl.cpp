@@ -25,9 +25,9 @@
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 #include <QDir>
 
 namespace openstudio {

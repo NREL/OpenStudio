@@ -23,16 +23,16 @@
 #include "SubTabView.hpp"
 #include "ModelObjectInspectorView.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "OSVectorController.hpp"
 #include "ScriptItem.hpp"
 #include "OSItemList.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include <QFileSystemWatcher>
 #include <QVBoxLayout>

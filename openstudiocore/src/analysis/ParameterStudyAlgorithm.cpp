@@ -25,10 +25,10 @@
 
 #include "Problem.hpp"
 
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -55,7 +55,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <typeinfo>
 #include <iostream>

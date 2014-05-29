@@ -22,10 +22,10 @@
 
 #include "Problem.hpp"
 
-#include <utilities/math/Primes.hpp>
+#include "../utilities/math/Primes.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 #include <stdlib.h>
 

@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 // copy from AirTerminalSingleDuctVAVReheat
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirTerminalSingleDuctVAVNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 //#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>

@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model_editor/test/ModelEditorFixture.hpp>
+#include "ModelEditorFixture.hpp"
 
-#include <model_editor/ModalDialogs.hpp>
-#include <model_editor/TestButton.hpp>
+#include "../ModalDialogs.hpp"
+#include "../TestButton.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"

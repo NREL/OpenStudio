@@ -24,7 +24,7 @@
 #include "CloudSettingsRecord.hpp"
 #include "JoinRecord.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

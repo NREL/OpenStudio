@@ -20,7 +20,7 @@
 #include "FenestrationMaterial.hpp"
 #include "FenestrationMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

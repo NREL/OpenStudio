@@ -24,7 +24,7 @@
 #include <QPainter>
 #include <QPushButton>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

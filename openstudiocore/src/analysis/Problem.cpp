@@ -46,27 +46,27 @@
 #include "UncertaintyDescription_Impl.hpp"
 #include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/MergedJobResults.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/MergedJobResults.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/idf/URLSearchPath.hpp>
+#include "../utilities/idf/URLSearchPath.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/URLHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/URLHelpers.hpp"
 
 #include <boost/bind.hpp>
 

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "EpwFile.hpp"
+#include "../idf/IdfObject.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Checksum.hpp>
+#include "../core/Checksum.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>

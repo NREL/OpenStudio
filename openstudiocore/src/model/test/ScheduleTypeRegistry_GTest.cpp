@@ -19,15 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleTypeRegistry.hpp"
+#include "../Model.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../LightsDefinition.hpp"
+#include "../Lights.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/core/Containers.hpp"
 
 #include <sstream>
 

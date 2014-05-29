@@ -73,9 +73,9 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QJsonDocument>

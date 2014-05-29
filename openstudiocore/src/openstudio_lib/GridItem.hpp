@@ -24,11 +24,11 @@
 #include <QCoreApplication>
 #include <QPixmap>
 #include <QPointer>
-#include <model/ModelObject.hpp>
-#include <model/Node.hpp>
-#include <model/Mixer.hpp>
-#include <model/Splitter.hpp>
-#include <model/Loop.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/Node.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/Splitter.hpp"
+#include "../model/Loop.hpp"
 #include "OSItem.hpp"
 #include "shared_gui_components/GraphicsItems.hpp"
 

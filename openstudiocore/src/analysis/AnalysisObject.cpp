@@ -26,9 +26,9 @@
 #include "DataPoint.hpp"
 #include "DataPoint_Impl.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
 namespace analysis {

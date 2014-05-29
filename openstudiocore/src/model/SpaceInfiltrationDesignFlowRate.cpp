@@ -33,9 +33,9 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx>
 
-#include <utilities/units/QuantityConverter.hpp>
+#include "../utilities/units/QuantityConverter.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

@@ -21,8 +21,8 @@
 #define OPENSTUDIO_HVACTEMPLATEHELPERDIALOG_HPP
 
 #include <QDialog>
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
+#include "../model/Model.hpp"
+#include "../model/ThermalZone.hpp"
 
 class QButtonGroup;
 

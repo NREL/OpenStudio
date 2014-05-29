@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/FileReferenceRecord_Impl.hpp>
+#include "ProjectFixture.hpp"
+#include "../ProjectDatabase.hpp"
+#include "../AnalysisRecord.hpp"
+#include "../AnalysisRecord_Impl.hpp"
+#include "../AttributeRecord.hpp"
+#include "../AttributeRecord_Impl.hpp"
+#include "../FileReferenceRecord.hpp"
+#include "../FileReferenceRecord_Impl.hpp"
 
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../../model/Component.hpp"
+#include "../../model/Component_Impl.hpp"
+#include "../../model/ComponentData.hpp"
+#include "../../model/ComponentData_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/EndUses.hpp"
+#include "../../utilities/core/FileReference.hpp"
 
 using namespace openstudio;
 using namespace openstudio::project;

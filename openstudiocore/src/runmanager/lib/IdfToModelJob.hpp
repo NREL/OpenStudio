@@ -22,10 +22,10 @@
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "JobParam.hpp"
-#include <utilities/core/Checksum.hpp>
+#include "../../utilities/core/Checksum.hpp"
 
 #include <QFileSystemWatcher>
 #include <QFileInfo>

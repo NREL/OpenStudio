@@ -18,24 +18,24 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithmOptions_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
+#include "../DDACEAlgorithm.hpp"
+#include "../DDACEAlgorithm_Impl.hpp"
+#include "../DDACEAlgorithmOptions.hpp"
+#include "../DDACEAlgorithmOptions_Impl.hpp"
+#include "../Problem.hpp"
+#include "../MeasureGroup.hpp"
+#include "../RubyMeasure.hpp"
+#include "../RubyMeasure_Impl.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyContinuousVariable.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
 #include <resources.hxx>
 

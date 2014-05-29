@@ -19,8 +19,8 @@
 
 #include "ConfigOptions.hpp"
 #include "ToolFinder.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -30,15 +30,12 @@
 #include <QIcon>
 #include <QMessageBox>
 #include <QSettings>
-#include <QtGlobal>
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
-// Undefine "max" defined by microsoft which conflicts with std::max
-#undef max
 #endif
 
 

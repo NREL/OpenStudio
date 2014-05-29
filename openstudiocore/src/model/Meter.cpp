@@ -29,11 +29,11 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>
 
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>

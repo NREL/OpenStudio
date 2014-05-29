@@ -39,7 +39,7 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include <utilities/idd/OS_Coil_Heating_Electric_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

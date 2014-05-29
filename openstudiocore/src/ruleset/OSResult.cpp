@@ -19,7 +19,7 @@
 
 #include "OSResult.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
 

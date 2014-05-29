@@ -24,12 +24,12 @@
 #include "OSVectorController.hpp"
 #include "OSDropZone.hpp"
 
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Schedule.hpp>
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Schedule.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

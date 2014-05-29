@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <sdd/Test/SDDFixture.hpp>
+#include "SDDFixture.hpp"
 
-#include <sdd/ForwardTranslator.hpp>
-#include <sdd/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/Construction.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/SimpleGlazing.hpp"
+#include "../../model/MasslessOpaqueMaterial.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
 
 #include <resources.hxx>
 

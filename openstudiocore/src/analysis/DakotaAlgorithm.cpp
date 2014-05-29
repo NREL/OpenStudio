@@ -26,8 +26,8 @@
 #include "DataPoint.hpp"
 #include "DakotaParametersFile.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <runmanager/lib/JSON.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../runmanager/lib/JSON.hpp"
 
 #include <sstream>
 

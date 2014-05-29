@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/TableElement.hpp>
-#include <utilities/document/TableElement_Impl.hpp>
-#include <utilities/document/DocumentRegex.hpp>
+#include "TableElement.hpp"
+#include "TableElement_Impl.hpp"
+#include "DocumentRegex.hpp"
 
-#include <utilities/core/Compare.hpp>
+#include "../core/Compare.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>

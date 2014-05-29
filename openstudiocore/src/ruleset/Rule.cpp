@@ -25,7 +25,7 @@
 #include "ActionClause.hpp"
 #include "ActionClause_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

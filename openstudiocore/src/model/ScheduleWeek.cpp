@@ -25,7 +25,7 @@
 
 #include <utilities/idd/OS_Schedule_Week_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

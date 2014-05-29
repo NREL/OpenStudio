@@ -23,7 +23,7 @@
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QSplitter>
 #include <QVBoxLayout>

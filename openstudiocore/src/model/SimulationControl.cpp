@@ -51,10 +51,10 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SimulationControl_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Unit.hpp"
 
 namespace openstudio{
 namespace model{

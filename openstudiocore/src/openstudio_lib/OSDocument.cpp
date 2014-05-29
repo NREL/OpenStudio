@@ -58,42 +58,42 @@
 #include "VariablesTabController.hpp"
 #include "YearSettingsWidget.hpp"
 
-#include <analysis/Analysis.hpp>
+#include "../analysis/Analysis.hpp"
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/LifeCycleCostParameters.hpp"
+#include "../model/LifeCycleCostParameters_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/bcl/BCLComponent.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/NullMeasure.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/NullMeasure.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
 #include <OpenStudio.hxx>
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
@@ -496,7 +496,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
   //******************************************************************************************************
   //
-  ///! TODO This tab has been deprecated until building summary information is availalbe
+  ///! TODO This tab has been deprecated until building summary information is available
   //
   //// Summary
   //

@@ -20,7 +20,7 @@
 #include "ModelObjectFilterClause.hpp"
 #include "ModelObjectFilterClause_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

@@ -19,16 +19,16 @@
 
 #include "OSArgument.hpp"
 
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddObject.hpp"
 
-#include <utilities/units/QuantityFactory.hpp>
+#include "../utilities/units/QuantityFactory.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Json.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Json.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/functional/value_factory.hpp>

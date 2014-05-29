@@ -24,12 +24,12 @@
 #include "DesignOfExperimentsRecord.hpp"
 #include "SequentialSearchRecord.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearch_Impl.hpp>
+#include "../analysis/DesignOfExperiments.hpp"
+#include "../analysis/DesignOfExperiments_Impl.hpp"
+#include "../analysis/SequentialSearch.hpp"
+#include "../analysis/SequentialSearch_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

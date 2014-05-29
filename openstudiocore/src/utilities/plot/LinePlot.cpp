@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/LinePlot.hpp>
+#include "LinePlot.hpp"
 #include <cfloat>
-#include <utilities/core/Application.hpp>
+#include "../core/Application.hpp"
 #include <qwt/qwt_painter.h>
 
 

@@ -22,7 +22,7 @@
 
 #include "ParentObject_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 

@@ -19,27 +19,27 @@
 
 #include "RefrigerationGridView.hpp"
 
-#include <shared_gui_components/OSGridView.hpp>
+#include "../shared_gui_components/OSGridView.hpp"
 
 #include "ModelObjectItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/RefrigerationCase.hpp"
+#include "../model/RefrigerationCase_Impl.hpp"
+#include "../model/RefrigerationSystem.hpp"
+#include "../model/RefrigerationSystem_Impl.hpp"
+#include "../model/RefrigerationWalkIn.hpp"
+#include "../model/RefrigerationWalkIn_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/ScheduleTypeRegistry.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>

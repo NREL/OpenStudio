@@ -27,10 +27,10 @@
 #include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {

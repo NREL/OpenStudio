@@ -30,14 +30,14 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/SpaceLoadInstance.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QHBoxLayout>

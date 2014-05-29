@@ -21,10 +21,10 @@
 #include "OSCollapsibleItemHeader.hpp"
 #include "ModelObjectListView.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <iostream>
 

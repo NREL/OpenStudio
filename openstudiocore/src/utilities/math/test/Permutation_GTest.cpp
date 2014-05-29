@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/math/Permutation.hpp>
+#include "../Permutation.hpp"
 
 #include <algorithm>
 

@@ -25,11 +25,11 @@
 #include "OSVectorController.hpp"
 #include "OSItemList.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include <QFileSystemWatcher>
 

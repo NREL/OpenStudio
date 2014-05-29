@@ -24,8 +24,8 @@
 #include "UtilityBillsView.hpp"
 #include "UtilityBillsController.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 #include <QLabel>
 #include <QStackedWidget>

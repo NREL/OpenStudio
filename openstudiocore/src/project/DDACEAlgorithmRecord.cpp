@@ -23,13 +23,13 @@
 #include "JoinRecord.hpp"
 #include "FileReferenceRecord.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
+#include "../analysis/DDACEAlgorithm.hpp"
+#include "../analysis/DDACEAlgorithm_Impl.hpp"
+#include "../analysis/DDACEAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

@@ -30,13 +30,13 @@
 #include "OpenStudioAlgorithm_Impl.hpp"
 #include "Problem_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../utilities/document/Table.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace analysis {

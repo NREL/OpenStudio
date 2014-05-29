@@ -23,10 +23,10 @@
 
 #include <vector>
 #include <string>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <QStandardItemModel>
 #include <boost/regex.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include <QThread>
 #include <boost/filesystem.hpp>
 

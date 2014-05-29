@@ -26,9 +26,9 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <energyplus/ForwardTranslator.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
 
 
 #include <QDir>

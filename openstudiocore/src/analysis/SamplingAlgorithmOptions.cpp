@@ -20,9 +20,9 @@
 #include "SamplingAlgorithmOptions.hpp"
 #include "SamplingAlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {

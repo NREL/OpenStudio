@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
 
 #include <utilities/idd/Curve_Biquadratic_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

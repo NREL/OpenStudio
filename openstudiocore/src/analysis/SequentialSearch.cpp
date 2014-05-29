@@ -32,10 +32,10 @@
 #include "DiscreteVariable.hpp"
 #include "DiscreteVariable_Impl.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/document/Table.hpp"
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {

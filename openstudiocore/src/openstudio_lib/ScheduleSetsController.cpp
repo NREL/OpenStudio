@@ -20,10 +20,10 @@
 #include "ScheduleSetsController.hpp"
 #include "ScheduleSetsView.hpp"
 
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

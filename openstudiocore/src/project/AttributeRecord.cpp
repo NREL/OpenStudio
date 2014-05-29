@@ -26,11 +26,11 @@
 #include "AlgorithmRecord.hpp"
 #include "VariableRecord.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 

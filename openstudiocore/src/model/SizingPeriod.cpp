@@ -27,7 +27,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {

@@ -24,10 +24,10 @@
 #include "CurrentAnalysis.hpp"
 #include "AnalysisDriverEnums.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../project/ProjectDatabase.hpp"
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/JobErrors.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/JobErrors.hpp"
 
 #include <QObject>
 

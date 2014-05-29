@@ -20,9 +20,9 @@
 #include "NullMeasure.hpp"
 #include "NullMeasure_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {

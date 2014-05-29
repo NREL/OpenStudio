@@ -24,11 +24,11 @@
 #include "JoinRecord.hpp"
 #include "ProjectDatabase.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 

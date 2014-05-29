@@ -27,13 +27,13 @@
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/StandardsInformationConstruction.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
 #include <QGridLayout>

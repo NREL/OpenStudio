@@ -24,9 +24,9 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ElectricEquipment_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

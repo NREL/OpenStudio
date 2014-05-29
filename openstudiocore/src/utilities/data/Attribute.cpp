@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Attribute_Impl.hpp>
+#include "Attribute.hpp"
+#include "Attribute_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Json.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Json.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../units/UnitFactory.hpp"
+#include "../units/Quantity.hpp"
+#include "../units/QuantityFactory.hpp"
+#include "../units/OSOptionalQuantity.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>

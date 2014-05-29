@@ -31,8 +31,8 @@
 
 #include <utilities/idd/OS_Schedule_Year_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Date.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {

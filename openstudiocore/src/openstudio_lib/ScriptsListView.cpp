@@ -22,9 +22,9 @@
 #include "ModelObjectListView.hpp"
 #include "ScriptItem.hpp"
 
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/PathHelpers.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>

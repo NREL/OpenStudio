@@ -28,9 +28,9 @@
 #include "TableView.hpp"
 #include "ClassViewWidget.hpp"
 
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace modeleditor
 {

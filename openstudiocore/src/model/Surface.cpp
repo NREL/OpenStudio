@@ -41,12 +41,12 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <QPolygon>
 

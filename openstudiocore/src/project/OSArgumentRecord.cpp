@@ -24,11 +24,11 @@
 
 #include "JoinRecord.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../utilities/document/Table.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace project {

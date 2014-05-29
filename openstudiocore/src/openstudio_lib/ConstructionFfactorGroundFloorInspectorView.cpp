@@ -24,10 +24,10 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/FFactorGroundFloorConstruction_Impl.hpp>
+#include "../model/FFactorGroundFloorConstruction.hpp"
+#include "../model/FFactorGroundFloorConstruction_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

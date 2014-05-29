@@ -24,21 +24,21 @@
 #include "AnalysisDriver.hpp"
 #include "CloudAnalysisDriver.hpp"
 
-#include <analysis/Analysis.hpp>
+#include "../analysis/Analysis.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "../utilities/cloud/CloudProvider.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 
 #include <boost/optional.hpp>
 

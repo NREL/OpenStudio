@@ -22,10 +22,10 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "OSVectorController.hpp"
 
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

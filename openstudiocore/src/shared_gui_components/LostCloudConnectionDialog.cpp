@@ -20,7 +20,7 @@
 #include "LostCloudConnectionDialog.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDesktopServices>

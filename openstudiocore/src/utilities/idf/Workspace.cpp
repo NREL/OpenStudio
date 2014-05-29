@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "Workspace.hpp"
+#include "Workspace_Impl.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "WorkspaceObject_Impl.hpp"
+#include "IdfFile.hpp"
+#include "URLSearchPath.hpp"
+#include "ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/plot/ProgressBar.hpp>
+#include "../plot/ProgressBar.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/URLHelpers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
+#include "../core/URLHelpers.hpp"
+#include "../core/Compare.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>

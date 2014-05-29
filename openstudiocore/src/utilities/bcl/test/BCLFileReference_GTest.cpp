@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 #include <resources.hxx>
 
-#include <utilities/bcl/BCLFileReference.hpp>
+#include "../BCLFileReference.hpp"
 
 #include <QFile>
 #include <QTextStream>

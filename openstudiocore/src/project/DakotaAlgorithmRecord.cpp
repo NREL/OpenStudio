@@ -28,20 +28,20 @@
 #include "ParameterStudyAlgorithmRecord.hpp"
 #include "SamplingAlgorithmRecord.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithm_Impl.hpp>
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
+#include "../analysis/DDACEAlgorithm.hpp"
+#include "../analysis/DDACEAlgorithm_Impl.hpp"
+#include "../analysis/FSUDaceAlgorithm.hpp"
+#include "../analysis/FSUDaceAlgorithm_Impl.hpp"
+#include "../analysis/PSUADEDaceAlgorithm.hpp"
+#include "../analysis/PSUADEDaceAlgorithm_Impl.hpp"
+#include "../analysis/ParameterStudyAlgorithm.hpp"
+#include "../analysis/ParameterStudyAlgorithm_Impl.hpp"
+#include "../analysis/SamplingAlgorithm.hpp"
+#include "../analysis/SamplingAlgorithm_Impl.hpp"
 
 #include "JoinRecord.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

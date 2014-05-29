@@ -19,13 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/OutputControlReportingTolerances.hpp>
-#include <model/OutputControlReportingTolerances_Impl.hpp>
+#include "../OutputControlReportingTolerances.hpp"
+#include "../OutputControlReportingTolerances_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

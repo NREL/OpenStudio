@@ -36,10 +36,10 @@
 #include "PeopleInspectorView.hpp"
 #include "OSItemSelectorButtons.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QLabel>

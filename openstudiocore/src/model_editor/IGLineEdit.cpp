@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 #include "IGLineEdit.hpp"
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
 #include <sstream>
 #include <string>
 #include <limits>

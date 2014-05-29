@@ -20,14 +20,14 @@
 #include "ScheduleDialog.hpp"
 #include "SchedulesTabController.hpp"
 
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleDay.hpp>
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleDay.hpp"
 
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QComboBox>

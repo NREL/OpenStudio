@@ -21,7 +21,7 @@
 
 #include "modeltest.h"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 Q_DECLARE_METATYPE(QModelIndex)
 

@@ -19,9 +19,9 @@
 
 #include "RunManager_Impl.hpp"
 #include "Configuration.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
 #include "Workflow.hpp"
@@ -30,9 +30,9 @@
 #include <QMessageBox>
 #include <QMutexLocker>
 #include <QElapsedTimer>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/core/System.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
 #include <QtConcurrentRun>
 #include <QFuture>
 #include <OpenStudio.hxx>
@@ -43,7 +43,7 @@
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
 #include "JobFactory.hpp"
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
 namespace openstudio {
 namespace runmanager {

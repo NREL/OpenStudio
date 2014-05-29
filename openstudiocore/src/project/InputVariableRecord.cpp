@@ -27,15 +27,15 @@
 #include "JoinRecord.hpp"
 #include "ProblemRecord.hpp"
 
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/GenericUncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "../analysis/ContinuousVariable.hpp"
+#include "../analysis/ContinuousVariable_Impl.hpp"
+#include "../analysis/DiscreteVariable.hpp"
+#include "../analysis/DiscreteVariable_Impl.hpp"
+#include "../analysis/GenericUncertaintyDescription.hpp"
+#include "../analysis/UncertaintyDescription.hpp"
+#include "../analysis/UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

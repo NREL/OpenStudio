@@ -21,12 +21,12 @@
 #define UTILITIES_DATA_ATTRIBUTE_IMPL_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/data/Attribute.hpp>
+#include "Attribute.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../core/Optional.hpp"
+#include "../core/String.hpp"
+#include "../core/Logger.hpp"
+#include "../core/UUID.hpp"
 
 #include <QVariant>
 #include <QMetaType>

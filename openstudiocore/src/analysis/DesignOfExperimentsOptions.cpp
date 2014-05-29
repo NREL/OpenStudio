@@ -20,7 +20,7 @@
 #include "DesignOfExperimentsOptions.hpp"
 #include "DesignOfExperimentsOptions_Impl.hpp"
 
-#include <utilities/core/Json.hpp>
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {

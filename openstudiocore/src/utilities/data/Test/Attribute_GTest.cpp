@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../Attribute.hpp"
 
-#include <utilities/core/Json.hpp>
+#include "../../core/Json.hpp"
 
 #include <boost/regex.hpp>
 

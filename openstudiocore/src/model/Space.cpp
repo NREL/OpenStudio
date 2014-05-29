@@ -104,14 +104,14 @@
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>

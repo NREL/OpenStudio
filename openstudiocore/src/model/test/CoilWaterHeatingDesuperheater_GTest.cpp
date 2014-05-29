@@ -18,22 +18,22 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilWaterHeatingDesuperheater.hpp>
-#include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
-#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilWaterHeatingDesuperheater.hpp"
+#include "../CoilWaterHeatingDesuperheater_Impl.hpp"
+#include "../RefrigerationCondenserAirCooled.hpp"
+#include "../RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

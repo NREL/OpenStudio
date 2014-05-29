@@ -21,7 +21,7 @@
 #include "Job.hpp"
 #include "RunManager.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 #include <QDesktopServices>
 #include <QMessageBox>

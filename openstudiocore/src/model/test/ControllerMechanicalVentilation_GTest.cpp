@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/ControllerMechanicalVentilation.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../ControllerMechanicalVentilation.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

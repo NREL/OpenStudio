@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <radiance/AnnualIlluminanceMap.hpp>
+#include "../AnnualIlluminanceMap.hpp"
 
 #include <resources.hxx>
 

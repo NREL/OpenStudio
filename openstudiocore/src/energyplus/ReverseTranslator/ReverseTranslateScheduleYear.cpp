@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
+#include "../../model/ScheduleYear.hpp"
+#include "../../model/ScheduleYear_Impl.hpp"
+#include "../../model/ScheduleWeek.hpp"
+#include "../../model/ScheduleWeek_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Year_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
 using namespace openstudio::model;
 

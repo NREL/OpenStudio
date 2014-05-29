@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../BCLComponent.hpp"
+#include "../BCLMeasure.hpp"
+#include "../LocalBCL.hpp"
+#include "../RemoteBCL.hpp"
+#include "../../data/Attribute.hpp"
+#include "../../idd/IddFile.hpp"
+#include "../../idf/Workspace.hpp"
+#include "../../time/DateTime.hpp"
 
 #include <QDateTime>
 #include <QDir>

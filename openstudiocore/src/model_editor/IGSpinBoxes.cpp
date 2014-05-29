@@ -19,7 +19,7 @@
 
 #include "IGSpinBoxes.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QWheelEvent>
 #include <string>

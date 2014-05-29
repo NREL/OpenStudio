@@ -20,16 +20,16 @@
 #include "ServiceWaterScene.hpp"
 #include "GridItem.hpp"
 #include "ServiceWaterGridItems.hpp"
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/WaterUseConnections.hpp"
+#include "../model/WaterUseConnections_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
 #include <QTimer>
 
 namespace openstudio {

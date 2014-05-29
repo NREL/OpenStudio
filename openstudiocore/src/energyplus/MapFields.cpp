@@ -19,8 +19,8 @@
 
 #include "MapFields.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace energyplus {

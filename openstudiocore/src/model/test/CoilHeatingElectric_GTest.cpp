@@ -18,19 +18,19 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/Schedule.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../PlantLoop.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingElectric_Impl.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../Schedule.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

@@ -26,7 +26,7 @@
 
 #include <utilities/idd/OS_Construction_FfactorGroundFloor_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

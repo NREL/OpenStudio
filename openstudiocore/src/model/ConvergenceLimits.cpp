@@ -23,7 +23,7 @@
 #include "SimulationControl_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_ConvergenceLimits_FieldEnums.hxx>
 
 namespace openstudio {

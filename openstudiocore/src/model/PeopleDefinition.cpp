@@ -20,13 +20,13 @@
 #include "PeopleDefinition.hpp"
 #include "PeopleDefinition_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_People_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

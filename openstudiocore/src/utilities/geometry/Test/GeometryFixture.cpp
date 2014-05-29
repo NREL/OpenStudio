@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;

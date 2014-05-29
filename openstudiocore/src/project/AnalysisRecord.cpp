@@ -32,14 +32,14 @@
 #include "DataPoint_Measure_JoinRecord.hpp"
 #include "TagRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Algorithm.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Containers.hpp"
 
 using namespace openstudio::analysis;
 

@@ -24,10 +24,10 @@
 #include "MeasureGroupRecord.hpp"
 #include "MeasureGroupRecord_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

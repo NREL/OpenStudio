@@ -19,7 +19,7 @@
 
 #include "MainMenu.hpp"
 #include <QMenu>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 
 namespace openstudio {

@@ -22,7 +22,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace model {

@@ -37,7 +37,7 @@
 #include "RenderingColor_Impl.hpp"
 #include "Space.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using std::vector;
 

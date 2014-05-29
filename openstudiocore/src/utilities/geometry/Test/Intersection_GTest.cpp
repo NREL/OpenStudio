@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "../Intersection.hpp"
+#include "GeometryFixture.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>

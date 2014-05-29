@@ -24,7 +24,7 @@
 #include "ModelObject.hpp"
 #include "ComponentData.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QObject>
 

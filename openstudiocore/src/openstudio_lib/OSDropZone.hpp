@@ -22,10 +22,10 @@
 
 #include "OSItem.hpp"
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "../shared_gui_components/FieldMethodTypedefs.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <QWidget>
 #include <QMouseEvent>

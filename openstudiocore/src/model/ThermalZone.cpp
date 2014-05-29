@@ -83,19 +83,19 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 namespace model {

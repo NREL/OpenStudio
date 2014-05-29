@@ -21,11 +21,11 @@
 
 #include <resources.hxx>
 
-#include <utilities/core/test/CoreFixture.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathWatcher.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
+#include "CoreFixture.hpp"
+#include "../Path.hpp"
+#include "../PathWatcher.hpp"
+#include "../Application.hpp"
+#include "../System.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>

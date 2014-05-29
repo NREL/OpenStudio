@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/GroundHeatExchangerVertical.hpp>
-#include <model/GroundHeatExchangerVertical_Impl.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/GroundHeatExchangerVertical.hpp"
+#include "../../model/GroundHeatExchangerVertical_Impl.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/GroundHeatExchanger_Vertical_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

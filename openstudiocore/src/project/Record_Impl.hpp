@@ -23,10 +23,10 @@
 #include "ProjectAPI.hpp"
 #include "Record.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QObject>
 #include <QSqlQuery>

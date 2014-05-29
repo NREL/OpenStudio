@@ -23,8 +23,8 @@
 #include "ModelAPI.hpp"
 #include "ShadingMaterial_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

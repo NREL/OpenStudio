@@ -24,21 +24,21 @@
 #include "ModelObjectItem.hpp"
 #include "RenderingColorWidget.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/Space.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/Space.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
 
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

@@ -22,11 +22,11 @@
 #include "JoinRecord.hpp"
 #include "ProjectDatabase.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
 #include <QSqlDatabase>
 #include <QSqlQuery>

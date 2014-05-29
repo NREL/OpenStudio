@@ -29,11 +29,11 @@
 #include "MeasureRecord.hpp"
 #include "AlgorithmRecord.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace project {

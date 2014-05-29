@@ -27,16 +27,16 @@
 
 #include "PatMainWindow.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <QLineEdit>
 #include <QTextEdit>

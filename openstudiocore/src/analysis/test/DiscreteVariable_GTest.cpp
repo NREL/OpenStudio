@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "../MeasureGroup.hpp"
+#include "../Measure.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../UncertaintyDescription.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 #include <OpenStudio.hxx>
 

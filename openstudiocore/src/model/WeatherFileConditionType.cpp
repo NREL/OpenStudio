@@ -22,7 +22,7 @@
 #include "Site.hpp"
 #include "Site_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {

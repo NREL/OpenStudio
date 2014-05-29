@@ -23,19 +23,19 @@
 #include "PatApp.hpp"
 #include "ResultsView.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+#include "../analysisdriver/CloudAnalysisDriver.hpp"
+#include "../analysisdriver/CloudAnalysisDriver_Impl.hpp"
 
-#include <model/UtilityBill.hpp>
+#include "../model/UtilityBill.hpp"
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 #include <QDesktopServices>
 #include <QDir>

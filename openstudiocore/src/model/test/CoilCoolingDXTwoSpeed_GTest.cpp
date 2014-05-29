@@ -18,28 +18,28 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/Schedule.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/Curve.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../PlantLoop.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CoilCoolingDXTwoSpeed.hpp"
+#include "../CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../Curve.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

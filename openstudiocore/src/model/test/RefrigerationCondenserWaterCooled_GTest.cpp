@@ -18,16 +18,16 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/RefrigerationCondenserWaterCooled.hpp>
-#include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../RefrigerationCondenserWaterCooled.hpp"
+#include "../RefrigerationCondenserWaterCooled_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

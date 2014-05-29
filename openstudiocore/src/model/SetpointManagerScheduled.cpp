@@ -28,10 +28,10 @@
 #include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/OS_SetpointManager_Scheduled_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

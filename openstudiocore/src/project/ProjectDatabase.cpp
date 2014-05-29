@@ -68,16 +68,16 @@
 #include "DataPoint_Measure_JoinRecord.hpp"
 #include "DataPoint_Measure_JoinRecord_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <OpenStudio.hxx>
 

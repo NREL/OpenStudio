@@ -49,13 +49,13 @@
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>

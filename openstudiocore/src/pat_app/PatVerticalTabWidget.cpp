@@ -21,7 +21,7 @@
 
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QButtonGroup>
 #include <QHBoxLayout>

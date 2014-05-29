@@ -19,19 +19,19 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/Test/SqlFileFixture.hpp>
+#include "SqlFileFixture.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Calendar.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/document/Table.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/plot/AnnotatedTimeline.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../../time/Date.hpp"
+#include "../../time/Calendar.hpp"
+#include "../../core/Optional.hpp"
+#include "../../data/DataEnums.hpp"
+#include "../../data/TimeSeries.hpp"
+#include "../../document/Table.hpp"
+#include "../../filetypes/EpwFile.hpp"
+#include "../../plot/AnnotatedTimeline.hpp"
+#include "../../plot/FloodPlot.hpp"
+#include "../../plot/LinePlot.hpp"
+#include "../../units/UnitFactory.hpp"
 
 #include <resources.hxx>
 

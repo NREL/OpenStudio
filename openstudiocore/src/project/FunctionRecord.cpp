@@ -25,10 +25,10 @@
 #include "ProblemRecord.hpp"
 #include "VariableRecord.hpp"
 
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
+#include "../analysis/LinearFunction.hpp"
+#include "../analysis/LinearFunction_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

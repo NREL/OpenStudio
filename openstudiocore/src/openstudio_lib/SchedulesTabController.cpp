@@ -31,25 +31,25 @@
 #include "SubTabView.hpp"
 #include "YearSettingsWidget.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
 #include <QApplication>
 #include <QDateTime>

@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "IddFileFactoryData.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
+#include "../utilities/idd/IddRegex.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>

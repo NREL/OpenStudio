@@ -26,11 +26,11 @@
 #include "OSVectorController.hpp"
 #include "OSDropZone.hpp"
 
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Construction.hpp>
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/Construction.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

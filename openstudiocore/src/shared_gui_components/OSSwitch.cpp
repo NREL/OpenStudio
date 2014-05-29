@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include "OSSwitch.hpp"
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional.hpp>
 #include <QString>

@@ -27,13 +27,13 @@
 #include "ProjectDatabase.hpp"
 #include "JoinRecord.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 

@@ -21,10 +21,10 @@
 #include "RubyJobUtils.hpp"
 #include <QCryptographicHash>
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 namespace openstudio {
 namespace runmanager {

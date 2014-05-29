@@ -23,10 +23,10 @@
 #include "ModelAPI.hpp"
 #include "ParentObject_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/CalibrationResult.hpp"
+#include "../utilities/data/EndUses.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {  
 

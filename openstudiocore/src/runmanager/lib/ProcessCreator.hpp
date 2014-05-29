@@ -22,7 +22,7 @@
 
 #include "Process.hpp"
 #include "ToolInfo.hpp"
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 
 namespace openstudio {
 namespace runmanager {

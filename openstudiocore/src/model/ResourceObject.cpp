@@ -20,7 +20,7 @@
 #include "ResourceObject.hpp"
 #include "ResourceObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

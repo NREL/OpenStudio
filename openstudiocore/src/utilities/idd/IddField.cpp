@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddField_Impl.hpp>
+#include "IddField.hpp"
+#include "IddField_Impl.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "IddRegex.hpp"
+#include "CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/IddUnitString.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../units/Unit.hpp"
+#include "../units/UnitFactory.hpp"
+#include "../units/IddUnitString.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/SIUnit.hpp"
+#include "../units/IPUnit.hpp"
+#include "../units/Quantity.hpp"
 
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Finder.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/algorithm/string.hpp>

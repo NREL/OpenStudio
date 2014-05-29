@@ -25,12 +25,12 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Daylighting_Control_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

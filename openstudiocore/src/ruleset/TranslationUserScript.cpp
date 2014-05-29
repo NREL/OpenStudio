@@ -22,9 +22,9 @@
 #include "OSArgument.hpp"
 #include "OSRunner.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 
 namespace openstudio {
 namespace ruleset {

@@ -27,11 +27,11 @@
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include "ModelExtensibleGroup.hpp"
 #include <utilities/idd/OS_LightingSimulationZone_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

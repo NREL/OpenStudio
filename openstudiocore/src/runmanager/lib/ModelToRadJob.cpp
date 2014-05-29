@@ -28,16 +28,16 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <radiance/ForwardTranslator.hpp>
+#include "../../radiance/ForwardTranslator.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 
 #include <QDir>
 #include <QDateTime>

@@ -22,13 +22,13 @@
 #include "OpenStudioApp.hpp"
 
 #include "../openstudio_lib/MainWindow.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <ruleset/OSArgument.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../ruleset/OSArgument.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QAbstractButton>
 #include <QApplication>
@@ -42,9 +42,9 @@ static const char *logfilepath = "/var/log/openstudio.log";
 #endif
 
 #define WSAAPI
-#include <utilities/core/Path.hpp>
-#include <utilities/core/RubyInterpreter.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter_Impl.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/RubyInterpreter.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter_Impl.hpp"
 
 #ifdef HAVE_RUBY_VERSION_H
 #include <ruby/version.h>

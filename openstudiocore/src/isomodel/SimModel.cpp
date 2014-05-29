@@ -16,7 +16,7 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
-#include <isomodel/SimModel.hpp>
+#include "SimModel.hpp"
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #define DEBUG_ISO_MODEL_SIMULATION

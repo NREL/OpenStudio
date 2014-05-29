@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/StraightComponent_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../ModelObject_Impl.hpp"
+#include "../StraightComponent_Impl.hpp"
 
 using namespace openstudio::model;
 

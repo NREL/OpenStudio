@@ -21,8 +21,8 @@
 #define RUNMANAGER_LIB_RUNMANAGER_IMPL_HPP
 
 #include <QObject>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/UUID.hpp"
 #include <QStandardItemModel>
 #include <QMutex>
 #include <QWaitCondition>

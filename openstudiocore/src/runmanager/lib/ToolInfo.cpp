@@ -19,7 +19,6 @@
 
 #include "ToolInfo.hpp"
 #include <boost/thread.hpp>
-#include <QtGlobal>
 
 namespace openstudio {
 namespace runmanager {

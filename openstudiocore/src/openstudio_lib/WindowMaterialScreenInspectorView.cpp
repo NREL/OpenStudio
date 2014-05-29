@@ -23,10 +23,10 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/Screen.hpp>
-#include <model/Screen_Impl.hpp>
+#include "../model/Screen.hpp"
+#include "../model/Screen_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

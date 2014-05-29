@@ -26,9 +26,9 @@
 #include "MeasureDragData.hpp"
 #include "MeasureManager.hpp"
 
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <OpenStudio.hxx>
 

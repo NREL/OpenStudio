@@ -20,9 +20,9 @@
 #ifndef OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
 #define OPENSTUDIO_HVACSYSTEMSCONTROLLER_HPP
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Loop.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Loop.hpp"
 #include "OSDropZone.hpp"
 #include "ModelObjectItem.hpp"
 #include "ModelObjectVectorController.hpp"

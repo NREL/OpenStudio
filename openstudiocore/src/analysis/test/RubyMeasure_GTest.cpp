@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/RubyMeasure.hpp>
+#include "../RubyMeasure.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/FileReference.hpp"
 
 #include <OpenStudio.hxx>
 #include <resources.hxx>

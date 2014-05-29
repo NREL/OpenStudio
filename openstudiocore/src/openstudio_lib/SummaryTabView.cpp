@@ -19,7 +19,7 @@
 
 #include "SummaryTabView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QLabel>
 

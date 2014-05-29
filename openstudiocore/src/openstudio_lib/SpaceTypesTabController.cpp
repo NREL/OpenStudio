@@ -21,9 +21,9 @@
 #include "SpaceTypesTabView.hpp"
 #include "SpaceTypesController.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
+#include "../RefrigerationGasCoolerAirCooled.hpp"
+#include "../RefrigerationGasCoolerAirCooled_Impl.hpp"
+#include "../CurveLinear.hpp"
+#include "../CurveLinear_Impl.hpp"
 // #include <model/ThermalZone.hpp>
 // #include <model/ThermalZone_Impl.hpp>
 

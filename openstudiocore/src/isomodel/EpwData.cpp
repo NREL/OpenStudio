@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <isomodel/EpwData.hpp>
+#include "EpwData.hpp"
 #include "SolarRadiation.hpp"
 
 namespace openstudio {

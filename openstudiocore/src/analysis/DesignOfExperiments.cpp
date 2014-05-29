@@ -29,9 +29,9 @@
 #include "DiscreteVariable.hpp"
 #include "DiscreteVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {

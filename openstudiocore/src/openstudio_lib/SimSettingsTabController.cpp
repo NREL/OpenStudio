@@ -21,10 +21,10 @@
 
 #include "SimSettingsTabView.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

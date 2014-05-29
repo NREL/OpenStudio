@@ -26,18 +26,18 @@
 #include "OptimizationDataPoint.hpp"
 #include "OptimizationDataPoint_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JSON.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/JSON.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/UnzipFile.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/UnzipFile.hpp"
 
 namespace openstudio {
 namespace analysis {

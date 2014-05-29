@@ -20,16 +20,16 @@
 #include "SpaceTypesController.hpp"
 #include "SpaceTypesView.hpp"
 
-#include <model/Model.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

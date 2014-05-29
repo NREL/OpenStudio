@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/sql/SqlFile_Impl.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+#include "SqlFile_Impl.hpp"
+#include "SqlFileTimeSeriesQuery.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/time/Calendar.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/String.hpp"
+#include "../time/Calendar.hpp"
+#include "../filetypes/EpwFile.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Optional.hpp"
+#include "../time/DateTime.hpp"
+#include "../core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>

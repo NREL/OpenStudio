@@ -23,14 +23,14 @@
 #include "OSCollapsibleView.hpp"
 #include "OSGridController.hpp"
 
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/idd/IddObject.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>

@@ -24,11 +24,11 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Constant_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

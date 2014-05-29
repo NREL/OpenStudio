@@ -23,18 +23,18 @@
 #include "OSDocument.hpp"
 #include "OSItemSelectorButtons.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
 #include <QInputDialog>

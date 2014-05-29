@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <math.h>
-#include <utilities/economics/CostLineItem.hpp>
+#include "CostLineItem.hpp"
 
-#include <utilities/economics/CostObject.hpp>
+#include "CostObject.hpp"
 
 namespace openstudio{
 

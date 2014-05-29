@@ -25,35 +25,35 @@
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Analysis_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Problem_Impl.hpp"
+#include "../analysis/Variable.hpp"
+#include "../analysis/Variable_Impl.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/AnalysisDriver.hpp"
+#include "../analysisdriver/AnalysisDriver_Impl.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
+#include "../project/AnalysisRecord.hpp"
+#include "../project/AnalysisRecord_Impl.hpp"
 
-#include <model/UtilityBill.hpp>
+#include "../model/UtilityBill.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/CalibrationResult.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/UnitFactory.hpp"
 
 #include <QBoxLayout>
 #include <QHeaderView>

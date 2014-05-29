@@ -25,13 +25,13 @@
 #include "ComponentData.hpp"
 #include "ComponentData_Impl.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace model {

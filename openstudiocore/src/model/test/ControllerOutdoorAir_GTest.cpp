@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/ControllerOutdoorAir.hpp>
+#include "../Model.hpp"
+#include "../ControllerOutdoorAir.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 

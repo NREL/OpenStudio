@@ -36,18 +36,18 @@
 #include <QTextStream>
 #include <QToolBar>
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
 #include "../model/Model.hpp"
 #include "AboutBox.hpp"
 #include "ModelExplorer.hpp"
 #include "InspectorGadget.hpp"
 #include <model_editor/tablemodel.h>
 #include <model_editor/treemodel.h>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include "EditorFrame.hpp"
 #include <boost/filesystem/fstream.hpp>

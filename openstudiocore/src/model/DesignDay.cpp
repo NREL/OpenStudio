@@ -24,7 +24,7 @@
 #include "Site.hpp"
 #include "Site_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>

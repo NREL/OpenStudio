@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../ProjectDatabase.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using openstudio::Logger;

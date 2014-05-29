@@ -20,16 +20,16 @@
 #include "GasMixture.hpp"
 #include "GasMixture_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_GasMixture_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <math.h>
 
 namespace openstudio {

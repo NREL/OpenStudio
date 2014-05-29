@@ -27,7 +27,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SurfaceConvectionAlgorithm_Outside_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {

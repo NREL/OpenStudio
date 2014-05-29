@@ -23,10 +23,10 @@
 #include "Model.hpp"
 #include "ModelExtensibleGroup.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <time.h>
 

@@ -20,11 +20,11 @@
 #include "ModelObjectFilterType.hpp"
 #include "ModelObjectFilterType_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Containers.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

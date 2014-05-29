@@ -24,7 +24,7 @@
 
 #include <utilities/idd/OS_UtilityCost_Variable_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 

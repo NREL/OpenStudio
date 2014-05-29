@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../Compare.hpp"
+#include "../Logger.hpp"
 
 #include <set>
 #include <vector>

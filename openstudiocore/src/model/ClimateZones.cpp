@@ -26,8 +26,8 @@
 
 #include <utilities/idd/OS_ClimateZones_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
 
 namespace openstudio {
 namespace model {

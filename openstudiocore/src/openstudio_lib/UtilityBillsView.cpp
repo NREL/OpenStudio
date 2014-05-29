@@ -31,17 +31,17 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSUnsignedEdit.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/UtilityBill_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Date.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/Date.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>

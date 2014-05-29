@@ -19,7 +19,7 @@
 
 #include "PrjObjects.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace contam {

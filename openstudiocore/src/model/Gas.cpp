@@ -20,14 +20,14 @@
 #include "Gas.hpp"
 #include "Gas_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Gas_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

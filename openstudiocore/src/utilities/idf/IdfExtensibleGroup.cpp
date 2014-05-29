@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/IdfObject_Impl.hpp>
+#include "IdfExtensibleGroup.hpp"
+#include "IdfObject.hpp"
+#include "IdfObject_Impl.hpp"
 
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <boost/lexical_cast.hpp>
 

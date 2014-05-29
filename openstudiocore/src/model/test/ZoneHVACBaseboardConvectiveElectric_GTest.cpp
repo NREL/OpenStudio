@@ -18,15 +18,15 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
-#include <model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../ZoneHVACBaseboardConvectiveElectric_Impl.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

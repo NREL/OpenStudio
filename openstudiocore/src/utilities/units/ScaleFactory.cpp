@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/ScaleFactory.hpp>
+#include "../core/Assert.hpp"
+#include "ScaleFactory.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Exception.hpp>
+#include "../core/String.hpp"
+#include "../core/Exception.hpp"
 
 #include <map>
 #include <vector>

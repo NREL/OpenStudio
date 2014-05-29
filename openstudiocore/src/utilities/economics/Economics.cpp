@@ -19,10 +19,10 @@
 #include <cstdlib>
 #include <cmath>
 
-#include <utilities/economics/CostObject.hpp>
-#include <utilities/economics/Economics.hpp>
+#include "CostObject.hpp"
+#include "Economics.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #define MAX_ERR 0.0001
 #define MAX_LIMIT 100000

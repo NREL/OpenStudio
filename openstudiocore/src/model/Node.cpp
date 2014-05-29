@@ -46,8 +46,8 @@
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
 #include <utilities/idd/OS_Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::detail::WorkspaceObject_Impl;
 

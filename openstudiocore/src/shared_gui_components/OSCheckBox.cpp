@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include "OSCheckBox.hpp"
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 #include <QString>
 
 namespace openstudio {

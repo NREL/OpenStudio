@@ -25,11 +25,11 @@
 #include "FunctionRecord.hpp"
 #include "RubyContinuousVariableRecord.hpp"
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

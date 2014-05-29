@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "Application.hpp"
+#include "ApplicationPathHelpers.hpp"
+#include "String.hpp"
 #include <OpenStudio.hxx>
 
 #include <QWidget>

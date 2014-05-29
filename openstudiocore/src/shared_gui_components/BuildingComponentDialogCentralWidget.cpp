@@ -25,11 +25,11 @@
 #include "Component.hpp"
 #include "ComponentList.hpp"
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/bcl/BCL.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QApplication>
 #include <QBoxLayout>

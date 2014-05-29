@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../ScaleFactory.hpp"
+#include "../UnitFactory.hpp"
+#include "../SIUnit.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../../data/Vector.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../core/Containers.hpp"
 
 #include <cmath>
 

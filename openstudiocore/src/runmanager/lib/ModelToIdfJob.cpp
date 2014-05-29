@@ -27,18 +27,18 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/URLHelpers.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <osversion/VersionTranslator.hpp>
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <QDir>
 #include <QDateTime>

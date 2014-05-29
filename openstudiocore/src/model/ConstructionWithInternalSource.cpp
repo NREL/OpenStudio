@@ -26,7 +26,7 @@
 #include "OpaqueMaterial.hpp"
 #include "ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
 namespace openstudio {

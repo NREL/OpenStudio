@@ -23,10 +23,10 @@
 #include "ProjectDatabase.hpp"
 #include "UrlRecord.hpp"
 
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

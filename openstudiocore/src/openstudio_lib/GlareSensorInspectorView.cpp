@@ -22,10 +22,10 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
+#include "../model/GlareSensor.hpp"
+#include "../model/GlareSensor_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

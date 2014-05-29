@@ -24,10 +24,10 @@
 #include "ModelObjectActionClause.hpp"
 #include "ModelObjectActionClause_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

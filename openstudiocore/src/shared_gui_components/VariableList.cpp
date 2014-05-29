@@ -27,22 +27,22 @@
 #include "LocalLibraryController.hpp"
 #include "WorkflowTools.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
+#include "../analysis/WorkflowStep.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/RubyException.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/RubyException.hpp"
 
 #include <QByteArray>
 #include <QDialog>

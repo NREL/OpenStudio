@@ -31,7 +31,7 @@
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
 #include "Mixer_Impl.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

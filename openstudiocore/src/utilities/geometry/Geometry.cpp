@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "Geometry.hpp"
+#include "Transformation.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
 

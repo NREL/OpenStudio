@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../Workspace.hpp"
+#include "../Workspace_Impl.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObjectOrder.hpp"
+#include "../URLSearchPath.hpp"
+#include "../ValidityReport.hpp"
+#include "../IdfExtensibleGroup.hpp"
+#include "../WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -44,17 +44,17 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/Test/IdfTestQObjects.hpp>
+#include "../WorkspaceWatcher.hpp"
+#include "IdfTestQObjects.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../core/Application.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../../core/Compare.hpp"
+#include "../../core/StringStreamLogSink.hpp"
 
 #include <resources.hxx>
 

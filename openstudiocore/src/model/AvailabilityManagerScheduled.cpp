@@ -27,7 +27,7 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Model.hpp"
 #include <utilities/idd/OS_AvailabilityManager_Scheduled_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

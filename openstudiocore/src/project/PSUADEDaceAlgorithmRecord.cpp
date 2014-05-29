@@ -23,13 +23,13 @@
 #include "JoinRecord.hpp"
 #include "FileReferenceRecord.hpp"
 
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
+#include "../analysis/PSUADEDaceAlgorithm.hpp"
+#include "../analysis/PSUADEDaceAlgorithm_Impl.hpp"
+#include "../analysis/PSUADEDaceAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

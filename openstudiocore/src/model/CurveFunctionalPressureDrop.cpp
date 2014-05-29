@@ -22,7 +22,7 @@
 
 #include <utilities/idd/OS_Curve_Functional_PressureDrop_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 

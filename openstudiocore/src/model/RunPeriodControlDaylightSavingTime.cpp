@@ -26,8 +26,8 @@
 
 #include <utilities/idd/OS_RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/Date.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

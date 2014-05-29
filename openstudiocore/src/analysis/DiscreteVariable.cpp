@@ -23,8 +23,8 @@
 #include "DataPoint.hpp"
 #include "Problem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "OSListController.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <algorithm>
 #include <QWidget>
 

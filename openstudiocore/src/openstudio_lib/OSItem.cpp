@@ -25,9 +25,9 @@
 #include "ScriptItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/bcl/LocalBCL.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDrag>

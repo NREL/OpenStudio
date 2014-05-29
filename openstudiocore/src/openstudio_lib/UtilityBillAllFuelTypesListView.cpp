@@ -27,12 +27,12 @@
 #include "UtilityBillFuelTypeItem.hpp"
 #include "UtilityBillFuelTypeListView.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <iostream>
 

@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../RefrigerationWalkInZoneBoundary.hpp"
+#include "../RefrigerationWalkInZoneBoundary_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

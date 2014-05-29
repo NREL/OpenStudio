@@ -19,17 +19,17 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/CmpntCostAdjustments.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
+#include "../CmpntCostAdjustments.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
 
 #include <utilities/idd/OS_ComponentCost_Adjustments_FieldEnums.hxx>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Optional.hpp"
 #include <boost/algorithm/string/case_conv.hpp>
 
 

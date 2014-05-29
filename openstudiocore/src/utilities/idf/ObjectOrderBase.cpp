@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/ObjectOrderBase.hpp>
-#include <utilities/math/Permutation.hpp>
+#include "ObjectOrderBase.hpp"
+#include "../math/Permutation.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 

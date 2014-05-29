@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysisdriver/test/AnalysisDriverTestLibrary.hpp>
+#include "AnalysisDriverTestLibrary.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../SimpleProject.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/WeatherFile.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
 
 #include <boost/filesystem.hpp>
 

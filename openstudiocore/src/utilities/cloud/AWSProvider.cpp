@@ -16,15 +16,15 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "AWSProvider.hpp"
+#include "AWSProvider_Impl.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/Application.hpp"
+#include "../core/ApplicationPathHelpers.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/String.hpp"
+#include "../core/System.hpp"
 
 #include <OpenStudio.hxx>
 #include <QDateTime>

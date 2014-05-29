@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/CurveBicubic.hpp>
-#include <model/CurveBicubic_Impl.hpp>
+#include "../RefrigerationCompressor.hpp"
+#include "../RefrigerationCompressor_Impl.hpp"
+#include "../CurveBicubic.hpp"
+#include "../CurveBicubic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

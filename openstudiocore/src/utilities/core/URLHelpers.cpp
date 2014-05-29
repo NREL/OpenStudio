@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include "URLHelpers.hpp"
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
+#include "Path.hpp"
+#include "String.hpp"
 
 namespace openstudio {
   

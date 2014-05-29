@@ -27,15 +27,15 @@
 #include "AttributeRecord.hpp"
 #include "AttributeRecord_Impl.hpp"
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm_Impl.hpp"
+#include "../analysis/DakotaAlgorithm.hpp"
+#include "../analysis/DakotaAlgorithm_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace project {

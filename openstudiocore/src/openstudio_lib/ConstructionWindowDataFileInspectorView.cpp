@@ -21,10 +21,10 @@
 
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/WindowDataFile.hpp>
-#include <model/WindowDataFile_Impl.hpp>
+#include "../model/WindowDataFile.hpp"
+#include "../model/WindowDataFile_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

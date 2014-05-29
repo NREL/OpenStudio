@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Matrix.hpp>
+#include "Matrix.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/math/FloatCompare.hpp>
+#include "../core/Optional.hpp"
+#include "../math/FloatCompare.hpp"
 
 #include <random>
 

@@ -20,8 +20,8 @@
 #include "ModelObjectFilterRelationship.hpp"
 #include "ModelObjectFilterRelationship_Impl.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/Relationship.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/Relationship.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

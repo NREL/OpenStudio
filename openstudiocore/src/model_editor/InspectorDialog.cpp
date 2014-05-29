@@ -28,11 +28,11 @@
 #include "../model/ResourceObject_Impl.hpp"
 #include "../model/AccessPolicyStore.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/idd/IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <QLabel>

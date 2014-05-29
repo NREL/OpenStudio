@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include "OSComboBox.hpp"
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <QEvent>
 #include <QCompleter>
 

@@ -34,12 +34,12 @@
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
 #include <boost/lexical_cast.hpp>

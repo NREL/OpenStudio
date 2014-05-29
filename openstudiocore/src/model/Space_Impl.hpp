@@ -23,7 +23,7 @@
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>

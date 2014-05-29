@@ -25,13 +25,13 @@
 #include "JoinRecord.hpp"
 #include "ProjectDatabase.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/UncertaintyDescription.hpp"
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 

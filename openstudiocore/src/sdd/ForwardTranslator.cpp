@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QDomDocument>

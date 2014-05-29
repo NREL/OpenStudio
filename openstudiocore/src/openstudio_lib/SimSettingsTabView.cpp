@@ -21,7 +21,7 @@
 
 #include "SimSettingsView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QScrollArea>
 

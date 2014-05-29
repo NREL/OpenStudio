@@ -20,12 +20,12 @@
 #include "BuildingStoriesController.hpp"
 #include "BuildingStoriesView.hpp"
 
-#include <model/Model.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Space.hpp>
+#include "../model/Model.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/Space.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

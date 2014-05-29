@@ -20,24 +20,24 @@
 #include "CloudAnalysisDriver.hpp"
 #include "CloudAnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/AdvancedStatus.hpp>
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/AdvancedStatus.hpp"
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/data/Tag.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/data/Tag.hpp"
+#include "../utilities/idf/URLSearchPath.hpp"
 
 #include <QTimer>
 

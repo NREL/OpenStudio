@@ -39,19 +39,19 @@
 
 #include "TagRecord.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/Tag.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 using namespace openstudio::analysis;
 

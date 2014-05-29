@@ -22,10 +22,10 @@
 
 #include "DataPoint.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {

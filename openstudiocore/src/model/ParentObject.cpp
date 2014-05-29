@@ -23,9 +23,9 @@
 #include "LifeCycleCost.hpp"
 #include "Component.hpp"
 
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/idf/Workspace_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <deque>
 

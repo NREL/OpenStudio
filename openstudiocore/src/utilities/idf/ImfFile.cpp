@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/ImfFile.hpp>
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "ImfFile.hpp"
+#include "IdfRegex.hpp"
+#include "../idd/CommentRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "../core/Assert.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/String.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/iostreams/filter/newline.hpp>

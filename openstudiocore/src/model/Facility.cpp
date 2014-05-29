@@ -43,11 +43,11 @@
 #include "UtilityBill.hpp"
 #include "UtilityBill_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/economics/Economics.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/economics/Economics.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

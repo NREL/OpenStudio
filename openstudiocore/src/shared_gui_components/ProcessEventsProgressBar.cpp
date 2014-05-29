@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "ProcessEventsProgressBar.hpp"
-#include <utilities/core/Application.hpp>
+#include "../utilities/core/Application.hpp"
 
 namespace openstudio {
 

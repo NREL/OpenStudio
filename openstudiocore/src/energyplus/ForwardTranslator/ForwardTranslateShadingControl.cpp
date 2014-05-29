@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/ShadingControl.hpp>
-#include <model/Construction.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/Schedule.hpp>
+#include "../../model/ShadingControl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/ShadingMaterial.hpp"
+#include "../../model/Schedule.hpp"
 
 #include <utilities/idd/WindowProperty_ShadingControl_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

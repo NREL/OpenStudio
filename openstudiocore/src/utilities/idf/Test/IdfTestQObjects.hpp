@@ -22,11 +22,11 @@
 
 #include <QObject>
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../Workspace.hpp"
+#include "../Workspace_Impl.hpp"
+#include "../WorkspaceObject.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../../core/Assert.hpp"
 
 #include <boost/optional.hpp>
 

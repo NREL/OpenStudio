@@ -21,22 +21,22 @@
 #include "ModelObjectTreeItems.hpp"
 #include "ModelObjectItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Surface.hpp"
+#include "../model/SubSurface.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QStyleOption>
 #include <QPainter>

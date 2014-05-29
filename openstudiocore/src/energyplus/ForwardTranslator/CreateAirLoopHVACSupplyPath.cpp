@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/AirLoopHVAC_SupplyPath_FieldEnums.hxx>
 
 using namespace openstudio::model;

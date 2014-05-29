@@ -23,8 +23,8 @@
 #include "PlantLoop_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Sizing_Plant_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

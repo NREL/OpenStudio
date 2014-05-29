@@ -18,14 +18,14 @@
  **********************************************************************/
 
 #include "OSAppBase.hpp"
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 #include "MainRightColumnController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "OSDocument.hpp"
 #include "MainWindow.hpp"
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/bcl/LocalBCL.hpp"
 #include <QMessageBox>
 #include <QDir>
 

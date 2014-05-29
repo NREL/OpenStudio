@@ -23,9 +23,9 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp" // required for Q_PROPERTY
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 #include <QObject>
 #include <QVariant>

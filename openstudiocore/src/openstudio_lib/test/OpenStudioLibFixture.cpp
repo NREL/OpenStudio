@@ -19,8 +19,8 @@
 
 #include "OpenStudioLibFixture.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/Path.hpp"
 
 void OpenStudioLibFixture::SetUp() {
   openstudio::Application::instance().application();

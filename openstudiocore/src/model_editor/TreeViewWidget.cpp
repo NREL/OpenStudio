@@ -31,7 +31,7 @@
 
 #include "TreeViewWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 

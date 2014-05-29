@@ -18,14 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
+#include "../TimeDependentValuationFile.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../../units/Quantity.hpp"
+#include "../../units/BTUUnit.hpp"
+#include "../../units/QuantityConverter.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../core/Containers.hpp"
+#include "../../core/Optional.hpp"
 
 #include <resources.hxx>
 

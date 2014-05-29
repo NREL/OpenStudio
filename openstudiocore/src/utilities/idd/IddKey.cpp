@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/idd/IddKey_Impl.hpp>
+#include "IddKey.hpp"
+#include "IddKey_Impl.hpp"
 
-#include <utilities/idd/IddKeyProperties.hpp>
-#include <utilities/idd/IddRegex.hpp>
+#include "IddKeyProperties.hpp"
+#include "IddRegex.hpp"
 
 #include <boost/algorithm/string.hpp>
 

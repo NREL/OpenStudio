@@ -26,8 +26,8 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/idf/IdfFile.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
 #include <utilities/idd/Version_FieldEnums.hxx>
 
 #include <QDir>

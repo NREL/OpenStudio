@@ -25,7 +25,7 @@
 #include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Sizing_System_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

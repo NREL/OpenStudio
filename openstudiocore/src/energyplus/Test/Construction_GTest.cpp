@@ -18,31 +18,31 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ErrorFile.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/Gas.hpp>
-#include <model/Gas_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/FenestrationMaterial.hpp"
+#include "../../model/FenestrationMaterial_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/StandardGlazing_Impl.hpp"
+#include "../../model/Gas.hpp"
+#include "../../model/Gas_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>

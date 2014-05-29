@@ -27,7 +27,7 @@
 #include "LocalLibrary.hpp"
 #include "BaseApp.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 #include <QHBoxLayout>
 #include <QLabel>

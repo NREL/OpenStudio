@@ -24,20 +24,20 @@
 #include "RunTabController.hpp"
 #include "RunView.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysis/DataPoint.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/OSServer.hpp>
-#include <utilities/cloud/OSServer_Impl.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/System.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../analysisdriver/CloudAnalysisDriver.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/OSServer.hpp"
+#include "../utilities/cloud/OSServer_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/System.hpp"
 
 #include "../shared_gui_components/LostCloudConnectionDialog.hpp"
 

@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/String.hpp>
+#include "../UUID.hpp"
+#include "../String.hpp"
 
 #include <iostream>
 #include <set>

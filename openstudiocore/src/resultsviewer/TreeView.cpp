@@ -19,7 +19,7 @@
 
 #include "TreeView.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QTreeWidgetItemIterator>
 

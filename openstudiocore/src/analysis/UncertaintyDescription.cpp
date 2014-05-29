@@ -22,9 +22,9 @@
 
 #include "GenericUncertaintyDescription.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {

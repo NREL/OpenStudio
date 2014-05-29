@@ -21,33 +21,33 @@
 
 #include "OSDocument.hpp"
 
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "../openstudio_app/OpenStudioApp.hpp"
 
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileConditionType.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/DesignDay.hpp"
+#include "../model/DesignDay_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/SizingPeriod.hpp"
+#include "../model/SizingPeriod_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/ClimateZones.hpp"
+#include "../model/ClimateZones_Impl.hpp"
+#include "../model/WeatherFileDays.hpp"
+#include "../model/WeatherFileConditionType.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../runmanager/lib/ConfigOptions.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/smart_ptr.hpp>
 

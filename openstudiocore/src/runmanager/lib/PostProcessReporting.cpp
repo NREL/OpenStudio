@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include <vector>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include "PostProcessReporting.hpp"
 

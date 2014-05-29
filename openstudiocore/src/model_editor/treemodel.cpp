@@ -42,12 +42,12 @@
 #include <model_editor/treeitem.h>
 #include "TreeView.hpp"
 #include "TreeViewWidget.hpp"
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
 #include <model_editor/treemodel.h>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #define guidOpenCurlyBrace '{'
 #define guidCloseCurlyBrace '}'

@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "BCLComponent.hpp"
+#include "../core/System.hpp"
+#include "../data/Attribute.hpp"
 
 #include <QDomDocument>
 #include <QFile>

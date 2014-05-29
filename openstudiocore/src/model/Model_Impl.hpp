@@ -27,10 +27,10 @@
 #include "YearDescription.hpp"
 #include "WeatherFile.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include <boost/optional.hpp>
 

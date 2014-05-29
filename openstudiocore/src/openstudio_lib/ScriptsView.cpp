@@ -23,18 +23,18 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/ConfigOptions.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/idf/ImfFile.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/document/DocumentRegex.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../utilities/idf/ImfFile.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/document/DocumentRegex.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <QStyleOption>
 #include <QPainter>

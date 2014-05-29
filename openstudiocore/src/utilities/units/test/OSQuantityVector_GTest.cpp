@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
+#include "../OSQuantityVector.hpp"
+#include "../Quantity.hpp"
+#include "../SIUnit.hpp"
+#include "../WhUnit.hpp"
+#include "../CelsiusUnit.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../../data/Vector.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../core/Containers.hpp"
 
 using namespace openstudio;
 

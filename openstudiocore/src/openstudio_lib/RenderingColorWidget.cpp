@@ -19,9 +19,9 @@
 
 #include "RenderingColorWidget.hpp"
 
-#include <model/RenderingColor_Impl.hpp>
+#include "../model/RenderingColor_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

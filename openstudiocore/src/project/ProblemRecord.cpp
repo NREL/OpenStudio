@@ -29,16 +29,16 @@
 #include "ProjectDatabase.hpp"
 #include "WorkflowRecord.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional/optional.hpp>
 

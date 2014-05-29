@@ -23,7 +23,7 @@
 #include "OSCollapsibleItem.hpp"
 #include "OSCollapsibleItemHeader.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QHBoxLayout>
 #include <QPainter>

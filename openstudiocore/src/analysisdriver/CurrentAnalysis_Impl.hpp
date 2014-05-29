@@ -24,8 +24,8 @@
 #include "AnalysisRunOptions.hpp"
 #include "AnalysisDriver_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
 
 #include <QObject>
 

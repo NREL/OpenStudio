@@ -21,15 +21,15 @@
 #include "SequentialSearchRecord_Impl.hpp"
 #include "AnalysisRecord.hpp"
 
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearch_Impl.hpp>
-#include <analysis/SequentialSearchOptions.hpp>
+#include "../analysis/SequentialSearch.hpp"
+#include "../analysis/SequentialSearch_Impl.hpp"
+#include "../analysis/SequentialSearchOptions.hpp"
 
 #include "JoinRecord.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

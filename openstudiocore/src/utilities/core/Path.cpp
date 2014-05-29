@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
+#include "Path.hpp"
+#include "String.hpp"
 
 #include <QDir>
 

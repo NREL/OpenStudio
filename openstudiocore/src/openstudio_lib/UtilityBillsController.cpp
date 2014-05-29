@@ -22,16 +22,16 @@
 #include "UtilityBillAllFuelTypesListView.hpp"
 #include "UtilityBillsView.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
 
 #include "OSInspectorView.hpp"
 #include "OSItemSelectorButtons.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 

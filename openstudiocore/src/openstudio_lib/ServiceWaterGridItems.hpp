@@ -23,7 +23,7 @@
 #include <QGraphicsObject>
 #include <QCoreApplication>
 #include <QPixmap>
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 #include "OSItem.hpp"
 #include "GridItem.hpp"
 

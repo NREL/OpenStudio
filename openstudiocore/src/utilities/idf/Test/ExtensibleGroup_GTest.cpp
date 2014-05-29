@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "IdfFixture.hpp"
+#include "../IdfObject.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObject_Impl.hpp"
+#include "../WorkspaceExtensibleGroup.hpp"
+#include "../Workspace.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Construction_FieldEnums.hxx>

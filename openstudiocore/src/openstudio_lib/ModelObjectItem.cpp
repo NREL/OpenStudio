@@ -19,14 +19,14 @@
 
 #include "ModelObjectItem.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
 #include <QLabel>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

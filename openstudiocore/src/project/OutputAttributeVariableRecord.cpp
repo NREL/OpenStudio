@@ -23,10 +23,10 @@
 #include "JoinRecord.hpp"
 #include "FunctionRecord.hpp"
 
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/OutputAttributeVariable_Impl.hpp>
+#include "../analysis/OutputAttributeVariable.hpp"
+#include "../analysis/OutputAttributeVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

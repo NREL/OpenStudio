@@ -41,7 +41,7 @@
 
 #include <utilities/idd/OS_ShadingSurface_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

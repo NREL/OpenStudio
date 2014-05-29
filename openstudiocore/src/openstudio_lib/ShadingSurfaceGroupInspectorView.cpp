@@ -21,10 +21,10 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

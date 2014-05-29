@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
+#include "TimeDependentValuationFile.hpp"
 
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../units/QuantityRegex.hpp"
+#include "../units/UnitFactory.hpp"
+#include "../units/QuantityFactory.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/SIUnit.hpp"
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../core/Checksum.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Assert.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <boost/regex.hpp>
 

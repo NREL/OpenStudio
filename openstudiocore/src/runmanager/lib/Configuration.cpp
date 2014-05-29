@@ -21,7 +21,7 @@
 #include "AddTool.hpp"
 #include "JobFactory.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 #include <QFileDialog>
 #include <QMessageBox>

@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "IdfFixture.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObjectOrder.hpp"
 
 using namespace openstudio;
 

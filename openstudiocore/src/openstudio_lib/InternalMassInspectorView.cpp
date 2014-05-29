@@ -22,14 +22,14 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "OSDropZone.hpp"
 #include "ModelObjectItem.hpp"
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_InternalMass_Definition_FieldEnums.hxx>
 #include <QVBoxLayout>
 #include <QHBoxLayout>

@@ -22,7 +22,7 @@
 
 #include "ParentObject_Impl.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
+#include "../utilities/geometry/Transformation.hpp"
 
 namespace openstudio {
 

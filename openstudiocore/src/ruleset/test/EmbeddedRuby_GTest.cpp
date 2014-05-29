@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../OSArgument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include <vector>
 #include <map>
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 // Pretty much the only safe place to include these files is here (or another app)
 // and in this order
-#include <utilities/core/RubyInterpreter.hpp>
+#include "../../utilities/core/RubyInterpreter.hpp"
 
 // This one is a bit more globally accessible, but no one can instantiate the template without the two above
-#include <ruleset/RubyUserScriptArgumentGetter_Impl.hpp>
+#include "../RubyUserScriptArgumentGetter_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

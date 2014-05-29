@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../IddFieldProperties.hpp"
+#include "../IddKey.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../core/String.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Containers.hpp"
+#include "../../core/Compare.hpp"
 
 #include <resources.hxx>
 

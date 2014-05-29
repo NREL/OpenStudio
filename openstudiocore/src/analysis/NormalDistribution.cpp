@@ -20,7 +20,7 @@
 #include "NormalDistribution.hpp"
 #include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -31,23 +31,23 @@
 // needed here for ::createObject
 #include "ConcreteModelObjects.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
+#include "../utilities/idf/IdfFile.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idf/Workspace_Impl.hpp> // needed for serialization
-#include <utilities/idd/IddObject_Impl.hpp>
-#include <utilities/idd/IddField_Impl.hpp>
-#include <utilities/idd/IddFile_Impl.hpp>
+#include "../utilities/idd/IddObject_Impl.hpp"
+#include "../utilities/idd/IddField_Impl.hpp"
+#include "../utilities/idd/IddFile_Impl.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <boost/regex.hpp>
 

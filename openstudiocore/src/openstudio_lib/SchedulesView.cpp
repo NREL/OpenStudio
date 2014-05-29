@@ -23,23 +23,23 @@
 #include "OSItemSelectorButtons.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "../utilities/time/Date.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/OSQuantityVector.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QButtonGroup>
 #include <QCalendarWidget>

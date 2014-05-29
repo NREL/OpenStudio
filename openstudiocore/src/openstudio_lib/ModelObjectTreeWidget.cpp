@@ -20,12 +20,12 @@
 #include "ModelObjectTreeWidget.hpp"
 #include "ModelObjectTreeItems.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QTreeWidget>

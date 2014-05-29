@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../SqlFile.hpp"
+#include "../../core/Path.hpp"
+#include "../../plot/FloodPlot.hpp"
+#include "../../core/FileLogSink.hpp"
 
 #include <resources.hxx>
 

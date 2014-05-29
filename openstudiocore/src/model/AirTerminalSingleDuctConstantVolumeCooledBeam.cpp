@@ -45,9 +45,9 @@
 #include "ThermalZone_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

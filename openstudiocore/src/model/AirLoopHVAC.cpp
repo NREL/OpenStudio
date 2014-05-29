@@ -76,8 +76,8 @@
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

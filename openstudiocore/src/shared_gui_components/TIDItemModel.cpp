@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include "TIDItemModel.hpp"
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 

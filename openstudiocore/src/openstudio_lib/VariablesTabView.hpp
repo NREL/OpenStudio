@@ -21,8 +21,8 @@
 #define OPENSTUDIO_VARIABLESTABVIEW_HPP
 
 #include "MainTabView.hpp"
-#include <model/Model.hpp>
-#include <model/OutputVariable.hpp>
+#include "../model/Model.hpp"
+#include "../model/OutputVariable.hpp"
 #include <boost/optional.hpp>
 
 class QComboBox;

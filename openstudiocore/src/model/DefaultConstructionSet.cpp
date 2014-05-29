@@ -45,7 +45,7 @@
 
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::istringEqual;
 

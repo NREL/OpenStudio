@@ -25,7 +25,7 @@
 #include <vector>
 #include <string>
 #include <QObject>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 #include "RunManager.hpp"
 #include "Job.hpp"
 

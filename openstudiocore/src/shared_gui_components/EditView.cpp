@@ -33,7 +33,7 @@
 #include <QWheelEvent>
 #include <QApplication>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio{
   

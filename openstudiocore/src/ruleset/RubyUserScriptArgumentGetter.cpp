@@ -20,9 +20,9 @@
 #include "RubyUserScriptArgumentGetter.hpp"
 #include "OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 
 #include <sstream>
 

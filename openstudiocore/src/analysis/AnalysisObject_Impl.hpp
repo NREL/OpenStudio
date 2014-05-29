@@ -24,8 +24,8 @@
 
 #include "AnalysisObject.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <QObject>
 

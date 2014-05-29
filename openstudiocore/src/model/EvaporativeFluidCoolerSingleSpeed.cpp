@@ -39,7 +39,7 @@
 #include "PortList_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_EvaporativeFluidCooler_SingleSpeed_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

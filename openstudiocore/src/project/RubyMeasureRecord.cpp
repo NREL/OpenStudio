@@ -25,16 +25,16 @@
 #include "FileReferenceRecord.hpp"
 #include "OSArgumentRecord.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <sstream>
 

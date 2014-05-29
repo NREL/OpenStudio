@@ -20,7 +20,7 @@
 #include "OSListView.hpp"
 #include "OSListController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QScrollArea>

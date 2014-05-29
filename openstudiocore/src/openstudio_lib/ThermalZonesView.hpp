@@ -24,10 +24,10 @@
 #include "ModelObjectVectorController.hpp"
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/Schedule.hpp>
+#include "../model/Model.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/Schedule.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QWidget>
 #include <QHash>

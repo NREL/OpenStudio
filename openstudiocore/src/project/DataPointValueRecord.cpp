@@ -25,8 +25,8 @@
 #include "FunctionRecord.hpp"
 #include "ContinuousVariableRecord.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

@@ -24,7 +24,7 @@
 #include <QStyleOption>
 #include <QPainter>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio{
   

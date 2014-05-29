@@ -37,7 +37,7 @@
 
 #include <utilities/idd/OS_ZoneHVAC_Baseboard_Convective_Water_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

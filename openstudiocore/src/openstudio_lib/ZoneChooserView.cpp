@@ -18,14 +18,14 @@
  **********************************************************************/
 
 #include "ZoneChooserView.hpp"
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/Model.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QStyleOption>

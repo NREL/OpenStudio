@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Geometry.hpp"
+#include "Intersection.hpp"
+#include "../data/Matrix.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>

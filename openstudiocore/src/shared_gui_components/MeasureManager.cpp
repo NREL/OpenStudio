@@ -23,28 +23,28 @@
 #include "BuildingComponentDialog.hpp"
 #include "OSDialog.hpp"
 
-#include <analysisdriver/CurrentAnalysis.hpp>
+#include "../analysisdriver/CurrentAnalysis.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Analysis.hpp"
+#include "../analysis/AnalysisObject.hpp"
+#include "../analysis/AnalysisObject_Impl.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/RubyException.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/RubyException.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
 
 #include <QAbstractButton>
 #include <QBoxLayout>

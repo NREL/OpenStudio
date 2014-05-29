@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
+#include "../QuantityFactory.hpp"
+#include "../ScaleFactory.hpp"
 
-#include <utilities/core/Exception.hpp>
+#include "../../core/Exception.hpp"
 
 #include <boost/pointer_cast.hpp>
 

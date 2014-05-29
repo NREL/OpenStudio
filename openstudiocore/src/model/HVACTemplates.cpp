@@ -96,7 +96,7 @@
 #include "Mixer_Impl.hpp"
 #include "CoolingTowerSingleSpeed.hpp"
 #include "CoolingTowerSingleSpeed_Impl.hpp"
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 

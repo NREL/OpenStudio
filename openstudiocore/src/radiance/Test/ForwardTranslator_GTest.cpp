@@ -19,27 +19,27 @@
 
 #include <gtest/gtest.h>
 
-#include <radiance/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/GlareSensor.hpp"
+#include "../../model/GlareSensor_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 

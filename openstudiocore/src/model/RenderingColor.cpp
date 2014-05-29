@@ -22,7 +22,7 @@
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QColor>
 

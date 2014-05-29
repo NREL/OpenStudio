@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Exception.hpp>
+#include "Date.hpp"
+#include "../core/Exception.hpp"
 
 #include <sstream>
 

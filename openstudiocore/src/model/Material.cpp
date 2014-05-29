@@ -20,7 +20,7 @@
 #include "Material.hpp"
 #include "Material_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

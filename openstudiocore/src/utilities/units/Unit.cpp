@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Unit_Impl.hpp>
+#include "Unit.hpp"
+#include "Unit_Impl.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "ScaleFactory.hpp"
+#include "QuantityRegex.hpp"
+#include "UnitFactory.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Compare.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
 
 #include <algorithm>
 #include <sstream>

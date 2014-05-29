@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "WorkspaceObject.hpp"
+#include "WorkspaceObject_Impl.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObjectDiff.hpp>
-#include <utilities/idf/WorkspaceObjectDiff_Impl.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "Workspace.hpp"
+#include "Workspace_Impl.hpp"
+#include "WorkspaceObjectDiff.hpp"
+#include "WorkspaceObjectDiff_Impl.hpp"
+#include "WorkspaceExtensibleGroup.hpp"
+#include "IdfExtensibleGroup.hpp"
+#include "ValidityReport.hpp"
 
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../core/Compare.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>

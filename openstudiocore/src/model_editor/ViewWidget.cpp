@@ -28,9 +28,9 @@
 
 #include "ViewWidget.hpp"
 
-#include <utilities/idd/IddFile.hpp>
+#include "../utilities/idd/IddFile.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace modeleditor
 {

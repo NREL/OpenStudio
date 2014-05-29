@@ -21,7 +21,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace contam {

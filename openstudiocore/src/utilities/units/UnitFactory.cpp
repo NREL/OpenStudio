@@ -17,36 +17,36 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/UnitFactory.hpp>
+#include "UnitFactory.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/SIUnit_Impl.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/BTUUnit_Impl.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/CFMUnit_Impl.hpp>
-#include <utilities/units/GPDUnit.hpp>
-#include <utilities/units/GPDUnit_Impl.hpp>
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/MPHUnit_Impl.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/WhUnit_Impl.hpp>
-#include <utilities/units/ThermUnit.hpp>
-#include <utilities/units/ThermUnit_Impl.hpp>
-#include <utilities/units/Misc1Unit.hpp>
-#include <utilities/units/Misc1Unit_Impl.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CelsiusUnit_Impl.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/FahrenheitUnit_Impl.hpp>
+#include "ScaleFactory.hpp"
+#include "QuantityRegex.hpp"
+#include "SIUnit.hpp"
+#include "SIUnit_Impl.hpp"
+#include "IPUnit.hpp"
+#include "IPUnit_Impl.hpp"
+#include "BTUUnit.hpp"
+#include "BTUUnit_Impl.hpp"
+#include "CFMUnit.hpp"
+#include "CFMUnit_Impl.hpp"
+#include "GPDUnit.hpp"
+#include "GPDUnit_Impl.hpp"
+#include "MPHUnit.hpp"
+#include "MPHUnit_Impl.hpp"
+#include "WhUnit.hpp"
+#include "WhUnit_Impl.hpp"
+#include "ThermUnit.hpp"
+#include "ThermUnit_Impl.hpp"
+#include "Misc1Unit.hpp"
+#include "Misc1Unit_Impl.hpp"
+#include "CelsiusUnit.hpp"
+#include "CelsiusUnit_Impl.hpp"
+#include "FahrenheitUnit.hpp"
+#include "FahrenheitUnit_Impl.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Exception.hpp"
+#include "../core/Containers.hpp"
+#include "../core/Assert.hpp"
 
 #include <boost/pointer_cast.hpp>
 

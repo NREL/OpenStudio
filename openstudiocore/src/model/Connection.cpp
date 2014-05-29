@@ -23,15 +23,15 @@
 
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace model {

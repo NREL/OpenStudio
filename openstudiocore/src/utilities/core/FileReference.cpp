@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/FileReference.hpp>
+#include "FileReference.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "Assert.hpp"
+#include "Checksum.hpp"
+#include "PathHelpers.hpp"
+#include "../time/DateTime.hpp"
 
 #include <QDateTime>
 #include <QFileInfo>

@@ -19,7 +19,7 @@
 
 #include <vector>
 #include <gtest/gtest.h>
-#include <utilities/economics/Economics.hpp>
+#include "../Economics.hpp"
 
 using namespace openstudio;
 

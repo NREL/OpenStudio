@@ -24,7 +24,7 @@
 #include "MainMenu.hpp"
 #include "VerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include "../shared_gui_components/NetworkProxyDialog.hpp"
 

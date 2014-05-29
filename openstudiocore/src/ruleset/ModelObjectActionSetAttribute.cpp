@@ -20,9 +20,9 @@
 #include "ModelObjectActionSetAttribute.hpp"
 #include "ModelObjectActionSetAttribute_Impl.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

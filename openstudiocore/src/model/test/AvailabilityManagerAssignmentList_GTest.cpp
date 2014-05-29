@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/AvailabilityManagerAssignmentList.hpp>
-#include <model/AvailabilityManagerAssignmentList_Impl.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/AvailabilityManagerScheduled_Impl.hpp>
-#include <model/AvailabilityManagerNightCycle.hpp>
-#include <model/AvailabilityManagerNightCycle_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../AvailabilityManagerAssignmentList.hpp"
+#include "../AvailabilityManagerAssignmentList_Impl.hpp"
+#include "../AvailabilityManagerScheduled.hpp"
+#include "../AvailabilityManagerScheduled_Impl.hpp"
+#include "../AvailabilityManagerNightCycle.hpp"
+#include "../AvailabilityManagerNightCycle_Impl.hpp"
 
 using namespace openstudio;
 

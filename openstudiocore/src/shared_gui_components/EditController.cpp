@@ -21,13 +21,13 @@
 #include "EditView.hpp"
 #include "OSViewSwitcher.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QWidget>
 #include <QLineEdit>

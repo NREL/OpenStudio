@@ -31,8 +31,8 @@
 #include "HVACComponent_Impl.hpp"
 #include <utilities/idd/OS_PortList_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

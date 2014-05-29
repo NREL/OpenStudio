@@ -22,9 +22,9 @@
 
 #include <utilities/idd/OS_Luminaire_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneControl_Thermostat_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
 
 using namespace openstudio::model;

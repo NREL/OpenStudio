@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/PathWatcher.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
+#include "PathWatcher.hpp"
+#include "Application.hpp"
+#include "Checksum.hpp"
+#include "Assert.hpp"
+#include "Logger.hpp"
 
 #include <QFileSystemWatcher>
 #include <QTimer>

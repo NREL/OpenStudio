@@ -42,11 +42,11 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
 

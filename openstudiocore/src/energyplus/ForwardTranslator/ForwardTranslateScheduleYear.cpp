@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
+#include "../../model/ScheduleYear.hpp"
+#include "../../model/ScheduleYear_Impl.hpp"
+#include "../../model/ScheduleWeek.hpp"
+#include "../../model/ScheduleWeek_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/time/Time.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 

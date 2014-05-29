@@ -24,34 +24,34 @@
 #include "OSDocument.hpp"
 #include "ScriptFolderListView.hpp"
 
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "../model/DaylightingControl.hpp"
+#include "../model/DaylightingControl_Impl.hpp"
+#include "../model/GlareSensor.hpp"
+#include "../model/GlareSensor_Impl.hpp"
+#include "../model/IlluminanceMap.hpp"
+#include "../model/IlluminanceMap_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
 
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/JobStatusWidget.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include "../shared_gui_components/WorkflowTools.hpp"
 
 #include <boost/filesystem.hpp>
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
 
 #include <QButtonGroup>
 #include <QDir>

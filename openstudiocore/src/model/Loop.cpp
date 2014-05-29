@@ -41,7 +41,7 @@
 #include "ConnectorSplitter_Impl.hpp"
 #include "Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

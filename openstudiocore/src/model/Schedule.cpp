@@ -26,9 +26,9 @@
 #include "ScheduleDay.hpp"
 #include "ScheduleDay_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

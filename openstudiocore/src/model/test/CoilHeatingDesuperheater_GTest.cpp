@@ -18,20 +18,20 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilHeatingDesuperheater.hpp>
-#include <model/CoilHeatingDesuperheater_Impl.hpp>
-#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilHeatingDesuperheater.hpp"
+#include "../CoilHeatingDesuperheater_Impl.hpp"
+#include "../RefrigerationCondenserAirCooled.hpp"
+#include "../RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

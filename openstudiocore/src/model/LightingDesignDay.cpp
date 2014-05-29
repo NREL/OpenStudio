@@ -28,8 +28,8 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_LightingDesignDay_FieldEnums.hxx>
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

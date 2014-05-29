@@ -26,17 +26,17 @@
 #include "OSDocument.hpp"
 #include "MainWindow.hpp"
 
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ComponentData.hpp>
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultSubSurfaceConstructions.hpp"
+#include "../model/DefaultSubSurfaceConstructions_Impl.hpp"
+#include "../model/DefaultSurfaceConstructions.hpp"
+#include "../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ComponentData.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
 #include <utilities/idd/OS_DefaultSubSurfaceConstructions_FieldEnums.hxx>
 #include <utilities/idd/OS_DefaultSurfaceConstructions_FieldEnums.hxx>

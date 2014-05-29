@@ -48,29 +48,29 @@
 #include "../shared_gui_components/ProcessEventsProgressBar.hpp"
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/AnalysisObject.hpp"
+#include "../analysis/AnalysisObject_Impl.hpp"
+#include "../analysisdriver/CurrentAnalysis.hpp"
+#include "../analysisdriver/SimpleProject_Impl.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
 #include <boost/filesystem.hpp>
 

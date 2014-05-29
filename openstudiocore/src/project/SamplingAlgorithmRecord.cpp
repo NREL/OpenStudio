@@ -23,13 +23,13 @@
 #include "JoinRecord.hpp"
 #include "FileReferenceRecord.hpp"
 
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
-#include <analysis/SamplingAlgorithmOptions.hpp>
+#include "../analysis/SamplingAlgorithm.hpp"
+#include "../analysis/SamplingAlgorithm_Impl.hpp"
+#include "../analysis/SamplingAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

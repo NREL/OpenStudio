@@ -22,13 +22,13 @@
 #include "WorkItem.hpp"
 #include "JSON.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
 
 #include <boost/filesystem.hpp>
 #include <QDir>

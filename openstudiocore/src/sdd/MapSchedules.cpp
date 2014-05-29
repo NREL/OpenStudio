@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ReverseTranslator.hpp>
+#include "ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleWeek.hpp"
+#include "../model/ScheduleWeek_Impl.hpp"
+#include "../model/ScheduleYear.hpp"
+#include "../model/ScheduleYear_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleTypeLimits_Impl.hpp"
+#include "../model/RunPeriodControlSpecialDays.hpp"
+#include "../model/RunPeriodControlSpecialDays_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <utilities/time/Time.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/Time.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomElement>
 

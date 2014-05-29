@@ -21,7 +21,7 @@
 
 #include "CloudMonitor.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDesktopServices>

@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/ExteriorLights.hpp>
-#include <model/ExteriorLights_Impl.hpp>
-#include <model/ExteriorLightsDefinition.hpp>
-#include <model/ExteriorLightsDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../../model/ExteriorLights.hpp"
+#include "../../model/ExteriorLights_Impl.hpp"
+#include "../../model/ExteriorLightsDefinition.hpp"
+#include "../../model/ExteriorLightsDefinition_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Exterior_Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace energyplus {

@@ -24,8 +24,8 @@
 
 #include <utilities/idd/OS_ModelObjectList_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {

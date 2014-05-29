@@ -23,7 +23,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SteamEquipment_Definition_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

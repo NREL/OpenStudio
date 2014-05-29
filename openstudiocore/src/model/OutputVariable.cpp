@@ -25,10 +25,10 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

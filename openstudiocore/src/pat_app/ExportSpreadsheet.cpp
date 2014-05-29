@@ -20,11 +20,11 @@
 
 #include "ExportSpreadsheet.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/System.hpp"
 
 #include <QProcess>
 

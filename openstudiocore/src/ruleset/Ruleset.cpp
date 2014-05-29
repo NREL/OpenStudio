@@ -21,10 +21,10 @@
 #include "Ruleset_Impl.hpp"
 #include "ModelRuleset.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

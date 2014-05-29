@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../model/ZoneHVACEquipmentList.hpp"
+#include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/RefrigerationAirChiller.hpp"
+#include "../../model/RefrigerationAirChiller_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_RefrigerationChillerSet_FieldEnums.hxx>

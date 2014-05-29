@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/ImfFile.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Logger.hpp>
+#include "IdfFixture.hpp"
+#include "../ImfFile.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
+#include "../../core/Logger.hpp"
 
 #include <resources.hxx>
 

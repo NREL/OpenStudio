@@ -19,11 +19,11 @@
 
 #include "OSIntegerEdit.hpp"
 
-#include <model/ModelObject_Impl.hpp>
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 #include <iomanip>
 

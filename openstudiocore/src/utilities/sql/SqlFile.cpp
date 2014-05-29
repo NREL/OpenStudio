@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/sql/SqlFile_Impl.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+#include "SqlFile.hpp"
+#include "SqlFile_Impl.hpp"
+#include "SqlFileTimeSeriesQuery.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../document/Table.hpp"
 
 namespace openstudio{
 

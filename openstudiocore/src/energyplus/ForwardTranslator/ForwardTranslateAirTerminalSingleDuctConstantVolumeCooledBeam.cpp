@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/CoilCoolingCooledBeam.hpp>
-#include <model/CoilCoolingCooledBeam_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "../../model/CoilCoolingCooledBeam.hpp"
+#include "../../model/CoilCoolingCooledBeam_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
+#include "../../model/StraightComponent.hpp"
+#include "../../model/StraightComponent_Impl.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../../model/AirLoopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_ConstantVolume_CooledBeam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

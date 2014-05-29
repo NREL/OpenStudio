@@ -26,7 +26,7 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
+#include "../../utilities/time/DateTime.hpp"
 #include <QDir>
 #include <QDateTime>
 

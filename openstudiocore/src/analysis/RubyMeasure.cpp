@@ -25,20 +25,20 @@
 #include "RubyContinuousVariable.hpp"
 #include "RubyContinuousVariable_Impl.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 

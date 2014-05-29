@@ -19,7 +19,7 @@
 
 #include "PageNavigator.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>

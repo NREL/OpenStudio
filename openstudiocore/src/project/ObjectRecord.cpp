@@ -22,9 +22,9 @@
 #include "ProjectDatabase.hpp"
 #include "ProjectDatabase_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>

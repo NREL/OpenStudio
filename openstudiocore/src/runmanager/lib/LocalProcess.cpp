@@ -27,9 +27,9 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
 #include <QDateTime>

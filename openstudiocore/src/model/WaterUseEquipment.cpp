@@ -30,8 +30,8 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

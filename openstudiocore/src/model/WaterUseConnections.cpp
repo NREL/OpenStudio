@@ -32,9 +32,9 @@
 #include "PlantLoop_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterUse_Connections_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 

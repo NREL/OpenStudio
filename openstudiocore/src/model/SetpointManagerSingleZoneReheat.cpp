@@ -28,8 +28,8 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
 
 using openstudio::Handle;

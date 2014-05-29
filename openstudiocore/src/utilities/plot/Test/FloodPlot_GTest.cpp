@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/FloodPlot.hpp>
+#include "../FloodPlot.hpp"
 
-#include <utilities/data/Matrix.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../../data/Matrix.hpp"
+#include "../../core/Application.hpp"
+#include "../../data/Vector.hpp"
 
 using namespace std;
 using namespace boost;

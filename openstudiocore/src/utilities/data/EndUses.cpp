@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/EndUses.hpp>
-#include <utilities/core/Assert.hpp>
+#include "EndUses.hpp"
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 

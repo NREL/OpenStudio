@@ -24,7 +24,7 @@
 #include "ModelObject_Impl.hpp"
 #include "Meter.hpp"
 
-#include <utilities/core/StaticInitializer.hpp>
+#include "../utilities/core/StaticInitializer.hpp"
 
 namespace openstudio {
   

@@ -23,10 +23,10 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
+#include "../model/RefractionExtinctionGlazing.hpp"
+#include "../model/RefractionExtinctionGlazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

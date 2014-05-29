@@ -22,11 +22,11 @@
 
 #include "DataPoint.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/core/Exception.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace analysis {

@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Schedule.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Schedule.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

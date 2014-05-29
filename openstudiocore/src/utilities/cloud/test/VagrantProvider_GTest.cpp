@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../VagrantProvider.hpp"
+#include "../VagrantProvider_Impl.hpp"
 
 #include <string>
 

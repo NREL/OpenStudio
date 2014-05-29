@@ -19,13 +19,13 @@
 
 #include "PatApp.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -38,9 +38,9 @@ static const char *logfilepath = "/var/log/openstudio_pat.log";
 #endif
 
 #define WSAAPI
-#include <utilities/core/Path.hpp>
-#include <utilities/core/RubyInterpreter.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter_Impl.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/RubyInterpreter.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter_Impl.hpp"
 
 #ifdef HAVE_RUBY_VERSION_H
 #include <ruby/version.h>

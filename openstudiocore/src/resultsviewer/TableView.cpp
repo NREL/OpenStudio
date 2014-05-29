@@ -19,7 +19,7 @@
 
 #include "TableView.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include<QHeaderView>
 

@@ -25,7 +25,7 @@
 #include "PatMainMenu.hpp"
 #include "PatVerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QAction>
 #include <QApplication>

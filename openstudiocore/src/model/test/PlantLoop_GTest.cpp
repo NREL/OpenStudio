@@ -18,24 +18,24 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Loop.hpp>
-#include <model/Loop_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../PlantLoop.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Loop.hpp"
+#include "../Loop_Impl.hpp"
+#include "../ConnectorSplitter.hpp"
+#include "../ConnectorSplitter_Impl.hpp"
+#include "../ConnectorMixer.hpp"
+#include "../ConnectorMixer_Impl.hpp"
+#include "../ChillerElectricEIR.hpp"
+#include "../ChillerElectricEIR_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../LifeCycleCost.hpp"
 
 //#include <utilities/idd/IddEnums.hxx>
 

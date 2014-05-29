@@ -38,17 +38,17 @@
 #include "OutputVariable.hpp"
 #include "OutputVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/TimeSeries.hpp"
 
 #include <QMetaProperty>
 

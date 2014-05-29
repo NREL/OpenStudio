@@ -28,8 +28,8 @@
 
 #include "ComponentData_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace model {

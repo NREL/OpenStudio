@@ -19,8 +19,8 @@
 
 #include "PlotView.hpp"
 #include "PlotViewProperties.hpp"
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/Vector.hpp"
 
 #include <qwt/qwt_symbol.h>
 #include <qwt/qwt_data.h>

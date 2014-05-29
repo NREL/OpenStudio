@@ -24,24 +24,24 @@
 #include "PatMainWindow.hpp"
 #include "PatVerticalTabWidget.hpp"
 
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/AnalysisDriver.hpp"
+#include "../analysisdriver/AnalysisRunOptions.hpp"
+#include "../analysisdriver/CurrentAnalysis.hpp"
+#include "../analysisdriver/CloudAnalysisDriver.hpp"
+#include "../analysisdriver/SimpleProject_Impl.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/WorkflowTools.hpp"

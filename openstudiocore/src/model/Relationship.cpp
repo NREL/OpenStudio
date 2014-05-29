@@ -26,9 +26,9 @@
 #include "ComponentData.hpp"
 #include "ComponentData_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QMetaType>
 

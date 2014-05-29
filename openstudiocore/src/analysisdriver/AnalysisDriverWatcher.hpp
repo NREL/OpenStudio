@@ -23,8 +23,8 @@
 #include "AnalysisDriverAPI.hpp"
 #include "AnalysisDriver.hpp"
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QObject>
 

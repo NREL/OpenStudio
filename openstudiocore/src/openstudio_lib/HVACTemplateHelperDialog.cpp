@@ -18,8 +18,8 @@
  **********************************************************************/
 
 #include "HVACTemplateHelperDialog.hpp"
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QButtonGroup>

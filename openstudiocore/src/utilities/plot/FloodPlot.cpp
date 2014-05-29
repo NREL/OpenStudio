@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Application.hpp>
+#include "FloodPlot.hpp"
+#include "../time/Time.hpp"
+#include "../core/Application.hpp"
 
 using namespace std;
 using namespace boost;

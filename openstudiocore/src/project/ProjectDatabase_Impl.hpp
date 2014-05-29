@@ -24,13 +24,13 @@
 #include "ProjectDatabaseRecord.hpp"
 #include "Record.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/time/DateTime.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RunManager.hpp"
 
 #include <QSqlQuery>
 #include <QObject>

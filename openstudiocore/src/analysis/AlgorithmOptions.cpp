@@ -20,10 +20,10 @@
 #include "AlgorithmOptions.hpp"
 #include "AlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {

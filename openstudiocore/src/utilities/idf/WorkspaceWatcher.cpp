@@ -18,10 +18,10 @@
 **********************************************************************/
 
 
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
+#include "WorkspaceWatcher.hpp"
+#include "Workspace_Impl.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
 
 #include <QTimer>
 

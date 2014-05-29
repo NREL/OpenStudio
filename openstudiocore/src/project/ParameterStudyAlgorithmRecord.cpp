@@ -23,13 +23,13 @@
 #include "JoinRecord.hpp"
 #include "FileReferenceRecord.hpp"
 
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
+#include "../analysis/ParameterStudyAlgorithm.hpp"
+#include "../analysis/ParameterStudyAlgorithm_Impl.hpp"
+#include "../analysis/ParameterStudyAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

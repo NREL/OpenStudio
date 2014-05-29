@@ -35,9 +35,9 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

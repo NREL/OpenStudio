@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../FanVariableVolume.hpp"
+#include "../FanVariableVolume_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

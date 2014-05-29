@@ -24,14 +24,14 @@
 #include "VariableRecord.hpp"
 #include "ProblemRecord.hpp"
 
-#include <analysis/Function.hpp>
-#include <analysis/Function_Impl.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/Variable.hpp>
+#include "../analysis/Function.hpp"
+#include "../analysis/Function_Impl.hpp"
+#include "../analysis/LinearFunction.hpp"
+#include "../analysis/Variable.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
 
 using namespace openstudio::analysis;
 

@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
+#include "../Model.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../ControllerOutdoorAir_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

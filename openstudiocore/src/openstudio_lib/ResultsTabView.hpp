@@ -22,10 +22,10 @@
 
 #include "MainTabView.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/units/Unit.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RunManager.hpp"
 
 #include <QWidget>
 #include <QWebView>

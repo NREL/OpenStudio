@@ -20,14 +20,14 @@
 #include "ModelObjectActionSetRelationship.hpp"
 #include "ModelObjectActionSetRelationship_Impl.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <model/Component.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Relationship.hpp>
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Relationship.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomElement>
 #include <QDomDocument>

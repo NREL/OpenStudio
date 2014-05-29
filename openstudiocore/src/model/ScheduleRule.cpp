@@ -30,12 +30,12 @@
 #include "Model_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Schedule_Rule_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <gbxml/Test/gbXMLFixture.hpp>
+#include "gbXMLFixture.hpp"
 
-#include <gbxml/ForwardTranslator.hpp>
-#include <gbxml/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
 #include <resources.hxx>
 

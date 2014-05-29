@@ -18,13 +18,13 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerWarmest.hpp"
+#include "../SetpointManagerWarmest_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

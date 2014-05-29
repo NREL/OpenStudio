@@ -22,12 +22,12 @@
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "OSDropZone.hpp"
 #include "ModelObjectItem.hpp"
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_Definition_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>

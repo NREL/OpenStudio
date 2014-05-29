@@ -18,18 +18,18 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 
 #include <utilities/idd/ZoneInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>

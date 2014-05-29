@@ -33,19 +33,19 @@
 #include <QToolBar>
 
 #include <resources.hxx>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 #include "../model/Model.hpp"
 #include "ClassViewWidget.hpp"
 #include "ObjectExplorer.hpp"
 #include "TreeViewWidget.hpp"
 #include "ViewWidget.hpp"
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include "ModelExplorer.hpp"
 

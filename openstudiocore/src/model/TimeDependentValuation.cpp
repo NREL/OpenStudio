@@ -29,13 +29,13 @@
 #include "SimulationControl_Impl.hpp"
 #include "Meter.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/URLHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/URLHelpers.hpp"
 
 namespace openstudio {
 namespace model {

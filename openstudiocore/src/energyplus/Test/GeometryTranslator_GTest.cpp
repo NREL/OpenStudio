@@ -18,24 +18,24 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/GeometryTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../GeometryTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/Surface.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/Surface.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Wall_Exterior_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>

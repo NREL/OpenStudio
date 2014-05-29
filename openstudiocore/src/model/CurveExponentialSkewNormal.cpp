@@ -23,7 +23,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_ExponentialSkewNormal_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 #include <boost/math/special_functions/erf.hpp>

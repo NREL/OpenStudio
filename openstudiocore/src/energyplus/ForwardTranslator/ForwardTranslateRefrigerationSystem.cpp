@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationSystem.hpp>
-#include <model/ThermalZone.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationSystem.hpp"
+#include "../../model/ThermalZone.hpp"
 //#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../model/RefrigerationAirChiller.hpp"
+#include "../../model/RefrigerationCondenserCascade.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationCompressor.hpp"
+#include "../../model/RefrigerationSecondarySystem.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+#include "../../model/RefrigerationSubcoolerLiquidSuction.hpp"
+#include "../../model/RefrigerationSubcoolerMechanical.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_System_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>

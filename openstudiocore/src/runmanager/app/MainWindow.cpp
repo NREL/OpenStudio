@@ -22,8 +22,8 @@
 #include "../lib/JobFactory.hpp"
 #include "../lib/Workflow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/plot/ProgressBar.hpp"
 
 #include <QDesktopServices>
 #include <QDirModel>

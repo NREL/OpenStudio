@@ -27,22 +27,22 @@
 #include "../shared_gui_components/OSCollapsibleView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/DataPoint_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QLabel>
 #include <QPainter>

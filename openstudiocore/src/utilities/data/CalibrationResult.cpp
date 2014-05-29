@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "CalibrationResult.hpp"
+#include "../core/Assert.hpp"
+#include "../time/Date.hpp"
+#include "DataEnums.hpp"
 
 namespace openstudio {
 

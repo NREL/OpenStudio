@@ -25,10 +25,10 @@
 
 #include "SimpleProject.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/OSServer.hpp>
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/OSServer.hpp"
 
 #include <QObject>
 

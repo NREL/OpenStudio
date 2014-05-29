@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <iomanip>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+#include "SqlFileTimeSeriesQuery.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Containers.hpp"
 
 namespace openstudio {
 

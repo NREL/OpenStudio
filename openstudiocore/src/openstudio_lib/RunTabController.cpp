@@ -19,11 +19,11 @@
 
 #include "RunTabController.hpp"
 #include "RunTabView.hpp"
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <runmanager/lib/JobStatusWidget.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../runmanager/lib/JobStatusWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

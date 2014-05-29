@@ -22,12 +22,12 @@
 #include "OSArgument.hpp"
 #include "UserScript.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace ruleset {

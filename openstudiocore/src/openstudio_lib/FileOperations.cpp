@@ -21,36 +21,36 @@
 
 #include "OSDocument.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../analysisdriver/AnalysisRunOptions.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/JobFactory.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <OpenStudio.hxx>
 
 #include <QDir>

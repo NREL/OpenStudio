@@ -24,8 +24,8 @@
 #include "ProjectDatabase.hpp"
 #include "JoinRecord.hpp"
 
-#include <utilities/data/Tag.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/data/Tag.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QSqlQuery>
 

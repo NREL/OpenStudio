@@ -33,8 +33,8 @@
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

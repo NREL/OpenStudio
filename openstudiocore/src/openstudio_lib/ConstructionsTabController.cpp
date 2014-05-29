@@ -24,10 +24,10 @@
 #include "DefaultConstructionSetsController.hpp"
 #include "MaterialsController.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Model.hpp>
+#include "../model/Construction.hpp"
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

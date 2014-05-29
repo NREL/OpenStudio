@@ -25,9 +25,9 @@
 #include "ModelObjectItem.hpp"
 #include "ModelObjectInspectorView.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QStyleOption>
 #include <QPainter>

@@ -27,7 +27,7 @@
 
 #include "OSAppBase.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 namespace openstudio {
 

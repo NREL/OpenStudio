@@ -46,9 +46,9 @@
 
 #include "ModelExtensibleGroup.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

@@ -19,7 +19,7 @@
 
 #include "ResultsViewerData.hpp"
 
-#include <utilities/core/String.hpp>
+#include "../utilities/core/String.hpp"
 
 #include <QFileInfo>
 #include <QString>

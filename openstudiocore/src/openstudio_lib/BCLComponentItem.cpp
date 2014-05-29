@@ -19,8 +19,8 @@
 
 #include "BCLComponentItem.hpp"
 #include "OSItem.hpp"
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/bcl/BCLComponent.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 #include <QLabel>
 
 namespace openstudio {

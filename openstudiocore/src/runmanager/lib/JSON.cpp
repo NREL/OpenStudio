@@ -23,10 +23,10 @@
 #include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Json.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <boost/bind.hpp>
 

@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>

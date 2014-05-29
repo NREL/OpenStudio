@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model_editor/test/ModelEditorFixture.hpp>
+#include "ModelEditorFixture.hpp"
 
-#include <model_editor/InspectorDialog.hpp>
-#include <model_editor/TestButton.hpp>
+#include "../InspectorDialog.hpp"
+#include "../TestButton.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
@@ -37,7 +37,7 @@
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 
-#include <utilities/idf/WorkspaceObjectWatcher.hpp>
+#include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
 
 #include <QObject>
 

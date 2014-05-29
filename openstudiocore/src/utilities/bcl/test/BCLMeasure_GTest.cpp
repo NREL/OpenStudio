@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "BCLFixture.hpp"
+#include "../../core/PathHelpers.hpp"
 #include <resources.hxx>
 
-#include <utilities/bcl/BCLFileReference.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../BCLFileReference.hpp"
+#include "../BCLMeasure.hpp"
 
 #include <QFile>
 

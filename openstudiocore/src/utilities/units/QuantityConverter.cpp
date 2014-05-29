@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "QuantityConverter.hpp"
+#include "Quantity.hpp"
+#include "OSQuantityVector.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/ThermUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
+#include "UnitFactory.hpp"
+#include "ScaleFactory.hpp"
+#include "Quantity.hpp"
+#include "Unit.hpp"
+#include "BTUUnit.hpp"
+#include "CelsiusUnit.hpp"
+#include "CFMUnit.hpp"
+#include "FahrenheitUnit.hpp"
+#include "IPUnit.hpp"
+#include "SIUnit.hpp"
+#include "ThermUnit.hpp"
+#include "WhUnit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 

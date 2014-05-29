@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/sql/Test/SqlFileLargeFixture.hpp>
+#include "SqlFileLargeFixture.hpp"
   /*
   To run test 
   1. uncomment in src/utilities/sql/CMakeLists.txt

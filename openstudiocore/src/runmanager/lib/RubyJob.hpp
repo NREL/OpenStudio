@@ -22,12 +22,12 @@
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "ToolBasedJob.hpp"
 #include "MergedJobResults.hpp"
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 #include <QProcess>
 #include <QFileSystemWatcher>

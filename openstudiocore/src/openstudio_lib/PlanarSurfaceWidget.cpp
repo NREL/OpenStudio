@@ -19,9 +19,9 @@
 
 #include "PlanarSurfaceWidget.hpp"
 
-#include <model/PlanarSurface_Impl.hpp>
+#include "../model/PlanarSurface_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

@@ -32,13 +32,13 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

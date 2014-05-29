@@ -19,10 +19,10 @@
 
 #include "MainWindow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/System.hpp"
 
 #include <QApplication>
 #include <QMessageBox>

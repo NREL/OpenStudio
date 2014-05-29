@@ -37,12 +37,12 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_UtilityBill_FieldEnums.hxx>
 
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDate>
 

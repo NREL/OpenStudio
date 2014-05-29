@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Section.hpp>
-#include <utilities/document/Section_Impl.hpp>
+#include "Section.hpp"
+#include "Section_Impl.hpp"
 
-#include <utilities/document/SectionHeading_Impl.hpp>
+#include "SectionHeading_Impl.hpp"
 
 namespace openstudio {
 

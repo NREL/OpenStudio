@@ -22,8 +22,8 @@
 #include "AnalysisEnums.hpp"
 #include "UncertaintyDescription.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/filter/newline.hpp>

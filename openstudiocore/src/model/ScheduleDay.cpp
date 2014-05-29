@@ -31,16 +31,16 @@
 #include "ScheduleRule.hpp"
 #include "ScheduleRule_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Rule_FieldEnums.hxx>
 
-#include <utilities/units/OSQuantityVector.hpp>
+#include "../utilities/units/OSQuantityVector.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/time/Time.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../utilities/time/Time.hpp"
+#include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
 namespace model {

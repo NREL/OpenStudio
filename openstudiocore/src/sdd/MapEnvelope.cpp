@@ -17,37 +17,37 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ReverseTranslator.hpp>
-#include <sdd/ForwardTranslator.hpp>
+#include "ReverseTranslator.hpp"
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/FFactorGroundFloorConstruction_Impl.hpp>
-#include <model/CFactorUndergroundWallConstruction.hpp>
-#include <model/CFactorUndergroundWallConstruction_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
+#include "../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../model/AirGap.hpp"
+#include "../model/AirGap_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/FFactorGroundFloorConstruction.hpp"
+#include "../model/FFactorGroundFloorConstruction_Impl.hpp"
+#include "../model/CFactorUndergroundWallConstruction.hpp"
+#include "../model/CFactorUndergroundWallConstruction_Impl.hpp"
+#include "../model/FenestrationMaterial.hpp"
+#include "../model/FenestrationMaterial_Impl.hpp"
+#include "../model/ModelPartitionMaterial.hpp"
+#include "../model/ModelPartitionMaterial_Impl.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/SimpleGlazing_Impl.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/IPUnit.hpp"
+#include "../utilities/units/SIUnit.hpp"
+#include "../utilities/units/BTUUnit.hpp"
+#include "../utilities/units/WhUnit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QDomDocument>

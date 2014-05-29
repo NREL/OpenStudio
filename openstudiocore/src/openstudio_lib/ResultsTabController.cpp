@@ -19,8 +19,8 @@
 
 #include "ResultsTabController.hpp"
 #include "ResultsTabView.hpp"
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 namespace openstudio {
 

@@ -27,7 +27,7 @@
 
 #include "ObjectExplorer.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace modeleditor
 {

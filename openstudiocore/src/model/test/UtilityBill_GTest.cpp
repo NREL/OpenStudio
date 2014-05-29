@@ -19,13 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/UtilityBill.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
+#include "../UtilityBill.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../Meter.hpp"
+#include "../Meter_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

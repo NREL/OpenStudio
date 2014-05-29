@@ -19,9 +19,9 @@
 
 #include "MainWindow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 
 #include <QApplication>
 

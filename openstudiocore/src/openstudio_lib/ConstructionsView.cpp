@@ -26,9 +26,9 @@
 #include "ConstructionWindowDataFileInspectorView.hpp"
 #include "ModelObjectTypeListView.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QStackedWidget>
 

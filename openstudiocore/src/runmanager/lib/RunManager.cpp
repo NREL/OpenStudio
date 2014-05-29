@@ -25,23 +25,23 @@
 #include "RunManager_Impl.hpp"
 #include <map>
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/Application.hpp"
 
-#include <model/Model.hpp>
-#include <model/ShadowCalculation.hpp>
-#include <model/ConvergenceLimits.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/Timestep.hpp>
-#include <model/ShadowCalculation_Impl.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ShadowCalculation.hpp"
+#include "../../model/ConvergenceLimits.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/Timestep.hpp"
+#include "../../model/ShadowCalculation_Impl.hpp"
+#include "../../model/ConvergenceLimits_Impl.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Timestep_Impl.hpp"
+#include "../../model/DesignDay.hpp"
+#include "../../model/DesignDay_Impl.hpp"
 
 
 #include <QThread>

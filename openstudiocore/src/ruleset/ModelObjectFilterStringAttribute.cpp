@@ -20,10 +20,10 @@
 #include "ModelObjectFilterStringAttribute.hpp"
 #include "ModelObjectFilterStringAttribute_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <boost/regex.hpp>
 

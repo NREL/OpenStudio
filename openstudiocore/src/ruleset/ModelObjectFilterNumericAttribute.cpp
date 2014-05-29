@@ -20,9 +20,9 @@
 #include "ModelObjectFilterNumericAttribute.hpp"
 #include "ModelObjectFilterNumericAttribute_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

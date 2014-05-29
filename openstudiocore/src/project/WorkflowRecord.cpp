@@ -24,10 +24,10 @@
 #include "ProblemRecord.hpp"
 #include "ProjectDatabase.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional/optional.hpp>
 

@@ -21,11 +21,11 @@
 #define SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
 
 #include "LocalLibraryController.hpp"
-#include <analysisdriver/SimpleProject.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -48,7 +48,7 @@ namespace osversion {
 class LocalLibraryController;
 
 #if defined(openstudio_lib_EXPORTS) || defined(COMPILING_FROM_OSAPP)
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include "../openstudio_lib/OpenStudioAPI.hpp"
 class OPENSTUDIO_API MeasureManager : public QObject
 #else
 class MeasureManager : public QObject

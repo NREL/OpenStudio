@@ -20,7 +20,7 @@
 #include "FacilityController.hpp"
 #include "FacilityView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

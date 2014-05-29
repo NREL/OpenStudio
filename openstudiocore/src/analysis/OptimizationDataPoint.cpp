@@ -23,8 +23,8 @@
 #include "OptimizationProblem.hpp"
 #include "OptimizationProblem_Impl.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Json.hpp>
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {

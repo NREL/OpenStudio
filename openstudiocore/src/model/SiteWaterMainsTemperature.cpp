@@ -27,13 +27,13 @@
 #include "Site.hpp"
 #include "Site_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Site_WaterMainsTemperature_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

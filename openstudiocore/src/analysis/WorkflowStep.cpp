@@ -26,13 +26,13 @@
 #include "Problem.hpp"
 #include "Problem_Impl.hpp"
 
-#include <runmanager/lib/JSON.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/JSON.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace analysis {

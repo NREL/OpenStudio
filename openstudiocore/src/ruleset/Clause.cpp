@@ -28,7 +28,7 @@
 #include "ModelObjectActionSetAttribute.hpp"
 #include "ModelObjectActionSetRelationship.hpp"
 
-#include <utilities/core/Checksum.hpp>
+#include "../utilities/core/Checksum.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>

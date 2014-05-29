@@ -19,20 +19,20 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirGap.hpp"
+#include "../AirGap_Impl.hpp"
+#include "../MasslessOpaqueMaterial.hpp"
+#include "../MasslessOpaqueMaterial_Impl.hpp"
+#include "../RoofVegetation.hpp"
+#include "../RoofVegetation_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 

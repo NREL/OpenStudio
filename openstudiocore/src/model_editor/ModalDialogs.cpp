@@ -48,9 +48,9 @@
 #include "../model/People.hpp"
 #include "../model/PeopleDefinition.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_ElectricEquipment_FieldEnums.hxx>
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
@@ -60,11 +60,11 @@
 #include <utilities/idd/OS_Luminaire_FieldEnums.hxx>
 #include <utilities/idd/OS_People_FieldEnums.hxx>
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/idd/IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Compare.hpp"
 
 #include <QLabel>
 #include <QComboBox>

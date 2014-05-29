@@ -26,12 +26,12 @@
 #include "VagrantSettingsRecord.hpp"
 #include "VagrantSettingsRecord_Impl.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {

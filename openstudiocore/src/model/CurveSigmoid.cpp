@@ -23,7 +23,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Sigmoid_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 

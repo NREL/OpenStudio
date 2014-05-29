@@ -21,9 +21,9 @@
 #include "AboutBox.hpp"
 #include "ChangeAliasDialog.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/TemporaryDirectory.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/TemporaryDirectory.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QComboBox>
 #include <QDesktopServices>

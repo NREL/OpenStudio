@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/GenerateIddFactory.hpp>
+#include "GenerateIddFactory.hpp"
 
 #include <boost/filesystem/path.hpp>
-#include <utilities/core/GeneratorApplicationPathHelpers.hpp>
+#include "../utilities/core/GeneratorApplicationPathHelpers.hpp"
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem/fstream.hpp>

@@ -18,43 +18,43 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../AnalysisDriver.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/AttributeRecord.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/DataPointRecord.hpp"
+#include "../../project/FileReferenceRecord.hpp"
+#include "../../project/AttributeRecord.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DDACEAlgorithmOptions.hpp"
+#include "../../analysis/DDACEAlgorithm.hpp"
+#include "../../analysis/InputVariable.hpp"
+#include "../../analysis/WorkflowStep.hpp"
 
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/RubyJobUtils.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../../osversion/VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/WeatherFile.hpp"
 
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/document/Table.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../../utilities/core/Finder.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/document/Table.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
 
 #include <OpenStudio.hxx>
 #include <runmanager/Test/ToolBin.hxx>

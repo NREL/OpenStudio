@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Json.hpp>
+#include "Json.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "Assert.hpp"
+#include "Compare.hpp"
+#include "Logger.hpp"
+#include "PathHelpers.hpp"
+#include "String.hpp"
 
 #include <OpenStudio.hxx>
 

@@ -24,7 +24,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ShadowCalculation_FieldEnums.hxx>

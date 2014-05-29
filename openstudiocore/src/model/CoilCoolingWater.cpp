@@ -33,8 +33,8 @@
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
 #include <utilities/idd/OS_Coil_Cooling_Water_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

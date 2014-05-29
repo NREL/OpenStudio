@@ -22,8 +22,8 @@
 
 #include "ModelObject_Impl.hpp"
 
-#include <utilities/filetypes/TimeDependentValuationFile.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/filetypes/TimeDependentValuationFile.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 namespace openstudio {
 namespace model {

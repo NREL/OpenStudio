@@ -23,7 +23,7 @@
 #include "ModelAPI.hpp"
 #include "ScheduleBase_Impl.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 

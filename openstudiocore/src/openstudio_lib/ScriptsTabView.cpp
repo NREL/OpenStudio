@@ -20,7 +20,7 @@
 #include <QVBoxLayout>
 
 #include "ScriptsTabView.hpp"
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
 #include "OSAppBase.hpp"
 #include "../shared_gui_components/OSListView.hpp"

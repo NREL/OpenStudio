@@ -16,13 +16,13 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/cloud/OSServer.hpp>
+#include "VagrantProvider.hpp"
+#include "VagrantProvider_Impl.hpp"
+#include "OSServer.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../core/System.hpp"
 
 #include <QSettings>
 #include <QProcess>

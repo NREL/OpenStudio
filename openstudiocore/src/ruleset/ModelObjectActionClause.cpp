@@ -20,7 +20,7 @@
 #include "ModelObjectActionClause.hpp"
 #include "ModelObjectActionClause_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 namespace ruleset {

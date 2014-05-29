@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Finder.hpp>
+#include "../Macro.hpp"
+#include "../Logger.hpp"
+#include "../Finder.hpp"
 
 using std::string;
 using openstudio::NameFinder;

@@ -19,7 +19,7 @@
 
 #include "VerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QHBoxLayout>
 #include <QKeySequence>

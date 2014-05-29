@@ -19,12 +19,12 @@
 #include <iostream>
 #include <sstream>
 
-#include <QtXml/QXmlDefaultHandler>
-#include <QtXml/QXmlReader>
+#include <QXmlDefaultHandler>
+#include <QXmlReader>
 
 #include "AccessPolicyStore.hpp"
 
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
 using std::map;
 using std::stringstream;

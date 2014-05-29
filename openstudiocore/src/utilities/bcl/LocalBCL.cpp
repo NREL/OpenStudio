@@ -16,17 +16,17 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "BCLComponent.hpp"
+#include "BCLMeasure.hpp"
+#include "LocalBCL.hpp"
+#include "RemoteBCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../data/Attribute.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/System.hpp"
 
 #include <QDir>
 #include <QFile>

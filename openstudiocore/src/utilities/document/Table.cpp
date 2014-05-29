@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Table.hpp>
-#include <utilities/document/Table_Impl.hpp>
-#include <utilities/document/DocumentRegex.hpp>
+#include "Table.hpp"
+#include "Table_Impl.hpp"
+#include "DocumentRegex.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "../units/UnitFactory.hpp"
+#include "../units/QuantityFactory.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/OSQuantityVector.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Assert.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>

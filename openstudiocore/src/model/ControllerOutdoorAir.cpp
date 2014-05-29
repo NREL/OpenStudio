@@ -32,10 +32,10 @@
 #include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;

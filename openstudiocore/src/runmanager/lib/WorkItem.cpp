@@ -24,8 +24,8 @@
 
 #include "JSON.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace runmanager {

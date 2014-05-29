@@ -21,10 +21,10 @@
 #include "LoadsTabView.hpp"
 #include "LoadsController.hpp"
 
-#include <model/Model.hpp>
-#include <model/Construction.hpp>
+#include "../model/Model.hpp"
+#include "../model/Construction.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

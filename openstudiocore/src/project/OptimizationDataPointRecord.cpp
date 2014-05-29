@@ -28,15 +28,15 @@
 #include "OptimizationProblemRecord.hpp"
 #include "OptimizationProblemRecord_Impl.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/Problem.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace project {

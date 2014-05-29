@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Assert.hpp>
+#include "../Assert.hpp"
 
 namespace sharedfromthistest
 {

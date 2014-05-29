@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_UPDATEMANAGER_HPP
 #define UTILITIES_CORE_UPDATEMANAGER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Logger.hpp"
 
 #include <string>
 #include <vector>

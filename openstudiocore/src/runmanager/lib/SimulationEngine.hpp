@@ -20,11 +20,11 @@
 #ifndef RUNMANAGER_LIB_SIMULATIONENGINE_HPP
 #define RUNMANAGER_LIB_SIMULATIONENGINE_HPP
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/UUID.hpp"
 #include <vector>
-#include <model/Model.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../model/Model.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include "RunManager.hpp"
 #include "RunManagerAPI.hpp"
 #include "ErrorEstimation.hpp"

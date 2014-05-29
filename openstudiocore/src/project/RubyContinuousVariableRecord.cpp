@@ -25,10 +25,10 @@
 #include "RubyMeasureRecord.hpp"
 #include "OSArgumentRecord.hpp"
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using namespace openstudio::ruleset;
 

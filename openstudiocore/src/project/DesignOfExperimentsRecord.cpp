@@ -22,12 +22,12 @@
 #include "AnalysisRecord.hpp"
 #include "JoinRecord.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
+#include "../analysis/DesignOfExperiments.hpp"
+#include "../analysis/DesignOfExperiments_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {

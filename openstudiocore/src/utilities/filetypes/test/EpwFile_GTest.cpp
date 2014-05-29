@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/Date.hpp>
+#include "../EpwFile.hpp"
+#include "../../time/Time.hpp"
+#include "../../time/Date.hpp"
 
 #include <resources.hxx>
 

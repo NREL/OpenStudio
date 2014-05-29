@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/GeometryTranslator.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../GeometryTranslator.hpp"
 
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

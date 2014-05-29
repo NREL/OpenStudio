@@ -22,7 +22,7 @@
 #include "Model.hpp"
 #include "Node.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

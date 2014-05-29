@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationTranscriticalSystem.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationTranscriticalSystem.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationCompressor.hpp"
+#include "../../model/RefrigerationGasCoolerAirCooled.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_TranscriticalSystem_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>

@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/WorkspaceObjectWatcher.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "IdfFixture.hpp"
+#include "../WorkspaceObjectWatcher.hpp"
+#include "../Workspace.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
 

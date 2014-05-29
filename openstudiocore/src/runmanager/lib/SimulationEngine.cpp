@@ -23,7 +23,7 @@
 #include "WorkItem.hpp"
 #include <boost/filesystem.hpp>
 #include <QCryptographicHash>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 namespace openstudio {
   namespace runmanager {

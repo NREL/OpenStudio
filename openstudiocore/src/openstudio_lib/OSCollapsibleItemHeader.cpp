@@ -20,7 +20,7 @@
 #include "OSCollapsibleItemHeader.hpp"
 
 #include "OSItem.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QLabel>

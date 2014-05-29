@@ -19,12 +19,12 @@
 
 #include "VariablesTabView.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/OutputVariable.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/OutputVariable_Impl.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>

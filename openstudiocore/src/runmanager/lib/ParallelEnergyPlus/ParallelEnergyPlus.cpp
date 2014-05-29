@@ -35,11 +35,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/iter_find.hpp>
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/RunPeriod_FieldEnums.hxx>
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../../energyplus/ReverseTranslator.hpp"
 
 ParallelEnergyPlus::ParallelEnergyPlus(const openstudio::path &t_idf, int t_numPartitions, int t_offsetInDays)
   : m_idfPath(t_idf), m_numPartitions(t_numPartitions), m_offset(t_offsetInDays), m_runPeriod(getRunPeriod(t_idf)), 

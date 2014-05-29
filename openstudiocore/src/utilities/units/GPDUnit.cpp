@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/GPDUnit.hpp>
-#include <utilities/units/GPDUnit_Impl.hpp>
+#include "GPDUnit.hpp"
+#include "GPDUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {

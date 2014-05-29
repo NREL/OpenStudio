@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "FileSystemSearch.hpp"
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 namespace openstudio {
 namespace runmanager {

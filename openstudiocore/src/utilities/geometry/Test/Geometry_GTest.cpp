@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../Geometry.hpp"
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
 
 using namespace std;
 using namespace boost;

@@ -23,11 +23,11 @@
 #include "JoinRecord.hpp"
 #include "FunctionRecord.hpp"
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace project {

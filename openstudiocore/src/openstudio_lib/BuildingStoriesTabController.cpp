@@ -21,9 +21,9 @@
 #include "BuildingStoriesTabView.hpp"
 #include "BuildingStoriesController.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

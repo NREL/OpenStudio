@@ -18,8 +18,8 @@
  **********************************************************************/
 
 #include "RunManagerWatcher.hpp"
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include "JobErrors.hpp"
 #include "FileInfo.hpp"

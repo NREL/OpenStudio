@@ -47,20 +47,20 @@
 #include "../model/ParentObject.hpp"
 #include "../model/ParentObject_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idd/IddField.hpp"
+#include "../utilities/idd/IddFieldProperties.hpp"
+#include "../utilities/idd/IddObjectProperties.hpp"
+#include "../utilities/idd/IddKey.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/document/DocumentRegex.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/document/DocumentRegex.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

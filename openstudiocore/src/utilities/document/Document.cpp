@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Document.hpp>
-#include <utilities/document/DocumentRegex.hpp>
-#include <utilities/document/SectionHeading.hpp>
-#include <utilities/document/SectionHeading_Impl.hpp>
-#include <utilities/document/Section.hpp>
-#include <utilities/document/Section_Impl.hpp>
-#include <utilities/document/Table.hpp>
-#include <utilities/document/Table_Impl.hpp>
-#include <utilities/document/Text.hpp>
-#include <utilities/document/Text_Impl.hpp>
+#include "Document.hpp"
+#include "DocumentRegex.hpp"
+#include "SectionHeading.hpp"
+#include "SectionHeading_Impl.hpp"
+#include "Section.hpp"
+#include "Section_Impl.hpp"
+#include "Table.hpp"
+#include "Table_Impl.hpp"
+#include "Text.hpp"
+#include "Text_Impl.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../core/PathHelpers.hpp"
 
 #include <boost/archive/archive_exception.hpp>
 

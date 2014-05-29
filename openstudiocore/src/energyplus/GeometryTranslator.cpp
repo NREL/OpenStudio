@@ -20,16 +20,16 @@
 #include "GeometryTranslator.hpp"
 #include "MapFields.hpp"
 
-#include <model/Building.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurface.hpp>
+#include "../model/Building.hpp"
+#include "../model/Space.hpp"
+#include "../model/Surface.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/ShadingSurface.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -68,8 +68,8 @@
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
 
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <boost/filesystem.hpp>
 

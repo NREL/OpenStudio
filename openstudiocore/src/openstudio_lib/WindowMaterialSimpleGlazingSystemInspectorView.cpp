@@ -22,10 +22,10 @@
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
+#include "../model/SimpleGlazing.hpp"
+#include "../model/SimpleGlazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

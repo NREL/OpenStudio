@@ -27,7 +27,7 @@
 #include "Algorithm.hpp"
 #include "DataPoint.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 #include <vector>
 

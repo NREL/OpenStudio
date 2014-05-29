@@ -88,7 +88,7 @@
 #include "../model/RefrigerationWalkInZoneBoundary_Impl.hpp"
 #include "../model/AirLoopHVACUnitarySystem.hpp"
 #include "../model/AirLoopHVACUnitarySystem_Impl.hpp"
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <QStackedWidget>
 #include <QVBoxLayout>
 #include <QApplication>

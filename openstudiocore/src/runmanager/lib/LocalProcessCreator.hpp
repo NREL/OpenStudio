@@ -23,7 +23,7 @@
 #include "ProcessCreator.hpp"
 #include <vector>
 #include <string>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 
 namespace openstudio {
 namespace runmanager {

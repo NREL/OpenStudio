@@ -24,8 +24,8 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

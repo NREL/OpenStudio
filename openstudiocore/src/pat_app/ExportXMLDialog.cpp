@@ -19,7 +19,7 @@
 
 #include "ExportXMLDialog.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QLabel>
 #include <QLineEdit>

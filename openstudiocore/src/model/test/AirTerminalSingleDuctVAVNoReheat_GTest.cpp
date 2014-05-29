@@ -18,18 +18,18 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
+#include "ModelFixture.hpp"
+#include "../AirTerminalSingleDuctVAVNoReheat.hpp"
+#include "../AirTerminalSingleDuctVAVNoReheat_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../ThermalZone.hpp"
+#include "../DesignSpecificationOutdoorAir.hpp"
 
 using namespace openstudio::model;
 

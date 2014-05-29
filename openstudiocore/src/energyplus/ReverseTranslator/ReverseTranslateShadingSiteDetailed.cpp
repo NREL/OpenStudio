@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/GeometryTranslator.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../GeometryTranslator.hpp"
 
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Shading_Site_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

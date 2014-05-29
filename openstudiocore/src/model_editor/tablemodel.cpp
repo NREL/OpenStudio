@@ -25,10 +25,10 @@
 #include "ClassViewWidget.hpp"
 #include "TableView.hpp"
 #include "../model/Model.hpp"
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <model_editor/tablemodel.h>
 

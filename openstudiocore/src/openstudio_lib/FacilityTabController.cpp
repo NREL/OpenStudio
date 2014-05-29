@@ -21,7 +21,7 @@
 #include "FacilityTabView.hpp"
 #include "FacilityController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

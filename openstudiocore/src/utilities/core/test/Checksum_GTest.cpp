@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../Checksum.hpp"
+#include "../UUID.hpp"
+#include "../Containers.hpp"
 
 #include <resources.hxx>
 

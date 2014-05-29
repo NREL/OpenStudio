@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/System.hpp>
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/System.hpp"
 #include "Job.hpp"
 #include "Job_Impl.hpp"
 #include "JSON.hpp"

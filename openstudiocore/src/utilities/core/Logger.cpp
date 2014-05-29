@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Logger.hpp>
+#include "Logger.hpp"
 
 #include <boost/log/common.hpp>
 #include <boost/log/core/record.hpp>

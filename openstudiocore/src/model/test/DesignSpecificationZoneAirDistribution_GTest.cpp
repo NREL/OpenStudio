@@ -18,11 +18,11 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/DesignSpecificationZoneAirDistribution.hpp>
-#include <model/DesignSpecificationZoneAirDistribution_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "ModelFixture.hpp"
+#include "../DesignSpecificationZoneAirDistribution.hpp"
+#include "../DesignSpecificationZoneAirDistribution_Impl.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

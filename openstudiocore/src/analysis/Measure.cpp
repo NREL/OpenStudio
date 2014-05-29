@@ -25,9 +25,9 @@
 #include "RubyMeasure.hpp"
 #include "RubyMeasure_Impl.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
 namespace openstudio {
 namespace analysis {

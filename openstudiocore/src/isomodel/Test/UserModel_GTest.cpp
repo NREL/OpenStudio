@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <isomodel/Test/ISOModelFixture.hpp>
+#include "ISOModelFixture.hpp"
 
-#include <isomodel/UserModel.hpp>
-#include <isomodel/SimModel.hpp>
+#include "../UserModel.hpp"
+#include "../SimModel.hpp"
 
 #include <resources.hxx>
 

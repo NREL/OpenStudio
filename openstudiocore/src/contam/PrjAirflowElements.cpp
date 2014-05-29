@@ -20,7 +20,7 @@
 #include "PrjAirflowElements.hpp"
 #include "PrjAirflowElementsImpl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace contam {

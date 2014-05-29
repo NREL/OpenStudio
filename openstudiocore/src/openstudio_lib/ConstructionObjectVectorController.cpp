@@ -23,12 +23,12 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
 #include <QMessageBox>

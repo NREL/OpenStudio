@@ -20,7 +20,7 @@
 #include "ShadingMaterial.hpp"
 #include "ShadingMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

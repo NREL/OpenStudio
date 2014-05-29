@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;

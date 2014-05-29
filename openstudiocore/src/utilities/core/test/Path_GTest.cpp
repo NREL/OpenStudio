@@ -22,9 +22,9 @@
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <utilities/core/test/CoreFixture.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "CoreFixture.hpp"
+#include "../Path.hpp"
+#include "../PathHelpers.hpp"
 
 using openstudio::path;
 using openstudio::toPath;

@@ -20,11 +20,11 @@
 #include "CurrentAnalysis.hpp"
 #include "CurrentAnalysis_Impl.hpp"
 
-#include <analysis/DataPoint_Impl.hpp>
+#include "../analysis/DataPoint_Impl.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobErrors.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/JobErrors.hpp"
 
 using namespace openstudio::analysis;
 

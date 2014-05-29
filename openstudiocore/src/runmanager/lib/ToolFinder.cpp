@@ -19,10 +19,10 @@
 
 #include "ToolFinder.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/idd/IddFile.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/idd/IddFile.hpp"
 
 #include <QIcon>
 #include <QLabel>

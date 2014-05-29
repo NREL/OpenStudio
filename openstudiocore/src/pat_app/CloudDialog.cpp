@@ -21,15 +21,15 @@
 
 #include <pat_app/VagrantConfiguration.hxx>
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Url.hpp"
 
 #include <QBoxLayout>
 #include <QCheckBox>

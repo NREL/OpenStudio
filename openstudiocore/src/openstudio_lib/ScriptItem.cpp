@@ -22,12 +22,12 @@
 #include "OSDocument.hpp"
 #include "ScriptFolderListView.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <QDir>
 #include <QMessageBox>

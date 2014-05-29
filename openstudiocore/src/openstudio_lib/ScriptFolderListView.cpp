@@ -26,9 +26,9 @@
 #include "OSCollapsibleItem.hpp"
 #include "OSItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>

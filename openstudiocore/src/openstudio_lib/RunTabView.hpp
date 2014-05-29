@@ -20,15 +20,15 @@
 #ifndef OPENSTUDIO_RUNTABVIEW_HPP
 #define OPENSTUDIO_RUNTABVIEW_HPP
 
-#include <model/Model.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include <boost/smart_ptr.hpp>
 #include "MainTabView.hpp"
 #include <QComboBox>
 #include <QWidget>
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/ConfigOptions.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
 class QButtonGroup;
 class QPlainTextEdit;

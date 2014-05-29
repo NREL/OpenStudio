@@ -19,15 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleFixedInterval.hpp>
-#include <model/ScheduleFixedInterval_Impl.hpp>
-#include <model/ScheduleVariableInterval.hpp>
-#include <model/ScheduleVariableInterval_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleFixedInterval.hpp"
+#include "../ScheduleFixedInterval_Impl.hpp"
+#include "../ScheduleVariableInterval.hpp"
+#include "../ScheduleVariableInterval_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/data/TimeSeries.hpp>
+#include "../../utilities/data/TimeSeries.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

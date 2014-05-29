@@ -20,7 +20,7 @@
 #include "ComponentList.hpp"
 #include "Component.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QAbstractButton>
 #include <QBoxLayout>

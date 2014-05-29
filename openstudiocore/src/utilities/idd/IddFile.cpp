@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddFile_Impl.hpp>
+#include "IddFile.hpp"
+#include "IddFile_Impl.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
+#include "IddRegex.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/PathHelpers.hpp"
+#include "../core/Assert.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../core/Containers.hpp"
 #include <boost/filesystem/fstream.hpp>
 
 #include <boost/algorithm/string.hpp>

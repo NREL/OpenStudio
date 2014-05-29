@@ -21,15 +21,15 @@
 #include "ReverseTranslator.hpp"
 #include "GeometryTranslator.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QThread>
 

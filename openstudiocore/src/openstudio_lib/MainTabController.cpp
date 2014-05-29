@@ -20,7 +20,7 @@
 #include "MainTabController.hpp"
 #include "MainTabView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 namespace openstudio {
 

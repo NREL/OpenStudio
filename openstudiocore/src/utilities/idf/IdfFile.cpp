@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfFile.hpp>
+#include "IdfFile.hpp"
 #include <utilities/idf/IdfObject_Impl.hpp> // needed for serialization
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "IdfRegex.hpp"
+#include "ValidityReport.hpp"
 
 #include <utilities/idd/IddObject_Impl.hpp> // needed for serialization
 #include <utilities/idd/IddField_Impl.hpp> // needed for serialization
 #include <utilities/idd/IddFile_Impl.hpp> // needed for serialization
-#include <utilities/idd/IddRegex.hpp>
+#include "../idd/IddRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/CommentRegex.hpp>
-#include <utilities/idd/Comments.hpp>
+#include "../idd/CommentRegex.hpp"
+#include "../idd/Comments.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../plot/ProgressBar.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/String.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Compare.hpp"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/split.hpp>

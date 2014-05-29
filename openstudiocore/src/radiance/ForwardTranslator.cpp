@@ -19,31 +19,31 @@
 
 #include "ForwardTranslator.hpp"
 
-#include <model/DaylightingControl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/RadianceParameters.hpp>
-#include <model/RadianceParameters_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
+#include "../model/DaylightingControl.hpp"
+#include "../model/GlareSensor.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/RadianceParameters.hpp"
+#include "../model/RadianceParameters_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/geometry/Transformation.hpp"
 
 #include <QPolygonF>
 #include <QPointF>

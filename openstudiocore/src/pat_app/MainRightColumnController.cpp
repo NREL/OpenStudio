@@ -27,7 +27,7 @@
 #include "../shared_gui_components/EditView.hpp"
 #include "PatApp.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QLayout>
 #include <QStackedWidget>

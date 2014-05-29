@@ -17,33 +17,33 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/IdfObject_Impl.hpp>
+#include "IdfObject.hpp"
+#include "IdfObject_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "IdfExtensibleGroup.hpp"
+#include "IdfRegex.hpp"
+#include "ValidityReport.hpp"
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/idd/ExtensibleIndex.hpp>
+#include "../idd/IddObject.hpp"
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
+#include "../idd/IddKey.hpp"
+#include "../idd/ExtensibleIndex.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
-#include <utilities/idd/Comments.hpp>
+#include "../idd/IddField.hpp"
+#include "../idd/IddRegex.hpp"
+#include "../idd/CommentRegex.hpp"
+#include "../idd/Comments.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../math/FloatCompare.hpp"
+#include "../core/Finder.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Url.hpp"
+#include "../core/UUID.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../units/Quantity.hpp"
+#include "../units/OSOptionalQuantity.hpp"
+#include "../units/QuantityConverter.hpp"
 
 #include <boost/filesystem/fstream.hpp> 
 #include <boost/lexical_cast.hpp>

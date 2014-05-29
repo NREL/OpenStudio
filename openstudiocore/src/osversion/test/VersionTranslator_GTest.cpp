@@ -18,33 +18,33 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <osversion/test/OSVersionFixture.hpp>
-#include <osversion/VersionTranslator.hpp>
+#include "OSVersionFixture.hpp"
+#include "../VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/Component_Impl.hpp"
+#include "../../model/ComponentData.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Version.hpp"
+#include "../../model/Version_Impl.hpp"
 
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
+#include "../../utilities/bcl/RemoteBCL.hpp"
+#include "../../utilities/bcl/LocalBCL.hpp"
+#include "../../utilities/bcl/OnDemandGenerator.hpp"
+#include "../../utilities/bcl/BCLComponent.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
+#include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/core/Compare.hpp"
 
 #include <boost/filesystem.hpp>
 
