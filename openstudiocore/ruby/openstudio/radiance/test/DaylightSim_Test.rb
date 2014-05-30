@@ -25,42 +25,46 @@ require 'fileutils'
 require 'openstudio/energyplus/find_energyplus'
 
 
+
 class DaylightSim_Test < Test::Unit::TestCase
   
   def setup
-    
+ 
   end
 
   def test_DaylightSim_genannual
+
+    #create example model, attach epw file
     modelExample = OpenStudio::Model::exampleModel()
-    modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
-    FileUtils.mkdir_p(modelPath.parent_path.to_s)
+    #modelPath = OpenStudio::Path.new("c:\ExampleModel.osm")
+    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("DaylightSim_test_genannual")
+    modelFile = outdir / OpenStudio::Path.new("in.osm") 
+    FileUtils.mkdir_p(modelFile.parent_path.to_s)
     ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)
     assert((not weatherFile.empty?))
-    modelExample.toIdfFile.save(modelPath, true)
-    #run ModelToRad.rb
-    command = "#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/ModelToRad.rb' '#{modelPath}'"
-    puts command
-    assert(system(command))
+    #modelExample.toIdfFile.save(modelPath, true)
+    modelExample.save(modelFile, true)
+
+    #setup path to Radiance binaries
+    co = OpenStudio::Runmanager::ConfigOptions.new(true);
+    co.fastFindRadiance();
+    radiancePath = co.getTools().getLastByName("rad").localBinPath.parent_path
+    	
+	  #run DaylightCalculations.rb (executes end-to-end Radiance annual daylight simulation)
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightCalculations.rb' '#{modelFile}' '#{radiancePath}' "))
   
-    #modelPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel.osm")
-    sqlPath = OpenStudio::Path.new("#{$OpenStudio_ResourcePath}radiance/test/ExampleModel/model/radiance/gen_eplus/3-EnergyPlus-0/eplusout.sql") 
-    #generate daylight coefficients
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dc"))
-    #do annual sim
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' '#{modelPath}' '#{sqlPath}' --dcts --month 1 --day 21"))
   end
   
   def test_DaylightSim_help
     #print help message
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightSim-Simple.rb' --help"))
+    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightCalculations.rb' --help"))
   end
   
   def teardown
-    #FileUtils.rm_rf("#{$OpenStudio_ResourcePath}radiance/test/")
+
   end
   
 end
