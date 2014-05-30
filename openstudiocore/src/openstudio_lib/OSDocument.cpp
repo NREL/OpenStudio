@@ -1320,6 +1320,36 @@ void OSDocument::toggleUnits(bool displayIP)
 
 void OSDocument::openMeasuresDlg()
 {
+  // save model if dirty
+  if(this->modified()){
+
+    QMessageBox * messageBox = new QMessageBox(this->mainWindow());
+    messageBox->setText("Save model?");
+    messageBox->setInformativeText("You must save model before you apply a measure!");
+    messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
+    messageBox->setDefaultButton(QMessageBox::Save);
+    messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
+    messageBox->setIcon(QMessageBox::Question);
+
+    int ret = messageBox->exec();
+
+    delete messageBox;
+
+    switch (ret)
+    {
+      case QMessageBox::Save:
+        // Save was clicked
+        this->save();
+        break;
+      case QMessageBox::Cancel:
+        // Cancel was clicked
+        return;
+      default:
+        // should never be reached
+        OS_ASSERT(false);
+    }
+  }
+
   // open modal dialog
   m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
   m_applyMeasureNowDialog->exec();
