@@ -28,6 +28,8 @@ namespace openstudio {
 
 class OSListView;
 
+class SyncMeasuresDialog;
+
 class ScriptsTabView : public MainTabView
 {
   Q_OBJECT
@@ -48,6 +50,8 @@ class ScriptsTabView : public MainTabView
   private:
 
   QPushButton * m_updateMeasuresButton;
+
+  boost::shared_ptr<SyncMeasuresDialog> m_syncMeasuresDialog;
 
   private slots:
 

@@ -19,11 +19,14 @@
 
 #include <openstudio_lib/ScriptsTabView.hpp>
 
+#include <openstudio_lib/MainWindow.hpp>
 #include <openstudio_lib/OSAppBase.hpp>
+#include <openstudio_lib/OSDocument.hpp>
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
+#include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
 #include <analysisdriver/SimpleProject.hpp>
 
@@ -96,7 +99,10 @@ void ScriptsTabView::showEvent(QShowEvent *e)
 
 void ScriptsTabView::openUpdateMeasuresDlg()
 {
-  //TODO
+  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog());
+  m_syncMeasuresDialog->exec();
+
+  m_syncMeasuresDialog->setGeometry(OSAppBase::instance()->currentDocument()->mainWindow()->geometry()); // TODO
 }
 
 } // openstudio
