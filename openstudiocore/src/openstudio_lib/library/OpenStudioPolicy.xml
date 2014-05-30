@@ -526,6 +526,7 @@
     <rule IddField="Loop Demand Side Outlet Node" Access="HIDDEN"/>
     <rule IddField="Loop Supply Side Inlet Node" Access="HIDDEN"/>
     <rule IddField="Loop Supply Side Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Heat Exchanger Setpoint Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Refrigeration_System">
     <rule IddField="Refrigerated CaseAndWalkInList Name" Access="HIDDEN"/>
