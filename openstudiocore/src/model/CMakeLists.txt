@@ -1277,6 +1277,7 @@ SET( ${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
   test/UtilityBill_GTest.cpp

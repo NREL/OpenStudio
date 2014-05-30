@@ -33,43 +33,6 @@ namespace openstudio {
 
 namespace energyplus {
 
-namespace multivariablelookup
-{
-  typedef std::vector<double> Combination;
-  
-  // Return all combinations of the independent variables in table, 
-  // starting at variableIndex.
-  std::vector<Combination> combinations(const TableMultiVariableLookup & table,
-                                        std::vector<Combination> & allCombinations,
-                                        Combination & thisCombination,
-                                        boost::optional<double> value,
-                                        int variableIndex)
-  {
-    if(value)
-    {
-      thisCombination.push_back(value.get());
-    }
-  
-    if( variableIndex >= table.numberofIndependentVariables() )
-    {
-      allCombinations.push_back(thisCombination);
-      thisCombination = Combination();
-    }
-    else
-    {
-      std::vector<double> xValues = table.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(variableIndex);
-      for(std::vector<double>::iterator it = xValues.begin();
-          it != xValues.end();
-          ++it)
-      {
-        combinations(table,allCombinations,thisCombination,*it,++variableIndex);
-      }
-    }
-  
-    return allCombinations;
-  }
-} // multivariablelookup
-
 boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup( TableMultiVariableLookup& modelObject )
 {
   OptionalString s;
@@ -123,10 +86,10 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
         it != xValues.end();
         ++it)
     {
-      std::vector<double> point;
-      point.push_back(*it);
+      TableMultiVariableLookup::Coordinate coord(1);
+      coord[0] = *it;
 
-      boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(point);
+      boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(coord);
       if(yValue)
       {
         idfObject.setDouble(t_currentFieldIndex,yValue.get());
@@ -153,11 +116,11 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
           it1 != x1Values.end();
           ++it1)
       {
-        std::vector<double> point;
-        point.push_back(*it1);
-        point.push_back(*it2);
+        TableMultiVariableLookup::Coordinate coord(2);
+        coord[0] = *it1;
+        coord[1] = *it2;
 
-        boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(point);
+        boost::optional<double> yValue = modelObject.yValue(coord);
         if(yValue)
         {
           idfObject.setDouble(t_currentFieldIndex,yValue.get());
@@ -172,63 +135,56 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
   else
   {
-    // If there are more than two variables we need to identify the values 
-    // of the variables above x2, and then follow the basic strategy when there
-    // are two variables.
-    std::vector<multivariablelookup::Combination> combinations;
-    multivariablelookup::Combination combination;
-    
-    combinations = multivariablelookup::combinations(modelObject,
-                                                     combinations,
-                                                     combination,
-                                                     boost::none,
-                                                     2);
+    std::vector<TableMultiVariableLookup::Point> points = modelObject.points();
 
-    for(std::vector<multivariablelookup::Combination>::const_iterator it = combinations.begin();
-        it != combinations.end();
+    // Slice the first and second x values off the coordinates
+    std::vector<std::vector<double> > slices;
+    for(std::vector<TableMultiVariableLookup::Point>::const_iterator it = points.begin();
+        it != points.end();
         ++it)
     {
-      std::vector<boost::optional<double> > yValues;
+      OS_ASSERT(it->first.size() == t_numberofIndependentVariables);
+      std::vector<double> slice(it->first.begin() + 2,it->first.begin() + t_numberofIndependentVariables);
+      slices.push_back(slice);
+    }
+
+    // Remove duplicate slices
+    std::sort(slices.begin(),slices.end());
+    slices.erase(std::unique(slices.begin(),slices.end()),slices.end());
+
+    // Iterate over each slice that is left, creating a 2D table for each one 
+    for(std::vector<std::vector<double> >::const_iterator it = slices.begin();
+        it != slices.end();
+        ++it)
+    {
+      for(std::vector<double>::const_iterator it2 = it->begin();
+          it2 != it->end();
+          ++it2)
+      {
+        idfObject.setDouble(t_currentFieldIndex,*it2);
+        ++t_currentFieldIndex; 
+      }
 
       std::vector<double> x1Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(0);
       std::vector<double> x2Values = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->xValues(1);
 
-      for(std::vector<double>::iterator it2 = x2Values.begin();
-          it2 != x2Values.end();
-          ++it2)
+      for(std::vector<double>::iterator x2It = x2Values.begin();
+          x2It != x2Values.end();
+          ++x2It)
       {
-        for(std::vector<double>::iterator it1 = x1Values.begin();
-            it1 != x1Values.end();
-            ++it1)
+        for(std::vector<double>::iterator x1It = x1Values.begin();
+            x1It != x1Values.end();
+            ++x1It)
         {
-          std::vector<double> point;
-          point.push_back(*it1);
-          point.push_back(*it2);
+          TableMultiVariableLookup::Coordinate coord(2);
+          coord[0] = *x1It;
+          coord[1] = *x2It;
+          coord.insert(coord.end(),it->begin(),it->end());
 
-          boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(point);
-          yValues.push_back(yValue);
-        }
-      }
-      // Only output this combination if there are y values
-      // TODO This would be simpler and faster to just find the unique combinations of x values above x2
-      // and iterate over that set.  Then no need to find all combinations and look for yvalues that might not exist.
-      if( ! yValues.empty() )
-      {
-        for(multivariablelookup::Combination::const_iterator combinationIt = it->begin();
-            combinationIt != it->end();
-            ++combinationIt)
-        {
-          idfObject.setDouble(t_currentFieldIndex,*combinationIt);
-          ++t_currentFieldIndex;
-        } 
-
-        for(std::vector<boost::optional<double> >::const_iterator yIt = yValues.begin();
-            yIt != yValues.end();
-            ++yIt)
-        {
-          if(*yIt)
+          boost::optional<double> yValue = modelObject.yValue(coord);
+          if(yValue)
           {
-            idfObject.setDouble(t_currentFieldIndex,(*yIt).get());
+            idfObject.setDouble(t_currentFieldIndex,yValue.get());
           }
           else
           {
