@@ -378,6 +378,13 @@ void OSDocument::showFirstTab()
 
   m_mainWindow->show();
 }
+  
+void OSDocument::showTab(int tabIndex)
+{
+  m_mainWindow->selectVerticalTabByIndex(tabIndex);
+
+  m_mainWindow->show();
+}
 
 void OSDocument::initializeModel()
 {
@@ -853,6 +860,11 @@ bool OSDocument::setFullWeatherFilePath()
   }
 
   return result;
+}
+
+int OSDocument::verticalTabIndex()
+{
+  return m_mainWindow->verticalTabIndex();
 }
 
 void OSDocument::onVerticalTabSelected(int verticalId)

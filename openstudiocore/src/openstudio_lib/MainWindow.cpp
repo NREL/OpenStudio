@@ -222,6 +222,16 @@ void MainWindow::selectVerticalTab(int id)
   m_verticalTabWidget->setCurrentId(id);
 }
 
+void MainWindow::selectVerticalTabByIndex(int index)
+{
+  m_verticalTabWidget->setCurrentIndex(index);
+}
+
+int MainWindow::verticalTabIndex()
+{
+  return m_verticalTabWidget->verticalTabIndex();
+}
+
 //void MainWindow::selectHorizontalTab(int id)
 //{
 //  m_horizontalTabWidget->setCurrentId(id);

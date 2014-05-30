@@ -91,7 +91,7 @@ private slots:
 
 signals:
 
-  void reloadFile(const QString& fileToLoad, bool modified);
+  void reloadFile(const QString& fileToLoad, bool modified, bool startOnLastTab);
 
 private:
 

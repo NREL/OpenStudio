@@ -55,6 +55,10 @@ class MainWindow : public QMainWindow
 
   void selectVerticalTab(int id);
 
+  void selectVerticalTabByIndex(int index);
+
+  int verticalTabIndex();
+
   //void selectHorizontalTab(int id);
 
   void closeSidebar();

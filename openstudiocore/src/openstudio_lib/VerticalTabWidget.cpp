@@ -181,6 +181,11 @@ void VerticalTabWidget::setCurrentIndex(int index)
   }
 }
 
+int VerticalTabWidget::verticalTabIndex()
+{
+  return m_pageStack->currentIndex();
+}
+
 void VerticalTabWidget::setCurrentWidget(QWidget * widget)
 {
   int i = m_pageStack->indexOf(widget);

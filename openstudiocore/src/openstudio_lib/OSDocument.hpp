@@ -167,6 +167,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 //  ScriptFolderListView* scriptFolderListView();
   void openMeasuresBclDlg();
 
+  int verticalTabIndex();
+
   enum VerticalTabID
   {
     SITE,
@@ -274,6 +276,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
   void showFirstTab();
+
+  void showTab(int tabIndex);
  
   void initializeModel();
 

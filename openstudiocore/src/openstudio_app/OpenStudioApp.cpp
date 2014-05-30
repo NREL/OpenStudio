@@ -798,8 +798,10 @@ void  OpenStudioApp::showAbout()
   about.exec();
 }
 
-void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified)
+void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool startOnLastTab)
 {
+  int index = OSAppBase::instance()->currentDocument()->verticalTabIndex();
+
   OS_ASSERT(m_osDocument);
 
   QFileInfo info(fileToLoad); // handles windows links and "\"
@@ -821,6 +823,9 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified)
     // todo: show error message
   }
 
+  if(startOnLastTab){
+    m_osDocument->showTab(index);
+  }
 }
 
 openstudio::path OpenStudioApp::resourcesPath() const
