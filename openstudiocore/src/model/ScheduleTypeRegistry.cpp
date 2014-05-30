@@ -208,6 +208,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
     {"HeatExchangerAirToAirSensibleAndLatent","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"HeatExchangerFluidToFluid","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HotWaterEquipment","Hot Water Equipment","schedule",true,"",0.0,1.0},
     {"Lights","Lighting","schedule",true,"",0.0,1.0},
     {"Luminaire","Luminaire","schedule",true,"",0.0,1.0},

@@ -133,6 +133,7 @@
 #include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
+#include <model/HeatExchangerFluidToFluid.hpp>
 #include <model/HotWaterEquipment.hpp>
 #include <model/HotWaterEquipmentDefinition.hpp>
 #include <model/IlluminanceMap.hpp>
@@ -389,6 +390,7 @@
 #include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
+#include <model/HeatExchangerFluidToFluid_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
 #include <model/HotWaterEquipmentDefinition_Impl.hpp>
 #include <model/IlluminanceMap_Impl.hpp>

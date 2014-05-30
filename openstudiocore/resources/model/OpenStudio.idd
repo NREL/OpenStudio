@@ -13687,6 +13687,129 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
 
+OS:HeatExchanger:FluidToFluid,
+        \min-fields 15
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2 , \field Name
+        \required-field
+        \reference ConnectionObject
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \note default is that heat exchanger is on
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Loop Demand Side Inlet Node
+        \type object-list
+        \object-list ConnectionNames
+   A5 , \field Loop Demand Side Outlet Node
+        \type object-list
+        \object-list ConnectionNames
+   N1 , \field Loop Demand Side Design Flow Rate
+        \type real
+        \required-field
+        \minimum> 0.0
+        \units m3/s
+        \ip-units gal/min
+        \autosizable
+   A6 , \field Loop Supply Side Inlet Node
+        \type object-list
+        \object-list ConnectionNames
+   A7 , \field Loop Supply Side Outlet Node
+        \type object-list
+        \object-list ConnectionNames
+   N2 , \field Loop Supply Side Design Flow Rate
+        \type real
+        \required-field
+        \minimum> 0.0
+        \units m3/s
+        \ip-units gal/min
+        \autosizable
+   A8 , \field Heat Exchange Model Type
+        \type choice
+        \key CrossFlowBothUnMixed
+        \key CrossFlowBothMixed
+        \key CrossFlowSupplyMixedDemandUnMixed
+        \key CrossFlowSupplyUnMixedDemandMixed
+        \key ParallelFlow
+        \key CounterFlow
+        \key Ideal
+        \default Ideal
+        \required-field
+   N3 , \field Heat Exchanger U-Factor Times Area Value
+        \type real
+        \units W/k
+        \minimum> 0.0
+        \autosizable
+        \required-field
+   A9 , \field Control Type
+        \type choice
+        \key UncontrolledOn
+        \key OperationSchemeModulated
+        \key OperationSchemeOnOff
+        \key HeatingSetpointModulated
+        \key HeatingSetpointOnOff
+        \key CoolingSetpointModulated
+        \key CoolingSetpointOnOff
+        \key DualDeadbandSetpointModulated
+        \key DualDeadbandSetpointOnOff
+        \key CoolingDifferentialOnOff
+        \key CoolingSetpointOnOffWithComponentOverride
+        \required-field
+        \default UncontrolledOn
+   A10 , \field Heat Exchanger Setpoint Node Name
+       \type object-list
+       \object-list Node
+   N4 , \field Minimum Temperature Difference to Activate Heat Exchanger
+        \note Tolerance between control temperatures used to determine if heat exchanger should run.
+        \type real
+        \required-field
+        \minimum 0.0
+        \maximum 50
+        \default 0.01
+        \units deltaC
+   A11, \field Heat Transfer Metering End Use Type
+        \note This feild controls end use reporting for heat transfer meters
+        \type choice
+        \key FreeCooling
+        \key HeatRecovery
+        \key HeatRejection
+        \key HeatRecoveryForCooling
+        \key HeatRecoveryForHeating
+        \key LoopToLoop
+        \default LoopToLoop
+        \required-field
+   A12, \field Component Override Loop Supply Side Inlet Node
+       \type object-list
+       \object-list Node
+   A13, \field Component Override Loop Demand Side Inlet Node
+       \type object-list
+       \object-list Node
+   A14, \field Component Override Cooling Control Temperature Mode
+        \required-field
+        \type choice
+        \key WetBulbTemperature
+        \key DryBulbTemperature
+        \key Loop
+        \default Loop
+        \note This field is only used if Control Type is set to CoolingSetpointOnOffWithComponentOverride
+   N5 , \field Sizing Factor
+        \note Multiplies the autosized flow rates for this device
+        \required-field
+        \type real
+        \minimum> 0.0
+        \default 1.0
+   N6 , \field Operation Minimum Temperature Limit
+        \note Lower limit on inlet temperatures, heat exchanger will not operate if either inlet is below this limit
+        \type real
+        \units C
+   N7 ; \field Operation Maximum Temperature Limit
+        \note Upper limit on inlet temperatures, heat exchanger will not operate if either inlet is above this limit
+        \type real
+        \units C
+
 OS:HVACComponentList,
       \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
   A1, \field Handle
