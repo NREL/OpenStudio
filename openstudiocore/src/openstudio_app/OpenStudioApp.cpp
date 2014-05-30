@@ -809,6 +809,10 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool st
   osversion::VersionTranslator versionTranslator;
   boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
   if( model ){
+
+    WaitDialog waitDialog("Accepting Changes","Accepting Changes");
+    waitDialog.open();
+    processEvents();  
     
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
     this->setQuitOnLastWindowClosed(false);
