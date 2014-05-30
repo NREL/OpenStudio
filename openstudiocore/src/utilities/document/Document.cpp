@@ -297,7 +297,7 @@ bool Document::save(const openstudio::path& p, bool overwrite) const {
           return false;
         }
         catch (...) {
-          LOG(Error,"Error serializing Document to boost serializaiton text format (.osd).");
+          LOG(Error,"Error serializing Document to boost serialization text format (.osd).");
           return false;
         }
       }

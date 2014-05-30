@@ -61,7 +61,7 @@ class UTILITIES_API Misc1Unit_Impl : public Unit_Impl {
   /** @name Base Units and Scale */
   //@{
 
-  /** Throws if baseUnit is not a vaild for Misc1Unit. */
+  /** Throws if baseUnit is not a valid for Misc1Unit. */
   virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
   //@}

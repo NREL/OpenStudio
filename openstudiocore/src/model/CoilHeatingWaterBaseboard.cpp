@@ -90,7 +90,7 @@ namespace detail {
     std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
     // populate the vector with all of them
     zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
-    // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
+    // loop through each one, seeing if the coil is contained by the zonehvacbaseboard
     for( const auto & zoneHVACBaseboardConvectiveWater : zoneHVACBaseboardConvectiveWaters )
     {
       if( boost::optional<HVACComponent> coil = zoneHVACBaseboardConvectiveWater.heatingCoil() )

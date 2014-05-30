@@ -43,7 +43,7 @@ class UTILITIES_API EndUses {
   /// get list of all categories
   static std::vector<EndUseCategoryType> categories();
 
-  /// Creates an EndUses wrapper around attribute if it is correclty formatted.
+  /// Creates an EndUses wrapper around attribute if it is correctly formatted.
   static boost::optional<EndUses> fromAttribute(const Attribute& attribute);
 
   /// Constructs a new end uses attribute

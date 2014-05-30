@@ -272,7 +272,7 @@ namespace openstudio{
     // create a generator
     boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
-    // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hangining on Windows 7,
+    // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hanging on Windows 7,
     // with BoostPro installer.
     // handle degenerate case
     OptionalDouble singlePoint;

@@ -63,7 +63,7 @@ namespace detail {
     /** @name Base Units and Scale */
     //@{
 
-    /** Throws if baseUnit is not a vaild for ThermUnit. */
+    /** Throws if baseUnit is not a valid for ThermUnit. */
     virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
     //@}

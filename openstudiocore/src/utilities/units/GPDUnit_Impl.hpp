@@ -61,7 +61,7 @@ namespace detail {
     /** @name Base Units and Scale */
     //@{
 
-    /** Throws if baseUnit is not a vaild for GPDUnit. */
+    /** Throws if baseUnit is not a valid for GPDUnit. */
     virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
     //@}

@@ -228,7 +228,7 @@ path relocatePath(const path& originalPath,
       << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
-    LOG_FREE(Debug,"openstudio.utilities.core","Reloacting path to '" << toString(result) << "'.");
+    LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
   }
   return result;
 }

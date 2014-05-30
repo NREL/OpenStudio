@@ -104,9 +104,9 @@ public:
   void setAnalysisPeriod( OptionalInt analysisPeriod );
   void setAnalysisPeriod( const int analysisPeriod = 30 );
 
-  // This function addopts Excel spreadsheet methodology
+  // This function adopts Excel spreadsheet methodology
   double getNPV(const double rate, const std::vector<double>& cashFlows);
-  // This function addopts Excel spreadsheet methodology
+  // This function adopts Excel spreadsheet methodology
   double getPayBack(const std::vector< double >& cashFlowSavings);
   std::vector<double> getCashFlows(const bool includeEnergySavings);
   void setVariables(const bool stdRetrofit,
@@ -162,8 +162,8 @@ private:
   double m_LCOE_Cost; // Levelized Cost of Electricity Cost
   double m_LCOE_Energy; // Levelized Cost of Electricity Energy
   double m_margIncomeTaxRate;
-  ///!  Mdified IRR assumes postive cash flows are reinvested at the cost of capital,
-  ///! and that intial outlays are financed at the cost of financing 
+  ///!  Modified IRR assumes positive cash flows are reinvested at the cost of capital,
+  ///! and that initial outlays are financed at the cost of financing 
   double m_NPV; // Net Present Value
   double m_SPB; // Simple Payback
   double m_TLCC_Savings; // Total Life-Cycle Cost

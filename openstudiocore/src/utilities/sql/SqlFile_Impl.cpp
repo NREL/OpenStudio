@@ -412,12 +412,12 @@ namespace openstudio{
         if (!isValidConnection()) {
           sqlite3_close(m_db);
           m_connectionOpen = false;
-          throw openstudio::Exception("ResultsViewer is not compatable with this file.");
+          throw openstudio::Exception("ResultsViewer is not compatible with this file.");
         }
         // set a 1 second timeout
         code = sqlite3_busy_timeout(m_db, 1000);
 
-        // set locking mode to exlusive
+        // set locking mode to exclusive
         //code = sqlite3_exec(m_db, "PRAGMA locking_mode=EXCLUSIVE", NULL, NULL, NULL);
 
         // retrieve DataDictionaryTable

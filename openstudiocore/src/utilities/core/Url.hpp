@@ -28,7 +28,7 @@
 
 namespace openstudio {
 
-  /// Uniform resource locator
+  /// Uniform resource locater
   typedef QUrl Url;
 
   /// optional Url

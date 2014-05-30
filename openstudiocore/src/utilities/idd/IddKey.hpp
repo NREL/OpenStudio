@@ -71,7 +71,7 @@ class UTILITIES_API IddKey {
   bool operator!=(const IddKey& other) const;
 
   //@}
-  /** @name Sertialization */
+  /** @name Serialization */
   //@{
 
   /** Load from text. */

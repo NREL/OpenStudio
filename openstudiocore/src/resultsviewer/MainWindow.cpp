@@ -1554,7 +1554,7 @@ namespace resultsviewer{
   {
     QString filterText = text.trimmed();
     // trac 1380 exact match (case insensitive) if double quotes - wildcard front and back if not - single words/phrases only
-    // no AND, OR searchaing and searches all fields
+    // no AND, OR searching and searches all fields
     if (!(filterText.startsWith("\"") && filterText.endsWith("\"")))
       filterText = "*" + filterText.replace("\"","") + "*";
     else // exact phrase

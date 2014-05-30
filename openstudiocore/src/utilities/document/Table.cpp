@@ -1300,7 +1300,7 @@ Table Table::loadFromBoostTextSerialization(boost::filesystem::ifstream& is) {
     LOG(Error,"Boost archive exception while loading Table from Text. Code " << e.code << ". Message: " << e.what());
   }
   catch (...) {
-    LOG(Error,"Error deserializing object of type 'Table' from boost searialization text file (.ost).");
+    LOG(Error,"Error deserializing object of type 'Table' from boost serialization text file (.ost).");
   }
   return result;
 }

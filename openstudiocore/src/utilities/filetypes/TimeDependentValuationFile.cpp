@@ -99,7 +99,7 @@ FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
   }
   catch (...) {}
   if (!oft) {
-    // try pseuodonyms
+    // try pseudonyms
     if (istringEqual(cell,"Electric")) { oft = FuelType(FuelType::Electricity); }
   }
   if (!oft) {
@@ -128,7 +128,7 @@ BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) 
   }
   catch (...) {}
   if (!obs) {
-    // try pseuodonyms
+    // try pseudonyms
     if (istringEqual(cell,"Res")) { obs = BuildingSector(BuildingSector::Residential); }
     else if (istringEqual(cell,"NonRes")) { obs = BuildingSector(BuildingSector::Commercial); }
     else if (istringEqual(cell,"Non-Residential")) { obs = BuildingSector(BuildingSector::Commercial); }

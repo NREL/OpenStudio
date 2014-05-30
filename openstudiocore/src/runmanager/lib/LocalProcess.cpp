@@ -490,7 +490,7 @@ namespace detail {
     if (m_process.state() != QProcess::Running
         && t_e == QProcess::WriteError)
     {
-      LOG(Info, "WriteError occured when process was not running, ignoring it");
+      LOG(Info, "WriteError occurred when process was not running, ignoring it");
     } else {
       //directoryChanged(openstudio::toQString(m_outdir));
       emit error(t_e);

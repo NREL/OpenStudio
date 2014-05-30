@@ -497,7 +497,7 @@ namespace resultsviewer{
     m_zoomer[0]->setTrackerMode(QwtPicker::ActiveOnly);
     m_zoomer[0]->setTrackerPen(QColor(Qt::blue));
 
-    // trac 349 - zommer double zooms when second zoomer created
+    // trac 349 - zoomer double zooms when second zoomer created
     m_zoomer[1] = new Zoomer(QwtPlot::xTop, QwtPlot::yRight, m_plot->canvas());
     m_zoomer[1]->setEnabled(false);
 
