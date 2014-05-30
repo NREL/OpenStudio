@@ -39,7 +39,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //Test construction of Coil:Heating:Desuperheater
-TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_DefaultContructor)
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_DefaultConstructor)
 {
     ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

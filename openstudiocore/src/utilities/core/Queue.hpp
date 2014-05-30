@@ -169,7 +169,7 @@ namespace openstudio
         //! Protection mutex for local data
         boost::shared_mutex m_mutex;
 
-        //! stl deque of incomming items.
+        //! stl deque of incoming items.
         std::deque<T> m_deque;
 
         //! Copy constructor, private and explicitly not implemented

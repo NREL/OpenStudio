@@ -107,7 +107,7 @@ template<typename Enum>
         return valueDescription(m_value); 
       } 
 
-      /** Set this intance's value to t_value. Throws std::runtime_error if 
+      /** Set this instance's value to t_value. Throws std::runtime_error if 
        *  t_value is not in the domain. */
       void setValue(int t_value)
       {

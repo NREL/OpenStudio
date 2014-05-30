@@ -1508,7 +1508,7 @@ namespace detail {
         start = matches[2].first;
         stop = matches[3].second;
 
-        // maches[2] is not a comment
+        // matches[2] is not a comment
         commentOrOtherText.clear();
       }
 

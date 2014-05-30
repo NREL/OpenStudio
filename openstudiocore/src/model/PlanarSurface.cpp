@@ -336,7 +336,7 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorbtance() const
+    boost::optional<double> PlanarSurface_Impl::interiorVisibleAbsorptance() const
     {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
@@ -344,7 +344,7 @@ namespace model {
 
       if (oConstruction) {
         // from input
-        OptionalDouble inputResult = oConstruction->interiorVisibleAbsorbtance();
+        OptionalDouble inputResult = oConstruction->interiorVisibleAbsorptance();
 
         // from output
         OptionalDouble outputResult;
@@ -369,8 +369,8 @@ namespace model {
       return result;
     }
 
-    /// get exterior visible absorbtance (unitless)
-    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorbtance() const
+    /// get exterior visible absorptance (unitless)
+    boost::optional<double> PlanarSurface_Impl::exteriorVisibleAbsorptance() const
     {
       OptionalDouble result;
       OptionalSqlFile sqlFile = model().sqlFile();
@@ -378,7 +378,7 @@ namespace model {
 
       if (oConstruction) {
         // from input
-        OptionalDouble inputResult = oConstruction->exteriorVisibleAbsorbtance();
+        OptionalDouble inputResult = oConstruction->exteriorVisibleAbsorptance();
 
         // from output
         OptionalDouble outputResult;
@@ -702,16 +702,28 @@ boost::optional<double> PlanarSurface::heatCapacity() const {
   return getImpl<detail::PlanarSurface_Impl>()->heatCapacity();
 }
 
-/// get interior visible absorbtance (unitless)
-OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const
+/// get interior visible absorptance (unitless)
+OptionalDouble PlanarSurface::interiorVisibleAbsorptance() const
 {
-  return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorbtance();
+  return getImpl<detail::PlanarSurface_Impl>()->interiorVisibleAbsorptance();
 }
 
-/// get exterior visible absorbtance (unitless)
+OptionalDouble PlanarSurface::interiorVisibleAbsorbtance() const
+{
+  LOG(Warn,"interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return interiorVisibleAbsorptance();
+}
+
+/// get exterior visible absorptance (unitless)
+OptionalDouble PlanarSurface::exteriorVisibleAbsorptance() const
+{
+  return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorptance();
+}
+
 OptionalDouble PlanarSurface::exteriorVisibleAbsorbtance() const
 {
-  return getImpl<detail::PlanarSurface_Impl>()->exteriorVisibleAbsorbtance();
+  LOG(Warn,"exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return exteriorVisibleAbsorptance();
 }
 
 boost::optional<PlanarSurfaceGroup> PlanarSurface::planarSurfaceGroup() const

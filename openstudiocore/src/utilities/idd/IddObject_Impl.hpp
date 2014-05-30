@@ -68,7 +68,7 @@ namespace detail {
     /** Get the properties of this object. */
     const IddObjectProperties& properties() const;
 
-    /** Get all non-extensible \linnk IddField IddFields\endlink. */
+    /** Get all non-extensible \link IddField IddFields\endlink. */
     const IddFieldVector& nonextensibleFields() const;
 
     /** Get this object's extensible group, that is, the vector of extensible \link IddFields
@@ -130,7 +130,7 @@ namespace detail {
     /** Get this IddObject's url flag. True if this object has a url in it */
     bool hasURL() const;
 
-    /** Returns ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Thows if
+    /** Returns ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Throws if
      *  !isExtensibleField(index). */
     ExtensibleIndex extensibleIndex(unsigned index) const;
 

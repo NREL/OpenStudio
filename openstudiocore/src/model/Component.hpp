@@ -90,7 +90,7 @@ class MODEL_API Component : public Model {
   friend class detail::ModelObject_Impl;
   friend class detail::ParentObject_Impl;
 
-  /** Protected contructor from impl. */
+  /** Protected constructor from impl. */
   Component(std::shared_ptr<detail::Component_Impl> impl);
 
   /// @endcond

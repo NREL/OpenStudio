@@ -147,7 +147,7 @@ namespace openstudio{
     /// Set the development OAuth key, validates the auth key before saving
     bool setDevAuthKey(const std::string& devAuthKey);
 
-    /// Retuns the path to the local BCL library
+    /// Returns the path to the local BCL library
     QString libraryPath() const;
 
     /// Relocates the local BCL library, stores the library path in user preferences

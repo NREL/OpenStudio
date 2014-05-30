@@ -424,7 +424,7 @@ namespace openstudio{
       /// convenience wrapper for timeseries data
       void timeseriesData(TimeSeries tsData);
 
-      /// coutour level limits
+      /// contour level limits
       void contourLevels(Vector& contourValues);
 
       /// color map range min and max values

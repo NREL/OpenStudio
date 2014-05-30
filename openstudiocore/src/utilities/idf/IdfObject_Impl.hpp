@@ -208,13 +208,13 @@ namespace detail {
     bool setQuantity (unsigned index, const Quantity q, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
      *  of bounds per IddField.properties()). */
     bool setUnsigned(unsigned index, unsigned value);
     bool setUnsigned(unsigned index, unsigned value, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
      *  of bounds per IddField.properties()). */
     bool setInt(unsigned index, int value);
     bool setInt(unsigned index, int value, bool checkValidity);
@@ -334,8 +334,8 @@ namespace detail {
     /** Serialize this object to os as Idf text. */
     std::ostream& print(std::ostream& os) const;
 
-    /** Serialize just the preceding comments and name of this IdfObject in the formmat used by 
-     *  full object print. If hasFields, the name is follwed by a ','. Otherwise, the name is 
+    /** Serialize just the preceding comments and name of this IdfObject in the format used by 
+     *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is 
      *  followed by a ';'. */
     std::ostream& printName(std::ostream& os, bool hasFields=true) const;
 

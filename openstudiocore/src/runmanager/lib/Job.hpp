@@ -280,7 +280,7 @@ namespace detail {
       /// \returns the overall status of the job tree
       openstudio::runmanager::TreeStatusEnum treeStatus() const;
 
-      /// \returns the contactenation of the job tree's detailed description fields
+      /// \returns the concatenation of the job tree's detailed description fields
       std::vector<std::string> treeDetailedDescription() const; 
 
       /** \returns all input and output files for all jobs in this job tree. */
@@ -324,7 +324,7 @@ namespace detail {
   
       /// \returns a re-created Job tree from the given JSON string.
       ///
-      /// \throws std::exception if any part of the parsing fails, with desription
+      /// \throws std::exception if any part of the parsing fails, with description
       ///         of where and why.
       ///
       /// \sa Job::toJSON for more information

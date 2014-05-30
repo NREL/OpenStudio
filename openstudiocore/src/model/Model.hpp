@@ -374,7 +374,7 @@ class MODEL_API Model : public openstudio::Workspace {
   friend class openstudio::Workspace;
   friend class detail::Model_Impl;
 
-  /** Protected contructor from impl. */
+  /** Protected constructor from impl. */
   Model(std::shared_ptr<detail::Model_Impl> impl);
 
   virtual void addVersionObject();

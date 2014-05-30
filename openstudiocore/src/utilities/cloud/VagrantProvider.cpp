@@ -1185,7 +1185,7 @@ namespace openstudio{
 
     void VagrantProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
     {
-      // note, it's important that this functon is always called, to clean up the QProcess object
+      // note, it's important that this function is always called, to clean up the QProcess object
       bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
       m_checkTerminatedProcess = nullptr;
 

@@ -731,7 +731,7 @@ namespace openstudio{
     ss << std::setprecision(prec) << std::showpoint << d;
     std::string s = ss.str();
 
-    // truncate zeroes from the end
+    // truncate zeros from the end
     int i = s.size() - 1;
     while (i > 0 && s[i] == '0')
     {

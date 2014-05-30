@@ -32,7 +32,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //Test construction of air-cooled gas cooler
-TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_DefaultContructor)
+TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_DefaultConstructor)
 {
     ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 

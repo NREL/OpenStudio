@@ -134,7 +134,7 @@ namespace detail {
     WorkspaceObjectVector getObjects(const std::vector<Handle>& handles) const;
 
     // ETH@20100409 boost::bind seems to need non-overloaded functions
-    // These are (ugly) wrappers to accomodate.
+    // These are (ugly) wrappers to accommodate.
     bool less_Handle(const Handle& left,const Handle& right) const;
     bool less_WorkspaceObject(const WorkspaceObject& left,const WorkspaceObject& right) const;
     virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
@@ -167,7 +167,7 @@ class UTILITIES_API WorkspaceObjectOrder {
 
   // GETTERS AND SETTERS
 
-  /// reterns whether or not currently ordering by IddObjectType
+  /// returns whether or not currently ordering by IddObjectType
   bool orderByIddEnum() const;
   /// deletes other ordering options and orders by IddObjectType
   void setOrderByIddEnum();

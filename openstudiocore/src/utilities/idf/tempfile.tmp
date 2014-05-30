@@ -386,7 +386,7 @@ namespace openstudio {
     friend class WorkspaceObject;
     friend class detail::WorkspaceObject_Impl;
 
-    /** Protected contructor from impl. */
+    /** Protected constructor from impl. */
     Workspace(std::shared_ptr<detail::Workspace_Impl> impl);
 
   private:

@@ -65,7 +65,7 @@ UTILITIES_API bool operator!=(const Vector& lhs, const Vector& rhs);
 // The following link has hints for interpolation
 // http://o2scl.sourceforge.net/o2scl/html/index.html#intp_section
 
-/** Enum to specify the interpoloation method. */
+/** Enum to specify the interpolation method. */
 enum InterpMethod{LinearInterp, NearestInterp, HoldLastInterp, HoldNextInterp};
 
 /** Enum to specify the extrapolation method. */
@@ -108,7 +108,7 @@ UTILITIES_API Vector linspace(double a, double b, unsigned N);
  *  interval delta. */
 UTILITIES_API Vector deltaSpace(double a, double b, double delta);
 
-/** Generates a Vector of N points logorithmically spaced between and including base^a and 
+/** Generates a Vector of N points logarithmically spaced between and including base^a and 
  *  base^b. */
 UTILITIES_API Vector logspace(double a, double b, unsigned N, double base = 10.0);
 
@@ -145,10 +145,10 @@ UTILITIES_API double stdDev(const Vector& vector);
 /** Returns std::function pointer to sum(const Vector&). */
 UTILITIES_API std::function<double (const Vector&)> sumVectorFunctor();
 
-/** Returns std::function pointer to maxiumum(const Vector&). */
+/** Returns std::function pointer to maximum(const Vector&). */
 UTILITIES_API std::function<double (const Vector&)> maximumVectorFunctor();
 
-/** Returns std::function pointer to miniumum(const Vector&). */
+/** Returns std::function pointer to minimum(const Vector&). */
 UTILITIES_API std::function<double (const Vector&)> minimumVectorFunctor();
 
 /** Returns std::function pointer to mean(const Vector&). */

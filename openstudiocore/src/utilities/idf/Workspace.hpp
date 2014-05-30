@@ -316,13 +316,13 @@ class UTILITIES_API Workspace {
   bool swap(WorkspaceObject& currentObject, IdfObject& newObject, bool keepTargets = false);
 
   /** Remove object from Workspace with the expectation that it will be destructed.
-   *  This function removes only the object specified by handle it is not overriden
+   *  This function removes only the object specified by handle it is not overridden
    *  to "do the right thing" for ModelObject.
    */
   bool removeObject(const Handle& handle);
 
   /** Remove objects from Workspace with the expectation that they will be destructed.
-   *  This function removes only the objects specified by handles it is not overriden
+   *  This function removes only the objects specified by handles it is not overridden
    *  to "do the right thing" for ModelObjects.
    */
   bool removeObjects(const std::vector<Handle>& handles);
@@ -484,7 +484,7 @@ class UTILITIES_API Workspace {
   friend class detail::WorkspaceObject_Impl;
   friend class detail::Workspace_Impl;
 
-  /** Protected contructor from impl. */
+  /** Protected constructor from impl. */
   Workspace(std::shared_ptr<detail::Workspace_Impl> impl);
 
   /** Returns all objects, including the versionObject. Protected in public class. */
