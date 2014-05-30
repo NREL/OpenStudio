@@ -959,13 +959,14 @@ namespace radiance {
         std::string constructionName = surface->getString(2).get();
         m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
 
-        double interiorVisibleAbsorbtance = surface->interiorVisibleAbsorbtance().get();
-        double exteriorVisibleAbsorbtance = surface->exteriorVisibleAbsorbtance().get();
-        double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-        double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+        // get reflectance
+        double interiorVisibleReflectance = 0.5; // default for space surfaces
+        if (surface->interiorVisibleAbsorbtance()){
+          double interiorVisibleAbsorbtance = surface->interiorVisibleAbsorbtance().get();
+          interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
+        }
 
         m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
-        m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
 
         // write material to library array
         /// \todo deal with exterior surfaces
@@ -1185,17 +1186,18 @@ namespace radiance {
           // set construction of shadingSurface
           std::string constructionName = shadingSurface->getString(1).get();
           m_radSpaces[space_name] += "#--constructionName = " + constructionName + "\n";
- 
-          double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
-          double exteriorVisibleAbsorbtance = shadingSurface->exteriorVisibleAbsorbtance().get();
-          double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
-          double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorbtance;
+
+          // get reflectance
+          double interiorVisibleReflectance = 0.25; // default for space shading surfaces
+          if (shadingSurface->interiorVisibleAbsorbtance()){
+            double interiorVisibleAbsorbtance = shadingSurface->interiorVisibleAbsorbtance().get();
+            interiorVisibleReflectance = 1.0 - interiorVisibleAbsorbtance;
+          }
 
           // write material
           m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
           // polygon header
           m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
-          m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
           // get / write surface polygon
           //
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(*shadingSurface);
@@ -1205,7 +1207,7 @@ namespace radiance {
               vertex != polygon.end();
               ++vertex)
           {
-            m_radSpaces[space_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n\n";
+            m_radSpaces[space_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
           }
 
         }
