@@ -37,6 +37,7 @@ MODELOBJECT_TEMPLATES(SizingZone);
 MODELOBJECT_TEMPLATES(SizingSystem);
 MODELOBJECT_TEMPLATES(ThermalZone);
 MODELOBJECT_TEMPLATES(ThermostatSetpointDualSetpoint);
+MODELOBJECT_TEMPLATES(ZoneControlHumidistat);
 MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlow);
 MODELOBJECT_TEMPLATES(AirLoopHVAC);
 MODELOBJECT_TEMPLATES(SizingPlant);
@@ -123,6 +124,7 @@ MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
 MODELOBJECT_TEMPLATES(WaterUseEquipment);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 MODELOBJECT_TEMPLATES(HeatExchangerAirToAirSensibleAndLatent);
+MODELOBJECT_TEMPLATES(HeatExchangerFluidToFluid);
 MODELOBJECT_TEMPLATES(GroundHeatExchangerVertical);
 
 SWIG_MODELOBJECT(PortList, 1);
@@ -139,6 +141,7 @@ SWIG_MODELOBJECT(SizingZone, 1);
 SWIG_MODELOBJECT(SizingSystem, 1);
 SWIG_MODELOBJECT(ThermalZone, 1);
 SWIG_MODELOBJECT(ThermostatSetpointDualSetpoint, 1);
+SWIG_MODELOBJECT(ZoneControlHumidistat,1);
 SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlow, 1);
 SWIG_MODELOBJECT(AirLoopHVAC, 1);
 SWIG_MODELOBJECT(SizingPlant, 1);
@@ -225,6 +228,7 @@ SWIG_MODELOBJECT(WaterUseEquipmentDefinition, 1);
 SWIG_MODELOBJECT(WaterUseEquipment, 1);
 SWIG_MODELOBJECT(WaterUseConnections, 1);
 SWIG_MODELOBJECT(HeatExchangerAirToAirSensibleAndLatent, 1);
+SWIG_MODELOBJECT(HeatExchangerFluidToFluid,1);
 SWIG_MODELOBJECT(GroundHeatExchangerVertical, 1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)

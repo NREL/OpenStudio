@@ -90,7 +90,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.0.2")] = &VersionTranslator::update_1_0_1_to_1_0_2;
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
-  m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
+  // m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -2294,6 +2295,44 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
 
     m_refactored.push_back( std::pair<IdfObject,IdfObject>(*buildingObject, newBuildingObject) );
     ss << newBuildingObject;
+  }
+
+  return ss.str();
+}
+
+std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, const IddFileAndFactoryWrapper& idd_1_3_5)
+{
+  std::stringstream ss;
+
+  ss << idf_1_3_4.header() << std::endl << std::endl;
+
+  // new version object
+  IdfFile targetIdf(idd_1_3_5.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  BOOST_FOREACH(const IdfObject& object,idf_1_3_4.objects()) {
+
+    if( object.iddObject().name() == "OS:Refrigeration:WalkIn" ) {
+
+      IdfObject newWalkin = object.clone(true);
+
+      boost::optional<std::string> s = object.getString(22);
+      if (s){
+        bool test = newWalkin.setString(22, "");
+        OS_ASSERT(test);
+        test = newWalkin.setString(23, *s);
+        OS_ASSERT(test);
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newWalkin) );
+
+      ss << newWalkin;
+
+    } else {
+
+      ss << object;
+
+    }
   }
 
   return ss.str();

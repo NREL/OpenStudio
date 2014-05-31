@@ -393,7 +393,6 @@ class ModelClassGenerator < SubProjectClassGenerator
     if not @iddObjectType.empty?
       require 'openstudio'
       
-      raise "ModelObjects are Q_OBJECTS. Add -q to the command line." if not @qobject
       raise "ModelObjects follow the pImpl idiom. Add -p to the command line." if not @pImpl
 
       @iddObjectType = @iddObjectType.to_IddObjectType
