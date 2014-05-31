@@ -38,6 +38,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   OptionalString s;
   OptionalDouble d;
   OptionalModelObject temp;
+  OptionalInt n;  
 
   // Create a new IddObjectType::Table_MultiVariableLookup
   IdfObject idfObject(IddObjectType::Table_MultiVariableLookup);
@@ -51,6 +52,159 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     idfObject.setName(*s);
   }
 
+  // InterpolationMethod
+  if( (s = modelObject.interpolationMethod()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InterpolationMethod,s.get());
+  }
+
+  // NumberofInterpolationPoints
+  if( (n = modelObject.numberofInterpolationPoints()) )
+  {
+    idfObject.setInt(Table_MultiVariableLookupFields::NumberofInterpolationPoints,n.get());
+  }
+
+  // CurveType
+  if( (s = modelObject.curveType()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::CurveType,s.get());
+  }
+  
+  // TableDataFormat
+  if( (s = modelObject.tableDataFormat()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::TableDataFormat,s.get());
+  }
+
+  // ExternalFileName
+  // Not supported
+  
+  // X1SortOrder
+  idfObject.setString(Table_MultiVariableLookupFields::X1SortOrder,"Ascending");
+  
+  // X2SortOrder
+  idfObject.setString(Table_MultiVariableLookupFields::X2SortOrder,"Ascending");
+  
+  // NormalizationReference
+  if( (d = modelObject.normalizationReference()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::NormalizationReference,d.get());
+  }
+  
+  // MinimumValueofX1
+  if( (d = modelObject.minimumValueofX1()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumValueofX1,d.get());
+  }
+  
+  // MaximumValueofX1
+  if( (d = modelObject.maximumValueofX1()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumValueofX1,d.get());
+  }
+  
+  // MinimumValueofX2
+  if( (d = modelObject.minimumValueofX2()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumValueofX2,d.get());
+  }
+  
+  // MaximumValueofX2
+  if( (d = modelObject.maximumValueofX2()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumValueofX2,d.get());
+  }
+  
+  // MinimumValueofX3
+  if( (d = modelObject.minimumValueofX3()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumValueofX3,d.get());
+  }
+  
+  // MaximumValueofX3
+  if( (d = modelObject.maximumValueofX3()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumValueofX3,d.get());
+  }
+  
+  // MinimumValueofX4
+  if( (d = modelObject.minimumValueofX4()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumValueofX4,d.get());
+  }
+  
+  // MaximumValueofX4
+  if( (d = modelObject.maximumValueofX4()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumValueofX4,d.get());
+  }
+  
+  // MinimumValueofX5
+  if( (d = modelObject.minimumValueofX5()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumValueofX5,d.get());
+  }
+  
+  // MaximumValueofX5
+  if( (d = modelObject.maximumValueofX5()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumValueofX5,d.get());
+  }
+  
+  // MinimumTableOutput
+  if( (d = modelObject.minimumTableOutput()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MinimumTableOutput,d.get());
+  }
+  
+  // MaximumTableOutput
+  if( (d = modelObject.maximumTableOutput()) )
+  {
+    idfObject.setDouble(Table_MultiVariableLookupFields::MaximumTableOutput,d.get());
+  }
+  
+  // InputUnitTypeforX1
+  if( (s = modelObject.inputUnitTypeforX1()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InputUnitTypeforX1,s.get());
+  }
+  
+  // InputUnitTypeforX2
+  if( (s = modelObject.inputUnitTypeforX2()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InputUnitTypeforX2,s.get());
+  }
+  
+  // InputUnitTypeforX3
+  if( (s = modelObject.inputUnitTypeforX3()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InputUnitTypeforX3,s.get());
+  }
+  
+  // InputUnitTypeforX4
+  if( (s = modelObject.inputUnitTypeforX4()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InputUnitTypeforX4,s.get());
+  }
+  
+  // InputUnitTypeforX5
+  if( (s = modelObject.inputUnitTypeforX5()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::InputUnitTypeforX5,s.get());
+  }
+  
+  // OutputUnitType
+  if( (s = modelObject.outputUnitType()) )
+  {
+    idfObject.setString(Table_MultiVariableLookupFields::OutputUnitType,s.get());
+  }
+  
+  // NumberofIndependentVariables
+  if( (n = modelObject.numberofIndependentVariables()) )
+  {
+    idfObject.setInt(Table_MultiVariableLookupFields::NumberofIndependentVariables,n.get());
+  }
+  
   unsigned t_numNonextensibleFields = idfObject.numNonextensibleFields();
   unsigned t_currentFieldIndex = t_numNonextensibleFields;
   unsigned t_numberofIndependentVariables = modelObject.numberofIndependentVariables();
