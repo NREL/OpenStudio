@@ -75,6 +75,36 @@ option(BUILD_R "Build R package" OFF)
 # Build Ruby gem
 option(BUILD_RUBY_GEM "Build Ruby Gem" OFF)
 
+# Enable runtime checking features
+if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  option(ENABLE_THREAD_SANITIZER "Enable thread sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_THREAD_SANITIZER)
+    add_definitions(-fsanitize=thread -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=thread")
+  endif()
+
+  option(ENABLE_ADDRESS_SANITIZER "Enable address sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_ADDRESS_SANITIZER)
+    add_definitions(-fsanitize=address -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=address")
+  endif()
+
+  option(ENABLE_UNDEFINED_SANITIZER "Enable undefined behavior sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_UNDEFINED_SANITIZER)
+    add_definitions(-fsanitize=undefined -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=undefined")
+  endif()
+
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+  
+
+  mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
+
+endif()
+
+
 if(BUILD_RUBY_GEM)
   find_program(GEM NAMES gem)
   if(NOT GEM)
