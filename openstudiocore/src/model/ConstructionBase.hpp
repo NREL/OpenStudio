@@ -109,13 +109,21 @@ class MODEL_API ConstructionBase : public ResourceObject {
   /** Get the visible absorptance of the interior side of this construction (dimensionless). May 
    *  require simulation ('EnvelopeSummary' table). 
    *
-   *  Attribute Name: 'interiorVisibleAbsorbtance' */
+   *  Attribute Name: 'interiorVisibleAbsorptance' */
+  boost::optional<double> interiorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> interiorVisibleAbsorbtance() const;
 
   /** Get the visible absorptance of the exterior side of this construction (dimensionless). May 
    *  require simulation ('EnvelopeSummary' table). 
    *
-   *  Attribute Name: 'exteriorVisibleAbsorbtance' */
+   *  Attribute Name: 'exteriorVisibleAbsorptance' */
+  boost::optional<double> exteriorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> exteriorVisibleAbsorbtance() const;
 
   /** Get the visible transmittance of this construction (dimensionless). May require simulation 

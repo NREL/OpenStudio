@@ -215,7 +215,7 @@ namespace openstudio{
     return result;
   }
 
-  /// generates a Vector of N points logorithmically spaced between and including base^a and base^b.
+  /// generates a Vector of N points logarithmically spaced between and including base^a and base^b.
   Vector logspace(double a, double b, unsigned N, double base)
   {
     Vector powers = linspace(a,b,N);

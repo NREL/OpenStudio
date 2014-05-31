@@ -166,7 +166,7 @@ void LostCloudConnectionDialog::createCloudConnectionWidgets(QVBoxLayout * vLayo
 
   label = new QLabel;
   label->setWordWrap(true);
-  label->setText("<b>" + tr("Stop Cloud. ") + "</b>" + tr("Disconnect from cloud.  This option will make the failed cloud session unavaible to Pat.  Any data that has not been downloaded to Pat will be lost.  Use the AWS Console to verify that the Amazon service have been completely shutdown."));
+  label->setText("<b>" + tr("Stop Cloud. ") + "</b>" + tr("Disconnect from cloud.  This option will make the failed cloud session unavailable to Pat.  Any data that has not been downloaded to Pat will be lost.  Use the AWS Console to verify that the Amazon service have been completely shutdown."));
   hLayout->addWidget(label);
 
   label = new QLabel;

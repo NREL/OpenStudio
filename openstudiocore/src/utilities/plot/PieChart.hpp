@@ -31,7 +31,7 @@
 namespace openstudio{
 
   /** Class which represents a pie chart.  Data for the chart are stored in a Vector, 
-  *   with each element corresponding to a slice in the chart and each slice is labelled.
+  *   with each element corresponding to a slice in the chart and each slice is labeled.
   *   The size of the pie is normalized to the sum of the data, slices may be hidden to
   *   represent "missing" sections.
   *  

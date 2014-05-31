@@ -40,7 +40,7 @@ namespace openstudio{
   class UTILITIES_API Transformation{
   public:
 
-    /// default constructor creates identity transfomation
+    /// default constructor creates identity transformation
     Transformation();
 
     /// constructor from storage, asserts matrix is 4x4

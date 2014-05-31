@@ -58,7 +58,7 @@
 #include <boost/config.hpp>
 #include <boost/filesystem/path.hpp>
 
-/** MAKE_PTR_SERIALIZABLE(T) macro is placed inside a publically visiable portion of class T.
+/** MAKE_PTR_SERIALIZABLE(T) macro is placed inside a publicly visible portion of class T.
 *   The macro provides serialization routines.  The class must inherit from SharedFromThis<T>
 *   in Macro.h.
 *
@@ -123,7 +123,7 @@ static Ptr fromBinary(std::istream& is){ \
 static Ptr fromBinary(const std::string& str) {std::stringstream ss; ss << str; return fromBinary(ss);} \
 
 
-/** MAKE_POD_SERIALIZABLE(T) macro is placed inside a publically visiable portion of class T.
+/** MAKE_POD_SERIALIZABLE(T) macro is placed inside a publicly visible portion of class T.
 *   The macro provides serialization routines.
 *
 *   Example usage:

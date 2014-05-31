@@ -37,7 +37,7 @@ using std::min;
 
 namespace openstudio{
 
-  /// default constructor creates identity transfomation
+  /// default constructor creates identity transformation
   Transformation::Transformation()
     : m_storage(identity_matrix<double>(4))
   {}
@@ -235,7 +235,7 @@ namespace openstudio{
     return Transformation(matrix);
   }
 
-  /// get the matrix representationdirectly
+  /// get the matrix representation directly
   Matrix Transformation::matrix() const
   {
     return m_storage;

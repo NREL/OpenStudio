@@ -81,7 +81,7 @@ namespace detail {
   int DesignOfExperiments_Impl::createNextIteration(Analysis& analysis) {
     int result(0);
 
-    // to make sure problem type check has already occured. this is stated usage in header.
+    // to make sure problem type check has already occurred. this is stated usage in header.
     OS_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
     // nothing else is supported yet
     DesignOfExperimentsOptions options = designOfExperimentsOptions();

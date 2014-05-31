@@ -33,7 +33,7 @@ class QTimer;
 namespace openstudio {
 
   /** Class for watching either a file or directory, QFileSystemWatcher has issues when watching 
-   **  many files so it is not recomended to use too many of these objects.
+   **  many files so it is not recommended to use too many of these objects.
    **/
   class UTILITIES_API PathWatcher : public QObject{
 

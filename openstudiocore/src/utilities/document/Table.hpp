@@ -38,8 +38,8 @@ namespace detail {
 }
 
 /** Table is a SectionElement that provides support for Table creation, serialization,
- *  and de-serialization. Tables can be serialized to their own internal format, HTML, LaTeX,
- *  CSV or JSON. Tables can be de-serialized from their own internal format and CSV. */
+ *  and deserialization. Tables can be serialized to their own internal format, HTML, LaTeX,
+ *  CSV or JSON. Tables can be deserialized from their own internal format and CSV. */
 class UTILITIES_API Table : public SectionElement {
  public:
 

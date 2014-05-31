@@ -354,14 +354,14 @@ TEST_F(ModelFixture, Surface_Area_In_File)
     ASSERT_TRUE(thermalConductance);
     EXPECT_TRUE(*thermalConductance > 0);
 
-    // check that we can get interior and exterior visible absorbtances
-    OptionalDouble interiorVisibleAbsorbtance = surface.interiorVisibleAbsorbtance();
-    ASSERT_TRUE(interiorVisibleAbsorbtance);
-    EXPECT_TRUE(*interiorVisibleAbsorbtance > 0);
+    // check that we can get interior and exterior visible absorptances
+    OptionalDouble interiorVisibleAbsorptance = surface.interiorVisibleAbsorptance();
+    ASSERT_TRUE(interiorVisibleAbsorptance);
+    EXPECT_TRUE(*interiorVisibleAbsorptance > 0);
 
-    OptionalDouble exteriorVisibleAbsorbtance = surface.exteriorVisibleAbsorbtance();
-    ASSERT_TRUE(exteriorVisibleAbsorbtance);
-    EXPECT_TRUE(*exteriorVisibleAbsorbtance > 0);
+    OptionalDouble exteriorVisibleAbsorptance = surface.exteriorVisibleAbsorptance();
+    ASSERT_TRUE(exteriorVisibleAbsorptance);
+    EXPECT_TRUE(*exteriorVisibleAbsorptance > 0);
 
     // check that construction is returned as resource used by surface
     ResourceObjectVector resources = surface.resources();

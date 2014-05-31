@@ -359,7 +359,7 @@ private:
   // curve thickness for multiple lines trac #170
   int m_lineThickness;
 
-  // set line based on color and number of curves and thicknes trac #179
+  // set line based on color and number of curves and thickness trac #179
   QPen curvePen(QColor &color);
 
 

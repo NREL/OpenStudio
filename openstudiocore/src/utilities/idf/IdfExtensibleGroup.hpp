@@ -148,7 +148,7 @@ class UTILITIES_API IdfExtensibleGroup {
    *  by the IddObject. */
   std::vector<unsigned> requiredFields() const;
 
-  /** Equality comparitor for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for 
+  /** Equality comparator for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for 
    *  strict identity (same IdfObject, same groupIndex()). */
   bool operator==(const IdfExtensibleGroup& other) const;
 

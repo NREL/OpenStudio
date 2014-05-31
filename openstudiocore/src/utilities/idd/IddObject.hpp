@@ -147,7 +147,7 @@ class UTILITIES_API IddObject {
   /** Returns the indices of all fields of url type. */
   std::vector<unsigned> urlFields() const;
 
-  /** Returns the ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Thows if
+  /** Returns the ExtensibleIndex(groupIndex,fieldIndex) that corresponds to field index. Throws if
    *  !isExtensibleField(index). */
   ExtensibleIndex extensibleIndex(unsigned index) const;
 

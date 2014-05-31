@@ -754,7 +754,7 @@ double Economics::getPayBack( const std::vector< double >& cashFlowSavings )
 double Economics::payBack( const std::vector< double >& cashFlowSavings )
 {
   //this calculates payback.  warning... if the expected life or
-  //the equipment isn't symetrical, then the SPB may be longer than required.
+  //the equipment isn't symmetrical, then the SPB may be longer than required.
   double result = 0.0;
   double diff = 0.0;
   double iResult = 0.0;
@@ -773,7 +773,7 @@ double Economics::payBack( const std::vector< double >& cashFlowSavings )
       }
       else
       {
-        //skip the initial captial for the iterated years
+        //skip the initial capital for the iterated years
         if ( iYear != 0 ) 
           diff = diff + cashFlowSavings.at(iYear);
       }

@@ -92,7 +92,7 @@ namespace openstudio{
     Date startDate() const;
 
 
-    /// get the last date in the clanedar
+    /// get the last date in the calendar
     Date endDate() const;
 
     

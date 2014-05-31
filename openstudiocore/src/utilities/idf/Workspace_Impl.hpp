@@ -316,13 +316,13 @@ namespace detail {
     virtual bool swap(WorkspaceObject& currentObject,IdfObject& newObject,bool keepTargets = false);
 
     /** Remove object from Workspace with the expectation that it will be destructed.
-     *  This function removes only the object specified by handle it is not overriden
+     *  This function removes only the object specified by handle it is not overridden
      *  to "do the right thing" for ModelObject.
      */
     virtual bool removeObject(const Handle& handle);
 
     /** Remove objects from Workspace with the expectation that they will be destructed.
-     *  This function removes only the objects specified by handles it is not overriden
+     *  This function removes only the objects specified by handles it is not overridden
      *  to "do the right thing" for ModelObjects.
      */
     virtual bool removeObjects(const std::vector<Handle>& handles);

@@ -179,12 +179,20 @@ class MODEL_API PlanarSurface : public ParentObject {
   *  Attribute name: heatCapacity */
   boost::optional<double> heatCapacity() const;
 
-  /// Returns interior visible absorbtance (unitless), if available.
-  /// Attribute name: interiorVisibleAbsorbtance
+  /// Returns interior visible absorptance (unitless), if available.
+  /// Attribute name: interiorVisibleAbsorptance
+  boost::optional<double> interiorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> interiorVisibleAbsorbtance() const;
 
-  /// Returns exterior visible absorbtance (unitless), if available.
-  /// Attribute name: exteriorVisibleAbsorbtance
+  /// Returns exterior visible absorptance (unitless), if available.
+  /// Attribute name: exteriorVisibleAbsorptance
+  boost::optional<double> exteriorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> exteriorVisibleAbsorbtance() const;
 
   /// Returns visible transmittance (unitless), if available.

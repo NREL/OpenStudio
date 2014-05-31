@@ -130,7 +130,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   virtual ~SimpleProject() {};
 
-  /** Open an existing SimpleProject, fails if cant find osp or if has 0 or > 1 analyses. 
+  /** Open an existing SimpleProject, fails if can't find osp or if has 0 or > 1 analyses. 
    *  Purposefully does not deserialize the analysis::Analysis from project::AnalysisRecord. */
   static boost::optional<SimpleProject> open(
       const openstudio::path& projectDir,
@@ -238,7 +238,7 @@ class ANALYSISDRIVER_API SimpleProject {
   /** Attempts to copy the OSM or IDF model at currentSeedLocation into this project's
    *  directory structure. Returns false if currentSeedLocation does not point to an
    *  OSM or IDF, or cannot be located. IDF files are copied over directly; OSM files
-   *  are also version translated, bring over a subset of their auxillary files, and have
+   *  are also version translated, bring over a subset of their auxiliary files, and have
    *  their weather files hard-assigned to the analysis. 
    *
    *  Since OpenStudio Models may also have measures attached, such measures are imported
@@ -252,7 +252,7 @@ class ANALYSISDRIVER_API SimpleProject {
    *  seed model, then the new measure and its arguments are simply copied over and used
    *  as-is. (This assumes that the seed model is internally consistent.) If there are 
    *  duplicates, we initially set up the imported measure to use the project's copy of 
-   *  the measure but the seed model's arguments. Measures for which this occured are
+   *  the measure but the seed model's arguments. Measures for which this occurred are
    *  then passed out as result.second so the user application can, if desired, 
    *  update the project measure to the version used by the seed.
    *
@@ -347,7 +347,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Creates DataPoint that swaps out seed model for altModel. Fails if
    *  analysis().dataPointsAreInvalid() or if !isPATProject() or if altModel is not an OSM or
-   *  cannot be located. altModel is copied over into projectDir, as are its auxillary files, and
+   *  cannot be located. altModel is copied over into projectDir, as are its auxiliary files, and
    *  the OSM is version translated if necessary. */
   bool addAlternateModel(const openstudio::path& altModel);
 

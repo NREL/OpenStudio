@@ -175,7 +175,7 @@ namespace detail {
       /// get value as string
       std::string valueAsString() const;
 
-      /// set value. throws if wront type.
+      /// set value. throws if wrong type.
       void setValue(const char* value);
 
       /// set value. throws if wrong type.
