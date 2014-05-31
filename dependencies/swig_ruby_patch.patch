@@ -1,0 +1,22 @@
+diff -rupN swig-3.0.0/Lib/ruby/rubyclasses.swg SWIG/Lib/ruby/rubyclasses.swg
+--- swig-3.0.0/Lib/ruby/rubyclasses.swg	2014-03-16 15:49:54.000000000 -0600
++++ SWIG/Lib/ruby/rubyclasses.swg	2014-05-31 10:45:42.000000000 -0600
+@@ -36,7 +36,8 @@
+ 
+ %fragment("GC_VALUE_definition","header") {
+ namespace swig {
+-  class SwigGCReferences {
++namespace { // static values are clashing on MacOS in an inexplicable way. This code should theoretically do nothing, but fixes crash-on-exit in bindings
++   class SwigGCReferences {
+     // Hash of all GC_VALUE's currently in use
+     static SwigGCReferences s_references;
+ 
+@@ -305,7 +306,7 @@ namespace swig {
+   SwigGCReferences SwigGCReferences::s_references;
+ 
+   typedef GC_VALUE LANGUAGE_OBJ;
+-
++} // anonymous namespace
+ } // namespace swig
+ 
+ } // %fragment(GC_VALUE_definition)

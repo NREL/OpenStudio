@@ -77,6 +77,7 @@ option(BUILD_PACKAGE "Build package" OFF)
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
 
+
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 if(UNIX)
@@ -547,7 +548,7 @@ if(BUILD_SWIG)
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-3.0.0.tar.gz
         URL_MD5 9c8278fad527dda4bf38edffe5acc394
 
-        PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
+        PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/swig_ruby_patch.patch && cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
@@ -570,7 +571,7 @@ endif()
 if(BUILD_BOOST)
   if(APPLE)
     if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
-      set(apple-frameworks "-stdlib=libc++")
+      set(apple-frameworks "-stdlib=libc++ -std=c++11")
     else()
       set(apple-frameworks "-stdlib=libstdc++")
     endif()
@@ -771,8 +772,6 @@ ExternalProject_Add(OpenStudioCore
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
     -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
-    -DBoost_INCLUDE_DIR:STRING=${Boost_INCLUDE_DIR}
-    -DBoost_LIBRARY_DIR:STRING=${Boost_LIBRARY_DIR}
     -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     -DQt5Network_DIR:STRING=${Qt5Network_DIR}
