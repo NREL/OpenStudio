@@ -718,14 +718,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     if(BUILD_NODE_MODULES)
       set(V8_DEFINES "-DBUILD_NODE_MODULE")
+      set(SWIG_ENGINE "-node")
     else()
       set(V8_DEFINES "")
+      set(SWIG_ENGINE "-v8")
     endif()
 
     add_custom_command(
       OUTPUT ${SWIG_WRAPPER}
       COMMAND "${SWIG_EXECUTABLE}"
-              "-javascript" "-v8" "-c++"
+              "-javascript" ${SWIG_ENGINE} "-c++"
               #-namespace ${NAMESPACE}
               #-features autodoc=1
               #-outdir "${CSHARP_GENERATED_SRC_DIR}"
@@ -738,7 +740,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     )
 
     if(BUILD_NODE_MODULES)
-      include_directories("${NODE_INCLUDE_DIR}" "${NODE_INCLUDE_DIR}/deps/v8/include" "${NODE_INCLUDE_DIR}/deps/uv/include")
+      include_directories("${NODE_INCLUDE_DIR}" "${NODE_INCLUDE_DIR}/deps/v8/include" "${NODE_INCLUDE_DIR}/deps/uv/include" "${NODE_INCLUDE_DIR}/src")
     else()
       include_directories(${V8_INCLUDE_DIR})
     endif()
@@ -760,7 +762,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/v8/")
 
     if(MSVC)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /DBUILDING_NODE_EXTENSION")
+    else()
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DBUILDING_NODE_EXTENSION")
     endif()
 
     if(APPLE)

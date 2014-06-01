@@ -533,8 +533,8 @@ if(BUILD_SWIG)
 
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
-        GIT_REPOSITORY git://github.com/lefticus/swig-v8.git
-        GIT_TAG devel
+        GIT_REPOSITORY git://github.com/lefticus/swig.git
+        GIT_TAG master
         # URL http://github.com/lefticus/swig-v8/archive/devel.zip
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && /bin/sh -c "PATH=\$PATH:${autoconf_path} ./autogen.sh" && cd - && ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install --disable-ccache
