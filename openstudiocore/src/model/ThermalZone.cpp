@@ -67,6 +67,8 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "ThermostatSetpointDualSetpoint.hpp"
 #include "ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "ZoneControlHumidistat.hpp"
+#include "ZoneControlHumidistat_Impl.hpp"
 #include "DesignSpecificationOutdoorAir.hpp"
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "Schedule.hpp"
@@ -271,6 +273,17 @@ namespace detail {
 
   IddObjectType ThermalZone_Impl::iddObjectType() const {
     return ThermalZone::iddObjectType();
+  }
+
+  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandComponent)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
   }
 
   int ThermalZone_Impl::multiplier() const {
@@ -961,6 +974,26 @@ namespace detail {
     setString(OS_ThermalZoneFields::ThermostatName, "");
   }
 
+  boost::optional<ZoneControlHumidistat> ThermalZone_Impl::zoneControlHumidistat() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ZoneControlHumidistat>(OS_ThermalZoneFields::HumidistatName);
+  }
+
+  bool ThermalZone_Impl::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
+  {
+    return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+  }
+
+  void ThermalZone_Impl::resetZoneControlHumidistat()
+  {
+    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() )
+    {
+      humidistat->remove();
+    }
+
+    setString(OS_ThermalZoneFields::HumidistatName, "");
+  }
+
   /// Combines all spaces referencing this zone into a single space referencing this zone.
   /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
   /// If this zone has one space referencing it, then that space is returned.
@@ -1354,7 +1387,7 @@ namespace detail {
       comp.remove();
     }
 
-    //detatch it from the zone air node
+    //detach it from the zone air node
     Node airNode = this->zoneAirNode();
 
     airNode.remove();
@@ -1464,6 +1497,15 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ModelObject> ThermalZone_Impl::zoneControlHumidistatAsModelObject() const {
+    OptionalModelObject result;
+    OptionalZoneControlHumidistat intermediate = zoneControlHumidistat();
+    if (intermediate) {
+      result = *intermediate;
+    }
+    return result;
+  }
+
   boost::optional<ModelObject> ThermalZone_Impl::primaryDaylightingControlAsModelObject() const {
     OptionalModelObject result;
     OptionalDaylightingControl intermediate = primaryDaylightingControl();
@@ -1522,6 +1564,22 @@ namespace detail {
     }
     else {
       resetThermostatSetpointDualSetpoint();
+    }
+    return true;
+  }
+
+  bool ThermalZone_Impl::setZoneControlHumidistatAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalZoneControlHumidistat intermediate = modelObject->optionalCast<ZoneControlHumidistat>();
+      if (intermediate) {
+        return setZoneControlHumidistat(*intermediate);
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      resetZoneControlHumidistat();
     }
     return true;
   }
@@ -2473,6 +2531,21 @@ bool ThermalZone::setThermostatSetpointDualSetpoint(const ThermostatSetpointDual
 void ThermalZone::resetThermostatSetpointDualSetpoint()
 {
   getImpl<detail::ThermalZone_Impl>()->resetThermostatSetpointDualSetpoint();
+}
+
+boost::optional<ZoneControlHumidistat> ThermalZone::zoneControlHumidistat() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneControlHumidistat();
+}
+
+bool ThermalZone::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setZoneControlHumidistat(humidistat);
+}
+
+void ThermalZone::resetZoneControlHumidistat()
+{
+  getImpl<detail::ThermalZone_Impl>()->resetZoneControlHumidistat();
 }
 
 void ThermalZone::disconnect()

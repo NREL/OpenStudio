@@ -1,7 +1,7 @@
 
 OS:Version,
   {a7e6ad9c-7645-4733-acee-49006df38b5f}, !- Handle
-  1.3.3;                                  !- Version Identifier
+  1.3.5;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Handle
@@ -6238,4 +6238,27 @@ OS:Coil:Heating:Gas,
   0,                                      !- Parasitic Electric Load {W}
   ,                                       !- Part Load Fraction Correlation Curve Name
   0;                                      !- Parasitic Gas Load {W}
+
+OS:HeatExchanger:FluidToFluid,
+  {fd491069-c3a7-456d-ae6b-203361d31084}, !- Handle
+  Fluid Heat Exchanger,        !- Name
+  ,                                       !- Availability Schedule Name
+  ,                                       !- Loop Demand Side Inlet Node
+  ,                                       !- Loop Demand Side Outlet Node
+  autosize,                               !- Loop Demand Side Design Flow Rate {m3/s}
+  ,                                       !- Loop Supply Side Inlet Node
+  ,                                       !- Loop Supply Side Outlet Node
+  autosize,                               !- Loop Supply Side Design Flow Rate {m3/s}
+  Ideal,                                  !- Heat Exchange Model Type
+  autosize,                               !- Heat Exchanger U-Factor Times Area Value {W/k}
+  UncontrolledOn,                         !- Control Type
+  ,                                       !- Heat Exchanger Setpoint Node Name
+  0.01,                                   !- Minimum Temperature Difference to Activate Heat Exchanger {deltaC}
+  LoopToLoop,                             !- Heat Transfer Metering End Use Type
+  ,                                       !- Component Override Loop Supply Side Inlet Node
+  ,                                       !- Component Override Loop Demand Side Inlet Node
+  Loop,                                   !- Component Override Cooling Control Temperature Mode
+  1,                                      !- Sizing Factor
+  0,                                      !- Operation Minimum Temperature Limit {C}
+  100;                                    !- Operation Maximum Temperature Limit {C}
 

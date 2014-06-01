@@ -76,6 +76,12 @@ class ThermalZonesController : public ModelSubTabController
 
   void setCoolingSchedule(model::ThermalZone &, model::OptionalSchedule &);
 
+  void enableHumidistat(model::ThermalZone &,bool);
+
+  void setHumidifyingSchedule(model::ThermalZone &, model::OptionalSchedule &);
+
+  void setDehumidifyingSchedule(model::ThermalZone &, model::OptionalSchedule &);
+
   void addComponentToZone(model::ThermalZone &, Handle &);
 
   void removeZoneHVACComponent( model::ZoneHVACComponent & );
