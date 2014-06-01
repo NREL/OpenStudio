@@ -113,20 +113,20 @@ class PatApp : public QApplication, public BaseApp
   // ensure that we set the seed on this project not a copy, will also cached the seed models
   bool setSeed(const FileReference& currentSeedLocation);
 
-  // Request to save the current project, will prompt user as neccessary.
+  // Request to save the current project, will prompt user as necessary.
   // Will return true if the path can be opened.
   bool userInteractiveOpenProject(QString path);
   
-  // Request to close the current project, will prompt user as neccessary.
+  // Request to close the current project, will prompt user as necessary.
   // Will return true if there is no current project.  Otherwise returns true
   // if the current project was closed.
   bool userInteractiveCloseProject();
 
-  // Request to save the current project, will prompt user as neccessary.
+  // Request to save the current project, will prompt user as necessary.
   // Will return false if there is no current project to save.
   bool userInteractiveSaveProject(bool allowCancel);
 
-  // Request to save the current project to a new location, will prompt user as neccessary.
+  // Request to save the current project to a new location, will prompt user as necessary.
   // Will return false if there is no current project to save.
   bool userInteractiveSaveAsProject();
 
@@ -313,4 +313,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_PATAPP_H
+#endif // PATAPP_PATAPP_HPP

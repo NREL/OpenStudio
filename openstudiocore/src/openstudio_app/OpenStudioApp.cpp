@@ -18,7 +18,7 @@
  **********************************************************************/
 
 #include "OpenStudioApp.hpp"
-#include "AboutBox.hpp"
+#include <openstudio_app/AboutBox.hpp>
 #include "StartupMenu.hpp"
 #include "StartupView.hpp"
 #include "../openstudio_lib/MainWindow.hpp"

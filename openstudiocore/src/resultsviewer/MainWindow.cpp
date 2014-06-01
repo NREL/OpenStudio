@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include "MainWindow.hpp"
-#include "AboutBox.hpp"
+#include <resultsviewer/AboutBox.hpp>
 #include "ChangeAliasDialog.hpp"
 
 #include "../utilities/core/String.hpp"
