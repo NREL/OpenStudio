@@ -313,8 +313,8 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   endif()
   
   if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
-    set(Boost_INCLUDE_DIR "C:/local/boost_1_55_0" CACHE PATH "Boost Include Dir" FORCE)
-    set(Boost_LIBRARY_DIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}" CACHE PATH "Boost Library Dir" FORCE)
+    set(BOOST_ROOT "C:/local/boost_1_55_0")
+    set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
     find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log QUIET)
     if(NOT Boost_FOUND)
       message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
@@ -584,6 +584,7 @@ if(BUILD_BOOST)
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   elseif(UNIX)
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
@@ -593,6 +594,7 @@ if(BUILD_BOOST)
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   else()
     # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't
     # be trying to find it
@@ -625,6 +627,7 @@ if(BUILD_BOOST)
     endif()
 
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   endif()
 endif()
 
@@ -771,7 +774,7 @@ ExternalProject_Add(OpenStudioCore
     -DCMAKE_VERSION_PATCH:STRING=${CMAKE_VERSION_PATCH}
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
-    -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
+    -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
     -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     -DQt5Network_DIR:STRING=${Qt5Network_DIR}
