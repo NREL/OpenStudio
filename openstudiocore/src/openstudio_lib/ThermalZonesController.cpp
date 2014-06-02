@@ -33,6 +33,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/ZoneControlHumidistat.hpp"
+#include "../model/ZoneControlHumidistat_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -53,6 +55,9 @@ ThermalZonesController::ThermalZonesController(bool isIP, const model::Model & m
 
   connect( thermalZoneView,SIGNAL(enableThermostatClicked(model::ThermalZone &, bool)),
            this,SLOT(enableThermostat(model::ThermalZone &, bool)) );
+
+  connect( thermalZoneView,SIGNAL(enableHumidistatClicked(model::ThermalZone &, bool)),
+           this,SLOT(enableHumidistat(model::ThermalZone &, bool)) );
 
   connect( thermalZoneView,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )),
            this,SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )) );
@@ -129,6 +134,54 @@ void ThermalZonesController::setCoolingSchedule(model::ThermalZone & thermalZone
     else
     {
       thermostat->resetCoolingSchedule();
+    }
+  }
+}
+
+void ThermalZonesController::enableHumidistat(model::ThermalZone & thermalZone, bool enable)
+{
+  if( enable )
+  {
+    model::ZoneControlHumidistat humidistat(model());
+
+    thermalZone.setZoneControlHumidistat(humidistat);
+  }
+  else
+  {
+    thermalZone.resetZoneControlHumidistat();
+  }
+}
+
+void ThermalZonesController::setHumidifyingSchedule(model::ThermalZone & thermalZone, model::OptionalSchedule & schedule)
+{
+  model::OptionalZoneControlHumidistat humidistat = thermalZone.zoneControlHumidistat();
+
+  if( humidistat )
+  {
+    if( schedule )
+    {
+      humidistat->setHumidifyingRelativeHumiditySetpointSchedule(schedule.get());
+    }
+    else
+    {
+      humidistat->resetHumidifyingRelativeHumiditySetpointSchedule();
+    }
+  }
+}
+
+void ThermalZonesController::setDehumidifyingSchedule(model::ThermalZone & thermalZone, model::OptionalSchedule & schedule)
+{
+  model::OptionalZoneControlHumidistat humidistat = thermalZone.zoneControlHumidistat();
+
+  if( humidistat )
+  {
+    if( schedule )
+    {
+      humidistat->setDehumidifyingRelativeHumiditySetpointSchedule(schedule.get());
+    }
+    else
+    {
+      humidistat->resetDehumidifyingRelativeHumiditySetpointSchedule();
     }
   }
 }

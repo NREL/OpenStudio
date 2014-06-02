@@ -250,6 +250,11 @@ namespace detail {
     return ModelObject_Impl::clone(model);
   }
 
+  std::vector<HVACComponent> HVACComponent_Impl::edges(bool isDemandComponent)
+  {
+    return std::vector<HVACComponent>();
+  }
+
   boost::optional<HVACComponent> HVACComponent_Impl::containingHVACComponent() const
   {
     return boost::none;

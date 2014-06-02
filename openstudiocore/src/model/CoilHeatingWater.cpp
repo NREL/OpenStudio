@@ -35,8 +35,6 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
-#include "AirLoopHVACUnitarySystem.hpp"
-#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "ScheduleCompact.hpp"

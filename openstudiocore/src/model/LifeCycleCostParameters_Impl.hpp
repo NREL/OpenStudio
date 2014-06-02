@@ -20,9 +20,6 @@
 #ifndef MODEL_LIFECYCLECOSTPARAMETERS_IMPL_HPP
 #define MODEL_LIFECYCLECOSTPARAMETERS_IMPL_HPP
 
-
-#include "LifeCycleCostParameters.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "../utilities/core/Optional.hpp"

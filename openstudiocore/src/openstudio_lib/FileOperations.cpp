@@ -42,8 +42,6 @@
 
 #include "../energyplus/ReverseTranslator.hpp"
 
-#include "../utilities/core/ApplicationPathHelpers.hpp"
-
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"

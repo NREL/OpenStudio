@@ -39,7 +39,6 @@
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
-#include "../CurveBiquadratic_Impl.hpp"
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
 #include "../../utilities/units/Quantity.hpp"
 

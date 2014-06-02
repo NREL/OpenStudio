@@ -32,7 +32,6 @@
 #include <QAction>
 #include <QColor>
  
-#include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_legend_item.h>

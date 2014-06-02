@@ -24,7 +24,6 @@
 #include "../shared_gui_components/OSListView.hpp"
 #include "../analysis/MeasureGroup.hpp"
 #include "../analysis/RubyMeasure.hpp"
-#include "../analysis/RubyMeasure.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include <QObject>
 #include <QPointer>

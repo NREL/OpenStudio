@@ -96,7 +96,7 @@ class CloudMonitor : public QObject
   // Stop current project cloud session
   void stopCloud();
 
-  // Restablish connection to current project session.
+  // Reestablish connection to current project session.
   // Use this when you open a new project that has a running session.
   // This only supports clouds that are stopped or running.
   // Behavior is undefined for clouds that are starting or stopping.
@@ -119,7 +119,7 @@ class CloudMonitor : public QObject
   // and enable UI as required.
   void onStartCloudWorkerComplete();
 
-  // Reset the cloud provider, renable UI, etc.
+  // Reset the cloud provider, enable UI, etc.
   void onStopCloudWorkerComplete();
 
   void onReconnectCloudWorkerComplete();

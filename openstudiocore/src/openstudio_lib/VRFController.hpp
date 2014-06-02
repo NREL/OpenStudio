@@ -25,7 +25,6 @@
 #include <boost/optional.hpp>
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../shared_gui_components/OSListController.hpp"
-#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
 class QGraphicsScene;
 class QGraphicsView;

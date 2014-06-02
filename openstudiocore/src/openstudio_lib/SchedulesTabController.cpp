@@ -23,7 +23,6 @@
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
 #include "OSItem.hpp"
-#include "OSItem.hpp"
 #include "ScheduleDialog.hpp"
 #include "ScheduleSetsController.hpp"
 #include "SchedulesTabView.hpp"

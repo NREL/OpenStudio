@@ -347,6 +347,17 @@ void StraightComponent_Impl::disconnect()
   this->model().disconnect(mo, this->outletPort());
 }
 
+std::vector<HVACComponent> StraightComponent_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+      edges.push_back(*edgeObject);
+    }
+  }
+  return edges;
+}
+
 bool StraightComponent_Impl::addToNode(Node & node)
 {
   Model _model = node.model(); 

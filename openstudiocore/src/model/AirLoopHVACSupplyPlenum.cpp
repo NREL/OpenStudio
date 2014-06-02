@@ -36,7 +36,6 @@
 #include "AirTerminalSingleDuctUncontrolled.hpp"
 #include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
-#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -280,8 +279,8 @@ namespace detail {
       mixer = t_airLoopHVAC->zoneMixer();
     }
 
-    BOOST_ASSERT(splitter);
-    BOOST_ASSERT(mixer);
+    OS_ASSERT(splitter);
+    OS_ASSERT(mixer);
 
     return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),terminal);
   }

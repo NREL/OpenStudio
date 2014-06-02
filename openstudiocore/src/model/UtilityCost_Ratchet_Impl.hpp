@@ -20,9 +20,6 @@
 #ifndef MODEL_UTILITYCOST_RATCHET_IMPL_HPP
 #define MODEL_UTILITYCOST_RATCHET_IMPL_HPP
 
-
-#include "UtilityCost_Ratchet.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "UtilityCost_Ratchet.hpp"
 #include "../utilities/core/Optional.hpp"

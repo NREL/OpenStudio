@@ -28,8 +28,6 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneAirHeatBalanceAlgorithm_FieldEnums.hxx>
 
-#include "../utilities/core/Assert.hpp"
-
 namespace openstudio {
 namespace model {
 

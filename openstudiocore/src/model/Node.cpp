@@ -39,6 +39,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
@@ -99,6 +101,22 @@ namespace detail{
   unsigned Node_Impl::outletPort()
   {
     return OS_NodeFields::OutletPort;
+  }
+
+  std::vector<HVACComponent> Node_Impl::edges(bool isDemandComponent)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+      if( boost::optional<PortList> portList = edgeModelObject->optionalCast<PortList>() ) {
+        if( boost::optional<ThermalZone> thermalZone = portList->thermalZone() ) {
+          edges.push_back(*thermalZone);
+        }
+      }
+      else if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
   }
 
   std::vector<IdfObject> Node_Impl::remove()

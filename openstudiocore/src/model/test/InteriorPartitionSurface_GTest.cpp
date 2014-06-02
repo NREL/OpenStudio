@@ -26,8 +26,6 @@
 #include "../InteriorPartitionSurfaceGroup.hpp"
 #include "../InteriorPartitionSurfaceGroup_Impl.hpp"
 
-#include "../InteriorPartitionSurfaceGroup_Impl.hpp"
-
 using namespace openstudio::model;
 using namespace openstudio;
 

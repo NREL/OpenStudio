@@ -29,6 +29,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "RefrigerationDefrostCycleParameters.hpp"
+#include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
@@ -37,6 +39,7 @@
 #include <utilities/idd/OS_Refrigeration_WalkIn_FieldEnums.hxx>
 
 #include "../utilities/units/Unit.hpp"
+#include "../utilities/time/Time.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -118,6 +121,11 @@ namespace detail {
     std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
     t_model->blockSignals(true);
 
+    if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
+      std::vector<IdfObject> removedDefrostCycleParameters = walkinDefrostCycleParameters->remove();
+      result.insert(result.end(), removedDefrostCycleParameters.begin(), removedDefrostCycleParameters.end());
+    }
+
     std::vector<RefrigerationWalkInZoneBoundary> zoneBoundaries = this->zoneBoundaries();
     for( auto & zoneBoundary : zoneBoundaries )
     {
@@ -136,6 +144,10 @@ namespace detail {
   ModelObject RefrigerationWalkIn_Impl::clone(Model model) const
   {
     RefrigerationWalkIn modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
+
+    if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
+      modelObjectClone.getImpl<RefrigerationWalkIn_Impl>()->setWalkinDefrostCycleParameters(walkinDefrostCycleParameters->clone(model).cast<RefrigerationDefrostCycleParameters>());
+    }
 
     modelObjectClone.removeAllZoneBoundaries();
 
@@ -327,6 +339,120 @@ namespace detail {
 
   bool RefrigerationWalkIn_Impl::isInsulatedFloorUValueDefaulted() const {
     return isEmpty(OS_Refrigeration_WalkInFields::InsulatedFloorUValue);
+  }
+
+  boost::optional<RefrigerationDefrostCycleParameters> RefrigerationWalkIn_Impl::optionalWalkinDefrostCycleParameters() const {
+    return getObject<ModelObject>().getModelObjectTarget<RefrigerationDefrostCycleParameters>(OS_Refrigeration_WalkInFields::WalkInDefrostCycleParametersName);
+  }
+
+  RefrigerationDefrostCycleParameters RefrigerationWalkIn_Impl::walkinDefrostCycleParameters() {
+    boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters();
+    if( !defrostCycleParameters ) {
+      defrostCycleParameters = RefrigerationDefrostCycleParameters(this->model());
+      OS_ASSERT(defrostCycleParameters);
+      bool result = setWalkinDefrostCycleParameters(*defrostCycleParameters);
+      OS_ASSERT(result);
+    }
+    return *defrostCycleParameters;
+  }
+
+  boost::optional<int> RefrigerationWalkIn_Impl::durationofDefrostCycle() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->durationofDefrostCycle();
+    }
+    return boost::none;
+  }
+
+  boost::optional<int> RefrigerationWalkIn_Impl::dripDownTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->dripDownTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost1StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost1StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost2StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost2StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost3StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost3StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost4StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost4StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost5StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost5StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost6StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost6StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost7StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost7StartTime();
+    }
+    return boost::none;
+  }
+
+  boost::optional<openstudio::Time> RefrigerationWalkIn_Impl::defrost8StartTime() const {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      return defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->defrost8StartTime();
+    }
+    return boost::none;
+  }
+
+  std::vector<openstudio::Time> RefrigerationWalkIn_Impl::defrostStartTimes() const {
+    std::vector<openstudio::Time> result;
+    if( boost::optional<openstudio::Time> defrost1StartTime = this->defrost1StartTime() ) {
+      result.push_back(*defrost1StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost2StartTime = this->defrost2StartTime() ) {
+      result.push_back(*defrost2StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost3StartTime = this->defrost3StartTime() ) {
+      result.push_back(*defrost3StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost4StartTime = this->defrost4StartTime() ) {
+      result.push_back(*defrost4StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost5StartTime = this->defrost5StartTime() ) {
+      result.push_back(*defrost5StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost6StartTime = this->defrost6StartTime() ) {
+      result.push_back(*defrost6StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost7StartTime = this->defrost7StartTime() ) {
+      result.push_back(*defrost7StartTime);
+    }
+    if( boost::optional<openstudio::Time> defrost8StartTime = this->defrost8StartTime() ) {
+      result.push_back(*defrost8StartTime);
+    }
+    return result;
   }
 
   boost::optional<RefrigerationSystem> RefrigerationWalkIn_Impl::system() const {
@@ -608,6 +734,110 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool RefrigerationWalkIn_Impl::setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters) {
+    return setPointer(OS_Refrigeration_WalkInFields::WalkInDefrostCycleParametersName, walkinDefrostCycleParameters.handle());
+  }
+
+  bool RefrigerationWalkIn_Impl::setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDurationofDefrostCycle() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDurationofDefrostCycle();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDripDownTime(boost::optional<int> dripDownTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDripDownTime(dripDownTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDripDownTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDripDownTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost1StartTime(defrost1StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost1StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost1StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost2StartTime(defrost2StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost2StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost2StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost3StartTime(defrost3StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost3StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost3StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost4StartTime(defrost4StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost4StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost4StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost5StartTime(defrost5StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost5StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost5StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost6StartTime(defrost6StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost6StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost6StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost7StartTime(defrost7StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost7StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost7StartTime();
+    }
+  }
+
+  bool RefrigerationWalkIn_Impl::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
+      return this->walkinDefrostCycleParameters().getImpl<RefrigerationDefrostCycleParameters_Impl>()->setDefrost8StartTime(defrost8StartTime);
+  }
+
+  void RefrigerationWalkIn_Impl::resetDefrost8StartTime() {
+    if( boost::optional<RefrigerationDefrostCycleParameters> defrostCycleParameters = this->optionalWalkinDefrostCycleParameters() ) {
+      defrostCycleParameters->getImpl<RefrigerationDefrostCycleParameters_Impl>()->resetDefrost8StartTime();
+    }
+  }
+
   boost::optional<Schedule> RefrigerationWalkIn_Impl::optionalDefrostSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_WalkInFields::DefrostScheduleName);
   }
@@ -870,6 +1100,46 @@ bool RefrigerationWalkIn::isInsulatedFloorUValueDefaulted() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->isInsulatedFloorUValueDefaulted();
 }
 
+boost::optional<int> RefrigerationWalkIn::durationofDefrostCycle() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->durationofDefrostCycle();
+}
+
+boost::optional<int> RefrigerationWalkIn::dripDownTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->dripDownTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost1StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost1StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost2StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost2StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost3StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost3StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost4StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost4StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost5StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost5StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost6StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost6StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost7StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost7StartTime();
+}
+
+boost::optional<openstudio::Time> RefrigerationWalkIn::defrost8StartTime() const {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->defrost8StartTime();
+}
+
 boost::optional<RefrigerationSystem> RefrigerationWalkIn::system() const {
   return getImpl<detail::RefrigerationWalkIn_Impl>()->system();
 }
@@ -1044,6 +1314,86 @@ bool RefrigerationWalkIn::setInsulatedFloorUValue(double insulatedFloorUValue) {
 
 void RefrigerationWalkIn::resetInsulatedFloorUValue() {
   getImpl<detail::RefrigerationWalkIn_Impl>()->resetInsulatedFloorUValue();
+}
+
+bool RefrigerationWalkIn::setDurationofDefrostCycle(int durationofDefrostCycle) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDurationofDefrostCycle(durationofDefrostCycle);
+}
+
+void RefrigerationWalkIn::resetDurationofDefrostCycle() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDurationofDefrostCycle();
+}
+
+bool RefrigerationWalkIn::setDripDownTime(int dripDownTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDripDownTime(dripDownTime);
+}
+
+void RefrigerationWalkIn::resetDripDownTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDripDownTime();
+}
+
+bool RefrigerationWalkIn::setDefrost1StartTime(const openstudio::Time& defrost1StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost1StartTime(defrost1StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost1StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost1StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost2StartTime(const openstudio::Time& defrost2StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost2StartTime(defrost2StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost2StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost2StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost3StartTime(const openstudio::Time& defrost3StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost3StartTime(defrost3StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost3StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost3StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost4StartTime(const openstudio::Time& defrost4StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost4StartTime(defrost4StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost4StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost4StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost5StartTime(const openstudio::Time& defrost5StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost5StartTime(defrost5StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost5StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost5StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost6StartTime(const openstudio::Time& defrost6StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost6StartTime(defrost6StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost6StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost6StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost7StartTime(const openstudio::Time& defrost7StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost7StartTime(defrost7StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost7StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost7StartTime();
+}
+
+bool RefrigerationWalkIn::setDefrost8StartTime(const openstudio::Time& defrost8StartTime) {
+  return getImpl<detail::RefrigerationWalkIn_Impl>()->setDefrost8StartTime(defrost8StartTime);
+}
+
+void RefrigerationWalkIn::resetDefrost8StartTime() {
+  getImpl<detail::RefrigerationWalkIn_Impl>()->resetDefrost8StartTime();
 }
 
 bool RefrigerationWalkIn::addToSystem(RefrigerationSystem & system) {

@@ -149,6 +149,17 @@ std::vector<ModelObject> Mixer_Impl::inletModelObjects()
   return result;
 }
 
+std::vector<HVACComponent> Mixer_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+      edges.push_back(*edgeObject);
+    }
+  }
+  return edges;
+}
+
 bool Mixer_Impl::isRemovable() const
 {
   if( airLoopHVAC() || plantLoop() )

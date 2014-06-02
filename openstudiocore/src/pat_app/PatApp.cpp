@@ -19,7 +19,7 @@
 
 #include "PatApp.hpp"
 
-#include "AboutBox.hpp"
+#include <pat_app/AboutBox.hpp>
 #include "CloudMonitor.hpp"
 #include "DesignAlternativesTabController.hpp"
 #include "DesignAlternativesView.hpp"

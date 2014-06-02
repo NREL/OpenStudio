@@ -39,8 +39,6 @@
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
-#include "../ZoneHVACWaterToAirHeatPump.hpp"
-#include "../ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CoilHeatingElectric_Impl.hpp"
 #include "../CoilHeatingWater.hpp"

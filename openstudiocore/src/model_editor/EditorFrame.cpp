@@ -38,7 +38,7 @@
 
 #include "../energyplus/ForwardTranslator.hpp"
 #include "../model/Model.hpp"
-#include "AboutBox.hpp"
+#include <model_editor/AboutBox.hpp>
 #include "ModelExplorer.hpp"
 #include "InspectorGadget.hpp"
 #include <model_editor/tablemodel.h>

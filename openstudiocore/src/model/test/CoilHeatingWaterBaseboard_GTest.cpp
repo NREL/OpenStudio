@@ -30,8 +30,6 @@
 #include "../Splitter.hpp"
 #include "../Splitter_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
-#include "../Node.hpp"
-#include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;

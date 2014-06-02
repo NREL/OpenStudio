@@ -28,7 +28,6 @@
 #include "Job.hpp"
 #include "RunManagerAPI.hpp"
 #include <QStandardItemModel>
-#include "RunManager.hpp"
 
 
 namespace openstudio {

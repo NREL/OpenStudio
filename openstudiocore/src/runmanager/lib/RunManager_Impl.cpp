@@ -23,8 +23,7 @@
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
-#include "JobFactory.hpp"
-#include "Workflow.hpp"
+
 #include <QFileInfo>
 #include <QDateTime>
 #include <QMessageBox>
@@ -40,6 +39,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include "RubyJobUtils.hpp"
+#include "Workflow.hpp"
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
 #include "JobFactory.hpp"

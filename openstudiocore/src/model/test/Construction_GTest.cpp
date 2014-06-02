@@ -45,7 +45,6 @@
 
 #include "../Material.hpp"
 #include "../Material_Impl.hpp"
-#include "../StandardOpaqueMaterial.hpp"
 #include "../AirGap.hpp"
 #include "../AirWallMaterial.hpp"
 #include "../StandardOpaqueMaterial.hpp"

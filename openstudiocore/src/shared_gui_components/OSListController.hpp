@@ -53,7 +53,7 @@ class OSListController : public QObject
 
   // The OSListController is initialized with a default OSItemSelectionController class.  
   // If several lists are intended to share selections, for example if only one selection is allowed
-  // among several lists, use setSelectionController to share one selection controller among many list constrollers.
+  // among several lists, use setSelectionController to share one selection controller among many list controllers.
   QSharedPointer<OSItemSelectionController> selectionController() const;
 
   void setSelectionController(QSharedPointer<OSItemSelectionController> controller);
@@ -168,7 +168,7 @@ class OSItemSelectionController : public QObject
 
   void unregisterListController(OSListController * listController);
 
-  // Accessor methods for m_selectedItems.  These are used by OSListItem to select and unselect items.
+  // Accessor methods for m_selectedItems.  These are used by OSListItem to select and deselect items.
   // These methods will assert if item is NULL.
   //
   // This method is unintelligent so it will add items multiple times.  Thus avoiding the need to search.  Use carefully.

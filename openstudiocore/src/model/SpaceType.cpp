@@ -68,7 +68,6 @@
 #include "Building_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Space.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>

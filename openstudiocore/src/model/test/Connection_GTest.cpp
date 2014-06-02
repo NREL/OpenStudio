@@ -29,8 +29,6 @@
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
-#include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
-#include <utilities/idd/OS_Node_FieldEnums.hxx>
 
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>

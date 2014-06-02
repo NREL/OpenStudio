@@ -20,9 +20,6 @@
 #ifndef MODEL_UTILITYCOST_CHARGE_BLOCK_IMPL_HPP
 #define MODEL_UTILITYCOST_CHARGE_BLOCK_IMPL_HPP
 
-
-#include "UtilityCost_Charge_Block.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "UtilityCost_Charge_Block.hpp"
 #include "../utilities/core/Optional.hpp"

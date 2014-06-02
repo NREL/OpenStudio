@@ -26,7 +26,6 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
-#include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/Assert.hpp"
 
