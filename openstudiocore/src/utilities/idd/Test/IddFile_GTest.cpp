@@ -54,7 +54,7 @@ TEST_F(IddFixture, IddFile)
 
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile);
+  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
   EXPECT_EQ("8.1.0.009",loadedIddFile->version());

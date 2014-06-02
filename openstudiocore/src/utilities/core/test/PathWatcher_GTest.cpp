@@ -64,7 +64,7 @@ struct TestFileWriter : public QThread{
 
   void run(){
     boost::filesystem::ofstream outFile(m_path, ios_base::out | ios_base::trunc);
-    ASSERT_TRUE(outFile);
+    ASSERT_TRUE(outFile?true:false);
     outFile << m_contents;
     outFile.close();
   }

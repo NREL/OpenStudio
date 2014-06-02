@@ -209,7 +209,7 @@ TEST(Table, UnitConversion) {
   EXPECT_EQ("kg",unitStr);
   p = resourcesPath()/toPath("utilities/Table/HeightWeightSI.csv");
   boost::filesystem::ofstream outFile(p);
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?true:false);
   table.printToStream(outFile,TableFormat(TableFormat::CSV));
   outFile.close();
 
@@ -232,7 +232,7 @@ TEST(Table, UnitConversion) {
   }
   p = resourcesPath()/toPath("utilities/Table/EUISI.csv");
   outFile.open(p);
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?false:true);
   table.printToStream(outFile,TableFormat(TableFormat::CSV));
   outFile.close();
 
