@@ -28,7 +28,6 @@
 #include "../model/Model_Impl.hpp"
 #include "../model/BuildingStory_Impl.hpp"
 #include "../model/RenderingColor.hpp"
-#include "../model/Space.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"

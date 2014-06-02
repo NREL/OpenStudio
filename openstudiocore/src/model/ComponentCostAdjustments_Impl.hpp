@@ -20,9 +20,6 @@
 #ifndef MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
 #define MODEL_COMPONENTCOSTADJUSTMENTS_IMPL_HPP
 
-
-#include "ComponentCostAdjustments.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "ComponentCostAdjustments.hpp"
 

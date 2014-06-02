@@ -20,7 +20,6 @@
 #ifndef OPENSTUDIO_SCRIPTSTABCONTROLLER_HPP
 #define OPENSTUDIO_SCRIPTSTABCONTROLLER_HPP
 
-#include "MainTabController.hpp"
 #include "../utilities/core/Path.hpp"
 
 #include "MainTabController.hpp"

@@ -23,7 +23,6 @@
 
 #include "UnitFactory.hpp"
 #include "ScaleFactory.hpp"
-#include "Quantity.hpp"
 #include "Unit.hpp"
 #include "BTUUnit.hpp"
 #include "CelsiusUnit.hpp"

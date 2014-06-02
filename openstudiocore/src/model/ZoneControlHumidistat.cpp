@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneControlHumidistat.hpp>
-#include <model/ZoneControlHumidistat_Impl.hpp>
+#include "ZoneControlHumidistat.hpp"
+#include "ZoneControlHumidistat_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_ZoneControl_Humidistat_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

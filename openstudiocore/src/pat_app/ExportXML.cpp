@@ -35,7 +35,6 @@
 #include "../analysis/InputVariable.hpp"
 #include "../analysis/InputVariable_Impl.hpp"
 #include "../analysis/Measure.hpp"
-#include "../analysis/DataPoint.hpp"
 #include "../analysis/RubyMeasure.hpp"
 #include "../analysis/RubyMeasure_Impl.hpp"
 #include "../analysis/MeasureGroup.hpp"

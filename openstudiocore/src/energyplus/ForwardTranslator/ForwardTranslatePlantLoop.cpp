@@ -31,7 +31,6 @@
 #include "../../model/Mixer.hpp"
 #include "../../model/Mixer_Impl.hpp"
 #include "../../model/PumpVariableSpeed.hpp"
-#include "../../model/PumpVariableSpeed.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/BoilerHotWater.hpp"

@@ -27,14 +27,10 @@
 
 #include "../shared_gui_components/MeasureManager.hpp"
 
-#include "../utilities/idf/IdfObject.hpp"
-#include "../utilities/idf/Workspace.hpp"
-#include "../utilities/idf/ValidityReport.hpp"
-#include "../utilities/idf/IdfFile.hpp"
-
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/Compare.hpp"
+
 #include "../utilities/idf/IdfFile.hpp"
 #include "../utilities/idf/IdfObject.hpp"
 #include "../utilities/idf/ValidityReport.hpp"

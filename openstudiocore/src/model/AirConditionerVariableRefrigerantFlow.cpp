@@ -27,8 +27,6 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
-#include "CurveCubic.hpp"
-#include "CurveCubic_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Connection.hpp"

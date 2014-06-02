@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/HeatExchangerFluidToFluid.hpp>
-#include <model/HeatExchangerFluidToFluid_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/HeatExchangerFluidToFluid.hpp"
+#include "../../model/HeatExchangerFluidToFluid_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <utilities/idd/HeatExchanger_FluidToFluid_FieldEnums.hxx>
 
 using namespace openstudio::model;

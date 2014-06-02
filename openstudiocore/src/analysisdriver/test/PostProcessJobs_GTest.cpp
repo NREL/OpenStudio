@@ -39,7 +39,6 @@
 #include "../../analysis/InputVariable.hpp"
 #include "../../analysis/WorkflowStep.hpp"
 
-#include <runmanager/Test/ToolBin.hxx>
 #include "../../runmanager/lib/RubyJobUtils.hpp"
 #include "../../runmanager/lib/WorkItem.hpp"
 

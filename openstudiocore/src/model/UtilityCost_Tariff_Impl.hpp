@@ -20,9 +20,6 @@
 #ifndef MODEL_UTILITYCOST_TARIFF_IMPL_HPP
 #define MODEL_UTILITYCOST_TARIFF_IMPL_HPP
 
-
-#include "UtilityCost_Tariff.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "UtilityCost_Tariff.hpp"
 #include "../utilities/core/Optional.hpp"

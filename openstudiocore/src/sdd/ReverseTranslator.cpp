@@ -86,7 +86,6 @@
 #include "../utilities/units/FahrenheitUnit.hpp"
 #include "../utilities/units/MPHUnit.hpp"
 #include "../utilities/units/WhUnit.hpp"
-#include "../utilities/core/Assert.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/Unit.hpp"

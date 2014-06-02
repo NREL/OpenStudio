@@ -27,7 +27,6 @@
 #include <QMimeData>
 #include <cmath>
 #include "../model/Loop.hpp"
-#include "../model/Node.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/Splitter.hpp"

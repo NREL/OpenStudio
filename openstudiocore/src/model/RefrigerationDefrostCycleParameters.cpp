@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "RefrigerationDefrostCycleParameters.hpp"
+#include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
 #include <utilities/idd/OS_Refrigeration_DefrostCycleParameters_FieldEnums.hxx>
 
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Time.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {

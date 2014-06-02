@@ -29,8 +29,6 @@
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceLoadInstance_Impl.hpp"
-#include "../model/SpaceLoadInstance.hpp"
-#include "../model/SpaceLoadInstance_Impl.hpp"
 #include "../model/SpaceLoadDefinition.hpp"
 #include "../model/SpaceLoadDefinition_Impl.hpp"
 #include "../model/ElectricEquipment.hpp"

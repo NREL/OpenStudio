@@ -20,9 +20,6 @@
 #ifndef MODEL_UTILITYCOST_VARIABLE_IMPL_HPP
 #define MODEL_UTILITYCOST_VARIABLE_IMPL_HPP
 
-
-#include "UtilityCost_Variable.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "UtilityCost_Variable.hpp"
 #include "../utilities/core/Optional.hpp"

@@ -32,7 +32,6 @@
 #include "../RubyContinuousVariable_Impl.hpp"
 #include "../RubyMeasure.hpp"
 #include "../RubyMeasure_Impl.hpp"
-#include "../RubyContinuousVariable.hpp"
 #include "../TriangularDistribution.hpp"
 
 #include "../../runmanager/lib/JobFactory.hpp"

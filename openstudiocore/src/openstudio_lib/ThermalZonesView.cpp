@@ -41,8 +41,6 @@
 #include "../model/ScheduleRule_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
-#include "../model/ZoneHVACComponent.hpp"
-#include "../model/ZoneHVACComponent_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/ZoneControlHumidistat.hpp"
@@ -66,11 +64,9 @@
 #include <QStyleOption>
 #include <QTimer>
 #include <QPainter>
-#include <QVBoxLayout>
 #include <QLabel>
 #include <QGridLayout>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QToolButton>
 #include <QObject>
 #include <QScrollArea>

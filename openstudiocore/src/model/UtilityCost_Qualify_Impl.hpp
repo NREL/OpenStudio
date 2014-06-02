@@ -20,9 +20,6 @@
 #ifndef MODEL_UTILITYCOST_QUALIFY_IMPL_HPP
 #define MODEL_UTILITYCOST_QUALIFY_IMPL_HPP
 
-
-#include "UtilityCost_Qualify.hpp"
-
 #include "ParentObject_Impl.hpp"
 #include "UtilityCost_Qualify.hpp"
 #include "../utilities/core/Optional.hpp"

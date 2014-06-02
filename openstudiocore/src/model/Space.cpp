@@ -52,8 +52,6 @@
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionBase_Impl.hpp"
 #include "InternalMass.hpp"
 #include "InternalMass_Impl.hpp"
 #include "InternalMassDefinition.hpp"

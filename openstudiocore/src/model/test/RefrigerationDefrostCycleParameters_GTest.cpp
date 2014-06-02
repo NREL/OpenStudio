@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "../RefrigerationDefrostCycleParameters.hpp"
+#include "../RefrigerationDefrostCycleParameters_Impl.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../utilities/time/Time.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
