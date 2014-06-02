@@ -232,7 +232,7 @@ TEST(Table, UnitConversion) {
   }
   p = resourcesPath()/toPath("utilities/Table/EUISI.csv");
   outFile.open(p);
-  ASSERT_TRUE(outFile?false:true);
+  ASSERT_TRUE(outFile?true:false);
   table.printToStream(outFile,TableFormat(TableFormat::CSV));
   outFile.close();
 
