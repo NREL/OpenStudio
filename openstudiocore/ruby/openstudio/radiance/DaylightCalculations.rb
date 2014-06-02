@@ -150,7 +150,6 @@ if ARGV[2]
   end
 end
 
-
 path = OpenStudio::Path.new(radiancePath).to_s
 raypath = (OpenStudio::Path.new(radiancePath).parent_path() / OpenStudio::Path.new("lib")).to_s()
 

@@ -36,7 +36,6 @@ class DaylightSim_Test < Test::Unit::TestCase
 
     #create example model, attach epw file
     modelExample = OpenStudio::Model::exampleModel()
-    #modelPath = OpenStudio::Path.new("c:\ExampleModel.osm")
     outdir = OpenStudio::tempDir() / OpenStudio::Path.new("DaylightSim_test_genannual")
     modelFile = outdir / OpenStudio::Path.new("in.osm") 
     FileUtils.mkdir_p(modelFile.parent_path.to_s)
@@ -45,7 +44,6 @@ class DaylightSim_Test < Test::Unit::TestCase
     epwFile = OpenStudio::EpwFile.new(epwPath)
     weatherFile = OpenStudio::Model::WeatherFile::setWeatherFile(modelExample, epwFile)
     assert((not weatherFile.empty?))
-    #modelExample.toIdfFile.save(modelPath, true)
     modelExample.save(modelFile, true)
 
     #setup path to Radiance binaries
