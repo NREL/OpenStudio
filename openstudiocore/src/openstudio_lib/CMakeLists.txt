@@ -17,8 +17,6 @@ SET( ${target_name}_SRC
   ApplyMeasureNowDialog.hpp
   BCLComponentItem.cpp
   BCLComponentItem.hpp
-  BuildingComponentController.cpp
-  BuildingComponentController.hpp
   BuildingInspectorView.cpp
   BuildingInspectorView.hpp
   BuildingStoriesController.cpp
@@ -463,7 +461,6 @@ SET( ${target_name}_SRC
 SET( ${target_name}_moc
   ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
-  BuildingComponentController.hpp
   BuildingInspectorView.hpp
   BuildingStoriesController.hpp
   BuildingStoriesTabController.hpp
