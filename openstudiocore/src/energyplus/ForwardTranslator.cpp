@@ -47,6 +47,7 @@
 #include <utilities/idf/WorkspaceObjectOrder.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Assert.hpp>
+#include <utilities/time/Time.hpp>
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -1001,6 +1002,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHeatExchangerAirToAirSensibleAndLatent(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
+    {
+      model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
+      retVal = translateHeatExchangerFluidToFluid(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_HotWaterEquipment :
     {
       model::HotWaterEquipment hotWaterEquipment = modelObject.cast<HotWaterEquipment>();
@@ -1594,6 +1601,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       // no-op
       return retVal;
+    }
+  case openstudio::IddObjectType::OS_ZoneControl_Humidistat :
+    {
+      model::ZoneControlHumidistat mo = modelObject.cast<ZoneControlHumidistat>();
+      retVal = translateZoneControlHumidistat(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric :
     {
@@ -2619,6 +2632,152 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
       m_idfObjects.push_back(*it);
     }
   }
+
+  return idfObject;
+}
+
+boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::string & name,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & defaultDay,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & summerDesignDay,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & winterDesignDay) {
+
+  IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
+
+  idfObject.setName(name);
+
+  StringVector values;
+  values.push_back("Through: 12/31");
+  IdfExtensibleGroup eg = idfObject.pushExtensibleGroup(values);
+  OS_ASSERT(!eg.empty());
+
+  if(!summerDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
+    values[0] = "For: SummerDesignDay";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+
+    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = summerDesignDay.begin();
+         it != summerDesignDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Summer Design Day must have a value for all 24 hours");
+    }
+  }
+
+  if(!winterDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
+    values[0] = "For: WinterDesignDay";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+
+    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = winterDesignDay.begin();
+         it != winterDesignDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Winter Design Day must have a value for all 24 hours");
+    }
+  }
+
+  if(!summerDesignDay.empty() || !winterDesignDay.empty()) {
+    values[0] = "For: AllOtherDays";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+  } else {
+    values[0] = "For: AllDays";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+  }
+
+  bool hasEndTime = false;
+  double endTimeValue;
+  for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = defaultDay.begin();
+         it != defaultDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+  if(hasEndTime) {
+    values[0] = "Until: 24:00";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    values[0] = "";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    bool ok = eg.setDouble(0,endTimeValue);
+    OS_ASSERT(ok);
+  } else {
+      LOG(Error, "Default Day must have a value for all 24 hours");
+    }
+
+  m_idfObjects.push_back(idfObject);
 
   return idfObject;
 }

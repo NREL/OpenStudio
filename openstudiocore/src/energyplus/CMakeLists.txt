@@ -97,6 +97,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateGroundHeatExchangerVertical.cpp
   ForwardTranslator/ForwardTranslateHeatBalanceAlgorithm.cpp
   ForwardTranslator/ForwardTranslateHeatExchangerAirToAirSensibleAndLatent.cpp
+  ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateIlluminanceMap.cpp
   ForwardTranslator/ForwardTranslateInsideSurfaceConvectionAlgorithm.cpp
@@ -189,6 +190,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateWaterUseConnections.cpp
   ForwardTranslator/ForwardTranslateWaterUseEquipment.cpp
   ForwardTranslator/ForwardTranslateZoneAirHeatBalanceAlgorithm.cpp
+  ForwardTranslator/ForwardTranslateZoneControlHumidistat.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
