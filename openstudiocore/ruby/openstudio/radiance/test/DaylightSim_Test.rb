@@ -33,12 +33,20 @@ class DaylightSim_Test < Test::Unit::TestCase
   end
 
   def test_DaylightSim_genannual
-
+  
+    #set up directories
+    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("DaylightSim_test_genannual")
+    if File.exists?(outdir.to_s)
+      FileUtils.rm_rf(outdir.to_s)
+    end
+    assert((not File.exists?(outdir.to_s)))
+    
+    FileUtils.mkdir_p(outdir.to_s)
+    assert(File.exists?(outdir.to_s))
+    
     #create example model, attach epw file
     modelExample = OpenStudio::Model::exampleModel()
-    outdir = OpenStudio::tempDir() / OpenStudio::Path.new("DaylightSim_test_genannual")
     modelFile = outdir / OpenStudio::Path.new("in.osm") 
-    FileUtils.mkdir_p(modelFile.parent_path.to_s)
     ep_hash = OpenStudio::EnergyPlus::find_energyplus(8,1)
     epwPath = OpenStudio::Path.new(ep_hash[:energyplus_weatherdata].to_s) / OpenStudio::Path.new("USA_CO_Golden-NREL.724666_TMY3.epw")
     epwFile = OpenStudio::EpwFile.new(epwPath)
@@ -56,11 +64,6 @@ class DaylightSim_Test < Test::Unit::TestCase
 	  #run DaylightCalculations.rb (executes end-to-end Radiance annual daylight simulation)
     assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightCalculations.rb' '#{modelFile}' '#{radiancePath}' "))
   
-  end
-  
-  def test_DaylightSim_help
-    #print help message
-    assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/radiance/DaylightCalculations.rb' --help"))
   end
   
   def teardown
