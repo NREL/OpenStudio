@@ -153,7 +153,12 @@ end
 path = OpenStudio::Path.new(radiancePath).to_s
 raypath = (OpenStudio::Path.new(radiancePath).parent_path() / OpenStudio::Path.new("lib")).to_s()
 
-ENV["EPW2WEAPATH"] = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new("epw2wea")).to_s
+epw2weapath = (OpenStudio::Path.new(radiancePath) / OpenStudio::Path.new("epw2wea")).to_s
+if Dir.glob(epw2weapath + ".*").empty?
+  puts "Cannot find epw2wea tool in radiance installation at '#{radiancePath}'.  You may need to install a newer version of radiance."
+  exit false
+end
+ENV["EPW2WEAPATH"] = epw2weapath
 
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   perlpath = ""

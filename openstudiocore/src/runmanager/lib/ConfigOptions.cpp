@@ -1090,6 +1090,7 @@ namespace runmanager {
 
 
     try {
+      // the epw2wea tool should only be located as part of a radiance installation
       ToolInfo epw2wea = getTools().getLastByName("epw2wea");
 
 
