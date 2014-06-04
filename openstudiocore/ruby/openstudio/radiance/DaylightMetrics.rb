@@ -374,6 +374,7 @@ building.spaces.each do |space|
   
 end
 
+# DLM: can we make some more metrics that are area weighted rather than just space weighted?
 building_average_space_sum = 0
 building_average_space.each {|e| building_average_space_sum += e}
 building_average = building_average_space_sum / building_average_space.length
