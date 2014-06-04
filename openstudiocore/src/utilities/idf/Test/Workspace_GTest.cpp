@@ -81,7 +81,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile);
+  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 

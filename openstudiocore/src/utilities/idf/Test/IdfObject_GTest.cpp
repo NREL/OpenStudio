@@ -69,7 +69,7 @@ TEST_F(IdfFixture, IdfObject_ConstructDefaultsFromIddObjectType) {
   // loop through each IddObject, create a default object, and print to a file.
   // examine, then partition into "good" and candidate for refactor (us or E+)
   boost::filesystem::ofstream outFile("defaultObjects.idf");
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?true:false);
 
   IddObjectVector iddObjects = IddFactory::instance().objects();
   for (const IddObject& iddObject : iddObjects) {
