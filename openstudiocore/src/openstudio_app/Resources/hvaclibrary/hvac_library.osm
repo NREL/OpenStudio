@@ -2962,6 +2962,7 @@ OS:Refrigeration:WalkIn,
   ,                                       !- Average Refrigerant Charge Inventory {kg}
   13,                                     !- Insulated Floor Surface Area {m2}
   0.207,                                  !- Insulated Floor U-Value {W/m2-K}
+  ,                                       !- WalkIn Defrost Cycle Parameters Name
   {525dce58-6555-4c3f-a3b6-be7cc870d92a}; !- WalkIn Zone Boundary 1
 
 OS:ScheduleTypeLimits,
