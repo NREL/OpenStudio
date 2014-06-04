@@ -20,16 +20,20 @@
 #include <shared_gui_components/SyncMeasuresDialog.hpp>
 
 #include <shared_gui_components/Component.hpp>
+#include "../shared_gui_components/MeasureManager.hpp"
 #include <shared_gui_components/SyncMeasuresDialogCentralWidget.hpp>
 
 #include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/OSDocument.hpp>
 
+#include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Assert.hpp>
+
+#include <vector>
 
 #include <QBoxLayout>
 #include <QButtonGroup>
-#include <QLabel>>
+//#include <QLabel>>
 #include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>
@@ -43,7 +47,6 @@ SyncMeasuresDialog::SyncMeasuresDialog(QWidget * parent)
   m_centralWidget(NULL),
   m_rightScrollArea(NULL),
   m_expandedComponent(NULL),
-  m_stackedWidget(NULL),
   m_measuresNeedingUpdates(std::vector<BCLMeasure>())
 {
   createLayout();
@@ -182,6 +185,7 @@ void SyncMeasuresDialog::on_noComponents()
 
 void SyncMeasuresDialog::findUpdates()
 {
+
   openstudio::OSAppBase * app = OSAppBase::instance();
 
   std::vector<BCLMeasure> measures;
@@ -201,6 +205,8 @@ void SyncMeasuresDialog::findUpdates()
 
   boost::optional<analysisdriver::SimpleProject> project = app->project();
   OS_ASSERT(project);
+
+ openstudio::OSAppBase * app2 = OSAppBase::instance();
 
   m_measuresNeedingUpdates.clear();
 
@@ -225,8 +231,13 @@ void SyncMeasuresDialog::findUpdates()
   }
 
   m_measuresNeedingUpdates = measures; // TODO remove
-// TODO show list of measures needing update
+  // TODO show list of measures needing update
+  m_centralWidget->setMeasures(measures);
 
+  // TODO on download button
+  //std::vector<BCLMeasure> newMeasures;
+  //bool showMessage = true;
+  //app->measureManager().updateMeasures(*project,newMeasures,showMessage);
 }
 
 } // namespace openstudio

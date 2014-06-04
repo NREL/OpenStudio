@@ -49,13 +49,13 @@ public:
   int pageIdx();
   bool showNewComponents();
   void setShowNewComponents(bool showNewComponents);
+  void setMeasures(std::vector<BCLMeasure> & measures);
 
 protected:
 
 private:
   void createLayout();
   void init();
-  void setMeasures(std::vector<BCLMeasure> & measures);
 
   CollapsibleComponentList * m_collapsibleComponentList;
   ComponentList * m_componentList; // TODO cruft to be removed

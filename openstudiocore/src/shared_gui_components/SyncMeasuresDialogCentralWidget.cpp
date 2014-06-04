@@ -46,7 +46,6 @@ namespace openstudio {
 
 SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(QWidget * parent)
   : QWidget(parent),
-  m_tid(0),
   m_collapsibleComponentList(NULL),
   m_componentList(NULL), // TODO cruft to be removed
   m_progressBar(NULL),
@@ -115,7 +114,7 @@ void SyncMeasuresDialogCentralWidget::createLayout()
   m_componentList = new ComponentList();  // TODO refactor and remove
 
   CollapsibleComponentHeader * collapsibleComponentHeader = NULL;
-  collapsibleComponentHeader = new CollapsibleComponentHeader("Constructions",100,5);
+  collapsibleComponentHeader = new CollapsibleComponentHeader("Updates",100,5);
 
   CollapsibleComponent * collapsibleComponent = NULL;
   collapsibleComponent = new CollapsibleComponent(collapsibleComponentHeader,m_componentList);
@@ -162,19 +161,8 @@ void SyncMeasuresDialogCentralWidget::setMeasures(std::vector<BCLMeasure> & meas
     delete *it;
   }
 
-  RemoteBCL remoteBCL;
-  std::vector<BCLSearchResult> responses;
-  if (filterType == "components")
-  {
-    responses = remoteBCL.searchComponentLibrary(searchString.toStdString(),tid,pageIdx);
-  }
-  else if (filterType == "measures")
-  {
-    responses = remoteBCL.searchMeasureLibrary(searchString.toStdString(),tid,pageIdx);
-  }
-
-  for( std::vector<BCLSearchResult>::iterator it = responses.begin();
-       it != responses.end();
+  for( std::vector<BCLMeasure>::iterator it = measures.begin();
+       it != measures.end();
        ++it )
   {
     Component * component = new Component(*it);
@@ -183,15 +171,14 @@ void SyncMeasuresDialogCentralWidget::setMeasures(std::vector<BCLMeasure> & meas
     m_componentList->addComponent(component);
   }
 
-  // the parent taxonomy
-  m_collapsibleComponentList->setText(title);
-
   // the total number of results
-  int lastTotalResults = remoteBCL.lastTotalResults();
-  m_collapsibleComponentList->setNumResults(lastTotalResults);
+  m_collapsibleComponentList->setNumResults(measures.size());
 
   // the number of pages of results
-  int numResultPages = remoteBCL.numResultPages();
+  int numResultPages = measures.size() / 10;
+  if (measures.size() % 2 != 0 ){
+    numResultPages++;
+  }
   m_collapsibleComponentList->setNumPages(numResultPages);
 
   // make sure the header is expanded
