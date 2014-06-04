@@ -27,12 +27,12 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 
 class ProgressBar;
 class Transformation;
-class Time;
 
 namespace model{
 
