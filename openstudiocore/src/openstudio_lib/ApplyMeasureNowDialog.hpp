@@ -107,8 +107,6 @@ private:
 
   QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
 
-  //boost::optional<analysis::RubyMeasure> m_rubyMeasure;
-
   boost::optional<runmanager::Job> m_job;
 
   boost::optional<model::Model> m_model;
