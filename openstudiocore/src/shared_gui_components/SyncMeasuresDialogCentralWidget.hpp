@@ -43,14 +43,8 @@ class SyncMeasuresDialogCentralWidget : public QWidget
 
 public:
   SyncMeasuresDialogCentralWidget(QWidget * parent = 0);
-  SyncMeasuresDialogCentralWidget(int tid, QWidget * parent = 0);
   virtual ~SyncMeasuresDialogCentralWidget() {}
-  int tid();
-  void setTid(const std::string& filterType,
-    int tids,
-    int pageIdx,
-    const QString & title,
-    const QString & string = "");
+
   Component * checkedComponent() const;
   int pageIdx();
   bool showNewComponents();
@@ -61,9 +55,8 @@ protected:
 private:
   void createLayout();
   void init();
-  void setTid();
+  void setMeasures(std::vector<BCLMeasure> & measures);
 
-  int m_tid;
   CollapsibleComponentList * m_collapsibleComponentList;
   ComponentList * m_componentList; // TODO cruft to be removed
   QProgressBar * m_progressBar;

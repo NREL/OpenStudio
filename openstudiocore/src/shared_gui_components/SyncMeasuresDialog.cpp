@@ -19,52 +19,40 @@
 
 #include <shared_gui_components/SyncMeasuresDialog.hpp>
 
-#include <shared_gui_components/BuildingComponentDialogCentralWidget.hpp>
-#include <shared_gui_components/BusyWidget.hpp>
 #include <shared_gui_components/Component.hpp>
-#include <shared_gui_components/TIDItemModel.hpp>
+#include <shared_gui_components/SyncMeasuresDialogCentralWidget.hpp>
+
+#include <openstudio_lib/OSAppBase.hpp>
+#include <openstudio_lib/OSDocument.hpp>
 
 #include <utilities/core/Assert.hpp>
 
 #include <QBoxLayout>
 #include <QButtonGroup>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QFile>
-#include <QGridLayout>
-#include <QHeaderView>
-#include <QLabel>
-#include <QLineEdit>
-#include <QModelIndex>
+#include <QLabel>>
 #include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSplitter>
-#include <QStackedWidget>
-#include <QTableWidget>
-#include <QTimer>
-#include <QTreeView>
+#include <QStyleOption>
 
 namespace openstudio {
 
 SyncMeasuresDialog::SyncMeasuresDialog(QWidget * parent)
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
-  m_dlgTitle(QString()),
-  m_tidTreeView(NULL),
   m_centralWidget(NULL),
   m_rightScrollArea(NULL),
   m_expandedComponent(NULL),
-  m_lineEdit(NULL),
   m_stackedWidget(NULL),
-  m_timer(NULL)
+  m_measuresNeedingUpdates(std::vector<BCLMeasure>())
 {
   createLayout();
+  findUpdates();
 }
 
 void SyncMeasuresDialog::createLayout()
 {
-  m_dlgTitle = "Updates Available in Library";
-  setWindowTitle(m_dlgTitle);
+  setWindowTitle("Updates Available in Library");
 
   setModal(true);
 
@@ -74,7 +62,7 @@ void SyncMeasuresDialog::createLayout()
 
   // The central pane
 
-  m_centralWidget = new BuildingComponentDialogCentralWidget();
+  m_centralWidget = new SyncMeasuresDialogCentralWidget();
 
   bool isConnected = false;
 
@@ -82,9 +70,9 @@ void SyncMeasuresDialog::createLayout()
                         this, SIGNAL(headerClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_centralWidget, SIGNAL(headerClicked(bool)),
-                        this, SLOT(on_headerClicked(bool)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_centralWidget, SIGNAL(headerClicked(bool)),
+  //                      this, SLOT(on_headerClicked(bool)));
+  //OS_ASSERT(isConnected);
 
   isConnected = connect(m_centralWidget, SIGNAL(componentClicked(bool)),
                         this, SIGNAL(componentClicked(bool)));
@@ -110,13 +98,13 @@ void SyncMeasuresDialog::createLayout()
                         this, SLOT(on_getComponentsByPage(int)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_centralWidget, SIGNAL(componentsReady()),
-                        this, SLOT(on_componentsReady()));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_centralWidget, SIGNAL(componentsReady()),
+  //                      this, SLOT(on_componentsReady()));
+  //OS_ASSERT(isConnected);
 
-  isConnected = connect(m_centralWidget, SIGNAL(requestComponents(const std::string&,int,int,const QString &)),
-                        this, SLOT(on_requestComponents(const std::string&,int,int,const QString &)));
-  OS_ASSERT(isConnected);
+  //isConnected = connect(m_centralWidget, SIGNAL(requestComponents(const std::string&,int,int,const QString &)),
+  //                      this, SLOT(on_requestComponents(const std::string&,int,int,const QString &)));
+  //OS_ASSERT(isConnected);
 
   isConnected = connect(m_centralWidget, SIGNAL(noComponents()),
                         this, SLOT(on_noComponents()));
@@ -140,29 +128,8 @@ void SyncMeasuresDialog::createLayout()
   splitter->addWidget(centralScrollArea);
   splitter->addWidget(m_rightScrollArea);
 
-  //QLabel * busyLabel = new QLabel("Searching BCL...");
-  //busyLabel->setObjectName("H1");
-
-  //BusyWidget * busyIcon = new BusyWidget();
-
-  //QVBoxLayout * busyLayout = new QVBoxLayout();
-  //busyLayout->addStretch();
-  //busyLayout->addWidget(busyLabel,0,Qt::AlignCenter);
-  //busyLayout->addWidget(busyIcon,0,Qt::AlignCenter);
-  //busyLayout->addStretch();
-
-  //m_timer = new QTimer(this);
-  //connect(m_timer,SIGNAL(timeout()),busyIcon,SLOT(rotate()));
-
-  //QWidget * busy = new QWidget();
-  //busy->setLayout(busyLayout);
-
-  m_stackedWidget = new QStackedWidget();
-  //m_stackedWidget->insertWidget(0,busy);
-  m_stackedWidget->insertWidget(1,splitter);
-
   QHBoxLayout * mainLayout = new QHBoxLayout();
-  mainLayout->addWidget(m_stackedWidget);
+  mainLayout->addWidget(splitter);
 
   setLayout(mainLayout);
 }
@@ -173,57 +140,6 @@ void SyncMeasuresDialog::paintEvent ( QPaintEvent * event )
   opt.init(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-}
-
-int SyncMeasuresDialog::currentTIDSelection()
-{
-  QModelIndex index = m_tidTreeView->currentIndex();
-
-  if( index.isValid() )
-  {
-    QAbstractItemModel * model = m_tidTreeView->model();
-
-    QVariant variant = model->data(index.sibling(index.row(),1));
-
-    return variant.toInt();
-  }
-
-  return 0;
-}
-
-int SyncMeasuresDialog::rootTID()
-{
-  QModelIndex rootIndex = m_tidTreeView->rootIndex();
-
-  if( rootIndex.isValid() )
-  {
-    QVariant variant = m_tidTreeView->model()->data(rootIndex.sibling(rootIndex.row(),1));
-
-    return variant.toInt();
-  }
-
-  return 0;
-}
-
-void SyncMeasuresDialog::setRootTID(int tid)
-{
-  QModelIndex index = static_cast<TIDItemModel *>(m_tidTreeView->model())->indexForTID(tid);
-
-  m_tidTreeView->setRootIndex(index);
-}
-
-void SyncMeasuresDialog::requestComponents(const std::string& filterType, int tids, int pageIdx, const QString & searchString)
-{
-  m_timer->start(50);
-  m_stackedWidget->setCurrentIndex(0);
-  QModelIndex index = m_tidTreeView->currentIndex();
-  while (index.parent().isValid())
-  {
-    index = index.parent();
-  }
-  QString parentTaxonomy = m_tidTreeView->model()->data(index).toString();
-
-  m_centralWidget->setTid(filterType, tids, pageIdx, parentTaxonomy, searchString);
 }
 
 bool SyncMeasuresDialog::showNewComponents()
@@ -237,30 +153,6 @@ void SyncMeasuresDialog::setShowNewComponents(bool showNewComponents)
 }
 
 ///! Slots
-
-void SyncMeasuresDialog::on_searchButton()
-{
-  QModelIndex index = m_tidTreeView->currentIndex();
-  if(!index.isValid()) return;
-
-  QVariant variant = m_tidTreeView->model()->data(index.sibling(index.row(),1));
- 
-  requestComponents(m_filterType, variant.toInt(), m_centralWidget->pageIdx(), m_lineEdit->text());
-}
-
-void SyncMeasuresDialog::on_tidClicked(const QModelIndex & index)
-{
-  // clear the line edit when initiating search from the tree
-  m_lineEdit->setText("");
-
-  QVariant variant = m_tidTreeView->model()->data(index.sibling(index.row(),1));
-
-  requestComponents(m_filterType, variant.toInt(), m_centralWidget->pageIdx(), QString());
-}
-
-void SyncMeasuresDialog::on_headerClicked(bool checked)
-{
-}
 
 void SyncMeasuresDialog::on_componentClicked(bool checked)
 {
@@ -281,25 +173,60 @@ void SyncMeasuresDialog::on_getComponentsByPage(int pageIdx)
 {
 }
 
-void SyncMeasuresDialog::on_componentsReady()
-{
-  m_stackedWidget->setCurrentIndex(1);
-  m_timer->stop();
-}
-
-void SyncMeasuresDialog::on_requestComponents(const std::string& filterType, int tids, int pageIdx, const QString & searchString)
-{
-  if(m_lineEdit->text() != searchString){
-    m_lineEdit->setText(searchString);
-  }
-  requestComponents(filterType, tids, pageIdx, searchString);
-}
-
 void SyncMeasuresDialog::on_noComponents()
 {
   m_expandedComponent = new Component();
   m_expandedComponent->setCheckable(false);
   m_rightScrollArea->setWidget(m_expandedComponent);
+}
+
+void SyncMeasuresDialog::findUpdates()
+{
+  openstudio::OSAppBase * app = OSAppBase::instance();
+
+  std::vector<BCLMeasure> measures;
+
+  std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
+
+  std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
+
+  measures = localBCLMeasures;
+
+  measures.insert(measures.end(), userMeasures.begin(),userMeasures.end());
+
+  //if (m_libraryController) TODO needed?
+  //{
+  //  m_libraryController->reset();
+  //}
+
+  boost::optional<analysisdriver::SimpleProject> project = app->project();
+  OS_ASSERT(project);
+
+  m_measuresNeedingUpdates.clear();
+
+  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
+      itr != measures.end();
+      ++itr)
+  {
+    bool isNewVersion = itr->checkForUpdates();
+    if (isNewVersion) {
+      itr->save();
+    }
+
+    boost::optional<BCLMeasure> projectmeasure = project->getMeasureByUUID(itr->uuid());
+    if (projectmeasure)
+    {
+      if (projectmeasure->versionUUID() != itr->versionUUID())
+      {
+        m_measuresNeedingUpdates.push_back(*itr);
+      }
+    }
+    
+  }
+
+  m_measuresNeedingUpdates = measures; // TODO remove
+// TODO show list of measures needing update
+
 }
 
 } // namespace openstudio

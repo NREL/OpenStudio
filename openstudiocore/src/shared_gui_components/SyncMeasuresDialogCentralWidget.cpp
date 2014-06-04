@@ -18,12 +18,13 @@
  **********************************************************************/
 
 #include <shared_gui_components/SyncMeasuresDialogCentralWidget.hpp>
-#include <shared_gui_components/SyncMeasuresDialog.hpp>
+
 #include <shared_gui_components/CollapsibleComponent.hpp>
 #include <shared_gui_components/CollapsibleComponentHeader.hpp>
 #include <shared_gui_components/CollapsibleComponentList.hpp>
 #include <shared_gui_components/Component.hpp>
 #include <shared_gui_components/ComponentList.hpp>
+#include <shared_gui_components/SyncMeasuresDialog.hpp>
 
 #include <utilities/bcl/BCL.hpp>
 #include <utilities/bcl/LocalBCL.hpp>
@@ -57,19 +58,6 @@ SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(QWidget * paren
   init();
 }
 
-SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(int tid, QWidget * parent)
-  : QWidget(parent),
-  m_tid(0),
-  m_collapsibleComponentList(NULL),
-  m_componentList(NULL), // TODO cruft to be removed
-  m_progressBar(NULL),
-  m_pendingDownloads(std::set<std::string>()),
-  m_pageIdx(0),
-  m_searchString(QString())
-{
-  init();
-}
-
 void SyncMeasuresDialogCentralWidget::init()
 {
   createLayout();
@@ -79,24 +67,12 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 {
   bool isConnected = false;
 
-  QLabel * label = new QLabel("Sort by:");
-  label->hide(); // TODO remove this hack when we have sorts to do
-
-  QComboBox * comboBox = new QComboBox(this);
-  comboBox->hide(); // TODO remove this hack when we have sorts to do
-
-  isConnected = connect(comboBox, SIGNAL(currentIndexChanged(const QString &)),
-                             this, SLOT(comboBoxIndexChanged(const QString &)));
-  OS_ASSERT(isConnected);
-
   QPushButton * upperPushButton = new QPushButton("Check All");
   isConnected = connect(upperPushButton, SIGNAL(clicked()),
                         this, SLOT(upperPushButtonClicked()));
   OS_ASSERT(isConnected);
 
   QHBoxLayout * upperLayout = new QHBoxLayout();
-  upperLayout->addWidget(label);
-  upperLayout->addWidget(comboBox);
   upperLayout->addStretch();
   upperLayout->addWidget(upperPushButton);
 
@@ -168,41 +144,16 @@ void SyncMeasuresDialogCentralWidget::createLayout()
   setLayout(mainLayout);
 }
 
-int SyncMeasuresDialogCentralWidget::tid()
-{
-  return m_tid;
-}
-
 int SyncMeasuresDialogCentralWidget::pageIdx()
 {
   return m_pageIdx;
 }
 
-void SyncMeasuresDialogCentralWidget::setTid()
+void SyncMeasuresDialogCentralWidget::setMeasures(std::vector<BCLMeasure> & measures)
 {
-  requestComponents(m_filterType, m_tid, m_pageIdx, m_searchString);
-}
+  m_collapsibleComponentList->firstPage();
 
-// Note: don't call this directly if the "wait" screen is desired
-void SyncMeasuresDialogCentralWidget::setTid(const std::string& filterType,
-                                                  int tid,
-                                                  int pageIdx,
-                                                  const QString & title,
-                                                  const QString & searchString)
-{
-
-  if(m_tid != tid || m_searchString != searchString){
-    m_collapsibleComponentList->firstPage();
-  }
-
-  m_filterType = filterType;
-
-  m_tid = tid;
-
-  m_searchString = searchString;
-
-  //std::vector<Component *> components = m_collapsibleComponentList->components();
-  std::vector<Component *> components = m_componentList->components();  // TODO replace with code above
+  std::vector<Component *> components = m_componentList->components();
 
   for( std::vector<Component *>::iterator it = components.begin();
        it != components.end();
@@ -444,7 +395,6 @@ void SyncMeasuresDialogCentralWidget::on_collapsibleComponentClicked(bool checke
 void SyncMeasuresDialogCentralWidget::on_getComponentsByPage(int pageIdx)
 {
   m_pageIdx = pageIdx;
-  setTid();
 }
 
 } // namespace openstudio
