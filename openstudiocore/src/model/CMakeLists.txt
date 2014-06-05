@@ -763,6 +763,9 @@ SET( ${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  TableMultiVariableLookup.hpp
+  TableMultiVariableLookup_Impl.hpp
+  TableMultiVariableLookup.cpp
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
@@ -1285,6 +1288,7 @@ SET( ${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
   test/UtilityBill_GTest.cpp

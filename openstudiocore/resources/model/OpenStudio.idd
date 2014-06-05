@@ -1,4 +1,4 @@
-!IDD_Version 1.3.5
+!IDD_Version 1.3.6
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -12993,6 +12993,192 @@ OS:Curve:DoubleExponentialDecay,
        \type choice
        \default Dimensionless
        \key Dimensionless
+
+OS:Table:MultiVariableLookup,
+       \memo The multi-variable lookup table can represent from 1 to 5 independent variables and
+       \memo can interpolate these independent variables up to a 4th order polynomial. The
+       \memo polynomial order is assumed to be the number of interpolation points (n) minus 1.
+       \memo When any independent variable value is outside the table limits, linear extrapolation
+       \memo is used to predict the table result and is based on the two nearest data points in the
+       \memo table for that particularindependent variable.
+       \extensible:1
+       \min-fields 29
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference TableMultiVariableLookup
+       \reference AllCurves
+       \reference LinearCurves
+       \reference LinearOrQuadraticCurves
+       \reference QuadraticCurves
+       \reference QuadraticCubicCurves
+       \reference BiquadraticQuadraticCubicCurves
+       \reference CubicCurves
+       \reference QuarticCurves
+       \reference BicubicCurves
+       \reference BicubicBiquadraticCurves
+       \reference BiquadraticCurves
+       \reference QuadraticLinearCurves
+       \reference TriQuadraticCurves
+  A3 , \field Interpolation Method
+       \type choice
+       \key LinearInterpolationOfTable
+       \key EvaluateCurveToLimits
+       \key LagrangeInterpolationLinearExtrapolation
+       \default LagrangeInterpolationLinearExtrapolation
+       \required-field
+  N1 , \field Number of Interpolation Points
+       \type integer
+       \minimum> 1
+       \maximum 4
+       \default 3
+       \required-field
+  A4 , \field Curve Type
+       \type choice
+       \key Linear
+       \key Quadratic
+       \key Cubic
+       \key Quartic
+       \key Exponent
+       \key BiQuadratic
+       \key QuadraticLinear
+       \key BiCubic
+       \key TriQuadratic
+       \key Other
+       \note The curve types BiCubic and TriQuadratic may not
+       \note be used with Interpolation Method = EvaluateCurveToLimits
+  A5 , \field Table Data Format
+       \type choice
+       \key SingleLineIndependentVariableWithMatrix
+       \default SingleLineIndependentVariableWithMatrix
+       \required-field
+  A6 , \field External File Name
+       \type alpha
+       \retaincase
+  A7 , \field X1 Sort Order
+       \type choice
+       \key Ascending
+       \key Descending
+       \default Ascending
+       \required-field
+  A8 , \field X2 Sort Order
+       \type choice
+       \key Ascending
+       \key Descending
+       \default Ascending
+       \required-field
+  N2 , \field Normalization Reference
+       \type real
+       \note This field is used to normalize the table output data.
+       \note The minimum and maximum table output fields are also normalized.
+       \note If this field is blank or 1, the table data will be directly used.
+       \note This field is not allowed to be set equal to 0.
+  N3 , \field Minimum Value of X1
+       \type real
+       \unitsBasedOnField A8
+  N4 , \field Maximum Value of X1
+       \type real
+       \unitsBasedOnField A8
+  N5 , \field Minimum Value of X2
+       \type real
+       \unitsBasedOnField A9
+  N6 , \field Maximum Value of X2
+       \type real
+       \unitsBasedOnField A9
+  N7 , \field Minimum Value of X3
+       \type real
+       \unitsBasedOnField A10
+  N8 , \field Maximum Value of X3
+       \type real
+       \unitsBasedOnField A10
+  N9 , \field Minimum Value of X4
+       \type real
+       \unitsBasedOnField A11
+  N10, \field Maximum Value of X4
+       \type real
+       \unitsBasedOnField A11
+  N11, \field Minimum Value of X5
+       \type real
+       \unitsBasedOnField A12
+  N12, \field Maximum Value of X5
+       \type real
+       \unitsBasedOnField A12
+  N13, \field Minimum Table Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A13
+  N14, \field Maximum Table Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A13
+  A9 , \field Input Unit Type for X1
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A10 , \field Input Unit Type for X2
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A11, \field Input Unit Type for X3
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A12, \field Input Unit Type for X4
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A13, \field Input Unit Type for X5
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A14, \field Output Unit Type
+       \type choice
+       \key Dimensionless
+       \key Capacity
+       \key Power
+       \default Dimensionless
+       \required-field
+  N15, \field Number of Independent Variables
+       \type integer
+       \minimum 1
+       \maximum 5
+       \required-field
+  N16; \field Data
+       \type real
+       \begin-extensible
 
 OS:DesignSpecification:OutdoorAir,
        \memo This object is used to describe general outdoor air requirements which
