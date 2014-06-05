@@ -19,10 +19,10 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 
-class EnvelopeSweep_Test < Test::Unit::TestCase
+class EnvelopeSweep_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

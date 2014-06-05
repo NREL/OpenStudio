@@ -21,7 +21,7 @@ require 'openstudio'
 require 'openstudio/analysis/find_dakota'
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 class TestWatcher < OpenStudio::AnalysisDriver::AnalysisDriverWatcher
   attr_accessor :numDataPointComplete, :numAnalysisComplete
@@ -48,7 +48,7 @@ class TestWatcher < OpenStudio::AnalysisDriver::AnalysisDriverWatcher
   
 end
 
-class AnalysisDriverWatcher_Test < Test::Unit::TestCase
+class AnalysisDriverWatcher_Test < MiniTest::Unit::TestCase
   
   # DLM: removing tests of functionality to be deprecated
   

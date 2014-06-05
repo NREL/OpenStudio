@@ -19,10 +19,10 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 
-class ExampleDDACEProblem_Test < Test::Unit::TestCase
+class ExampleDDACEProblem_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

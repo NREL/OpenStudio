@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class RubyUserScriptArgumentGetter_Test < Test::Unit::TestCase
+class RubyUserScriptArgumentGetter_Test < MiniTest::Unit::TestCase
 
   def test_BCLMeasureArguments
 

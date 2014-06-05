@@ -19,10 +19,9 @@
 
 require 'openstudio'
 require $OpenStudio_LibPath + 'openstudio/analysis/problems/Rosenbrock.rb'
+require 'minitest/autorun'
 
-require 'test/unit'
-
-class Rosenbrock_Test < Test::Unit::TestCase
+class Rosenbrock_Test < MiniTest::Unit::TestCase
 
   # DLM: removing tests of functionality to be deprecated
 
