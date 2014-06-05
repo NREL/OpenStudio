@@ -373,7 +373,8 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     matrixGroups = Array.new
     aziVectorX = ""
     aziVectorY = ""
-    puts "Using 3-phase method"
+    puts "Warning: using unsupported 3-phase method"
+    #puts "Using 3-phase method"
     system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
     #read DC materials file
     windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
