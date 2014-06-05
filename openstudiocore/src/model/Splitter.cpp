@@ -21,6 +21,9 @@
 #include <model/Splitter_Impl.hpp>
 #include <model/Model.hpp>
 #include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/PortList.hpp>
+#include <model/PortList_Impl.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -63,6 +66,11 @@ boost::optional<ModelObject> Splitter_Impl::inletModelObject()
 boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchIndex)
 {
   return connectedObject( outletPort( branchIndex ) );
+}
+
+std::vector<HVACComponent> Splitter_Impl::edges(bool isDemandComponent)
+{
+  return castVector<HVACComponent>(this->outletModelObjects());
 }
 
 boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject()

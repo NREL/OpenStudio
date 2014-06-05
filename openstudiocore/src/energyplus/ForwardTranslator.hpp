@@ -27,6 +27,7 @@
 #include <utilities/idf/Workspace.hpp>
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/StringStreamLogSink.hpp>
+#include <utilities/time/Time.hpp>
 
 namespace openstudio {
 
@@ -120,6 +121,7 @@ class GasMixture;
 class GroundHeatExchangerVertical;
 class HeatBalanceAlgorithm;
 class HeatExchangerAirToAirSensibleAndLatent;
+class HeatExchangerFluidToFluid;
 class HotWaterEquipment;
 class IlluminanceMap;
 class InsideSurfaceConvectionAlgorithm;
@@ -205,6 +207,7 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class TableMultiVariableLookup;
 class ThermalZone;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
@@ -213,6 +216,7 @@ class WaterHeaterMixed;
 class WaterUseConnections;
 class WaterUseEquipment;
 class ZoneAirHeatBalanceAlgorithm;
+class ZoneControlHumidistat;
 class ZoneHVACBaseboardConvectiveElectric;
 class ZoneHVACBaseboardConvectiveWater;
 class ZoneHVACFourPipeFanCoil;
@@ -473,6 +477,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateHeatExchangerAirToAirSensibleAndLatent( model::HeatExchangerAirToAirSensibleAndLatent & modelObject );
 
+  boost::optional<IdfObject> translateHeatExchangerFluidToFluid( model::HeatExchangerFluidToFluid & modelObject );
+
   boost::optional<IdfObject> translateHotWaterEquipment( model::HotWaterEquipment & modelObject );
 
   boost::optional<IdfObject> translateIlluminanceMap( model::IlluminanceMap & modelObject );
@@ -641,6 +647,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
+  boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
+
   boost::optional<IdfObject> translateThermalZone( model::ThermalZone & modelObject );
 
   boost::optional<IdfObject> translateThermostatSetpointDualSetpoint( model::ThermostatSetpointDualSetpoint& tsds );
@@ -656,6 +664,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateWaterUseEquipment( model::WaterUseEquipment & modelObject );
 
   boost::optional<IdfObject> translateZoneAirHeatBalanceAlgorithm( model::ZoneAirHeatBalanceAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateZoneControlHumidistat( model::ZoneControlHumidistat& modelObject );
   
   boost::optional<IdfObject> translateZoneHVACBaseboardConvectiveElectric( model::ZoneHVACBaseboardConvectiveElectric & modelObject );
 
@@ -743,6 +753,18 @@ class ENERGYPLUS_API ForwardTranslator {
   /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
    *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
+
+  /** Create a simple Schedule:Compact based on input vectors. The function will consume the vectors in
+   *  order, so the times must be in chronological order otherwise E+ will output an error. Summer and
+   *  winter design days are not required entries, only defaultDay and name are required. At the moment,
+   *  there is no ScheduleTypeLimit so there is no validation and E+ outputs a warning. It is up to the 
+   *  developer to make sure all E+ rules and validation for Schedule:Compact are upheld. This converts
+   *  openstudio::Time of 00:00 to 24:00 and makes sure it is the last value.
+   */
+  boost::optional<IdfObject> createSimpleSchedule(const std::string & name,
+                                                  const std::vector< std::pair<openstudio::Time, double> > & defaultDay,
+                                                  const std::vector< std::pair<openstudio::Time, double> > & summerDesignDay = std::vector< std::pair<openstudio::Time, double> > (),
+                                                  const std::vector< std::pair<openstudio::Time, double> > & winterDesignDay = std::vector< std::pair<openstudio::Time, double> > ());
 
   /** Creates the FluidProperties IdfObjects and adds them to m_idfObjects based on the input 
    *  fluidType. Returns an uninitialized object if unsuccessful for any reason. If successful, returns

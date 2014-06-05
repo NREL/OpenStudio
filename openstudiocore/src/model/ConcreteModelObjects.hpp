@@ -133,6 +133,7 @@
 #include <model/GroundHeatExchangerVertical.hpp>
 #include <model/HeatBalanceAlgorithm.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent.hpp>
+#include <model/HeatExchangerFluidToFluid.hpp>
 #include <model/HotWaterEquipment.hpp>
 #include <model/HotWaterEquipmentDefinition.hpp>
 #include <model/IlluminanceMap.hpp>
@@ -178,6 +179,7 @@
 #include <model/RefrigerationCondenserCascade.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled.hpp>
 #include <model/RefrigerationCondenserWaterCooled.hpp>
+#include <model/RefrigerationDefrostCycleParameters.hpp>
 #include <model/RefrigerationGasCoolerAirCooled.hpp>
 #include <model/RefrigerationSubcoolerLiquidSuction.hpp>
 #include <model/RefrigerationSubcoolerMechanical.hpp>
@@ -235,6 +237,7 @@
 #include <model/SteamEquipmentDefinition.hpp>
 #include <model/SubSurface.hpp>
 #include <model/Surface.hpp>
+#include <model/TableMultiVariableLookup.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/ThermochromicGlazing.hpp>
@@ -261,6 +264,7 @@
 #include <model/ZoneAirContaminantBalance.hpp>
 #include <model/ZoneAirHeatBalanceAlgorithm.hpp>
 #include <model/ZoneCapacitanceMultiplierResearchSpecial.hpp>
+#include <model/ZoneControlHumidistat.hpp>
 #include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater.hpp>
 #include <model/ZoneHVACEquipmentList.hpp>
@@ -387,6 +391,7 @@
 #include <model/GroundHeatExchangerVertical_Impl.hpp>
 #include <model/HeatBalanceAlgorithm_Impl.hpp>
 #include <model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp>
+#include <model/HeatExchangerFluidToFluid_Impl.hpp>
 #include <model/HotWaterEquipment_Impl.hpp>
 #include <model/HotWaterEquipmentDefinition_Impl.hpp>
 #include <model/IlluminanceMap_Impl.hpp>
@@ -432,6 +437,7 @@
 #include <model/RefrigerationCondenserCascade_Impl.hpp>
 #include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
 #include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
+#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
 #include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
 #include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
 #include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
@@ -489,6 +495,7 @@
 #include <model/SteamEquipmentDefinition_Impl.hpp>
 #include <model/SubSurface_Impl.hpp>
 #include <model/Surface_Impl.hpp>
+#include <model/TableMultiVariableLookup_Impl.hpp>
 #include <model/ThermalZone_Impl.hpp>
 #include <model/ThermochromicGlazing_Impl.hpp>
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
@@ -515,6 +522,7 @@
 #include <model/ZoneAirContaminantBalance_Impl.hpp>
 #include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
 #include <model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp>
+#include <model/ZoneControlHumidistat_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveElectric_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
 #include <model/ZoneHVACEquipmentList_Impl.hpp>

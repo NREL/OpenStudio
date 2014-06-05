@@ -89,6 +89,25 @@ boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
   return connectedObject( waterOutletPort() );
 }
 
+std::vector<HVACComponent> WaterToAirComponent_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( isDemandComponent ) {
+    if( boost::optional<ModelObject> edgeModelObject = this->waterOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  } else {
+    if( boost::optional<ModelObject> edgeModelObject = this->airOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  }
+  return edges;
+}
+
 boost::optional<AirLoopHVAC> WaterToAirComponent_Impl::airLoopHVAC() const
 {
   return HVACComponent_Impl::airLoopHVAC();

@@ -86,6 +86,25 @@ OptionalModelObject WaterToWaterComponent_Impl::demandOutletModelObject()
   return connectedObject(demandOutletPort());
 }
 
+std::vector<HVACComponent> WaterToWaterComponent_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( isDemandComponent ) {
+    if( boost::optional<ModelObject> edgeModelObject = this->demandOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  } else {
+    if( boost::optional<ModelObject> edgeModelObject = this->supplyOutletModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+  }
+  return edges;
+}
+
 std::vector<openstudio::IdfObject> WaterToWaterComponent_Impl::remove()
 {
   removeFromPlantLoop();

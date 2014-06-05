@@ -1,4 +1,4 @@
-!IDD_Version 1.3.5
+!IDD_Version 1.3.6
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -5836,10 +5836,56 @@ OS:Refrigeration:Case,
         \note For a DX system, enter the saturated temperature for refrigerant pressure leaving case
         \note For a brine-cooled cooled (secondary system) case, enter the brine inlet temperature
         \note Default is 5 C less than case operating temperature
-  N21;  \field Average Refrigerant Charge Inventory
+  N21,  \field Average Refrigerant Charge Inventory
         \units kg/m
         \type real
         \default 0.0
+  N22,  \field Number Of Doors
+        \type integer
+        \minimum> 0
+  N23,  \field Rated Total Cooling Capacity per Door
+        \type real
+        \units W
+        \minimum> 0.0
+  N24,  \field Standard Case Fan Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N25,  \field Operating Case Fan Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N26,  \field Standard Case Lighting Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N27,  \field Installed Case Lighting Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N28,  \field Case Anti-Sweat Heater Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+  N29,  \field Minimum Anti-Sweat Heater Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+        \note This field is only applicable to the Linear, Dewpoint Method, and
+        \note Heat Balance Method anti-sweat heater control types
+  N30,  \field Case Defrost Power per Door
+        \type real
+        \units W
+        \minimum 0.0
+        \note Used to evaluate load on case as well as power or heat consumption
+  A16,  \field Unit Type
+        \type choice
+        \key UnitLength
+        \key NumberOfDoors
+        \default UnitLength
+  A17;  \field Case Defrost Cycle Parameters Name
+        \type object-list
+        \object-list RefrigerationDefrostCycleParameters
 
 OS:Refrigeration:Condenser:AirCooled,
         \min-fields 6
@@ -6269,6 +6315,103 @@ OS:Refrigeration:Compressor,
   A8;   \field Transcritical Compressor Capacity Curve Name
         \type object-list
         \object-list BicubicCurves
+
+OS:Refrigeration:DefrostCycleParameters,
+        \min-fields 6
+  A1,   \field Handle
+        \type handle
+  A2,   \field Name
+        \required-field
+        \type alpha
+        \reference RefrigerationDefrostCycleParameters
+  N1,   \field Duration of Defrost Cycle
+        \type integer
+        \units minutes
+        \minimum> 0
+  N2,   \field Drip Down Time
+        \type integer
+        \units minutes
+        \minimum> 0
+  N3,   \field Defrost 1 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N4,   \field Defrost 1 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N5,   \field Defrost 2 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N6,   \field Defrost 2 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N7,   \field Defrost 3 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N8,   \field Defrost 3 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N9,   \field Defrost 4 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N10,  \field Defrost 4 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N11,  \field Defrost 5 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N12,  \field Defrost 5 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N13,  \field Defrost 6 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N14,  \field Defrost 6 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N15,  \field Defrost 7 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N16,  \field Defrost 7 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
+  N17,  \field Defrost 8 Hour Start Time
+        \type integer
+        \units hr
+        \minimum 0
+        \maximum 23
+  N18;  \field Defrost 8 Minute Start Time
+        \type integer
+        \units minutes
+        \minimum 0
+        \maximum 59
 
 OS:Refrigeration:GasCooler:AirCooled,
         \memo The transcritical refrigeration system requires a single gas cooler to reject the
@@ -6874,7 +7017,10 @@ OS:Refrigeration:WalkIn,
         \note Some examples:
         \note R15 is U 0.3785 W/m2-K
         \note R5 is U 1.136 W/m2-K
-  A11;  \field WalkIn Zone Boundary
+  A11,  \field WalkIn Defrost Cycle Parameters Name
+        \type object-list
+        \object-list RefrigerationDefrostCycleParameters
+  A12;  \field WalkIn Zone Boundary
         \begin-extensible
         \required-field
         \type object-list
@@ -12848,6 +12994,192 @@ OS:Curve:DoubleExponentialDecay,
        \default Dimensionless
        \key Dimensionless
 
+OS:Table:MultiVariableLookup,
+       \memo The multi-variable lookup table can represent from 1 to 5 independent variables and
+       \memo can interpolate these independent variables up to a 4th order polynomial. The
+       \memo polynomial order is assumed to be the number of interpolation points (n) minus 1.
+       \memo When any independent variable value is outside the table limits, linear extrapolation
+       \memo is used to predict the table result and is based on the two nearest data points in the
+       \memo table for that particularindependent variable.
+       \extensible:1
+       \min-fields 29
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference TableMultiVariableLookup
+       \reference AllCurves
+       \reference LinearCurves
+       \reference LinearOrQuadraticCurves
+       \reference QuadraticCurves
+       \reference QuadraticCubicCurves
+       \reference BiquadraticQuadraticCubicCurves
+       \reference CubicCurves
+       \reference QuarticCurves
+       \reference BicubicCurves
+       \reference BicubicBiquadraticCurves
+       \reference BiquadraticCurves
+       \reference QuadraticLinearCurves
+       \reference TriQuadraticCurves
+  A3 , \field Interpolation Method
+       \type choice
+       \key LinearInterpolationOfTable
+       \key EvaluateCurveToLimits
+       \key LagrangeInterpolationLinearExtrapolation
+       \default LagrangeInterpolationLinearExtrapolation
+       \required-field
+  N1 , \field Number of Interpolation Points
+       \type integer
+       \minimum> 1
+       \maximum 4
+       \default 3
+       \required-field
+  A4 , \field Curve Type
+       \type choice
+       \key Linear
+       \key Quadratic
+       \key Cubic
+       \key Quartic
+       \key Exponent
+       \key BiQuadratic
+       \key QuadraticLinear
+       \key BiCubic
+       \key TriQuadratic
+       \key Other
+       \note The curve types BiCubic and TriQuadratic may not
+       \note be used with Interpolation Method = EvaluateCurveToLimits
+  A5 , \field Table Data Format
+       \type choice
+       \key SingleLineIndependentVariableWithMatrix
+       \default SingleLineIndependentVariableWithMatrix
+       \required-field
+  A6 , \field External File Name
+       \type alpha
+       \retaincase
+  A7 , \field X1 Sort Order
+       \type choice
+       \key Ascending
+       \key Descending
+       \default Ascending
+       \required-field
+  A8 , \field X2 Sort Order
+       \type choice
+       \key Ascending
+       \key Descending
+       \default Ascending
+       \required-field
+  N2 , \field Normalization Reference
+       \type real
+       \note This field is used to normalize the table output data.
+       \note The minimum and maximum table output fields are also normalized.
+       \note If this field is blank or 1, the table data will be directly used.
+       \note This field is not allowed to be set equal to 0.
+  N3 , \field Minimum Value of X1
+       \type real
+       \unitsBasedOnField A8
+  N4 , \field Maximum Value of X1
+       \type real
+       \unitsBasedOnField A8
+  N5 , \field Minimum Value of X2
+       \type real
+       \unitsBasedOnField A9
+  N6 , \field Maximum Value of X2
+       \type real
+       \unitsBasedOnField A9
+  N7 , \field Minimum Value of X3
+       \type real
+       \unitsBasedOnField A10
+  N8 , \field Maximum Value of X3
+       \type real
+       \unitsBasedOnField A10
+  N9 , \field Minimum Value of X4
+       \type real
+       \unitsBasedOnField A11
+  N10, \field Maximum Value of X4
+       \type real
+       \unitsBasedOnField A11
+  N11, \field Minimum Value of X5
+       \type real
+       \unitsBasedOnField A12
+  N12, \field Maximum Value of X5
+       \type real
+       \unitsBasedOnField A12
+  N13, \field Minimum Table Output
+       \type real
+       \note Specify the minimum value calculated by this curve object
+       \unitsBasedOnField A13
+  N14, \field Maximum Table Output
+       \type real
+       \note Specify the maximum value calculated by this curve object
+       \unitsBasedOnField A13
+  A9 , \field Input Unit Type for X1
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A10 , \field Input Unit Type for X2
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A11, \field Input Unit Type for X3
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A12, \field Input Unit Type for X4
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A13, \field Input Unit Type for X5
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \default Dimensionless
+       \required-field
+  A14, \field Output Unit Type
+       \type choice
+       \key Dimensionless
+       \key Capacity
+       \key Power
+       \default Dimensionless
+       \required-field
+  N15, \field Number of Independent Variables
+       \type integer
+       \minimum 1
+       \maximum 5
+       \required-field
+  N16; \field Data
+       \type real
+       \begin-extensible
+
 OS:DesignSpecification:OutdoorAir,
        \memo This object is used to describe general outdoor air requirements which
        \memo are referenced by other objects.
@@ -13117,7 +13449,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \default 0.008
        \units percent
        \note Rate of drift loss as a percentage of circulating spray water flow rate
-       \note Default value for this field in under investigation. For now Cooling towerӳ drift loss
+       \note Default value for this field in under investigation. For now Cooling tower's drift loss
        \note percent default value is taken here.
   A9 , \field Blowdown Calculation Mode
        \type choice
@@ -13132,7 +13464,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \note Blowdown is water intentionally drained from the basin in order to offset the build
        \note up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value for this field in under investigation. For now Cooling towerӳ
+       \note Default value for this field in under investigation. For now Cooling tower's
        \note Blowdown Concentration Ratio percent default value is taken here.
   A10, \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
@@ -13540,6 +13872,129 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \key No
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
+
+OS:HeatExchanger:FluidToFluid,
+        \min-fields 15
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2 , \field Name
+        \required-field
+        \reference ConnectionObject
+   A3 , \field Availability Schedule Name
+        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+        \note If this field is blank, the system is always available.
+        \note default is that heat exchanger is on
+        \type object-list
+        \object-list ScheduleNames
+   A4 , \field Loop Demand Side Inlet Node
+        \type object-list
+        \object-list ConnectionNames
+   A5 , \field Loop Demand Side Outlet Node
+        \type object-list
+        \object-list ConnectionNames
+   N1 , \field Loop Demand Side Design Flow Rate
+        \type real
+        \required-field
+        \minimum> 0.0
+        \units m3/s
+        \ip-units gal/min
+        \autosizable
+   A6 , \field Loop Supply Side Inlet Node
+        \type object-list
+        \object-list ConnectionNames
+   A7 , \field Loop Supply Side Outlet Node
+        \type object-list
+        \object-list ConnectionNames
+   N2 , \field Loop Supply Side Design Flow Rate
+        \type real
+        \required-field
+        \minimum> 0.0
+        \units m3/s
+        \ip-units gal/min
+        \autosizable
+   A8 , \field Heat Exchange Model Type
+        \type choice
+        \key CrossFlowBothUnMixed
+        \key CrossFlowBothMixed
+        \key CrossFlowSupplyMixedDemandUnMixed
+        \key CrossFlowSupplyUnMixedDemandMixed
+        \key ParallelFlow
+        \key CounterFlow
+        \key Ideal
+        \default Ideal
+        \required-field
+   N3 , \field Heat Exchanger U-Factor Times Area Value
+        \type real
+        \units W/k
+        \minimum> 0.0
+        \autosizable
+        \required-field
+   A9 , \field Control Type
+        \type choice
+        \key UncontrolledOn
+        \key OperationSchemeModulated
+        \key OperationSchemeOnOff
+        \key HeatingSetpointModulated
+        \key HeatingSetpointOnOff
+        \key CoolingSetpointModulated
+        \key CoolingSetpointOnOff
+        \key DualDeadbandSetpointModulated
+        \key DualDeadbandSetpointOnOff
+        \key CoolingDifferentialOnOff
+        \key CoolingSetpointOnOffWithComponentOverride
+        \required-field
+        \default UncontrolledOn
+   A10 , \field Heat Exchanger Setpoint Node Name
+       \type object-list
+       \object-list Node
+   N4 , \field Minimum Temperature Difference to Activate Heat Exchanger
+        \note Tolerance between control temperatures used to determine if heat exchanger should run.
+        \type real
+        \required-field
+        \minimum 0.0
+        \maximum 50
+        \default 0.01
+        \units deltaC
+   A11, \field Heat Transfer Metering End Use Type
+        \note This feild controls end use reporting for heat transfer meters
+        \type choice
+        \key FreeCooling
+        \key HeatRecovery
+        \key HeatRejection
+        \key HeatRecoveryForCooling
+        \key HeatRecoveryForHeating
+        \key LoopToLoop
+        \default LoopToLoop
+        \required-field
+   A12, \field Component Override Loop Supply Side Inlet Node
+       \type object-list
+       \object-list Node
+   A13, \field Component Override Loop Demand Side Inlet Node
+       \type object-list
+       \object-list Node
+   A14, \field Component Override Cooling Control Temperature Mode
+        \required-field
+        \type choice
+        \key WetBulbTemperature
+        \key DryBulbTemperature
+        \key Loop
+        \default Loop
+        \note This field is only used if Control Type is set to CoolingSetpointOnOffWithComponentOverride
+   N5 , \field Sizing Factor
+        \note Multiplies the autosized flow rates for this device
+        \required-field
+        \type real
+        \minimum> 0.0
+        \default 1.0
+   N6 , \field Operation Minimum Temperature Limit
+        \note Lower limit on inlet temperatures, heat exchanger will not operate if either inlet is below this limit
+        \type real
+        \units C
+   N7 ; \field Operation Maximum Temperature Limit
+        \note Upper limit on inlet temperatures, heat exchanger will not operate if either inlet is above this limit
+        \type real
+        \units C
 
 OS:HVACComponentList,
       \extensible:1 - repeat last field, remembering to remove ; from "inner" fields.
@@ -14511,10 +14966,32 @@ OS:ThermalZone,
   A14, \field Thermostat Name
        \type object-list
        \object-list ThermostatNames
-  A15; \field Use Ideal Air Loads
+  A15, \field Use Ideal Air Loads
        \type choice
        \key Yes
        \key No
+  A16; \field Humidistat Name
+       \type object-list
+       \object-list HumidistatNames
+
+OS:ZoneControl:Humidistat,
+       \memo Specifies zone relative humidity setpoint schedules for humidifying and dehumidifying.
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference HumidistatNames
+  A3,  \field Humidifying Relative Humidity Setpoint Schedule Name
+       \required-field
+       \note hourly schedule values should be in Relative Humidity (percent)
+       \type object-list
+       \object-list ScheduleNames
+  A4;  \field Dehumidifying Relative Humidity Setpoint Schedule Name
+       \note hourly schedule values should be in Relative Humidity (percent)
+       \type object-list
+       \object-list ScheduleNames
 
 OS:ThermostatSetpoint:DualSetpoint,
        \min-fields 1
@@ -14527,7 +15004,6 @@ OS:ThermostatSetpoint:DualSetpoint,
        \reference ThermostatNames
   A3, \field Heating Setpoint Temperature Schedule Name
        \type object-list
-       \object-list ScheduleNames
        \object-list ScheduleNames
   A4; \field Cooling Setpoint Temperature Schedule Name
        \type object-list

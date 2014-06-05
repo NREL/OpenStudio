@@ -41,6 +41,7 @@
     <file>images/coilcoolinglowtemprad_varflow.png</file>      
     <file>images/cooling_tower.png</file>
     <file>images/cooling_tower_variable.png</file>
+    <file>images/dehumidify_schedule_icon.png</file>
     <file>images/delete-icon.png</file>
     <file>images/delete.png</file>
     <file>images/delete_disabled.png</file>
@@ -67,6 +68,7 @@
     <file>images/fast_forward.png</file>
     <file>images/fast_reverse.png</file>
     <file>images/fire.png</file>
+    <file>images/fluid_hx.png</file>
     <file>images/forward.png</file>
     <file>images/four_pipe_fan_coil.png</file>    
     <file>images/furnace.png</file>    
@@ -75,6 +77,8 @@
     <file>images/heat_coil.png</file>
     <file>images/heat_pump3.png</file>
     <file>images/heat_transfer_outdoorair.png</file>
+    <file>images/humidify_schedule_icon.png</file>
+    <file>images/humidistat.png</file>
     <file>images/hvac-icon.png</file>
     <file>images/icon_scripts.png</file>
     <file>images/image_header.png</file>
@@ -271,6 +275,7 @@
     <file>images/mini_icons/fan_on_off_mini.png</file>
     <file>images/mini_icons/fan_variable.png</file>
     <file>images/mini_icons/fan_zoneexhaust.png</file>
+    <file>images/mini_icons/fluid_hx_mini.png</file>
     <file>images/mini_icons/folder.png</file>
     <file>images/mini_icons/four_pipe_fan_coil.png</file>    
     <file>images/mini_icons/furnace.png</file>
