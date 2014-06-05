@@ -100,9 +100,8 @@ void ScriptsTabView::showEvent(QShowEvent *e)
 void ScriptsTabView::openUpdateMeasuresDlg()
 {
   m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog());
+  m_syncMeasuresDialog->setGeometry(OSAppBase::instance()->currentDocument()->mainWindow()->geometry());
   m_syncMeasuresDialog->exec();
-
-  m_syncMeasuresDialog->setGeometry(OSAppBase::instance()->currentDocument()->mainWindow()->geometry()); // TODO
 }
 
 } // openstudio

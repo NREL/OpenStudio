@@ -22,12 +22,7 @@
 
 #include <QWidget>
 
-#include <set>
-#include <vector>
-
-#include <boost/optional.hpp>
-
-class QProgressBar;
+#include <utilities/bcl/BCLMeasure.hpp>
 
 namespace openstudio {
 
@@ -46,44 +41,28 @@ public:
   virtual ~SyncMeasuresDialogCentralWidget() {}
 
   Component * checkedComponent() const;
-  int pageIdx();
-  bool showNewComponents();
-  void setShowNewComponents(bool showNewComponents);
-  void setMeasures(std::vector<BCLMeasure> & measures);
+  void setMeasures(const std::vector<BCLMeasure> & measures);
 
 protected:
 
 private:
   void createLayout();
   void init();
+  void displayMeasures(int pageIdx);
 
   CollapsibleComponentList * m_collapsibleComponentList;
-  ComponentList * m_componentList; // TODO cruft to be removed
-  QProgressBar * m_progressBar;
-  std::set<std::string> m_pendingDownloads;
-  std::string m_filterType;
+  ComponentList * m_componentList;
   int m_pageIdx;
-  QString m_searchString;
-  bool m_showNewComponents;
+  std::vector<BCLMeasure> m_measures;
 
 signals:
-  void headerClicked(bool checked);
   void componentClicked(bool checked);
-  void collapsibleComponentClicked(bool checked);
   void getComponentsByPage(int pageNum);
-  void componentsReady();
   void noComponents();
-  void requestComponents(const std::string& filterType, int tids, int pageIdx, const QString & searchString);
 
 private slots:
   void upperPushButtonClicked();
   void lowerPushButtonClicked();
-  void comboBoxIndexChanged(const QString & text);
-  void on_headerClicked(bool checked);
-  void componentDownloadComplete(const std::string& uid, const boost::optional<BCLComponent>& component);
-  void measureDownloadComplete(const std::string& uid, const boost::optional<BCLMeasure>& measure);
-  void on_componentClicked(bool checked);
-  void on_collapsibleComponentClicked(bool checked);
   void on_getComponentsByPage(int pageIdx);
 
 };

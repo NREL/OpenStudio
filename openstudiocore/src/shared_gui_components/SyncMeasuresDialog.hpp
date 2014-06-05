@@ -26,8 +26,6 @@
 
 #include <vector>
 
-class QButtonGroup;
-class QPushButton;
 class QScrollArea;
 class QWidget;
 
@@ -44,32 +42,21 @@ public:
   SyncMeasuresDialog(QWidget * parent = 0);
   virtual ~SyncMeasuresDialog() {}
 
-  bool showNewComponents();
-  void setShowNewComponents(bool showNewComponents);
-
 protected:
   void paintEvent(QPaintEvent * event);
 
 private:
   void createLayout();
+  void findUpdates();
 
   SyncMeasuresDialogCentralWidget * m_centralWidget;
   QScrollArea * m_rightScrollArea;
   Component * m_expandedComponent;
   std::vector<BCLMeasure> m_measuresNeedingUpdates;
 
-signals:
-  void headerClicked(bool checked);
-  void componentClicked(bool checked);
-  void collapsibleComponentClicked(bool checked);
-  void getComponentsByPage(int pageNum);
-
 private slots:
   void on_componentClicked(bool checked);
-  void on_collapsibleComponentClicked(bool checked);
-  void on_getComponentsByPage(int pageIdx);
   void on_noComponents();
-  void findUpdates();
 
 };
 

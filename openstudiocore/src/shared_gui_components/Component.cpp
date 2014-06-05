@@ -23,6 +23,8 @@
 #include <utilities/bcl/LocalBCL.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/core/Compare.hpp>
+#include <utilities/units/Quantity.hpp>
+#include <utilities/units/Unit.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -416,7 +418,7 @@ void Component::createAbridgedLayout()
         }
       }
     }
-    else if(m_componentType == "measure"){
+    else if(m_componentType == "measure" || m_componentType == "MeasureType"){
       if(string.toStdString() == "Measure Type"){
         openstudio::AttributeValueType type = attribute.valueType();
         if(type == AttributeValueType::String){
@@ -495,34 +497,47 @@ void Component::createCompleteLayout()
 
     openstudio::AttributeValueType type = attribute.valueType();
 
-    if(type == AttributeValueType::Double){
-      string = string.setNum(attribute.valueAsDouble());
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
+    if(type == AttributeValueType::Boolean){
+      bool success = attribute.valueAsBoolean();
+      if(success){
+        string = "true";
+      } else {
+        string = "false";
       }
+    }
+    else if(type == AttributeValueType::Double){
+      string = string.setNum(attribute.valueAsDouble());
+    }
+    else if(type == AttributeValueType::Quantity){
+      Quantity quantity = attribute.valueAsQuantity();
+      string = string.setNum(quantity.value());
+      string += " ";
+      string += quantity.prettyUnitsString().c_str();
+    }
+    else if(type == AttributeValueType::Unit){
+      Unit unit = attribute.valueAsUnit();
+      string = unit.prettyString().c_str();
     }
     else if(type == AttributeValueType::Integer){
       string = string.setNum(attribute.valueAsInteger());
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
-      }
     }
+    else if(type == AttributeValueType::Unsigned){
+      string = string.setNum(attribute.valueAsUnsigned());
+    } 
     else if(type == AttributeValueType::String){
       string = attribute.valueAsString().c_str();
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
-      }
+    }
+    else if(type == AttributeValueType::AttributeVector){
+      AttributeVector attributeVector = attribute.valueAsAttributeVector();
+      // TODO handle this case
     }
     else{
       // should never get here
-      // see utility::bcl for utilized types
-      OS_ASSERT(false);
+    }
+    if(optionalUnits){
+      string += " ";
+      std::string temp = optionalUnits.get();
+      string += temp.c_str();
     }
     item = new QTableWidgetItem(string);
     tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);
