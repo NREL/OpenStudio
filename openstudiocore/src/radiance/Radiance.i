@@ -21,6 +21,9 @@
   using namespace openstudio;
 %}
 
+%ignore formatString;
+%ignore cleanName;
+
 // #ifdef SWIGCSHARP
 %rename(RadianceForwardTranslator) openstudio::radiance::ForwardTranslator;
 // #endif
