@@ -21,6 +21,8 @@
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/core/Checksum.hpp>
+#include "../core/Assert.hpp"
+#include "../units/QuantityConverter.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -34,6 +36,45 @@
 #include <cmath>
 
 namespace openstudio{
+
+EpwDataPoint::EpwDataPoint()
+{
+  m_year=1;
+  m_month=1;
+  m_day=1;
+  m_hour=1;
+  m_minute=0,
+  m_dataSourceandUncertaintyFlags="";
+  m_dryBulbTemperature="99.9";
+  m_dewPointTemperature="99.9",
+  m_relativeHumidity="999";
+  m_atmosphericStationPressure="999999";
+  m_extraterrestrialHorizontalRadiation="9999";
+  m_extraterrestrialDirectNormalRadiation="9999";
+  m_horizontalInfraredRadiationIntensity="9999",
+  m_globalHorizontalRadiation="9999";
+  m_directNormalRadiation="9999";
+  m_diffuseHorizontalRadiation="9999",
+  m_globalHorizontalIlluminance="999999";
+  m_directNormalIlluminance="999999";
+  m_diffuseHorizontalIlluminance="999999";
+  m_zenithLuminance="9999";
+  m_windDirection="999";
+  m_windSpeed="999";
+  m_totalSkyCover=99;
+  m_opaqueSkyCover=99,
+  m_visibility="9999";
+  m_ceilingHeight="99999";
+  m_presentWeatherObservation=0;
+  m_presentWeatherCodes=0;
+  m_precipitableWater="999";
+  m_aerosolOpticalDepth=".999";
+  m_snowDepth="999";
+  m_daysSinceLastSnowfall="99",
+  m_albedo="999";
+  m_liquidPrecipitationDepth="999";
+  m_liquidPrecipitationQuantity="99";
+}
 
 EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,
@@ -150,19 +191,16 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
   return boost::optional<EpwDataPoint>(pt);
 }
 
-std::string EpwDataPoint::unitsByName(std::string name)
+boost::optional<std::string> EpwDataPoint::unitsByName(std::string name)
 {
   EpwDataField id;
-  try
-  {
+  try {
     id = EpwDataField(name);
-  }
-  catch(...)
-  {
+  } catch(...) {
     // Could do a warning message here
-    return std::string();
+    return boost::optional<std::string>();
   }
-  return units(id);
+  return boost::optional<std::string>(units(id));
 }
 
 std::string EpwDataPoint::units(EpwDataField field)
@@ -433,7 +471,9 @@ boost::optional<std::string> EpwDataPoint::toWthString()
     LOG_FREE(Error,"openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
     return boost::optional<std::string>();
   }
-  double drybulb = value.get()+273.15;
+  boost::optional<double> optdrybulb = openstudio::convert(value.get(), "C", "K");
+  OS_ASSERT(optdrybulb);
+  double drybulb = optdrybulb.get();
   output << QString("%1").arg(drybulb);
   value = atmosphericStationPressure();
   if(!value)
@@ -465,7 +505,9 @@ boost::optional<std::string> EpwDataPoint::toWthString()
       LOG_FREE(Error,"openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
       return boost::optional<std::string>();
     }
-    double dewpoint = value.get()+273.15;
+    boost::optional<double> optdewpoint = openstudio::convert(value.get(), "C", "K");
+    OS_ASSERT(optdewpoint);
+    double dewpoint = optdewpoint.get();
     pw = psat(dewpoint);
   }
   else // Have relative humidity
@@ -536,7 +578,7 @@ bool EpwDataPoint::setYear(std::string year)
   {
     return false;
   }
-  m_year = value;
+  setYear(value);
   return true;
 }
 
@@ -562,11 +604,8 @@ bool EpwDataPoint::setMonth(std::string month)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 12 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
-    return false;
   }
-  m_month = value;
+  setMonth(value);
   return true;
 }
 
@@ -592,11 +631,8 @@ bool EpwDataPoint::setDay(std::string day)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 31 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
-    return false;
-  }
-  m_day = value;
+  } 
+  setDay(value);
   return true;
 }
 
@@ -622,11 +658,8 @@ bool EpwDataPoint::setHour(std::string hour)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 24 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
-    return false;
   }
-  m_hour = value;
+  setHour(value);
   return true;
 }
 
@@ -652,10 +685,8 @@ bool EpwDataPoint::setMinute(std::string minute)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
     return false;
-  } else if(0 > value || 59 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
-    return false;
   }
+  setMinute(value);
   m_minute = value;
   return true;
 }
