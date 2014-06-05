@@ -384,12 +384,13 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
           #row[0..-1].each do |azi|
           matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
           space_name = matchVmx[1]
+          # DLM: aziVector is not actually a vector right?  just the angle in radians?
           aziVector = matchVmx[2]
           glazingTransmissivity = matchVmx[3]
           aziAngle = aziVector.to_f * (180 / Math::PI)
           # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
-          aziVectorX = Math::sin(aziVector)
-          aziVectorY = Math::cos(aziVector)
+          aziVectorX = Math::sin(aziVector.to_f)
+          aziVectorY = Math::cos(aziVector.to_f)
           viewVectorX = -aziVectorX
           viewVectorY = -aziVectorY
           # sanity checks
@@ -429,39 +430,44 @@ def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_s
   allValues = []
 
   t_cmds.each do | command | 
-    tempIO = IO.popen(command)
-    temp = tempIO.readlines.to_s
-    tempIO.close
-
-    puts "#{Time.now.getutc}: Parsing result"
-    cmdValues = []
-    val_lines = temp.split(/\n/)
-    
-    has_header = false
-    if not val_lines.empty?
-      has_header = /RADIANCE/.match(val_lines[0])
-    end
-    header_read = false
   
-    linenum = 0
-    val_lines.each do |val|
+    tempIO = IO.popen(command)
+    
+    puts "#{Time.now.getutc}: Parsing result"
+    
+    cmdValues = []
+    
+    line_num = 0
+    data_num = 0
+    has_header = false
+    header_read = false
+    tempIO.each_line("\n") do |line| 
+    
+      if line_num == 0
+        has_header = /RADIANCE/.match(line)
+      end
+      line_num += 1
+    
       if has_header and not header_read
-        if /^\s?\d/.match(val)
+        if /^\s?\d/.match(line)
           header_read = true
         else
           next
         end
       end
-    
-      line = OpenStudio::Radiance::parseGenDayMtxLine(val)
-      if line.size != 8760
-        abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
+      
+      values = OpenStudio::Radiance::parseGenDayMtxLine(line)
+      if values.size != 8760
+        abort "Unable to parse line, not enough hours found (line: #{line_num}): #{values}\nOriginal Line: #{line}"
       end
-      linenum = linenum + 1
-      cmdValues << line
-
-
+      
+      line_num = line_num + 1
+      cmdValues << values
+      
     end
+
+    tempIO.close
+    
     allValues << cmdValues
   end
 
