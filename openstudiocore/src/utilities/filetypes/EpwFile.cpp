@@ -21,6 +21,7 @@
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/core/Checksum.hpp>
+#include <utilities/core/Assert.hpp>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -1643,6 +1644,7 @@ double EpwFile::elevation() const
 
 Time EpwFile::timeStep() const
 {
+  OS_ASSERT((60 % m_recordsPerHour) == 0);
   return Time(0,0,60/m_recordsPerHour);
 }
 
@@ -1865,6 +1867,7 @@ bool EpwFile::parse(bool storeData)
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
+  OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60/m_recordsPerHour;
   int currentMinute = 0;
   while(std::getline(ifs, line)){
@@ -1960,6 +1963,7 @@ bool EpwFile::parse(bool storeData)
       m_endDateActualYear = endDate->year();
     }
   }
+
   if(!realYear && wrapAround) {
     LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
     return false;
@@ -1973,7 +1977,7 @@ bool EpwFile::parseLocation(const std::string& line)
   bool result = true;
 
   // LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0
-  boost::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)$");
+  boost::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
   boost::smatch matches;
   if (boost::regex_search(line, matches, locationRegex)){
     std::string city = std::string(matches[1].first, matches[1].second); boost::trim(city);
@@ -2026,7 +2030,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   bool result = true;
 
   // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-  boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)$");
+  boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
   boost::smatch matches;
   if (boost::regex_search(line, matches, dataPeriodRegex)){
     std::string nDataPeriods =  std::string(matches[1].first, matches[1].second); boost::trim(nDataPeriods);
@@ -2047,9 +2051,9 @@ bool EpwFile::parseDataPeriod(const std::string& line)
     }
     try{
       m_recordsPerHour = boost::lexical_cast<int>(timeStep);
-      if(60 % m_recordsPerHour != 0) {
-        LOG(Error, "Number of records per hour does not result in integral mintes between records in EPW file '" << m_path<<"'");
-        return false;
+      if((60 % m_recordsPerHour) != 0) {
+        LOG(Error, "Number of records per hour of " << m_recordsPerHour << " does not result in integral number of minutes between records in EPW file '" << m_path<<"'");
+        result = false;
       }
     }catch(...){
       result = false;
