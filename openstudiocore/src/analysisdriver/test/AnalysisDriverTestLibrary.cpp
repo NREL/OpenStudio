@@ -120,7 +120,7 @@ SimpleProject AnalysisDriverTestLibrarySingleton::createProject(
   std::vector<openstudio::path>::const_iterator it;
   it = std::find_if(m_baselineModels.begin(),
                     m_baselineModels.end(),
-                    std::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,_1,baselineModelName));
+                    std::bind(AnalysisDriverTestLibrarySingleton::pathStemEquals,std::placeholders::_1,baselineModelName));
   OS_ASSERT(it != m_baselineModels.end());
   bool test = result->setSeed(FileReference(*it)).first;
   OS_ASSERT(test);
