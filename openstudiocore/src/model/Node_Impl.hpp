@@ -33,7 +33,7 @@ class SetpointManagerScheduled;
 class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
-//class SetpointManager;
+class SetpointManager;
 
 namespace detail {
 
@@ -69,7 +69,7 @@ namespace detail {
 
     unsigned outletPort();
 
-    //std::vector<SetpointManager> setpointManagers() const;
+    std::vector<SetpointManager> setpointManagers() const;
 
     // boost::optional<SetpointManager> hasTemperatureSetpointManager() const;
 

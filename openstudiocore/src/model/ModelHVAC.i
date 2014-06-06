@@ -133,7 +133,6 @@ SWIG_MODELOBJECT(Loop, 0);
 SWIG_MODELOBJECT(ZoneHVACComponent, 0);
 SWIG_MODELOBJECT(ZoneHVACEquipmentList, 1);
 SWIG_MODELOBJECT(HVACComponent, 0);
-SWIG_MODELOBJECT(SetpointManager, 0);
 SWIG_MODELOBJECT(StraightComponent, 0);
 SWIG_MODELOBJECT(WaterToAirComponent, 0);
 SWIG_MODELOBJECT(WaterToWaterComponent, 0);

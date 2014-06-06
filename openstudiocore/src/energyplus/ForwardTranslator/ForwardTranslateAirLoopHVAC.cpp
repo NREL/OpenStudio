@@ -41,8 +41,8 @@
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleCompact.hpp>
 #include <model/ScheduleCompact_Impl.hpp>
-// #include <model/SetpointManager.hpp>
-// #include <model/SetpointManager_Impl.hpp>
+#include <model/SetpointManager.hpp>
+#include <model/SetpointManager_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 // #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/StraightComponent.hpp>
@@ -129,11 +129,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
        it != upperNodes.end();
        ++it )
   {
-    // std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-    // if( ! _setpointManagers.empty() ) {
-    //   SetpointManagerMixedAir spm(t_model);
-    //   spm.addToNode(*it);
-    // }
+    std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
+    if( ! _setpointManagers.empty() ) {
+      SetpointManagerMixedAir spm(t_model);
+      spm.addToNode(*it);
+    }
     // if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
     // {
     //   SetpointManagerMixedAir spm(t_model);
@@ -141,25 +141,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     // }
   } 
 
-  // std::vector<SetpointManager> _supplyOutletSetpointManagers = airLoopHVAC.supplyOutletNode().setpointManagers();
-  std::vector<int> _supplyOutletSetpointManagers;
-  // if( boost::optional<ModelObject> mo = airLoopHVAC.supplyOutletNode().getImpl<model::detail::Node_Impl>()->setpointManager() )
+  std::vector<SetpointManager> _supplyOutletSetpointManagers = airLoopHVAC.supplyOutletNode().setpointManagers();
+  //if( boost::optional<ModelObject> mo = airLoopHVAC.supplyOutletNode().getImpl<model::detail::Node_Impl>()->setpointManager() )
   if( ! _supplyOutletSetpointManagers.empty() )
   {
     for( std::vector<Node>::iterator it = lowerNodes.begin();
          it != lowerNodes.end();
          ++it )
     {
-      // std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-      // if( ! _setpointManagers.empty() ) {
-      //   for( std::vector<SetpointManager>::iterator _setpointManager = _supplyOutletSetpointManagers.begin();
-      //        _setpointManager != _supplyOutletSetpointManagers.end();
-      //        ++_setpointManager )
-      //   {
-      //     SetpointManager spmClone = _setpointManager->clone(t_model).cast<SetpointManager>();
-      //     spmClone.addToNode(*it);
-      //   }
-      // }
+      std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
+      if( ! _setpointManagers.empty() ) {
+        for( std::vector<SetpointManager>::iterator _setpointManager = _supplyOutletSetpointManagers.begin();
+             _setpointManager != _supplyOutletSetpointManagers.end();
+             ++_setpointManager )
+        {
+          SetpointManager spmClone = _setpointManager->clone(t_model).cast<SetpointManager>();
+          spmClone.addToNode(*it);
+        }
+      }
       // if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
       // {
       //   SetpointManager spmClone = mo->clone(t_model).cast<SetpointManager>();
@@ -180,11 +179,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
       {
         if( *it != outboardOANode.get() )
         {
-          // std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-          // if( ! _setpointManagers.empty() ) {
-          //   SetpointManagerMixedAir spm(t_model);
-          //   spm.addToNode(*it);
-          // }
+          std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
+          if( ! _setpointManagers.empty() ) {
+            SetpointManagerMixedAir spm(t_model);
+            spm.addToNode(*it);
+          }
           // if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
           // {
           //   SetpointManagerMixedAir spm(t_model);

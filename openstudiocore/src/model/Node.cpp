@@ -19,8 +19,8 @@
 
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
-// #include <model/SetpointManager.hpp>
-// #include <model/SetpointManager_Impl.hpp>
+#include <model/SetpointManager.hpp>
+#include <model/SetpointManager_Impl.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerMixedAir_Impl.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
@@ -529,24 +529,24 @@ namespace detail{
     }
   }
 
-  // std::vector<SetpointManager> Node_Impl::setpointManagers() const
-  // {
-  //   std::vector<SetpointManager> _setpointManagers;
-  //   std::vector<SetpointManager> _modelObjects = getObject<Node>().getModelObjectSources<SetpointManager>();
-  //   for(std::vector<SetpointManager>::iterator it = _modelObjects.begin();
-  //       it != _modelObjects.end();
-  //       ++it)
-  //   {
-  //     if( boost::optional<Node> setpointNode = it->setpointNode() )
-  //     {
-  //       if( setpointNode->handle() == this->handle() )
-  //       {
-  //         _setpointManagers.push_back(*it);
-  //       }
-  //     }
-  //   }
-  //   return _setpointManagers;
-  // }
+  std::vector<SetpointManager> Node_Impl::setpointManagers() const
+  {
+    std::vector<SetpointManager> _setpointManagers;
+    std::vector<SetpointManager> _modelObjects = getObject<Node>().getModelObjectSources<SetpointManager>();
+    for(std::vector<SetpointManager>::iterator it = _modelObjects.begin();
+        it != _modelObjects.end();
+        ++it)
+    {
+      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      {
+        if( setpointNode->handle() == this->handle() )
+        {
+          _setpointManagers.push_back(*it);
+        }
+      }
+    }
+    return _setpointManagers;
+  }
 
   // boost::optional<SetpointManager> Node_Impl::hasTemperatureSetpointManager() const
   // {
@@ -603,10 +603,10 @@ Node::Node(boost::shared_ptr<detail::Node_Impl> p)
   : StraightComponent(p)
 {}
 
-// std::vector<SetpointManager> Node::setpointManagers() const
-// {
-//   return getImpl<detail::Node_Impl>()->setpointManagers();
-// }
+std::vector<SetpointManager> Node::setpointManagers() const
+{
+  return getImpl<detail::Node_Impl>()->setpointManagers();
+}
 
 void Node::addSetpointManager(SetpointManagerSingleZoneReheat spm)
 {

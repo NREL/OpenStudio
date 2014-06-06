@@ -41,14 +41,14 @@ namespace detail{
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(idfObject, model, keepHandle)
+    : SetpointManager_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
 
   SetpointManagerScheduled_Impl::SetpointManagerScheduled_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerScheduled::iddObjectType());
   }
@@ -57,7 +57,7 @@ namespace detail{
       const SetpointManagerScheduled_Impl& other, 
       Model_Impl* model,
       bool keepHandles)
-    : HVACComponent_Impl(other,model,keepHandles)
+    : SetpointManager_Impl(other,model,keepHandles)
   {
   }
 
@@ -87,84 +87,84 @@ namespace detail{
     return result;
   }
 
-  boost::optional<ParentObject> SetpointManagerScheduled_Impl::parent() const {
-    NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
-    if (nodes.size() == 1u) {
-      return nodes[0];
-    }
-    return boost::none;
-  }
+  // boost::optional<ParentObject> SetpointManagerScheduled_Impl::parent() const {
+  //   NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
+  //   if (nodes.size() == 1u) {
+  //     return nodes[0];
+  //   }
+  //   return boost::none;
+  // }
 
-  std::vector<ModelObject> SetpointManagerScheduled_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
+  // std::vector<ModelObject> SetpointManagerScheduled_Impl::children() const
+  // {
+  //   std::vector<ModelObject> result;
+  //   return result;
+  // }
 
-  bool SetpointManagerScheduled_Impl::addToNode(Node & node)
-  {
-    if( node.model() != this->model() )
-    {
-      return false;
-    } 
+  // bool SetpointManagerScheduled_Impl::addToNode(Node & node)
+  // {
+  //   if( node.model() != this->model() )
+  //   {
+  //     return false;
+  //   } 
 
-    node.removeSetpointManagerMixedAir();
+  //   node.removeSetpointManagerMixedAir();
 
-    node.removeSetpointManagerSingleZoneReheat();
+  //   node.removeSetpointManagerSingleZoneReheat();
 
-    node.removeSetpointManagerScheduled();
+  //   node.removeSetpointManagerScheduled();
 
-    node.removeSetpointManagerFollowOutdoorAirTemperature();
+  //   node.removeSetpointManagerFollowOutdoorAirTemperature();
 
-    node.removeSetpointManagerOutdoorAirReset();
+  //   node.removeSetpointManagerOutdoorAirReset();
 
-    node.removeSetpointManagerWarmest();
+  //   node.removeSetpointManagerWarmest();
 
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
+  //   if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
+  //   {
+  //     if( airLoop->supplyComponent(node.handle()) )
+  //     {
+  //       this->setSetpointNode(node);
 
-        return true;
-      }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
+  //       return true;
+  //     }
+  //     if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
+  //     {
+  //       if(node == oaSystem->outboardOANode().get())
+  //       {
+  //         return false;
+  //       }
 
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          this->setSetpointNode(node);
+  //       if(oaSystem->oaComponent(node.handle()))
+  //       {
+  //         this->setSetpointNode(node);
         
-          return true;
-        }
-      }
-    }
-    else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
-    {
-      if( plantLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
+  //         return true;
+  //       }
+  //     }
+  //   }
+  //   else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
+  //   {
+  //     if( plantLoop->supplyComponent(node.handle()) )
+  //     {
+  //       this->setSetpointNode(node);
 
-        return true;
-      }
-    }
+  //       return true;
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
-  std::vector<openstudio::IdfObject> SetpointManagerScheduled_Impl::remove()
-  {
-    return HVACComponent_Impl::remove();
-  }
+  // std::vector<openstudio::IdfObject> SetpointManagerScheduled_Impl::remove()
+  // {
+  //   return HVACComponent_Impl::remove();
+  // }
 
-  ModelObject SetpointManagerScheduled_Impl::clone(Model model)
-  {
-    return HVACComponent_Impl::clone( model );
-  }
+  // ModelObject SetpointManagerScheduled_Impl::clone(Model model)
+  // {
+  //   return HVACComponent_Impl::clone( model );
+  // }
 
   boost::optional<Node> SetpointManagerScheduled_Impl::setpointNode() const
   {
@@ -173,11 +173,11 @@ namespace detail{
     return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
   }
 
-  void SetpointManagerScheduled_Impl::setSetpointNode( Node & node )
+  bool SetpointManagerScheduled_Impl::setSetpointNode( const Node & node )
   {
     SetpointManagerScheduled thisModelObject = this->getObject<SetpointManagerScheduled>();
 
-    thisModelObject.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,node.handle());
+    return thisModelObject.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,node.handle());
   }
 
   std::string SetpointManagerScheduled_Impl::controlVariable() const
@@ -187,7 +187,7 @@ namespace detail{
     return value.get();
   }
 
-  bool SetpointManagerScheduled_Impl::setControlVariable(std::string value) {
+  bool SetpointManagerScheduled_Impl::setControlVariable(const std::string& value) {
     if (boost::optional<IddKey> key = iddObject().getField(OS_SetpointManager_ScheduledFields::ControlVariable).get().getKey(value)) {
       std::string currentScheduleDisplayName = scheduleDisplayName();
       if (currentScheduleDisplayName.empty() || (scheduleDisplayName() == scheduleDisplayName(key->name()))) {
@@ -280,7 +280,7 @@ namespace detail{
   
 SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    Schedule& schedule)
-  : HVACComponent(SetpointManagerScheduled::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model) 
 {
   OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable("Temperature");
@@ -295,7 +295,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
 SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
                                                    const std::string& controlVariable,
                                                    Schedule& setpointSchedule)
-  : HVACComponent(SetpointManagerScheduled::iddObjectType(),model)
+  : SetpointManager(SetpointManagerScheduled::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerScheduled_Impl>());
   bool ok = setControlVariable(controlVariable);
@@ -312,7 +312,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
 }
 
 SetpointManagerScheduled::SetpointManagerScheduled(boost::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
-  : HVACComponent(p)
+  : SetpointManager(p)
 {
 }
 
@@ -337,7 +337,7 @@ std::string SetpointManagerScheduled::controlVariable() const
   return getImpl<detail::SetpointManagerScheduled_Impl>()->controlVariable();
 }
 
-bool SetpointManagerScheduled::setControlVariable(std::string value)
+bool SetpointManagerScheduled::setControlVariable(const std::string& value)
 {
   return getImpl<detail::SetpointManagerScheduled_Impl>()->setControlVariable(value);
 }
