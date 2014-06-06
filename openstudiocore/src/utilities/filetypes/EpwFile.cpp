@@ -605,8 +605,7 @@ bool EpwDataPoint::setMonth(std::string month)
     LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
     return false;
   }
-  setMonth(value);
-  return true;
+  return setMonth(value);
 }
 
 int EpwDataPoint::day() const
@@ -632,8 +631,7 @@ bool EpwDataPoint::setDay(std::string day)
     LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
     return false;
   } 
-  setDay(value);
-  return true;
+  return setDay(value);
 }
 
 int EpwDataPoint::hour() const
@@ -659,8 +657,7 @@ bool EpwDataPoint::setHour(std::string hour)
     LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
     return false;
   }
-  setHour(value);
-  return true;
+  return setHour(value);
 }
 
 int EpwDataPoint::minute() const
@@ -686,9 +683,7 @@ bool EpwDataPoint::setMinute(std::string minute)
     LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
     return false;
   }
-  setMinute(value);
-  m_minute = value;
-  return true;
+  return setMinute(value);
 }
 
 std::string EpwDataPoint::dataSourceandUncertaintyFlags() const
@@ -726,13 +721,12 @@ bool EpwDataPoint::setDryBulbTemperature(std::string dryBulbTemperature)
 {
   bool ok;
   double value = QString().fromStdString(dryBulbTemperature).toDouble(&ok);
-  if(-70 >= value || !ok)
+  if(!ok)
   {
     m_dryBulbTemperature = "99.9";
     return false;
   }
-  m_dryBulbTemperature = QString().fromStdString(dryBulbTemperature);
-  return true;
+  return setDryBulbTemperature(value);
 }
 
 boost::optional<double> EpwDataPoint::dewPointTemperature() const
@@ -760,13 +754,12 @@ bool EpwDataPoint::setDewPointTemperature(std::string dewPointTemperature)
 {
   bool ok;
   double value = QString().fromStdString(dewPointTemperature).toDouble(&ok);
-  if(-70 >= value || !ok)
+  if(!ok)
   {
     m_dewPointTemperature = "99.9";
     return false;
   }
-  m_dewPointTemperature = QString().fromStdString(dewPointTemperature);
-  return true;
+  return setDewPointTemperature(value);
 }
 
 boost::optional<double> EpwDataPoint::relativeHumidity() const
@@ -794,13 +787,12 @@ bool EpwDataPoint::setRelativeHumidity(std::string relativeHumidity)
 {
   bool ok;
   double value = QString().fromStdString(relativeHumidity).toDouble(&ok);
-  if(0 > value || 110 < value || !ok)
+  if(!ok)
   {
     m_relativeHumidity = "999";
     return false;
   }
-  m_relativeHumidity = QString().fromStdString(relativeHumidity);
-  return true;
+  return setRelativeHumidity(value);
 }
 
 boost::optional<double> EpwDataPoint::atmosphericStationPressure() const
@@ -828,13 +820,12 @@ bool EpwDataPoint::setAtmosphericStationPressure(std::string atmosphericStationP
 {
   bool ok;
   double value = QString().fromStdString(atmosphericStationPressure).toDouble(&ok);
-  if(31000 >= value || !ok)
+  if(!ok)
   {
     m_atmosphericStationPressure = "999999";
     return false;
   }
-  m_atmosphericStationPressure = QString().fromStdString(atmosphericStationPressure);
-  return true;
+  return setAtmosphericStationPressure(value);
 }
 
 boost::optional<double> EpwDataPoint::extraterrestrialHorizontalRadiation() const
@@ -862,13 +853,12 @@ bool EpwDataPoint::setExtraterrestrialHorizontalRadiation(std::string extraterre
 {
   bool ok;
   double value = QString().fromStdString(extraterrestrialHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_extraterrestrialHorizontalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialHorizontalRadiation = QString().fromStdString(extraterrestrialHorizontalRadiation);
-  return true;
+  return setExtraterrestrialHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::extraterrestrialDirectNormalRadiation() const
@@ -896,13 +886,12 @@ bool EpwDataPoint::setExtraterrestrialDirectNormalRadiation(std::string extrater
 {
   bool ok;
   double value = QString().fromStdString(extraterrestrialDirectNormalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_extraterrestrialDirectNormalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialDirectNormalRadiation = QString().fromStdString(extraterrestrialDirectNormalRadiation);
-  return true;
+  return setExtraterrestrialDirectNormalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::horizontalInfraredRadiationIntensity() const
@@ -930,13 +919,12 @@ bool EpwDataPoint::setHorizontalInfraredRadiationIntensity(std::string horizonta
 {
   bool ok;
   double value = QString().fromStdString(horizontalInfraredRadiationIntensity).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_horizontalInfraredRadiationIntensity = "9999";
     return false;
   }
-  m_horizontalInfraredRadiationIntensity = QString().fromStdString(horizontalInfraredRadiationIntensity);
-  return true;
+  return setHorizontalInfraredRadiationIntensity(value);
 }
 
 boost::optional<double> EpwDataPoint::globalHorizontalRadiation() const
@@ -964,13 +952,12 @@ bool EpwDataPoint::setGlobalHorizontalRadiation(std::string globalHorizontalRadi
 {
   bool ok;
   double value = QString().fromStdString(globalHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_globalHorizontalRadiation = "9999";
     return false;
   }
-  m_globalHorizontalRadiation = QString().fromStdString(globalHorizontalRadiation);
-  return true;
+  return setGlobalHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::directNormalRadiation() const
@@ -998,13 +985,12 @@ bool EpwDataPoint::setDirectNormalRadiation(std::string directNormalRadiation)
 {
   bool ok;
   double value = QString().fromStdString(directNormalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_directNormalRadiation = "9999";
     return false;
   }
-  m_directNormalRadiation = QString().fromStdString(directNormalRadiation);
-  return true;
+  return setDirectNormalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::diffuseHorizontalRadiation() const
@@ -1032,13 +1018,12 @@ bool EpwDataPoint::setDiffuseHorizontalRadiation(std::string diffuseHorizontalRa
 {
   bool ok;
   double value = QString().fromStdString(diffuseHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_diffuseHorizontalRadiation = "9999";
     return false;
   }
-  m_diffuseHorizontalRadiation = QString().fromStdString(diffuseHorizontalRadiation);
-  return true;
+  return setDiffuseHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::globalHorizontalIlluminance() const
@@ -1066,13 +1051,12 @@ bool EpwDataPoint::setGlobalHorizontalIlluminance(std::string globalHorizontalIl
 {
   bool ok;
   double value = QString().fromStdString(globalHorizontalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_globalHorizontalIlluminance = "999999";
     return false;
   }
-  m_globalHorizontalIlluminance = QString().fromStdString(globalHorizontalIlluminance);
-  return true;
+  return setGlobalHorizontalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::directNormalIlluminance() const
@@ -1100,13 +1084,12 @@ bool EpwDataPoint::setDirectNormalIlluminance(std::string directNormalIlluminanc
 {
   bool ok;
   double value = QString().fromStdString(directNormalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_directNormalIlluminance = "999999";
     return false;
   }
-  m_directNormalIlluminance = QString().fromStdString(directNormalIlluminance);
-  return true;
+  return setDirectNormalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::diffuseHorizontalIlluminance() const
@@ -1134,13 +1117,12 @@ bool EpwDataPoint::setDiffuseHorizontalIlluminance(std::string diffuseHorizontal
 {
   bool ok;
   double value = QString().fromStdString(diffuseHorizontalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_diffuseHorizontalIlluminance = "999999";
     return false;
   }
-  m_diffuseHorizontalIlluminance = QString().fromStdString(diffuseHorizontalIlluminance);
-  return true;
+  return setDiffuseHorizontalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::zenithLuminance() const
@@ -1168,13 +1150,12 @@ bool EpwDataPoint::setZenithLuminance(std::string zenithLuminance)
 {
   bool ok;
   double value = QString().fromStdString(zenithLuminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_zenithLuminance = "9999";
     return false;
   }
-  m_zenithLuminance = QString().fromStdString(zenithLuminance);
-  return true;
+  return setZenithLuminance(value);
 }
 
 boost::optional<double> EpwDataPoint::windDirection() const
@@ -1202,13 +1183,12 @@ bool EpwDataPoint::setWindDirection(std::string windDirection)
 {
   bool ok;
   double value = QString().fromStdString(windDirection).toDouble(&ok);
-  if(0 > value || 360 < value || !ok)
+  if(!ok)
   {
     m_windDirection = "999";
     return false;
   }
-  m_windDirection = QString().fromStdString(windDirection);
-  return true;
+  return setWindDirection(value);
 }
 
 boost::optional<double> EpwDataPoint::windSpeed() const
@@ -1236,13 +1216,12 @@ bool EpwDataPoint::setWindSpeed(std::string windSpeed)
 {
   bool ok;
   double value = QString().fromStdString(windSpeed).toDouble(&ok);
-  if(0 > value || 40 < value || !ok)
+  if(!ok)
   {
     m_windSpeed = "999";
     return false;
   }
-  m_windSpeed = QString().fromStdString(windSpeed);
-  return true;
+  return setWindSpeed(value);
 }
 
 int EpwDataPoint::totalSkyCover() const
@@ -1265,13 +1244,12 @@ bool EpwDataPoint::setTotalSkyCover(std::string totalSkyCover)
 {
   bool ok;
   int value = QString().fromStdString(totalSkyCover).toInt(&ok);
-  if(0 > value || 10 < value || !ok)
+  if(!ok)
   {
     m_totalSkyCover = 99;
     return false;
   }
-  m_totalSkyCover = value;
-  return true;
+  return setTotalSkyCover(value);
 }
 
 int EpwDataPoint::opaqueSkyCover() const
@@ -1294,13 +1272,12 @@ bool EpwDataPoint::setOpaqueSkyCover(std::string opaqueSkyCover)
 {
   bool ok;
   int value = QString().fromStdString(opaqueSkyCover).toInt(&ok);
-  if(0 > value || 10 < value || !ok)
+  if(!ok)
   {
     m_opaqueSkyCover = 99;
     return false;
   }
-  m_opaqueSkyCover = value;
-  return true;
+  return setOpaqueSkyCover(value);
 }
 
 boost::optional<double> EpwDataPoint::visibility() const
