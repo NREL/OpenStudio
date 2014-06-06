@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include <model/SetpointManager_Impl.hpp>
 
 namespace openstudio {
 
@@ -30,7 +30,7 @@ class Schedule;
 
 namespace detail {
 
-class MODEL_API SetpointManagerScheduled_Impl : public HVACComponent_Impl {
+class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
   Q_OBJECT;
 
   Q_PROPERTY(std::string controlVariable READ controlVariable WRITE setControlVariable);
@@ -57,9 +57,9 @@ class MODEL_API SetpointManagerScheduled_Impl : public HVACComponent_Impl {
   /** @name Virtual Methods */
   //@{
 
-  virtual std::vector<openstudio::IdfObject> remove();
+  // virtual std::vector<openstudio::IdfObject> remove();
 
-  virtual ModelObject clone(Model model);
+  // virtual ModelObject clone(Model model);
 
   virtual const std::vector<std::string>& outputVariableNames() const;
 
@@ -67,19 +67,19 @@ class MODEL_API SetpointManagerScheduled_Impl : public HVACComponent_Impl {
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
-  virtual boost::optional<ParentObject> parent() const;
+  // virtual boost::optional<ParentObject> parent() const;
 
-  virtual std::vector<ModelObject> children() const;
+  // virtual std::vector<ModelObject> children() const;
 
-  virtual bool addToNode(Node & node);
+  // virtual bool addToNode(Node & node);
 
   //@}
   /** @name Getters */
   //@{
 
-  boost::optional<Node> setpointNode() const;
+  virtual boost::optional<Node> setpointNode() const;
 
-  std::string controlVariable() const;
+  virtual std::string controlVariable() const;
 
   Schedule schedule() const;
 
@@ -89,7 +89,7 @@ class MODEL_API SetpointManagerScheduled_Impl : public HVACComponent_Impl {
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
+  virtual bool setControlVariable(const std::string& controlVariable);
 
   bool setSchedule(Schedule& schedule);
 
@@ -105,7 +105,7 @@ class MODEL_API SetpointManagerScheduled_Impl : public HVACComponent_Impl {
   //@}
  private:
 
-  void setSetpointNode( Node & node );
+  virtual bool setSetpointNode( const Node & node );
 
   // converts control variable to the schedule's display name
   std::string scheduleDisplayName() const;
