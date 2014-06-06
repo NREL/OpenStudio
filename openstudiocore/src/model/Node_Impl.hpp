@@ -33,6 +33,7 @@ class SetpointManagerScheduled;
 class SetpointManagerFollowOutdoorAirTemperature;
 class SetpointManagerOutdoorAirReset;
 class SetpointManagerWarmest;
+//class SetpointManager;
 
 namespace detail {
 
@@ -68,10 +69,11 @@ namespace detail {
 
     unsigned outletPort();
 
-    // In the future there should be a SetpointManager base class.
-    // When that happens change the signature of this method to return SetpointManager instead of ModelObject
-    // and make this method public.
-    boost::optional<ModelObject> setpointManager() const;
+    //std::vector<SetpointManager> setpointManagers() const;
+
+    // boost::optional<SetpointManager> hasTemperatureSetpointManager() const;
+
+    // boost::optional<SetpointManager> hasHumiditySetpointManager() const;
 
     void addSetpointManager(SetpointManagerSingleZoneReheat singleZoneReheat);
 

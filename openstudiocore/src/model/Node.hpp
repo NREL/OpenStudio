@@ -40,6 +40,8 @@ class SetpointManagerOutdoorAirReset;
 
 class SetpointManagerWarmest;
 
+//class SetpointManager;
+
 namespace detail {
   class Node_Impl;
 } // detail
@@ -58,6 +60,8 @@ class MODEL_API Node : public StraightComponent {
   explicit Node(const Model& model);
 
   virtual ~Node() {}
+
+  //std::vector<SetpointManager> setpointManagers() const;
 
   /** Adds setPointManager of type SetpointManagerSingleZoneReheat to this Node. **/
   void addSetpointManager( SetpointManagerSingleZoneReheat setPointManager );

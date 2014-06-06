@@ -640,6 +640,9 @@ SET( ${target_name}_src
   Screen.hpp
   Screen_Impl.hpp
   Screen.cpp
+  SetpointManager.hpp
+  SetpointManager_Impl.hpp
+  SetpointManager.cpp
   SetpointManagerFollowOutdoorAirTemperature.hpp
   SetpointManagerFollowOutdoorAirTemperature_Impl.hpp
   SetpointManagerFollowOutdoorAirTemperature.cpp
