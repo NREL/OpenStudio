@@ -21,7 +21,8 @@
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/core/Checksum.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
+#include "../units/QuantityConverter.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -35,6 +36,45 @@
 #include <cmath>
 
 namespace openstudio{
+
+EpwDataPoint::EpwDataPoint()
+{
+  m_year=1;
+  m_month=1;
+  m_day=1;
+  m_hour=1;
+  m_minute=0,
+  m_dataSourceandUncertaintyFlags="";
+  m_dryBulbTemperature="99.9";
+  m_dewPointTemperature="99.9",
+  m_relativeHumidity="999";
+  m_atmosphericStationPressure="999999";
+  m_extraterrestrialHorizontalRadiation="9999";
+  m_extraterrestrialDirectNormalRadiation="9999";
+  m_horizontalInfraredRadiationIntensity="9999",
+  m_globalHorizontalRadiation="9999";
+  m_directNormalRadiation="9999";
+  m_diffuseHorizontalRadiation="9999",
+  m_globalHorizontalIlluminance="999999";
+  m_directNormalIlluminance="999999";
+  m_diffuseHorizontalIlluminance="999999";
+  m_zenithLuminance="9999";
+  m_windDirection="999";
+  m_windSpeed="999";
+  m_totalSkyCover=99;
+  m_opaqueSkyCover=99,
+  m_visibility="9999";
+  m_ceilingHeight="99999";
+  m_presentWeatherObservation=0;
+  m_presentWeatherCodes=0;
+  m_precipitableWater="999";
+  m_aerosolOpticalDepth=".999";
+  m_snowDepth="999";
+  m_daysSinceLastSnowfall="99",
+  m_albedo="999";
+  m_liquidPrecipitationDepth="999";
+  m_liquidPrecipitationQuantity="99";
+}
 
 EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,
@@ -105,65 +145,62 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
     return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
-  if(!pt.setYear(list[0].toStdString())) {
+  if(!pt.setYear(list[EpwDataField::Year].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setMonth(list[1].toStdString())) {
+  if(!pt.setMonth(list[EpwDataField::Month].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setDay(list[2].toStdString())) {
+  if(!pt.setDay(list[EpwDataField::Day].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setHour(list[3].toStdString())) {
+  if(!pt.setHour(list[EpwDataField::Hour].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
   // The minute field is not set here - it is set based upon the header data
-  pt.setDataSourceandUncertaintyFlags(list[5].toStdString());
-  pt.setDryBulbTemperature(list[6].toStdString());
-  pt.setDewPointTemperature(list[7].toStdString());
-  pt.setRelativeHumidity(list[8].toStdString());
-  pt.setAtmosphericStationPressure(list[9].toStdString());
-  pt.setExtraterrestrialHorizontalRadiation(list[10].toStdString());
-  pt.setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
-  pt.setHorizontalInfraredRadiationIntensity(list[12].toStdString());
-  pt.setGlobalHorizontalRadiation(list[13].toStdString());
-  pt.setDirectNormalRadiation(list[14].toStdString());
-  pt.setDiffuseHorizontalRadiation(list[15].toStdString());
-  pt.setGlobalHorizontalIlluminance(list[16].toStdString());
-  pt.setDirectNormalIlluminance(list[17].toStdString());
-  pt.setDiffuseHorizontalIlluminance(list[18].toStdString());
-  pt.setZenithLuminance(list[19].toStdString());
-  pt.setWindDirection(list[20].toStdString());
-  pt.setWindSpeed(list[21].toStdString());
-  pt.setTotalSkyCover(list[22].toStdString());
-  pt.setOpaqueSkyCover(list[23].toStdString());
-  pt.setVisibility(list[24].toStdString());
-  pt.setCeilingHeight(list[25].toStdString());
-  pt.setPresentWeatherObservation(list[26].toStdString());
-  pt.setPresentWeatherCodes(list[27].toStdString());
-  pt.setPrecipitableWater(list[28].toStdString());
-  pt.setAerosolOpticalDepth(list[29].toStdString());
-  pt.setSnowDepth(list[30].toStdString());
-  pt.setDaysSinceLastSnowfall(list[31].toStdString());
-  pt.setAlbedo(list[32].toStdString());
-  pt.setLiquidPrecipitationDepth(list[33].toStdString());
-  pt.setLiquidPrecipitationQuantity(list[34].toStdString());
+  pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags].toStdString());
+  pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature].toStdString());
+  pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature].toStdString());
+  pt.setRelativeHumidity(list[EpwDataField::RelativeHumidity].toStdString());
+  pt.setAtmosphericStationPressure(list[EpwDataField::AtmosphericStationPressure].toStdString());
+  pt.setExtraterrestrialHorizontalRadiation(list[EpwDataField::ExtraterrestrialHorizontalRadiation].toStdString());
+  pt.setExtraterrestrialDirectNormalRadiation(list[EpwDataField::ExtraterrestrialDirectNormalRadiation].toStdString());
+  pt.setHorizontalInfraredRadiationIntensity(list[EpwDataField::HorizontalInfraredRadiationIntensity].toStdString());
+  pt.setGlobalHorizontalRadiation(list[EpwDataField::GlobalHorizontalRadiation].toStdString());
+  pt.setDirectNormalRadiation(list[EpwDataField::DirectNormalRadiation].toStdString());
+  pt.setDiffuseHorizontalRadiation(list[EpwDataField::DiffuseHorizontalRadiation].toStdString());
+  pt.setGlobalHorizontalIlluminance(list[EpwDataField::GlobalHorizontalIlluminance].toStdString());
+  pt.setDirectNormalIlluminance(list[EpwDataField::DirectNormalIlluminance].toStdString());
+  pt.setDiffuseHorizontalIlluminance(list[EpwDataField::DiffuseHorizontalIlluminance].toStdString());
+  pt.setZenithLuminance(list[EpwDataField::ZenithLuminance].toStdString());
+  pt.setWindDirection(list[EpwDataField::WindDirection].toStdString());
+  pt.setWindSpeed(list[EpwDataField::WindSpeed].toStdString());
+  pt.setTotalSkyCover(list[EpwDataField::TotalSkyCover].toStdString());
+  pt.setOpaqueSkyCover(list[EpwDataField::OpaqueSkyCover].toStdString());
+  pt.setVisibility(list[EpwDataField::Visibility].toStdString());
+  pt.setCeilingHeight(list[EpwDataField::CeilingHeight].toStdString());
+  pt.setPresentWeatherObservation(list[EpwDataField::PresentWeatherObservation].toStdString());
+  pt.setPresentWeatherCodes(list[EpwDataField::PresentWeatherCodes].toStdString());
+  pt.setPrecipitableWater(list[EpwDataField::PrecipitableWater].toStdString());
+  pt.setAerosolOpticalDepth(list[EpwDataField::AerosolOpticalDepth].toStdString());
+  pt.setSnowDepth(list[EpwDataField::SnowDepth].toStdString());
+  pt.setDaysSinceLastSnowfall(list[EpwDataField::DaysSinceLastSnowfall].toStdString());
+  pt.setAlbedo(list[EpwDataField::Albedo].toStdString());
+  pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth].toStdString());
+  pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity].toStdString());
   return boost::optional<EpwDataPoint>(pt);
 }
 
-std::string EpwDataPoint::unitsByName(std::string name)
+boost::optional<std::string> EpwDataPoint::unitsByName(std::string name)
 {
   EpwDataField id;
-  try
-  {
+  try {
     id = EpwDataField(name);
-  }
-  catch(...)
-  {
+  } catch(...) {
     // Could do a warning message here
-    return std::string();
+    return boost::optional<std::string>();
   }
-  return units(id);
+  return boost::optional<std::string>(units(id));
 }
 
 std::string EpwDataPoint::units(EpwDataField field)
@@ -434,7 +471,9 @@ boost::optional<std::string> EpwDataPoint::toWthString()
     LOG_FREE(Error,"openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
     return boost::optional<std::string>();
   }
-  double drybulb = value.get()+273.15;
+  boost::optional<double> optdrybulb = openstudio::convert(value.get(), "C", "K");
+  OS_ASSERT(optdrybulb);
+  double drybulb = optdrybulb.get();
   output << QString("%1").arg(drybulb);
   value = atmosphericStationPressure();
   if(!value)
@@ -466,7 +505,9 @@ boost::optional<std::string> EpwDataPoint::toWthString()
       LOG_FREE(Error,"openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
       return boost::optional<std::string>();
     }
-    double dewpoint = value.get()+273.15;
+    boost::optional<double> optdewpoint = openstudio::convert(value.get(), "C", "K");
+    OS_ASSERT(optdewpoint);
+    double dewpoint = optdewpoint.get();
     pw = psat(dewpoint);
   }
   else // Have relative humidity
@@ -537,7 +578,7 @@ bool EpwDataPoint::setYear(std::string year)
   {
     return false;
   }
-  m_year = value;
+  setYear(value);
   return true;
 }
 
@@ -563,11 +604,8 @@ bool EpwDataPoint::setMonth(std::string month)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 12 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
-    return false;
   }
-  m_month = value;
+  setMonth(value);
   return true;
 }
 
@@ -593,11 +631,8 @@ bool EpwDataPoint::setDay(std::string day)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 31 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
-    return false;
-  }
-  m_day = value;
+  } 
+  setDay(value);
   return true;
 }
 
@@ -623,11 +658,8 @@ bool EpwDataPoint::setHour(std::string hour)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
     return false;
-  } else if(1 > value || 24 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
-    return false;
   }
-  m_hour = value;
+  setHour(value);
   return true;
 }
 
@@ -653,10 +685,8 @@ bool EpwDataPoint::setMinute(std::string minute)
   if(!ok) {
     LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
     return false;
-  } else if(0 > value || 59 < value) {
-    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
-    return false;
   }
+  setMinute(value);
   m_minute = value;
   return true;
 }
