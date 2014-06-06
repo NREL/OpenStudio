@@ -210,6 +210,11 @@ void MainWindow::addVerticalTab( QWidget * widget,
   m_verticalTabWidget->addTab(widget,id,toolTip,selectedImagePath,unSelectedImagePath);
 }
 
+void MainWindow::deleteAllVerticalTabs()
+{
+  m_verticalTabWidget->deleteAllTabs();
+}
+
 //void MainWindow::addHorizontalTab( QWidget * widget,
 //                                   int id,
 //                                   const QString & label )

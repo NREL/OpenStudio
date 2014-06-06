@@ -46,6 +46,8 @@ class VerticalTabWidget : public QWidget
                const QString & selectedImagePath,
                const QString & unSelectedImagePath );
 
+  void deleteAllTabs();
+
   int verticalTabIndex();
 
   signals:

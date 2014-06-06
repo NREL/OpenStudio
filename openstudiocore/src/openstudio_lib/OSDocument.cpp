@@ -429,8 +429,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   // Main Right Column
 
-  m_mainRightColumnController = 
-    boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
+  m_mainRightColumnController = boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_mainRightColumnController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
@@ -438,6 +437,8 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_mainWindow->setMainRightColumnView(m_mainRightColumnController->mainRightColumnView());
 
   // Main Vertical Tabs
+
+  m_mainWindow->deleteAllVerticalTabs();
 
   // Location
 
@@ -627,7 +628,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   //******************************************************************************************************
   //
-  ///! TODO This tab has been deprecated until building summary information is availalbe
+  ///! TODO This tab has been deprecated until building summary information is available
   //
   //// Summary
   //
@@ -752,8 +753,6 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   // DLM: this signal is not connected, is it needed?
   connect(this, SIGNAL(toolsUpdated()),
       m_scriptsTabController.get(), SIGNAL(updateRubyInterpreterWarning()));
-
-
 
   connect(this, SIGNAL(toolsUpdated()),
       m_runTabController.get(), SLOT(updateToolsWarnings()));
@@ -1101,6 +1100,7 @@ void OSDocument::save()
 void OSDocument::revert()
 {
   // TODO
+  //setModel(*model, true);
 }
 
 void OSDocument::scanForTools()

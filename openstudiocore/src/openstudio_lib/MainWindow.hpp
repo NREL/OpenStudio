@@ -47,6 +47,8 @@ class MainWindow : public QMainWindow
                        const QString & selectedImagePath,
                        const QString & unSelectedImagePath );
 
+  void deleteAllVerticalTabs();
+
   void setMainRightColumnView(QWidget * widget);
 
   //void addHorizontalTab( QWidget * widget,
