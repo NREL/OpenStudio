@@ -19,13 +19,13 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 require 'fileutils'
 require 'openstudio/energyplus/find_energyplus'
 
 
-class DaylightSim_Test < Test::Unit::TestCase
+class DaylightSim_Test < MiniTest::Unit::TestCase
   
   def setup
     

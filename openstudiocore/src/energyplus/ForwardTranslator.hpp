@@ -27,12 +27,12 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 
 class ProgressBar;
 class Transformation;
-class Time;
 
 namespace model{
 
@@ -207,6 +207,7 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class TableMultiVariableLookup;
 class ThermalZone;
 class ThermostatSetpointDualSetpoint;
 class Timestep;
@@ -645,6 +646,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSubSurface( model::SubSurface & modelObject );
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
+
+  boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 
   boost::optional<IdfObject> translateThermalZone( model::ThermalZone & modelObject );
 

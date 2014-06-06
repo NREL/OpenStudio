@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class IddEnums_Test < Test::Unit::TestCase
+class IddEnums_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

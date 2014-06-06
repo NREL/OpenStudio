@@ -21,9 +21,9 @@ require 'openstudio'
 
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class AttributeRecord_Test < Test::Unit::TestCase
+class AttributeRecord_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

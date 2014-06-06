@@ -42,8 +42,8 @@
 ######################################################################
 
 require 'openstudio'
-require 'test/unit'
-require 'test/unit/ui/console/testrunner'
+require 'minitest/autorun'
+require 'minitest/autorun/ui/console/testrunner'
 
 # special function that prints report in format that job can scrape from screen and report to ResultsViewer
 def check_timeseries(timeseries, min, max)
@@ -63,7 +63,7 @@ end
 
 # define the tests that the user cares about in this test case
 # this class can be configured for each project
-class QCTestCase < Test::Unit::TestCase
+class QCTestCase < MiniTest::Unit::TestCase
 
   @@model = nil
   
@@ -149,4 +149,4 @@ model.setSqlFile(sqlFile)
 QCTestCase::model = model
 
 # run the test suite
-Test::Unit::UI::Console::TestRunner.run(QCTestCase.suite)
+MiniTest::Unit::UI::Console::TestRunner.run(QCTestCase.suite)

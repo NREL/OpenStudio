@@ -618,5 +618,10 @@
     <rule IddField="Heat Recovery Heating Capacity Modifier Curve" Access="LOCKED"/>
     <rule IddField="Heat Recovery Heating Energy Modifier Curve" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_Table_MultiVariableLookupFields">
+    <rule IddField="External File Name" Access="HIDDEN"/>
+    <rule IddField="X1 Sort Order" Access="HIDDEN"/>
+    <rule IddField="X2 Sort Order" Access="HIDDEN"/>
+  </POLICY>
 
 </ROOT>

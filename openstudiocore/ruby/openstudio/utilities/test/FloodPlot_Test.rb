@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class FloodPlot_Test < Test::Unit::TestCase
+class FloodPlot_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

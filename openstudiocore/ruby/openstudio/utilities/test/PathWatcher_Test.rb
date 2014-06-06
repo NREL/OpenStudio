@@ -19,7 +19,7 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 class TestPathWatcher < OpenStudio::PathWatcher
 
@@ -40,7 +40,7 @@ class TestPathWatcher < OpenStudio::PathWatcher
   
 end
 
-class PathWatcher_Test < Test::Unit::TestCase
+class PathWatcher_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

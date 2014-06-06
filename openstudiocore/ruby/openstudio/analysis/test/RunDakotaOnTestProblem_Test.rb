@@ -19,10 +19,10 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 
-class SimpleDakotaDemonstration_Test < Test::Unit::TestCase
+class SimpleDakotaDemonstration_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

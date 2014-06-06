@@ -42,8 +42,6 @@ namespace openstudio{
   ///       of static initialize and destruction order problems caused by statics used in the QDatabase stuff
   class UTILITIES_API LocalBCL : public BCL {
 
-  static std::shared_ptr<LocalBCL> ptr;
-
     Q_OBJECT
 
   public:
@@ -177,10 +175,11 @@ namespace openstudio{
 
     std::string formatString(double d, uint prec = 15);
 
+    static std::shared_ptr<LocalBCL> &instanceInternal();
+
     QString m_libraryPath;
     const QString m_dbName;
     QString dbVersion;
-    std::shared_ptr<QSqlDatabase> m_qSqlDatabase;
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
   };
