@@ -158,31 +158,34 @@ void OSRunner::registerAttribute(Attribute& attribute) {
 }
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  registerAttribute(Attribute(name,value,units));
+  Attribute attribute(name,value,units);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -192,24 +195,26 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  Attribute attribute = Attribute(name,value,units);
+  Attribute attribute(name,value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  registerAttribute(Attribute(name,value,units));
+  Attribute attribute(name,value,units);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -219,20 +224,21 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  Attribute attribute = Attribute(name,value,units);
+  Attribute attribute(name,value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
