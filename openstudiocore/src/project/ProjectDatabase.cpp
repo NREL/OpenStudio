@@ -754,8 +754,8 @@ namespace detail {
       update_1_0_6_to_1_0_7(dbv);
     }
 
-    if (dbv < VersionString("1.3.4")) {
-      update_1_3_3_to_1_3_4(dbv);
+    if (dbv < VersionString("1.3.6")) {
+      update_1_3_5_to_1_3_6(dbv);
     }
 
     if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
@@ -1213,7 +1213,7 @@ namespace detail {
     assertExec(query);
     query.clear();
 
-    // Code from update_1_3_3_to_1_3_4 needed to make AttributeRecord constructor work.
+    // Code from update_1_3_5_to_1_3_6 needed to make AttributeRecord constructor work.
     LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
         << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
 
@@ -2462,7 +2462,7 @@ namespace detail {
     // been created correctly by the 1.0.4 to 1.0.5 update method.
   }
 
-  void ProjectDatabase_Impl::update_1_3_3_to_1_3_4(const VersionString& startVersion) {
+  void ProjectDatabase_Impl::update_1_3_5_to_1_3_6(const VersionString& startVersion) {
 
     bool didStartTransaction = startTransaction();
     OS_ASSERT(didStartTransaction);
