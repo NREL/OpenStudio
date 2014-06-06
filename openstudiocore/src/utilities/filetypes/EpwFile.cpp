@@ -145,16 +145,16 @@ boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
     return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
-  if(!pt.setYear(list[0].toStdString())) {
+  if(!pt.setYear(list[EpwDataField::Year].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setMonth(list[1].toStdString())) {
+  if(!pt.setMonth(list[EpwDataField::Month].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setDay(list[2].toStdString())) {
+  if(!pt.setDay(list[EpwDataField::Day].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
-  if(!pt.setHour(list[3].toStdString())) {
+  if(!pt.setHour(list[EpwDataField::Hour].toStdString())) {
     return boost::optional<EpwDataPoint>();
   }
   // The minute field is not set here - it is set based upon the header data
