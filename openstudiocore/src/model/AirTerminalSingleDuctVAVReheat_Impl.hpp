@@ -130,6 +130,8 @@ namespace detail {
 
     boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 
+    void resetMaximumFlowPerZoneFloorAreaDuringReheat();
+
     void setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
 
     void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
@@ -143,6 +145,8 @@ namespace detail {
     void autosizeMaximumFlowFractionDuringReheat();
 
     bool isMaximumFlowFractionDuringReheatAutosized() const;
+
+    void resetMaximumFlowFractionDuringReheat();
 
     double maximumReheatAirTemperature();
 

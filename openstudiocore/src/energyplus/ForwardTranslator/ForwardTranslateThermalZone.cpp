@@ -41,6 +41,7 @@
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
+#include <model/ZoneControlHumidistat.hpp>
 #include <model/SizingZone.hpp>
 #include <model/SizingZone_Impl.hpp>
 #include <model/DesignSpecificationOutdoorAir.hpp>
@@ -122,6 +123,7 @@
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
 #include <utilities/idd/ZoneControl_Thermostat_FieldEnums.hxx>
+#include <utilities/idd/ZoneControl_Humidistat_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
@@ -497,13 +499,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
   }
 
-  // translate thermostat
+  // translate thermostat and/or humidistat
   if( ( modelObject.equipment().size() > 0 ) || modelObject.useIdealAirLoads() )
   {
     // Thermostat
-    boost::optional<ThermostatSetpointDualSetpoint> thermostat;
-    boost::optional<IdfObject> idfThermostat;
-    if((thermostat = modelObject.thermostatSetpointDualSetpoint()))
+    if( boost::optional<ThermostatSetpointDualSetpoint> thermostat = modelObject.thermostatSetpointDualSetpoint() )
     {
       IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
@@ -528,14 +528,20 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
 
-      idfThermostat = translateAndMapModelObject(thermostat.get());
-
-      if( idfThermostat )
+      if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
       {
         StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
         values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
         values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
         IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+      }
+    }
+
+    // Humidistat
+    if( boost::optional<ZoneControlHumidistat> humidistat = modelObject.zoneControlHumidistat() )
+    {
+      if( boost::optional<IdfObject> idfHumidistat = translateAndMapModelObject(humidistat.get()) ) {
+        idfHumidistat->setString(ZoneControl_HumidistatFields::ZoneName,modelObject.name().get());
       }
     }
   }
@@ -560,6 +566,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(connectionsObject);
 
     s = modelObject.name().get();
+    std::string name = s;
     connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneName,s);
 
     //set the inlet port list
@@ -569,6 +576,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _inletNodeList = translateAndMapModelObject(inletPortList);
       if(_inletNodeList)
       {
+        _inletNodeList->setName(name + " Inlet Node List");
         s = _inletNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName,s);
       }
@@ -581,6 +589,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _exhaustNodeList = translateAndMapModelObject(exhaustPortList);
       if(_exhaustNodeList)
       {
+        _exhaustNodeList->setName(name + " Exhaust Node List");
         s = _exhaustNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirExhaustNodeorNodeListName,s);
       }

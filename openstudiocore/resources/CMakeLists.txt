@@ -25,6 +25,7 @@ SET(utilities_resources_src
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.rb
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.xml
   utilities/Checksum/Checksum.txt
+  utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
   utilities/Filetypes/USA_CO_Golden-NREL.amy
@@ -299,6 +300,9 @@ SET(osversion_resources_src
   osversion/1_3_4/OpenStudio.idd
   osversion/1_3_4/example.osm
   osversion/1_3_4/example.osc
+  osversion/1_3_5/OpenStudio.idd
+  osversion/1_3_5/example.osm
+  osversion/1_3_5/example.osc
   osversion/unknown.osc
 )
 

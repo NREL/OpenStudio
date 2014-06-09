@@ -2,7 +2,7 @@
 #define MODEL_GEOMETRY_I
 
 #ifdef SWIGPYTHON
-%module openstudiomodelgeometry
+  %module openstudiomodelgeometry
 #endif
 
 
@@ -18,7 +18,6 @@
   #include <utilities/sql/SqlFile.hpp>
 
 %}
-
 
 #if defined SWIGCSHARP
 
@@ -126,51 +125,67 @@ MODELOBJECT_TEMPLATES(LightingSimulationZone);
 SWIG_UNIQUEMODELOBJECT(Site);
 SWIG_UNIQUEMODELOBJECT(Facility);
 SWIG_UNIQUEMODELOBJECT(Building);
-SWIG_MODELOBJECT(BuildingStory);
-SWIG_MODELOBJECT(PlanarSurfaceGroup);
-SWIG_MODELOBJECT(Space); 
-SWIG_MODELOBJECT(SpaceItem); 
-SWIG_MODELOBJECT(SpaceLoad);
-SWIG_MODELOBJECT(SpaceLoadInstance); 
-SWIG_MODELOBJECT(Lights); 
-SWIG_MODELOBJECT(PlanarSurface);
-SWIG_MODELOBJECT(DefaultConstructionSet);
-SWIG_MODELOBJECT(Surface); 
-SWIG_MODELOBJECT(SubSurface);
-SWIG_MODELOBJECT(ShadingSurfaceGroup); 
-SWIG_MODELOBJECT(ShadingSurface); 
-SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup); 
-SWIG_MODELOBJECT(InteriorPartitionSurface);
-SWIG_MODELOBJECT(People);
-SWIG_MODELOBJECT(Luminaire);
-SWIG_MODELOBJECT(ElectricEquipment);
-SWIG_MODELOBJECT(GasEquipment);
-SWIG_MODELOBJECT(HotWaterEquipment);
-SWIG_MODELOBJECT(SteamEquipment);
-SWIG_MODELOBJECT(OtherEquipment);
-SWIG_MODELOBJECT(InternalMass);
-SWIG_MODELOBJECT(SpaceInfiltrationDesignFlowRate);
-SWIG_MODELOBJECT(SpaceInfiltrationEffectiveLeakageArea);
-SWIG_MODELOBJECT(DaylightingControl);
-SWIG_MODELOBJECT(GlareSensor);
-SWIG_MODELOBJECT(IlluminanceMap); 
-SWIG_MODELOBJECT(DaylightingDeviceShelf);
-SWIG_MODELOBJECT(SpaceType);
-SWIG_MODELOBJECT(ExteriorLights);
-SWIG_MODELOBJECT(LightingSimulationZone);
+SWIG_MODELOBJECT(BuildingStory, 1);
+SWIG_MODELOBJECT(PlanarSurfaceGroup, 0);
+SWIG_MODELOBJECT(Space, 1); 
+SWIG_MODELOBJECT(SpaceItem, 0); 
+SWIG_MODELOBJECT(SpaceLoad, 0);
+SWIG_MODELOBJECT(SpaceLoadInstance, 0); 
+SWIG_MODELOBJECT(Lights, 1); 
+SWIG_MODELOBJECT(PlanarSurface, 0);
+SWIG_MODELOBJECT(DefaultConstructionSet, 1);
+SWIG_MODELOBJECT(Surface, 1); 
+SWIG_MODELOBJECT(SubSurface, 1);
+SWIG_MODELOBJECT(ShadingSurfaceGroup, 1); 
+SWIG_MODELOBJECT(ShadingSurface, 1); 
+SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1); 
+SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
+SWIG_MODELOBJECT(People, 1);
+SWIG_MODELOBJECT(Luminaire, 1);
+SWIG_MODELOBJECT(ElectricEquipment, 1);
+SWIG_MODELOBJECT(GasEquipment, 1);
+SWIG_MODELOBJECT(HotWaterEquipment, 1);
+SWIG_MODELOBJECT(SteamEquipment, 1);
+SWIG_MODELOBJECT(OtherEquipment, 1);
+SWIG_MODELOBJECT(InternalMass, 1);
+SWIG_MODELOBJECT(SpaceInfiltrationDesignFlowRate, 1);
+SWIG_MODELOBJECT(SpaceInfiltrationEffectiveLeakageArea, 1);
+SWIG_MODELOBJECT(DaylightingControl, 1);
+SWIG_MODELOBJECT(GlareSensor, 1);
+SWIG_MODELOBJECT(IlluminanceMap, 1); 
+SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
+SWIG_MODELOBJECT(SpaceType, 1);
+SWIG_MODELOBJECT(ExteriorLights, 1);
+SWIG_MODELOBJECT(LightingSimulationZone, 1);
 
-#if defined SWIGCSHARP
+#if defined SWIGCSHARP || defined(SWIGJAVA)
 
-%inline {
-  namespace openstudio {
-    namespace model {
-      std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
-        return spaceType.spaces();
+  %inline {
+    namespace openstudio {
+      namespace model {
+        std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
+          return spaceType.spaces();
+        }
       }
     }
   }
-}
 
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+  
+    using System;
+    using System.Runtime.InteropServices;
+    
+    public partial class SpaceType : ResourceObject {
+      public SpaceVector spaces()
+      {
+        return OpenStudio.OpenStudioModelGeometry.getSpaces(this);
+      }
+    }  
+  %}
 #endif
 
 #endif 

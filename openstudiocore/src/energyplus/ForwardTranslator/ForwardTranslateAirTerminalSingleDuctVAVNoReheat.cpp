@@ -46,12 +46,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
   OptionalString optS;
   boost::optional<std::string> s;
 
+  std::string baseName = modelObject.name().get();
+
   IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
-  _airDistributionUnit.createName();
+  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
 
   IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat);
 
-  idfObject.setName(modelObject.name().get());
+  idfObject.setName(baseName);
 
   //HVACComponent coil = modelObject.NoReheatCoil();
 
