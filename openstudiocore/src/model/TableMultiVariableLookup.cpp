@@ -675,7 +675,7 @@ namespace detail {
       OS_ASSERT(d);
       double yValue = d.get();
 
-      TableMultiVariableLookup::Point p = std::make_pair<TableMultiVariableLookup::Coordinate,double>(c,yValue);
+      TableMultiVariableLookup::Point p = std::pair<TableMultiVariableLookup::Coordinate,double>(c,yValue);
       result.push_back(p);
     }
 
@@ -1220,8 +1220,8 @@ std::vector<double> TableMultiVariableLookup::xValues(int i) const
 
 
 /// @cond
-TableMultiVariableLookup::TableMultiVariableLookup(boost::shared_ptr<detail::TableMultiVariableLookup_Impl> impl)
-  : Curve(impl)
+TableMultiVariableLookup::TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl)
+  : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(impl))
 {}
 /// @endcond
 

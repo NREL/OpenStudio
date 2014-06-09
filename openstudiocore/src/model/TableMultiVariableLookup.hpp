@@ -327,7 +327,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   /// @cond
   typedef detail::TableMultiVariableLookup_Impl ImplType;
 
-  explicit TableMultiVariableLookup(boost::shared_ptr<detail::TableMultiVariableLookup_Impl> impl);
+  explicit TableMultiVariableLookup(std::shared_ptr<detail::TableMultiVariableLookup_Impl> impl);
 
   friend class detail::TableMultiVariableLookup_Impl;
   friend class Model;
