@@ -422,13 +422,13 @@ endif()
 if(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
-    URL http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
+    URL http://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
   )
   set(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
-  set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.15")
+  set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.28")
 endif()
 
 if(BUILD_V8)
