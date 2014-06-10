@@ -248,10 +248,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
     WaitDialog waitDialog("Loading Model","Loading Model");
     waitDialog.open();
     processEvents();  
-    // Note: currently not needed
-    //QThread * thread = new QThread();
-    //waitDialog.moveToThread(thread);
-    //thread->start();
 
     osversion::VersionTranslator versionTranslator;
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
@@ -293,9 +289,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
       versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
 
       this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
-
-      //delete thread;
-      //thread = 0;
 
       return true;
     }else{
@@ -808,11 +801,7 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool st
   QString fileName = info.absoluteFilePath();
   osversion::VersionTranslator versionTranslator;
   boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
-  if( model ){
-
-    WaitDialog waitDialog("Accepting Changes","Accepting Changes");
-    waitDialog.open();
-    processEvents();  
+  if( model ){ 
     
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
     this->setQuitOnLastWindowClosed(false);

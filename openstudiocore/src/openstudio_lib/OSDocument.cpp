@@ -58,6 +58,7 @@
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/WaitDialog.hpp"
 
 #include <analysis/Analysis.hpp>
 
@@ -418,6 +419,11 @@ model::Model OSDocument::model()
 
 void OSDocument::setModel(const model::Model& model, bool modified)
 {
+  WaitDialog waitDialog("Loading Model","Loading Model");
+  waitDialog.open();
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->processEvents();  
+
   bool isConnected = false;
 
   bool wasVisible = m_mainWindow->isVisible();
@@ -1056,6 +1062,12 @@ void OSDocument::exportFile(fileType type)
 
 void OSDocument::save()
 {
+
+  WaitDialog waitDialog("Loading Model","Loading Model");
+  waitDialog.open();
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->processEvents();  
+
   // save the project file
   analysis::Analysis analysis = m_simpleProject->analysis();
 
