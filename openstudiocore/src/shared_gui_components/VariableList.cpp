@@ -56,7 +56,7 @@
 #include <QRadioButton>
 
 #include <boost/bind.hpp>
-
+#include <boost/foreach.hpp>
 
 namespace openstudio{
 
@@ -577,6 +577,18 @@ void VariableItem::remove()
     }
   }
 
+  // if any of this variable's measures are being edited, clear the edit controller
+  MeasureItem* measureItem = m_app->editController()->measureItem();
+  if (measureItem){
+    analysis::RubyMeasure rubyMeasure = measureItem->measure();
+    BOOST_FOREACH(const analysis::Measure& measure, m_variable.measures(false)){
+      if (measure == rubyMeasure){
+        m_app->editController()->reset();
+        break;
+      }
+    }
+  }
+
   qobject_cast<VariableListController *>(controller())->removeItemForVariable(m_variable);
 }
 
@@ -943,7 +955,10 @@ void MeasureItem::remove()
     }
   }
 
-  m_app->editController()->reset();
+  // if this measure is being edited, clear the edit controller
+  if (m_app->editController()->measureItem() == this){
+    m_app->editController()->reset();
+  }
 
   qobject_cast<MeasureListController *>(controller())->removeItemForMeasure(m_measure);
 }

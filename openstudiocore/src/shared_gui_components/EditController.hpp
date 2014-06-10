@@ -66,6 +66,8 @@ class EditController : public QObject
   // Show something when no RubyMeasure is selected
   void reset();
 
+  void removeItemForVariable(analysis::MeasureGroup variable);
+
   private slots:
 
   void updateDescription();
