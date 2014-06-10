@@ -110,7 +110,13 @@ class MainMenu : public QMenuBar
 
   QAction * m_configureProxy;
 
+  QAction * m_revertToSavedAction;
+
   bool m_isIP;
+
+  public slots:
+
+  void enableRevertToSavedAction(bool enable);
 
   private slots:
 

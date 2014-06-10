@@ -343,6 +343,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
   OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),m_mainWindow,SIGNAL(enableRevertToSaved(bool)));
+  OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
   OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
@@ -788,6 +790,8 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   QTimer::singleShot(0, this, SLOT(showFirstTab())); 
 
   m_mainWindow->setVisible(wasVisible);
+
+  m_mainWindow->enableRevertToSavedAction(true);
 }
 
 runmanager::RunManager OSDocument::runManager() {
@@ -1062,12 +1066,6 @@ void OSDocument::exportFile(fileType type)
 
 void OSDocument::save()
 {
-
-  WaitDialog waitDialog("Loading Model","Loading Model");
-  waitDialog.open();
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->processEvents();  
-
   // save the project file
   analysis::Analysis analysis = m_simpleProject->analysis();
 
@@ -1089,8 +1087,14 @@ void OSDocument::save()
 
   m_simpleProject->save();
 
+
+
   if( !m_savePath.isEmpty() )
   {
+    WaitDialog waitDialog("Loading Model","Loading Model");
+    waitDialog.open();
+    openstudio::OSAppBase * app = OSAppBase::instance();
+    app->processEvents();
 
     // saves the model to modelTempDir / in.osm
     openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
@@ -1107,12 +1111,24 @@ void OSDocument::save()
   }else{
     saveAs();
   }
+  m_mainWindow->enableRevertToSavedAction(true);
 }
 
 void OSDocument::revert()
 {
-  // TODO
-  //setModel(*model, true);
+  openstudio::OSAppBase * app = OSAppBase::instance(); 
+  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir());
+  openstudio::path modelPath = outDir / openstudio::toPath("in.osm");
+
+  osversion::VersionTranslator versionTranslator;
+  boost::optional<openstudio::model::Model> temp = modelFromOSM(modelPath, versionTranslator);
+
+  if(temp){
+    model::Model model = temp.get();
+    setModel(model, true);
+  } else {
+    QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
+  }
 }
 
 void OSDocument::scanForTools()
@@ -1159,6 +1175,11 @@ void OSDocument::saveAs()
 
   if( ! filePath.isEmpty() )
   {
+    WaitDialog waitDialog("Loading Model","Loading Model");
+    waitDialog.open();
+    openstudio::OSAppBase * app = OSAppBase::instance();
+    app->processEvents();
+
     //scriptFolderListView()->saveOSArguments();
 
     // saves the model to modelTempDir / in.osm

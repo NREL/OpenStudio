@@ -69,6 +69,8 @@ class MainWindow : public QMainWindow
 
   bool displayIP();
 
+  void enableRevertToSavedAction(bool enable);
+
   signals:
 
   void closeClicked();
@@ -126,6 +128,8 @@ class MainWindow : public QMainWindow
   void applyMeasureClicked();
 
   void downloadMeasuresClicked();
+
+  void enableRevertToSaved(bool enable);
 
   protected:
 

@@ -235,6 +235,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void treeChanged(const openstudio::UUID &t_uuid);
 
+  void enableRevertToSaved(bool enable);
+
  public slots:
 
   void markAsModified();

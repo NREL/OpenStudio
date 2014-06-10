@@ -96,6 +96,10 @@ class OpenStudioApp : public OSAppBase
 
   virtual bool notify(QObject* receiver, QEvent* event);
 
+ signals:
+
+  void enableRevertToSaved(bool enable);
+
  public slots:
   
   void quit();

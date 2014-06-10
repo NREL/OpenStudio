@@ -19,9 +19,16 @@
 
 #include <openstudio_lib/MainMenu.hpp>
 
-#include <QMenu>
+#include <openstudio_lib/FileOperations.hpp>
+#include <openstudio_lib/OSAppBase.hpp>
+#include <openstudio_lib/OSDocument.hpp>
+
+#include <osversion/VersionTranslator.hpp>
 
 #include <utilities/core/Assert.hpp>
+#include <utilities/core/Path.hpp>
+
+#include <QMenu>
 
 namespace openstudio {
 
@@ -54,9 +61,10 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   m_fileMenu->addSeparator();
   
-  action = new QAction(tr("Revert to Saved"), this);
-  m_fileMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(revertFileClicked()));
+  m_revertToSavedAction = new QAction(tr("Revert to Saved"), this);
+  //m_revertToSavedAction->setDisabled(true); TODO uncomment this
+  m_fileMenu->addAction(m_revertToSavedAction);
+  isConnected = connect(m_revertToSavedAction, SIGNAL(triggered()), this, SIGNAL(revertFileClicked()));
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("&Save"), this);
@@ -230,6 +238,25 @@ void MainMenu::displayIPUnitsClicked()
   m_displayIPUnitsAction->setIcon(QIcon(":/images/check.png"));
   m_displaySIUnitsAction->setIcon(QIcon());
   emit toggleUnitsClicked(true);
+}
+
+void MainMenu::enableRevertToSavedAction(bool enable)
+{
+  openstudio::OSAppBase * app = OSAppBase::instance();
+
+  boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
+  
+  if(currentDocument == 0) return;
+
+  openstudio::path outDir = openstudio::toPath(currentDocument->modelTempDir());
+  openstudio::path modelPath = outDir / openstudio::toPath("in.osm");
+
+  openstudio::osversion::VersionTranslator versionTranslator;
+  boost::optional<openstudio::model::Model> temp = modelFromOSM(modelPath, versionTranslator);
+
+  if(temp){
+    m_revertToSavedAction->setEnabled(enable);
+  }
 }
 
 } // openstudio

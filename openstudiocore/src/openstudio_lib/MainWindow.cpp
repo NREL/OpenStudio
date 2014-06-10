@@ -148,7 +148,8 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   OS_ASSERT(isConnected);
   isConnected = connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
   OS_ASSERT(isConnected);
-  
+  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),mainMenu,SLOT(enableRevertToSavedAction(bool)));
+  OS_ASSERT(isConnected);
 }
 
 QSize MainWindow::sizeHint() const
@@ -267,6 +268,11 @@ void MainWindow::openSidebar()
 bool MainWindow::displayIP()
 {
   return m_displayIP;
+}
+
+void MainWindow::enableRevertToSavedAction(bool enable)
+{
+  emit enableRevertToSaved(enable);
 }
 
 void MainWindow::readSettings()
