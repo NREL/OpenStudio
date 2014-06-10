@@ -57,21 +57,11 @@ class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
   /** @name Virtual Methods */
   //@{
 
-  // virtual std::vector<openstudio::IdfObject> remove();
-
-  // virtual ModelObject clone(Model model);
-
   virtual const std::vector<std::string>& outputVariableNames() const;
 
   virtual IddObjectType iddObjectType() const;
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
-
-  // virtual boost::optional<ParentObject> parent() const;
-
-  // virtual std::vector<ModelObject> children() const;
-
-  // virtual bool addToNode(Node & node);
 
   //@}
   /** @name Getters */

@@ -27,6 +27,9 @@
 #include <model/Building_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/StraightComponent_Impl.hpp>
+#include <model/AirLoopHVAC.hpp>
+#include <model/ScheduleConstant.hpp>
+#include <model/SetpointManagerScheduled.hpp>
 
 using namespace openstudio::model;
 
@@ -55,4 +58,29 @@ TEST_F(ModelFixture, Node_Casting)
   EXPECT_TRUE(obj.optionalCast<StraightComponent>());
   EXPECT_TRUE(obj.optionalCast<ModelObject>());
   EXPECT_FALSE(obj.optionalCast<Building>());
+}
+
+TEST_F(ModelFixture, Node_SetpointManagers)
+{
+  Model m;
+  AirLoopHVAC airloop(m);
+  Node testObject = airloop.supplyOutletNode();
+  ScheduleConstant tempSch(m);
+  tempSch.setValue(50);
+
+  SetpointManagerScheduled spm_1(m,tempSch);
+  spm_1.setControlVariable("MaximumTemperature");
+
+  SetpointManagerScheduled spm_2(m,tempSch);
+  spm_2.setControlVariable("MinimumTemperature");
+
+  SetpointManagerScheduled spm_3(m,tempSch);
+  spm_3.setControlVariable("Temperature");
+
+  spm_1.addToNode(testObject);
+  spm_2.addToNode(testObject);
+  spm_3.addToNode(testObject);
+
+  std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
+  EXPECT_EQ(3, _setpointManagers.size());
 }

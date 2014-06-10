@@ -548,48 +548,6 @@ namespace detail{
     return _setpointManagers;
   }
 
-  // boost::optional<SetpointManager> Node_Impl::hasTemperatureSetpointManager() const
-  // {
-  //   std::vector<SetpointManager> _modelObjects = getObject<Node>().getModelObjectSources<SetpointManager>();
-  //   for(std::vector<SetpointManager>::iterator it = _modelObjects.begin();
-  //       it != _modelObjects.end();
-  //       ++it)
-  //   {
-  //     if( it->getImpl<SetpointManager_Impl>()->isTemperatureSetpointManager() )
-  //     {
-  //       if( boost::optional<Node> setpointNode = it->setpointNode() )
-  //       {
-  //         if( setpointNode->handle() == this->handle() )
-  //         {
-  //           return true;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // boost::optional<SetpointManager> Node_Impl::hasHumiditySetpointManager() const
-  // {
-  //   std::vector<SetpointManager> _modelObjects = getObject<Node>().getModelObjectSources<SetpointManager>();
-  //   for(std::vector<SetpointManager>::iterator it = _modelObjects.begin();
-  //       it != _modelObjects.end();
-  //       ++it)
-  //   {
-  //     if( it->getImpl<SetpointManager_Impl>()->isHumiditySetpointManager() )
-  //     {
-  //       if( boost::optional<Node> setpointNode = it->setpointNode() )
-  //       {
-  //         if( setpointNode->handle() == this->handle() )
-  //         {
-  //           return true;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // }
-
 } // detail
 
 // create a new Node object in the model's workspace

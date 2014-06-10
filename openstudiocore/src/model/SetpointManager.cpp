@@ -89,19 +89,19 @@ namespace detail{
       return false;
     }
 
-    // std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
-    // if( !_setpointManagers.empty() )
-    // {
-    //   for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
-    //     it != _setpointManagers.end();
-    //     ++it)
-    //   {
-    //     if( istringEqual(this->controlVariable(), it->controlVariable()) )
-    //     {
-    //       it->remove();
-    //     }
-    //   }
-    // }
+    std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
+    if( !_setpointManagers.empty() )
+    {
+      for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it)
+      {
+        if( istringEqual(this->controlVariable(), it->controlVariable()) )
+        {
+          it->remove();
+        }
+      }
+    }
 
     if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
     {
@@ -144,49 +144,6 @@ namespace detail{
   {
     return HVACComponent_Impl::clone( model );
   }
-
-  // bool SetpointManager_Impl::isTemperatureSetpointManager() const
-  // {
-  //   std::string controlVariable = this->controlVariable();
-  //   return istringEqual(controlVariable, "Temperature") || istringEqual(controlVariable, "MaximumTemperature") || istringEqual(controlVariable, "MinimumTemperature");
-  // }
-
-  // bool SetpointManager_Impl::isHumiditySetpointManager() const
-  // {
-  //   std::string controlVariable = this->controlVariable();
-  //   return istringEqual(controlVariable, "HumidityRatio") || istringEqual(controlVariable, "MaximumHumidityRatio") || istringEqual(controlVariable, "MinimumHumidityRatio");
-  // }
-
-  // boost::optional<Node> SetpointManager_Impl::setpointNode() const
-  // {
-  //   SetpointManager thisModelObject = this->getObject<SetpointManager>();
-
-  //   return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
-  // }
-
-  // void SetpointManager_Impl::setSetpointNode( Node & node )
-  // {
-  //   SetpointManager thisModelObject = this->getObject<SetpointManager>();
-
-  //   thisModelObject.setPointer(OS_SetpointManager_ScheduledFields::SetpointNodeorNodeListName,node.handle());
-  // }
-
-  // std::string SetpointManager_Impl::controlVariable() const
-  // {
-  //   boost::optional<std::string> value = getString(OS_SetpointManager_ScheduledFields::ControlVariable,true);
-  //   OS_ASSERT(value);
-  //   return value.get();
-  // }
-
-  // bool SetpointManager_Impl::setControlVariable(std::string value) {
-  //   if (boost::optional<IddKey> key = iddObject().getField(OS_SetpointManager_ScheduledFields::ControlVariable).get().getKey(value)) {
-  //     std::string currentScheduleDisplayName = scheduleDisplayName();
-  //     if (currentScheduleDisplayName.empty() || (scheduleDisplayName() == scheduleDisplayName(key->name()))) {
-  //       return setString(OS_SetpointManager_ScheduledFields::ControlVariable,key->name());
-  //     }
-  //   }
-  //   return false;
-  // }
 
 } // detail
   
