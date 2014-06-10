@@ -61,10 +61,6 @@ namespace detail {
 
     virtual boost::optional<Node> setpointNode() const = 0;
 
-    // bool isTemperatureSetpointManager() const;
-
-    // bool isHumiditySetpointManager() const;
-
    private:
 
     /** This is used to set the field SetpointNodeName.

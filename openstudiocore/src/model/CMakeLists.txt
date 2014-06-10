@@ -1260,7 +1260,9 @@ SET( ${target_name}_test_src
   test/RoofVegetation_GTest.cpp
   test/RunPeriodControlDaylightSavingTime_GTest.cpp
   test/RunPeriodControlSpecialDays_GTest.cpp
+  test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
+  test/SetpointManagerScheduled_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp

@@ -71,10 +71,6 @@ namespace detail {
 
     std::vector<SetpointManager> setpointManagers() const;
 
-    // boost::optional<SetpointManager> hasTemperatureSetpointManager() const;
-
-    // boost::optional<SetpointManager> hasHumiditySetpointManager() const;
-
     void addSetpointManager(SetpointManagerSingleZoneReheat singleZoneReheat);
 
     void removeSetpointManagerSingleZoneReheat();
