@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RULESET_RUBYUSERSCRIPTARGUMENTGETTER_IMPL_HPP
-#define RULESET_RUBYUSERSCRIPTARGUMENTGETTER_IMPL_HPP
+#ifndef RULESET_EMBEDDEDRUBYUSERSCRIPTARGUMENTGETTER_HPP
+#define RULESET_EMBEDDEDRUBYUSERSCRIPTARGUMENTGETTER_HPP
 
 #include <ruleset/RubyUserScriptArgumentGetter.hpp>
 
@@ -28,14 +28,12 @@
 namespace openstudio {
 namespace ruleset {
 
-namespace detail {
-
   /** Should only be instantiated in C++ Applications. For an example of how to use this, see
-   *  XXXX. */
+   *  src/ruleset/test/EmbeddedRuby_GTest.cpp. */
   template<typename RubyInterpreterType>
-  class RubyUserScriptArgumentGetter_Impl : public RubyUserScriptArgumentGetter {
+  class EmbeddedRubyUserScriptArgumentGetter : public RubyUserScriptArgumentGetter {
    public:
-    RubyUserScriptArgumentGetter_Impl(const boost::shared_ptr<RubyInterpreterType>& rubyInterpreter)
+    EmbeddedRubyUserScriptArgumentGetter(const boost::shared_ptr<RubyInterpreterType>& rubyInterpreter)
       : m_rubyInterpreter(rubyInterpreter)
     {
       m_rubyInterpreter->template registerType<openstudio::BCLMeasure>("openstudio::BCLMeasure");
@@ -46,7 +44,7 @@ namespace detail {
       m_rubyInterpreter->evalString(argumentExtractorRubyFunction());
     }
 
-    virtual ~RubyUserScriptArgumentGetter_Impl() {}
+    virtual ~EmbeddedRubyUserScriptArgumentGetter() {}
 
     std::vector<OSArgument> getArguments(const BCLMeasure& measure) {
       return m_rubyInterpreter->template execWithReturn<std::vector<OSArgument> >(
@@ -76,9 +74,7 @@ namespace detail {
     boost::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
   };
 
-} // detail
-
 } // ruleset
 } // openstudio
 
-#endif // RULESET_RUBYUSERSCRIPTARGUMENTGETTER_IMPL_HPP
+#endif // RULESET_EMBEDDEDRUBYUSERSCRIPTARGUMENTGETTER_HPP

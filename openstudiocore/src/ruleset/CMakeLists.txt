@@ -26,8 +26,8 @@ SET( ${target_name}_src
   UtilityUserScript.hpp
   UtilityUserScript.cpp
   RubyUserScriptArgumentGetter.hpp
-  RubyUserScriptArgumentGetter_Impl.hpp
   RubyUserScriptArgumentGetter.cpp
+  EmbeddedRubyUserScriptArgumentGetter.hpp
 )
 
 SET( ${target_name}_test_src
