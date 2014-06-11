@@ -39,41 +39,11 @@ namespace detail {
 class MODEL_API TableMultiVariableLookup : public Curve {
  public:
 
-  // A vector of x values
-  struct Coordinate : public std::vector<double>
-  {
-    Coordinate(unsigned numberofIndependentVariables)
-      : std::vector<double>(numberofIndependentVariables)
-    {
-    }
+  // A vector of x values that form the xValues of a point
+  typedef std::vector<double> Coordinate;
 
-    bool operator==(const Coordinate& c)
-    {
-      bool result = true;
-
-      if( size() != c.size() )
-      {
-        result = false;
-      }
-      else
-      {
-        for(Coordinate::const_iterator it1 = c.begin(),it2 = this->begin();
-            it1 != c.end() && it2 != this->end();
-            ++it1,++it2)
-        {
-          if( ! equal(*it1,*it2) )
-          {
-            result = false;
-          }
-        }
-      }
-      
-      return result;
-    }
-  };
-
-  // A Coordinate and corresponding y value
-  typedef std::pair<Coordinate,double> Point;
+  // x values and corresponding y value
+  typedef std::pair<std::vector<double>,double> Point;
 
   /** @name Constructors and Destructors */
   //@{
@@ -284,12 +254,12 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   //@{
 
   /**
-   * Add a y value corresponding to the coordinate. The size of the coordinate vector must be
+   * Add a y value corresponding to xValues. The size of the XValues vector must be
    * equal to the number of independent variables specified when the table was created.
    * If a y value already exists for a particular coordinate, then the y value
    * will be replaced.
    */
-  bool addPoint(const Coordinate & coordinate, double yValue);
+  bool addPoint(const Coordinate & coord, double yValue);
 
   bool addPoint(double x1, double yValue);
 
@@ -301,9 +271,10 @@ class MODEL_API TableMultiVariableLookup : public Curve {
 
   bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
+  // Return a vector of xValues and corresponding yValues, this is the entire set of data points
   std::vector<Point> points() const;
 
-  boost::optional<double> yValue(const Coordinate & coordinate) const;
+  boost::optional<double> yValue(const Coordinate & coord) const;
 
   /** Return all of the x values for independent variable i
     * in asscending order.
