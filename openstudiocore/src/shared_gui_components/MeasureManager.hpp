@@ -70,7 +70,7 @@ class MeasureManager : public QObject
     // Retrieve measures from both bclMeasures and myMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 
-    /// Updates an individial measure. Does not ask for user approval, approval is assumed.
+    /// Updates an individual measure. Does not ask for user approval, approval is assumed.
     /// \returns true if the update succeeded.
     std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
@@ -122,7 +122,6 @@ class MeasureManager : public QObject
     void addMeasure();
 
     void duplicateSelectedMeasure();
-
 
   signals:
     void newMeasure(BCLMeasure newMeasure);

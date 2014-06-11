@@ -62,7 +62,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   m_fileMenu->addSeparator();
   
   m_revertToSavedAction = new QAction(tr("Revert to Saved"), this);
-  //m_revertToSavedAction->setDisabled(true); TODO uncomment this
+  m_revertToSavedAction->setDisabled(true);
   m_fileMenu->addAction(m_revertToSavedAction);
   isConnected = connect(m_revertToSavedAction, SIGNAL(triggered()), this, SIGNAL(revertFileClicked()));
   OS_ASSERT(isConnected);

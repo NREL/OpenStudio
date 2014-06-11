@@ -113,7 +113,7 @@ void ApplyMeasureNowDialog::createWidgets()
   
   m_editController = QSharedPointer<EditController>( new EditController(true) );
   bool onlyShowModelMeasures = true;
-  m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(OSAppBase::instance(),onlyShowModelMeasures) );
+  m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
   app->measureManager().setLibraryController(m_localLibraryController); 
   app->measureManager().updateMeasuresLists();
@@ -301,10 +301,9 @@ void ApplyMeasureNowDialog::runMeasure()
     return;
   }
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
-
   OS_ASSERT(m_model);
 
+  openstudio::OSAppBase * app = OSAppBase::instance();
   openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
