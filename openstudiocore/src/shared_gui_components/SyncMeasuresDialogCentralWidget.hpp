@@ -31,13 +31,22 @@ class BCLMeasure;
 class Component;
 class ComponentList;
 class CollapsibleComponentList;
+class MeasureManager;
+
+namespace analysisdriver {
+
+class SimpleProject;
+
+}
 
 class SyncMeasuresDialogCentralWidget : public QWidget
 {
   Q_OBJECT
 
 public:
-  SyncMeasuresDialogCentralWidget(QWidget * parent = 0);
+  SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
+    MeasureManager * measureManager,
+    QWidget * parent = 0);
   virtual ~SyncMeasuresDialogCentralWidget() {}
 
   Component * checkedComponent() const;
@@ -54,6 +63,8 @@ private:
   ComponentList * m_componentList;
   int m_pageIdx;
   std::vector<BCLMeasure> m_measures;
+  analysisdriver::SimpleProject * m_project;
+  MeasureManager * m_measureManager;
 
 signals:
   void componentClicked(bool checked);

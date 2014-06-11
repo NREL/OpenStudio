@@ -23,7 +23,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp"
 
-#include <openstudio_lib/OSAppBase.hpp>
+#include <analysisdriver/SimpleProject.hpp>
 
 #include <utilities/bcl/BCLMeasure.hpp>
 #include <utilities/core/Assert.hpp>
@@ -38,12 +38,16 @@
 
 namespace openstudio {
 
-SyncMeasuresDialog::SyncMeasuresDialog(QWidget * parent)
+SyncMeasuresDialog::SyncMeasuresDialog(analysisdriver::SimpleProject * project,
+  MeasureManager * measureManager,
+  QWidget * parent)
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
   m_centralWidget(NULL),
   m_rightScrollArea(NULL),
   m_expandedComponent(NULL),
-  m_measuresNeedingUpdates(std::vector<BCLMeasure>())
+  m_measuresNeedingUpdates(std::vector<BCLMeasure>()),
+  m_project(project),
+  m_measureManager(measureManager)
 {
   createLayout();
   findUpdates();
@@ -60,8 +64,7 @@ void SyncMeasuresDialog::createLayout()
   setObjectName("BlueGradientWidget");
 
   // The central pane
-
-  m_centralWidget = new SyncMeasuresDialogCentralWidget();
+  m_centralWidget = new SyncMeasuresDialogCentralWidget(m_project,m_measureManager);
 
   bool isConnected = false;
 
@@ -97,8 +100,6 @@ void SyncMeasuresDialog::createLayout()
 
 void SyncMeasuresDialog::findUpdates()
 {
-  openstudio::OSAppBase * app = OSAppBase::instance();
-
   std::vector<BCLMeasure> measures;
 
   std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
@@ -108,9 +109,6 @@ void SyncMeasuresDialog::findUpdates()
   measures = localBCLMeasures;
 
   measures.insert(measures.end(), userMeasures.begin(),userMeasures.end());
-
-  boost::optional<analysisdriver::SimpleProject> project = app->project();
-  OS_ASSERT(project);
 
   m_measuresNeedingUpdates.clear();
 
@@ -123,7 +121,7 @@ void SyncMeasuresDialog::findUpdates()
       itr->save();
     }
 
-    boost::optional<BCLMeasure> projectmeasure = project->getMeasureByUUID(itr->uuid());
+    boost::optional<BCLMeasure> projectmeasure = m_project->getMeasureByUUID(itr->uuid());
     if (projectmeasure)
     {
       if (projectmeasure->versionUUID() != itr->versionUUID())

@@ -124,6 +124,10 @@ SET( ${target_name}_SRC
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
   ../shared_gui_components/ProcessEventsProgressBar.hpp
+  ../shared_gui_components/SyncMeasuresDialog.cpp
+  ../shared_gui_components/SyncMeasuresDialog.hpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.cpp
@@ -198,6 +202,8 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSSwitch.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/SyncMeasuresDialog.hpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp

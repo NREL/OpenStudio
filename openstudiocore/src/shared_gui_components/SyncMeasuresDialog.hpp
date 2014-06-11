@@ -31,15 +31,23 @@ class QWidget;
 
 namespace openstudio {
 
-class SyncMeasuresDialogCentralWidget;
 class Component;
+class MeasureManager;
+class SyncMeasuresDialogCentralWidget;
 
+namespace analysisdriver {
+
+class SimpleProject;
+
+}
 class SyncMeasuresDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  SyncMeasuresDialog(QWidget * parent = 0);
+  SyncMeasuresDialog(analysisdriver::SimpleProject * project,
+    MeasureManager * measureManager,
+    QWidget * parent = 0);
   virtual ~SyncMeasuresDialog() {}
 
 protected:
@@ -53,6 +61,8 @@ private:
   QScrollArea * m_rightScrollArea;
   Component * m_expandedComponent;
   std::vector<BCLMeasure> m_measuresNeedingUpdates;
+  analysisdriver::SimpleProject * m_project;
+  MeasureManager * m_measureManager;
 
 private slots:
   void on_componentClicked(bool checked);

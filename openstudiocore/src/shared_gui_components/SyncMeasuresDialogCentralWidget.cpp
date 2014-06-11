@@ -27,7 +27,7 @@
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include <openstudio_lib/OSAppBase.hpp>
+#include <analysisdriver/SimpleProject.hpp>
 
 #include <utilities/core/Assert.hpp>
 
@@ -39,11 +39,15 @@
 
 namespace openstudio {
 
-SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(QWidget * parent)
+SyncMeasuresDialogCentralWidget::SyncMeasuresDialogCentralWidget(analysisdriver::SimpleProject * project,
+  MeasureManager * measureManager,
+  QWidget * parent)
   : QWidget(parent),
   m_collapsibleComponentList(NULL),
   m_componentList(NULL),
-  m_pageIdx(0)
+  m_pageIdx(0),
+  m_project(project),
+  m_measureManager(measureManager)
 {
   init();
 }
@@ -204,15 +208,10 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
   }
 
   if(newMeasures.empty()) return;
-  
-  openstudio::OSAppBase * app = OSAppBase::instance();
-
-  boost::optional<analysisdriver::SimpleProject> project = app->project();
-  OS_ASSERT(project);
 
   bool showMessage = true;
 
-  app->measureManager().updateMeasures(*project,newMeasures,showMessage);
+  m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
 }
 
 void SyncMeasuresDialogCentralWidget::on_getComponentsByPage(int pageIdx)
