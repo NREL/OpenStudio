@@ -93,6 +93,8 @@ signals:
 
   void reloadFile(const QString& fileToLoad, bool modified, bool startOnLastTab);
 
+  void toolsUpdated();
+
 private:
 
   void createWidgets();

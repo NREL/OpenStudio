@@ -1386,6 +1386,10 @@ void OSDocument::openMeasuresDlg()
   // open modal dialog
   m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
   m_applyMeasureNowDialog->exec();
+  
+  bool isConnected = false;
+  isConnected = connect(m_applyMeasureNowDialog.get(), SIGNAL(toolsUpdated()), this, SIGNAL(toolsUpdated()));
+  OS_ASSERT(isConnected);
 }
 
 void OSDocument::openChangeMeasuresDirDlg()

@@ -286,21 +286,37 @@ void ApplyMeasureNowDialog::displayMeasure()
 void ApplyMeasureNowDialog::runMeasure()
 {
   runmanager::ConfigOptions co(true);
-      
-  if (co.getTools().getAllByName("ruby").tools().size() == 0)
+
+  if (co.getTools().getAllByName("ruby").tools().size() == 0) 
   {
     QMessageBox::information(this,
       "Missing Ruby",
-      "Ruby could not be located, simulation aborted.",
+      "Ruby could not be located.\nOpenStudio will scan for tools.",
       QMessageBox::Ok);
 
-    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
-    m_timer->stop();
-    this->okButton()->hide();
+    co.findTools(true);
+    openstudio::runmanager::RunManager rm;
+    rm.setConfigOptions(co);
+    rm.showConfigGui();
 
-    return;
+    rm.getConfigOptions().saveQSettings();
+
+    emit toolsUpdated();
+
+    if (co.getTools().getAllByName("ruby").tools().size() == 0)
+    {
+      QMessageBox::information(this,
+        "Missing Ruby",
+        "Ruby was not located by tool search.\nPlease ensure Ruby correctly installed.\nSimulation aborted.",
+        QMessageBox::Ok);
+
+      m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+      m_timer->stop();
+      this->okButton()->hide();
+
+      return;
+    }
   }
-
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -658,8 +674,9 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
+
   openstudio::OSAppBase * app = OSAppBase::instance();
-  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController());
+  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   OSDialog::on_cancelButton(checked);
 }
@@ -667,10 +684,10 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
 void ApplyMeasureNowDialog::on_okButton(bool checked)
 {
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
+    runMeasure();
     m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
     m_timer->start(50);
     this->okButton()->hide();
-    runMeasure();
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     // N/A
     OS_ASSERT(false);
