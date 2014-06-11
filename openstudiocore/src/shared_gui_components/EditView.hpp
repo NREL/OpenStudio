@@ -40,7 +40,7 @@ class EditNullView : public QWidget
 
   public:
 
-  EditNullView();
+  EditNullView(const QString & text = "Select a Measure to Edit");
   virtual ~EditNullView() {}
 
   protected:

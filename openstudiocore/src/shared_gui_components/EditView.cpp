@@ -141,7 +141,7 @@ void EditRubyMeasureView::clear()
  }
 }
 
-EditNullView::EditNullView() 
+EditNullView::EditNullView(const QString & text) 
   : QWidget()
 {
   QVBoxLayout * mainVLayout = new QVBoxLayout();
@@ -150,7 +150,7 @@ EditNullView::EditNullView()
   setLayout(mainVLayout);
   
   QLabel * label = new QLabel();
-  label->setText("Select a Measure to Edit");
+  label->setText(text);
   label->setWordWrap(true);
   label->setAlignment(Qt::AlignCenter);
   mainVLayout->addWidget(label);
