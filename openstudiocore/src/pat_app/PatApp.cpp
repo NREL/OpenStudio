@@ -1298,16 +1298,16 @@ bool PatApp::openFile(const QString& fileName)
       }
       return true;
     } else {
-      if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
-        QMessageBox::warning(mainWindow,
-                             "Error Opening Project",
-                             QString("Project at '") + fileName + QString("' is not a PAT project."));
-      }
-      else {
+      //if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
+      //  QMessageBox::warning(mainWindow,
+      //                       "Error Opening Project",
+      //                       QString("Project at '") + fileName + QString("' is not a PAT project."));
+      //}
+      //else {
         QMessageBox::warning(mainWindow,
                              "Error Opening Project",
                              QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
-      }
+      //}
       showStartupView();
     }
   }
