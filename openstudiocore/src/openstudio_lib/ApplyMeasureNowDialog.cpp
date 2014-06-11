@@ -37,6 +37,7 @@
 #include <model/Model_Impl.hpp>
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/RubyException.hpp>
 
 #include <runmanager/lib/AdvancedStatus.hpp>
@@ -323,6 +324,10 @@ void ApplyMeasureNowDialog::runMeasure()
   openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
   openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
+
+  bool success = false;
+  success = removeDirectory(outDir);
+  OS_ASSERT(success);
   
   // save cloned model to temp directory
   m_model->save(modelPath,true); 
