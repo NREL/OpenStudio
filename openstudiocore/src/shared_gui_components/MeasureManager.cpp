@@ -343,6 +343,35 @@ void MeasureManager::updateMeasures(analysisdriver::SimpleProject &t_project,
   }
 }
 
+void MeasureManager::updatePatApplicationMeasures(analysisdriver::SimpleProject &t_project)
+{
+  updateMeasuresLists();
+
+  std::vector<BCLMeasure> toUpdate;
+
+  std::vector<BCLMeasure> measures = patApplicationMeasures();
+
+  for (std::vector<BCLMeasure>::iterator itr = measures.begin();
+      itr != measures.end();
+      ++itr)
+  {
+    // DLM: this should not happen for applications measures, cannot save to application dir
+    bool isNewVersion = itr->checkForUpdates();
+    OS_ASSERT(!isNewVersion);
+
+    boost::optional<BCLMeasure> projectmeasure = t_project.getMeasureByUUID(itr->uuid());
+    if (projectmeasure)
+    {
+      if (projectmeasure->versionUUID() != itr->versionUUID())
+      {
+        toUpdate.push_back(*itr);
+      }
+    }
+  }
+
+  updateMeasures(t_project, toUpdate, false);
+}
+
 void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
 {
   updateMeasuresLists();

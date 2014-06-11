@@ -136,6 +136,12 @@ class MeasureManager : public QObject
     /// update the measures in the project at all
     void updateMeasuresLists();
 
+    /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
+    /// in the project, update the project to the new version
+    /// 
+    /// Does not ask for user approval
+    void updatePatApplicationMeasures(analysisdriver::SimpleProject &t_project);
+
     /// Updates the UI for all measures.
     /// For all measures in the "myMeasures" list which have changed relative to the version
     /// in the project, update the project to the new version
