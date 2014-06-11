@@ -358,6 +358,14 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
     // accept the event to make the icon refresh
     event->accept();
 
+    // don't allow user to drag standard reports or other built in measures 
+    if (m_app->measureManager().isPatApplicationMeasure(id)){
+      QMessageBox::warning( m_app->mainWidget(), 
+          "Cannot add measure", 
+          "This is a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");
+      return;
+    }
+
     // check if we have data points other than the baseline
     if (project->analysis().dataPoints().size() > 1){
       // warn user that this will blow away their data points
