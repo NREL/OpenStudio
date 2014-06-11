@@ -89,7 +89,7 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
 
 QSize ApplyMeasureNowDialog::sizeHint() const
 {
-  return QSize(770,540);
+  return QSize(770,560);
 }
 
 void ApplyMeasureNowDialog::createWidgets()
