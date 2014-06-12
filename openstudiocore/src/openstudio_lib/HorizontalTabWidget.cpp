@@ -18,14 +18,18 @@
  **********************************************************************/
 
 #include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <QStackedWidget>
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QStyleOption>
+
+#include <utilities/core/Assert.hpp>
+
+#include <QBoxLayout>
 #include <QPainter>
+#include <QPixmap>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QStyleOption>
+
 #include <vector>
+
 #include <algorithm>
 
 namespace openstudio {
@@ -201,6 +205,33 @@ void HorizontalTabWidget::paintEvent ( QPaintEvent * event )
   opt.init(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
+{
+  int index = m_pageStack->indexOf(widget);
+  OS_ASSERT(index >= 0);
+  
+  int currentIndex = m_pageStack->currentIndex();
+  if(currentIndex == index){
+    if(currentIndex + 1 < m_pageStack->count()){
+      setCurrentIndex(currentIndex + 1);
+    } else if (currentIndex != 0) {
+      setCurrentIndex(0);
+    } else {
+      // index and currentIndex are both 0
+      // can't hide both the tab and the page
+      return;
+    }
+  }
+
+  QPushButton * button = m_tabButtons.at(index);
+  OS_ASSERT(button);
+  if(hide){
+    button->hide();
+  } else {
+    button->show();
+  }
 }
 
 } // namespace openstudio

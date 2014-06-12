@@ -880,6 +880,9 @@ void OSDocument::onVerticalTabSelected(int verticalId)
 {
   m_mainTabId = verticalId;
 
+  if(m_mainTabId != RUBY_SCRIPTS && m_mainRightColumnController->isMyModelTabHidden()){
+     m_mainRightColumnController->hideMyModelTab(false);
+  }
   switch( m_mainTabId )
   {
     case SITE:
@@ -932,6 +935,8 @@ void OSDocument::onVerticalTabSelected(int verticalId)
       m_mainRightColumnController->configureForSimulationSettingsSubTab(m_subTabId);
       break;
     case RUBY_SCRIPTS:
+      // Do special stuff here to hide "My Model" tab
+      m_mainRightColumnController->hideMyModelTab(true);
       m_subTabId = m_scriptsTabController->mainContentWidget()->currentId();
       m_mainRightColumnController->configureForScriptsSubTab(m_subTabId);
       break;

@@ -59,7 +59,8 @@ MainRightColumnController::MainRightColumnController(const model::Model & model,
     m_model(model),
     m_resourcesPath(resourcesPath),
     m_measureLibraryController(new LocalLibraryController(OSAppBase::instance())),
-    m_measureEditController(new EditController())
+    m_measureEditController(new EditController()),
+    m_myModelTabIsHidden(false)
 {
   m_measureLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
   OSAppBase::instance()->measureManager().setLibraryController(m_measureLibraryController);
@@ -983,7 +984,6 @@ void MainRightColumnController::toggleUnits(bool displayIP)
 {
 }
 
-
 QSharedPointer<LocalLibraryController> MainRightColumnController::measuresLibraryController()
 {
   return m_measureLibraryController;
@@ -999,6 +999,13 @@ void MainRightColumnController::chooseEditTab()
   m_horizontalTabWidget->setCurrentId(EDIT);
 
   OSAppBase::instance()->currentDocument()->openSidebar();
+}
+
+void MainRightColumnController::hideMyModelTab(bool hide)
+{
+  m_myModelTabIsHidden = hide;
+
+  m_horizontalTabWidget->hideTab(m_myModelView,hide);
 }
 
 } // openstudio
