@@ -218,6 +218,12 @@ namespace detail {
         m_configOptions = boost::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
       }
 
+      void fixupData()
+      {
+        QMutexLocker l(&m_mutex);
+        m_db.query(" delete from joberrors_ where  value_ Glob \"*total times*\" and id_ not in (select min(id_) from joberrors_  where value_ Glob  \"*total times*\" group by type_, jobUuid_, errorType_, value_) ; commit; vacuum; begin;");
+      }
+
       void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
       {
         QMutexLocker l(&m_mutex);
@@ -1516,6 +1522,8 @@ namespace detail {
         SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
         SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
     }
+
+    m_dbholder->fixupData();
 
     // make sure a QApplication exists, it is required for the
     // Q-Model related code to work properly
