@@ -281,7 +281,7 @@ namespace detail {
 
     bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
-    std::vector<TableMultiVariableLookup::Point> points() const;
+    std::vector<std::pair<std::vector<double>,double> > points() const;
 
     static bool xValuesEqual(const std::vector<double> & a, const std::vector<double> & b);
 

@@ -39,12 +39,6 @@ namespace detail {
 class MODEL_API TableMultiVariableLookup : public Curve {
  public:
 
-  // A vector of x values that form the xValues of a point
-  typedef std::vector<double> Coordinate;
-
-  // x values and corresponding y value
-  typedef std::pair<std::vector<double>,double> Point;
-
   /** @name Constructors and Destructors */
   //@{
 
@@ -259,7 +253,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
    * If a y value already exists for a particular coordinate, then the y value
    * will be replaced.
    */
-  bool addPoint(const Coordinate & coord, double yValue);
+  bool addPoint(const std::vector<double> & xValues, double yValue);
 
   bool addPoint(double x1, double yValue);
 
@@ -272,9 +266,9 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
   // Return a vector of xValues and corresponding yValues, this is the entire set of data points
-  std::vector<Point> points() const;
+  std::vector<std::pair<std::vector<double>,double> > points() const;
 
-  boost::optional<double> yValue(const Coordinate & coord) const;
+  boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
   /** Return all of the x values for independent variable i
     * in asscending order.

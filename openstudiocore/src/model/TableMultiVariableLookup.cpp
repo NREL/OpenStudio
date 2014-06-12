@@ -651,16 +651,20 @@ namespace detail {
     return 1.0;
   }
 
-  bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & xValues, double yValue)
+  bool TableMultiVariableLookup_Impl::addPoint(const std::vector<double> & t_xValues, double t_yValue)
   {
-    if( xValues.size() != numberofIndependentVariables() )
+    if( t_xValues.size() != numberofIndependentVariables() )
+    {
+      return false;
+    }
+    else if( yValue(t_xValues) )
     {
       return false;
     }
     else
     {
-      for(std::vector<double>::const_iterator it = xValues.begin();
-          it != xValues.end();
+      for(std::vector<double>::const_iterator it = t_xValues.begin();
+          it != t_xValues.end();
           ++it)
       {
         IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
@@ -668,15 +672,15 @@ namespace detail {
       }
 
       IdfExtensibleGroup eg = getObject<model::TableMultiVariableLookup>().pushExtensibleGroup();
-      eg.setDouble(0,yValue);  
+      eg.setDouble(0,t_yValue);  
     }
 
     return true;
   }
 
-  std::vector<TableMultiVariableLookup::Point> TableMultiVariableLookup_Impl::points() const
+  std::vector<std::pair<std::vector<double>,double> > TableMultiVariableLookup_Impl::points() const
   {
-    std::vector<TableMultiVariableLookup::Point> result;
+    std::vector<std::pair<std::vector<double>,double> > result;
 
     int t_numberofIndependentVariables = numberofIndependentVariables();
 
@@ -699,7 +703,7 @@ namespace detail {
       OS_ASSERT(d);
       double yValue = d.get();
 
-      TableMultiVariableLookup::Point p = std::make_pair<std::vector<double>,double>(xValues,yValue);
+      std::pair<std::vector<double>,double> p = std::make_pair<std::vector<double>,double>(xValues,yValue);
       result.push_back(p);
     }
 
@@ -715,8 +719,8 @@ namespace detail {
       return result;
     }
 
-    std::vector<TableMultiVariableLookup::Point> t_points = points();
-    for(std::vector<TableMultiVariableLookup::Point>::const_iterator it = t_points.begin();
+    std::vector<std::pair<std::vector<double>,double> > t_points = points();
+    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = t_points.begin();
         it != t_points.end();
         ++it)
     {
@@ -734,8 +738,8 @@ namespace detail {
   {
     boost::optional<double> result;
 
-    std::vector<TableMultiVariableLookup::Point> t_points = points();
-    for(std::vector<TableMultiVariableLookup::Point>::const_iterator it = t_points.begin();
+    std::vector<std::pair<std::vector<double>,double> > t_points = points();
+    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = t_points.begin();
         it != t_points.end();
         ++it)
     {
@@ -1227,7 +1231,7 @@ bool TableMultiVariableLookup::addPoint(double x1, double x2, double x3, double 
   return getImpl<detail::TableMultiVariableLookup_Impl>()->addPoint(x1,x2,x3,x4,x5,yValue);
 }
 
-std::vector<TableMultiVariableLookup::Point> TableMultiVariableLookup::points() const
+std::vector<std::pair<std::vector<double>,double> > TableMultiVariableLookup::points() const
 {
   return getImpl<detail::TableMultiVariableLookup_Impl>()->points();
 }
