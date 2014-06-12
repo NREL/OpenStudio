@@ -345,6 +345,18 @@ namespace openstudio{
     return result;
   }
 
+  BCLMeasure BCLMeasure::alternativeModelMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
+  }
+
+  BCLMeasure BCLMeasure::standardReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("StandardReports"));
+  }
+
+  BCLMeasure BCLMeasure::calibrationReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
+  }
+
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()
   {
     return LocalBCL::instance().measures();

@@ -1341,6 +1341,9 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     // TODO: Do not create baseline point here. Add SimpleProject::getOptionalBaselineDataPoint
     // and use that. Call this original version when the run button is hit.
 
+    // update built in measures that may have changed if we upgraded versions
+    m_measureManager.updatePatApplicationMeasures(*m_project);
+
     // cache the seed models here
     m_project->seedModel();
     m_project->seedIdf();
