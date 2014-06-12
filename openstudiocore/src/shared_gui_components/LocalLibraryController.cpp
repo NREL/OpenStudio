@@ -531,8 +531,9 @@ void LibrarySubGroupListController::reset()
   emit libraryItemCountChanged(count);
 }
 
-LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, BaseApp *t_app):
+LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySource source, BaseApp *t_app):
   OSListItem(),
+  m_source(source),
   m_bclMeasure(bclMeasure),
   m_app(t_app)
 {
@@ -596,7 +597,7 @@ QWidget * LibraryItemDelegate::view(QSharedPointer<OSListItem> dataSource)
       widget->m_measureTypeBadge->setVisible(true);
     }
 
-    if(std::find(localUUIDs.begin(), localUUIDs.end(), measureUUID.toStdString()) != localUUIDs.end()){
+    if(libraryItem->m_source == LocalLibrary::BCL){
       widget->m_bclBadge->setVisible(true);
     }
 
@@ -705,7 +706,7 @@ void LibraryListController::createItems()
         continue;
       }
 
-      QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, m_app));
+      QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, m_source, m_app));
 
       item->setController(this);
 

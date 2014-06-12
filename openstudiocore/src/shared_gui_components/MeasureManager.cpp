@@ -112,10 +112,10 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
   if (isMyMeasure) {
     bool updated = measure->checkForUpdates();
     if (updated) {
-      measure->save();     
+      measure->save(); 
+      m_myMeasures.erase(t_id);
+      m_myMeasures.insert(std::map<UUID,BCLMeasure>::value_type(t_id,*measure));
     }
-    m_myMeasures.erase(t_id);
-    m_myMeasures.insert(std::map<UUID,BCLMeasure>::value_type(t_id,*measure));
   }
 
   boost::optional<BCLMeasure> existingMeasure = t_project.getMeasureByUUID(t_id);
@@ -538,9 +538,10 @@ void MeasureManager::updateMeasuresLists()
        it != patApplicationMeasures.end();
        ++it )
   {
-    if (m_patApplicationMeasures.find(it->uuid()) != m_patApplicationMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it2 = m_patApplicationMeasures.find(it->uuid());
+    if (it2 != m_patApplicationMeasures.end()){
       // duplicate measure detected
-      LOG(Error, "UUID of built in measure at '" << it->directory() << "' conflicts with other built in measure, it will not be displayed'");
+      LOG(Error, "UUID of built in measure at '" << it->directory() << "' conflicts with other built in measure, measure at '" << it2->second.directory() << "' will be used instead");
     }else{
       m_patApplicationMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
     }
@@ -551,10 +552,11 @@ void MeasureManager::updateMeasuresLists()
        it != userMeasures.end();
        ++it )
   {
-     if (m_myMeasures.find(it->uuid()) != m_myMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it2 = m_myMeasures.find(it->uuid());
+    if (it2 != m_myMeasures.end()){
       // duplicate measure detected, manual copy and paste likely cause
       // DLM: could assign measure a new UUID here and save?
-      LOG(Error, "UUID of user measure at '" << it->directory() << "' conflicts with other user measure, it will not be displayed'");
+      LOG(Error, "UUID of user measure at '" << it->directory() << "' conflicts with other user measure, measure at '" << it2->second.directory() << "' will be used instead");
     }else{
       m_myMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
     }
@@ -565,9 +567,10 @@ void MeasureManager::updateMeasuresLists()
        it != localBCLMeasures.end();
        ++it )
   {
-    if (m_bclMeasures.find(it->uuid()) != m_bclMeasures.end()){
+    std::map<UUID,BCLMeasure>::iterator it2 = m_bclMeasures.find(it->uuid());
+    if (it2 != m_bclMeasures.end()){
       // duplicate measure detected
-      LOG(Error, "UUID of bcl measure at '" << it->directory() << "' conflicts with other bcl measure, it will not be displayed'");
+      LOG(Error, "UUID of bcl measure at '" << it->directory() << "' conflicts with other bcl measure, measure at '" << it2->second.directory() << "' will be used instead");
     }else{
       m_bclMeasures.insert(std::make_pair<UUID,BCLMeasure>(it->uuid(),*it));
     }
@@ -660,21 +663,41 @@ bool MeasureManager::isMeasureSelected()
 
 boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)
 {
+  boost::optional<BCLMeasure> result;
+
   std::map<UUID,BCLMeasure>::iterator it;
   
   // search pat application measures
   it = m_patApplicationMeasures.find(id);
-  if( it != m_patApplicationMeasures.end() ) { return it->second; }
+  if( it != m_patApplicationMeasures.end() ) {
+    if (result){
+      LOG(Error, "UUID of built in measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
+    }else{
+      result = it->second; 
+    }
+  }
 
   // search my measures
   it = m_myMeasures.find(id);
-  if( it != m_myMeasures.end() ) { return it->second; }
+  if( it != m_myMeasures.end() ) { 
+    if (result){
+      LOG(Error, "UUID of user measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
+    }else{
+      result = it->second; 
+    }
+  }
 
   // search bcl measures
   it = m_bclMeasures.find(id);
-  if( it != m_bclMeasures.end() ) { return it->second; }
+  if( it != m_bclMeasures.end() ) {     
+    if (result){
+      LOG(Error, "UUID of bcl measure at '" << it->second.directory() << "' conflicts with other measure, measure at '" << result->directory() << "' will be used instead");
+    }else{
+      result = it->second; 
+    }
+  }
 
-  return boost::none;
+  return result;
 }
 
 void MeasureManager::setLibraryController(const QSharedPointer<LocalLibraryController> &t_controller)
