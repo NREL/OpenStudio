@@ -66,7 +66,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   public slots:
 
-    virtual void reloadFile(const QString& fileToLoad, bool modified, bool startOnLastTab = false) = 0;
+    virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0) = 0;
 
   private:
 

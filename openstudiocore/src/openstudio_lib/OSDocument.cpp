@@ -435,6 +435,12 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   m_model = model;
 
+  int startTabIndex = 0;
+  boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
+  if(currentDocument){
+    startTabIndex = app->currentDocument()->verticalTabIndex();
+  }
+
   // Main Right Column
 
   m_mainRightColumnController = boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
@@ -786,12 +792,15 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   QTimer::singleShot(0, this, SLOT(initializeModel())); 
 
-  // TODO: add parameters which indicate tab and sub tab to start on
-  QTimer::singleShot(0, this, SLOT(showFirstTab())); 
-
   m_mainWindow->setVisible(wasVisible);
 
   m_mainWindow->enableRevertToSavedAction(true);
+
+  if(currentDocument){
+    app->currentDocument()->showTab(startTabIndex);
+  } else {
+    QTimer::singleShot(0, this, SLOT(showFirstTab())); 
+  }
 }
 
 runmanager::RunManager OSDocument::runManager() {

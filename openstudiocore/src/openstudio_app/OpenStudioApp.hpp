@@ -120,7 +120,7 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
-  virtual void reloadFile(const QString& fileToLoad, bool modified, bool startOnLastTab = false);
+  virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
 
  private slots:
 
