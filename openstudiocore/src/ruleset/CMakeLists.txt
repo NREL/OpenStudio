@@ -16,7 +16,6 @@ SET( ${target_name}_src
   ReportingUserScript.hpp
   RubyUserScriptArgumentGetter.cpp
   RubyUserScriptArgumentGetter.hpp
-  RubyUserScriptArgumentGetter_Impl.hpp
   RulesetAPI.hpp
   TranslationUserScript.cpp
   TranslationUserScript.hpp
@@ -26,6 +25,8 @@ SET( ${target_name}_src
   UtilityUserScript.hpp
   WorkspaceUserScript.cpp
   WorkspaceUserScript.hpp
+  RubyUserScriptArgumentGetter.cpp
+  EmbeddedRubyUserScriptArgumentGetter.hpp
 )
 
 SET( ${target_name}_test_src

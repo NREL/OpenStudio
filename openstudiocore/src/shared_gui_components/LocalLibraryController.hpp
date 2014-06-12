@@ -277,7 +277,7 @@ class LibraryItem : public OSListItem
 
   public:
 
-  LibraryItem(const BCLMeasure & bclMeasure, BaseApp *t_app);
+  LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySource source, BaseApp *t_app);
 
   virtual ~LibraryItem() {}
 
@@ -289,6 +289,8 @@ class LibraryItem : public OSListItem
 
   BCLMeasure m_bclMeasure;
 
+  LocalLibrary::LibrarySource m_source;
+
   bool isAvailable() const { return m_available; }
 
   public slots:
@@ -296,8 +298,10 @@ class LibraryItem : public OSListItem
   void dragItem(const OSDragPixmapData & data);
 
   private:
-  BaseApp *m_app;
+
   bool m_available;
+  BaseApp *m_app;
+  
 };
 
 class LibraryItemDelegate : public OSItemDelegate
