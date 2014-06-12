@@ -58,6 +58,7 @@ void ScriptsTabView::showEvent(QShowEvent *e)
   boost::optional<openstudio::analysisdriver::SimpleProject> project = OSAppBase::instance()->project();
   if (project)
   {
+    // DLM: why is this necessary?
     OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
   }
   variableGroupListView->refreshAllViews();

@@ -362,7 +362,7 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
     if (m_app->measureManager().isPatApplicationMeasure(id)){
       QMessageBox::warning( m_app->mainWidget(), 
           "Cannot add measure", 
-          "This is a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");
+          "This measure conflicts with a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");
       return;
     }
 
