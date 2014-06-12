@@ -318,6 +318,10 @@ void ApplyMeasureNowDialog::runMeasure()
       return;
     }
   }
+
+  m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
+  m_timer->start(50);
+  this->okButton()->hide();
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -690,9 +694,6 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
 {
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     runMeasure();
-    m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
-    m_timer->start(50);
-    this->okButton()->hide();
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     // N/A
     OS_ASSERT(false);
