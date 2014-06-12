@@ -1,3 +1,6 @@
+FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Modules")
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/Modules")
+
 SET(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory" )
 set(CPACK_PACKAGE_CONTACT "OpenStudio@nrel.gov" )
 
@@ -133,3 +136,7 @@ IF(BUILD_SIMXML)
 ENDIF()
 
 INCLUDE(CPack)
+
+IF(APPLE)
+  CONFIGURE_FILE(CPack.Info.plist.in.in "${CMAKE_BINARY_DIR}/Modules/CPack.Info.plist.in")
+ENDIF()
