@@ -563,20 +563,8 @@ namespace openstudio {
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
-        // DLM: this should be passed from app level
-        openstudio::path resourcesPath;
-        if (applicationIsRunningFromBuildDirectory()){
-          resourcesPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
-        } else {
-          resourcesPath = getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
-        }
-
-        // find reporting measures
-        openstudio::path standardReportsPath = resourcesPath / openstudio::toPath("measures/StandardReports/");
-        openstudio::path calibrationReportsPath = resourcesPath / openstudio::toPath("measures/CalibrationReports/");
-
-        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure(standardReportsPath);
-        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure(calibrationReportsPath);
+        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
+        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
 
         // DLM: always add this measure even if the user has their own copy, this is more clear
         //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());

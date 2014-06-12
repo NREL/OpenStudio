@@ -161,6 +161,11 @@ if (APPLE)
   install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
            DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
          )
+         
+  install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
+           DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
+         )
+                  
 elseif (WIN32)
   #LIST(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
   
