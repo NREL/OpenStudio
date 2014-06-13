@@ -56,6 +56,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    virtual bool addToNode(Node & node);
+
     //@}
     /** @name Getters and Setters */
     //@{
@@ -86,6 +88,8 @@ namespace detail {
    private:
 
     virtual bool setSetpointNode(const Node & node );
+
+    virtual void resetSetpointNode();
   };
 
 } // detail

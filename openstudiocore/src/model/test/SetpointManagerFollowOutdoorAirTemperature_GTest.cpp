@@ -25,6 +25,7 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 
 using namespace openstudio::model;
 
@@ -46,6 +47,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
 {
   Model m;
   AirLoopHVAC airloop(m);
+  PlantLoop plantLoop(m);
   Node testObject = airloop.supplyOutletNode();
 
   SetpointManagerFollowOutdoorAirTemperature spm_1(m);
@@ -60,14 +62,20 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
   SetpointManagerFollowOutdoorAirTemperature spm_4(m);
   spm_4.setControlVariable("Temperature");
 
+  SetpointManagerFollowOutdoorAirTemperature spm_5(m);
+  spm_5.setControlVariable("Temperature");
+
   EXPECT_TRUE(spm_1.addToNode(testObject));
   EXPECT_TRUE(spm_2.addToNode(testObject));
   EXPECT_TRUE(spm_3.addToNode(testObject));
 
+  Node plantNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(spm_5.addToNode(plantNode));
+
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
   std::vector<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
-  EXPECT_EQ(4, setpointManagerFollowOutdoorAirTemperatures.size());
+  EXPECT_EQ(5, setpointManagerFollowOutdoorAirTemperatures.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
   EXPECT_TRUE(spm_4.addToNode(testObject));
@@ -77,7 +85,7 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode)
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
   setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
-  EXPECT_EQ(3, setpointManagerFollowOutdoorAirTemperatures.size());
+  EXPECT_EQ(4, setpointManagerFollowOutdoorAirTemperatures.size());
 }
 
 TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_remove)
@@ -113,12 +121,14 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_clone)
   SetpointManagerFollowOutdoorAirTemperature testObject(m);
   testObject.setControlVariable("Temperature");
   testObject.addToNode(outletNode);
+  ASSERT_TRUE(testObject.setpointNode());
+  EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
   SetpointManagerFollowOutdoorAirTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
+  EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
-  EXPECT_EQ(testObject.setpointNode().get(), testObjectClone.setpointNode().get());
   EXPECT_EQ(testObject.referenceTemperatureType(), testObjectClone.referenceTemperatureType());
   EXPECT_EQ(testObject.offsetTemperatureDifference(), testObjectClone.offsetTemperatureDifference());
   EXPECT_EQ(testObject.maximumSetpointTemperature(), testObjectClone.maximumSetpointTemperature());
@@ -142,12 +152,14 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_customDataClone)
   testObject.setOffsetTemperatureDifference(999.9);
   testObject.setMaximumSetpointTemperature(999.9);
   testObject.setMinimumSetpointTemperature(999.9);
+  ASSERT_TRUE(testObject.setpointNode());
+  EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
   SetpointManagerFollowOutdoorAirTemperature testObjectClone = testObject.clone(m).cast<SetpointManagerFollowOutdoorAirTemperature>();
+  EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
-  EXPECT_EQ(testObject.setpointNode().get(), testObjectClone.setpointNode().get());
   EXPECT_EQ(testObject.referenceTemperatureType(), testObjectClone.referenceTemperatureType());
   EXPECT_EQ(testObject.offsetTemperatureDifference(), testObjectClone.offsetTemperatureDifference());
   EXPECT_EQ(testObject.maximumSetpointTemperature(), testObjectClone.maximumSetpointTemperature());

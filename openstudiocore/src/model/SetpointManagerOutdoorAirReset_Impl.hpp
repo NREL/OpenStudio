@@ -103,6 +103,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+    virtual bool addToNode(Node & node);
+
     //@}
     /** @name Getters */
     //@{
@@ -210,7 +212,7 @@ namespace detail {
    private:
     virtual bool setSetpointNode(const Node& node);
 
-    void resetSetpointNode();
+    virtual void resetSetpointNode();
 
     REGISTER_LOGGER("openstudio.model.SetpointManagerOutdoorAirReset");
 

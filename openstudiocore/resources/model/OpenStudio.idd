@@ -14522,15 +14522,19 @@ OS:SetpointManager:SingleZone:Reheat,
   N2, \field Maximum Supply Air Temperature
        \type real
        \units C
-  A4, \field Control Zone Name
+  A3, \field Control Zone Name
        \type object-list
        \required-field
        \object-list ThermalZoneNames
-  A7; \field Setpoint Node or NodeList Name
+  A4, \field Setpoint Node or NodeList Name
        \note Node(s) at which the temperature will be set
        \type object-list
        \required-field
        \object-list Node
+  A5; \field Control Variable
+       \type choice
+       \default Temperature
+       \key Temperature
 
 OS:SetpointManager:Scheduled,
        \min-fields 1

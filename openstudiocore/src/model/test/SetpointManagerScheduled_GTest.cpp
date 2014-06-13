@@ -25,6 +25,7 @@
 #include <model/Model.hpp>
 #include <model/Node.hpp>
 #include <model/AirLoopHVAC.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/ScheduleConstant.hpp>
 
 using namespace openstudio::model;
@@ -49,6 +50,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
 {
   Model m;
   AirLoopHVAC airloop(m);
+  PlantLoop plantLoop(m);
   Node testObject = airloop.supplyOutletNode();
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
@@ -65,14 +67,20 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
   SetpointManagerScheduled spm_4(m,tempSch);
   spm_4.setControlVariable("Temperature");
 
+  SetpointManagerScheduled spm_5(m,tempSch);
+  spm_5.setControlVariable("Temperature");
+
   EXPECT_TRUE(spm_1.addToNode(testObject));
   EXPECT_TRUE(spm_2.addToNode(testObject));
   EXPECT_TRUE(spm_3.addToNode(testObject));
 
+  Node plantNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(spm_5.addToNode(plantNode));
+
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
   std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
-  EXPECT_EQ(4, setpointManagerScheduleds.size());
+  EXPECT_EQ(5, setpointManagerScheduleds.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
   EXPECT_TRUE(spm_4.addToNode(testObject));
@@ -82,7 +90,7 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode)
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
   setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
-  EXPECT_EQ(3, setpointManagerScheduleds.size());
+  EXPECT_EQ(4, setpointManagerScheduleds.size());
 }
 
 TEST_F(ModelFixture, SetpointManagerScheduled_remove)
@@ -122,12 +130,14 @@ TEST_F(ModelFixture, SetpointManagerScheduled_clone)
   SetpointManagerScheduled testObject(m,tempSch);
   testObject.setControlVariable("Temperature");
   testObject.addToNode(outletNode);
+  ASSERT_TRUE(testObject.setpointNode());
+  EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
   SetpointManagerScheduled testObjectClone = testObject.clone(m).cast<SetpointManagerScheduled>();
+  EXPECT_FALSE(testObjectClone.setpointNode());
 
   EXPECT_NE(testObject, testObjectClone);
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
-  EXPECT_EQ(testObject.setpointNode().get(), testObjectClone.setpointNode().get());
   EXPECT_EQ(testObject.schedule(), testObjectClone.schedule());
 }
 

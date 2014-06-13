@@ -47,7 +47,7 @@ namespace detail {
 
     virtual std::vector<openstudio::IdfObject> remove();
 
-    virtual ModelObject clone(Model model);
+    virtual ModelObject clone(Model model) const;
 
     virtual const std::vector<std::string>& outputVariableNames() const;
 
@@ -66,6 +66,9 @@ namespace detail {
     /** This is used to set the field SetpointNodeName.
       * Use addToNode to add a setpoint manager to a node. */
     virtual bool setSetpointNode( const Node & node ) = 0;
+
+    /** This is used to reset the field SetpointNodeName. */
+    virtual void resetSetpointNode() = 0;
 
     REGISTER_LOGGER("openstudio.model.SetpointManager");
   };
