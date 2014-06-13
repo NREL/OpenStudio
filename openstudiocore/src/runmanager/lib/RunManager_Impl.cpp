@@ -221,7 +221,10 @@ namespace detail {
       void fixupData()
       {
         QMutexLocker l(&m_mutex);
-        m_db.query(" delete from joberrors_ where  value_ Glob \"*total times*\" and id_ not in (select min(id_) from joberrors_  where value_ Glob  \"*total times*\" group by type_, jobUuid_, errorType_, value_) ; commit; vacuum; begin;");
+        if (litesql::select<RunManagerDB::JobErrors>(m_db).count() > 0)
+        {
+          m_db.query("delete from joberrors_ where  value_ Glob \"*total times*\" and id_ not in (select min(id_) from joberrors_  where value_ Glob  \"*total times*\" group by type_, jobUuid_, errorType_, value_) ; commit; vacuum; begin;");
+        }
       }
 
       void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)

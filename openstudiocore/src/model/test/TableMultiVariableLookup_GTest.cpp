@@ -80,6 +80,9 @@ TEST_F(ModelFixture,TableMultiVariableLookup)
     ASSERT_TRUE(table.addPoint(76,107,1.2));
     ASSERT_TRUE(table.addPoint(78,107,1.4));
 
+    // Make sure you cant add a point twice
+    ASSERT_FALSE(table.addPoint(78,107,1.4));
+
     ASSERT_EQ(2,table.numberofIndependentVariables());
 
     ASSERT_EQ(30,table.points().size());
@@ -92,7 +95,7 @@ TEST_F(ModelFixture,TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(78,table.xValues(0)[4]);
     ASSERT_DOUBLE_EQ(107,table.xValues(1)[5]);
 
-    TableMultiVariableLookup::Coordinate c(2);
+    std::vector<double> c(2);
     c[0] = 70;
     c[1] = 81;
     boost::optional<double> yValue = table.yValue(c);

@@ -240,7 +240,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
         it != xValues.end();
         ++it)
     {
-      TableMultiVariableLookup::Coordinate coord(1);
+      std::vector<double> coord(1);
       coord[0] = *it;
 
       boost::optional<double> yValue = modelObject.getImpl<model::detail::TableMultiVariableLookup_Impl>()->yValue(coord);
@@ -270,7 +270,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
           it1 != x1Values.end();
           ++it1)
       {
-        TableMultiVariableLookup::Coordinate coord(2);
+        std::vector<double> coord(2);
         coord[0] = *it1;
         coord[1] = *it2;
 
@@ -289,11 +289,11 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
   else
   {
-    std::vector<TableMultiVariableLookup::Point> points = modelObject.points();
+    std::vector<std::pair<std::vector<double>,double> > points = modelObject.points();
 
     // Slice the first and second x values off the coordinates
     std::vector<std::vector<double> > slices;
-    for(std::vector<TableMultiVariableLookup::Point>::const_iterator it = points.begin();
+    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = points.begin();
         it != points.end();
         ++it)
     {
@@ -330,7 +330,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
             x1It != x1Values.end();
             ++x1It)
         {
-          TableMultiVariableLookup::Coordinate coord(2);
+          std::vector<double> coord(2);
           coord[0] = *x1It;
           coord[1] = *x2It;
           coord.insert(coord.end(),it->begin(),it->end());
