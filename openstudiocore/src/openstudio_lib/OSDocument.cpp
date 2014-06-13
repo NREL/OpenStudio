@@ -337,7 +337,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
   OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresDlg()));
+  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresBclDlg()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
   OS_ASSERT(isConnected);
