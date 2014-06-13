@@ -33,28 +33,12 @@
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
 #include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
 #include <model/PortList.hpp>
 #include <model/PortList_Impl.hpp>
 #include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
-#include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
-#include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
-#include <utilities/idd/OS_Fan_ConstantVolume_FieldEnums.hxx>
-#include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
-
-using openstudio::detail::WorkspaceObject_Impl;
 
 namespace openstudio {
 
@@ -126,18 +110,7 @@ namespace detail{
   {
     if( isRemovable() )
     {
-      removeSetpointManagerSingleZoneReheat();
-
-      removeSetpointManagerMixedAir();
-
-      removeSetpointManagerScheduled();
-
-      removeSetpointManagerFollowOutdoorAirTemperature();
-
-      removeSetpointManagerOutdoorAirReset();
-
-      removeSetpointManagerWarmest();
-
+      this->removeSetpointManagers();
       return ModelObject_Impl::remove();
     }
     else
@@ -146,179 +119,62 @@ namespace detail{
     }
   }
 
-  void Node_Impl::addSetpointManager(SetpointManagerSingleZoneReheat singleZoneReheat)
+  void Node_Impl::addSetpointManager(SetpointManagerSingleZoneReheat & singleZoneReheat)
   {
-    removeSetpointManagerSingleZoneReheat();
-
-    removeSetpointManagerMixedAir();
-
-    removeSetpointManagerScheduled();
-
-    removeSetpointManagerFollowOutdoorAirTemperature();
-
-    removeSetpointManagerOutdoorAirReset();
-
-    removeSetpointManagerWarmest();
-
-    std::string s;
-
-    singleZoneReheat.setString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName,
-                               this->name().get());
-    // Get the AirLoop
-    boost::optional<AirLoopHVAC> _airLoop;
-    _airLoop = airLoopHVAC();
-
-    if( _airLoop )
-    {
-      ModelObjectVector modelObjectVector;
-
-      modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
-      if(modelObjectVector.size() > 0)
-      {
-        ModelObject mo = modelObjectVector.front();
-        OptionalThermalZone thermalZone = mo.optionalCast<ThermalZone>();
-
-        s = thermalZone->name().get();
-        singleZoneReheat.setString( OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,s );
-      }
-    }
+    Node node = this->getObject<Node>();
+    singleZoneReheat.addToNode(node);
   }
 
   void Node_Impl::removeSetpointManagerSingleZoneReheat()
   {
-    boost::optional<SetpointManagerSingleZoneReheat> opt(this->getSetpointManagerSingleZoneReheat());
-    if( opt )
+    if( boost::optional<SetpointManagerSingleZoneReheat> spm = this->getSetpointManagerSingleZoneReheat() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
   boost::optional<SetpointManagerSingleZoneReheat> Node_Impl::getSetpointManagerSingleZoneReheat() const
   {
-    /*
-    SetpointManagerSingleZoneReheatVector modelObjects;
-    modelObjects = this->model().getModelObjects<SetpointManagerSingleZoneReheat>();
-    for( SetpointManagerSingleZoneReheatVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it!=itEnd;
-         ++it )
+    SetpointManagerSingleZoneReheatVector _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerSingleZoneReheat>();
+    for(SetpointManagerSingleZoneReheatVector::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-      if( it->getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
-          this->name().get() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
         return *it;
       }
-
-    }
-    return OptionalSetpointManagerSingleZoneReheat();
-    */
-
-    SetpointManagerSingleZoneReheatVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerSingleZoneReheat>();
-    for( SetpointManagerSingleZoneReheatVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it!=itEnd;
-         ++it )
-    {
-      if( it->getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
-          this->name().get() )
-      {
-        return *it;
-      }
-
     }
     return boost::none;
   }
 
-  void  Node_Impl::addSetpointManager(SetpointManagerMixedAir mixedAir)
+  void  Node_Impl::addSetpointManager(SetpointManagerMixedAir & mixedAir)
   {
-    removeSetpointManagerMixedAir();
-
-    removeSetpointManagerSingleZoneReheat();
-
-    removeSetpointManagerScheduled();
-
-    removeSetpointManagerFollowOutdoorAirTemperature();
-
-    removeSetpointManagerOutdoorAirReset();
-
-    removeSetpointManagerWarmest();
-
-    std::string s;
-
-    mixedAir.setString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName,
-                               this->name().get());
-
-    // Get the AirLoop
-    boost::optional<AirLoopHVAC> _airLoop;
-    _airLoop = airLoopHVAC();
-
-    if( _airLoop )
-    {
-      ModelObjectVector modelObjectVector;
-
-      // Get any OS_Fan_ConstantVolume fans
-      modelObjectVector = _airLoop->supplyComponents(openstudio::IddObjectType::OS_Fan_ConstantVolume);
-
-      if(modelObjectVector.size() > 0)
-      {
-        ModelObject mo = modelObjectVector.front();
-        OptionalFanConstantVolume fanConstantVolume = mo.optionalCast<FanConstantVolume>();
-
-        // Get the fan inlet node
-        s = fanConstantVolume->inletModelObject()->name().get();
-        mixedAir.setString( OS_SetpointManager_MixedAirFields::FanInletNodeName,s );
-
-        // Get the fan outlet node
-        s = fanConstantVolume->outletModelObject()->name().get();
-        mixedAir.setString( OS_SetpointManager_MixedAirFields::FanOutletNodeName,s );
-      }
-
-      // Get any OS_Fan_VairableVolume fans
-      modelObjectVector = _airLoop->supplyComponents(openstudio::IddObjectType::OS_Fan_VariableVolume);
-
-      if(modelObjectVector.size() > 0)
-      {
-        ModelObject mo = modelObjectVector.front();
-        OptionalFanVariableVolume fanVariableVolume = mo.optionalCast<FanVariableVolume>();
-
-        // Get the fan inlet node
-        s = fanVariableVolume->inletModelObject()->name().get();
-        mixedAir.setString( OS_SetpointManager_MixedAirFields::FanInletNodeName,s );
-
-        // Get the fan outlet node
-        s = fanVariableVolume->outletModelObject()->name().get();
-        mixedAir.setString( OS_SetpointManager_MixedAirFields::FanOutletNodeName,s );
-      }
-
-      // Get the supply outlet node
-      s = _airLoop->supplyOutletNodes().front().name().get();
-      mixedAir.setString( OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,s );
-    }
+    Node node = this->getObject<Node>();
+    mixedAir.addToNode(node);
   }
 
   void Node_Impl::removeSetpointManagerMixedAir()
   {
-    boost::optional<SetpointManagerMixedAir> opt(this->getSetpointManagerMixedAir());
-    if( opt )
+    if( boost::optional<SetpointManagerMixedAir> spm = this->getSetpointManagerMixedAir() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
   boost::optional<SetpointManagerMixedAir> Node_Impl::getSetpointManagerMixedAir() const
   {
-    SetpointManagerMixedAirVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerMixedAir>();
-    for( SetpointManagerMixedAirVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    SetpointManagerMixedAirVector _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerMixedAir>();
+    for(SetpointManagerMixedAirVector::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-
-      if( it->getString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get() ==
-          this->name().get() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
         return *it;
       }
-
     }
     return boost::none;
   }
@@ -326,24 +182,20 @@ namespace detail{
   void Node_Impl::addSetpointManager( SetpointManagerScheduled & setPointManager )
   {
     Node node = this->getObject<Node>();
-
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerScheduled> Node_Impl::setpointManagerScheduled() const
   {
-    std::vector<SetpointManagerScheduled> modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerScheduled>();
-    for( std::vector<SetpointManagerScheduled>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    std::vector<SetpointManagerScheduled> _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerScheduled>();
+    for(std::vector<SetpointManagerScheduled>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
-        if( setpointNode->handle() == this->handle() )
-        {
-          return *it;
-        }
+        return *it;
       }
     }
     return boost::none;
@@ -351,11 +203,9 @@ namespace detail{
 
   void Node_Impl::removeSetpointManagerScheduled()
   {
-    boost::optional<SetpointManagerScheduled> opt(this->setpointManagerScheduled());
-    if( opt )
+    if( boost::optional<SetpointManagerScheduled> spm = this->setpointManagerScheduled() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
@@ -364,25 +214,21 @@ namespace detail{
   void Node_Impl::addSetpointManager( SetpointManagerFollowOutdoorAirTemperature & setPointManager )
   {
     Node node = this->getObject<Node>();
-
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerFollowOutdoorAirTemperature> Node_Impl::setpointManagerFollowOutdoorAirTemperature() const
   {
-    std::vector<SetpointManagerFollowOutdoorAirTemperature> modelObjects = 
+    std::vector<SetpointManagerFollowOutdoorAirTemperature> _setpointManagers = 
       getObject<Node>().getModelObjectSources<SetpointManagerFollowOutdoorAirTemperature>();
-    for( std::vector<SetpointManagerFollowOutdoorAirTemperature>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(std::vector<SetpointManagerFollowOutdoorAirTemperature>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
-        if( setpointNode->handle() == this->handle() )
-        {
-          return *it;
-        }
+        return *it;
       }
     }
     return boost::none;
@@ -390,11 +236,9 @@ namespace detail{
 
   void Node_Impl::removeSetpointManagerFollowOutdoorAirTemperature()
   {
-    boost::optional<SetpointManagerFollowOutdoorAirTemperature> opt(setpointManagerFollowOutdoorAirTemperature());
-    if( opt )
+    if( boost::optional<SetpointManagerFollowOutdoorAirTemperature> spm = this->setpointManagerFollowOutdoorAirTemperature() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
@@ -403,25 +247,21 @@ namespace detail{
   void Node_Impl::addSetpointManager( SetpointManagerOutdoorAirReset & setPointManager )
   {
     Node node = this->getObject<Node>();
-
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerOutdoorAirReset> Node_Impl::setpointManagerOutdoorAirReset() const
   {
-    std::vector<SetpointManagerOutdoorAirReset> modelObjects = 
+    std::vector<SetpointManagerOutdoorAirReset> _setpointManagers = 
       getObject<Node>().getModelObjectSources<SetpointManagerOutdoorAirReset>();
-    for( std::vector<SetpointManagerOutdoorAirReset>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(std::vector<SetpointManagerOutdoorAirReset>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
-        if( setpointNode->handle() == this->handle() )
-        {
-          return *it;
-        }
+        return *it;
       }
     }
     return boost::none;
@@ -429,36 +269,30 @@ namespace detail{
 
   void Node_Impl::removeSetpointManagerOutdoorAirReset()
   {
-    boost::optional<SetpointManagerOutdoorAirReset> opt(setpointManagerOutdoorAirReset());
-    if( opt )
+    if( boost::optional<SetpointManagerOutdoorAirReset> spm = this->setpointManagerOutdoorAirReset() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
   void Node_Impl::addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager )
   {
     Node node = this->getObject<Node>();
-
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerWarmest> Node_Impl::setpointManagerWarmest() const
   {
-    std::vector<SetpointManagerWarmest> modelObjects = 
+    std::vector<SetpointManagerWarmest> _setpointManagers = 
       getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
-    for( std::vector<SetpointManagerWarmest>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(std::vector<SetpointManagerWarmest>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it )
     {
-
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      OptionalNode setpointNode = it->setpointNode();
+      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
       {
-        if( setpointNode->handle() == this->handle() )
-        {
-          return *it;
-        }
+        return *it;
       }
     }
     return boost::none;
@@ -466,44 +300,15 @@ namespace detail{
 
   void Node_Impl::removeSetpointManagerWarmest()
   {
-    boost::optional<SetpointManagerWarmest> opt(setpointManagerWarmest());
-    if( opt )
+    if( boost::optional<SetpointManagerWarmest> spm = this->setpointManagerWarmest() )
     {
-      openstudio::Handle h = opt->handle();
-      this->model().removeObject(h);
+      spm->remove();
     }
   }
 
   std::vector<ModelObject> Node_Impl::children() const
   {
-    std::vector<ModelObject> result;
-    if(getSetpointManagerSingleZoneReheat())
-    {
-      result.push_back(getSetpointManagerSingleZoneReheat().get());
-    }
-    if(this->getSetpointManagerMixedAir())
-    {
-      result.push_back(getSetpointManagerMixedAir().get());
-    }
-    if(boost::optional<SetpointManagerScheduled> setpointManagerScheduled = this->setpointManagerScheduled())
-    {
-      result.push_back(setpointManagerScheduled.get());
-    }
-    if( boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature = 
-        this->setpointManagerFollowOutdoorAirTemperature() )
-    {
-      result.push_back(setpointManagerFollowOutdoorAirTemperature.get());
-    }
-    if( boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset = 
-        this->setpointManagerOutdoorAirReset() )
-    {
-      result.push_back(setpointManagerOutdoorAirReset.get());
-    }
-    if( boost::optional<SetpointManagerWarmest> setpointManagerWarmest = 
-        this->setpointManagerWarmest() )
-    {
-      result.push_back(setpointManagerWarmest.get());
-    }
+    std::vector<ModelObject> result = castVector<ModelObject>(this->setpointManagers());
     return result;
   }
 
@@ -519,7 +324,7 @@ namespace detail{
   
   bool Node_Impl::isRemovable() const
   {
-    if( airLoopHVAC() || plantLoop() )
+    if( this->loop() )
     {
       return false;
     }
@@ -548,6 +353,17 @@ namespace detail{
     return _setpointManagers;
   }
 
+  void Node_Impl::removeSetpointManagers()
+  {
+    std::vector<SetpointManager> _setpointManagers = this->setpointManagers();
+    for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
+        it != _setpointManagers.end();
+        ++it)
+    {
+      it->remove();
+    }
+  }
+
 } // detail
 
 // create a new Node object in the model's workspace
@@ -566,7 +382,7 @@ std::vector<SetpointManager> Node::setpointManagers() const
   return getImpl<detail::Node_Impl>()->setpointManagers();
 }
 
-void Node::addSetpointManager(SetpointManagerSingleZoneReheat spm)
+void Node::addSetpointManager(SetpointManagerSingleZoneReheat & spm)
 {
   getImpl<detail::Node_Impl>()->addSetpointManager(spm);
 }
@@ -581,7 +397,7 @@ boost::optional<SetpointManagerSingleZoneReheat> Node::getSetpointManagerSingleZ
   return getImpl<detail::Node_Impl>()->getSetpointManagerSingleZoneReheat();
 }
 
-void Node::addSetpointManager(SetpointManagerMixedAir spm)
+void Node::addSetpointManager(SetpointManagerMixedAir & spm)
 {
   return getImpl<detail::Node_Impl>()->addSetpointManager(spm);
 }
