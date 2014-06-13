@@ -169,7 +169,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     // look for file path in args 0
     QFileInfo info(args.at(0)); // handles windows links and "\"
     QString fileName = info.absoluteFilePath();
+
     osversion::VersionTranslator versionTranslator;
+    versionTranslator.setAllowNewerVersions(false);
+
     boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
     if( model ){
 
@@ -240,6 +243,8 @@ bool OpenStudioApp::openFile(const QString& fileName)
   if(fileName.length() > 0)
   {
     osversion::VersionTranslator versionTranslator;
+    versionTranslator.setAllowNewerVersions(false);
+
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
     if (temp) {
       model::Model model = temp.get();
@@ -291,6 +296,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
 void OpenStudioApp::buildCompLibraries()
 {
   osversion::VersionTranslator versionTranslator;
+  versionTranslator.setAllowNewerVersions(false);
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
   OS_ASSERT(exists(p));
@@ -691,6 +697,8 @@ void OpenStudioApp::loadLibrary()
     if( ! (fileName == "") )
     {
       osversion::VersionTranslator versionTranslator;
+      versionTranslator.setAllowNewerVersions(false);
+
       boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
       if( model ) {
         this->currentDocument()->setComponentLibrary(*model);

@@ -181,6 +181,7 @@ namespace detail {
       FileReference seed = analysis().seed();
       if (seed.fileType() == FileReferenceType::OSM) {
         osversion::VersionTranslator translator;
+        //translator.allowNewerVersions(false); // allow loading newer versions here
         m_seedModel = translator.loadModel(seed.path(), progressBar);
       }
     }
@@ -1727,8 +1728,9 @@ namespace detail {
   }
 
   bool SimpleProject_Impl::upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar) {
-    VersionTranslator translator;
     if (requiresVersionTranslation(modelPath)) {
+      VersionTranslator translator;
+      //translator.allowNewerVersions(false); // allow newer versions here
       OptionalModel upgradedModel = translator.loadModel(modelPath, progressBar);
       if (upgradedModel) {
         upgradedModel->save(modelPath,true);

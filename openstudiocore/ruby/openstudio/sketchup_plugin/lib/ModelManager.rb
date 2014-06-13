@@ -262,9 +262,10 @@ module OpenStudio
         Plugin.log(OpenStudio::Error, "model_from_openstudio_path: #{path} does not exist")
         
       else
-        # load idf 
+        # load model 
         
         versionTranslator = OpenStudio::OSVersion::VersionTranslator.new
+        versionTranslator.setAllowNewerVersions(false)
         currentVersion = OpenStudio::VersionString.new(OpenStudio::openStudioVersion())
         
         model = nil

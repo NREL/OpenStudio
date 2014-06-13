@@ -1171,6 +1171,7 @@ boost::optional<model::Component> OSDocument::getComponent(const OSItemId& itemI
         //OS_ASSERT(boost::filesystem::exists(oscPath));
 
         osversion::VersionTranslator translator;
+        //translator.setAllowNewerVersions(false); // DLM: allow to open newer versions?
 
         modelComponent = translator.loadComponent(oscPath);
       }
