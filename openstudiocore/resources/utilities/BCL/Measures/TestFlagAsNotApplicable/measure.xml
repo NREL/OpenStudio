@@ -1,7 +1,7 @@
 <measure>
   <name>Test Flag As Not Applicable</name>
   <uid>1679ca80-aa30-42ab-82c3-8b4b958f509f</uid>
-  <version_id>58704ad8-4618-4eab-8ae5-ffb626c58776</version_id>
+  <version_id>37ad7563-6c45-46c7-b937-0a3dc583aa95</version_id>
   <description>Measure for testing the ability of UserScripts to register their end state as not applicable.</description>
   <modeler_description></modeler_description>
   <provenances/>
@@ -33,7 +33,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>DBCB0CE5</checksum>
+      <checksum>73C02886</checksum>
     </file>
   </files>
 </measure>
