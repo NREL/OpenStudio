@@ -250,9 +250,11 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void exportSDD();
 
-  void save();
+  // returns if a file was saved
+  bool save();
 
-  void saveAs();
+  // returns if a file was saved
+  bool saveAs();
 
   void revert();
 
