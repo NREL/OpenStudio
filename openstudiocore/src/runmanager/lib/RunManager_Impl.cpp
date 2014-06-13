@@ -1252,7 +1252,7 @@ namespace detail {
 
           while (head.has_parent_path())
           {
-            LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
+            // LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
 
             if (!tail.empty())
             {
@@ -1269,7 +1269,7 @@ namespace detail {
             {
               try {
                 openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
-                LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+                // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
                 if (boost::filesystem::exists(potentialNewPath))
                 {
                   return potentialNewPath;
