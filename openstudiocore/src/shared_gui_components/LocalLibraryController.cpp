@@ -596,26 +596,29 @@ struct MeasureSorter{
   }
 };
 
+bool nonModelMeasureToRemove(const BCLMeasure& measure){
+  return (measure.measureType() != MeasureType::ModelMeasure);
+}
+
 void LibraryListController::createItems()
 {
   m_items.clear();
 
-  std::vector<BCLMeasure> temp;
-  std::vector<BCLMeasure> measures;
+  std::vector<BCLMeasure> myMeasures;
+  std::vector<BCLMeasure> bclMeasures;
 
   if( m_source == LocalLibrary::USER )
   {
-    temp = m_app->measureManager().myMeasures();
+    myMeasures = m_app->measureManager().myMeasures();
   }
   else if( m_source == LocalLibrary::BCL )
   {
-    temp = m_app->measureManager().bclMeasures();
+    bclMeasures = m_app->measureManager().bclMeasures();
   }
   else if( m_source == LocalLibrary::COMBINED )
   {
-    temp = m_app->measureManager().myMeasures();
-    std::vector<BCLMeasure> bclMeasures = m_app->measureManager().bclMeasures();
-    temp.insert(temp.end(), bclMeasures.begin(), bclMeasures.end());
+    myMeasures = m_app->measureManager().myMeasures();
+    bclMeasures = m_app->measureManager().bclMeasures();
   }
   else
   {
@@ -623,22 +626,20 @@ void LibraryListController::createItems()
     OS_ASSERT(false);
   }
 
+  // combine measures
+  std::vector<BCLMeasure> measures;
+  measures.insert(measures.end(), myMeasures.begin(), myMeasures.end());
+  measures.insert(measures.end(), bclMeasures.begin(), bclMeasures.end());
+
+  // filter measures
   if(m_onlyShowModelMeasures){
-     for( std::vector<BCLMeasure>::iterator it = temp.begin();
-         it != temp.end();
-         ++it )
-    {
-      if(it->measureType() == MeasureType::ModelMeasure){
-        measures.push_back(*it);
-      }
-    }
-  } else {
-    measures = temp;
+    measures.erase( std::remove_if( measures.begin(), measures.end(), nonModelMeasureToRemove ), measures.end() ); 
   }
   
   // sort measures
   std::sort(measures.begin(), measures.end(), MeasureSorter());
 
+  // create items
   for( std::vector<BCLMeasure>::iterator it = measures.begin();
        it != measures.end();
        ++it )
@@ -650,7 +651,16 @@ void LibraryListController::createItems()
         continue;
       }
 
-      QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, m_source, m_app));
+      LocalLibrary::LibrarySource source = m_source;
+      if (source == LocalLibrary::COMBINED){
+        if (std::find(myMeasures.begin(), myMeasures.end(), *it) != myMeasures.end()){
+          source = LocalLibrary::USER;
+        }else{
+          source = LocalLibrary::BCL;
+        }
+      }
+
+      QSharedPointer<LibraryItem> item = QSharedPointer<LibraryItem>(new LibraryItem(*it, source, m_app));
 
       item->setController(this);
 
