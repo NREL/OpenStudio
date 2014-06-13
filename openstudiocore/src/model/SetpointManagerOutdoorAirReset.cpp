@@ -23,7 +23,6 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
@@ -33,7 +32,6 @@
 #include <utilities/idd/OS_SetpointManager_OutdoorAirReset_FieldEnums.hxx>
 
 #include <utilities/units/Unit.hpp>
-
 #include <utilities/core/Assert.hpp>
 
 namespace openstudio {

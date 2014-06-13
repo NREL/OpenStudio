@@ -26,7 +26,6 @@
 #include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
-#include <utilities/core/Compare.hpp>
 #include <utilities/core/Assert.hpp>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
