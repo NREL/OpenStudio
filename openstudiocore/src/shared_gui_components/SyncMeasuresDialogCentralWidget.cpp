@@ -176,6 +176,8 @@ void SyncMeasuresDialogCentralWidget::displayMeasures(int pageIdx)
     emit noComponents();
   }
 
+  // check all the components for download
+  upperPushButtonClicked();
 }
 
 Component * SyncMeasuresDialogCentralWidget::checkedComponent() const
