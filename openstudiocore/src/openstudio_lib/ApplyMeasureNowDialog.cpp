@@ -408,6 +408,10 @@ void ApplyMeasureNowDialog::displayResults()
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
   m_jobItemView->setExpanded(true);
+
+  if(jobErrors.errors().size()){
+    this->okButton()->setDisabled(true);
+  }
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
