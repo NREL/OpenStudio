@@ -63,6 +63,8 @@ class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
 
+  virtual bool addToNode(Node & node);
+
   //@}
   /** @name Getters */
   //@{
@@ -96,6 +98,8 @@ class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
  private:
 
   virtual bool setSetpointNode( const Node & node );
+
+  virtual void resetSetpointNode();
 
   // converts control variable to the schedule's display name
   std::string scheduleDisplayName() const;

@@ -75,6 +75,18 @@ namespace detail {
     return SetpointManagerOutdoorAirReset::iddObjectType();
   }
 
+  bool SetpointManagerOutdoorAirReset_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
+  }
+
   std::vector<ScheduleTypeKey> SetpointManagerOutdoorAirReset_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     // TODO: Check schedule display names.

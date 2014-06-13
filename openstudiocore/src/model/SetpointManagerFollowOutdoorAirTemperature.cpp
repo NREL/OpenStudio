@@ -24,7 +24,8 @@
 #include <model/Node.hpp>
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
+// #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/PlantLoop.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 
@@ -74,6 +75,18 @@ namespace detail{
     return SetpointManagerFollowOutdoorAirTemperature::iddObjectType();
   }
 
+  bool SetpointManagerFollowOutdoorAirTemperature_Impl::addToNode(Node & node) {
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      return added;
+    } else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() ) {
+      if( plantLoop->supplyComponent(node.handle()) ) {
+        return this->setSetpointNode(node);
+      }
+    }
+    return added;
+  }
+
   boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature_Impl::setpointNode() const
   {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName);
@@ -82,6 +95,12 @@ namespace detail{
   bool SetpointManagerFollowOutdoorAirTemperature_Impl::setSetpointNode(const Node & node )
   {
     return setPointer(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,node.handle());
+  }
+
+  void SetpointManagerFollowOutdoorAirTemperature_Impl::resetSetpointNode()
+  {
+    bool result = setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
   }
 
   std::string SetpointManagerFollowOutdoorAirTemperature_Impl::controlVariable() const

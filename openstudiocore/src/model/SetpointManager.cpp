@@ -107,8 +107,7 @@ namespace detail{
     {
       if( airLoop->supplyComponent(node.handle()) )
       {
-        this->setSetpointNode(node);
-        return true;
+        return this->setSetpointNode(node);
       }
       if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
       {
@@ -119,17 +118,8 @@ namespace detail{
 
         if(oaSystem->oaComponent(node.handle()))
         {
-          this->setSetpointNode(node);
-          return true;
+          return this->setSetpointNode(node);
         }
-      }
-    }
-    else if( boost::optional<PlantLoop> plantLoop = node.plantLoop() )
-    {
-      if( plantLoop->supplyComponent(node.handle()) )
-      {
-        this->setSetpointNode(node);
-        return true;
       }
     }
     return false;
@@ -140,9 +130,11 @@ namespace detail{
     return HVACComponent_Impl::remove();
   }
 
-  ModelObject SetpointManager_Impl::clone(Model model)
+  ModelObject SetpointManager_Impl::clone(Model model) const
   {
-    return HVACComponent_Impl::clone( model );
+    SetpointManager clonedObject = HVACComponent_Impl::clone( model ).cast<SetpointManager>();
+    clonedObject.getImpl<detail::SetpointManager_Impl>()->resetSetpointNode();
+    return clonedObject;
   }
 
 } // detail
