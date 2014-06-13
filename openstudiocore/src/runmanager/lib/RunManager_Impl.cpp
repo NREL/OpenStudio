@@ -973,7 +973,7 @@ namespace detail {
         {
           JobParam param(itr->value);
           param.value = fixupPath(param.value);
-          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(itr->value)));
+          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(param)));
         }
 
         std::map<openstudio::UUID, JobParams> retval;
@@ -1226,8 +1226,18 @@ namespace detail {
 
       static openstudio::path fixupPath(const openstudio::path &t_path)
       {
+        openstudio::path modified = fixupPathImpl(t_path);
+        if (modified != t_path)
+        {
+          LOG(Debug, "Fixed up path from: " << openstudio::toString(t_path) << " to " << openstudio::toString(modified));
+        }
+        return modified;
+      }
+
+      static openstudio::path fixupPathImpl(const openstudio::path &t_path)
+      {
         // only attempt this for things that look like ruby scripts
-        if (t_path == openstudio::toPath(".rb") && t_path.is_complete())
+        if (t_path.extension() == openstudio::toPath(".rb"))
         {
           try {
             if (boost::filesystem::exists(t_path)) {
@@ -1242,7 +1252,7 @@ namespace detail {
 
           while (head.has_parent_path())
           {
-            openstudio::path oldTail = tail;
+            LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
 
             if (!tail.empty())
             {
@@ -1253,12 +1263,13 @@ namespace detail {
 
             head = head.parent_path();
 
-            if (tail == openstudio::toPath("openstudio")
-                && (head.parent_path().filename() == openstudio::toPath("ruby")
-                  || head.parent_path().filename() == openstudio::toPath("Ruby")))
+            if (*tail.begin() == openstudio::toPath("openstudio")
+                && (head.filename() == openstudio::toPath("ruby")
+                  || head.filename() == openstudio::toPath("Ruby")))
             {
               try {
-                openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / oldTail;
+                openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
+                LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
                 if (boost::filesystem::exists(potentialNewPath))
                 {
                   return potentialNewPath;
