@@ -71,13 +71,15 @@ namespace detail {
 
     std::vector<SetpointManager> setpointManagers() const;
 
-    void addSetpointManager(SetpointManagerSingleZoneReheat singleZoneReheat);
+    void removeSetpointManagers();
+
+    void addSetpointManager(SetpointManagerSingleZoneReheat & singleZoneReheat);
 
     void removeSetpointManagerSingleZoneReheat();
 
     boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat() const;
 
-    void  addSetpointManager(SetpointManagerMixedAir mixedAir);
+    void  addSetpointManager(SetpointManagerMixedAir & mixedAir);
 
     void removeSetpointManagerMixedAir();
 
