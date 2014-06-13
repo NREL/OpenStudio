@@ -69,6 +69,14 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     ENDIF()
 
     AddPCH( ${BASE_NAME}_tests )
+
+    ## suppress deprecated warnings in unit tests
+    IF(UNIX)
+      SET_TARGET_PROPERTIES( ${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ELSEIF(MSVC)
+      SET_TARGET_PROPERTIES( ${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "/wd4996" )
+    ENDIF()
+
   ENDIF()
 endmacro()
 
@@ -291,7 +299,13 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     #      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
   ENDIF()
-  
+
+  ## suppress deprecated warnings in swig bindings
+  IF(UNIX)
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+  ELSEIF(MSVC)
+    SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/wd4996" )
+  ENDIF()
 
   IF(MSVC)
     # if visual studio 2010
@@ -452,6 +466,14 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     ELSEIF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess" )
     ENDIF()
+
+    ## suppress deprecated warnings in swig bindings
+    IF(UNIX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ELSEIF(MSVC)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/wd4996" )
+    ENDIF()
+
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY} )
 
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
@@ -561,6 +583,8 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/" )
     IF(MSVC)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      ## suppress deprecated warnings in swig bindings
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/wd4996" )
     ENDIF()
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} )
 
@@ -650,6 +674,14 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
       SET(final_name "${JAVA_OUTPUT_NAME}.dll")
     ENDIF()
+
+    ## suppress deprecated warnings in swig bindings
+    IF(UNIX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ELSEIF(MSVC)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/wd4996" )
+    ENDIF()
+
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
     IF(APPLE)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".dylib" )
@@ -764,6 +796,13 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
 
     IF(MSVC)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+    ENDIF()
+
+    ## suppress deprecated warnings in swig bindings
+    IF(UNIX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ELSEIF(MSVC)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/wd4996" )
     ENDIF()
 
     IF(APPLE)      
