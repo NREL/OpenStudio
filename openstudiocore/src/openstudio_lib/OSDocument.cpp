@@ -1105,11 +1105,6 @@ void OSDocument::save()
 
   if( !m_savePath.isEmpty() )
   {
-    WaitDialog waitDialog("Loading Model","Loading Model");
-    waitDialog.open();
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    app->processEvents();
-
     // saves the model to modelTempDir / in.osm
     openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
 
