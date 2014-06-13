@@ -29,7 +29,7 @@ module UI
       
       if (not dir.empty?)
 
-        if (RUBY_PLATFORM =~ /mswin/)  # Windows
+        if (RUBY_PLATFORM =~ /mswin/ or RUBY_PLATFORM =~ /mingw/)  # Windows
           # Replace / with \\ for the file separator
           dir = dir.split("/").join("\\")
 
@@ -81,7 +81,7 @@ module UI
       
       if (not dir.empty?)
       
-        if (RUBY_PLATFORM =~ /mswin/)  # Windows
+        if (RUBY_PLATFORM =~ /mswin/ or RUBY_PLATFORM =~ /mingw/)  # Windows
           # Replace / with \\ for the file separator
           dir = dir.split("/").join("\\")
 
