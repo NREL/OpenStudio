@@ -143,6 +143,11 @@ void HorizontalTabWidget::setCurrentIndex(int index)
   {  
     QPushButton * button = m_tabButtons[i];
 
+    if(button->isHidden()){
+      button->move(0,0);
+      continue;
+    }
+
     QString style;
 
     style.append("QPushButton { border: none; background-color: #808080; ");
@@ -215,9 +220,9 @@ void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
   int currentIndex = m_pageStack->currentIndex();
   if(currentIndex == index){
     if(currentIndex + 1 < m_pageStack->count()){
-      setCurrentIndex(currentIndex + 1);
+      currentIndex++;
     } else if (currentIndex != 0) {
-      setCurrentIndex(0);
+      currentIndex = 0;
     } else {
       // index and currentIndex are both 0
       // can't hide both the tab and the page
@@ -225,13 +230,16 @@ void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
     }
   }
 
-  QPushButton * button = m_tabButtons.at(index);
+  QPushButton * button = 0;
+  button = m_tabButtons.at(index);
   OS_ASSERT(button);
   if(hide){
     button->hide();
   } else {
     button->show();
   }
+
+  setCurrentIndex(currentIndex);
 }
 
 } // namespace openstudio
