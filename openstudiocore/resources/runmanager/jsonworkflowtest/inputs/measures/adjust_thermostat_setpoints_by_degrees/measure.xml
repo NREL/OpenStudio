@@ -1,7 +1,7 @@
 <measure>
   <name>Adjust Thermostat Setpoints by Degrees</name>
   <uid>6e1f34f9-92e1-44ea-9279-de0b9b64f6a1</uid>
-  <version_id>9aec9134-51da-4f80-bb4f-4bb0b470f929</version_id>
+  <version_id>c4b4e64d-ba8c-45ae-ad1e-fe9e7c6c65da</version_id>
   <description>This measure adjusts heating and cooling setpoints by a user specified number of degrees. This is applied throughout the entire building.</description>
   <modeler_description>This measure will clone all of the schedules that are used as heating and cooling setpoints for thermal zones. The clones are hooked up to the thermostat in place of the original schedules. Then the schedules are adjusted by the specified values. There is a checkbox to determine if the thermostat for design days should be altered.</modeler_description>
   <provenances/>
@@ -32,24 +32,6 @@
   </attributes>
   <files>
     <file>
-      <filename>seed_model.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>F4270953</checksum>
-    </file>
-    <file>
-      <filename>AdjustTheromstatSetpointsByDegrees_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>B160947B</checksum>
-    </file>
-    <file>
-      <filename>ThermostatTestModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>2FF71CC2</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.10.2</identifier>
@@ -57,7 +39,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>301857D5</checksum>
+      <checksum>776BB939</checksum>
     </file>
   </files>
 </measure>

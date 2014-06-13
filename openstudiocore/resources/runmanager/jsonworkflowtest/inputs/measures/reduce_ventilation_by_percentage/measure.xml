@@ -1,7 +1,7 @@
 <measure>
   <name>Reduce Ventilation By Percentage</name>
   <uid>cecf490d-7146-4055-85c7-a7901b9a7dc0</uid>
-  <version_id>7c871e64-8f3b-4e98-bd35-8717d0334e09</version_id>
+  <version_id>26d6a210-eacf-446c-a33f-c36f9a00faf8</version_id>
   <description>This measure will reduce space ventilation rates by the requested percentage. A cost per square foot of building area can be added to the model.</description>
   <modeler_description>This can be run across a space type or the entire building. Costs will be associated with the building. If design specification outdoor air objects are removed at a later date, the costs will remain.</modeler_description>
   <provenances/>
@@ -22,18 +22,6 @@
   </attributes>
   <files>
     <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>32489599</checksum>
-    </file>
-    <file>
-      <filename>ReduceVentilationByPercentage_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>07CBB153</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.0.5</identifier>
@@ -41,7 +29,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>D087E00C</checksum>
+      <checksum>C783FA18</checksum>
     </file>
   </files>
 </measure>

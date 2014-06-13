@@ -1,7 +1,7 @@
 <measure>
   <name>Test Create Warning Msgs</name>
   <uid>e15b432a-5834-4e4f-bcf0-56844a1a43be</uid>
-  <version_id>6c3c39bb-1e19-4271-b639-668ec83f512c</version_id>
+  <version_id>8fa6d760-542c-45d9-9430-7c8a55404b24</version_id>
   <description>Measure for testing ability of UserScripts to register warning messages.</description>
   <modeler_description></modeler_description>
   <provenances/>
@@ -33,7 +33,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>3C987D87</checksum>
+      <checksum>7BCB235A</checksum>
     </file>
   </files>
 </measure>
