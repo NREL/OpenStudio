@@ -165,7 +165,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 //  const ScriptFolderListView* scriptFolderListView() const;
 
 //  ScriptFolderListView* scriptFolderListView();
-  void openMeasuresBclDlg();
 
   int verticalTabIndex();
 
@@ -251,9 +250,11 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void exportSDD();
 
-  void save();
+  // returns if a file was saved
+  bool save();
 
-  void saveAs();
+  // returns if a file was saved
+  bool saveAs();
 
   void revert();
 
@@ -266,6 +267,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void openSidebar();
 
   void openBclDlg();
+
+  void openMeasuresBclDlg();
 
   void openMeasuresDlg();
 

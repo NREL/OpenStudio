@@ -105,10 +105,8 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   m_mainVLayout->addStretch();
 
   if(applyMeasureNow){
-    measureOptionTitleLabel->hide();
-    nameLineEdit->hide();
-    descriptionTitleLabel->hide();
-    descriptionTextEdit->hide();
+    nameLineEdit->setReadOnly(true);
+    descriptionTextEdit->setReadOnly(true);
   }
 }
 

@@ -198,7 +198,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   action = new QAction(tr("Download Measures"),this);
   m_measureMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadComponentsClicked())); // TODO
+  isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadMeasuresClicked()));
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("Download Components"),this);

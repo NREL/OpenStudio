@@ -337,7 +337,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(applyMeasureClicked()), this, SLOT(openMeasuresDlg()));
   OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresDlg()));
+  isConnected = connect(m_mainWindow, SIGNAL(downloadMeasuresClicked()), this, SLOT(openMeasuresBclDlg()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
   OS_ASSERT(isConnected);
@@ -1078,8 +1078,10 @@ void OSDocument::exportFile(fileType type)
   }
 }
 
-void OSDocument::save()
+bool OSDocument::save()
 {
+  bool fileSaved = false;
+
   // save the project file
   analysis::Analysis analysis = m_simpleProject->analysis();
 
@@ -1101,15 +1103,8 @@ void OSDocument::save()
 
   m_simpleProject->save();
 
-
-
   if( !m_savePath.isEmpty() )
   {
-    WaitDialog waitDialog("Loading Model","Loading Model");
-    waitDialog.open();
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    app->processEvents();
-
     // saves the model to modelTempDir / in.osm
     openstudio::path modelPath = saveModel(this->model(), toPath(m_savePath), toPath(m_modelTempDir));
 
@@ -1122,10 +1117,14 @@ void OSDocument::save()
     saveModelTempDir(toPath(m_modelTempDir), modelPath);
     
     this->markAsUnmodified();
+
+    fileSaved = true;
   }else{
-    saveAs();
+    fileSaved = saveAs();
   }
   m_mainWindow->enableRevertToSavedAction(true);
+
+  return fileSaved;
 }
 
 void OSDocument::revert()
@@ -1140,6 +1139,7 @@ void OSDocument::revert()
   if(temp){
     model::Model model = temp.get();
     setModel(model, true);
+    app->currentDocument()->markAsUnmodified();
   } else {
     QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
   }
@@ -1172,8 +1172,10 @@ void OSDocument::showRunManagerPreferences()
   emit toolsUpdated();
 }
 
-void OSDocument::saveAs()
+bool OSDocument::saveAs()
 {
+  bool fileSaved = false;
+
   QString filePath, defaultDir;
 
   if (!this->savePath().length()){
@@ -1189,11 +1191,6 @@ void OSDocument::saveAs()
 
   if( ! filePath.isEmpty() )
   {
-    WaitDialog waitDialog("Loading Model","Loading Model");
-    waitDialog.open();
-    openstudio::OSAppBase * app = OSAppBase::instance();
-    app->processEvents();
-
     //scriptFolderListView()->saveOSArguments();
 
     // saves the model to modelTempDir / in.osm
@@ -1208,7 +1205,12 @@ void OSDocument::saveAs()
     saveModelTempDir(toPath(m_modelTempDir), modelPath);
     
     this->markAsUnmodified();
+
+    fileSaved = true;
   }
+
+  return fileSaved;
+
 }
 
 openstudio::model::Model OSDocument::componentLibrary() const
@@ -1386,7 +1388,7 @@ void OSDocument::openMeasuresDlg()
     {
       case QMessageBox::Save:
         // Save was clicked
-        this->save();
+        if(this->save() != true) return;
         break;
       case QMessageBox::Cancel:
         // Cancel was clicked
