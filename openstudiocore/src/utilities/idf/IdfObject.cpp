@@ -97,6 +97,27 @@ namespace detail {
     resizeToMinFields();
   }
 
+  IdfObject_Impl::IdfObject_Impl(IddObjectType type, const std::string& name) 
+    : m_handle(openstudio::createUUID())
+  {
+    OptionalIddObject candidate = IddFactory::instance().getObject(type);
+    OS_ASSERT(candidate);
+    m_iddObject = *candidate;
+    if (m_iddObject.hasHandleField()) {
+      bool ok = setString(0,toString(m_handle));
+      OS_ASSERT(ok);
+    }
+    if (this->m_iddObject.hasNameField()) {
+      boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
+      OS_ASSERT(nameFieldIndex);
+      bool ok = setString(*nameFieldIndex,name);
+      OS_ASSERT(ok);
+    }else{
+      LOG(Error, "Requested setting name field to '" << name << "' but object of type '" << this->m_iddObject.name() << "' has no name field");
+    }
+    resizeToMinFields();
+  }
+
   IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject)
     : m_handle(openstudio::createUUID()),
       m_iddObject(iddObject)
@@ -104,6 +125,25 @@ namespace detail {
     if (this->m_iddObject.hasHandleField()) {
       bool ok = setString(0,toString(m_handle));
       OS_ASSERT(ok);
+    }
+    resizeToMinFields();
+  }
+
+  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, const std::string& name)
+    : m_handle(openstudio::createUUID()),
+      m_iddObject(iddObject)
+  {
+    if (this->m_iddObject.hasHandleField()) {
+      bool ok = setString(0,toString(m_handle));
+      OS_ASSERT(ok);
+    }
+    if (this->m_iddObject.hasNameField()) {
+      boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
+      OS_ASSERT(nameFieldIndex);
+      bool ok = setString(*nameFieldIndex,name);
+      OS_ASSERT(ok);
+    }else{
+      LOG(Error, "Requested setting name field to '" << name << "' but object of type '" << this->m_iddObject.name() << "' has no name field");
     }
     resizeToMinFields();
   }
@@ -1950,9 +1990,21 @@ IdfObject::IdfObject(IddObjectType type)
   OS_ASSERT(m_impl);
 }
 
+IdfObject::IdfObject(IddObjectType type, const std::string& name) 
+{
+  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, name));
+  OS_ASSERT(m_impl);
+}
+
 IdfObject::IdfObject(const IddObject& iddObject)
 {
   m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject));
+  OS_ASSERT(m_impl);
+}
+
+IdfObject::IdfObject(const IddObject& iddObject, const std::string& name)
+{
+  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, name));
   OS_ASSERT(m_impl);
 }
 

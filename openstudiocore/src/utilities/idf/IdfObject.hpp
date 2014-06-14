@@ -88,9 +88,11 @@ class UTILITIES_API IdfObject {
    *  unless type == IddObjectType::UserCustom, in which case, the constructed object is equivalent
    *  to IdfObject(IddObjectType::Catchall). */
   explicit IdfObject(IddObjectType type);
+  explicit IdfObject(IddObjectType type, const std::string& name);
 
   /** Constructor from iddObject. */
   explicit IdfObject(const IddObject& iddObject);
+  explicit IdfObject(const IddObject&, const std::string& name);
   
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */

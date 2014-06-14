@@ -1200,6 +1200,22 @@ ModelObject::ModelObject(IddObjectType type, const Model& model)
   }
 }
 
+ModelObject::ModelObject(IddObjectType type, const std::string& name, const Model& model)
+  : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, name),false))
+{
+  // create object of correct type
+  OS_ASSERT(getImpl<detail::ModelObject_Impl>());
+  OS_ASSERT(!getImpl<detail::ModelObject_Impl>()->initialized());
+  // add to Workspace
+  openstudio::detail::WorkspaceObject_ImplPtrVector impls;
+  impls.push_back(getImpl<openstudio::detail::WorkspaceObject_Impl>());
+  model.getImpl<detail::Model_Impl>()->addObjects(impls);
+  // object should be initialized and ready to go
+  if (!getImpl<detail::ModelObject_Impl>()->initialized()){
+    LOG_AND_THROW("ModelObject not initialized: " << std::endl << getImpl<openstudio::detail::WorkspaceObject_Impl>()->idfObject());
+  }
+}
+
 ModelObject::ModelObject(boost::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(p)
 {}

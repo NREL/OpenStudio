@@ -67,9 +67,11 @@ namespace detail {
 
     /** Constructor from type. Equivalent to IdfObject(IddFactory::instance.iddObject(type)). */
     explicit IdfObject_Impl(IddObjectType type);
+    explicit IdfObject_Impl(IddObjectType type, const std::string& name);
 
     /** Constructor from iddObject. */
     explicit IdfObject_Impl(const IddObject& iddObject);
+    explicit IdfObject_Impl(const IddObject& iddObject, const std::string& name);
 
     /** Constructor from underlying data. Used by WorkspaceObject_Impl. */
     IdfObject_Impl(const Handle& handle,

@@ -136,7 +136,7 @@ namespace detail {
 } // detail
 
 Connection::Connection(const Model& model)
-  : ModelObject(Connection::iddObjectType(),model)
+  : ModelObject(Connection::iddObjectType(), toString(createUUID()), model)
 {
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }
