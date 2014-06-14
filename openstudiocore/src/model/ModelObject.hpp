@@ -317,7 +317,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   // constructor
   explicit ModelObject(IddObjectType type, const Model& model);
 
-  explicit ModelObject(IddObjectType type, const std::string& name, const Model& model);
+  explicit ModelObject(IddObjectType type, const Model& model, bool handleName);
 
   // constructor
   explicit ModelObject(boost::shared_ptr<detail::ModelObject_Impl> impl);

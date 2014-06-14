@@ -97,7 +97,7 @@ namespace detail {
     resizeToMinFields();
   }
 
-  IdfObject_Impl::IdfObject_Impl(IddObjectType type, const std::string& name) 
+  IdfObject_Impl::IdfObject_Impl(bool handleName, IddObjectType type) 
     : m_handle(openstudio::createUUID())
   {
     OptionalIddObject candidate = IddFactory::instance().getObject(type);
@@ -107,13 +107,13 @@ namespace detail {
       bool ok = setString(0,toString(m_handle));
       OS_ASSERT(ok);
     }
-    if (this->m_iddObject.hasNameField()) {
+    if( handleName && this->m_iddObject.hasNameField() ) {
       boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
       OS_ASSERT(nameFieldIndex);
-      bool ok = setString(*nameFieldIndex,name);
+      bool ok = setString(*nameFieldIndex,toString(createUUID()));
       OS_ASSERT(ok);
-    }else{
-      LOG(Error, "Requested setting name field to '" << name << "' but object of type '" << this->m_iddObject.name() << "' has no name field");
+    } else {
+      LOG(Error, "Requested setting name field to UUID but object of type '" << this->m_iddObject.name() << "' has no name field");
     }
     resizeToMinFields();
   }
@@ -129,7 +129,7 @@ namespace detail {
     resizeToMinFields();
   }
 
-  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, const std::string& name)
+  IdfObject_Impl::IdfObject_Impl(bool handleName, const IddObject& iddObject)
     : m_handle(openstudio::createUUID()),
       m_iddObject(iddObject)
   {
@@ -137,13 +137,13 @@ namespace detail {
       bool ok = setString(0,toString(m_handle));
       OS_ASSERT(ok);
     }
-    if (this->m_iddObject.hasNameField()) {
+    if( handleName && this->m_iddObject.hasNameField() ) {
       boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
       OS_ASSERT(nameFieldIndex);
-      bool ok = setString(*nameFieldIndex,name);
+      bool ok = setString(*nameFieldIndex,toString(createUUID()));
       OS_ASSERT(ok);
-    }else{
-      LOG(Error, "Requested setting name field to '" << name << "' but object of type '" << this->m_iddObject.name() << "' has no name field");
+    } else {
+      LOG(Error, "Requested setting name field to UUID but object of type '" << this->m_iddObject.name() << "' has no name field");
     }
     resizeToMinFields();
   }
@@ -1990,9 +1990,9 @@ IdfObject::IdfObject(IddObjectType type)
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(IddObjectType type, const std::string& name) 
+IdfObject::IdfObject(IddObjectType type, bool handleName) 
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, name));
+  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(handleName, type));
   OS_ASSERT(m_impl);
 }
 
@@ -2002,9 +2002,9 @@ IdfObject::IdfObject(const IddObject& iddObject)
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(const IddObject& iddObject, const std::string& name)
+IdfObject::IdfObject(const IddObject& iddObject, bool handleName)
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, name));
+  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(handleName, iddObject));
   OS_ASSERT(m_impl);
 }
 

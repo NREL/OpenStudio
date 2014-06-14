@@ -1200,8 +1200,8 @@ ModelObject::ModelObject(IddObjectType type, const Model& model)
   }
 }
 
-ModelObject::ModelObject(IddObjectType type, const std::string& name, const Model& model)
-  : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, name),false))
+ModelObject::ModelObject(IddObjectType type, const Model& model, bool handleName)
+  : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, handleName),false))
 {
   // create object of correct type
   OS_ASSERT(getImpl<detail::ModelObject_Impl>());
