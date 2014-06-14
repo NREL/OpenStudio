@@ -502,11 +502,10 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   rjb.addInputFile(FileSelection::Last, FileSource::All, ".*\\.osm", "in.osm");
   openstudio::path scriptsPath = openstudio::toPath("some/random/path") / openstudio::toPath("openstudio/radiance/");
   ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("ModelToRad.rb"), openstudio::toPath("ModelToRad.rb"), openstudio::path(), false));
-  ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim.rb"), openstudio::toPath("DaylightSim.rb"), openstudio::path(), false));
   ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightSim-Simple.rb"), openstudio::toPath("DaylightSim-Simple.rb"), openstudio::path(), false));
   ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("MakeSchedules.rb"), openstudio::toPath("MakeSchedules.rb"), openstudio::path(), false));
   ASSERT_TRUE(rjb.addRequiredFile(scriptsPath / openstudio::toPath("DaylightMetrics.rb"), openstudio::toPath("DaylightMetrics.rb"), openstudio::path(), false));
-  ASSERT_EQ(rjb.requiredFiles().size(), 5u);
+  ASSERT_EQ(rjb.requiredFiles().size(), 4u);
   rjb.copyRequiredFiles("osm", "osm", "in.epw");
   rjb.setScriptFile(scriptsPath / openstudio::toPath("DaylightCalculations.rb"));
   rjb.addToWorkflow(wf);
@@ -517,7 +516,7 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   LOG_FREE(Debug, "RunManagerTestFixture", "workitem: " << wi.toJSON());
 
   ASSERT_EQ(wi.files.files().at(0).fullPath, openstudio::toPath("some/random/path/openstudio/radiance/DaylightCalculations.rb"));
-  ASSERT_EQ(wi.files.files().at(0).requiredFiles.size(), 5u);
+  ASSERT_EQ(wi.files.files().at(0).requiredFiles.size(), 4u);
   ASSERT_EQ(openstudio::toPath(wi.files.files().at(0).requiredFiles.at(0).first.toLocalFile()), 
       openstudio::toPath("some/random/path/openstudio/radiance/ModelToRad.rb"));
 
@@ -538,7 +537,7 @@ TEST_F(RunManagerTestFixture, RelocateDaylightSimPath)
   ASSERT_EQ(wi2.jobkeyname, "testjobkeyname");
   std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = wi2.files.files().at(0).requiredFiles;
 
-  ASSERT_EQ(requiredFiles.size(), 5u);
+  ASSERT_EQ(requiredFiles.size(), 4u);
 
   for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
       itr != requiredFiles.end();

@@ -1,7 +1,7 @@
 <measure>
   <name>Set Window to Wall Ratio by Facade</name>
   <uid>f347ae80-48b4-4c40-bfd4-6c5139b38136</uid>
-  <version_id>ca3c000c-0747-49eb-953a-3aca11771730</version_id>
+  <version_id>6035cd49-1b46-4e83-981c-d5da4a799b13</version_id>
   <description>Description should be asked for upon creation.</description>
   <modeler_description>Modeler description needs to be hand-edited.</modeler_description>
   <provenances/>
@@ -29,25 +29,25 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>37114538</checksum>
+      <checksum>DB86AB00</checksum>
     </file>
     <file>
       <filename>SimpleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>B5D57FBB</checksum>
+      <checksum>8C645B45</checksum>
     </file>
     <file>
       <filename>ExampleModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>63C08266</checksum>
+      <checksum>7E646707</checksum>
     </file>
     <file>
       <filename>SimpleModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>EE845F53</checksum>
+      <checksum>6BAF4619</checksum>
     </file>
   </files>
 </measure>
