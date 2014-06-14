@@ -315,9 +315,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   friend class Attribute;
 
   // constructor
-  explicit ModelObject(IddObjectType type, const Model& model);
-
-  explicit ModelObject(IddObjectType type, const Model& model, bool handleName);
+  explicit ModelObject(IddObjectType type, const Model& model, bool fastName = false);
 
   // constructor
   explicit ModelObject(boost::shared_ptr<detail::ModelObject_Impl> impl);
