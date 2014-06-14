@@ -11634,6 +11634,7 @@ OS:Connection,
   A2, \field Name
        \type alpha
        \reference ConnectionNames
+       \default Connection
   A3, \field Source Object
        \type object-list
        \required-field
