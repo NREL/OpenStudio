@@ -1058,6 +1058,7 @@ ScheduleDayView::ScheduleDayView(bool isIP,
                                  const model::ScheduleDay & scheduleDay,
                                  SchedulesView * schedulesView)
   : QWidget(schedulesView),
+    m_focusStartTime(0.0),
     m_zoom(1.0),
     m_snap(3600.0),
     m_scheduleDay(scheduleDay),
