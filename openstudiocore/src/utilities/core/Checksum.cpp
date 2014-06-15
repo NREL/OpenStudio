@@ -59,10 +59,12 @@ namespace openstudio {
       std::streamsize readSize = is.gcount();
       //crc.process_bytes(buffer, readSize);
 
-      std::string str(buffer, readSize);
+      size_t stringSize = static_cast<size_t>(readSize);
+      std::string str(buffer, stringSize);
       str.erase( std::remove_if( str.begin(), str.end(), openstudio::detail::checksumIgnore ), str.end() );
-
-      crc.process_bytes(str.c_str(), str.size());
+      stringSize = str.size();
+      
+      crc.process_bytes(str.c_str(), stringSize);
     } while ( is );
     
     std::stringstream ss;
