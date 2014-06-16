@@ -93,7 +93,7 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <energyplus/ReverseTranslator.hpp>
 
-#include <gbXML/ReverseTranslator.hpp>
+#include <gbxml/ReverseTranslator.hpp>
 #include <sdd/ReverseTranslator.hpp>
 
 #include <QAbstractButton>
