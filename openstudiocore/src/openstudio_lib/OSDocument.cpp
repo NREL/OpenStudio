@@ -1139,7 +1139,7 @@ void OSDocument::revert()
   if(temp){
     model::Model model = temp.get();
     setModel(model, true);
-    app->currentDocument()->markAsUnmodified();
+    QTimer::singleShot(0, app->currentDocument().get(), SLOT(markAsUnmodified()));
   } else {
     QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
   }
