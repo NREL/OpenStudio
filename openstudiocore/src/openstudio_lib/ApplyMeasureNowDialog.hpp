@@ -75,6 +75,8 @@ protected slots:
 
   virtual void on_cancelButton(bool checked);
 
+  virtual void on_backButton(bool checked);
+
   virtual void on_okButton(bool checked);
 
 protected:
@@ -138,6 +140,8 @@ private:
   int m_argumentsOkPageIdx;
 
   QLabel * m_jobPath;
+
+  bool m_stopRequested;
 
 };
 

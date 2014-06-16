@@ -75,7 +75,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_rightPaneStackedWidget(0),
   m_argumentsFailedTextEdit(0),
   m_jobItemView(0),
-  m_timer(0)
+  m_timer(0),
+  m_stopRequested(false)
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -196,6 +197,9 @@ void ApplyMeasureNowDialog::createWidgets()
   this->okButton()->setText(APPLY_MEASURE);
   this->okButton()->setEnabled(false);
 
+  this->backButton()->show();
+  this->backButton()->setEnabled(false);
+
   // OS SETTINGS
 
   #ifdef Q_OS_MAC
@@ -210,6 +214,7 @@ void ApplyMeasureNowDialog::displayMeasure()
   this->okButton()->setText(APPLY_MEASURE);
   this->okButton()->show();
   this->okButton()->setEnabled(false);
+
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
   m_bclMeasure.reset();
@@ -319,6 +324,7 @@ void ApplyMeasureNowDialog::runMeasure()
       m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
       m_timer->stop();
       this->okButton()->hide();
+      this->backButton()->hide();
 
       return;
     }
@@ -327,6 +333,7 @@ void ApplyMeasureNowDialog::runMeasure()
   m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
   m_timer->start(50);
   this->okButton()->hide();
+  this->backButton()->hide();
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -387,6 +394,11 @@ void ApplyMeasureNowDialog::runMeasure()
 void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
 {
   if(advancedStatus.value() == runmanager::AdvancedStatusEnum::Idle){
+    if(m_stopRequested == true){
+      m_stopRequested = false;
+      this->okButton()->setDisabled(true);
+    }
+    this->backButton()->setEnabled(true);
     displayResults();
   }
 }
@@ -409,6 +421,8 @@ void ApplyMeasureNowDialog::displayResults()
   }else{
     this->okButton()->setEnabled(false);
   }
+  this->backButton()->show();
+  this->backButton()->setEnabled(true);
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
@@ -686,9 +700,16 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    if(m_job){
+      m_job->requestStop();
+      m_stopRequested = true;
+      this->okButton()->setDisabled(true);
+      return;
+    }
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
     this->okButton()->show();
+    this->backButton()->show();
     return;
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
@@ -698,6 +719,18 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   OSDialog::on_cancelButton(checked);
+}
+
+void ApplyMeasureNowDialog::on_backButton(bool checked)
+{
+  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
+    // Nothing specific here
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    // Nothing specific here
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
+    this->backButton()->setEnabled(false);
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+  }
 }
 
 void ApplyMeasureNowDialog::on_okButton(bool checked)
