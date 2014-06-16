@@ -644,7 +644,8 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
     try{
       runmanager::Files files(job.outputFiles());
       openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
-      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdErrPathStr = toString(stdErrPath);
+      std::ifstream ifs(stdErrPathStr.c_str());
       std::string stdErrorMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
       if (!stdErrorMessage.empty()){
