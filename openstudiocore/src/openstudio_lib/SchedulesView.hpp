@@ -170,7 +170,7 @@ class SchedulesView : public QWidget
 
   void toggleUnitsClicked(bool displayIP);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
 

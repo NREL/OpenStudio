@@ -49,7 +49,7 @@ class MainTabController : public OSQObjectController
 
     void toggleUnitsClicked(bool displayIP);
 
-    void openBclDlgClicked();
+    void downloadComponentsClicked();
 
     void openLibDlgClicked();
 

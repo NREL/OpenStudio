@@ -96,11 +96,17 @@ class OpenStudioApp : public OSAppBase
 
   virtual bool notify(QObject* receiver, QEvent* event);
 
+ signals:
+
+  void enableRevertToSaved(bool enable);
+
  public slots:
   
   void quit();
 
   void importIdf(); 
+
+  void importgbXML(); 
 
   void importSDD(); 
 
@@ -114,6 +120,8 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
+  virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
+
  private slots:
 
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );
@@ -125,6 +133,13 @@ class OpenStudioApp : public OSAppBase
   void onCloseClicked();
 
  private:
+
+  enum fileType{
+    SDD,
+    GBXML
+  };
+
+  void import(fileType type);
 
   bool openFile(const QString& fileName);
 

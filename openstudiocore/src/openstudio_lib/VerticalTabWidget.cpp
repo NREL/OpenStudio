@@ -72,7 +72,6 @@ VerticalTabWidget::VerticalTabWidget(QWidget * parent)
   OS_ASSERT(isConnected);
 }
 
-
 void VerticalTabWidget::addTab( QWidget * widget,
                                 int id,
                                 QString toolTip,
@@ -98,6 +97,32 @@ void VerticalTabWidget::addTab( QWidget * widget,
   m_ids.push_back(id);
 
   setCurrentIndex(0);
+}
+
+void VerticalTabWidget::deleteAllTabs()
+{
+  Q_FOREACH(QPushButton * button, m_tabButtons){
+    delete button;
+    button = 0;
+  }
+  m_tabButtons.clear();
+
+  QWidget * widget = 0;
+  for(int i = m_pageStack->count() - 1; i >= 0; --i){
+    widget = m_pageStack->widget(i);
+    m_pageStack->removeWidget(widget);
+    delete widget;
+    widget = 0;
+  }
+
+  m_selectedPixmaps.clear();
+
+  m_unSelectedPixmaps.clear();
+
+  m_ids.clear();
+
+  currentIndex = -1;
+
 }
 
 void VerticalTabWidget::select()
@@ -179,6 +204,11 @@ void VerticalTabWidget::setCurrentIndex(int index)
       button->setStyleSheet(style); 
     }
   }
+}
+
+int VerticalTabWidget::verticalTabIndex()
+{
+  return m_pageStack->currentIndex();
 }
 
 void VerticalTabWidget::setCurrentWidget(QWidget * widget)

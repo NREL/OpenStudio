@@ -138,9 +138,9 @@ SubTabView::SubTabView(OSItemSelector* itemSelector,
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_itemSelectorButtons,
-                                 SIGNAL(openBclDlgClicked()),
+                                 SIGNAL(downloadComponentsClicked()),
                                  this,
-                                 SIGNAL(openBclDlgClicked()));
+                                 SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   //isConnected = QObject::connect(m_itemSelectorButtons,

@@ -1117,7 +1117,7 @@ module OpenStudio
         else
           # a duplicate was found
           entity_to_drawing_interfaces[child.entity] << child
-          entities_with_duplicate_interfaces.insert(child.entity)
+          entities_with_duplicate_interfaces.add(child.entity)
         end
       end
       

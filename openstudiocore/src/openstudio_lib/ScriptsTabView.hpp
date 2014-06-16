@@ -22,9 +22,13 @@
 
 #include <openstudio_lib/SubTabView.hpp>
 
+class QPushButton;
+
 namespace openstudio {
 
 class OSListView;
+
+class SyncMeasuresDialog;
 
 class ScriptsTabView : public MainTabView
 {
@@ -42,6 +46,16 @@ class ScriptsTabView : public MainTabView
   protected:
 
   virtual void showEvent(QShowEvent *e);
+
+  private:
+
+  QPushButton * m_updateMeasuresButton;
+
+  boost::shared_ptr<SyncMeasuresDialog> m_syncMeasuresDialog;
+
+  private slots:
+
+  void openUpdateMeasuresDlg();
 
 };
 

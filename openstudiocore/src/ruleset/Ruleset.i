@@ -21,16 +21,16 @@
 %ignore openstudio::ruleset::detail;
 
 %{
-  #include <ruleset/UserScript.hpp>
+  #include <ruleset/ModelUserScript.hpp>
   #include <ruleset/OSArgument.hpp>
   #include <ruleset/OSResult.hpp>
   #include <ruleset/OSRunner.hpp>
-  #include <ruleset/ModelUserScript.hpp>
-  #include <ruleset/WorkspaceUserScript.hpp>
-  #include <ruleset/TranslationUserScript.hpp>
-  #include <ruleset/UtilityUserScript.hpp>
   #include <ruleset/ReportingUserScript.hpp>
   #include <ruleset/RubyUserScriptArgumentGetter.hpp>
+  #include <ruleset/TranslationUserScript.hpp>
+  #include <ruleset/UserScript.hpp>
+  #include <ruleset/UtilityUserScript.hpp>
+  #include <ruleset/WorkspaceUserScript.hpp>
 
   #include <model/Component.hpp>
   #include <model/ConcreteModelObjects.hpp>

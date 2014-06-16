@@ -48,7 +48,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
                        bool addScrollArea,
                        bool draggable,
                        bool removeable,
-                       OSItem::Type headerType,
+                       OSItemType headerType,
                        QWidget * parent = 0);
 
   virtual ~ScriptFolderListView();
@@ -84,7 +84,7 @@ class ScriptFolderListView : public OSCollapsibleItemList {
   openstudio::path iterateFileName(const openstudio::path &t_path);
 
   openstudio::path m_rootPath;
-  OSItem::Type m_headerType;
+  OSItemType m_headerType;
   std::map<openstudio::path, std::string> m_displayNames;
   std::map<openstudio::path, ScriptsListView *> m_scriptsListViews;
 

@@ -55,7 +55,7 @@ class EditController : public QObject
 
   QPointer<EditRubyMeasureView> editRubyMeasureView;
 
-  EditController();
+  EditController(bool applyMeasureNow = false);
 
   virtual ~EditController();
 

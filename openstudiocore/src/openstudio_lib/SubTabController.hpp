@@ -68,7 +68,7 @@ class SubTabController : public OSQObjectController
 
 signals:
 
-    void openBclDlgClicked();
+    void downloadComponentsClicked();
 
     void openLibDlgClicked();
 

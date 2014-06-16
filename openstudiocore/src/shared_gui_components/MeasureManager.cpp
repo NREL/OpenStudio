@@ -165,7 +165,7 @@ BCLMeasure MeasureManager::insertReplaceMeasure(analysisdriver::SimpleProject &t
           return *updatedMeasure;
         } else {
           QMessageBox::critical(m_app->mainWidget(), QString("Error Updating Measure"), QString::fromStdString(updateResult.second));
-          throw std::runtime_error("Uknown error occured when calling project.updateMeasure, false was returned");
+          throw std::runtime_error("Unknown error occurred when calling project.updateMeasure, false was returned");
         }
       } else {
         LOG(Info, "User chose to use existing copy of measure for new instance");
@@ -660,6 +660,10 @@ bool MeasureManager::isMeasureSelected()
   return false;
 }
 
+QSharedPointer<ruleset::RubyUserScriptArgumentGetter> MeasureManager::argumentGetter() const
+{
+  return m_argumentGetter;
+}
 
 boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)
 {

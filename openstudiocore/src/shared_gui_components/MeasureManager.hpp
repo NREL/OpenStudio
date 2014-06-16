@@ -109,7 +109,7 @@ class MeasureManager : public QObject
     // Retrieve a measure from patApplicationMeasures, myMeasures, and bclMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 
-    /// Updates an individial measure. Does not ask for user approval, approval is assumed.
+    /// Updates an individual measure. Does not ask for user approval, approval is assumed.
     /// \returns true if the update succeeded.
     std::pair<bool,std::string> updateMeasure(analysisdriver::SimpleProject &t_project, const BCLMeasure &t_measure);
 
@@ -130,6 +130,8 @@ class MeasureManager : public QObject
     std::string suggestMeasureName(const BCLMeasure &t_measure, bool t_fixed);
 
     bool isMeasureSelected();
+
+    QSharedPointer<ruleset::RubyUserScriptArgumentGetter> argumentGetter() const;
 
   public slots:
     /// Update the UI display for all measures. Does not re-get the arguments nor
@@ -165,7 +167,6 @@ class MeasureManager : public QObject
     void addMeasure();
 
     void duplicateSelectedMeasure();
-
 
   signals:
     void newMeasure(BCLMeasure newMeasure);

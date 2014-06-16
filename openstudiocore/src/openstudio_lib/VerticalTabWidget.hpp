@@ -46,6 +46,10 @@ class VerticalTabWidget : public QWidget
                const QString & selectedImagePath,
                const QString & unSelectedImagePath );
 
+  void deleteAllTabs();
+
+  int verticalTabIndex();
+
   signals:
 
   void tabSelected(int id);
@@ -53,6 +57,8 @@ class VerticalTabWidget : public QWidget
   public slots:
 
   void setCurrentId(int id);
+
+  void setCurrentIndex(int index);
 
   void setCurrentWidget(QWidget * widget);
 
@@ -63,8 +69,6 @@ class VerticalTabWidget : public QWidget
   private slots:
 
   void select();
-
-  void setCurrentIndex(int index);
 
   private:
 

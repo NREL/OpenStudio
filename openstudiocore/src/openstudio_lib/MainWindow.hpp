@@ -47,6 +47,8 @@ class MainWindow : public QMainWindow
                        const QString & selectedImagePath,
                        const QString & unSelectedImagePath );
 
+  void deleteAllVerticalTabs();
+
   void setMainRightColumnView(QWidget * widget);
 
   //void addHorizontalTab( QWidget * widget,
@@ -54,6 +56,10 @@ class MainWindow : public QMainWindow
   //                       const QString & label );
 
   void selectVerticalTab(int id);
+
+  void selectVerticalTabByIndex(int index);
+
+  int verticalTabIndex();
 
   //void selectHorizontalTab(int id);
 
@@ -63,6 +69,8 @@ class MainWindow : public QMainWindow
 
   bool displayIP();
 
+  void enableRevertToSavedAction(bool enable);
+
   signals:
 
   void closeClicked();
@@ -71,7 +79,13 @@ class MainWindow : public QMainWindow
 
   void exportClicked();
 
+  void exportgbXMLClicked();
+
+  void exportSDDClicked();
+
   void importClicked();
+
+  void importgbXMLClicked();
 
   void importSDDClicked();
 
@@ -84,6 +98,8 @@ class MainWindow : public QMainWindow
   void saveAsFileClicked(); 
 
   void saveFileClicked();
+
+  void revertFileClicked();
 
   void scanForToolsClicked();
 
@@ -101,16 +117,26 @@ class MainWindow : public QMainWindow
 
   void toggleUnitsClicked(bool displayIP);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
+
+  void changeMyMeasuresDir();
+
+  void changeBclLogin();
+
+  void applyMeasureClicked();
+
+  void downloadMeasuresClicked();
+
+  void enableRevertToSaved(bool enable);
 
   protected:
 
   void closeEvent(QCloseEvent * event);
 
   void dragEnterEvent(QDragEnterEvent * event);
-  
+
   void dropEvent(QDropEvent * event);
 
   QSize sizeHint() const;
@@ -135,9 +161,8 @@ class MainWindow : public QMainWindow
 
   void toggleUnits(bool displayIP);
 
-  private slots:
-  
   void configureProxyClicked();
+
   void loadProxySettings();
 
 };

@@ -40,8 +40,8 @@ SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
                         SIGNAL(modelObjectSelected(model::OptionalModelObject &, bool )));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_spaceTypesController.get(), SIGNAL(openLibDlgClicked()),

@@ -32,7 +32,7 @@ namespace openstudio {
 
 OSCollapsibleItemHeader::OSCollapsibleItemHeader(const std::string & text,
                                                  const OSItemId& itemId,
-                                                 OSItem::Type type,
+                                                 OSItemType type,
                                                  QWidget * parent)
   : QWidget(parent),
     m_mouseDown(false)

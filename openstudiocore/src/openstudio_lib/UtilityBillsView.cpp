@@ -66,7 +66,7 @@ UtilityBillsView::UtilityBillsView(const openstudio::model::Model& model, QWidge
                      : ModelSubTabView(new UtilityBillAllFuelTypesListView(UtilityBillsView::utilityBillFuelTypesAndNames(), 
                                                                            model, 
                                                                            true, 
-                                                                           OSItem::COLLAPSIBLE_LIST_HEADER, 
+                                                                           OSItemType::CollapsibleListHeader, 
                                                                            parent),
                                        new UtilityBillsInspectorView(model,parent),
                                        parent)
