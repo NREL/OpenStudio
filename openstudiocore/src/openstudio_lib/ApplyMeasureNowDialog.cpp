@@ -273,6 +273,9 @@ void ApplyMeasureNowDialog::displayMeasure()
     bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
 
+    m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
+
     // DLM: this is ok, call with overload to ignore isItOKToClearResults
     m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
 
