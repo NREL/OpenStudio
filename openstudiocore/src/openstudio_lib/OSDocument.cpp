@@ -1129,18 +1129,16 @@ bool OSDocument::save()
 
 void OSDocument::revert()
 {
-  openstudio::OSAppBase * app = OSAppBase::instance(); 
-  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir());
-  openstudio::path modelPath = outDir / openstudio::toPath("in.osm");
-
+  openstudio::path windowFilePath = openstudio::toPath(this->mainWindow()->windowFilePath());
   osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> temp = modelFromOSM(modelPath, versionTranslator);
+  boost::optional<openstudio::model::Model> temp = modelFromOSM(windowFilePath, versionTranslator);
 
   if(temp){
     model::Model model = temp.get();
     setModel(model, true);
-    QTimer::singleShot(0, app->currentDocument().get(), SLOT(markAsUnmodified()));
+    QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
   } else {
+    openstudio::OSAppBase * app = OSAppBase::instance(); 
     QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
   }
 }
