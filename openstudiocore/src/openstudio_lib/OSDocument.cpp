@@ -96,7 +96,7 @@
 #include <OpenStudio.hxx>
 
 #include <energyplus/ForwardTranslator.hpp>
-#include <gbXML/ForwardTranslator.hpp>
+#include <gbxml/ForwardTranslator.hpp>
 #include <sdd/ForwardTranslator.hpp>
 
 #include <boost/filesystem/fstream.hpp>
@@ -1035,12 +1035,12 @@ void OSDocument::exportFile(fileType type)
 
     if(type == SDD){
       sdd::ForwardTranslator trans;
-      Workspace workspace = trans.modelToSDD(m, outDir);
+      trans.modelToSDD(m, outDir);
       translatorErrors = trans.errors();
       translatorWarnings = trans.warnings();
     } else if(type == GBXML) {
       gbxml::ForwardTranslator trans;
-      Workspace workspace = trans.modelToGbXML(m, outDir);
+      trans.modelToGbXML(m, outDir);
       translatorErrors = trans.errors();
       translatorWarnings = trans.warnings();
     } 

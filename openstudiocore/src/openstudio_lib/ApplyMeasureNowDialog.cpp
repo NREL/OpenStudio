@@ -59,6 +59,8 @@
 #include <QTextEdit>
 #include <QTimer>
 
+#include <fstream>
+
 #define FAILED_ARG_TEXT "<FONT COLOR = RED>Failed to Show Arguments<FONT COLOR = BLACK> <br> <br>Reason(s): <br> <br>"
 
 #define ACCEPT_CHANGES "Accept Changes"
