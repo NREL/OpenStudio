@@ -207,6 +207,7 @@ namespace runmanager {
         tools.append(toRaImageToolInfo(tool));
         tools.append(toRadToolInfo(tool));
         tools.append(toRTraceToolInfo(tool));
+        tools.append(toEpw2Wea(tool));
         break;
 
       case ToolType::XMLPreprocessor:
@@ -452,6 +453,24 @@ namespace runmanager {
         toPath("rad"),
         boost::regex(".*\\.hdr"));
   }
+
+  openstudio::runmanager::ToolInfo ConfigOptions::toEpw2Wea(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
+  {
+#ifdef Q_WS_WIN
+    static const wchar_t exeext[] = L".exe";
+#else
+    static const char exeext[] = "";
+#endif
+
+    return openstudio::runmanager::ToolInfo(
+        "epw2wea",
+        eplus.first,
+        change_extension(eplus.second.binaryDir / toPath("epw2wea"), exeext),
+        eplus.second.linuxBinaryArchive,
+        toPath("epw2wea"),
+        boost::regex(".*\\.wea"));
+  }
+
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
@@ -1022,10 +1041,10 @@ namespace runmanager {
     } else  {
       search.push_back(openstudio::getApplicationRunDirectory().parent_path());
     }
-    
+
     // Add drive C no matter what
     search.push_back(openstudio::toPath("C:\\"));
-    
+
     for (char drive = 'D'; drive <= 'Z'; ++drive)
     {
       // Add all normal fixed harddrives
@@ -1064,9 +1083,46 @@ namespace runmanager {
     m_toolLocations 
       = std::set<std::pair<openstudio::runmanager::ToolVersion, openstudio::runmanager::ToolLocationInfo> >(mergedtools.begin(), mergedtools.end());
 
-
-
     setIDFEPWDefaults();
+
+
+    try {
+      // the epw2wea tool should only be located as part of a radiance installation
+      ToolInfo epw2wea = getTools().getLastByName("epw2wea");
+
+
+      bool verpath_found = false;
+      try {
+        openstudio::path verpath = epw2wea.localBinPath.parent_path().parent_path() / openstudio::toPath("NREL_ver.txt");
+        LOG(Debug, "Looking for NREL_ver at: " << openstudio::toString(verpath));
+        verpath_found = boost::filesystem::exists(verpath);
+      } catch (const std::exception &) {
+      }
+
+      if (!verpath_found) {
+        LOG(Error, "Radiance found with no NREL_ver.txt");
+
+        if (t_promptUser || t_showProgressDialog) {
+          QMessageBox msgBox;
+          msgBox.setIcon(QMessageBox::Information);
+          msgBox.setWindowTitle("Non-NREL Radiance Found");
+          if (Application::instance().isDefaultInstance())
+          {
+            QIcon icon = QIcon(":/images/rm_16.png");
+            icon.addPixmap(QPixmap(":/images/rm_32.png"));
+            icon.addPixmap(QPixmap(":/images/rm_48.png"));
+            icon.addPixmap(QPixmap(":/images/rm_64.png"));
+            icon.addPixmap(QPixmap(":/images/rm_128.png"));
+            icon.addPixmap(QPixmap(":/images/rm_256.png"));
+            msgBox.setWindowIcon(icon);
+          }
+          msgBox.setText("Radiance was found, but it was not the NREL provided version.");
+          msgBox.exec();
+        }
+      }
+    } catch (const std::exception &) {
+      // no radiance tool found
+    }
 
     if (t_promptUser)
     {

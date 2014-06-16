@@ -447,6 +447,12 @@ namespace detail{
     return this->getDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat);
   }
 
+  void AirTerminalSingleDuctVAVReheat_Impl::resetMaximumFlowPerZoneFloorAreaDuringReheat()
+  {
+    bool result = setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat, "");
+    OS_ASSERT(result);
+  }
+
   void AirTerminalSingleDuctVAVReheat_Impl::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
   {
     this->setDouble(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value);
@@ -506,6 +512,11 @@ namespace detail{
     }
 
     return false;
+  }
+
+  void AirTerminalSingleDuctVAVReheat_Impl::resetMaximumFlowFractionDuringReheat()
+  {
+    this->setString(OS_AirTerminal_SingleDuct_VAV_ReheatFields::MaximumFlowFractionDuringReheat,"");
   }
 
   double AirTerminalSingleDuctVAVReheat_Impl::maximumReheatAirTemperature()
@@ -797,6 +808,11 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::maximumFlowPerZoneFloorA
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->maximumFlowPerZoneFloorAreaDuringReheat();
 }
 
+void AirTerminalSingleDuctVAVReheat::resetMaximumFlowPerZoneFloorAreaDuringReheat()
+{
+  return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->resetMaximumFlowPerZoneFloorAreaDuringReheat();
+}
+
 void AirTerminalSingleDuctVAVReheat::setMaximumFlowPerZoneFloorAreaDuringReheat( double value )
 {
   getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->setMaximumFlowPerZoneFloorAreaDuringReheat(value);
@@ -830,6 +846,11 @@ void AirTerminalSingleDuctVAVReheat::autosizeMaximumFlowFractionDuringReheat()
 bool AirTerminalSingleDuctVAVReheat::isMaximumFlowFractionDuringReheatAutosized() const
 {
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->isMaximumFlowFractionDuringReheatAutosized();
+}
+
+void AirTerminalSingleDuctVAVReheat::resetMaximumFlowFractionDuringReheat()
+{
+  getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->resetMaximumFlowFractionDuringReheat();
 }
 
 double AirTerminalSingleDuctVAVReheat::maximumReheatAirTemperature()

@@ -265,11 +265,11 @@ namespace detail {
     /** Return the y value corresponding to xValues.
       * If no value then return boost::none
       */
-    boost::optional<double> yValue(const TableMultiVariableLookup::Coordinate & coord) const;
+    boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
     double evaluate(const std::vector<double>& x) const;
 
-    bool addPoint(const TableMultiVariableLookup::Coordinate & coord, const double & yValue);
+    bool addPoint(const std::vector<double> & xValues, double yValue);
 
     bool addPoint(double x1, double yValue);
 
@@ -281,7 +281,9 @@ namespace detail {
 
     bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
-    std::vector<TableMultiVariableLookup::Point> points() const;
+    std::vector<std::pair<std::vector<double>,double> > points() const;
+
+    static bool xValuesEqual(const std::vector<double> & a, const std::vector<double> & b);
 
     //@}
    protected:

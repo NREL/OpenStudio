@@ -1298,16 +1298,16 @@ bool PatApp::openFile(const QString& fileName)
       }
       return true;
     } else {
-      if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
-        QMessageBox::warning(mainWindow,
-                             "Error Opening Project",
-                             QString("Project at '") + fileName + QString("' is not a PAT project."));
-      }
-      else {
+      //if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
+      //  QMessageBox::warning(mainWindow,
+      //                       "Error Opening Project",
+      //                       QString("Project at '") + fileName + QString("' is not a PAT project."));
+      //}
+      //else {
         QMessageBox::warning(mainWindow,
                              "Error Opening Project",
                              QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
-      }
+      //}
       showStartupView();
     }
   }
@@ -1340,6 +1340,9 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // TODO: Do not create baseline point here. Add SimpleProject::getOptionalBaselineDataPoint
     // and use that. Call this original version when the run button is hit.
+
+    // update built in measures that may have changed if we upgraded versions
+    m_measureManager.updatePatApplicationMeasures(*m_project);
 
     // cache the seed models here
     m_project->seedModel();

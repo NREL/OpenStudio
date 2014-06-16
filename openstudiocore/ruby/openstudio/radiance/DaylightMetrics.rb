@@ -108,6 +108,9 @@ exteriorIlluminanceTimeseries = eplusoutFile.timeSeries("Run Period 1".upcase, "
 # summary report string
 summary_report = ""
 
+building_average_space = []
+building_average = ""
+
 # loop through all the spaces
 building = model.getBuilding
 building.spaces.each do |space|
@@ -224,10 +227,13 @@ building.spaces.each do |space|
       map_values.each do |map_value|
         if map_value >= daylightSetpoint
           num_da += 1
+          num_cda += 1
+        end
+        if map_value > 0 and map_value < daylightSetpoint  
           num_cda += map_value / daylightSetpoint 
-          if map_value > 100 and map_value < 2000
-            num_udi += 1
-          end
+        end
+        if map_value > 100 and map_value < 2000
+          num_udi += 1
         end
       end
       
@@ -363,8 +369,17 @@ building.spaces.each do |space|
   summary_report += "#{space_name}: UDI Daylit and Occupied Hours, #{cda_daylit_occupied_sum}, #{cda_daylit_occupied_num}, #{annual_udi_daylit_occupied}\n"
 
   # now replace nil with 0 in each timeseries to radout.sql for plotting
+  
+  building_average_space << annual_da_daylit_occupied
+  
 end
 
+# DLM: can we make some more metrics that are area weighted rather than just space weighted?
+building_average_space_sum = 0
+building_average_space.each {|e| building_average_space_sum += e}
+building_average = building_average_space_sum / building_average_space.length
+
 File.open('./DaylightingMetrics.csv', 'w') do |file|
+  file.puts "Building average daylight autonomy:#{building_average}"
   file.puts summary_report
 end

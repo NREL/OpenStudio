@@ -27,5 +27,50 @@ bool JobErrors::operator==(const JobErrors &t_rhs) const
   return (result == t_rhs.result) && (allErrors == t_rhs.allErrors);
 }
 
+int JobErrors::totalCountByType(const ErrorType &t_et) const
+{
+  std::vector<std::pair<int, std::string> > results = errorsByTypeWithCount(t_et);
+
+  int sum = 0;
+  for (std::vector<std::pair<int, std::string> >::const_iterator itr = results.begin();
+       itr != results.end();
+       ++itr)
+  {
+    sum += itr->first;
+  }
+
+  return sum;
+}
+
+std::vector<std::pair<int, std::string> > JobErrors::errorsByTypeWithCount(const ErrorType &t_et) const
+{
+  std::vector<std::pair<int, std::string> > results;
+
+  boost::regex occurredTotalTimes(".*occurred ([0-9]+) total times.*");
+
+  for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = allErrors.begin();
+      itr != allErrors.end();
+      ++itr)
+  {
+    if (itr->first == t_et)
+    {
+      int repeatCount = 0;
+
+      boost::smatch matches;
+      if (boost::regex_search(itr->second, matches, occurredTotalTimes)) {
+        std::string temp = std::string(matches[1].first, matches[1].second); 
+        repeatCount = atoi(temp.c_str()) - 1;
+      }
+
+      if (repeatCount < 1) repeatCount = 1;
+
+      results.push_back(std::make_pair(repeatCount, itr->second));
+    }
+  }
+
+  return results;
+}
+
+
 } // runmanager
 } // openstudio

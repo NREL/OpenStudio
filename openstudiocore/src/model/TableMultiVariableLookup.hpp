@@ -39,42 +39,6 @@ namespace detail {
 class MODEL_API TableMultiVariableLookup : public Curve {
  public:
 
-  // A vector of x values
-  struct Coordinate : public std::vector<double>
-  {
-    Coordinate(unsigned numberofIndependentVariables)
-      : std::vector<double>(numberofIndependentVariables)
-    {
-    }
-
-    bool operator==(const Coordinate& c)
-    {
-      bool result = true;
-
-      if( size() != c.size() )
-      {
-        result = false;
-      }
-      else
-      {
-        for(Coordinate::const_iterator it1 = c.begin(),it2 = this->begin();
-            it1 != c.end() && it2 != this->end();
-            ++it1,++it2)
-        {
-          if( ! equal(*it1,*it2) )
-          {
-            result = false;
-          }
-        }
-      }
-      
-      return result;
-    }
-  };
-
-  // A Coordinate and corresponding y value
-  typedef std::pair<Coordinate,double> Point;
-
   /** @name Constructors and Destructors */
   //@{
 
@@ -284,12 +248,12 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   //@{
 
   /**
-   * Add a y value corresponding to the coordinate. The size of the coordinate vector must be
+   * Add a y value corresponding to xValues. The size of the XValues vector must be
    * equal to the number of independent variables specified when the table was created.
    * If a y value already exists for a particular coordinate, then the y value
    * will be replaced.
    */
-  bool addPoint(const Coordinate & coordinate, double yValue);
+  bool addPoint(const std::vector<double> & xValues, double yValue);
 
   bool addPoint(double x1, double yValue);
 
@@ -301,9 +265,10 @@ class MODEL_API TableMultiVariableLookup : public Curve {
 
   bool addPoint(double x1, double x2, double x3, double x4, double x5, double yValue);
 
-  std::vector<Point> points() const;
+  // Return a vector of xValues and corresponding yValues, this is the entire set of data points
+  std::vector<std::pair<std::vector<double>,double> > points() const;
 
-  boost::optional<double> yValue(const Coordinate & coordinate) const;
+  boost::optional<double> yValue(const std::vector<double> & xValues) const;
 
   /** Return all of the x values for independent variable i
     * in asscending order.

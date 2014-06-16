@@ -85,6 +85,12 @@ namespace openstudio{
     /// Load all measures in the PAT application's measures directory.
     static std::vector<BCLMeasure> patApplicationMeasures();
 
+    static BCLMeasure alternativeModelMeasure();
+
+    static BCLMeasure standardReportMeasure();
+
+    static BCLMeasure calibrationReportMeasure();
+
     /// Returns the path to the PAT application's measures directory.
     static openstudio::path patApplicationMeasuresDir();
 

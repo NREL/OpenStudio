@@ -562,6 +562,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(connectionsObject);
 
     s = modelObject.name().get();
+    std::string name = s;
     connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneName,s);
 
     //set the inlet port list
@@ -571,6 +572,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _inletNodeList = translateAndMapModelObject(inletPortList);
       if(_inletNodeList)
       {
+        _inletNodeList->setName(name + " Inlet Node List");
         s = _inletNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName,s);
       }
@@ -583,6 +585,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _exhaustNodeList = translateAndMapModelObject(exhaustPortList);
       if(_exhaustNodeList)
       {
+        _exhaustNodeList->setName(name + " Exhaust Node List");
         s = _exhaustNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirExhaustNodeorNodeListName,s);
       }

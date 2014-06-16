@@ -27,6 +27,8 @@
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ShadingControl.hpp"
 #include "../../model/Construction.hpp"
 #include "../../model/Construction_Impl.hpp"
 #include "../../model/DaylightingControl.hpp"
@@ -69,7 +71,6 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
   for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
@@ -93,7 +94,6 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
@@ -125,7 +125,6 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
@@ -157,24 +156,51 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   for (const Point3d& vertex : polygon){
     LOG_FREE(::Info, "Radiance", vertex);
   }
-
 }
 
 
 TEST(Radiance, ForwardTranslator_ExampleModel)
 {
   Model model = exampleModel();
-
-  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
+  
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  boost::filesystem::remove_all(outpath);
 }
+
+
+TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
+{
+  Model model = exampleModel();
+  Construction shadedConstruction(model);
+
+  model::ShadingControl shadingControl(shadedConstruction); 
+  for (auto & subSurface : model.getConcreteModelObjects<model::SubSurface>()){
+    if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
+        istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
+      subSurface.setShadingControl(shadingControl);
+    }
+  }
+
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModelWithShadingControl");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
+
+  ForwardTranslator ft;
+  std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
+  EXPECT_FALSE(outpaths.empty());
+  EXPECT_TRUE(ft.errors().empty());
+  EXPECT_TRUE(ft.warnings().empty());
+}
+
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
 {
@@ -184,15 +210,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
     illuminanceMap.remove();
   } 
   
-  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoIllumMaps");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  boost::filesystem::remove_all(outpath);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
@@ -203,15 +230,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
     daylightingControl.remove();
   } 
   
-  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoDaylightingControls");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_TRUE(ft.warnings().empty());
-
-  boost::filesystem::remove_all(outpath);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
@@ -222,15 +250,16 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
     glareSensor.remove();
   } 
   
-  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoGlareSensors");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_TRUE(boost::filesystem::exists(outpath));
   EXPECT_FALSE(outpaths.empty());
   EXPECT_TRUE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
-
-  boost::filesystem::remove_all(outpath);
 }
 
 TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
@@ -243,13 +272,15 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
     thermalZone.resetIlluminanceMap();
   } 
   
-  openstudio::path outpath = toPath(toString(openstudio::createUUID()));
+  openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel_NoThermalZoneLinks");
+  boost::filesystem::remove_all(outpath);
+  ASSERT_FALSE(boost::filesystem::exists(outpath));
 
   ForwardTranslator ft;
   std::vector<path> outpaths = ft.translateModel(outpath, model);
+  EXPECT_FALSE(boost::filesystem::exists(outpath));
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
 
-  boost::filesystem::remove_all(outpath);
 }

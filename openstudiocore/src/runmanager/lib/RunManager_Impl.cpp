@@ -23,7 +23,8 @@
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
-
+#include "JobFactory.hpp"
+#include "Workflow.hpp"
 #include <QFileInfo>
 #include <QDateTime>
 #include <QMessageBox>
@@ -39,7 +40,6 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include "RubyJobUtils.hpp"
-#include "Workflow.hpp"
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
 #include "JobFactory.hpp"
@@ -214,6 +214,15 @@ namespace detail {
         updateConfiguration(m_db, m_config, t_co);
         m_db.commit();
         m_configOptions = std::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
+      }
+
+      void fixupData()
+      {
+        QMutexLocker l(&m_mutex);
+        if (litesql::select<RunManagerDB::JobErrors>(m_db).count() > 0)
+        {
+          m_db.query("delete from joberrors_ where  value_ Glob \"*total times*\" and id_ not in (select min(id_) from joberrors_  where value_ Glob  \"*total times*\" group by type_, jobUuid_, errorType_, value_) ; commit; vacuum; begin;");
+        }
       }
 
       void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
@@ -1418,6 +1427,8 @@ namespace detail {
 
     LOG(Info, "Loading config options");
     ConfigOptions co = m_dbholder->getConfigOptions();
+
+    m_dbholder->fixupData();
 
     // make sure a QApplication exists, it is required for the
     // Q-Model related code to work properly

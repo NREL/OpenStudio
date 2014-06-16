@@ -340,6 +340,9 @@ namespace detail {
 
     openstudio::path m_projectDir;
     analysisdriver::AnalysisDriver m_analysisDriver;
+    openstudio::UUID m_alternativeModelMeasureUUID;
+    openstudio::UUID m_standardReportMeasureUUID;
+    openstudio::UUID m_calibrationReportMeasureUUID;
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
     mutable boost::optional<CloudAnalysisDriver> m_cloudAnalysisDriver; // mutable for lazy load
     mutable boost::optional<CloudSession> m_cloudSession;   // mutable for lazy load on open
@@ -397,12 +400,6 @@ namespace detail {
     /** Copies measure into this project's scripts directory, overwriting the existing measure
      *  with the same UUID. */
     BCLMeasure overwriteMeasure(const BCLMeasure& measure);
-
-    static openstudio::UUID alternativeModelMeasureUUID();
-
-    static openstudio::UUID standardReportMeasureUUID();
-
-    static openstudio::UUID calibrationReportMeasureUUID();
   };
 
 } // detail

@@ -38,7 +38,7 @@
 #include "../../utilities/core/RubyInterpreter.hpp"
 
 // This one is a bit more globally accessible, but no one can instantiate the template without the two above
-#include "../RubyUserScriptArgumentGetter_Impl.hpp"
+#include "../EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -106,7 +106,7 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
 
   // Initialize the argument getter
   std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
-    rsc(new openstudio::ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(ri));
+    rsc(new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(ri));
 
   // Test calling the actual function we are concerned about
   std::vector<OSArgument> args;

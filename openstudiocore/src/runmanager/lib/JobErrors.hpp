@@ -89,6 +89,11 @@ namespace runmanager {
       return ret;
     }
 
+    std::vector<std::pair<int, std::string> > errorsByTypeWithCount(const ErrorType &t_et) const;
+
+    int totalCountByType(const ErrorType &t_et) const;
+
+
     std::vector<std::string> errorsByType(const ErrorType &t_et) const
     {
       std::vector<std::string> results;

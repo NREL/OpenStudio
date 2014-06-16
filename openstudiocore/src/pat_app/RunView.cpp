@@ -721,8 +721,8 @@ void DataPointRunHeaderView::update()
 
     openstudio::runmanager::JobErrors treeErrors = topLevelJob->treeErrors();
     numNAs = treeErrors.numNAs;
-    numErrors = treeErrors.errors().size();
-    numWarnings = treeErrors.warnings().size();
+    numErrors = treeErrors.totalCountByType(openstudio::runmanager::ErrorType::Error);
+    numWarnings = treeErrors.totalCountByType(openstudio::runmanager::ErrorType::Warning);
   }
 
   QString nasStyle;
@@ -1210,21 +1210,6 @@ void DataPointJobItemView::requestUpdate()
   }
 }
 
-std::vector<std::pair<std::string, int> > DataPointJobItemView::collateMessages(const std::vector<std::string> &t_messages)
-{
-  std::vector<std::pair<std::string, int> > retval;
-
-  for (const auto & message : t_messages)
-  {
-    if (retval.empty() || retval.back().first != message) {
-      retval.push_back(std::make_pair(message, 1));
-    } else {
-      ++(retval.back().second);
-    }
-  }
-  return retval;
-}
-
 void DataPointJobItemView::update()
 {
   m_updateRequested = false;
@@ -1306,13 +1291,13 @@ void DataPointJobItemView::update()
     }
   }
 
-  std::vector<std::string> warnings = jobErrors.warnings();
-  std::vector<std::pair<std::string, int> > collatedWarnings = collateMessages(warnings);
+  std::vector<std::pair<int, std::string> > warnings = jobErrors.errorsByTypeWithCount(openstudio::runmanager::ErrorType::Warning);
+  int numWarnings = jobErrors.totalCountByType(openstudio::runmanager::ErrorType::Warning);
 
-  dataPointJobHeaderView->setNumWarnings(warnings.size());
-  typedef std::pair<std::string, int> Msg;
-  for (const Msg& warningMessage : collatedWarnings) {
-    dataPointJobContentView->addWarningMessage(warningMessage.first, warningMessage.second);
+  dataPointJobHeaderView->setNumWarnings(numWarnings);
+  typedef std::pair<int, std::string> Msg;
+  for (const Msg& warningMessage : warnings) {
+    dataPointJobContentView->addWarningMessage(warningMessage.second, warningMessage.first);
   }
 
   std::vector<std::string> infos = jobErrors.infos();

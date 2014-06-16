@@ -27,6 +27,7 @@ set(utilities_resources_src
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.rb
   utilities/BCL/Measures/TestMissingARequiredArgWithNoDefault/measure.xml
   utilities/Checksum/Checksum.txt
+  utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
   utilities/Filetypes/USA_CO_Golden-NREL.amy

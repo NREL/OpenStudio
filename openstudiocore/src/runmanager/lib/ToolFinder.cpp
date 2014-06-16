@@ -185,6 +185,28 @@ namespace runmanager {
 
 #endif
 
+        if (!t_path1.empty() && !t_path2.empty())
+        {
+          openstudio::path verpath_1 = t_path1.parent_path() / openstudio::toPath("NREL_ver.txt");
+          openstudio::path verpath_2 = t_path2.parent_path() / openstudio::toPath("NREL_ver.txt");
+
+          LOG(Debug, "Checking for NREL_ver " << openstudio::toString(verpath_1));
+          LOG(Debug, "Checking for NREL_ver " << openstudio::toString(verpath_2));
+
+          // existence of this file in the parent folder indicates that it's a version provided
+          // by NREL and we should prefer it 
+          bool path1_has_nrel_ver = safeExists(verpath_1);
+          bool path2_has_nrel_ver = safeExists(verpath_2);
+
+          if (path1_has_nrel_ver && !path2_has_nrel_ver)
+          {
+            return t_path1;
+          } else if (!path1_has_nrel_ver && path2_has_nrel_ver) {
+            return t_path2;
+          }
+        }
+
+
         // return the shortest path that exists. Unless one of the two exists in the run dir,
         // that means it's one we provided and we want to return it
         if (t_path1.empty() 
@@ -375,6 +397,8 @@ namespace runmanager {
             || openstudio::toPath("/mnt") == curPath
             || openstudio::toPath("/Volumes") == curPath
             || subPathMatch(curPath, boost::regex("lib.*", boost::regex::perl))
+            || subPathMatch(curPath, boost::regex("share", boost::regex::perl))
+            || openstudio::toPath("C:/Windows") == curPath
             || (subPathMatch(curPath, boost::regex("share", boost::regex::perl)) && !subPathMatch(curPath, boost::regex("openstudio", boost::regex::perl)))
             || openstudio::toPath("C:/Windows") == curPath
             || openstudio::toPath("C:/DAYSIM") == curPath

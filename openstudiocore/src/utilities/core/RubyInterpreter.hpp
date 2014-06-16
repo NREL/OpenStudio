@@ -666,7 +666,8 @@ namespace openstudio
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).native()).c_str());
 #endif
 
-#if defined(WIN32) && (defined(_M_X64) || defined(__amd64__))
+#if defined(WIN32) 
+  #if (defined(_M_X64) || defined(__amd64__))
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
@@ -675,6 +676,16 @@ namespace openstudio
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))).native()).c_str());
+  #else
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))).native()).c_str());
+  #endif
 #endif
           }
 

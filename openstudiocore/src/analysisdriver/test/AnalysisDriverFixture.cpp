@@ -69,7 +69,7 @@
 // put these in cpp, after all other openstudio includes
 // otherwise ruby.h will get you, sometime, somewhere
 #include "../../utilities/core/RubyInterpreter.hpp"
-#include "../../ruleset/RubyUserScriptArgumentGetter_Impl.hpp"
+#include "../../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::ruleset;
@@ -114,7 +114,7 @@ void AnalysisDriverFixture::SetUpTestCase() {
                                                 modules));
   // Initialize the argument getter
   argumentGetter = std::shared_ptr<RubyUserScriptArgumentGetter>(
-      new ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+      new ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 }
 
 void AnalysisDriverFixture::TearDownTestCase() {

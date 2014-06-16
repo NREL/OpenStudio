@@ -21,6 +21,7 @@
 #define RADIANCE_FORWARDTRANSLATOR_HPP
 
 #include "RadianceAPI.hpp"
+#include <radiance/WindowGroup.hpp>
 
 #include "../model/Model.hpp"
 #include "../model/Surface.hpp"
@@ -108,6 +109,8 @@ namespace radiance {
       static double PI() { return 3.14159265358979323; }
       openstudio::model::Model m_model;
 
+      void clear();
+
       // create materials library for model, shared for all Spaces
       std::set<std::string> m_radMaterials;
       std::set<std::string> m_radMaterialsDC;
@@ -125,9 +128,13 @@ namespace radiance {
       std::map<std::string, std::string> m_radMaps;
       std::map<std::string, openstudio::Handle> m_radMapHandles;
       std::map<std::string, std::string> m_radViewPoints;
-      std::map<std::string, std::string> m_radApertures;
+      std::map<std::string, std::string> m_radWindowGroups; 
 
-      std::vector<std::string> aperture_headings;
+      // get window group
+      WindowGroup getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
+                                 const boost::optional<model::ShadingControl>& shadingControl,
+                                 const openstudio::Point3dVector& polygon);
+      std::vector<WindowGroup> m_windowGroups;
 
       void siteShadingSurfaceGroups(const openstudio::path &t_radDir, 
           const std::vector<openstudio::model::ShadingSurfaceGroup> &t_radShadingSurfaceGroups,
@@ -146,6 +153,10 @@ namespace radiance {
     REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
 
   };
+
+  std::string formatString(double t_d, unsigned t_prec = 15);
+
+  std::string cleanName(const std::string& name);
 
 } // radiance
 } // openstudio

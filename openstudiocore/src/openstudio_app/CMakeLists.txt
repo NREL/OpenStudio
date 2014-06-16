@@ -55,7 +55,7 @@ if(APPLE)
     PROPERTIES MACOSX_PACKAGE_LOCATION Resources
   )
   set(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
-  set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.openstudio")
+  set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.${CMAKE_VERSION_BUILD}.openstudio")
   set(MACOSX_BUNDLE_BUNDLE_NAME "OpenStudio")
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 endif()
@@ -142,6 +142,10 @@ if(APPLE)
 
   install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
           DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/OSApp
+  )
+
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
+          DESTINATION OpenStudio.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
   )
 elseif(WIN32)
   #list(APPEND DIRS "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Release" "${CMAKE_BINARY_DIR}/Products/OSAppConfigInstall/Debug")
