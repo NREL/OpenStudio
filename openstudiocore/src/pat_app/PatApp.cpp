@@ -71,6 +71,9 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
+#include <utilities/idf/IdfFile.hpp>
+
+#include <OpenStudio.hxx>
 
 #include <boost/filesystem.hpp>
 
@@ -725,6 +728,20 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
 
     // get original number of variables
     int nvars = m_project->analysis().problem().numVariables();
+
+    // check that the version is compatible
+    boost::optional<VersionString> candidate = IdfFile::loadVersionOnly(currentSeedLocation.path());
+    VersionString osVersion(openStudioVersion());
+    if (!candidate){
+      LOG(Error, "Cannot determine OpenStudio version for file at '" << toString(currentSeedLocation.path()) << "'");
+      mainWindow->setEnabled(true);
+      return false;
+    }else if (*candidate > osVersion){
+      LOG(Error, "OpenStudio version for file at '" << toString(currentSeedLocation.path()) << "' is '" << *candidate 
+        << "' which is newer than current Openstudio version '" << osVersion << "'");
+      mainWindow->setEnabled(true);
+      return false;
+    }
 
     // set seed model
     result = m_project->setSeed(currentSeedLocation, processEventsProgressBar);
