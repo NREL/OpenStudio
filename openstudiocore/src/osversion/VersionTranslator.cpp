@@ -63,7 +63,8 @@ namespace openstudio {
 namespace osversion {
 
 VersionTranslator::VersionTranslator()
-  : m_originalVersion("0.0.0")
+  : m_originalVersion("0.0.0"),
+    m_allowNewerVersions(true)
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.osversion\\.VersionTranslator"));
@@ -249,6 +250,16 @@ std::vector< std::pair<IdfObject,IdfObject> > VersionTranslator::refactoredObjec
   return m_refactored;
 }
 
+bool VersionTranslator::allowNewerVersions() const
+{
+  return m_allowNewerVersions;
+}
+
+void VersionTranslator::setAllowNewerVersions(bool allowNewerVersions)
+{
+  m_allowNewerVersions = allowNewerVersions;
+}
+
 boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is, 
                                                                bool isComponent,
                                                                ProgressBar* progressBar) {
@@ -361,18 +372,26 @@ void VersionTranslator::initializeMap(std::istream& is) {
     return;
   }
   if (currentVersion > VersionString(openStudioVersion())) {
-    // if currentVersion is just one ahead, may be a developer using the cloud. 
-    // let it pass as if currentVersion == openStudioVersion(), with a warning
-    if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
-      LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
-          << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
-          << "Proceeding as if these versions are the same. Use with caution.");
-      currentVersion = VersionString(openStudioVersion());
-    }
-    else {
-      // if currentVersion is farther ahead, log error and return nothing
+    if (m_allowNewerVersions){
+      // if currentVersion is just one ahead, may be a developer using the cloud. 
+      // let it pass as if currentVersion == openStudioVersion(), with a warning
+      if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
+        LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
+            << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
+            << "Proceeding as if these versions are the same. Use with caution.");
+        currentVersion = VersionString(openStudioVersion());
+      }
+      else {
+        // if currentVersion is farther ahead, log error and return nothing
+        LOG(Error,"Version extracted from file '" << currentVersion.str()
+            << "' is not supported by OpenStudio Version " << openStudioVersion()
+            << ". Please check http://openstudio.nrel.gov for updates.");
+        return;
+      }
+    }else{
+      // log error and return nothing
       LOG(Error,"Version extracted from file '" << currentVersion.str()
-          << "' is not supported by OpenStudio Version " << openStudioVersion()
+          << "' is newer than current OpenStudio Version " << openStudioVersion()
           << ". Please check http://openstudio.nrel.gov for updates.");
       return;
     }
