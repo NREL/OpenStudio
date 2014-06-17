@@ -27,6 +27,7 @@
 #include <analysis/RubyMeasure.hpp>
 #include <analysis/RubyMeasure.hpp>
 #include <utilities/bcl/BCLMeasure.hpp>
+#include <utilities/core/Logger.hpp>
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer>
@@ -275,6 +276,8 @@ class MeasureItem : public OSListItem
   private:
   BaseApp *m_app;
   analysis::RubyMeasure m_measure;
+
+  REGISTER_LOGGER("openstudio.measuretab.MeasureItem");
 };
 
 class MeasureItemDelegate : public OSItemDelegate

@@ -51,6 +51,10 @@
 #include <analysis/Analysis.hpp>
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/SimpleProject_Impl.hpp>
 
@@ -1287,6 +1291,7 @@ bool PatApp::openFile(const QString& fileName)
       } else {
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
+
       openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
       osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
       if (boost::filesystem::exists(osmForThisOsp)) {
@@ -1296,6 +1301,33 @@ bool PatApp::openFile(const QString& fileName)
                              toQString(osmForThisOsp) + 
                              QString("'. For best results, 'Save as ...' this project elsewhere before continuing your work."));
       }
+
+      // check that all Ruby scripts exist, duplicates code in OSDocument::OSDocument
+      std::stringstream ss;
+      BOOST_FOREACH(const analysis::InputVariable& inputVariable, project->analysis().problem().variables()){
+        boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
+        if (measureGroup){
+          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+            boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
+            if (rubyMeasure){
+              boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
+              if (!bclMeasure){
+                ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
+              }
+            }
+          }
+        }
+      }
+      if (ss.str().size() > 0){
+        ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
+        LOG(Warn,ss.str());
+        // DLM: which dialog should be parent?
+        QMessageBox::warning(0, 
+                             QString("Error opening measure and run data."),
+                             toQString(ss.str()),
+                             QMessageBox::Ok);
+      }
+
       return true;
     } else {
       //if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
