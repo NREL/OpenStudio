@@ -953,9 +953,12 @@ void OpenStudioApp::revertToSaved()
   if(!testFile.exists()) return;
 
   QMessageBox::StandardButton reply;
-  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert your file?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
   if (reply == QMessageBox::Yes) 
   {
+    // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
+    this->currentDocument()->markAsUnmodified();
+
     openFile(fileName);
   }
 
