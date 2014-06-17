@@ -419,15 +419,12 @@ model::Model OSDocument::model()
 
 void OSDocument::setModel(const model::Model& model, bool modified)
 {
-  WaitDialog waitDialog("Loading Model","Loading Model");
-  waitDialog.open();
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->processEvents();  
-
   bool isConnected = false;
 
   bool wasVisible = m_mainWindow->isVisible();
   m_mainWindow->setVisible(false);
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->waitDialog()->setVisible(true);
 
   bool isIP = m_mainWindow->displayIP();
 
@@ -790,6 +787,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   QTimer::singleShot(0, this, SLOT(initializeModel())); 
 
+  app->waitDialog()->setVisible(false);
   m_mainWindow->setVisible(wasVisible);
 
   if(currentDocument){
@@ -797,6 +795,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   } else {
     QTimer::singleShot(0, this, SLOT(showFirstTab())); 
   }
+
 }
 
 runmanager::RunManager OSDocument::runManager() {

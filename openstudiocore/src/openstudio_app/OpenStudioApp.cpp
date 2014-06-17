@@ -237,16 +237,13 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   //
   //*************************************************************************************
-
 }
 
 bool OpenStudioApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
   { 
-    WaitDialog waitDialog("Loading Model","Loading Model");
-    waitDialog.open();
-    processEvents();  
+    waitDialog()->setVisible(true);
 
     osversion::VersionTranslator versionTranslator;
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
@@ -295,6 +292,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
 
       versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
     }
+    waitDialog()->setVisible(false);
   }
   return false;
 }
