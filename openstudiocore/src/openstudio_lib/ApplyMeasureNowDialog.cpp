@@ -728,6 +728,8 @@ void ApplyMeasureNowDialog::on_backButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
+    this->okButton()->setEnabled(true);
+    this->okButton()->setText(APPLY_MEASURE);
     this->backButton()->setEnabled(false);
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
