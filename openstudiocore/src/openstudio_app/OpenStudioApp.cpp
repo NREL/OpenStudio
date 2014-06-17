@@ -945,5 +945,14 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
   }
 }
 
-} // openstudio
+void OpenStudioApp::revertToSaved()
+{
+  QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
 
+  QFile testFile(fileName);
+  if(!testFile.exists()) return;
+
+  openFile(fileName);
+}
+
+} // openstudio
