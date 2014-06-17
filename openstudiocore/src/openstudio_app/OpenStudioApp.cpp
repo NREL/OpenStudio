@@ -952,7 +952,13 @@ void OpenStudioApp::revertToSaved()
   QFile testFile(fileName);
   if(!testFile.exists()) return;
 
-  openFile(fileName);
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert your file?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+  if (reply == QMessageBox::Yes) 
+  {
+    openFile(fileName);
+  }
+
 }
 
 } // openstudio
