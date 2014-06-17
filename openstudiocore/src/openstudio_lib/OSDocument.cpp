@@ -327,7 +327,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
   OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), this, SLOT(revert()));
+  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
   OS_ASSERT(isConnected);
@@ -1125,22 +1125,6 @@ bool OSDocument::save()
   m_mainWindow->enableRevertToSavedAction(true);
 
   return fileSaved;
-}
-
-void OSDocument::revert()
-{
-  openstudio::path windowFilePath = openstudio::toPath(this->mainWindow()->windowFilePath());
-  osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> temp = modelFromOSM(windowFilePath, versionTranslator);
-
-  if(temp){
-    model::Model model = temp.get();
-    setModel(model, true);
-    QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
-  } else {
-    openstudio::OSAppBase * app = OSAppBase::instance(); 
-    QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
-  }
 }
 
 void OSDocument::scanForTools()

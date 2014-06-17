@@ -122,6 +122,8 @@ class OpenStudioApp : public OSAppBase
 
   virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
 
+  void revertToSaved();
+
  private slots:
 
   void newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum );
