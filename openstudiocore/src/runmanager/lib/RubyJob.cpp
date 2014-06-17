@@ -402,6 +402,12 @@ namespace detail {
       return results;
     }
 
+    // if this job is waiting for parents to run then it will not have any results
+    //if (this->outOfDate() && !this->runnable()){
+//    if (this->treeStatus() == TreeStatusEnum::Waiting){
+//      return results;
+//    }
+    
     Files outputFiles = this->outputFiles();
 
     // search for stderr file in case of failure
