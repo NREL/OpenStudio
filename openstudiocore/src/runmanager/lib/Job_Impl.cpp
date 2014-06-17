@@ -1550,11 +1550,18 @@ namespace detail {
     else {
       temp = errors();
     }
+
+    // it's possible there are no mergedjobresults available yet, but this is a mergedjob
+    if (!temp)
+    {
+      temp = JobErrors();
+      temp->result = ruleset::OSResultValue::Success; // assume we succeeded until we failed
+    }
+
     JobErrors err = *temp;
 
     QReadLocker l(&m_mutex);
 
-    //err.result = ruleset::OSResultValue::Success; // assume we succeeded until we failed
 
     for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = m_children.begin();
         itr != m_children.end();

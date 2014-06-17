@@ -403,21 +403,20 @@ namespace detail {
     }
 
     // if this job is waiting for parents to run then it will not have any results
-    //if (this->outOfDate() && !this->runnable()){
-//    if (this->treeStatus() == TreeStatusEnum::Waiting){
-//      return results;
-//    }
-    
-    Files outputFiles = this->outputFiles();
+    if (treeStatus() == TreeStatusEnum::Waiting){
+      return results;
+    }
+
+    Files oFiles = outputFiles();
 
     // search for stderr file in case of failure
     boost::optional<FileInfo> stderrFile;
     try { 
-      stderrFile = outputFiles.getLastByFilename("stderr"); 
+      stderrFile = oFiles.getLastByFilename("stderr"); 
     } catch (...) {
     }
 
-    std::vector<FileInfo> files = outputFiles.files();
+    std::vector<FileInfo> files = oFiles.files();
 
     // loop over all merged jobs
     bool errorAssigned = false;
@@ -478,7 +477,7 @@ namespace detail {
         if (!errorAssigned){
 
           // look through all JobErrors from all the merged jobs
-          JobErrors thisErrors = this->errors();
+          JobErrors thisErrors = errors();
           for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = thisErrors.allErrors.begin();
                itr != thisErrors.allErrors.end();
                ++itr)
@@ -498,7 +497,7 @@ namespace detail {
             }
             jobfiles.append(*stderrFile);
           }else{
-            e.addError(ErrorType::Error, "Merged job failed but cannot find stderr file, check " + toString(this->outdir(false)) + " for output.");
+            e.addError(ErrorType::Error, "Merged job failed but cannot find stderr file, check " + toString(outdir(false)) + " for output.");
           }
 
           errorAssigned = true;
