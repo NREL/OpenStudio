@@ -1554,8 +1554,7 @@ namespace detail {
     // it's possible there are no mergedjobresults available yet, but this is a mergedjob
     if (!temp)
     {
-      temp = JobErrors();
-      temp->result = ruleset::OSResultValue::Success; // assume we succeeded until we failed
+      temp = errors();
     }
 
     JobErrors err = *temp;
