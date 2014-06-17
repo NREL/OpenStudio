@@ -54,6 +54,8 @@
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/SimpleProject_Impl.hpp>
 
+#include <project/ProjectDatabase.hpp>
+
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/RunManager.hpp>
 
@@ -71,6 +73,8 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
+
+#include <OpenStudio.hxx>
 
 #include <boost/filesystem.hpp>
 
@@ -1278,6 +1282,21 @@ bool PatApp::openFile(const QString& fileName)
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){
       OS_ASSERT(project->isPATProject());
+
+      project::ProjectDatabase projectDatabase = project->projectDatabase();
+      openstudio::VersionString projectVersion(projectDatabase.version());
+      openstudio::VersionString currentOSVersion(openStudioVersion());
+      if (projectVersion > currentOSVersion){
+        std::stringstream ss;
+        ss << "Unable to open project at '" << toString(projectDir) << "'." << std::endl;
+        ss << "Project has version of '" << projectVersion << "' which is newer than current OpenStudio version '" << currentOSVersion << "'.";
+        QMessageBox::warning(mainWindow,
+                             "Error Opening Project",
+                             QString(ss.str().c_str()));
+        showStartupView();
+        return false;
+      }
+
       attachProject(project);
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
