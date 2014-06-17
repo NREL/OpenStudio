@@ -38,6 +38,7 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+class QPushButton;
 class QStackedWidget;
 class QTextEdit;
 class QTimer;
@@ -91,6 +92,10 @@ private slots:
 
   void requestReload();
 
+  void showStdError();
+
+  void showStdOut();
+
 signals:
 
   void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
@@ -142,6 +147,14 @@ private:
   QLabel * m_jobPath;
 
   bool m_stopRequested;
+
+  QPushButton * m_showStdError;
+
+  QPushButton * m_showStdOut;
+
+  QString m_StdError;
+
+  QString m_StdOut;
 
 };
 

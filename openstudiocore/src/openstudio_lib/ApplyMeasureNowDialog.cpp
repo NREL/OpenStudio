@@ -76,7 +76,11 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_argumentsFailedTextEdit(0),
   m_jobItemView(0),
   m_timer(0),
-  m_stopRequested(false)
+  m_stopRequested(false),
+  m_showStdError(0),
+  m_showStdOut(0),
+  m_StdError(QString()),
+  m_StdOut(QString())
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -175,6 +179,22 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
+  m_showStdError = new QPushButton("Show StdError Messages"); 
+  isConnected = connect(m_showStdError,SIGNAL(clicked(bool)),this,SLOT(showStdError()));
+  OS_ASSERT(isConnected);
+
+  m_showStdOut = new QPushButton("Show StdOut Messages");
+  isConnected = connect(m_showStdOut,SIGNAL(clicked(bool)),this,SLOT(showStdOut()));
+  OS_ASSERT(isConnected);
+
+  QHBoxLayout * hLayout = new QHBoxLayout();
+  hLayout->addStretch();
+  hLayout->addWidget(m_showStdError);
+  hLayout->addStretch();
+  hLayout->addWidget(m_showStdOut);
+  hLayout->addStretch();
+  layout->addLayout(hLayout);
+
   layout->addStretch();
 
   widget = new QWidget();
@@ -271,8 +291,7 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
     bool isConnected = false;
-    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),
-      this,SLOT(disableOkButton(bool)));
+    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),this,SLOT(disableOkButton(bool)));
     OS_ASSERT(isConnected);
 
     bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
@@ -423,6 +442,9 @@ void ApplyMeasureNowDialog::displayResults()
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
+  m_showStdError->setEnabled(false);
+  m_showStdOut->setEnabled(false);
+
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
@@ -431,6 +453,41 @@ void ApplyMeasureNowDialog::displayResults()
   if(jobErrors.errors().size()){
     this->okButton()->setDisabled(true);
   }
+
+  m_StdError.clear();
+  if(!jobErrors.succeeded()){
+    try{
+      runmanager::Files files(m_job->outputFiles());
+      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+      ifs.close();
+      if (!stdMessage.empty()){
+        m_showStdError->setEnabled(true);
+        m_StdError = stdMessage.c_str();
+      }
+    }catch(std::exception&){
+      m_showStdError->setEnabled(false);
+    }
+  }
+
+  m_StdOut.clear();
+  if(!jobErrors.succeeded()){
+    try{
+      runmanager::Files files(m_job->outputFiles());
+      openstudio::path stdErrPath = files.getLastByFilename("stdout").fullPath;
+      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+      ifs.close();
+      if (!stdMessage.empty()){
+        m_showStdOut->setEnabled(true);
+        m_StdOut = stdMessage.c_str();
+      }
+    }catch(std::exception&){
+      m_showStdOut->setEnabled(false);
+    }
+  }
+  
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -770,6 +827,22 @@ void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 void ApplyMeasureNowDialog::disableOkButton(bool disable)
 {
   this->okButton()->setDisabled(disable);
+}
+
+void ApplyMeasureNowDialog::showStdError()
+{
+  if(m_StdError.count() == 0){
+    m_StdError = "No StdError messages.";
+  }
+  QMessageBox::information(this, QString("StdError Messages"), m_StdError);
+}
+
+void ApplyMeasureNowDialog::showStdOut()
+{
+  if(m_StdOut.count() == 0){
+    m_StdOut = "No StdOut messages.";
+  }
+  QMessageBox::information(this, QString("StdOut Messages"), m_StdOut);
 }
 
 } // openstudio
