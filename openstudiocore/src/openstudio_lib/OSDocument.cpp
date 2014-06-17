@@ -343,8 +343,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
   OS_ASSERT(isConnected);
-  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),m_mainWindow,SIGNAL(enableRevertToSaved(bool)));
-  OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
   OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
@@ -794,8 +792,6 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   m_mainWindow->setVisible(wasVisible);
 
-  m_mainWindow->enableRevertToSavedAction(true);
-
   if(currentDocument){
     app->currentDocument()->showTab(startTabIndex);
   } else {
@@ -810,11 +806,20 @@ runmanager::RunManager OSDocument::runManager() {
 void OSDocument::markAsModified()
 {
   m_mainWindow->setWindowModified(true);
+
+  QString fileName = this->mainWindow()->windowFilePath();
+
+  QFile testFile(fileName);
+  if(!testFile.exists()) return;
+
+  m_mainWindow->enableRevertToSavedAction(true);
 }
 
 void OSDocument::markAsUnmodified()
 {
   m_mainWindow->setWindowModified(false);
+
+  m_mainWindow->enableRevertToSavedAction(false);
 }
 
 void OSDocument::runComplete()
@@ -1122,7 +1127,6 @@ bool OSDocument::save()
   }else{
     fileSaved = saveAs();
   }
-  m_mainWindow->enableRevertToSavedAction(true);
 
   return fileSaved;
 }

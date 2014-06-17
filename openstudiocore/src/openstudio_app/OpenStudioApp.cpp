@@ -195,9 +195,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
       connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
 
-      bool isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),m_osDocument.get(),SIGNAL(enableRevertToSaved(bool)));
-      OS_ASSERT(isConnected);
-
       if(args.size() == 2){
         // check for 'noSavePath'
         if (args.at(1) == QString("noSavePath")){
@@ -291,8 +288,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
       versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
 
       this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
-
-      emit enableRevertToSaved(true);
 
       return true;
     }else{

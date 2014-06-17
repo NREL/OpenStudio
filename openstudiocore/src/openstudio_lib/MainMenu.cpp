@@ -242,21 +242,7 @@ void MainMenu::displayIPUnitsClicked()
 
 void MainMenu::enableRevertToSavedAction(bool enable)
 {
-  openstudio::OSAppBase * app = OSAppBase::instance();
-
-  boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
-  
-  if(currentDocument == 0) return;
-
-  openstudio::path outDir = openstudio::toPath(currentDocument->modelTempDir());
-  openstudio::path modelPath = outDir / openstudio::toPath("in.osm");
-
-  openstudio::osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> temp = modelFromOSM(modelPath, versionTranslator);
-
-  if(temp){
-    m_revertToSavedAction->setEnabled(enable);
-  }
+  m_revertToSavedAction->setEnabled(enable);
 }
 
 } // openstudio

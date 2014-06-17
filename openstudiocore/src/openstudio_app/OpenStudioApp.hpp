@@ -98,8 +98,6 @@ class OpenStudioApp : public OSAppBase
 
  signals:
 
-  void enableRevertToSaved(bool enable);
-
  public slots:
   
   void quit();
