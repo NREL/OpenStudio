@@ -85,17 +85,17 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   action = new QAction(tr("IDF"), this);
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("gbXML"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importgbXMLClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importgbXMLClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("SDD"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   QMenu * exportMenu = m_fileMenu->addMenu(tr("Export"));
