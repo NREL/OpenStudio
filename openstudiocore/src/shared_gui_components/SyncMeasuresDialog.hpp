@@ -61,8 +61,8 @@ private:
   QScrollArea * m_rightScrollArea;
   Component * m_expandedComponent;
   std::vector<BCLMeasure> m_measuresNeedingUpdates;
-  analysisdriver::SimpleProject * m_project;
-  MeasureManager * m_measureManager;
+  analysisdriver::SimpleProject * m_project; // DLM: why is this a raw pointer?
+  MeasureManager * m_measureManager; // DLM: why is this a raw pointer?
 
 private slots:
   void on_componentClicked(bool checked);
