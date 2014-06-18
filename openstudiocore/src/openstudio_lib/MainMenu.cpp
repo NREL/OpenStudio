@@ -170,7 +170,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("Change BCL Login Information"),this);
-  m_preferencesMenu->addAction(action);
+  //m_preferencesMenu->addAction(action);
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(changeBclLogin()));
   OS_ASSERT(isConnected);
 
@@ -196,12 +196,12 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(applyMeasureClicked()));
   OS_ASSERT(isConnected);
 
-  action = new QAction(tr("Download Measures"),this);
+  action = new QAction(tr("Find Measures"),this);
   m_measureMenu->addAction(action);
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadMeasuresClicked()));
   OS_ASSERT(isConnected);
 
-  action = new QAction(tr("Download Components"),this);
+  action = new QAction(tr("Find Components"),this);
   m_measureMenu->addAction(action); 
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
