@@ -81,8 +81,6 @@
 
 #include <OpenStudio.hxx>
 
-#include <OpenStudio.hxx>
-
 #include <boost/filesystem.hpp>
 
 #include <QAbstractButton>
