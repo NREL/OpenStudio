@@ -68,9 +68,11 @@ public:
 
   QSize sizeHint() const;
 
-  void displayMeasure();  
-  
+  void displayMeasure();
+
   QSharedPointer<EditController> m_editController;
+
+  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
 protected slots:
 
@@ -121,8 +123,6 @@ private:
   boost::optional<model::Model> m_model;
 
   boost::optional<openstudio::path> m_reloadPath;
-
-  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
   QStackedWidget * m_mainPaneStackedWidget;
 
