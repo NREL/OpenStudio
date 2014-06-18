@@ -114,6 +114,8 @@ private:
 
   void searchForExistingResults(const openstudio::path &t_runDir);
 
+  void removeWorkingDir();
+
   boost::optional<BCLMeasure> m_bclMeasure;
 
   QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
@@ -155,6 +157,8 @@ private:
   QString m_stdError;
 
   QString m_stdOut;
+
+  openstudio::path m_workingDir;
 
 };
 
