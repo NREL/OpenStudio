@@ -38,6 +38,7 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+class QPushButton;
 class QStackedWidget;
 class QTextEdit;
 class QTimer;
@@ -75,6 +76,8 @@ protected slots:
 
   virtual void on_cancelButton(bool checked);
 
+  virtual void on_backButton(bool checked);
+
   virtual void on_okButton(bool checked);
 
 protected:
@@ -88,6 +91,10 @@ private slots:
   void runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus);
 
   void requestReload();
+
+  void showStdError();
+
+  void showStdOut();
 
 signals:
 
@@ -138,6 +145,16 @@ private:
   int m_argumentsOkPageIdx;
 
   QLabel * m_jobPath;
+
+  bool m_stopRequested;
+
+  QPushButton * m_showStdError;
+
+  QPushButton * m_showStdOut;
+
+  QString m_StdError;
+
+  QString m_StdOut;
 
 };
 

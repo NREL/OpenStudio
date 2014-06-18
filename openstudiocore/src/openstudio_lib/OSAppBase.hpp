@@ -35,6 +35,8 @@ namespace openstudio {
 
 class OSDocument;
 
+class WaitDialog;
+
 class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 {
 
@@ -63,6 +65,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   virtual void openBclDlg();
   virtual void chooseHorizontalEditTab();
   virtual QSharedPointer<openstudio::EditController> editController();
+  boost::shared_ptr<WaitDialog> waitDialog() {return m_waitDialog;}
 
   public slots:
 
@@ -73,6 +76,8 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
   REGISTER_LOGGER("openstudio.OSAppBase");
 
   QSharedPointer<openstudio::MeasureManager> m_measureManager;
+
+  boost::shared_ptr<WaitDialog> m_waitDialog;
 };
 
 } // openstudio

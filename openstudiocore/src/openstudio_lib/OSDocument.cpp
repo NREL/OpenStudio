@@ -358,7 +358,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(saveFileClicked()), this, SLOT(save()));
   OS_ASSERT(isConnected);
-  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), this, SLOT(revert()));
+  isConnected = connect(m_mainWindow, SIGNAL(revertFileClicked()), OSAppBase::instance(), SLOT(revertToSaved()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(scanForToolsClicked()), this, SLOT(scanForTools()));
   OS_ASSERT(isConnected);
@@ -373,8 +373,6 @@ OSDocument::OSDocument( openstudio::model::Model library,
   isConnected = connect(m_mainWindow, SIGNAL(changeMyMeasuresDir()), this, SLOT(openChangeMeasuresDirDlg()));
   OS_ASSERT(isConnected);
   isConnected = connect(m_mainWindow, SIGNAL(changeBclLogin()), this, SLOT(changeBclLogin()));
-  OS_ASSERT(isConnected);
-  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),m_mainWindow,SIGNAL(enableRevertToSaved(bool)));
   OS_ASSERT(isConnected);
   isConnected = QObject::connect(this, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
   OS_ASSERT(isConnected);
@@ -452,15 +450,12 @@ model::Model OSDocument::model()
 
 void OSDocument::setModel(const model::Model& model, bool modified)
 {
-  WaitDialog waitDialog("Loading Model","Loading Model");
-  waitDialog.open();
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->processEvents();  
-
   bool isConnected = false;
 
   bool wasVisible = m_mainWindow->isVisible();
   m_mainWindow->setVisible(false);
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->waitDialog()->setVisible(true);
 
   bool isIP = m_mainWindow->displayIP();
 
@@ -823,15 +818,15 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   QTimer::singleShot(0, this, SLOT(initializeModel())); 
 
+  app->waitDialog()->setVisible(false);
   m_mainWindow->setVisible(wasVisible);
-
-  m_mainWindow->enableRevertToSavedAction(true);
 
   if(currentDocument){
     app->currentDocument()->showTab(startTabIndex);
   } else {
     QTimer::singleShot(0, this, SLOT(showFirstTab())); 
   }
+
 }
 
 runmanager::RunManager OSDocument::runManager() {
@@ -841,11 +836,20 @@ runmanager::RunManager OSDocument::runManager() {
 void OSDocument::markAsModified()
 {
   m_mainWindow->setWindowModified(true);
+
+  QString fileName = this->mainWindow()->windowFilePath();
+
+  QFile testFile(fileName);
+  if(!testFile.exists()) return;
+
+  m_mainWindow->enableRevertToSavedAction(true);
 }
 
 void OSDocument::markAsUnmodified()
 {
   m_mainWindow->setWindowModified(false);
+
+  m_mainWindow->enableRevertToSavedAction(false);
 }
 
 void OSDocument::runComplete()
@@ -1153,27 +1157,8 @@ bool OSDocument::save()
   }else{
     fileSaved = saveAs();
   }
-  m_mainWindow->enableRevertToSavedAction(true);
 
   return fileSaved;
-}
-
-void OSDocument::revert()
-{
-  openstudio::OSAppBase * app = OSAppBase::instance(); 
-  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir());
-  openstudio::path modelPath = outDir / openstudio::toPath("in.osm");
-
-  osversion::VersionTranslator versionTranslator;
-  boost::optional<openstudio::model::Model> temp = modelFromOSM(modelPath, versionTranslator);
-
-  if(temp){
-    model::Model model = temp.get();
-    setModel(model, true);
-    QTimer::singleShot(0, app->currentDocument().get(), SLOT(markAsUnmodified()));
-  } else {
-    QMessageBox::information(app->mainWidget(), QString("Unable to revert model"), QString("No model to revert to."));
-  }
 }
 
 void OSDocument::scanForTools()

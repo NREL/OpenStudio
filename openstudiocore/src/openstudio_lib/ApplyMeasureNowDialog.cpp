@@ -75,7 +75,12 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_rightPaneStackedWidget(0),
   m_argumentsFailedTextEdit(0),
   m_jobItemView(0),
-  m_timer(0)
+  m_timer(0),
+  m_stopRequested(false),
+  m_showStdError(0),
+  m_showStdOut(0),
+  m_StdError(QString()),
+  m_StdOut(QString())
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -174,6 +179,22 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
+  m_showStdError = new QPushButton("Show StdError Messages"); 
+  isConnected = connect(m_showStdError,SIGNAL(clicked(bool)),this,SLOT(showStdError()));
+  OS_ASSERT(isConnected);
+
+  m_showStdOut = new QPushButton("Show StdOut Messages");
+  isConnected = connect(m_showStdOut,SIGNAL(clicked(bool)),this,SLOT(showStdOut()));
+  OS_ASSERT(isConnected);
+
+  QHBoxLayout * hLayout = new QHBoxLayout();
+  hLayout->addStretch();
+  hLayout->addWidget(m_showStdError);
+  hLayout->addStretch();
+  hLayout->addWidget(m_showStdOut);
+  hLayout->addStretch();
+  layout->addLayout(hLayout);
+
   layout->addStretch();
 
   widget = new QWidget();
@@ -196,6 +217,9 @@ void ApplyMeasureNowDialog::createWidgets()
   this->okButton()->setText(APPLY_MEASURE);
   this->okButton()->setEnabled(false);
 
+  this->backButton()->show();
+  this->backButton()->setEnabled(false);
+
   // OS SETTINGS
 
   #ifdef Q_OS_MAC
@@ -210,6 +234,7 @@ void ApplyMeasureNowDialog::displayMeasure()
   this->okButton()->setText(APPLY_MEASURE);
   this->okButton()->show();
   this->okButton()->setEnabled(false);
+
   m_rightPaneStackedWidget->setCurrentIndex(m_argumentsOkPageIdx);
 
   m_bclMeasure.reset();
@@ -266,12 +291,14 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_currentMeasureItem = QSharedPointer<measuretab::MeasureItem>(new measuretab::MeasureItem(rubyMeasure, app));
 
     bool isConnected = false;
-    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),
-      this,SLOT(disableOkButton(bool)));
+    isConnected = connect(m_currentMeasureItem.data(),SIGNAL(argumentsChanged(bool)),this,SLOT(disableOkButton(bool)));
     OS_ASSERT(isConnected);
 
     bool hasIncompleteArguments = m_currentMeasureItem->hasIncompleteArguments();
     disableOkButton(hasIncompleteArguments);
+
+    m_currentMeasureItem->setName(m_bclMeasure->name().c_str());
+    m_currentMeasureItem->setDescription(m_bclMeasure->description().c_str());
 
     // DLM: this is ok, call with overload to ignore isItOKToClearResults
     m_editController->setMeasureItem(m_currentMeasureItem.data(), app);
@@ -316,6 +343,7 @@ void ApplyMeasureNowDialog::runMeasure()
       m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
       m_timer->stop();
       this->okButton()->hide();
+      this->backButton()->hide();
 
       return;
     }
@@ -324,6 +352,7 @@ void ApplyMeasureNowDialog::runMeasure()
   m_mainPaneStackedWidget->setCurrentIndex(m_runningPageIdx);
   m_timer->start(50);
   this->okButton()->hide();
+  this->backButton()->hide();
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -384,6 +413,11 @@ void ApplyMeasureNowDialog::runMeasure()
 void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
 {
   if(advancedStatus.value() == runmanager::AdvancedStatusEnum::Idle){
+    if(m_stopRequested == true){
+      m_stopRequested = false;
+      this->okButton()->setDisabled(true);
+    }
+    this->backButton()->setEnabled(true);
     displayResults();
   }
 }
@@ -406,6 +440,11 @@ void ApplyMeasureNowDialog::displayResults()
   }else{
     this->okButton()->setEnabled(false);
   }
+  this->backButton()->show();
+  this->backButton()->setEnabled(true);
+  m_showStdError->setEnabled(false);
+  m_showStdOut->setEnabled(false);
+
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
   m_jobItemView->update(rubyMeasure, *m_bclMeasure, jobErrors, *m_job);
@@ -414,6 +453,41 @@ void ApplyMeasureNowDialog::displayResults()
   if(jobErrors.errors().size()){
     this->okButton()->setDisabled(true);
   }
+
+  m_StdError.clear();
+  if(!jobErrors.succeeded()){
+    try{
+      runmanager::Files files(m_job->outputFiles());
+      openstudio::path stdErrPath = files.getLastByFilename("stderr").fullPath;
+      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+      ifs.close();
+      if (!stdMessage.empty()){
+        m_showStdError->setEnabled(true);
+        m_StdError = stdMessage.c_str();
+      }
+    }catch(std::exception&){
+      m_showStdError->setEnabled(false);
+    }
+  }
+
+  m_StdOut.clear();
+  if(!jobErrors.succeeded()){
+    try{
+      runmanager::Files files(m_job->outputFiles());
+      openstudio::path stdErrPath = files.getLastByFilename("stdout").fullPath;
+      std::ifstream ifs(toString(stdErrPath).c_str());
+      std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+      ifs.close();
+      if (!stdMessage.empty()){
+        m_showStdOut->setEnabled(true);
+        m_StdOut = stdMessage.c_str();
+      }
+    }catch(std::exception&){
+      m_showStdOut->setEnabled(false);
+    }
+  }
+  
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -683,9 +757,16 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
     // Nothing specific here
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    if(m_job){
+      m_job->requestStop();
+      m_stopRequested = true;
+      this->okButton()->setDisabled(true);
+      return;
+    }
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
     m_timer->stop();
     this->okButton()->show();
+    this->backButton()->show();
     return;
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
@@ -695,6 +776,20 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   OSDialog::on_cancelButton(checked);
+}
+
+void ApplyMeasureNowDialog::on_backButton(bool checked)
+{
+  if(m_mainPaneStackedWidget->currentIndex() == m_inputPageIdx){
+    // Nothing specific here
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
+    // Nothing specific here
+  } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
+    this->okButton()->setEnabled(true);
+    this->okButton()->setText(APPLY_MEASURE);
+    this->backButton()->setEnabled(false);
+    m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
+  }
 }
 
 void ApplyMeasureNowDialog::on_okButton(bool checked)
@@ -732,6 +827,22 @@ void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 void ApplyMeasureNowDialog::disableOkButton(bool disable)
 {
   this->okButton()->setDisabled(disable);
+}
+
+void ApplyMeasureNowDialog::showStdError()
+{
+  if(m_StdError.count() == 0){
+    m_StdError = "No StdError messages.";
+  }
+  QMessageBox::information(this, QString("StdError Messages"), m_StdError);
+}
+
+void ApplyMeasureNowDialog::showStdOut()
+{
+  if(m_StdOut.count() == 0){
+    m_StdOut = "No StdOut messages.";
+  }
+  QMessageBox::information(this, QString("StdOut Messages"), m_StdOut);
 }
 
 } // openstudio

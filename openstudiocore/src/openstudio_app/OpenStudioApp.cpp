@@ -198,9 +198,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
       connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
 
-      bool isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),m_osDocument.get(),SIGNAL(enableRevertToSaved(bool)));
-      OS_ASSERT(isConnected);
-
       if(args.size() == 2){
         // check for 'noSavePath'
         if (args.at(1) == QString("noSavePath")){
@@ -243,16 +240,13 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   //
   //*************************************************************************************
-
 }
 
 bool OpenStudioApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
   { 
-    WaitDialog waitDialog("Loading Model","Loading Model");
-    waitDialog.open();
-    processEvents();  
+    waitDialog()->setVisible(true);
 
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
@@ -297,14 +291,13 @@ bool OpenStudioApp::openFile(const QString& fileName)
 
       this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
 
-      emit enableRevertToSaved(true);
-
       return true;
     }else{
       LOG_FREE(Warn, "OpenStudio", "Could not open file at " << toString(fileName));
 
       versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
     }
+    waitDialog()->setVisible(false);
   }
   return false;
 }
@@ -953,5 +946,23 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
   }
 }
 
-} // openstudio
+void OpenStudioApp::revertToSaved()
+{
+  QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
 
+  QFile testFile(fileName);
+  if(!testFile.exists()) return;
+
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+  if (reply == QMessageBox::Yes) 
+  {
+    // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
+    this->currentDocument()->markAsUnmodified();
+
+    openFile(fileName);
+  }
+
+}
+
+} // openstudio

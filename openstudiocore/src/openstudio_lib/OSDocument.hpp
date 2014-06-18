@@ -256,8 +256,6 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   // returns if a file was saved
   bool saveAs();
 
-  void revert();
-
   void showRunManagerPreferences();
 
   void scanForTools();

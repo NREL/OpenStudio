@@ -98,8 +98,6 @@ class OpenStudioApp : public OSAppBase
 
  signals:
 
-  void enableRevertToSaved(bool enable);
-
  public slots:
   
   void quit();
@@ -121,6 +119,8 @@ class OpenStudioApp : public OSAppBase
   void showAbout();
 
   virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
+
+  void revertToSaved();
 
  private slots:
 

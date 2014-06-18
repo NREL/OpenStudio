@@ -107,6 +107,8 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   if(applyMeasureNow){
     nameLineEdit->setReadOnly(true);
     descriptionTextEdit->setReadOnly(true);
+    nameLineEdit->setDisabled(true);
+    descriptionTextEdit->setDisabled(true);
   }
 }
 
