@@ -261,6 +261,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
       }
 
       waitDialog()->setVisible(true);
+      processEvents();
 
       m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 

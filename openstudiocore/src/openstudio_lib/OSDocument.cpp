@@ -425,6 +425,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_mainWindow->setVisible(false);
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->waitDialog()->setVisible(true);
+  app->processEvents();
 
   bool isIP = m_mainWindow->displayIP();
 
