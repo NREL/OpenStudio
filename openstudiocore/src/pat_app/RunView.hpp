@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNVIEW_H
-#define OPENSTUDIO_RUNVIEW_H
+#ifndef PATAPP_RUNVIEW_HPP
+#define PATAPP_RUNVIEW_HPP
 
-#include <pat_app/PatMainTabView.hpp>
+#include "PatMainTabView.hpp"
 #include "PatConstants.hpp"
 
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Problem.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "../analysisdriver/AnalysisDriverEnums.hpp"
 
 #include <boost/optional.hpp>
 
@@ -325,7 +325,6 @@ public slots:
   void requestUpdate();
 
 private:
-  static std::vector<std::pair<std::string, int> > collateMessages(const std::vector<std::string> &t_messages);
 
   analysis::WorkflowStepJob m_workflowStepJob;
 
@@ -352,4 +351,4 @@ class PatProgressBar : public QProgressBar
 
 } // openstudio
 
-#endif // OPENSTUDIO_RUNVIEW_H
+#endif // PATAPP_RUNVIEW_HPP

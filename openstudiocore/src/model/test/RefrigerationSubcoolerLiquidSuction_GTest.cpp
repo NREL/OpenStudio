@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
+#include "../RefrigerationSubcoolerLiquidSuction.hpp"
+#include "../RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

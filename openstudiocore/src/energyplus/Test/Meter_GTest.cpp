@@ -18,14 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Meter.hpp"
+#include "../../model/Meter_Impl.hpp"
 
 #include <utilities/idd/Output_Meter_FieldEnums.hxx>
 

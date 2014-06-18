@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SERVICEWATERSCENE_H
-#define OPENSTUDIO_SERVICEWATERSCENE_H
+#ifndef OPENSTUDIO_SERVICEWATERSCENE_HPP
+#define OPENSTUDIO_SERVICEWATERSCENE_HPP
 
-#include <openstudio_lib/GridScene.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <model/Model.hpp>
-#include <model/WaterUseConnections.hpp>
+#include "GridScene.hpp"
+#include "OSItem.hpp"
+#include "../model/Model.hpp"
+#include "../model/WaterUseConnections.hpp"
 
 namespace openstudio {
 
@@ -51,9 +51,9 @@ class ServiceWaterScene : public GridScene
 
   private slots:
 
-  void onAddedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
 
-  void onRemovedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
+  void onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
 
   private:
 
@@ -84,9 +84,9 @@ class WaterUseConnectionsDetailScene : public GridScene
 
   private slots:
 
-  void onAddedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
+  void onAddedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wPtr );
 
-  void onRemovedWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
+  void onRemovedWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> );
 
   private:
 
@@ -97,5 +97,5 @@ class WaterUseConnectionsDetailScene : public GridScene
 
 } // openstudio
 
-#endif // OPENSTUDIO_SERVICEWATERSCENE_H
+#endif // OPENSTUDIO_SERVICEWATERSCENE_HPP
 

@@ -20,11 +20,13 @@
 #ifndef MODEL_REFRIGERATIONCASE_HPP
 #define MODEL_REFRIGERATIONCASE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <model/RefrigerationSystem.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "RefrigerationSystem.hpp"
 
 namespace openstudio {
+
+class Time;
 
 namespace model {
 
@@ -59,6 +61,8 @@ class MODEL_API RefrigerationCase : public ParentObject {
   static std::vector<std::string> caseDefrostTypeValues();
 
   static std::vector<std::string> defrostEnergyCorrectionCurveTypeValues();
+
+  static std::vector<std::string> unitTypeValues();
 
   /** @name Getters */
   //@{
@@ -176,6 +180,53 @@ class MODEL_API RefrigerationCase : public ParentObject {
   double averageRefrigerantChargeInventory() const;
 
   bool isAverageRefrigerantChargeInventoryDefaulted() const;
+
+  boost::optional<int> numberOfDoors() const;
+
+  boost::optional<double> ratedTotalCoolingCapacityperDoor() const;
+
+  boost::optional<double> standardCaseFanPowerperDoor() const;
+
+  boost::optional<double> operatingCaseFanPowerperDoor() const;
+
+  boost::optional<double> standardCaseLightingPowerperDoor() const;
+
+  boost::optional<double> installedCaseLightingPowerperDoor() const;
+
+  boost::optional<double> caseAntiSweatHeaterPowerperDoor() const;
+
+  boost::optional<double> minimumAntiSweatHeaterPowerperDoor() const;
+
+  boost::optional<double> caseDefrostPowerperDoor() const;
+
+  /** Read the method for defining loads.
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
+  * from the *perDoor methods.
+  */
+  std::string unitType() const;
+
+  bool isUnitTypeDefaulted() const;
+
+  boost::optional<int> durationofDefrostCycle() const;
+
+  boost::optional<int> dripDownTime() const;
+
+  boost::optional<openstudio::Time> defrost1StartTime() const;
+
+  boost::optional<openstudio::Time> defrost2StartTime() const;
+
+  boost::optional<openstudio::Time> defrost3StartTime() const;
+
+  boost::optional<openstudio::Time> defrost4StartTime() const;
+
+  boost::optional<openstudio::Time> defrost5StartTime() const;
+
+  boost::optional<openstudio::Time> defrost6StartTime() const;
+
+  boost::optional<openstudio::Time> defrost7StartTime() const;
+
+  boost::optional<openstudio::Time> defrost8StartTime() const;
 
   boost::optional<RefrigerationSystem> system() const;
 
@@ -317,6 +368,92 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   void resetAverageRefrigerantChargeInventory();
 
+  bool setNumberOfDoors(int numberOfDoors);
+
+  void resetNumberOfDoors();
+
+  bool setRatedTotalCoolingCapacityperDoor(double ratedTotalCoolingCapacityperDoor);
+
+  void resetRatedTotalCoolingCapacityperDoor();
+
+  bool setStandardCaseFanPowerperDoor(double standardCaseFanPowerperDoor);
+
+  void resetStandardCaseFanPowerperDoor();
+
+  bool setOperatingCaseFanPowerperDoor(double operatingCaseFanPowerperDoor);
+
+  void resetOperatingCaseFanPowerperDoor();
+
+  bool setStandardCaseLightingPowerperDoor(double standardCaseLightingPowerperDoor);
+
+  void resetStandardCaseLightingPowerperDoor();
+
+  bool setInstalledCaseLightingPowerperDoor(double installedCaseLightingPowerperDoor);
+
+  void resetInstalledCaseLightingPowerperDoor();
+
+  bool setCaseAntiSweatHeaterPowerperDoor(double caseAntiSweatHeaterPowerperDoor);
+
+  void resetCaseAntiSweatHeaterPowerperDoor();
+
+  bool setMinimumAntiSweatHeaterPowerperDoor(double minimumAntiSweatHeaterPowerperDoor);
+
+  void resetMinimumAntiSweatHeaterPowerperDoor();
+
+  bool setCaseDefrostPowerperDoor(double caseDefrostPowerperDoor);
+
+  void resetCaseDefrostPowerperDoor();
+
+  /** Set the method for defining loads.
+  * Options are UnitLength and NumberOfDoors.  If UnitLength values will be used 
+  * from the *perUnitLength methods.  If NumberOfDoors, the values will be used
+  * from the *perDoor methods.
+  */
+  bool setUnitType(std::string unitType);
+
+  /** Reset unit type to the default, "UnitLength" **/
+  void resetUnitType();
+
+  bool setDurationofDefrostCycle(int durationofDefrostCycle);
+
+  void resetDurationofDefrostCycle();
+
+  bool setDripDownTime(int dripDownTime);
+
+  void resetDripDownTime();
+
+  bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
+
+  void resetDefrost1StartTime();
+
+  bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
+
+  void resetDefrost2StartTime();
+
+  bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
+
+  void resetDefrost3StartTime();
+
+  bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
+
+  void resetDefrost4StartTime();
+
+  bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
+
+  void resetDefrost5StartTime();
+
+  bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
+
+  void resetDefrost6StartTime();
+
+  bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
+
+  void resetDefrost7StartTime();
+
+  bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
+
+  void resetDefrost8StartTime();
+
   bool addToSystem(RefrigerationSystem & system);
 
   void removeFromSystem();
@@ -330,7 +467,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /// @cond
   typedef detail::RefrigerationCase_Impl ImplType;
 
-  explicit RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl);
+  explicit RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl);
 
   friend class detail::RefrigerationCase_Impl;
   friend class Model;

@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/GumbelDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "GumbelDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 GumbelDistribution::GumbelDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GumbelDistribution::type())))
 {}
 
 GumbelDistribution::GumbelDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(GumbelDistribution::type())))
 {
   setAlpha(alpha);
@@ -65,7 +65,7 @@ void GumbelDistribution::setBeta(double value) {
   impl()->setAttribute(Attribute("betas",value),false);
 }
 
-GumbelDistribution::GumbelDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+GumbelDistribution::GumbelDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == GumbelDistribution::type());

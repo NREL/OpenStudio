@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_H
-#define OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_H
+#ifndef OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_HPP
+#define OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -85,5 +85,5 @@ class SteamEquipmentDefinitionInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_H
+#endif // OPENSTUDIO_STEAMEQUIPMENTINSPECTORVIEW_HPP
 

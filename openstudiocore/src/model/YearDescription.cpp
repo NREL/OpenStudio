@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/ScheduleBase.hpp>
-#include <model/ScheduleBase_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/LightingDesignDay.hpp>
-#include <model/LightingDesignDay_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "RunPeriodControlDaylightSavingTime.hpp"
+#include "RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "RunPeriodControlSpecialDays.hpp"
+#include "RunPeriodControlSpecialDays_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "ScheduleBase.hpp"
+#include "ScheduleBase_Impl.hpp"
+#include "ScheduleRule.hpp"
+#include "ScheduleRule_Impl.hpp"
+#include "LightingDesignDay.hpp"
+#include "LightingDesignDay_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_YearDescription_FieldEnums.hxx>
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -90,7 +90,7 @@ namespace detail {
       result.push_back(*dst);
     }
 
-    for (RunPeriodControlSpecialDays day : model.getModelObjects<RunPeriodControlSpecialDays>()){
+    for (RunPeriodControlSpecialDays day : model.getConcreteModelObjects<RunPeriodControlSpecialDays>()){
       result.push_back(day);
     }
 
@@ -410,7 +410,7 @@ openstudio::Date YearDescription::makeDate(unsigned dayOfYear)
 }
 
 /// @cond
-YearDescription::YearDescription(boost::shared_ptr<detail::YearDescription_Impl> impl)
+YearDescription::YearDescription(std::shared_ptr<detail::YearDescription_Impl> impl)
   : ParentObject(impl)
 {}
 YearDescription::YearDescription(Model& model)

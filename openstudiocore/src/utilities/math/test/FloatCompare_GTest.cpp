@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../FloatCompare.hpp"
 
 #include <iostream>
 

@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Geometry.hpp"
+#include "Intersection.hpp"
+#include "../data/Matrix.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Logger.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
@@ -53,7 +53,7 @@ Ring (having 8 vertices, including closing vertex)
 | +--+
 | | ^this "spike" is removed, can be located outside/inside the ring
 +------+
-(the actualy determination if it is removed is done by a strategy)
+(the actual determination if it is removed is done by a strategy)
 
 */
 
@@ -64,7 +64,7 @@ namespace openstudio {
   {
     // adapted from boost\geometry\algorithms\detail\point_is_spike_or_equal.hpp to include tolerance checking
 
-    // segment_a is at the begining
+    // segment_a is at the beginning
     // segment_b is in the middle
     // last_point is at the end
 
@@ -80,7 +80,7 @@ namespace openstudio {
       diff1_x = diff1_x/norm1;
       diff1_y = diff1_y/norm1;
     }else{
-      // last point is too close to segement b
+      // last point is too close to segment b
       return true;
     }
 
@@ -91,7 +91,7 @@ namespace openstudio {
       diff2_x = diff2_x/norm2;
       diff2_y = diff2_y/norm2;
     }else{
-      // segement b is too close to segement a
+      // segment b is too close to segment a
       return true;
     }
 

@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_ENUMHELPERS_HPP
 #define UTILITIES_CORE_ENUMHELPERS_HPP
 
-#include <utilities/core/Containers.hpp>
+#include "Containers.hpp"
 
 namespace openstudio {
 

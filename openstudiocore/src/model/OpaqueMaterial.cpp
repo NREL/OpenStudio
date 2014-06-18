@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
+#include "OpaqueMaterial.hpp"
+#include "OpaqueMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -148,7 +148,7 @@ boost::optional<double> OpaqueMaterial::heatCapacity() const {
 }
 
 /// @cond
-OpaqueMaterial::OpaqueMaterial(boost::shared_ptr<detail::OpaqueMaterial_Impl> impl)
+OpaqueMaterial::OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl)
   : Material(impl)
 {}
 /// @endcond

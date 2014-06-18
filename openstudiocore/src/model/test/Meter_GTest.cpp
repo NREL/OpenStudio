@@ -19,17 +19,17 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Meter.hpp"
+#include "../Meter_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../../utilities/sql/SqlFileEnums.hpp"
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/core/Compare.hpp"
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>
 
 #include <QThreadPool>

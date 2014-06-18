@@ -17,27 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AlgorithmRecord.hpp>
-#include <project/AlgorithmRecord_Impl.hpp>
+#include "AlgorithmRecord.hpp"
+#include "AlgorithmRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/OpenStudioAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
+#include "ProjectDatabase.hpp"
+#include "AnalysisRecord.hpp"
+#include "OpenStudioAlgorithmRecord.hpp"
+#include "DakotaAlgorithmRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm_Impl.hpp"
+#include "../analysis/DakotaAlgorithm.hpp"
+#include "../analysis/DakotaAlgorithm_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace project {
@@ -238,7 +236,7 @@ namespace detail {
 
 } // detail
 
-AlgorithmRecord::AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl,
+AlgorithmRecord::AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl,
                                  ProjectDatabase database,
                                  const boost::optional<analysis::Algorithm>& algorithm)
 : ObjectRecord(impl, database)
@@ -255,8 +253,8 @@ void AlgorithmRecord::constructRelatedRecords(const analysis::Algorithm& algorit
   AlgorithmRecord copyOfThis(getImpl<detail::AlgorithmRecord_Impl>());
   for (const Attribute& option : options) {
     // find in dbOptions
-    std::vector<Attribute>::iterator dbIt = std::find_if(dbOptions.begin(),dbOptions.end(),
-                                                         boost::bind(uuidsEqual<Attribute,Attribute>,_1,option));
+    auto dbIt = std::find_if(dbOptions.begin(),dbOptions.end(),
+                             std::bind(uuidsEqual<Attribute,Attribute>,std::placeholders::_1,option));
     // if not there, or if different versionUUID, save it
     if ((dbIt == dbOptions.end()) || (option.versionUUID() != dbIt->versionUUID())) {
       AttributeRecord algOptionRecord(option,copyOfThis);
@@ -290,7 +288,7 @@ UpdateByIdQueryData AlgorithmRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -298,7 +296,7 @@ UpdateByIdQueryData AlgorithmRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -312,11 +310,10 @@ UpdateByIdQueryData AlgorithmRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -432,7 +429,7 @@ void AlgorithmRecord::reset() {
 }
 
 /// @cond
-AlgorithmRecord::AlgorithmRecord(boost::shared_ptr<detail::AlgorithmRecord_Impl> impl)
+AlgorithmRecord::AlgorithmRecord(std::shared_ptr<detail::AlgorithmRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

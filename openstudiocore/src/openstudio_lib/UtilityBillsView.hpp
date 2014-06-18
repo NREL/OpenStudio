@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLSTABVIEW_H
-#define OPENSTUDIO_UTILITYBILLSTABVIEW_H
+#ifndef OPENSTUDIO_UTILITYBILLSVIEW_HPP
+#define OPENSTUDIO_UTILITYBILLSVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelSubTabView.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelSubTabView.hpp"
 
-#include <model/Model.hpp>
-#include <model/UtilityBill.hpp>
+#include "../model/Model.hpp"
+#include "../model/UtilityBill.hpp"
 
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/data/DataEnums.hpp"
 
 #include <QWidget>
 
@@ -230,4 +230,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLSTABVIEW_H
+#endif // OPENSTUDIO_UTILITYBILLSVIEW_HPP

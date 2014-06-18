@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/FileReferenceRecord.hpp>
-#include <project/FileReferenceRecord_Impl.hpp>
+#include "FileReferenceRecord.hpp"
+#include "FileReferenceRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/TagRecord.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "JoinRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "TagRecord.hpp"
+#include "AnalysisRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "MeasureRecord.hpp"
+#include "AlgorithmRecord.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace project {
@@ -154,7 +154,7 @@ namespace detail {
     return result;
   }
 
-  void FileReferenceRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) 
+  void FileReferenceRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) 
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FileReferenceRecord>(query);
@@ -407,7 +407,7 @@ namespace detail {
 
 FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference, 
                                          ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(fileReference, database)),
         database)
 {
@@ -416,7 +416,7 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
 
 FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference, 
                                          ObjectRecord& parentRecord)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(fileReference, parentRecord)),
         parentRecord.projectDatabase())
 {
@@ -424,14 +424,14 @@ FileReferenceRecord::FileReferenceRecord(const FileReference& fileReference,
 }
 
 FileReferenceRecord::FileReferenceRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::FileReferenceRecord_Impl>(
         new detail::FileReferenceRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::FileReferenceRecord_Impl>());
 }
 
-FileReferenceRecord::FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl,
+FileReferenceRecord::FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl,
                                          ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -452,7 +452,7 @@ UpdateByIdQueryData FileReferenceRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
+    for (auto it = result.columnValues.begin(), 
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -460,7 +460,7 @@ UpdateByIdQueryData FileReferenceRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -474,11 +474,10 @@ UpdateByIdQueryData FileReferenceRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -626,7 +625,7 @@ boost::optional<TagRecord> FileReferenceRecord::getTagRecord(const std::string& 
 }
 
 /// @cond
-FileReferenceRecord::FileReferenceRecord(boost::shared_ptr<detail::FileReferenceRecord_Impl> impl)
+FileReferenceRecord::FileReferenceRecord(std::shared_ptr<detail::FileReferenceRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

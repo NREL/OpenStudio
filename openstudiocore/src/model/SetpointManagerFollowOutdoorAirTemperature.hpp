@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_HPP
 #define MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -99,7 +99,7 @@ class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public HVACComponen
 
   typedef detail::SetpointManagerFollowOutdoorAirTemperature_Impl ImplType;
 
-  explicit SetpointManagerFollowOutdoorAirTemperature(boost::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
+  explicit SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> impl);
 
   private:
 

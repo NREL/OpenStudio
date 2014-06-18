@@ -20,11 +20,11 @@
 #ifndef UTILITIES_PLOT_PLOT2D_HPP
 #define UTILITIES_PLOT_PLOT2D_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Macro.hpp> 
-#include <utilities/data/TimeSeries.hpp> 
+#include "../core/Path.hpp"
+#include "../core/Macro.hpp"
+#include "../data/TimeSeries.hpp"
 
 #include <QWidget>
 #include <QAction>
@@ -47,7 +47,6 @@
 #include <qwt/qwt_plot_panner.h>
 #include <qwt/qwt_scale_widget.h>
 #include <qwt/qwt_scale_draw.h>
-#include <boost/shared_ptr.hpp>
 #include <qwt/qwt_plot_curve.h>
 
 #include <QApplication>
@@ -252,7 +251,7 @@ public:
 
 protected:
   /// constructor
-  Plot2D(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+  Plot2D(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   QVBoxLayout *m_vBoxLayout;
 

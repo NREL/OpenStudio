@@ -20,7 +20,7 @@
 #ifndef MODEL_SCHEDULE_IMPL_HPP
 #define MODEL_SCHEDULE_IMPL_HPP 
 
-#include <model/ScheduleBase_Impl.hpp>
+#include "ScheduleBase_Impl.hpp"
 
 #include <QObject>
 

@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/SectionHeading.hpp>
-#include <utilities/document/SectionHeading_Impl.hpp>
+#include "SectionHeading.hpp"
+#include "SectionHeading_Impl.hpp"
 
 #include <algorithm>
 #include <functional>

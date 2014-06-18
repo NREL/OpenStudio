@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PATCONSTANTS_HPP
-#define OPENSTUDIO_PATCONSTANTS_HPP
+#ifndef PATAPP_PATCONSTANTS_HPP
+#define PATAPP_PATCONSTANTS_HPP
 
 namespace openstudio {
 
@@ -30,5 +30,5 @@ enum CloudStatus { CLOUD_STARTING, CLOUD_RUNNING, CLOUD_STOPPING, CLOUD_STOPPED,
 
 } // openstudio
 
-#endif // OPENSTUDIO_PATCONSTANTS_HPP
+#endif // PATAPP_PATCONSTANTS_HPP
 

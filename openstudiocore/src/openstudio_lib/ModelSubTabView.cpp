@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelSubTabView.hpp>
-#include <openstudio_lib/OSItemSelector.hpp>
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "ModelSubTabView.hpp"
+#include "OSItemSelector.hpp"
+#include "OSItemSelectorButtons.hpp"
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectListView.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "ModelObjectItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -85,7 +85,7 @@ ModelObjectInspectorView* ModelSubTabView::modelObjectInspectorView()
 
 void ModelSubTabView::dropZoneItemClicked(OSItem* item)
 { 
-  boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
   if (currentDocument){
     boost::optional<model::ModelObject> modelObject = currentDocument->getModelObject(item->itemId());
     bool readOnly = item->itemId().isDefaulted();

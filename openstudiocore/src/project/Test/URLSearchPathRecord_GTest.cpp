@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/URLSearchPathRecord.hpp>
-#include <project/URLSearchPathRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "../URLSearchPathRecord.hpp"
+#include "../URLSearchPathRecord_Impl.hpp"
+#include "../ProjectDatabase.hpp"
 
-#include <utilities/idf/URLSearchPath.hpp>
+#include "../../utilities/idf/URLSearchPath.hpp"
 
 #include <resources.hxx>
 

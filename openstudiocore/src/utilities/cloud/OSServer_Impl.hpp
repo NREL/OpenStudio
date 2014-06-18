@@ -20,11 +20,11 @@
 #ifndef UTILITIES_CLOUD_OSSERVER_IMPL_HPP
 #define UTILITIES_CLOUD_OSSERVER_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Url.hpp"
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
 
 #include <QObject>
 
@@ -247,9 +247,9 @@ namespace detail{
   private:
 
     Url m_url;
-    boost::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
+    std::shared_ptr<QNetworkAccessManager> m_networkAccessManager;
     QNetworkReply* m_networkReply;
-    boost::shared_ptr<QMutex> m_mutex;
+    std::shared_ptr<QMutex> m_mutex;
 
     bool m_lastAvailable;
     std::vector<UUID> m_lastProjectUUIDs; 

@@ -20,8 +20,8 @@
 #ifndef MODEL_COILHEATINGWATER_HPP
 #define MODEL_COILHEATINGWATER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToAirComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -164,7 +164,7 @@ class MODEL_API CoilHeatingWater : public WaterToAirComponent {
   /// @cond
   typedef detail::CoilHeatingWater_Impl ImplType;
 
-  explicit CoilHeatingWater(boost::shared_ptr<detail::CoilHeatingWater_Impl> impl);
+  explicit CoilHeatingWater(std::shared_ptr<detail::CoilHeatingWater_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.CoilHeatingWater");

@@ -19,37 +19,38 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../SizingZone.hpp"
+#include "../SizingZone_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../StraightComponent.hpp"
+#include "../Space.hpp"
+#include "../SpaceInfiltrationDesignFlowRate.hpp"
+#include "../SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../LightsDefinition.hpp"
+#include "../Lights.hpp"
+#include "../ZoneControlHumidistat.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -472,4 +473,18 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3)
   ASSERT_EQ(1u, newSpace->electricEquipment()[1].definition().lifeCycleCosts().size());
   EXPECT_EQ("CostPerEach", newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].costUnits());
   EXPECT_EQ(100, newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].totalCost());
+}
+
+TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
+{
+  Model m;
+  ThermalZone thermalZone(m);
+  ZoneControlHumidistat humidistat(m);
+
+  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
+  EXPECT_TRUE(thermalZone.setZoneControlHumidistat(humidistat));
+  ASSERT_TRUE(thermalZone.zoneControlHumidistat());
+  EXPECT_EQ(humidistat, thermalZone.zoneControlHumidistat().get());
+  thermalZone.resetZoneControlHumidistat();
+  EXPECT_FALSE(thermalZone.zoneControlHumidistat());
 }

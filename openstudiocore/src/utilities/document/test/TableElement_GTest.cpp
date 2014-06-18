@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/document/TableElement.hpp>
+#include "../TableElement.hpp"
 
 using openstudio::TableElement;
 using openstudio::OptionalInt;

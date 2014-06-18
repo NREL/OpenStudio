@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/IdfObjectWatcher.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idd/Comments.hpp>
-#include <utilities/core/Optional.hpp>
+#include "IdfFixture.hpp"
+#include "../IdfObjectWatcher.hpp"
+#include "../IdfExtensibleGroup.hpp"
+#include "../../idd/Comments.hpp"
+#include "../../core/Optional.hpp"
 
 #include <resources.hxx>
 

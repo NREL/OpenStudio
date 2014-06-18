@@ -20,10 +20,10 @@
 #ifndef PROJECT_DAKOTAALGORITHMRECORD_IMPL_HPP
 #define PROJECT_DAKOTAALGORITHMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/AlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "AlgorithmRecord_Impl.hpp"
 
-#include <project/DakotaAlgorithmRecord.hpp>
+#include "DakotaAlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace project {
@@ -54,7 +54,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> children() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     /** Resets algorithm back to its initial state. Provided for callers operating
      *  directly on the database, not holding a copy of this analysis in memory. Use

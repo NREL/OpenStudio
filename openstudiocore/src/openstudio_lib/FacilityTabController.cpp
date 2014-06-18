@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/FacilityTabController.hpp>
-#include <openstudio_lib/FacilityTabView.hpp>
-#include <openstudio_lib/FacilityController.hpp>
+#include "FacilityTabController.hpp"
+#include "FacilityTabView.hpp"
+#include "FacilityController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
 FacilityTabController::FacilityTabController(bool isIP, const model::Model& model)
   : MainTabController(new FacilityTabView())
 {
-  m_facilityController = boost::shared_ptr<FacilityController>(new FacilityController(isIP, model));
+  m_facilityController = std::shared_ptr<FacilityController>(new FacilityController(isIP, model));
 
   bool isConnected = false;
 

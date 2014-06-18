@@ -17,40 +17,40 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CurrentAnalysis_Impl.hpp>
+#include "AnalysisDriver.hpp"
+#include "AnalysisDriver_Impl.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "CurrentAnalysis.hpp"
+#include "CurrentAnalysis_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/DakotaParametersFile.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/OpenStudioAlgorithm.hpp"
+#include "../analysis/OpenStudioAlgorithm_Impl.hpp"
+#include "../analysis/DakotaAlgorithm.hpp"
+#include "../analysis/DakotaAlgorithm_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/DakotaParametersFile.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/AnalysisRecord.hpp"
+#include "../project/AlgorithmRecord.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/JobFactory.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 
@@ -101,7 +101,7 @@ namespace detail {
   }
 
   AnalysisDriver AnalysisDriver_Impl::getAnalysisDriver() const {
-    AnalysisDriver result(boost::const_pointer_cast<AnalysisDriver_Impl>(shared_from_this()));
+    AnalysisDriver result(std::const_pointer_cast<AnalysisDriver_Impl>(shared_from_this()));
     return result;
   }
 
@@ -162,7 +162,7 @@ namespace detail {
     // construct CurrentAnalysis
     CurrentAnalysis currentAnalysis(analysis,runOptions);
     m_currentAnalyses.push_back(currentAnalysis);
-    CurrentAnalysisVector::iterator currentAnalysisIt = m_currentAnalyses.end();
+    auto currentAnalysisIt = m_currentAnalyses.end();
     --currentAnalysisIt;
 
     // queue jobs
@@ -224,9 +224,9 @@ namespace detail {
     bool wasPaused = runManager.paused();
     runManager.setPaused(true);
 
-    CurrentAnalysisVector::iterator currentAnalysisIt = std::find(m_currentAnalyses.begin(),
-                                                                  m_currentAnalyses.end(),
-                                                                  currentAnalysis);
+    auto currentAnalysisIt = std::find(m_currentAnalyses.begin(),
+                                       m_currentAnalyses.end(),
+                                       currentAnalysis);
     if (currentAnalysisIt != m_currentAnalyses.end()) {
       UUID analysisUUID = currentAnalysisIt->analysis().uuid();
       // register the fact that we are stopping this analysis so other methods are aware of state.
@@ -245,7 +245,7 @@ namespace detail {
 
       // register a successful stop
       LOG(Debug,"Analysis " << toString(analysisUUID) << " stopped.");
-      UUIDVector::iterator it = std::find(m_stopping.begin(),m_stopping.end(),analysisUUID);
+      auto it = std::find(m_stopping.begin(),m_stopping.end(),analysisUUID);
       m_stopping.erase(it);
 
       // this will be caught by catchAnalysisCompleteOrStopped which will set status
@@ -262,7 +262,7 @@ namespace detail {
 
   void AnalysisDriver_Impl::stop(DataPoint& dataPoint) {
     // first see if dataPoint even running
-    CurrentAnalysisVector::iterator it = m_currentAnalyses.end();
+    auto it = m_currentAnalyses.end();
     if (dataPoint.topLevelJob()) {
       it = getCurrentAnalysisByQueuedJob(dataPoint.topLevelJob()->uuid());
     }
@@ -299,7 +299,7 @@ namespace detail {
   {
     if (file.exists && boost::regex_search(file.filename,dakotaParametersFilename())) {
       // try to create new DataPoint
-      CurrentAnalysisVector::iterator currentAnalysis = getCurrentAnalysisByDakotaJob(dakotaJob);
+      auto currentAnalysis = getCurrentAnalysisByDakotaJob(dakotaJob);
       Analysis analysis = currentAnalysis->analysis();
       OptionalDataPoint dataPoint;
 
@@ -353,7 +353,7 @@ namespace detail {
                       SLOT(jobTreeStateChanged(const openstudio::UUID &)));
 
       // retrieve analysis
-      CurrentAnalysisVector::iterator currentAnalysisIt = getCurrentAnalysisByQueuedJob(job->uuid());
+      auto currentAnalysisIt = getCurrentAnalysisByQueuedJob(job->uuid());
       if (currentAnalysisIt == m_currentAnalyses.end()) {
         // can happen if multiple finished or failed signals are emitted by RunManager
         LOG(Trace,"Parent job uuid '" << toString(job->uuid()) << "' is no longer registered as a "
@@ -445,7 +445,7 @@ namespace detail {
   void AnalysisDriver_Impl::dakotaJobComplete(const openstudio::UUID &uuid,
                                               const openstudio::runmanager::JobErrors& jobErrors)
   {
-    CurrentAnalysisVector::iterator currentAnalysis = getCurrentAnalysisByDakotaJob(uuid);
+    auto currentAnalysis = getCurrentAnalysisByDakotaJob(uuid);
     if ((currentAnalysis != m_currentAnalyses.end()) &&
         (m_stopping.empty() || (!isAnalysisBeingStopped(currentAnalysis->analysis().uuid()))))
     {
@@ -537,7 +537,7 @@ namespace detail {
     // Check to see if there is any work to do.
     Analysis analysis = currentAnalysis->analysis();
     DataPointVector dataPoints = analysis.dataPointsToQueue();
-    DataPointVector::iterator dpit = dataPoints.begin();
+    auto dpit = dataPoints.begin();
     // Analysis does not know what is already running, so remove any points that already are.
     while (dpit != dataPoints.end()) {
       if (currentAnalysis->getImpl()->isQueuedDataPoint(*dpit)) {
@@ -893,7 +893,7 @@ namespace detail {
   std::vector<CurrentAnalysis>::iterator AnalysisDriver_Impl::getCurrentAnalysisByQueuedJob(
       const openstudio::UUID& queuedJob)
   {
-    CurrentAnalysisVector::iterator result = m_currentAnalyses.begin();
+    auto result = m_currentAnalyses.begin();
     while (result != m_currentAnalyses.end()) {
       if (result->getImpl()->isQueuedDataPoint(queuedJob)) {
         break;
@@ -906,7 +906,7 @@ namespace detail {
   std::vector<CurrentAnalysis>::iterator AnalysisDriver_Impl::getCurrentAnalysisByDakotaJob(
       const openstudio::UUID& dakotaJob)
   {
-    CurrentAnalysisVector::iterator result = m_currentAnalyses.begin();
+    auto result = m_currentAnalyses.begin();
     while (result != m_currentAnalyses.end()) {
       if (OptionalUUID candidate = result->getImpl()->dakotaJob()) {
         if (*candidate == dakotaJob) {
@@ -986,7 +986,7 @@ namespace detail {
 } // detail
 
 AnalysisDriver::AnalysisDriver(project::ProjectDatabase& database)
-  : m_impl(boost::shared_ptr<detail::AnalysisDriver_Impl>(new detail::AnalysisDriver_Impl(database)))
+  : m_impl(std::shared_ptr<detail::AnalysisDriver_Impl>(new detail::AnalysisDriver_Impl(database)))
 {}
 
 project::ProjectDatabase AnalysisDriver::database() const {
@@ -1005,7 +1005,7 @@ void AnalysisDriver::moveToThread(QThread* targetThread) {
   getImpl()->moveToThread(targetThread);
 }
 
-boost::shared_ptr<detail::AnalysisDriver_Impl> AnalysisDriver::getImpl() const {
+std::shared_ptr<detail::AnalysisDriver_Impl> AnalysisDriver::getImpl() const {
   return m_impl;
 }
 
@@ -1047,7 +1047,7 @@ bool AnalysisDriver::connect(const std::string& signal,
 }
 
 /// @cond
-AnalysisDriver::AnalysisDriver(boost::shared_ptr<detail::AnalysisDriver_Impl> impl)
+AnalysisDriver::AnalysisDriver(std::shared_ptr<detail::AnalysisDriver_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

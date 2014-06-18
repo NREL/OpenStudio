@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_app/StartupMenu.hpp>
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "StartupMenu.hpp"
+#include "OpenStudioApp.hpp"
 #include <QMenu>
 
 namespace openstudio {

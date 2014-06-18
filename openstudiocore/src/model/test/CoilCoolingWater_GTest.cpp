@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/ScheduleCompact.hpp>
+#include "../AirLoopHVAC.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../ScheduleCompact.hpp"
 
 using namespace openstudio;
 

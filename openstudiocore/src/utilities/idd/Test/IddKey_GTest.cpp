@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../IddField.hpp"
+#include "../IddKey.hpp"
 
 using namespace openstudio;
 

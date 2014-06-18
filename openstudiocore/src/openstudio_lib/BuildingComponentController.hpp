@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_H
-#define OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_H
+#ifndef OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_HPP
+#define OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_HPP
 
 #include <map>
 #include <QObject>
 #include <QString>
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
 namespace openstudio {
 
@@ -44,5 +44,5 @@ class BuildingComponentController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_H
+#endif // OPENSTUDIO_BUILDINGCOMPONENTCONTROLLER_HPP
 

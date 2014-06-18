@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Comments_Test < Test::Unit::TestCase
+class Comments_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

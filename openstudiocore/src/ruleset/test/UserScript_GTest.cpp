@@ -18,25 +18,25 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <ruleset/OSArgument.hpp>
-#include <ruleset/OSRunner.hpp>
-#include <ruleset/OSResult.hpp>
-#include <ruleset/ModelUserScript.hpp>
-#include <ruleset/UserScript.hpp>
+#include "../OSArgument.hpp"
+#include "../OSRunner.hpp"
+#include "../OSResult.hpp"
+#include "../ModelUserScript.hpp"
+#include "../UserScript.hpp"
 
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/LightsDefinition_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Finder.hpp>
+#include "../../utilities/core/Finder.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
+#include "../../utilities/units/QuantityConverter.hpp"
 
 #include <vector>
 #include <map>

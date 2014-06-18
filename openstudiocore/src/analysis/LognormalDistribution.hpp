@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_LognormalDISTRIBUTION_HPP
-#define ANALYSIS_LognormalDISTRIBUTION_HPP
+#ifndef ANALYSIS_LOGNORMALDISTRIBUTION_HPP
+#define ANALYSIS_LOGNORMALDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -35,7 +35,7 @@ class ANALYSIS_API LognormalDistribution : public UncertaintyDescription {
 
   /** This distribution requires one of the three following pairs: mean and standardDeviation,
    *  mean and errorFactor, or lambda and zeta. The default constructor creates a distribution with
-   *  mean 1 and standard devition of 1.*/
+   *  mean 1 and standard deviation of 1.*/
   LognormalDistribution();
 
   virtual ~LognormalDistribution() {}
@@ -100,7 +100,7 @@ class ANALYSIS_API LognormalDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit LognormalDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit LognormalDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -111,4 +111,4 @@ class ANALYSIS_API LognormalDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_LognormalDISTRIBUTION_HPP
+#endif // ANALYSIS_LOGNORMALDISTRIBUTION_HPP

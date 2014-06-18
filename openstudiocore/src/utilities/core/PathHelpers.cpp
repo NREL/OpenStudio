@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Logger.hpp>
+#include "PathHelpers.hpp"
+#include "Logger.hpp"
 #include <boost/filesystem.hpp>
 
 #include <QDir>
@@ -228,7 +228,7 @@ path relocatePath(const path& originalPath,
       << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
-    LOG_FREE(Debug,"openstudio.utilities.core","Reloacting path to '" << toString(result) << "'.");
+    LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
   }
   return result;
 }

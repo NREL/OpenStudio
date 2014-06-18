@@ -20,8 +20,8 @@
 #ifndef MODEL_HOTWATEREQUIPMENT_HPP
 #define MODEL_HOTWATEREQUIPMENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -114,7 +114,7 @@ class MODEL_API HotWaterEquipment : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit HotWaterEquipment(boost::shared_ptr<detail::HotWaterEquipment_Impl> impl);
+  explicit HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl);
 
   /// @endcond
  private:

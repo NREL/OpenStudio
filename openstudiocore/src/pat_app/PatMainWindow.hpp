@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PATMAINWINDOW_H
-#define OPENSTUDIO_PATMAINWINDOW_H
+#ifndef PATAPP_PATMAINWINDOW_HPP
+#define PATAPP_PATMAINWINDOW_HPP
 
 #include <QMainWindow>
 #include "../utilities/core/Logger.hpp"
@@ -46,7 +46,7 @@ class PatMainWindow : public QMainWindow
 
   public:
 
-  PatMainWindow(QWidget *parent = 0);
+  PatMainWindow(QWidget *parent = nullptr);
 
   virtual ~PatMainWindow() {}
 
@@ -131,5 +131,5 @@ class PatMainWindow : public QMainWindow
 
 } // openstudio
 
-#endif // OPENSTUDIO_PATMAINWINDOW_H
+#endif // PATAPP_PATMAINWINDOW_HPP
 

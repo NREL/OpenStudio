@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectActionClause.hpp>
-#include <ruleset/ModelObjectActionClause_Impl.hpp>
+#include "ModelObjectActionClause.hpp"
+#include "ModelObjectActionClause_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 namespace ruleset {
@@ -56,7 +56,7 @@ namespace detail {
 } // detail
 
 /// @cond
-ModelObjectActionClause::ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionClause_Impl> impl)
+ModelObjectActionClause::ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionClause_Impl> impl)
   : ActionClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectActionClause_Impl>());

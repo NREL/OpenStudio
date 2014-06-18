@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
-#define OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
+#ifndef OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
+#define OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
 
-#include <shared_gui_components/OSGridController.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../shared_gui_components/OSGridController.hpp"
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QWidget>
 
@@ -119,5 +119,5 @@ public slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_REFRIGERATIONGRIDVIEW_H
+#endif // OPENSTUDIO_REFRIGERATIONGRIDVIEW_HPP
 

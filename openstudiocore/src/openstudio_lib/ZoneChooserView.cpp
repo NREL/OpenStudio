@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/ZoneChooserView.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
+#include "ZoneChooserView.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/Model.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QStyleOption>
@@ -126,7 +126,7 @@ void ZoneChooserView::layoutView()
   }
 
   std::vector<model::ThermalZone> zones;
-  zones = m_splitter->model().getModelObjects<model::ThermalZone>();
+  zones = m_splitter->model().getConcreteModelObjects<model::ThermalZone>();
   std::sort(zones.begin(),zones.end(),WorkspaceObjectNameLess());
 
   for( std::vector<model::ThermalZone>::iterator it = zones.begin();

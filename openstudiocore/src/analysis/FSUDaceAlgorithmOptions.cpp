@@ -17,14 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
-#include <analysis/FSUDaceAlgorithmOptions_Impl.hpp>
+#include "FSUDaceAlgorithmOptions.hpp"
+#include "FSUDaceAlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 #include <stdlib.h>
 
@@ -56,7 +54,7 @@ namespace detail {
   {}
 
   AlgorithmOptions FSUDaceAlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<FSUDaceAlgorithmOptions_Impl> impl(new FSUDaceAlgorithmOptions_Impl(*this));
+    std::shared_ptr<FSUDaceAlgorithmOptions_Impl> impl(new FSUDaceAlgorithmOptions_Impl(*this));
     return FSUDaceAlgorithmOptions(impl);
   }
 
@@ -294,7 +292,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return FSUDaceAlgorithmOptions(
           map["fsu_dace_algorithm_type"].toString().toStdString(),
           map.contains("trial_type") ? FSUDaceCvtTrialType(map["trial_type"].toString().toStdString()) : OptionalFSUDaceCvtTrialType(),
@@ -304,14 +302,14 @@ namespace detail {
 } // detail
 
 FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(const FSUDaceAlgorithmType& algorithmType)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl>(
         new detail::FSUDaceAlgorithmOptions_Impl(algorithmType)))
 {}
 
 FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(const FSUDaceAlgorithmType& algorithmType,
                                                  const boost::optional<FSUDaceCvtTrialType>& trialType,
                                                  const std::vector<Attribute>& options)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl>(
         new detail::FSUDaceAlgorithmOptions_Impl(algorithmType, trialType, options)))
 {}
 
@@ -428,7 +426,7 @@ void FSUDaceAlgorithmOptions::clearTrialType() {
 
 
 /// @cond
-FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(boost::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl)
+FSUDaceAlgorithmOptions::FSUDaceAlgorithmOptions(std::shared_ptr<detail::FSUDaceAlgorithmOptions_Impl> impl)
   : DakotaAlgorithmOptions(impl)
 {}
 

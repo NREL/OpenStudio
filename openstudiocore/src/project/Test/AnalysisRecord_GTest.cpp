@@ -19,38 +19,38 @@
 
 #include <gtest/gtest.h>
 
-#include <project/AnalysisRecord.hpp>
-#include <project/Test/ProjectFixture.hpp>
+#include "../AnalysisRecord.hpp"
+#include "ProjectFixture.hpp"
 
-#include <project/ProblemRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/NullMeasureRecord_Impl.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
-#include <project/LinearFunctionRecord.hpp>
-#include <project/LinearFunctionRecord_Impl.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../ProblemRecord.hpp"
+#include "../MeasureGroupRecord.hpp"
+#include "../MeasureGroupRecord_Impl.hpp"
+#include "../NullMeasureRecord.hpp"
+#include "../NullMeasureRecord_Impl.hpp"
+#include "../RubyMeasureRecord.hpp"
+#include "../RubyMeasureRecord_Impl.hpp"
+#include "../LinearFunctionRecord.hpp"
+#include "../LinearFunctionRecord_Impl.hpp"
+#include "../DataPointRecord.hpp"
+#include "../DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Problem_Impl.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

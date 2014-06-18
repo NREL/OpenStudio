@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACCOMPONENT_HPP
 #define MODEL_ZONEHVACCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -85,7 +85,7 @@ class MODEL_API ZoneHVACComponent : public ParentObject
 
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ZoneHVACComponent(boost::shared_ptr<ImplType> impl);
+  explicit ZoneHVACComponent(std::shared_ptr<ImplType> impl);
 
   virtual std::vector<ModelObject> children() const;
 

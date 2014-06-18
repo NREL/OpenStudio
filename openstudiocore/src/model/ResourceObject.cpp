@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -75,7 +75,7 @@ ResourceObject::ResourceObject(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ResourceObject_Impl>());
 }
 
-ResourceObject::ResourceObject(boost::shared_ptr<detail::ResourceObject_Impl> impl)
+ResourceObject::ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl)
   : ParentObject(impl)
 {}
 

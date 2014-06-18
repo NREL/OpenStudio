@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVECUBIC_HPP
 #define MODEL_CURVECUBIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -121,7 +121,7 @@ class MODEL_API CurveCubic : public Curve {
   /// @cond
   typedef detail::CurveCubic_Impl ImplType;
 
-  explicit CurveCubic(boost::shared_ptr<detail::CurveCubic_Impl> impl);
+  explicit CurveCubic(std::shared_ptr<detail::CurveCubic_Impl> impl);
 
   friend class detail::CurveCubic_Impl;
   friend class Model;

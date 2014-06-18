@@ -20,8 +20,8 @@
 #ifndef MODEL_CONTROLLERWATERCOIL_HPP
 #define MODEL_CONTROLLERWATERCOIL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -136,7 +136,7 @@ class MODEL_API ControllerWaterCoil : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  explicit ControllerWaterCoil(boost::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
+  explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
 
   /// @endcond
   private:

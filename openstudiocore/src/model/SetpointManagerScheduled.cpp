@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "SetpointManagerScheduled.hpp"
+#include "SetpointManagerScheduled_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddKey.hpp>
+#include "../utilities/idd/IddKey.hpp"
 #include <utilities/idd/OS_SetpointManager_Scheduled_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -311,7 +311,7 @@ SetpointManagerScheduled::SetpointManagerScheduled(const Model& model,
   }
 }
 
-SetpointManagerScheduled::SetpointManagerScheduled(boost::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
+SetpointManagerScheduled::SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> p)
   : HVACComponent(p)
 {
 }

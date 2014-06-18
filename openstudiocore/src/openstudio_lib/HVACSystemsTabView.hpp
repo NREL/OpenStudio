@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HVACSYSTEMSTABVIEW_H
-#define OPENSTUDIO_HVACSYSTEMSTABVIEW_H
+#ifndef OPENSTUDIO_HVACSYSTEMSTABVIEW_HPP
+#define OPENSTUDIO_HVACSYSTEMSTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 
 namespace openstudio {
 
@@ -37,4 +37,4 @@ class HVACSystemsTabView : public MainTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_HVACSYSTEMSTABVIEW_H
+#endif // OPENSTUDIO_HVACSYSTEMSTABVIEW_HPP

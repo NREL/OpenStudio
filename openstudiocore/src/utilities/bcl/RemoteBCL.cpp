@@ -16,16 +16,16 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "LocalBCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "RemoteBCL.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/System.hpp"
+#include "../core/UnzipFile.hpp"
+#include "../core/ZipFile.hpp"
 
 #include <QDir>
 #include <QDomDocument>
@@ -243,7 +243,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns a bool, but was not checking, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns a bool, but was not checking, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -287,7 +287,7 @@ namespace openstudio{
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but no check, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but no check, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -521,7 +521,7 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
@@ -602,7 +602,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -613,12 +613,12 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-	QUrlQuery query;
-	query.addQueryItem("uids", toQString(uid));
-	//query.addQueryItem("api_version", toQString(m_apiVersion));
-	url.setQuery(query);
+    QUrlQuery query;
+    query.addQueryItem("uids", toQString(uid));
+    //query.addQueryItem("api_version", toQString(m_apiVersion));
+    url.setQuery(query);
 
-	data.append(url.query());
+    data.append(url.query());
     LOG(Warn, url.toString().toStdString());
 
     QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));
@@ -630,7 +630,7 @@ namespace openstudio{
     LOG(Info, testString);
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -669,7 +669,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
@@ -702,7 +702,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -751,7 +751,7 @@ namespace openstudio{
     //LOG(Warn, url.toString().toStdString());
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -800,7 +800,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -848,7 +848,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -902,7 +902,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
@@ -954,7 +954,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete

@@ -17,136 +17,136 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <isomodel/ForwardTranslator.hpp>
-#include <isomodel/UserModel.hpp>
+#include "ForwardTranslator.hpp"
+#include "UserModel.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/BoilerHotWater.hpp>
-#include <model/BoilerHotWater_Impl.hpp>
-#include <model/BoilerSteam.hpp>
-#include <model/BoilerSteam_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CoilCoolingDXTwoSpeed.hpp>
-#include <model/CoilCoolingDXTwoSpeed_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ExteriorLights.hpp>
-#include <model/ExteriorLights_Impl.hpp>
-#include <model/ExteriorLightsDefinition.hpp>
-#include <model/ExteriorLightsDefinition_Impl.hpp>
-#include <model/Gas.hpp>
-#include <model/Gas_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasMixture.hpp>
-#include <model/GasMixture_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PipeAdiabatic.hpp>
-#include <model/PipeAdiabatic_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/AirGap.hpp"
+#include "../model/AirGap_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "../model/BoilerHotWater.hpp"
+#include "../model/BoilerHotWater_Impl.hpp"
+#include "../model/BoilerSteam.hpp"
+#include "../model/BoilerSteam_Impl.hpp"
+#include "../model/ChillerElectricEIR.hpp"
+#include "../model/ChillerElectricEIR_Impl.hpp"
+#include "../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../model/CoilCoolingWater.hpp"
+#include "../model/CoilCoolingWater_Impl.hpp"
+#include "../model/CoilHeatingDXSingleSpeed.hpp"
+#include "../model/CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../model/CoilHeatingElectric.hpp"
+#include "../model/CoilHeatingElectric_Impl.hpp"
+#include "../model/CoilHeatingGas.hpp"
+#include "../model/CoilHeatingGas_Impl.hpp"
+#include "../model/CoilHeatingWater.hpp"
+#include "../model/CoilHeatingWater_Impl.hpp"
+#include "../model/ConnectorMixer.hpp"
+#include "../model/ConnectorMixer_Impl.hpp"
+#include "../model/ConnectorSplitter.hpp"
+#include "../model/ConnectorSplitter_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/DaylightingControl.hpp"
+#include "../model/DaylightingControl_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipment_Impl.hpp"
+#include "../model/ExteriorLights.hpp"
+#include "../model/ExteriorLights_Impl.hpp"
+#include "../model/ExteriorLightsDefinition.hpp"
+#include "../model/ExteriorLightsDefinition_Impl.hpp"
+#include "../model/Gas.hpp"
+#include "../model/Gas_Impl.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipment_Impl.hpp"
+#include "../model/GasMixture.hpp"
+#include "../model/GasMixture_Impl.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
+#include "../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/OpaqueMaterial.hpp"
+#include "../model/OpaqueMaterial_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/PipeAdiabatic.hpp"
+#include "../model/PipeAdiabatic_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/RefractionExtinctionGlazing.hpp"
+#include "../model/RefractionExtinctionGlazing_Impl.hpp"
+#include "../model/RoofVegetation.hpp"
+#include "../model/RoofVegetation_Impl.hpp"
+#include "../model/ScheduleDay.hpp"
+#include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/SimpleGlazing_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/StandardGlazing.hpp"
+#include "../model/StandardGlazing_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermochromicGlazing.hpp"
+#include "../model/ThermochromicGlazing_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/WaterHeaterMixed.hpp"
+#include "../model/WaterHeaterMixed_Impl.hpp"
+#include "../model/WaterUseConnections.hpp"
+#include "../model/WaterUseConnections_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump.hpp>
-#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../model/ZoneHVACUnitHeater.hpp"
+#include "../model/ZoneHVACUnitHeater_Impl.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump.hpp"
+#include "../model/ZoneHVACWaterToAirHeatPump_Impl.hpp"
 
 #include <QElapsedTimer>
 
@@ -352,15 +352,15 @@ namespace isomodel {
     // get some important objects from the building model;
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
-    std::vector<openstudio::model::Surface> surfaces = model.getModelObjects<openstudio::model::Surface>();
-    std::vector<openstudio::model::SubSurface> sub_surfaces = model.getModelObjects<openstudio::model::SubSurface>();
-    std::vector<openstudio::model::Space> spaces = model.getModelObjects<openstudio::model::Space>();
-    std::vector<openstudio::model::ThermalZone> thermal_zones = model.getModelObjects<openstudio::model::ThermalZone>();
-    std::vector<openstudio::model::SpaceType> space_types = model.getModelObjects<openstudio::model::SpaceType>();
-    std::vector<openstudio::model::Construction> constructions = model.getModelObjects<openstudio::model::Construction>();
-    std::vector<openstudio::model::InternalMassDefinition> internal_masses = model.getModelObjects<openstudio::model::InternalMassDefinition>();
-    std::vector<openstudio::model::AirLoopHVAC> air_loops = model.getModelObjects<openstudio::model::AirLoopHVAC>();
-    std::vector<openstudio::model::PlantLoop> plant_loops = model.getModelObjects<openstudio::model::PlantLoop>();
+    std::vector<openstudio::model::Surface> surfaces = model.getConcreteModelObjects<openstudio::model::Surface>();
+    std::vector<openstudio::model::SubSurface> sub_surfaces = model.getConcreteModelObjects<openstudio::model::SubSurface>();
+    std::vector<openstudio::model::Space> spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    std::vector<openstudio::model::ThermalZone> thermal_zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
+    std::vector<openstudio::model::SpaceType> space_types = model.getConcreteModelObjects<openstudio::model::SpaceType>();
+    std::vector<openstudio::model::Construction> constructions = model.getConcreteModelObjects<openstudio::model::Construction>();
+    std::vector<openstudio::model::InternalMassDefinition> internal_masses = model.getConcreteModelObjects<openstudio::model::InternalMassDefinition>();
+    std::vector<openstudio::model::AirLoopHVAC> air_loops = model.getConcreteModelObjects<openstudio::model::AirLoopHVAC>();
+    std::vector<openstudio::model::PlantLoop> plant_loops = model.getConcreteModelObjects<openstudio::model::PlantLoop>();
 
     LOG(Debug, "Found " << surfaces.size() << " surfaces");
     LOG(Debug, "Found " << sub_surfaces.size() << " sub surfaces");
@@ -621,7 +621,7 @@ namespace isomodel {
     LOG(Debug, "...Parsing Schedules");
 
 
-    std::vector<openstudio::model::ScheduleRuleset> schedule_rulesets = model.getModelObjects<openstudio::model::ScheduleRuleset>();
+    std::vector<openstudio::model::ScheduleRuleset> schedule_rulesets = model.getConcreteModelObjects<openstudio::model::ScheduleRuleset>();
     LOG(Debug, "Found " << schedule_rulesets.size() << " schedules in the OSM");
 
 
@@ -1040,7 +1040,7 @@ namespace isomodel {
     LOG(Debug, "Exterior Lighting Power = " << exterior_lighting_power << " W");
 
     // check for luminaire definitions and print a warning if they are defined;
-    std::vector<openstudio::model::Luminaire> luminaires = model.getModelObjects<openstudio::model::Luminaire>();
+    std::vector<openstudio::model::Luminaire> luminaires = model.getConcreteModelObjects<openstudio::model::Luminaire>();
     if (!luminaires.empty()) {
       LOG(Debug, "Warning: Luminaires defined in OSM but not currently translated into ISO");
     }
@@ -1061,7 +1061,7 @@ namespace isomodel {
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times
 
       // set the occupied and unoccupied temperature setpoint by finding average setpoint over the occupied and unoccupied times;
-      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
+      //std::vector<openstudio::model::ThermostatSetpointDualSetpoint> thermostats = model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>();
 
       double total_zone_area = 0;
       double heat_setpoint_occ_total=0;
@@ -1437,8 +1437,8 @@ namespace isomodel {
 
     if (OSM_extract_infil_rate) {
       //first check to see if there effective leakage areas defined and if !those, then design flow rates;
-      if (!model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
-        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
+      if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>().empty()) {
+        //std::vector<openstudio::model::SpaceInfiltrationEffectiveLeakageArea> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationEffectiveLeakageArea>();
 
         /// \todo no reason for this to be in a loop
         //      for (const openstudio::model::SpaceInfiltrationEffectiveLeakageArea &infil : infiltration) {
@@ -1447,8 +1447,8 @@ namespace isomodel {
         infiltration_rate = infil_rate_default;
         //      }
 
-      } else if (!model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>().empty()) {
-        std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> infiltration = model.getModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
+      } else if (!model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>().empty()) {
+        std::vector<openstudio::model::SpaceInfiltrationDesignFlowRate> infiltration = model.getConcreteModelObjects<openstudio::model::SpaceInfiltrationDesignFlowRate>();
         LOG(Debug, "Found " << infiltration.size() << " SpaceInfiltrationDesignFlowRate objects");
 
         /// \todo this is not used
@@ -2050,7 +2050,7 @@ namespace isomodel {
       }
 
       // extract the water usage by starting with the water use connections and then finding equipment;
-      std::vector<openstudio::model::WaterUseConnections> water_connects = model.getModelObjects<openstudio::model::WaterUseConnections>();
+      std::vector<openstudio::model::WaterUseConnections> water_connects = model.getConcreteModelObjects<openstudio::model::WaterUseConnections>();
       for (const openstudio::model::WaterUseConnections &connect : water_connects) {
         std::vector<openstudio::model::WaterUseEquipment> equipments = connect.waterUseEquipment();
         for (const openstudio::model::WaterUseEquipment &equip : equipments) {

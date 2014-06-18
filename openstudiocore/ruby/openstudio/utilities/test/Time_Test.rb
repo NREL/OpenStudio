@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Time_Test < Test::Unit::TestCase
+class Time_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
@@ -114,11 +114,11 @@ class Time_Test < Test::Unit::TestCase
   end
   
   def test_to_s
-    assert_not_nil(OpenStudio::Time.new(-1.0).to_s)
-    assert_not_nil(OpenStudio::Time.new(0.0).to_s)
-    assert_not_nil(OpenStudio::Time.new(0.5).to_s)
-    assert_not_nil(OpenStudio::Time.new(1.0).to_s)
-    assert_not_nil(OpenStudio::Time.new(2.0).to_s)
+    assert(!OpenStudio::Time.new(-1.0).to_s.nil?)
+    assert(!OpenStudio::Time.new(0.0).to_s.nil?)
+    assert(!OpenStudio::Time.new(0.5).to_s.nil?)
+    assert(!OpenStudio::Time.new(1.0).to_s.nil?)
+    assert(!OpenStudio::Time.new(2.0).to_s.nil?)
   end
 
 end

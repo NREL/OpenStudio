@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/AnnotatedTimeline.hpp>
+#include "AnnotatedTimeline.hpp"
 
 #include <iostream>
 #include <set>

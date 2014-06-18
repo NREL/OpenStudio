@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "IddFieldProperties.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Optional.hpp"
+#include "../core/Containers.hpp"
 
 #include <sstream>
 

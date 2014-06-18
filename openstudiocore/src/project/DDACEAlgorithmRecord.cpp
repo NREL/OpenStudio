@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DDACEAlgorithmRecord.hpp>
-#include <project/DDACEAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "DDACEAlgorithmRecord.hpp"
+#include "DDACEAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
+#include "../analysis/DDACEAlgorithm.hpp"
+#include "../analysis/DDACEAlgorithm_Impl.hpp"
+#include "../analysis/DDACEAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {
@@ -70,7 +70,7 @@ namespace detail {
     return result;
   }
 
-  void DDACEAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DDACEAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DDACEAlgorithmRecord>(query);
@@ -174,7 +174,7 @@ namespace detail {
 
 DDACEAlgorithmRecord::DDACEAlgorithmRecord(const analysis::DDACEAlgorithm& ddaceAlgorithm,
                                            AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
         new detail::DDACEAlgorithmRecord_Impl(ddaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         ddaceAlgorithm)
@@ -185,7 +185,7 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const analysis::DDACEAlgorithm& ddace
 }
 
 DDACEAlgorithmRecord::DDACEAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl>(
         new detail::DDACEAlgorithmRecord_Impl(query, database)),
         database,
         boost::optional<analysis::DakotaAlgorithm>())
@@ -193,7 +193,7 @@ DDACEAlgorithmRecord::DDACEAlgorithmRecord(const QSqlQuery& query, ProjectDataba
   OS_ASSERT(getImpl<detail::DDACEAlgorithmRecord_Impl>());
 }
 
-DDACEAlgorithmRecord::DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
+DDACEAlgorithmRecord::DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl,
                                            ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
@@ -257,7 +257,7 @@ analysis::DDACEAlgorithm DDACEAlgorithmRecord::ddaceAlgorithm() const {
 }
 
 /// @cond
-DDACEAlgorithmRecord::DDACEAlgorithmRecord(boost::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl)
+DDACEAlgorithmRecord::DDACEAlgorithmRecord(std::shared_ptr<detail::DDACEAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

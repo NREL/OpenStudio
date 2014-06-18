@@ -20,15 +20,13 @@
 #ifndef UTILITIES_IDF_IDFOBJECT_HPP
 #define UTILITIES_IDF_IDFOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/Handle.hpp>
+#include "Handle.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
-#include <boost/bind.hpp>
 
 #include <string>
 #include <ostream>
@@ -369,13 +367,13 @@ class UTILITIES_API IdfObject {
   //model class or make it public.
   // get the impl
   template<typename T>
-    boost::shared_ptr<T> getImpl() const
-  {  return boost::dynamic_pointer_cast<T>(m_impl); }
+    std::shared_ptr<T> getImpl() const
+  {  return std::dynamic_pointer_cast<T>(m_impl); }
 
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -386,7 +384,7 @@ class UTILITIES_API IdfObject {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -407,12 +405,12 @@ class UTILITIES_API IdfObject {
   friend class Workspace;                    // for toIdfFile completion (constructs IdfObject from impl)
 
   /** Protected constructor from impl. */
-  IdfObject(boost::shared_ptr<detail::IdfObject_Impl> impl);
+  IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl);
 
  private:
 
   // pointer to impl
-  boost::shared_ptr<detail::IdfObject_Impl> m_impl;
+  std::shared_ptr<detail::IdfObject_Impl> m_impl;
 
   // configure logging
   REGISTER_LOGGER("utilities.idf.IdfObject");
@@ -462,7 +460,7 @@ template<typename T>
 std::vector<T> sortByObjectName(std::vector<T> objects) {
   std::sort(objects.begin(),
             objects.end(),
-            boost::bind(&istringLess,boost::bind(&objectName,_1),boost::bind(&objectName,_1)));
+            std::bind(&istringLess,std::bind(&objectName,std::placeholders::_1),std::bind(&objectName,std::placeholders::_1)));
   return objects;
 }
 

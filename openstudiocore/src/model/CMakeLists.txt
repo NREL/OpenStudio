@@ -383,6 +383,9 @@ set(${target_name}_src
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
+  HeatExchangerFluidToFluid.hpp
+  HeatExchangerFluidToFluid_Impl.hpp
+  HeatExchangerFluidToFluid.cpp
   HotWaterEquipment.hpp
   HotWaterEquipment_Impl.hpp
   HotWaterEquipment.cpp
@@ -550,6 +553,9 @@ set(${target_name}_src
   RefrigerationCondenserWaterCooled.hpp
   RefrigerationCondenserWaterCooled_Impl.hpp
   RefrigerationCondenserWaterCooled.cpp
+  RefrigerationDefrostCycleParameters.hpp
+  RefrigerationDefrostCycleParameters_Impl.hpp
+  RefrigerationDefrostCycleParameters.cpp
   RefrigerationGasCoolerAirCooled.hpp
   RefrigerationGasCoolerAirCooled_Impl.hpp
   RefrigerationGasCoolerAirCooled.cpp
@@ -757,6 +763,9 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  TableMultiVariableLookup.hpp
+  TableMultiVariableLookup_Impl.hpp
+  TableMultiVariableLookup.cpp
   ThermalZone.hpp
   ThermalZone_Impl.hpp
   ThermalZone.cpp
@@ -841,6 +850,9 @@ set(${target_name}_src
   ZoneCapacitanceMultiplierResearchSpecial.hpp
   ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp
   ZoneCapacitanceMultiplierResearchSpecial.cpp
+  ZoneControlHumidistat.hpp
+  ZoneControlHumidistat_Impl.hpp
+  ZoneControlHumidistat.cpp
   ZoneHVACBaseboardConvectiveElectric.hpp
   ZoneHVACBaseboardConvectiveElectric_Impl.hpp
   ZoneHVACBaseboardConvectiveElectric.cpp
@@ -1191,6 +1203,7 @@ set(${target_name}_test_src
   test/GroundHeatExchangerVertical_GTest.cpp
   test/HotWaterEquipment_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
+  test/HeatExchangerFluidToFluid_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
@@ -1231,6 +1244,7 @@ set(${target_name}_test_src
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
   test/RefrigerationCondenserWaterCooled_GTest.cpp
+  test/RefrigerationDefrostCycleParameters_GTest.cpp
   test/RefrigerationGasCoolerAirCooled_GTest.cpp
   test/RefrigerationSubcoolerLiquidSuction_GTest.cpp
   test/RefrigerationSubcoolerMechanical_GTest.cpp
@@ -1275,6 +1289,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/TimeDependentValuation_GTest.cpp
   test/UtilityBill_GTest.cpp

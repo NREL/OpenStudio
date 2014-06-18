@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "IddFixture.hpp"
+#include "../IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../ExtensibleIndex.hpp"
+#include "../../core/Containers.hpp"
 
 #include <sstream>
 #include <string>

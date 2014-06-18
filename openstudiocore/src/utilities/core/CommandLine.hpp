@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_COMMANDLINE_HPP
 #define UTILITIES_CORE_COMMANDLINE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 #include <boost/program_options.hpp>
 
 #include <string>

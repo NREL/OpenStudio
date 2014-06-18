@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/NormalDistribution.hpp>
-#include <analysis/GenericUncertaintyDescription.hpp>
+#include "../NormalDistribution.hpp"
+#include "../GenericUncertaintyDescription.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

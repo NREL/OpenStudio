@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
+#include "ZoneHVACBaseboardConvectiveWater.hpp"
+#include "ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterBaseboard_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "CoilHeatingWaterBaseboard.hpp"
+#include "CoilHeatingWaterBaseboard_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 
 #include <utilities/idd/OS_ZoneHVAC_Baseboard_Convective_Water_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -202,18 +202,15 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
 
   boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater_Impl::thermalZone()
   {
-    Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
+    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+    for( const auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        return *it;
+        return thermalZone;
       }
     }
     return boost::none;
@@ -306,7 +303,7 @@ void ZoneHVACBaseboardConvectiveWater::removeFromThermalZone()
   return getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>()->removeFromThermalZone();
 }
 /// @cond
-ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(boost::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
+ZoneHVACBaseboardConvectiveWater::ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

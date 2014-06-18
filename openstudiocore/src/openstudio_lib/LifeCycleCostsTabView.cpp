@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LifeCycleCostsTabView.hpp>
+#include "LifeCycleCostsTabView.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSDoubleEdit.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/LifeCycleCostParameters_Impl.hpp"
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -425,113 +425,113 @@ void LifeCycleCostsView::attach(openstudio::model::LifeCycleCostParameters & lif
     m_nistRegionComboBox->bind<std::string>(
       *m_lifeCycleCostParameters,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(&model::LifeCycleCostParameters::validNistRegionValues,m_lifeCycleCostParameters.get_ptr()),
-      OptionalStringGetter(boost::bind(&model::LifeCycleCostParameters::nistRegion,m_lifeCycleCostParameters.get_ptr())),
-      boost::bind(&model::LifeCycleCostParameters::setNISTRegion,m_lifeCycleCostParameters.get_ptr(),_1));
+      std::bind(&model::LifeCycleCostParameters::validNistRegionValues,m_lifeCycleCostParameters.get_ptr()),
+      OptionalStringGetter(std::bind(&model::LifeCycleCostParameters::nistRegion,m_lifeCycleCostParameters.get_ptr())),
+      std::bind(&model::LifeCycleCostParameters::setNISTRegion,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1));
   }
 
   if(m_nistSectorComboBox){
     m_nistSectorComboBox->bind<std::string>(
       *m_lifeCycleCostParameters,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(&model::LifeCycleCostParameters::validNistSectorValues,m_lifeCycleCostParameters.get_ptr()),
-      OptionalStringGetter(boost::bind(&model::LifeCycleCostParameters::nistSector,m_lifeCycleCostParameters.get_ptr())),
-      boost::bind(&model::LifeCycleCostParameters::setNISTSector,m_lifeCycleCostParameters.get_ptr(),_1));
+      std::bind(&model::LifeCycleCostParameters::validNistSectorValues,m_lifeCycleCostParameters.get_ptr()),
+      OptionalStringGetter(std::bind(&model::LifeCycleCostParameters::nistSector,m_lifeCycleCostParameters.get_ptr())),
+      std::bind(&model::LifeCycleCostParameters::setNISTSector,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1));
   }
 
   if(m_analysisLengthIntegerEdit){
     m_analysisLengthIntegerEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalIntGetter(boost::bind(&model::LifeCycleCostParameters::lengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<IntSetter>(boost::bind(&model::LifeCycleCostParameters::setLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())));
+      OptionalIntGetter(std::bind(&model::LifeCycleCostParameters::lengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<IntSetter>(std::bind(&model::LifeCycleCostParameters::setLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetLengthOfStudyPeriodInYears,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_realDiscountRateDoubleEdit){
     m_realDiscountRateDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::realDiscountRate,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setRealDiscountRate,m_lifeCycleCostParameters.get_ptr(),_1)));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::realDiscountRate,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setRealDiscountRate,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)));
   }
 
   if(m_electricityDoubleEdit){
     m_electricityDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::electricityInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setElectricityInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetElectricityInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::electricityInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setElectricityInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetElectricityInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_naturalGasDoubleEdit){
     m_naturalGasDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::naturalGasInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setNaturalGasInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetNaturalGasInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::naturalGasInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setNaturalGasInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetNaturalGasInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_steamDoubleEdit){
     m_steamDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::steamInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setSteamInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetSteamInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::steamInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setSteamInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetSteamInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_gasolineDoubleEdit){
     m_gasolineDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::gasolineInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setGasolineInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetGasolineInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::gasolineInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setGasolineInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetGasolineInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_dieselDoubleEdit){
     m_dieselDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::dieselInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setDieselInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetDieselInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::dieselInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setDieselInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetDieselInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_propaneDoubleEdit){
     m_propaneDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::propaneInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setPropaneInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetPropaneInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::propaneInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setPropaneInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetPropaneInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_coalDoubleEdit){
     m_coalDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::coalInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setCoalInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetCoalInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::coalInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setCoalInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetCoalInflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_fuelOil_1DoubleEdit){
     m_fuelOil_1DoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::fuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::fuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetFuelOil1Inflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_fuelOil_2DoubleEdit){
     m_fuelOil_2DoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::fuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::fuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetFuelOil2Inflation,m_lifeCycleCostParameters.get_ptr())));
   }
 
   if(m_waterDoubleEdit){
     m_waterDoubleEdit->bind(
       *m_lifeCycleCostParameters,
-      OptionalDoubleGetter(boost::bind(&model::LifeCycleCostParameters::waterInflation,m_lifeCycleCostParameters.get_ptr())),
-      boost::optional<DoubleSetter>(boost::bind(&model::LifeCycleCostParameters::setWaterInflation,m_lifeCycleCostParameters.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::LifeCycleCostParameters::resetWaterInflation,m_lifeCycleCostParameters.get_ptr())));
+      OptionalDoubleGetter(std::bind(&model::LifeCycleCostParameters::waterInflation,m_lifeCycleCostParameters.get_ptr())),
+      boost::optional<DoubleSetter>(std::bind(&model::LifeCycleCostParameters::setWaterInflation,m_lifeCycleCostParameters.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::LifeCycleCostParameters::resetWaterInflation,m_lifeCycleCostParameters.get_ptr())));
   }
  
   OS_ASSERT(m_fempGroup->button(0));

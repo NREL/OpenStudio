@@ -18,21 +18,20 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../IddFieldProperties.hpp"
+#include "../IddKey.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../core/String.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Containers.hpp"
+#include "../../core/Compare.hpp"
 
 #include <resources.hxx>
 
-#include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem/fstream.hpp>
 
@@ -55,7 +54,7 @@ TEST_F(IddFixture, IddFile)
 
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
-  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile);
+  boost::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
   OptionalIddFile loadedIddFile = IddFile::load(inFile);
   ASSERT_TRUE(loadedIddFile); inFile.close();
   EXPECT_EQ("8.1.0.009",loadedIddFile->version());
@@ -280,7 +279,7 @@ TEST_F(IddFixture, IddFile_EpGroups) {
   std::stringstream ss;
   // uniqueness
   for (StringVector::const_iterator it = groups.begin(), itEnd = groups.end(); it != itEnd; ++it) {
-    StringVector::const_iterator loc = std::find_if(it+1,itEnd,boost::bind(istringEqual,*it,_1));
+    StringVector::const_iterator loc = std::find_if(it+1,itEnd,std::bind(istringEqual,*it,std::placeholders::_1));
     EXPECT_TRUE(loc == itEnd);
     if (loc != itEnd) {
       LOG(Debug,"The group name '" << *it << "' is repeated in epIddFile.");

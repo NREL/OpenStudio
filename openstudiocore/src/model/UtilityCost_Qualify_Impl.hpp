@@ -17,15 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_UTILITYCOST_QUALITY_IMPL_HPP
-#define MODEL_UTILITYCOST_QUALITY_IMPL_HPP
+#ifndef MODEL_UTILITYCOST_QUALIFY_IMPL_HPP
+#define MODEL_UTILITYCOST_QUALIFY_IMPL_HPP
 
-
-#include <model/UtilityCost_Qualify.hpp>
-
-#include <model/ParentObject_Impl.hpp>
-#include <model/UtilityCost_Qualify.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ParentObject_Impl.hpp"
+#include "UtilityCost_Qualify.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,4 +92,4 @@ private:
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_QUALITY_IMPL_HPP
+#endif // MODEL_UTILITYCOST_QUALIFY_IMPL_HPP

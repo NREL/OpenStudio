@@ -17,19 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ENERGYPLUS_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP
-#define ENERGYPLUS_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP
+#ifndef UTILITIES_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP
+#define UTILITIES_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
 #include <resources.hxx>
 
-#include <utilities/document/Document.hpp>
+#include "../Document.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
 class DocumentFixture : public ::testing::Test {
  protected:
@@ -39,7 +37,7 @@ class DocumentFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -55,4 +53,4 @@ class DocumentFixture : public ::testing::Test {
   virtual ~DocumentFixture() {}
 };
 
-#endif // ENERGYPLUS_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP
+#endif // UTILITIES_DOCUMENT_TEST_DOCUMENTFIXTURE_HPP

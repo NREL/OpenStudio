@@ -19,17 +19,17 @@
 
 #include <gtest/gtest.h>
 
-#include <openstudio_app/test/OpenStudioAppFixture.hpp>
+#include "OpenStudioAppFixture.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../../osversion/VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/SpaceLoad.hpp>
-#include <model/SpaceLoad_Impl.hpp>
-#include <model/SpaceType.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/SpaceLoad.hpp"
+#include "../../model/SpaceLoad_Impl.hpp"
+#include "../../model/SpaceType.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
 #include <QFileInfo>

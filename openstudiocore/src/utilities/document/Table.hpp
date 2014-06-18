@@ -20,15 +20,16 @@
 #ifndef UTILITIES_DOCUMENT_TABLE_HPP
 #define UTILITIES_DOCUMENT_TABLE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/document/SectionElement.hpp>
-#include <utilities/document/TableElement.hpp>
+#include "SectionElement.hpp"
+#include "TableElement.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../units/Unit.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../core/Path.hpp"
 #include <boost/filesystem/fstream.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -37,8 +38,8 @@ namespace detail {
 }
 
 /** Table is a SectionElement that provides support for Table creation, serialization,
- *  and de-serialization. Tables can be serialized to their own internal format, HTML, LaTeX,
- *  CSV or JSON. Tables can be de-serialized from their own internal format and CSV. */
+ *  and deserialization. Tables can be serialized to their own internal format, HTML, LaTeX,
+ *  CSV or JSON. Tables can be deserialized from their own internal format and CSV. */
 class UTILITIES_API Table : public SectionElement {
  public:
 

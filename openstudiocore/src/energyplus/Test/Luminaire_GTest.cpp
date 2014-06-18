@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/Luminaire_Impl.hpp"
+#include "../../model/LuminaireDefinition.hpp"
+#include "../../model/LuminaireDefinition_Impl.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
 

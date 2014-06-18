@@ -20,8 +20,8 @@
 #ifndef MODEL_GASEQUIPMENT_HPP
 #define MODEL_GASEQUIPMENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -124,7 +124,7 @@ class MODEL_API GasEquipment : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit GasEquipment(boost::shared_ptr<detail::GasEquipment_Impl> impl);
+  explicit GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl);
 
   /// @endcond
  private:

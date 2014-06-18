@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "Model.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -149,6 +149,17 @@ std::vector<ModelObject> Mixer_Impl::inletModelObjects()
   return result;
 }
 
+std::vector<HVACComponent> Mixer_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+      edges.push_back(*edgeObject);
+    }
+  }
+  return edges;
+}
+
 bool Mixer_Impl::isRemovable() const
 {
   if( airLoopHVAC() || plantLoop() )
@@ -163,7 +174,7 @@ bool Mixer_Impl::isRemovable() const
 
 } // detail
 
-Mixer::Mixer(boost::shared_ptr<detail::Mixer_Impl> p)
+Mixer::Mixer(std::shared_ptr<detail::Mixer_Impl> p)
   : HVACComponent(p)
 {}
 

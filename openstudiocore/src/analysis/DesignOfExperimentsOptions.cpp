@@ -17,13 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
+#include "DesignOfExperimentsOptions.hpp"
+#include "DesignOfExperimentsOptions_Impl.hpp"
 
-#include <utilities/core/Json.hpp>
-
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -42,7 +39,7 @@ namespace detail {
   {}
 
   AlgorithmOptions DesignOfExperimentsOptions_Impl::clone() const {
-    boost::shared_ptr<DesignOfExperimentsOptions_Impl> impl(new DesignOfExperimentsOptions_Impl(*this));
+    std::shared_ptr<DesignOfExperimentsOptions_Impl> impl(new DesignOfExperimentsOptions_Impl(*this));
     return DesignOfExperimentsOptions(impl);
   }
 
@@ -68,7 +65,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return DesignOfExperimentsOptions(DesignOfExperimentsType(map["design_type"].toString().toStdString()),
                                       attributes);
   }
@@ -76,13 +73,13 @@ namespace detail {
 } // detail
 
 DesignOfExperimentsOptions::DesignOfExperimentsOptions(const DesignOfExperimentsType& designType)
-  : AlgorithmOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
+  : AlgorithmOptions(std::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
         new detail::DesignOfExperimentsOptions_Impl(designType)))
 {}
 
 DesignOfExperimentsOptions::DesignOfExperimentsOptions(const DesignOfExperimentsType& designType,
                                                        const std::vector<Attribute>& options)
-  : AlgorithmOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
+  : AlgorithmOptions(std::shared_ptr<detail::DesignOfExperimentsOptions_Impl>(
         new detail::DesignOfExperimentsOptions_Impl(designType,options)))
 {}
 
@@ -95,7 +92,7 @@ void DesignOfExperimentsOptions::setDesignType(const DesignOfExperimentsType& de
 }
 
 /// @cond
-DesignOfExperimentsOptions::DesignOfExperimentsOptions(boost::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl)
+DesignOfExperimentsOptions::DesignOfExperimentsOptions(std::shared_ptr<detail::DesignOfExperimentsOptions_Impl> impl)
   : AlgorithmOptions(impl)
 {}
 /// @endcond

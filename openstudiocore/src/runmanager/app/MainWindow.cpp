@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/app/MainWindow.hpp>
-#include <runmanager/app/FileSystemSearch.hpp>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "MainWindow.hpp"
+#include "FileSystemSearch.hpp"
+#include "../lib/JobFactory.hpp"
+#include "../lib/Workflow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/plot/ProgressBar.hpp"
 
 #include <QDesktopServices>
 #include <QDirModel>
@@ -65,8 +65,8 @@ namespace runmanager {
   setWindowIcon(icon);
 #endif
 
-    m_selectedMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
-    m_regexMessage = boost::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
+    m_selectedMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("0 files selected.", statusBar()));
+    m_regexMessage = std::shared_ptr<StatusBarMessage>(new StatusBarMessage("", statusBar()));
 
     connect(ui.tabWidget, SIGNAL(currentChanged(int)), this, SLOT(updateToolbar(int)));
 
@@ -183,11 +183,9 @@ namespace runmanager {
     if (!badtools.empty())
     {
       std::string paths;
-      for (std::set<std::string>::const_iterator itr = badtools.begin();
-           itr != badtools.end();
-           ++itr)
+      for (const auto & badtool : badtools)
       {
-        paths += "\n\t" + *itr;
+        paths += "\n\t" + badtool;
       }
 
       QMessageBox::warning(this,
@@ -825,11 +823,9 @@ namespace runmanager {
       StatusBarProgress sbp("Adding jobs to queue", statusBar());
       sbp.update(0, t_files.size()-1, 0);
       int place = 0;
-      for (std::vector<openstudio::path>::const_iterator itr = t_files.begin();
-           itr != t_files.end();
-           ++itr)
+      for (const auto & file : t_files)
       {
-        queueSimulation(*itr, epw);
+        queueSimulation(file, epw);
         ++place;
         sbp.update(place);
       }

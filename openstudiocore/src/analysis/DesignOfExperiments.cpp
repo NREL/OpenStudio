@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
+#include "DesignOfExperiments.hpp"
+#include "DesignOfExperiments_Impl.hpp"
 
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
+#include "DesignOfExperimentsOptions.hpp"
+#include "DesignOfExperimentsOptions_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include "Analysis.hpp"
+#include "Problem.hpp"
+#include "DataPoint.hpp"
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -66,7 +66,7 @@ namespace detail {
   {}
 
   AnalysisObject DesignOfExperiments_Impl::clone() const {
-    boost::shared_ptr<DesignOfExperiments_Impl> impl(new DesignOfExperiments_Impl(*this));
+    std::shared_ptr<DesignOfExperiments_Impl> impl(new DesignOfExperiments_Impl(*this));
     return DesignOfExperiments(impl);
   }
 
@@ -81,7 +81,7 @@ namespace detail {
   int DesignOfExperiments_Impl::createNextIteration(Analysis& analysis) {
     int result(0);
 
-    // to make sure problem type check has already occured. this is stated usage in header.
+    // to make sure problem type check has already occurred. this is stated usage in header.
     OS_ASSERT(analysis.algorithm().get() == getPublicObject<DesignOfExperiments>());
     // nothing else is supported yet
     DesignOfExperimentsOptions options = designOfExperimentsOptions();
@@ -191,7 +191,7 @@ namespace detail {
 } // detail
 
 DesignOfExperiments::DesignOfExperiments(const DesignOfExperimentsOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::DesignOfExperiments_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::DesignOfExperiments_Impl>(
         new detail::DesignOfExperiments_Impl(options)))
 {
   createCallbackForOptions();
@@ -205,7 +205,7 @@ DesignOfExperiments::DesignOfExperiments(const UUID& uuid,
                                          bool failed,
                                          int iter,
                                          const DesignOfExperimentsOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::DesignOfExperiments_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::DesignOfExperiments_Impl>(
         new detail::DesignOfExperiments_Impl(uuid,
                                              versionUUID,
                                              displayName,
@@ -227,7 +227,7 @@ DesignOfExperimentsOptions DesignOfExperiments::designOfExperimentsOptions() con
 }
 
 /// @cond
-DesignOfExperiments::DesignOfExperiments(boost::shared_ptr<detail::DesignOfExperiments_Impl> impl)
+DesignOfExperiments::DesignOfExperiments(std::shared_ptr<detail::DesignOfExperiments_Impl> impl)
   : OpenStudioAlgorithm(impl)
 {}
 /// @endcond

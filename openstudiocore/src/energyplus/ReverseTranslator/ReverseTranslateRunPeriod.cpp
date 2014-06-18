@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../../model/RunPeriod.hpp"
+#include "../../model/RunPeriod_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 
 #include <utilities/idd/RunPeriod_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
 using namespace openstudio::model;
 

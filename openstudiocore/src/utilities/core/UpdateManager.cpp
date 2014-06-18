@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/UpdateManager.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Application.hpp>
+#include "UpdateManager.hpp"
+#include "Assert.hpp"
+#include "Application.hpp"
 #include <OpenStudio.hxx>
 
 #include <QNetworkAccessManager>

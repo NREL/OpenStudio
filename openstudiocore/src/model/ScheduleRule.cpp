@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ScheduleRule.hpp"
+#include "ScheduleRule_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+#include "ScheduleRuleset_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Schedule_Rule_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -83,7 +83,7 @@ namespace detail {
     // remove daySchedule as a resource so it can be a child
     ResourceObjectVector result = ModelObject_Impl::resources();
     ScheduleDay daySchedule = this->daySchedule();
-    ResourceObjectVector::iterator it = result.begin();
+    auto it = result.begin();
     while (it != result.end()) {
       if ((*it) == daySchedule) {
         result.erase(it);
@@ -762,7 +762,7 @@ std::vector<bool> ScheduleRule::containsDates(const std::vector<openstudio::Date
 
 
 /// @cond
-ScheduleRule::ScheduleRule(boost::shared_ptr<detail::ScheduleRule_Impl> impl)
+ScheduleRule::ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

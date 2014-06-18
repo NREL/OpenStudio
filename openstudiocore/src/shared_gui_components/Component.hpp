@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef SHAREDGUICOMPONENTS_COMPONENT_HPP
+#define SHAREDGUICOMPONENTS_COMPONENT_HPP
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/bcl/BCL.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 #include <QAbstractButton>
 
@@ -40,10 +40,10 @@ public:
   Component(const BCLSearchResult & bclSearchResult,
     bool showAbridgedView = true,
     bool showCheckBox = true,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(bool showAbridgedView = false,
     bool showCheckBox = false,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   Component(const Component & other);
   virtual ~Component();
   Component & operator=(const Component & other);
@@ -86,4 +86,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // COMPONENT_H
+#endif // SHAREDGUICOMPONENTS_COMPONENT_HPP

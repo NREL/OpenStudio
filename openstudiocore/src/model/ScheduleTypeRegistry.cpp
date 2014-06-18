@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
+#include "ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -68,7 +68,7 @@ std::vector<ScheduleType> ScheduleTypeRegistrySingleton::getScheduleTypesByClass
     const std::string& className) const
 {
   ScheduleTypeVector result;
-  ClassNameToScheduleTypesMap::const_iterator it = m_classNameToScheduleTypesMap.find(className);
+  auto it = m_classNameToScheduleTypesMap.find(className);
   if (it != m_classNameToScheduleTypesMap.end()) {
     result = it->second;
   }
@@ -206,6 +206,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"FanZoneExhaust","Balanced Exhaust Fraction","balancedExhaustFractionSchedule",true,"Dimensionless",0.0,1.0},    
     {"GasEquipment","Gas Equipment","schedule",true,"",0.0,1.0},
     {"HeatExchangerAirToAirSensibleAndLatent","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"HeatExchangerFluidToFluid","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"HotWaterEquipment","Hot Water Equipment","schedule",true,"",0.0,1.0},
     {"Lights","Lighting","schedule",true,"",0.0,1.0},
     {"Luminaire","Luminaire","schedule",true,"",0.0,1.0},
@@ -262,6 +263,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"WaterUseEquipment","Cold Water Supply Temperature","coldWaterSupplyTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterUseEquipment","Sensible Fraction","sensibleFractionSchedule",true,"",0.0,1.0},
     {"WaterUseEquipment","Latent Fraction","latentFractionSchedule",true,"",0.0,1.0},
+    {"ZoneControlHumidistat","Humidifying Relative Humidity Setpoint","humidifyingRelativeHumiditySetpointSchedule",true,"Percent",0.0,100.0},
+    {"ZoneControlHumidistat","Dehumidifying Relative Humidity Setpoint","dehumidifyingRelativeHumiditySetpointSchedule",true,"Percent",0.0,100.0},
     {"ZoneHVACBaseboardConvectiveElectric","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACBaseboardConvectiveWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneHVACIdealLoadsAirSystem","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
@@ -292,7 +295,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
 
   int i(0);
   while (!scheduleTypes[i].className.empty()) {
-    ClassNameToScheduleTypesMap::iterator it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
+    auto it = m_classNameToScheduleTypesMap.find(scheduleTypes[i].className);
     if (it == m_classNameToScheduleTypesMap.end()) {
       m_classNameToScheduleTypesMap.insert(ClassNameToScheduleTypesMap::value_type(scheduleTypes[i].className,ScheduleTypeVector(1u,scheduleTypes[i])));
     }
@@ -406,7 +409,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
                                                                 const std::string& scheduleDisplayName)
 {
   ScheduleTypeLimitsVector result;
-  ScheduleTypeLimitsVector candidates = model.getModelObjects<ScheduleTypeLimits>();
+  ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   for (const ScheduleTypeLimits& candidate : candidates) {
     if (isCompatible(scheduleType,candidate)) {

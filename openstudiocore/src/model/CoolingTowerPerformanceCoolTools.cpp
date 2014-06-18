@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoolingTowerPerformanceCoolTools.hpp>
-#include <model/CoolingTowerPerformanceCoolTools_Impl.hpp>
+#include "CoolingTowerPerformanceCoolTools.hpp"
+#include "CoolingTowerPerformanceCoolTools_Impl.hpp"
 
 #include <utilities/idd/OS_CoolingTowerPerformance_CoolTools_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -939,7 +939,7 @@ void CoolingTowerPerformanceCoolTools::setCoefficient35(double coefficient35) {
 }
 
 /// @cond
-CoolingTowerPerformanceCoolTools::CoolingTowerPerformanceCoolTools(boost::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl)
+CoolingTowerPerformanceCoolTools::CoolingTowerPerformanceCoolTools(std::shared_ptr<detail::CoolingTowerPerformanceCoolTools_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

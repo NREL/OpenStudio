@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/AlgorithmOptions.hpp>
-#include <analysis/AlgorithmOptions_Impl.hpp>
+#include "AlgorithmOptions.hpp"
+#include "AlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -46,7 +46,7 @@ namespace detail {
   }
 
   AlgorithmOptions AlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
+    std::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
     return AlgorithmOptions(impl);
   }
 
@@ -128,7 +128,7 @@ namespace detail {
   }
 
   void AlgorithmOptions_Impl::clearOption(const std::string& name) {
-    std::vector<Attribute>::iterator it = findIteratorByName(m_options,name,true);
+    auto it = findIteratorByName(m_options,name,true);
     if (it != m_options.end()) {
       m_options.erase(it);
     }
@@ -157,7 +157,7 @@ namespace detail {
 } // detail
 
 AlgorithmOptions::AlgorithmOptions()
-  : m_impl(boost::shared_ptr<detail::AlgorithmOptions_Impl>(
+  : m_impl(std::shared_ptr<detail::AlgorithmOptions_Impl>(
         new detail::AlgorithmOptions_Impl()))
 {}
 
@@ -194,7 +194,7 @@ void AlgorithmOptions::clearMaxSims() {
 }
 
 /// @cond
-AlgorithmOptions::AlgorithmOptions(boost::shared_ptr<detail::AlgorithmOptions_Impl> impl)
+AlgorithmOptions::AlgorithmOptions(std::shared_ptr<detail::AlgorithmOptions_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

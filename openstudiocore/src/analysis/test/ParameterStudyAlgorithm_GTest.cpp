@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
+#include "../ParameterStudyAlgorithm.hpp"
+#include "../ParameterStudyAlgorithmOptions.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

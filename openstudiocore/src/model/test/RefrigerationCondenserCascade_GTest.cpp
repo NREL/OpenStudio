@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCondenserCascade_Impl.hpp>
+#include "../RefrigerationCondenserCascade.hpp"
+#include "../RefrigerationCondenserCascade_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

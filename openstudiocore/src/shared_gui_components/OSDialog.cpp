@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QMouseEvent>
@@ -36,10 +36,10 @@ OSDialog::OSDialog(bool isIP,
                    QWidget * parent)
   : QDialog(parent),
   m_isIP(isIP),
-  m_backButton(NULL),
-  m_cancelButton(NULL),
-  m_okButton(NULL),
-  m_upperLayout(NULL),
+  m_backButton(nullptr),
+  m_cancelButton(nullptr),
+  m_okButton(nullptr),
+  m_upperLayout(nullptr),
   m_sizeHint(QSize(800,500)),
   m_layoutContentsMargins(QMargins(20,70,20,20)),
   _move(false)
@@ -59,7 +59,7 @@ void OSDialog::createLayout()
 {
   m_upperLayout = new QVBoxLayout();
 
-  QHBoxLayout * lowerLayout = new QHBoxLayout();
+  auto lowerLayout = new QHBoxLayout();
 
   lowerLayout->addStretch();
 
@@ -94,7 +94,7 @@ void OSDialog::createLayout()
   OS_ASSERT(isConnected);
   lowerLayout->addWidget(m_cancelButton);
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
   mainLayout->setContentsMargins(m_layoutContentsMargins);
   mainLayout->addLayout(m_upperLayout);
   mainLayout->addLayout(lowerLayout);

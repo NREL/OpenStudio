@@ -20,7 +20,7 @@
 #ifndef MODEL_WEATHERFILEDAYS_IMPL_HPP
 #define MODEL_WEATHERFILEDAYS_IMPL_HPP
 
-#include <model/SizingPeriod_Impl.hpp>
+#include "SizingPeriod_Impl.hpp"
 
 namespace openstudio {
 namespace model {

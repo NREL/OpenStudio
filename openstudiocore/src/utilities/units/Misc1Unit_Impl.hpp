@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_MISC1UNIT_IMPL_HPP
 #define UTILITIES_UNITS_MISC1UNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit_Impl.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit_Impl.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -61,7 +61,7 @@ class UTILITIES_API Misc1Unit_Impl : public Unit_Impl {
   /** @name Base Units and Scale */
   //@{
 
-  /** Throws if baseUnit is not a vaild for Misc1Unit. */
+  /** Throws if baseUnit is not a valid for Misc1Unit. */
   virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
   //@}

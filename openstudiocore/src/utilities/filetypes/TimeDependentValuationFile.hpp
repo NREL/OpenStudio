@@ -20,13 +20,13 @@
 #ifndef UTILITIES_FILETYPES_TIMEDEPENDENTVALUATIONFILE_HPP
 #define UTILITIES_FILETYPES_TIMEDEPENDENTVALUATIONFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/data/DataEnums.hpp>
+#include "../document/Table.hpp"
+#include "../data/DataEnums.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

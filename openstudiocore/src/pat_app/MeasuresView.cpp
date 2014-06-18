@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/MeasuresView.hpp>
+#include "MeasuresView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
@@ -47,7 +47,7 @@ MeasuresTabView::MeasuresTabView()
 
   mainContent = new QWidget();
 
-  QVBoxLayout * mainContentVLayout = new QVBoxLayout();
+  auto mainContentVLayout = new QVBoxLayout();
   mainContentVLayout->setContentsMargins(0,0,0,0);
   mainContentVLayout->setSpacing(0);
   mainContentVLayout->setAlignment(Qt::AlignTop);
@@ -57,7 +57,7 @@ MeasuresTabView::MeasuresTabView()
 
   // Select Baseline Header
 
-  QWidget * selectBaselineHeader = new QWidget();
+  auto selectBaselineHeader = new QWidget();
   selectBaselineHeader->setFixedHeight(30);
   selectBaselineHeader->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   selectBaselineHeader->setObjectName("SelectBaselineHeader");
@@ -65,7 +65,7 @@ MeasuresTabView::MeasuresTabView()
 
   mainContentVLayout->addWidget(selectBaselineHeader);
 
-  QHBoxLayout * baselineHeaderHLayout = new QHBoxLayout(); 
+  auto baselineHeaderHLayout = new QHBoxLayout(); 
   baselineHeaderHLayout->setContentsMargins(5,5,5,5);
   baselineHeaderHLayout->setSpacing(10);
 
@@ -83,7 +83,7 @@ MeasuresTabView::MeasuresTabView()
   baselineNameBackground->setObjectName("BaselineNameBackground");
   baselineNameBackground->setStyleSheet("QWidget#BaselineNameBackground { background: #D9D9D9 }");
   baselineNameBackground->setMinimumWidth(250);
-  QHBoxLayout * baselineNameBackgroundLayout = new QHBoxLayout();
+  auto baselineNameBackgroundLayout = new QHBoxLayout();
   baselineNameBackgroundLayout->setContentsMargins(5,2,5,2);
   baselineNameBackgroundLayout->setSpacing(5);
   baselineNameBackground->setLayout(baselineNameBackgroundLayout);

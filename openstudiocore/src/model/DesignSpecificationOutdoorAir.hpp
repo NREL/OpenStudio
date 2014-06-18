@@ -20,8 +20,8 @@
 #ifndef MODEL_DESIGNSPECIFICATIONOUTDOORAIR_HPP
 #define MODEL_DESIGNSPECIFICATIONOUTDOORAIR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -128,7 +128,7 @@ class MODEL_API DesignSpecificationOutdoorAir : public ResourceObject {
   /// @cond
   typedef detail::DesignSpecificationOutdoorAir_Impl ImplType;
 
-  explicit DesignSpecificationOutdoorAir(boost::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
+  explicit DesignSpecificationOutdoorAir(std::shared_ptr<detail::DesignSpecificationOutdoorAir_Impl> impl);
 
   friend class detail::DesignSpecificationOutdoorAir_Impl;
 

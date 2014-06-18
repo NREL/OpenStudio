@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCALLIBRARY_HPP
-#define OPENSTUDIO_LOCALLIBRARY_HPP
+#ifndef SHAREDGUICOMPONENTS_LOCALLIBRARY_HPP
+#define SHAREDGUICOMPONENTS_LOCALLIBRARY_HPP
 
 
 namespace openstudio{
@@ -34,5 +34,5 @@ namespace openstudio{
 
 } // openstudio
 
-#endif 
+#endif // SHAREDGUICOMPONENTS_LOCALLIBRARY_HPP
 

@@ -17,65 +17,65 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectTreeItems.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
+#include "ModelObjectTreeItems.hpp"
+#include "ModelObjectItem.hpp"
+#include "IconLibrary.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/DaylightingControl.hpp"
+#include "../model/DaylightingControl_Impl.hpp"
+#include "../model/GlareSensor.hpp"
+#include "../model/GlareSensor_Impl.hpp"
+#include "../model/IlluminanceMap.hpp"
+#include "../model/IlluminanceMap_Impl.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMass_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipment_Impl.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipment_Impl.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipment_Impl.hpp"
+#include "../model/SteamEquipment.hpp"
+#include "../model/SteamEquipment_Impl.hpp"
+#include "../model/OtherEquipment.hpp"
+#include "../model/OtherEquipment_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
@@ -103,8 +103,8 @@
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/OS_DesignSpecification_OutdoorAir_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -622,7 +622,7 @@ std::string SiteShadingTreeItem::itemName()
 std::vector<model::ModelObject> SiteShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Site", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -690,13 +690,13 @@ std::vector<model::ModelObject> BuildingTreeItem::modelObjectChildren() const
   std::vector<model::ModelObject> result;
 
   if (m_sortByType == IddObjectType::OS_BuildingStory){
-    std::vector<model::BuildingStory> buildingStories = model.getModelObjects<model::BuildingStory>();
+    std::vector<model::BuildingStory> buildingStories = model.getConcreteModelObjects<model::BuildingStory>();
     result.insert(result.end(), buildingStories.begin(), buildingStories.end());
   }else if (m_sortByType == IddObjectType::OS_ThermalZone){
-    std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     result.insert(result.end(), thermalZones.begin(), thermalZones.end());
   }else if (m_sortByType == IddObjectType::OS_SpaceType){
-    std::vector<model::SpaceType> spaceTypes = model.getModelObjects<model::SpaceType>();
+    std::vector<model::SpaceType> spaceTypes = model.getConcreteModelObjects<model::SpaceType>();
     result.insert(result.end(), spaceTypes.begin(), spaceTypes.end());
   }
 
@@ -775,7 +775,7 @@ std::string BuildingShadingTreeItem::itemName()
 std::vector<model::ModelObject> BuildingShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Building", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -841,7 +841,7 @@ std::vector<model::ModelObject> NoBuildingStoryTreeItem::modelObjectChildren() c
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.buildingStory()){
       result.push_back(space);
     }
@@ -922,7 +922,7 @@ std::vector<model::ModelObject> NoThermalZoneTreeItem::modelObjectChildren() con
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.thermalZone()){
       result.push_back(space);
     }
@@ -1021,7 +1021,7 @@ std::vector<model::ModelObject> NoSpaceTypeTreeItem::modelObjectChildren() const
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.spaceType()){
       result.push_back(space);
     }

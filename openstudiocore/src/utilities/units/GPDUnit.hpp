@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_GPDUNIT_HPP
 #define UTILITIES_UNITS_GPDUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -110,7 +110,7 @@ class UTILITIES_API GPDUnit : public Unit {
   /// @cond
   typedef detail::GPDUnit_Impl ImplType;
 
-  explicit GPDUnit(boost::shared_ptr<detail::GPDUnit_Impl> impl);
+  explicit GPDUnit(std::shared_ptr<detail::GPDUnit_Impl> impl);
 
   friend class detail::GPDUnit_Impl;
   friend class Unit;

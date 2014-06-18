@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <gbxml/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
 
@@ -172,7 +172,7 @@ namespace gbxml {
     }
 */
     // do thermal zones
-    std::vector<model::ThermalZone> thermalZones = model.getModelObjects<model::ThermalZone>();
+    std::vector<model::ThermalZone> thermalZones = model.getConcreteModelObjects<model::ThermalZone>();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
@@ -216,7 +216,7 @@ namespace gbxml {
     }
 
     // translate surfaces
-    std::vector<model::Surface> surfaces = model.getModelObjects<model::Surface>();
+    std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
       m_progressBar->setMinimum(0);

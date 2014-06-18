@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSCONTROLLER_H
-#define OPENSTUDIO_SCRIPTSCONTROLLER_H
+#ifndef OPENSTUDIO_SCRIPTSCONTROLLER_HPP
+#define OPENSTUDIO_SCRIPTSCONTROLLER_HPP
 
-#include <openstudio_lib/SubTabController.hpp>
+#include "SubTabController.hpp"
 
 namespace openstudio {
 
@@ -68,4 +68,4 @@ class ScriptsController : public SubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSCONTROLLER_H
+#endif // OPENSTUDIO_SCRIPTSCONTROLLER_HPP

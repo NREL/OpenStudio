@@ -20,8 +20,8 @@
 #ifndef MODEL_PUMPVARIABLESPEED_HPP
 #define MODEL_PUMPVARIABLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -271,7 +271,7 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit PumpVariableSpeed(boost::shared_ptr<detail::PumpVariableSpeed_Impl> impl);
+  explicit PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl);
 
   /// @endcond
  private:

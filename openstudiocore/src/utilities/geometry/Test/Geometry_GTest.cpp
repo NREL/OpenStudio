@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../Geometry.hpp"
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
 
 using namespace std;
 using namespace boost;
@@ -166,6 +166,19 @@ TEST_F(GeometryFixture, Centroid)
   EXPECT_EQ(0.5, c->x());
   EXPECT_EQ(0.0, c->y());
   EXPECT_EQ(0.5, c->z());
+
+  // large rectangle
+  points.clear();
+  points.push_back(Point3d(3,0,2));
+  points.push_back(Point3d(3,0,1));
+  points.push_back(Point3d(3,100,1));
+  points.push_back(Point3d(3,100,2));
+  
+  c = getCentroid(points);
+  ASSERT_TRUE(c);
+  EXPECT_EQ(3.0, c->x());
+  EXPECT_EQ(50.0, c->y());
+  EXPECT_EQ(1.5, c->z());
 
   // L
   points.clear();

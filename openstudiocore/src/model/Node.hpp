@@ -20,10 +20,10 @@
 #ifndef MODEL_NODE_HPP
 #define MODEL_NODE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -135,7 +135,7 @@ class MODEL_API Node : public StraightComponent {
 
   typedef detail::Node_Impl ImplType;
 
-  explicit Node(boost::shared_ptr<detail::Node_Impl> impl);
+  explicit Node(std::shared_ptr<detail::Node_Impl> impl);
 
  private:
 

@@ -17,12 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Schedule.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationCase_Impl.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../utilities/time/Time.hpp"
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -82,12 +84,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     object.setDouble(Refrigeration_CaseFields::RatedAmbientRelativeHumidity,d.get());
   }
 
-//RatedTotalCoolingCapacityperUnitLength
-  d = modelObject.ratedTotalCoolingCapacityperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,d.get());
-  }
-
 //RatedLatentHeatRatio
   d = modelObject.ratedLatentHeatRatio();
   if (d) {
@@ -131,30 +127,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     }
   }
 
-//StandardCaseFanPowerperUnitLength
-  d = modelObject.standardCaseFanPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,d.get());
-  }
-
-//OperatingCaseFanPowerperUnitLength
-  d = modelObject.operatingCaseFanPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,d.get());
-  }
-
-//StandardCaseLightingPowerperUnitLength
-  d = modelObject.standardCaseLightingPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,d.get());
-  }
-
-//InstalledCaseLightingPowerperUnitLength
-  d = modelObject.installedCaseLightingPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,d.get());
-  }
-
 //CaseLightingScheduleName
   boost::optional<Schedule> caseLightingSchedule = modelObject.caseLightingSchedule();
 
@@ -172,18 +144,6 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   d = modelObject.fractionofLightingEnergytoCase();
   if (d) {
     object.setDouble(Refrigeration_CaseFields::FractionofLightingEnergytoCase,d.get());
-  }
-
-//CaseAntiSweatHeaterPowerperUnitLength
-  d = modelObject.caseAntiSweatHeaterPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,d.get());
-  }
-
-//MinimumAntiSweatHeaterPowerperUnitLength
-  d = modelObject.minimumAntiSweatHeaterPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,d.get());
   }
 
 //AntiSweatHeaterControlType
@@ -210,41 +170,82 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
     object.setDouble(Refrigeration_CaseFields::FractionofAntiSweatHeaterEnergytoCase,d.get());
   }
 
-//CaseDefrostPowerperUnitLength
-  d = modelObject.caseDefrostPowerperUnitLength();
-  if (d) {
-    object.setDouble(Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,d.get());
-  }
-
 //CaseDefrostType
   s = modelObject.caseDefrostType();
   if (s) {
     object.setString(Refrigeration_CaseFields::CaseDefrostType,s.get());
   }
 
-//CaseDefrostScheduleName
-  boost::optional<Schedule> caseDefrostSchedule = modelObject.caseDefrostSchedule();
+//DefrostCycleParameters
+  boost::optional<int> durationofDefrostCycle = modelObject.durationofDefrostCycle();
+  boost::optional<int> dripDownTime = modelObject.dripDownTime();
+  std::vector<openstudio::Time> defrostStartTimes = modelObject.getImpl<model::detail::RefrigerationCase_Impl>()->defrostStartTimes();
 
-  if( caseDefrostSchedule )
-  {
-    boost::optional<IdfObject> _caseDefrostSchedule = translateAndMapModelObject(caseDefrostSchedule.get());
+  if( durationofDefrostCycle && dripDownTime && !defrostStartTimes.empty() ) {
+    int defrostTimeHour = *durationofDefrostCycle / 60;
+    int defrostTimeMin = *durationofDefrostCycle % 60;
+    int dripDownTimeHour = *dripDownTime / 60;
+    int dripDownTimeMin = *dripDownTime % 60;
 
-    if( _caseDefrostSchedule && _caseDefrostSchedule->name() )
+    std::vector< std::pair<openstudio::Time, double> > defrostDefaultDay;
+    std::vector< std::pair<openstudio::Time, double> > dripDownDefaultDay;
+    for( std::vector<openstudio::Time>::iterator _defrostStartTime = defrostStartTimes.begin();
+       _defrostStartTime != defrostStartTimes.end();
+       ++_defrostStartTime )
     {
-      object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
+      defrostDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // defrost off
+      openstudio::Time defrostEndTime(0, _defrostStartTime->hours() + defrostTimeHour, _defrostStartTime->minutes() + defrostTimeMin);
+      defrostDefaultDay.push_back(std::make_pair(defrostEndTime, 1)); // defrost on
+
+      dripDownDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // drip down off
+      openstudio::Time dripDownEndTime(0, _defrostStartTime->hours() + defrostTimeHour + dripDownTimeHour, _defrostStartTime->minutes() + defrostTimeMin + dripDownTimeMin);
+      dripDownDefaultDay.push_back(std::make_pair(dripDownEndTime, 1)); // drip down on
     }
-  }
 
-//CaseDefrostDripDownScheduleName
-  boost::optional<Schedule> caseDefrostDripDownSchedule = modelObject.caseDefrostDripDownSchedule();
+    if( (defrostStartTimes.front().hours() != 0 && defrostStartTimes.front().minutes() != 0) || defrostStartTimes.back().hours() < 24) {
+      openstudio::Time defrostDayEnd(0, 24, 0);
+      defrostDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // defrost off
+      dripDownDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // drip down off
+    }
 
-  if( caseDefrostDripDownSchedule )
-  {
-    boost::optional<IdfObject> _caseDefrostDripDownSchedule = translateAndMapModelObject(caseDefrostDripDownSchedule.get());
+    //CaseDefrostScheduleName
+    std::string defrostName(modelObject.name().get() + " Defrost Schedule");
+    boost::optional<IdfObject> defrostSchedule = this->createSimpleSchedule(defrostName, defrostDefaultDay);
+    if( defrostSchedule ) {
+      object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName, defrostName);
+    }
 
-    if( _caseDefrostDripDownSchedule && _caseDefrostDripDownSchedule->name() )
+    //CaseDefrostDripDownScheduleName
+    std::string dripDownName(modelObject.name().get() + " Defrost Drip Down Schedule");
+    boost::optional<IdfObject> defrostDripDownSchedule = this->createSimpleSchedule(dripDownName, dripDownDefaultDay);
+    if( defrostDripDownSchedule ) {
+      object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName, dripDownName);
+    }
+  } else {
+  //CaseDefrostScheduleName
+    boost::optional<Schedule> caseDefrostSchedule = modelObject.caseDefrostSchedule();
+
+    if( caseDefrostSchedule )
     {
-      object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
+      boost::optional<IdfObject> _caseDefrostSchedule = translateAndMapModelObject(caseDefrostSchedule.get());
+
+      if( _caseDefrostSchedule && _caseDefrostSchedule->name() )
+      {
+        object.setString(Refrigeration_CaseFields::CaseDefrostScheduleName,_caseDefrostSchedule->name().get());
+      }
+    }
+
+  //CaseDefrostDripDownScheduleName
+    boost::optional<Schedule> caseDefrostDripDownSchedule = modelObject.caseDefrostDripDownSchedule();
+
+    if( caseDefrostDripDownSchedule )
+    {
+      boost::optional<IdfObject> _caseDefrostDripDownSchedule = translateAndMapModelObject(caseDefrostDripDownSchedule.get());
+
+      if( _caseDefrostDripDownSchedule && _caseDefrostDripDownSchedule->name() )
+      {
+        object.setString(Refrigeration_CaseFields::CaseDefrostDripDownScheduleName,_caseDefrostDripDownSchedule->name().get());
+      }
     }
   }
 
@@ -309,6 +310,103 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationCase( Refrig
   d = modelObject.averageRefrigerantChargeInventory();
   if (d) {
     object.setDouble(Refrigeration_CaseFields::AverageRefrigerantChargeInventory,d.get());
+  }
+
+  boost::optional<double> ratedTotalCoolingCapacity;
+  boost::optional<double> standardCaseFanPower;
+  boost::optional<double> operatingCaseFanPower;
+  boost::optional<double> standardCaseLightingPower;
+  boost::optional<double> installedCaseLightingPower;
+  boost::optional<double> caseAntiSweatHeaterPower;
+  boost::optional<double> minimumAntiSweatHeaterPower;
+  boost::optional<double> caseDefrostPower;
+
+  std::string const unitType = modelObject.unitType();
+  if(istringEqual("UnitLength", unitType)) {
+    ratedTotalCoolingCapacity = modelObject.ratedTotalCoolingCapacityperUnitLength();
+    standardCaseFanPower = modelObject.standardCaseFanPowerperUnitLength();
+    operatingCaseFanPower = modelObject.operatingCaseFanPowerperUnitLength();
+    standardCaseLightingPower = modelObject.standardCaseLightingPowerperUnitLength();
+    installedCaseLightingPower = modelObject.installedCaseLightingPowerperUnitLength();
+    caseAntiSweatHeaterPower = modelObject.caseAntiSweatHeaterPowerperUnitLength();
+    minimumAntiSweatHeaterPower = modelObject.minimumAntiSweatHeaterPowerperUnitLength();
+    caseDefrostPower = modelObject.caseDefrostPowerperUnitLength();
+  }
+  else { // NumberOfDoors
+    boost::optional<int> numberOfDoors = modelObject.numberOfDoors();
+    boost::optional<double> caseLength = modelObject.caseLength();
+    if( !numberOfDoors ) {
+      LOG(Error, "Missing required input 'NumberOfDoors' for Refrigeration:Case named '" << modelObject.name().get() << "'");
+    }
+    if( !caseLength ) {
+      LOG(Error, "Missing required input 'CaseLength' for Refrigeration:Case named '" << modelObject.name().get() << "'");
+    }
+    double conversion = numberOfDoors.get() / caseLength.get();
+
+    if( ( ratedTotalCoolingCapacity = modelObject.ratedTotalCoolingCapacityperDoor() ) ) {
+      ratedTotalCoolingCapacity = ratedTotalCoolingCapacity.get() * conversion;
+    }
+    if( ( standardCaseFanPower = modelObject.standardCaseFanPowerperDoor() ) ) {
+      standardCaseFanPower = standardCaseFanPower.get() * conversion;
+    }
+    if( ( operatingCaseFanPower = modelObject.operatingCaseFanPowerperDoor() ) ) {
+      operatingCaseFanPower = operatingCaseFanPower.get() * conversion;
+    }
+    if( ( standardCaseLightingPower = modelObject.standardCaseLightingPowerperDoor() ) ) {
+      standardCaseLightingPower = standardCaseLightingPower.get() * conversion;
+    }
+    if( ( installedCaseLightingPower = modelObject.installedCaseLightingPowerperDoor() ) ) {
+      installedCaseLightingPower = installedCaseLightingPower.get() * conversion;
+    }
+    if( ( caseAntiSweatHeaterPower = modelObject.caseAntiSweatHeaterPowerperDoor() ) ) {
+      caseAntiSweatHeaterPower = caseAntiSweatHeaterPower.get() * conversion;
+    }
+    if( ( minimumAntiSweatHeaterPower = modelObject.minimumAntiSweatHeaterPowerperDoor() ) ) {
+      minimumAntiSweatHeaterPower = minimumAntiSweatHeaterPower.get() * conversion;
+    }
+    if( ( caseDefrostPower = modelObject.caseDefrostPowerperDoor() ) ) {
+      caseDefrostPower = caseDefrostPower.get() * conversion;
+    }
+  }
+
+//RatedTotalCoolingCapacityperUnitLength
+  if (ratedTotalCoolingCapacity) {
+    object.setDouble(Refrigeration_CaseFields::RatedTotalCoolingCapacityperUnitLength,ratedTotalCoolingCapacity.get());
+  }
+
+//StandardCaseFanPowerperUnitLength
+  if (standardCaseFanPower) {
+    object.setDouble(Refrigeration_CaseFields::StandardCaseFanPowerperUnitLength,standardCaseFanPower.get());
+  }
+
+//OperatingCaseFanPowerperUnitLength
+  if (operatingCaseFanPower) {
+    object.setDouble(Refrigeration_CaseFields::OperatingCaseFanPowerperUnitLength,operatingCaseFanPower.get());
+  }
+
+//StandardCaseLightingPowerperUnitLength
+  if (standardCaseLightingPower) {
+    object.setDouble(Refrigeration_CaseFields::StandardCaseLightingPowerperUnitLength,standardCaseLightingPower.get());
+  }
+
+//InstalledCaseLightingPowerperUnitLength
+  if (installedCaseLightingPower) {
+    object.setDouble(Refrigeration_CaseFields::InstalledCaseLightingPowerperUnitLength,installedCaseLightingPower.get());
+  }
+
+//CaseAntiSweatHeaterPowerperUnitLength
+  if (caseAntiSweatHeaterPower) {
+    object.setDouble(Refrigeration_CaseFields::CaseAntiSweatHeaterPowerperUnitLength,caseAntiSweatHeaterPower.get());
+  }
+
+//MinimumAntiSweatHeaterPowerperUnitLength
+  if (minimumAntiSweatHeaterPower) {
+    object.setDouble(Refrigeration_CaseFields::MinimumAntiSweatHeaterPowerperUnitLength,minimumAntiSweatHeaterPower.get());
+  }
+
+//CaseDefrostPowerperUnitLength
+  if (caseDefrostPower) {
+    object.setDouble(Refrigeration_CaseFields::CaseDefrostPowerperUnitLength,caseDefrostPower.get());
   }
 
   return object;

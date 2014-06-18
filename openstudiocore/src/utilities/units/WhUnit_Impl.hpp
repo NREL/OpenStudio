@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_WHUNIT_IMPL_HPP
 #define UTILITIES_UNITS_WHUNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit_Impl.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit_Impl.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -65,7 +65,7 @@ namespace detail {
     /** @name Base Units and Scale */
     //@{
 
-    /** Throws if baseUnit is not a vaild for WhUnit. */
+    /** Throws if baseUnit is not a valid for WhUnit. */
     virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
     //@}

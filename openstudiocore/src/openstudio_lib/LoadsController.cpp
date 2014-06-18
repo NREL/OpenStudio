@@ -17,36 +17,36 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LoadsController.hpp>
-#include <openstudio_lib/LoadsView.hpp>
+#include "LoadsController.hpp"
+#include "LoadsView.hpp"
 
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-#include <model/OtherEquipmentDefinition.hpp>
-#include <model/OtherEquipmentDefinition_Impl.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
+#include "../model/SpaceLoadDefinition.hpp"
+#include "../model/SpaceLoadDefinition_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/InternalMassDefinition_Impl.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/LightsDefinition_Impl.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/LuminaireDefinition_Impl.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/GasEquipmentDefinition_Impl.hpp"
+#include "../model/SteamEquipmentDefinition.hpp"
+#include "../model/SteamEquipmentDefinition_Impl.hpp"
+#include "../model/OtherEquipmentDefinition.hpp"
+#include "../model/OtherEquipmentDefinition_Impl.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/PeopleDefinition_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QMessageBox>
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

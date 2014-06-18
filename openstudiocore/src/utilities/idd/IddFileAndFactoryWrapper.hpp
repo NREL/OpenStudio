@@ -20,8 +20,8 @@
 #ifndef UTILITIES_IDD_IDDFILEANDFACTORYWRAPPER_HPP
 #define UTILITIES_IDD_IDDFILEANDFACTORYWRAPPER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddFile.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddFile.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {

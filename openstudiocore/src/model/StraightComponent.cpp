@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -347,6 +347,17 @@ void StraightComponent_Impl::disconnect()
   this->model().disconnect(mo, this->outletPort());
 }
 
+std::vector<HVACComponent> StraightComponent_Impl::edges(bool isDemandComponent)
+{
+  std::vector<HVACComponent> edges;
+  if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+    if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+      edges.push_back(*edgeObject);
+    }
+  }
+  return edges;
+}
+
 bool StraightComponent_Impl::addToNode(Node & node)
 {
   Model _model = node.model(); 
@@ -492,7 +503,7 @@ StraightComponent::StraightComponent(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::StraightComponent_Impl>());
 }     
 
-StraightComponent::StraightComponent(boost::shared_ptr<detail::StraightComponent_Impl> p)
+StraightComponent::StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> p)
   : HVACComponent(p)
 {}
 

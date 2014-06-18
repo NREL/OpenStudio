@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_TABBARDRAG_H
-#define  RESULTSVIEWER_TABBARDRAG_H
+#ifndef RESULTSVIEWER_TABBARDRAG_HPP
+#define RESULTSVIEWER_TABBARDRAG_HPP
 
 #include <QTabBar>
 #include <QDropEvent>
@@ -52,7 +52,7 @@ class TabBarDrag : public QTabBar
 
  public:
 
-  TabBarDrag( QWidget* parent=0);
+  TabBarDrag(QWidget* parent=nullptr);
 
  private:
 //  void dropEvent(QDropEvent *evt);
@@ -77,4 +77,4 @@ class TabBarDrag : public QTabBar
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TABBARDRAG_H
+#endif // RESULTSVIEWER_TABBARDRAG_HPP

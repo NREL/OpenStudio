@@ -18,100 +18,92 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/HVACTemplates.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../AirLoopHVACSupplyPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../ControllerWaterCoil.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
+#include "../AirLoopHVACZoneMixer_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../SizingSystem.hpp"
+#include "../SizingSystem_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../HVACTemplates.hpp"
+#include "../LifeCycleCost.hpp"
 
-using namespace openstudio;
+using namespace openstudio::model;
 
 TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ASSERT_EQ(airLoopHVAC.iddObject().name(),"OS:AirLoopHVAC");
 
-  openstudio::model::OptionalNode supplyInletNode = airLoopHVAC.supplyInletNode();
-  openstudio::model::OptionalNode demandOutletNode = airLoopHVAC.demandOutletNode();
-  std::vector<openstudio::model::Node> supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
-  std::vector<openstudio::model::Node> demandInletNodes = airLoopHVAC.demandInletNodes();
+  OptionalNode supplyInletNode = airLoopHVAC.supplyInletNode();
+  OptionalNode demandOutletNode = airLoopHVAC.demandOutletNode();
+  std::vector<Node> supplyOutletNodes = airLoopHVAC.supplyOutletNodes();
+  std::vector<Node> demandInletNodes = airLoopHVAC.demandInletNodes();
 
   ASSERT_TRUE( supplyInletNode );
   ASSERT_TRUE( demandOutletNode );
   ASSERT_EQ( unsigned(1), supplyOutletNodes.size() );
   ASSERT_EQ( unsigned(1), demandInletNodes.size() );
 
-  openstudio::model::OptionalNode supplyOutletNode = openstudio::model::OptionalNode(supplyOutletNodes.front());
-  openstudio::model::OptionalNode demandInletNode = openstudio::model::OptionalNode(demandInletNodes.front());
+  OptionalNode supplyOutletNode = OptionalNode(supplyOutletNodes.front());
+  OptionalNode demandInletNode = OptionalNode(demandInletNodes.front());
 
   modelObject = demandInletNode->outletModelObject();
   ASSERT_TRUE( modelObject );
 
-  openstudio::model::OptionalAirLoopHVACZoneSplitter splitter;
-  splitter = modelObject->optionalCast<openstudio::model::AirLoopHVACZoneSplitter>();
+  OptionalAirLoopHVACZoneSplitter splitter;
+  splitter = modelObject->optionalCast<AirLoopHVACZoneSplitter>();
   ASSERT_TRUE( splitter );
 
   modelObject = splitter->lastOutletModelObject();
   ASSERT_TRUE( modelObject );
 
-  openstudio::model::OptionalNode splitterNode;
-  splitterNode = modelObject->optionalCast<openstudio::model::Node>();
+  OptionalNode splitterNode;
+  splitterNode = modelObject->optionalCast<Node>();
   ASSERT_TRUE( splitterNode );
 
   modelObject = splitterNode->outletModelObject();
   ASSERT_TRUE(modelObject);
 
-  openstudio::model::OptionalAirLoopHVACZoneMixer mixer;
-  mixer = modelObject->optionalCast<openstudio::model::AirLoopHVACZoneMixer>();
+  OptionalAirLoopHVACZoneMixer mixer;
+  mixer = modelObject->optionalCast<AirLoopHVACZoneMixer>();
   ASSERT_TRUE( mixer );
 
   modelObject = mixer->outletModelObject();
   ASSERT_TRUE( modelObject );
 
-  openstudio::model::OptionalNode _demandOutletNode;
-  _demandOutletNode = modelObject->optionalCast<openstudio::model::Node>();
+  OptionalNode _demandOutletNode;
+  _demandOutletNode = modelObject->optionalCast<Node>();
   ASSERT_TRUE( _demandOutletNode );
 
   modelObject = _demandOutletNode->outletModelObject();
   ASSERT_TRUE( modelObject );
 
-  openstudio::model::OptionalAirLoopHVAC _airLoopHVAC;
-  _airLoopHVAC = modelObject->optionalCast<openstudio::model::AirLoopHVAC>();
+  OptionalAirLoopHVAC _airLoopHVAC;
+  _airLoopHVAC = modelObject->optionalCast<AirLoopHVAC>();
   ASSERT_TRUE( _airLoopHVAC );
 
   ASSERT_EQ("StayOff",_airLoopHVAC->nightCycleControlType());
@@ -123,9 +115,9 @@ TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
 
   ASSERT_EXIT (
     {
-      model::Model m;
+      Model m;
 
-      model::AirLoopHVAC airLoopHVAC(m);
+      AirLoopHVAC airLoopHVAC(m);
 
       airLoopHVAC.availabilitySchedule();
 
@@ -136,34 +128,34 @@ TEST_F(ModelFixture,AirLoopHVAC_AirLoopHVAC)
 
 TEST_F(ModelFixture,AirLoopHVAC_addBranchForZone)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<openstudio::model::StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
@@ -171,26 +163,26 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents)
 
   ASSERT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
 
-  airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<openstudio::model::StraightComponent>());
+  airLoopHVAC.addBranchForZone(thermalZone2, boost::optional<StraightComponent>());
 
   ASSERT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
-  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<openstudio::model::HVACComponent>(), 
-                                                       airLoopHVAC.zoneMixer().inletModelObject(0)->cast<openstudio::model::HVACComponent>(),
+  ASSERT_EQ( thermalZone,airLoopHVAC.demandComponents( airLoopHVAC.zoneSplitter().outletModelObject(0)->cast<HVACComponent>(), 
+                                                       airLoopHVAC.zoneMixer().inletModelObject(0)->cast<HVACComponent>(),
                                                        thermalZone.iddObjectType() ).front() );
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
 
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,boost::optional<openstudio::model::StraightComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,boost::optional<StraightComponent>()));
 
   EXPECT_EQ( unsigned(7),airLoopHVAC.demandComponents().size() );
 
@@ -201,15 +193,15 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
 
 TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
@@ -217,7 +209,7 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 
   EXPECT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<openstudio::model::StraightComponent>()));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   EXPECT_EQ( unsigned(12),airLoopHVAC.demandComponents().size() );
 
@@ -232,19 +224,19 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 
 TEST_F(ModelFixture,ThermalZone_remove)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<openstudio::model::StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   airLoopHVAC.removeBranchForZone(thermalZone2);
 
@@ -253,35 +245,35 @@ TEST_F(ModelFixture,ThermalZone_remove)
 
 TEST_F(ModelFixture,AirLoopHVAC_remove)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
 
   ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
 
-  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<openstudio::model::StraightComponent>()));
+  ASSERT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,boost::optional<StraightComponent>()));
 
   ASSERT_NO_THROW(airLoopHVAC.remove());
 }
 
 TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_addToNode)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::ScheduleCompact schedule(model);
-  openstudio::model::AirLoopHVAC airLoopHVAC(model);
-  openstudio::model::ControllerOutdoorAir controller(model);
-  openstudio::model::AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  openstudio::model::FanConstantVolume fan(model,schedule);
+  ScheduleCompact schedule(model);
+  AirLoopHVAC airLoopHVAC(model);
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
+  FanConstantVolume fan(model,schedule);
 
-  openstudio::model::Node supplyInletNode = airLoopHVAC.supplyInletNode();
+  Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
   ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
 
@@ -293,23 +285,23 @@ TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_addToNode)
 
   ASSERT_EQ(fan,supplyInletNode.outletModelObject().get());
 
-  ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<openstudio::model::Node>());
+  ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<openstudio::model::Node>().inletModelObject().get());
+  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 }
 
 TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::ScheduleCompact schedule(model);
-  openstudio::model::AirLoopHVAC airLoopHVAC(model);
-  openstudio::model::ControllerOutdoorAir controller(model);
-  openstudio::model::AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  openstudio::model::FanConstantVolume fan(model,schedule);
+  ScheduleCompact schedule(model);
+  AirLoopHVAC airLoopHVAC(model);
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
+  FanConstantVolume fan(model,schedule);
 
-  openstudio::model::Node supplyInletNode = airLoopHVAC.supplyInletNode();
+  Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
   ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
 
@@ -321,12 +313,12 @@ TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 
   ASSERT_EQ(fan,supplyInletNode.outletModelObject().get());
 
-  ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<openstudio::model::Node>());
+  ASSERT_TRUE(oaSystem.returnAirModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<openstudio::model::Node>().inletModelObject().get());
+  ASSERT_EQ(fan,oaSystem.returnAirModelObject()->cast<Node>().inletModelObject().get());
 
-  std::vector<openstudio::model::ModelObject> returnComponents = 
-    airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<openstudio::model::Node>());
+  std::vector<ModelObject> returnComponents = 
+    airLoopHVAC.supplyComponents(supplyInletNode, oaSystem.returnAirModelObject()->cast<Node>());
   returnComponents.erase( returnComponents.begin() );
 
   ASSERT_EQ(unsigned(2),returnComponents.size());
@@ -334,17 +326,17 @@ TEST_F(ModelFixture,AirLoopHVAC_supplyComponents)
 
 TEST_F(ModelFixture,FanConstantVolume_remove)
 {
-  openstudio::model::Model model = openstudio::model::Model();
-  openstudio::model::OptionalModelObject modelObject;
+  Model model = Model();
+  OptionalModelObject modelObject;
 
-  openstudio::model::ScheduleCompact schedule(model);
-  openstudio::model::AirLoopHVAC airLoopHVAC(model);
-  openstudio::model::ControllerOutdoorAir controller(model);
-  openstudio::model::AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
-  openstudio::model::FanConstantVolume fan(model,schedule);
+  ScheduleCompact schedule(model);
+  AirLoopHVAC airLoopHVAC(model);
+  ControllerOutdoorAir controller(model);
+  AirLoopHVACOutdoorAirSystem oaSystem(model,controller);
+  FanConstantVolume fan(model,schedule);
 
-  openstudio::model::Node supplyInletNode = airLoopHVAC.supplyInletNode();
-  openstudio::model::Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+  Node supplyInletNode = airLoopHVAC.supplyInletNode();
+  Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
 
   ASSERT_TRUE(oaSystem.addToNode(supplyInletNode));
 
@@ -352,13 +344,13 @@ TEST_F(ModelFixture,FanConstantVolume_remove)
 
   ASSERT_EQ(fan,supplyOutletNode.inletModelObject().get());
 
-  ASSERT_TRUE(fan.inletModelObject()->optionalCast<openstudio::model::Node>());
+  ASSERT_TRUE(fan.inletModelObject()->optionalCast<Node>());
 
-  ASSERT_EQ(oaSystem,fan.inletModelObject()->cast<openstudio::model::Node>().inletModelObject().get());
+  ASSERT_EQ(oaSystem,fan.inletModelObject()->cast<Node>().inletModelObject().get());
 
   ASSERT_TRUE(fan.outletModelObject());
 
-  ASSERT_TRUE(fan.outletModelObject()->optionalCast<openstudio::model::Node>());
+  ASSERT_TRUE(fan.outletModelObject()->optionalCast<Node>());
 
   ASSERT_EQ(supplyOutletNode,fan.outletModelObject().get());
 
@@ -371,17 +363,17 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  model::Model m; 
+  Model m; 
 
-  model::ScheduleCompact s(m);
+  ScheduleCompact s(m);
   
-  model::PlantLoop plantLoop(m); 
+  PlantLoop plantLoop(m); 
 
-  model::AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-  model::Node airSupplyOutletNode = airLoop.supplyOutletNode();
+  Node airSupplyOutletNode = airLoop.supplyOutletNode();
 
-  model::CoilHeatingWater heatingCoil(m,s);
+  CoilHeatingWater heatingCoil(m,s);
 
   heatingCoil.addToNode(airSupplyOutletNode);
 
@@ -389,7 +381,7 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
   EXPECT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
 
-  model::CoilCoolingWater coolingCoil(m,s);
+  CoilCoolingWater coolingCoil(m,s);
 
   coolingCoil.addToNode(airSupplyOutletNode);
 
@@ -424,39 +416,39 @@ TEST_F(ModelFixture,AirLoopHVAC_remove2)
 
 TEST_F(ModelFixture, AirLoopHVAC_remove3)
 {
-  model::Model m; 
+  Model m; 
 
-  EXPECT_EQ(0u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
 
-  model::Loop loop = addSystemType5(m);
+  Loop loop = addSystemType5(m);
 
-  EXPECT_EQ(1u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(1u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(1u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(1u, m.getModelObjects<SizingSystem>().size());
 
   loop.remove();
 
-  EXPECT_EQ(0u, m.getModelObjects<model::AirLoopHVAC>().size());
-  EXPECT_EQ(0u, m.getModelObjects<model::SizingSystem>().size());
+  EXPECT_EQ(0u, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_EQ(0u, m.getModelObjects<SizingSystem>().size());
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_Cost)
 {
-  openstudio::model::Model model; 
+  Model model; 
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
-  boost::optional<openstudio::model::LifeCycleCost> cost1 = openstudio::model::LifeCycleCost::createLifeCycleCost("Install", airLoopHVAC, 1000.0, "CostPerEach", "Construction");
+  boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Install", airLoopHVAC, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
-  boost::optional<openstudio::model::LifeCycleCost> cost2 = openstudio::model::LifeCycleCost::createLifeCycleCost("Ducting", airLoopHVAC, 200.0, "CostPerThermalZone", "Construction");
+  boost::optional<LifeCycleCost> cost2 = LifeCycleCost::createLifeCycleCost("Ducting", airLoopHVAC, 200.0, "CostPerThermalZone", "Construction");
   ASSERT_TRUE(cost2);
-  boost::optional<openstudio::model::LifeCycleCost> cost3 = openstudio::model::LifeCycleCost::createLifeCycleCost("Terminals", airLoopHVAC, 66.0, "CostPerArea", "Construction");
+  boost::optional<LifeCycleCost> cost3 = LifeCycleCost::createLifeCycleCost("Terminals", airLoopHVAC, 66.0, "CostPerArea", "Construction");
   EXPECT_FALSE(cost3);
 
   EXPECT_DOUBLE_EQ(1000.0, cost1->totalCost());
@@ -487,14 +479,14 @@ TEST_F(ModelFixture, AirLoopHVAC_Cost)
 
 TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 {
-  openstudio::model::Model model; 
+  Model model; 
 
-  openstudio::model::AirLoopHVAC airLoopHVAC = openstudio::model::AirLoopHVAC(model);
-  openstudio::model::ThermalZone thermalZone = openstudio::model::ThermalZone(model);
-  openstudio::model::ThermalZone thermalZone2 = openstudio::model::ThermalZone(model);
-  openstudio::model::ScheduleCompact scheduleCompact = openstudio::model::ScheduleCompact(model);
-  openstudio::model::AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         openstudio::model::AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
+  ThermalZone thermalZone = ThermalZone(model);
+  ThermalZone thermalZone2 = ThermalZone(model);
+  ScheduleCompact scheduleCompact = ScheduleCompact(model);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
+                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
   EXPECT_TRUE(scheduleCompact.scheduleTypeLimits());
 
 
@@ -506,10 +498,155 @@ TEST_F(ModelFixture, AirLoopHVAC_AddBranchForZone_ReuseTerminal)
 
   EXPECT_EQ(1u, airLoopHVAC.thermalZones().size());
 
-  openstudio::model::AirTerminalSingleDuctUncontrolled term2 = 
-    singleDuctTerminal.clone(model).cast<openstudio::model::AirTerminalSingleDuctUncontrolled>();
+  AirTerminalSingleDuctUncontrolled term2 = 
+    singleDuctTerminal.clone(model).cast<AirTerminalSingleDuctUncontrolled>();
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,term2));
 
   EXPECT_EQ(2u, airLoopHVAC.thermalZones().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_edges)
+{
+  Model m;
+
+  AirLoopHVAC airLoopHVAC(m);
+  PlantLoop plantLoop(m);
+  // demand components
+  ThermalZone thermalZone(m);
+  ThermalZone thermalZone2(m);
+  ThermalZone thermalZone3(m);
+  ThermalZone thermalZone4(m);
+  ScheduleCompact s(m);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m, s);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal2(m, s);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal3(m, s);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal4(m, s);
+
+  AirLoopHVACZoneSplitter splitter = airLoopHVAC.zoneSplitter();
+  AirLoopHVACZoneMixer mixer = airLoopHVAC.zoneMixer();
+
+  Mixer plantDemandMixer = plantLoop.demandMixer();
+
+  // supply components
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m, controllerOutdoorAir);
+  CoilHeatingElectric coil(m, s);
+  CoilHeatingElectric coil2(m, s);
+  CoilHeatingWater coil3(m, s);
+  CoilCoolingWater coil4(m, s);
+  FanConstantVolume fan(m, s);
+
+  airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal);
+  airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal2);
+  airLoopHVAC.addBranchForZone(thermalZone3,singleDuctTerminal3);
+  airLoopHVAC.addBranchForZone(thermalZone4,singleDuctTerminal4);
+
+  Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+  coil4.addToNode(supplyOutletNode);
+  coil3.addToNode(supplyOutletNode);
+  coil.addToNode(supplyOutletNode);
+  fan.addToNode(supplyOutletNode);
+
+  plantLoop.addDemandBranchForComponent(coil3);
+
+  boost::optional<Node> OANode = outdoorAirSystem.outboardOANode();
+  ASSERT_TRUE(OANode);
+  coil2.addToNode(*OANode);
+
+  boost::optional<ModelObject> oaSystem = airLoopHVAC.supplyComponent(outdoorAirSystem.handle());
+  ASSERT_TRUE(oaSystem);
+  EXPECT_EQ(outdoorAirSystem, *oaSystem);
+  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(coil4, edges[0]);
+
+  boost::optional<ModelObject> splitter_obj = airLoopHVAC.demandComponent(splitter.handle());
+  ASSERT_TRUE(splitter_obj);
+  EXPECT_EQ(splitter, *splitter_obj);
+  edges = splitter.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be all air terminals
+  EXPECT_EQ(4, edges.size());
+  bool found_terminal_1 = false;
+  bool found_terminal_2 = false;
+  bool found_terminal_3 = false;
+  bool found_terminal_4 = false;
+  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  {
+    if( singleDuctTerminal == *it ) {
+      found_terminal_1 = true;
+    }
+    else if( singleDuctTerminal2 == *it ) {
+      found_terminal_2 = true;
+    }
+    else if( singleDuctTerminal3 == *it ) {
+      found_terminal_3 = true;
+    }
+    else if( singleDuctTerminal4 == *it ) {
+      found_terminal_4 = true;
+    }
+  }
+  EXPECT_TRUE(found_terminal_1);
+  EXPECT_TRUE(found_terminal_2);
+  EXPECT_TRUE(found_terminal_3);
+  EXPECT_TRUE(found_terminal_4);
+
+  boost::optional<ModelObject> thermal_zone = airLoopHVAC.demandComponent(thermalZone.handle());
+  ASSERT_TRUE(thermal_zone);
+  EXPECT_EQ(thermalZone, *thermal_zone);
+  edges = thermalZone.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Mixer
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(mixer, edges[0]);
+
+  boost::optional<ModelObject> terminal = airLoopHVAC.demandComponent(singleDuctTerminal.handle());
+  ASSERT_TRUE(terminal);
+  EXPECT_EQ(singleDuctTerminal, *terminal);
+  edges = singleDuctTerminal.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be ThermalZone
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(thermalZone, edges[0]);
+
+  boost::optional<ModelObject> heatingElecCoil = airLoopHVAC.supplyComponent(coil.handle());
+  ASSERT_TRUE(heatingElecCoil);
+  EXPECT_EQ(coil, *heatingElecCoil);
+  edges = coil.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be ConstantVolumeFan
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(fan, edges[0]);
+
+  Node supplyInletNode = airLoopHVAC.supplyInletNode();
+  boost::optional<ModelObject> inletNode = airLoopHVAC.supplyComponent(supplyInletNode.handle());
+  ASSERT_TRUE(inletNode);
+  EXPECT_EQ(supplyInletNode, *inletNode);
+  edges = supplyInletNode.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be OASystem
+
+  boost::optional<ModelObject> heatingWaterCoil_air = airLoopHVAC.supplyComponent(coil3.handle());
+  ASSERT_TRUE(heatingWaterCoil_air);
+  EXPECT_EQ(coil3, *heatingWaterCoil_air);
+  edges = coil3.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(coil, edges[0]);
+
+  boost::optional<ModelObject> heatingWaterCoil_plant = plantLoop.demandComponent(coil3.handle());
+  ASSERT_TRUE(heatingWaterCoil_plant);
+  EXPECT_EQ(coil3, *heatingWaterCoil_plant);
+  edges = coil3.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(true); // should be ConnectorMixer
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(plantDemandMixer, edges[0]);
+
+  // does not search OA system
+  boost::optional<ModelObject> oaInletNode = airLoopHVAC.supplyComponent((*OANode).handle());
+  ASSERT_FALSE(oaInletNode);
+  boost::optional<ModelObject> heatingElecCoil2 = airLoopHVAC.supplyComponent(coil2.handle());
+  ASSERT_FALSE(heatingElecCoil2);
 }

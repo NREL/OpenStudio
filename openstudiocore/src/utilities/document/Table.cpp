@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Table.hpp>
-#include <utilities/document/Table_Impl.hpp>
-#include <utilities/document/DocumentRegex.hpp>
+#include "Table.hpp"
+#include "Table_Impl.hpp"
+#include "DocumentRegex.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
+#include "../units/UnitFactory.hpp"
+#include "../units/QuantityFactory.hpp"
+#include "../units/QuantityConverter.hpp"
+#include "../units/OSQuantityVector.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Assert.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/Containers.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -210,7 +210,7 @@ namespace detail {
     if (edge == Table::T) {
       num = nEmptyRows(Table::T);
       if (num > 0) {
-        std::vector<TableRow>::iterator itEraseEnd = m_table.begin();
+        auto itEraseEnd = m_table.begin();
         for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
         m_table.erase(m_table.begin(),itEraseEnd);
       }
@@ -230,7 +230,7 @@ namespace detail {
       num = nEmptyCols(Table::L);
       if (num > 0) {
         for (TableRow& row : m_table) {
-          TableRow::iterator itEraseEnd = row.begin();
+          auto itEraseEnd = row.begin();
           for (unsigned i = 0; i < num; ++i, ++itEraseEnd);
           row.erase(row.begin(),itEraseEnd);
           OS_ASSERT(row.size() == m_nCols - num);
@@ -1300,7 +1300,7 @@ Table Table::loadFromBoostTextSerialization(boost::filesystem::ifstream& is) {
     LOG(Error,"Boost archive exception while loading Table from Text. Code " << e.code << ". Message: " << e.what());
   }
   catch (...) {
-    LOG(Error,"Error deserializing object of type 'Table' from boost searialization text file (.ost).");
+    LOG(Error,"Error deserializing object of type 'Table' from boost serialization text file (.ost).");
   }
   return result;
 }

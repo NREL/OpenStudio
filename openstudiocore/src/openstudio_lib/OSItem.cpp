@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
-#include <openstudio_lib/IconLibrary.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/BCLComponentItem.hpp>
-#include <openstudio_lib/ScriptItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "IconLibrary.hpp"
+#include "ModelObjectItem.hpp"
+#include "BCLComponentItem.hpp"
+#include "ScriptItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDrag>
@@ -197,7 +197,7 @@ void OSItem::createLayout()
 
   mainHLayout->addLayout(leftVBoxLayout);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   if(doc){
     boost::optional<IddObjectType> iddObjectType = doc->getIddObjectType(m_itemId);
     if(iddObjectType){

@@ -17,26 +17,26 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
+#include "Analysis.hpp"
+#include "Analysis_Impl.hpp"
 
-#include <analysis/Algorithm_Impl.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
-#include <analysis/DakotaAlgorithm_Impl.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "Algorithm_Impl.hpp"
+#include "DakotaAlgorithm.hpp"
+#include "DakotaAlgorithm_Impl.hpp"
+#include "DataPoint_Impl.hpp"
+#include "Measure.hpp"
+#include "InputVariable.hpp"
+#include "OpenStudioAlgorithm.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
+#include "Problem_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../utilities/document/Table.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -223,7 +223,7 @@ namespace detail {
   }
 
   AnalysisObject Analysis_Impl::clone() const {
-    boost::shared_ptr<Analysis_Impl> impl(new Analysis_Impl(*this));
+    std::shared_ptr<Analysis_Impl> impl(new Analysis_Impl(*this));
     Analysis result(impl);
     Problem problem = result.problem();
     problem.setParent(result);
@@ -532,7 +532,7 @@ namespace detail {
   bool Analysis_Impl::removeDataPoint(const DataPoint &dataPoint) {
     OptionalDataPoint exactDataPoint = getDataPointByUUID(dataPoint);
     if (exactDataPoint) {
-      DataPointVector::iterator it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
+      auto it = std::find(m_dataPoints.begin(),m_dataPoints.end(),*exactDataPoint);
       OS_ASSERT(it != m_dataPoints.end());
       disconnectChild(*it);
       m_dataPoints.erase(it);
@@ -835,7 +835,7 @@ namespace detail {
     if (map.contains("data_points")) {
       dataPoints = deserializeUnorderedVector<DataPoint>(
             map["data_points"].toList(),
-            boost::function<DataPoint (const QVariant&)>(boost::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,_1,version,problem)));
+            std::function<DataPoint (const QVariant&)>(std::bind(openstudio::analysis::detail::DataPoint_Impl::factoryFromVariant,std::placeholders::_1,version,problem)));
     }
     return Analysis(toUUID(map["uuid"].toString().toStdString()),
                     toUUID(map["version_uuid"].toString().toStdString()),
@@ -878,7 +878,7 @@ AnalysisSerializationOptions::AnalysisSerializationOptions(
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReferenceType& seedType)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
                      new detail::Analysis_Impl(name,problem,seedType)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -888,7 +888,7 @@ Analysis::Analysis(const std::string& name,
 Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReference& seed)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,seed)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -899,7 +899,7 @@ Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const FileReference& seed,
                    const FileReference& weatherFile)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,seed,weatherFile)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -910,7 +910,7 @@ Analysis::Analysis(const std::string& name,
                    const Problem& problem,
                    const Algorithm& algorithm,
                    const FileReference& seed)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,algorithm,seed)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -923,7 +923,7 @@ Analysis::Analysis(const std::string& name,
                    const Algorithm& algorithm,
                    const FileReference& seed,
                    const FileReference& weatherFile)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(name,problem,algorithm,seed,weatherFile)))
 {
   Analysis copyOfThis(getImpl<detail::Analysis_Impl>());
@@ -943,7 +943,7 @@ Analysis::Analysis(const UUID& uuid,
                    const std::vector<DataPoint>& dataPoints,
                    bool resultsAreInvalid,
                    bool dataPointsAreInvalid)
-  : AnalysisObject(boost::shared_ptr<detail::Analysis_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::Analysis_Impl>(
         new detail::Analysis_Impl(uuid,versionUUID,name,displayName,description,
                                   problem,algorithm,seed,weatherFile,dataPoints,
                                   resultsAreInvalid,dataPointsAreInvalid)))
@@ -1178,7 +1178,7 @@ boost::optional<Analysis> Analysis::loadJSON(const std::string& json,
 }
 
 /// @cond
-Analysis::Analysis(boost::shared_ptr<detail::Analysis_Impl> impl)
+Analysis::Analysis(std::shared_ptr<detail::Analysis_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

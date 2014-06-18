@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef PROJECT_OSARGUMENTRECORD_IMPL_HPP
 #define PROJECT_OSARGUMENTRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord_Impl.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -75,7 +75,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual void updatePathData(const openstudio::path& originalBase,
                                 const openstudio::path& newBase);

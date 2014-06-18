@@ -17,41 +17,41 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/Test/ProjectVersioningFixture.hpp>
+#include "ProjectVersioningFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "../ProjectDatabase.hpp"
+#include "../AnalysisRecord.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
+#include "../../analysis/FSUDaceAlgorithm.hpp"
+#include "../../analysis/FSUDaceAlgorithmOptions.hpp"
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/Tag.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/SIUnit.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>

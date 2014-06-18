@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/Clause.hpp>
-#include <ruleset/Clause_Impl.hpp>
-#include <ruleset/FilterClause.hpp>
-#include <ruleset/ModelObjectFilterBooleanAttribute.hpp>
-#include <ruleset/ModelObjectFilterNumericAttribute.hpp>
-#include <ruleset/ModelObjectFilterStringAttribute.hpp>
-#include <ruleset/ModelObjectFilterRelationship.hpp>
-#include <ruleset/ModelObjectFilterType.hpp>
-#include <ruleset/ModelObjectActionSetAttribute.hpp>
-#include <ruleset/ModelObjectActionSetRelationship.hpp>
+#include "Clause.hpp"
+#include "Clause_Impl.hpp"
+#include "FilterClause.hpp"
+#include "ModelObjectFilterBooleanAttribute.hpp"
+#include "ModelObjectFilterNumericAttribute.hpp"
+#include "ModelObjectFilterStringAttribute.hpp"
+#include "ModelObjectFilterRelationship.hpp"
+#include "ModelObjectFilterType.hpp"
+#include "ModelObjectActionSetAttribute.hpp"
+#include "ModelObjectActionSetRelationship.hpp"
 
-#include <utilities/core/Checksum.hpp>
+#include "../utilities/core/Checksum.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -90,7 +90,7 @@ boost::optional<Clause> Clause::factoryFromXml(const QDomElement& element)
 }
 
 /// @cond
-Clause::Clause(boost::shared_ptr<detail::Clause_Impl> impl)
+Clause::Clause(std::shared_ptr<detail::Clause_Impl> impl)
   : RulesetObject(impl)
 {
   OS_ASSERT(getImpl<detail::Clause_Impl>());

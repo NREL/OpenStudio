@@ -17,28 +17,28 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "RubyMeasure.hpp"
+#include "RubyMeasure_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -133,7 +133,7 @@ namespace detail {
   }
 
   AnalysisObject RubyMeasure_Impl::clone() const {
-    boost::shared_ptr<RubyMeasure_Impl> impl(new RubyMeasure_Impl(*this));
+    std::shared_ptr<RubyMeasure_Impl> impl(new RubyMeasure_Impl(*this));
     return RubyMeasure(impl);
   }
 
@@ -332,9 +332,9 @@ namespace detail {
       OSArgument newArgClone = newArg.clone();
       // look for current value
       NameFinder<OSArgument> finder(newArgClone.name(),true);
-      ruleset::OSArgumentVector::iterator it = std::find_if(currentArgs.begin(),
-                                                            currentArgs.end(),
-                                                            finder);
+      auto it = std::find_if(currentArgs.begin(),
+                             currentArgs.end(),
+                             finder);
       if (it != currentArgs.end()) {
         // already exists--try to preserve value
         if (it->hasValue()) {
@@ -421,9 +421,9 @@ namespace detail {
 
   void RubyMeasure_Impl::setArgument(const ruleset::OSArgument& argument) {
     NameFinder<ruleset::OSArgument> finder(argument.name(),true);
-    ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
-                                                          m_arguments.end(),
-                                                          finder);
+    auto it = std::find_if(m_arguments.begin(),
+                           m_arguments.end(),
+                           finder);
     if (it != m_arguments.end()) {
       m_arguments.at(int(it - m_arguments.begin())) = argument;
     }
@@ -443,9 +443,9 @@ namespace detail {
 
   bool RubyMeasure_Impl::removeArgument(const std::string& argumentName) {
     NameFinder<ruleset::OSArgument> finder(argumentName,true);
-    ruleset::OSArgumentVector::iterator it = std::find_if(m_arguments.begin(),
-                                                          m_arguments.end(),
-                                                          finder);
+    auto it = std::find_if(m_arguments.begin(),
+                           m_arguments.end(),
+                           finder);
     if (it != m_arguments.end()) {
       m_arguments.erase(it);
       onChange(AnalysisObject_Impl::InvalidatesResults);
@@ -517,7 +517,7 @@ namespace detail {
       arguments = deserializeOrderedVector(
             map["arguments"].toList(),
             "argument_index",
-            boost::function<OSArgument (const QVariant&)>(boost::bind(ruleset::detail::toOSArgument,_1,version)));
+            std::function<OSArgument (const QVariant&)>(std::bind(ruleset::detail::toOSArgument,std::placeholders::_1,version)));
     }
 
     return RubyMeasure(toUUID(map["uuid"].toString().toStdString()),
@@ -592,7 +592,7 @@ namespace detail {
 } // detail
 
 RubyMeasure::RubyMeasure(const BCLMeasure& bclMeasure, bool isSelected)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
                            new detail::RubyMeasure_Impl(bclMeasure,isSelected)))
 {}
 
@@ -601,7 +601,7 @@ RubyMeasure::RubyMeasure(const openstudio::path& perturbationScript,
                                    const FileReferenceType& outputFileType,
                                    bool isUserScript,
                                    bool isSelected)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
         new detail::RubyMeasure_Impl(perturbationScript,
                                      inputFileType,
                                      outputFileType,
@@ -621,7 +621,7 @@ RubyMeasure::RubyMeasure(const UUID& uuid,
                                    bool isUserScript,
                                    const std::vector<ruleset::OSArgument>& arguments,
                                    bool usesBCLMeasure)
-  : Measure(boost::shared_ptr<detail::RubyMeasure_Impl>(
+  : Measure(std::shared_ptr<detail::RubyMeasure_Impl>(
         new detail::RubyMeasure_Impl(uuid,
                                      versionUUID,
                                      name,
@@ -747,7 +747,7 @@ void RubyMeasure::clearArguments() {
 }
 
 /// @cond
-RubyMeasure::RubyMeasure(boost::shared_ptr<detail::RubyMeasure_Impl> impl)
+RubyMeasure::RubyMeasure(std::shared_ptr<detail::RubyMeasure_Impl> impl)
   : Measure(impl)
 {}
 /// @endcond

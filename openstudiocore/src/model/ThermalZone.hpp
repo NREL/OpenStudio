@@ -20,8 +20,8 @@
 #ifndef MODEL_THERMALZONE_HPP
 #define MODEL_THERMALZONE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -35,6 +35,7 @@ class DaylightingControl;
 class IlluminanceMap;
 class RenderingColor;
 class ThermostatSetpointDualSetpoint;
+class ZoneControlHumidistat;
 class SizingZone;
 class PortList;
 
@@ -92,6 +93,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   std::string zoneConditioningEquipmentListName() const;
 
   boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
+
+  boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
   double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
@@ -152,6 +155,10 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint & thermostat);
 
   void resetThermostatSetpointDualSetpoint();
+
+  bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
+
+  void resetZoneControlHumidistat();
 
   bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
   
@@ -397,7 +404,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ThermalZone(boost::shared_ptr<detail::ThermalZone_Impl> impl);
+  explicit ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl);
 
   /// @endcond
  private:

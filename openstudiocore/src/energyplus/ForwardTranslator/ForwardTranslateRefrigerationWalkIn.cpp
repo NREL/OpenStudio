@@ -17,14 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Schedule.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+#include "../../model/RefrigerationWalkIn_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/RefrigerationWalkInZoneBoundary.hpp"
+#include "../../utilities/time/Time.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_WalkIn_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -141,29 +142,76 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
     refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostControlType,s.get());
   }
 
-//DefrostScheduleName
-  boost::optional<Schedule> defrostSchedule = modelObject.defrostSchedule();
+//DefrostCycleParameters
+  boost::optional<int> durationofDefrostCycle = modelObject.durationofDefrostCycle();
+  boost::optional<int> dripDownTime = modelObject.dripDownTime();
+  std::vector<openstudio::Time> defrostStartTimes = modelObject.getImpl<model::detail::RefrigerationWalkIn_Impl>()->defrostStartTimes();
 
-  if( defrostSchedule )
-  {
-    boost::optional<IdfObject> _defrostSchedule = translateAndMapModelObject(defrostSchedule.get());
+  if( durationofDefrostCycle && dripDownTime && !defrostStartTimes.empty() ) {
+    int defrostTimeHour = *durationofDefrostCycle / 60;
+    int defrostTimeMin = *durationofDefrostCycle % 60;
+    int dripDownTimeHour = *dripDownTime / 60;
+    int dripDownTimeMin = *dripDownTime % 60;
 
-    if( _defrostSchedule && _defrostSchedule->name() )
+    std::vector< std::pair<openstudio::Time, double> > defrostDefaultDay;
+    std::vector< std::pair<openstudio::Time, double> > dripDownDefaultDay;
+    for( std::vector<openstudio::Time>::iterator _defrostStartTime = defrostStartTimes.begin();
+       _defrostStartTime != defrostStartTimes.end();
+       ++_defrostStartTime )
     {
-      refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostScheduleName,_defrostSchedule->name().get());
+      defrostDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // defrost off
+      openstudio::Time defrostEndTime(0, _defrostStartTime->hours() + defrostTimeHour, _defrostStartTime->minutes() + defrostTimeMin);
+      defrostDefaultDay.push_back(std::make_pair(defrostEndTime, 1)); // defrost on
+
+      dripDownDefaultDay.push_back(std::make_pair(*_defrostStartTime, 0)); // drip down off
+      openstudio::Time dripDownEndTime(0, _defrostStartTime->hours() + defrostTimeHour + dripDownTimeHour, _defrostStartTime->minutes() + defrostTimeMin + dripDownTimeMin);
+      dripDownDefaultDay.push_back(std::make_pair(dripDownEndTime, 1)); // drip down on
     }
-  }
 
-//DefrostDripDownScheduleName
-  boost::optional<Schedule> defrostDripDownSchedule = modelObject.defrostDripDownSchedule();
+    if( (defrostStartTimes.front().hours() != 0 && defrostStartTimes.front().minutes() != 0) || defrostStartTimes.back().hours() < 24) {
+      openstudio::Time defrostDayEnd(0, 24, 0);
+      defrostDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // defrost off
+      dripDownDefaultDay.push_back(std::make_pair(defrostDayEnd, 0)); // drip down off
+    }
 
-  if( defrostDripDownSchedule )
-  {
-    boost::optional<IdfObject> _defrostDripDownSchedule = translateAndMapModelObject(defrostDripDownSchedule.get());
+    //DefrostScheduleName
+    std::string defrostName(modelObject.name().get() + " Defrost Schedule");
+    boost::optional<IdfObject> defrostSchedule = this->createSimpleSchedule(defrostName, defrostDefaultDay);
+    if( defrostSchedule ) {
+      refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostScheduleName, defrostName);
+    }
 
-    if( _defrostDripDownSchedule && _defrostDripDownSchedule->name() )
+    //DefrostDripDownScheduleName
+    std::string dripDownName(modelObject.name().get() + " Defrost Drip Down Schedule");
+    boost::optional<IdfObject> defrostDripDownSchedule = this->createSimpleSchedule(dripDownName, dripDownDefaultDay);
+    if( defrostDripDownSchedule ) {
+      refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostDripDownScheduleName, dripDownName);
+    }
+  } else {
+  //DefrostScheduleName
+    boost::optional<Schedule> defrostSchedule = modelObject.defrostSchedule();
+
+    if( defrostSchedule )
     {
-      refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostDripDownScheduleName,_defrostDripDownSchedule->name().get());
+      boost::optional<IdfObject> _defrostSchedule = translateAndMapModelObject(defrostSchedule.get());
+
+      if( _defrostSchedule && _defrostSchedule->name() )
+      {
+        refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostScheduleName,_defrostSchedule->name().get());
+      }
+    }
+
+  //DefrostDripDownScheduleName
+    boost::optional<Schedule> defrostDripDownSchedule = modelObject.defrostDripDownSchedule();
+
+    if( defrostDripDownSchedule )
+    {
+      boost::optional<IdfObject> _defrostDripDownSchedule = translateAndMapModelObject(defrostDripDownSchedule.get());
+
+      if( _defrostDripDownSchedule && _defrostDripDownSchedule->name() )
+      {
+        refrigerationWalkIn.setString(Refrigeration_WalkInFields::DefrostDripDownScheduleName,_defrostDripDownSchedule->name().get());
+      }
     }
   }
 
@@ -215,14 +263,12 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
 
   if( !zoneBoundaries.empty() )
   {
-    for( std::vector<RefrigerationWalkInZoneBoundary>::iterator _zoneBoundary = zoneBoundaries.begin();
-       _zoneBoundary != zoneBoundaries.end();
-       ++_zoneBoundary )
+    for( const auto & _zoneBoundary : zoneBoundaries )
     {
       IdfExtensibleGroup eg = refrigerationWalkIn.pushExtensibleGroup();
 
       //ZoneName
-        boost::optional<ThermalZone> thermalZone = _zoneBoundary->thermalZone();
+        boost::optional<ThermalZone> thermalZone = _zoneBoundary.thermalZone();
 
         if( thermalZone )
         {
@@ -235,37 +281,37 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //TotalInsulatedSurfaceAreaFacingZone
-        d = _zoneBoundary->totalInsulatedSurfaceAreaFacingZone();
+        d = _zoneBoundary.totalInsulatedSurfaceAreaFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::TotalInsulatedSurfaceAreaFacingZone,d.get());
         }
 
       //InsulatedSurfaceUValueFacingZone
-        d = _zoneBoundary->insulatedSurfaceUValueFacingZone();
+        d = _zoneBoundary.insulatedSurfaceUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::InsulatedSurfaceUValueFacingZone,d.get());
         }
 
       //AreaofGlassReachInDoorsFacingZone
-        d = _zoneBoundary->areaofGlassReachInDoorsFacingZone();
+        d = _zoneBoundary.areaofGlassReachInDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::AreaofGlassReachInDoorsFacingZone,d.get());
         }
 
       //HeightofGlassReachInDoorsFacingZone
-        d = _zoneBoundary->heightofGlassReachInDoorsFacingZone();
+        d = _zoneBoundary.heightofGlassReachInDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::HeightofGlassReachInDoorsFacingZone,d.get());
         }
 
       //GlassReachInDoorUValueFacingZone
-        d = _zoneBoundary->glassReachInDoorUValueFacingZone();
+        d = _zoneBoundary.glassReachInDoorUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::GlassReachInDoorUValueFacingZone,d.get());
         }
 
       //GlassReachInDoorOpeningScheduleNameFacingZone
-        boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone = _zoneBoundary->glassReachInDoorOpeningScheduleFacingZone();
+        boost::optional<Schedule> glassReachInDoorOpeningScheduleFacingZone = _zoneBoundary.glassReachInDoorOpeningScheduleFacingZone();
 
         if( glassReachInDoorOpeningScheduleFacingZone )
         {
@@ -278,25 +324,25 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //AreaofStockingDoorsFacingZone
-        d = _zoneBoundary->areaofStockingDoorsFacingZone();
+        d = _zoneBoundary.areaofStockingDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::AreaofStockingDoorsFacingZone,d.get());
         }
 
       //HeightofStockingDoorsFacingZone
-        d = _zoneBoundary->heightofStockingDoorsFacingZone();
+        d = _zoneBoundary.heightofStockingDoorsFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::HeightofStockingDoorsFacingZone,d.get());
         }
 
       //StockingDoorUValueFacingZone
-        d = _zoneBoundary->stockingDoorUValueFacingZone();
+        d = _zoneBoundary.stockingDoorUValueFacingZone();
         if (d) {
           eg.setDouble(Refrigeration_WalkInExtensibleFields::StockingDoorUValueFacingZone,d.get());
         }
 
       //StockingDoorOpeningScheduleNameFacingZone
-        boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone = _zoneBoundary->stockingDoorOpeningScheduleFacingZone();
+        boost::optional<Schedule> stockingDoorOpeningScheduleFacingZone = _zoneBoundary.stockingDoorOpeningScheduleFacingZone();
 
         if( stockingDoorOpeningScheduleFacingZone )
         {
@@ -309,7 +355,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationWalkIn( Refr
         }
 
       //StockingDoorOpeningProtectionTypeFacingZone
-        s = _zoneBoundary->stockingDoorOpeningProtectionTypeFacingZone();
+        s = _zoneBoundary.stockingDoorOpeningProtectionTypeFacingZone();
         if (s) {
           eg.setString(Refrigeration_WalkInExtensibleFields::StockingDoorOpeningProtectionTypeFacingZone,s.get());
         }

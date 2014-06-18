@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Section.hpp>
-#include <utilities/document/Section_Impl.hpp>
+#include "Section.hpp"
+#include "Section_Impl.hpp"
 
-#include <utilities/document/SectionHeading_Impl.hpp>
+#include "SectionHeading_Impl.hpp"
 
 namespace openstudio {
 
@@ -112,7 +112,7 @@ namespace detail {
       append(element); 
       return;
     }
-    SectionElementVector::iterator it = m_contents.begin();
+    auto it = m_contents.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_contents.insert(it,element);
   }
@@ -130,7 +130,7 @@ namespace detail {
 
   void Section_Impl::erase(unsigned index) {
     if (index < numElements()) {
-      SectionElementVector::iterator it = m_contents.begin();
+      auto it = m_contents.begin();
       for (unsigned i = 0; i < index; ++i, ++it) {}
       m_contents.erase(it);
     }

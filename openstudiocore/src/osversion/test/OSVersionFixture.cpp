@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <osversion/test/OSVersionFixture.hpp>
+#include "OSVersionFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -52,7 +52,7 @@ void OSVersionFixture::SetUpTestCase() {
   // directly copied over, and so all these items can be copied back into source.
   model::Model model = openstudio::model::exampleModel();
   model.save(thisVersionPath / toPath("example.osm"),true);
-  model::Component component = model.getModelObjects<model::Construction>()[0].createComponent();
+  model::Component component = model.getConcreteModelObjects<model::Construction>()[0].createComponent();
   component.save(thisVersionPath / toPath("example.osc"),true);
   IddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
   iddFile.save(thisVersionPath / toPath("OpenStudio.idd"),true);

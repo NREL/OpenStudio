@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleYear.hpp>
-#include <model/ScheduleYear_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ScheduleYear.hpp"
+#include "ScheduleYear_Impl.hpp"
+#include "ScheduleWeek.hpp"
+#include "ScheduleWeek_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Year_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/time/Date.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/Date.hpp"
 
 namespace openstudio {
 namespace model {
@@ -285,7 +285,7 @@ IddObjectType ScheduleYear::iddObjectType() {
 }
 
 /// @cond
-ScheduleYear::ScheduleYear(boost::shared_ptr<detail::ScheduleYear_Impl> impl)
+ScheduleYear::ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl)
   : Schedule(impl)
 {}
 /// @endcond

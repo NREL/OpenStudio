@@ -18,59 +18,59 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../SimpleProject.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Algorithm.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Algorithm.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DDACEAlgorithmOptions.hpp"
+#include "../../analysis/DDACEAlgorithm.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/Measure.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../../analysis/WorkflowStep.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/WorkflowRecord.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/AnalysisRecord.hpp"
+#include "../../project/ProblemRecord.hpp"
+#include "../../project/DataPointRecord.hpp"
+#include "../../project/InputVariableRecord.hpp"
+#include "../../project/DakotaAlgorithmRecord.hpp"
+#include "../../project/DakotaAlgorithmRecord_Impl.hpp"
+#include "../../project/FileReferenceRecord.hpp"
+#include "../../project/WorkflowRecord.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../../runmanager/lib/Job.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/cloud/VagrantProvider.hpp"
+#include "../../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/UnzipFile.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include <OpenStudio.hxx>
 #include <resources.hxx>

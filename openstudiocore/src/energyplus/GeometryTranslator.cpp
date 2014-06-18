@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/GeometryTranslator.hpp>
-#include <energyplus/MapFields.hpp>
+#include "GeometryTranslator.hpp"
+#include "MapFields.hpp"
 
-#include <model/Building.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurface.hpp>
+#include "../model/Building.hpp"
+#include "../model/Space.hpp"
+#include "../model/Surface.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/ShadingSurface.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -68,8 +68,8 @@
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
 
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -428,7 +428,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -531,7 +531,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -633,7 +633,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -761,7 +761,7 @@ namespace energyplus {
       OptionalDouble yMax;
       for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();

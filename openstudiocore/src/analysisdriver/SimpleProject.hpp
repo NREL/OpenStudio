@@ -20,14 +20,13 @@
 #ifndef ANALYSISDRIVER_SIMPLEPROJECT_HPP
 #define ANALYSISDRIVER_SIMPLEPROJECT_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriver.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -131,7 +130,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   virtual ~SimpleProject() {};
 
-  /** Open an existing SimpleProject, fails if cant find osp or if has 0 or > 1 analyses. 
+  /** Open an existing SimpleProject, fails if can't find osp or if has 0 or > 1 analyses. 
    *  Purposefully does not deserialize the analysis::Analysis from project::AnalysisRecord. */
   static boost::optional<SimpleProject> open(
       const openstudio::path& projectDir,
@@ -167,11 +166,11 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Returns the analysis seed model, if it is positively specified, can be located, and is an 
    *  OpenStudio Model (not an EnergyPlus IDF). */
-  boost::optional<model::Model> seedModel(ProgressBar* progressBar = NULL) const;
+  boost::optional<model::Model> seedModel(ProgressBar* progressBar = nullptr) const;
 
   /** Returns the analysis seed if it is an IDF, or the seed model translated to IDF
    *  otherwise. */
-  boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
+  boost::optional<Workspace> seedIdf(ProgressBar* progressBar = nullptr) const;
 
   /** Returns true if the seed model or any alternate models need version translation, or if
    *  the analysis weather file cannot be located. */
@@ -239,7 +238,7 @@ class ANALYSISDRIVER_API SimpleProject {
   /** Attempts to copy the OSM or IDF model at currentSeedLocation into this project's
    *  directory structure. Returns false if currentSeedLocation does not point to an
    *  OSM or IDF, or cannot be located. IDF files are copied over directly; OSM files
-   *  are also version translated, bring over a subset of their auxillary files, and have
+   *  are also version translated, bring over a subset of their auxiliary files, and have
    *  their weather files hard-assigned to the analysis. 
    *
    *  Since OpenStudio Models may also have measures attached, such measures are imported
@@ -253,7 +252,7 @@ class ANALYSISDRIVER_API SimpleProject {
    *  seed model, then the new measure and its arguments are simply copied over and used
    *  as-is. (This assumes that the seed model is internally consistent.) If there are 
    *  duplicates, we initially set up the imported measure to use the project's copy of 
-   *  the measure but the seed model's arguments. Measures for which this occured are
+   *  the measure but the seed model's arguments. Measures for which this occurred are
    *  then passed out as result.second so the user application can, if desired, 
    *  update the project measure to the version used by the seed.
    *
@@ -261,7 +260,7 @@ class ANALYSISDRIVER_API SimpleProject {
    *  models. The user is responsible for deleting any such measures that are no longer
    *  needed/desired. */
   std::pair<bool,std::vector<BCLMeasure> > setSeed(const FileReference& currentSeedLocation, 
-                                                   ProgressBar* progressBar = NULL);
+                                                   ProgressBar* progressBar = nullptr);
 
   /** Looks for measure by UUID, returning this project's copy if found, adding and returning
    *  the new project-specific copy otherwise. */
@@ -348,7 +347,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   /** Creates DataPoint that swaps out seed model for altModel. Fails if
    *  analysis().dataPointsAreInvalid() or if !isPATProject() or if altModel is not an OSM or
-   *  cannot be located. altModel is copied over into projectDir, as are its auxillary files, and
+   *  cannot be located. altModel is copied over into projectDir, as are its auxiliary files, and
    *  the OSM is version translated if necessary. */
   bool addAlternateModel(const openstudio::path& altModel);
 
@@ -382,7 +381,7 @@ class ANALYSISDRIVER_API SimpleProject {
 
   //@}
  protected:
-  boost::shared_ptr<detail::SimpleProject_Impl> getImpl() const;
+  std::shared_ptr<detail::SimpleProject_Impl> getImpl() const;
 
   /// @cond
   typedef detail::SimpleProject_Impl ImplType;
@@ -390,12 +389,12 @@ class ANALYSISDRIVER_API SimpleProject {
   friend class openstudio::pat::PatApp;
   friend class openstudio::pat::RunTabController;
 
-  explicit SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl);
+  explicit SimpleProject(std::shared_ptr<detail::SimpleProject_Impl> impl);
 
   /// @endcond
  private:
 
-  boost::shared_ptr<detail::SimpleProject_Impl> m_impl;
+  std::shared_ptr<detail::SimpleProject_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysisdriver.SimpleProject");
 };

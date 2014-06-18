@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_HPP
 #define MODEL_DESIGNSPECIFICATIONZONEAIRDISTRIBUTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -98,7 +98,7 @@ class MODEL_API DesignSpecificationZoneAirDistribution : public ModelObject {
   /// @cond
   typedef detail::DesignSpecificationZoneAirDistribution_Impl ImplType;
 
-  explicit DesignSpecificationZoneAirDistribution(boost::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
+  explicit DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl);
 
   friend class detail::DesignSpecificationZoneAirDistribution_Impl;
   friend class Model;

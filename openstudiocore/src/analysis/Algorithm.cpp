@@ -17,23 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/Algorithm_Impl.hpp>
+#include "Algorithm.hpp"
+#include "Algorithm_Impl.hpp"
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/SamplingAlgorithm_Impl.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearch_Impl.hpp>
+#include "DDACEAlgorithm.hpp"
+#include "DDACEAlgorithm_Impl.hpp"
+#include "FSUDaceAlgorithm.hpp"
+#include "FSUDaceAlgorithm_Impl.hpp"
+#include "ParameterStudyAlgorithm.hpp"
+#include "ParameterStudyAlgorithm_Impl.hpp"
+#include "PSUADEDaceAlgorithm.hpp"
+#include "PSUADEDaceAlgorithm_Impl.hpp"
+#include "SamplingAlgorithm.hpp"
+#include "SamplingAlgorithm_Impl.hpp"
+#include "DesignOfExperiments.hpp"
+#include "DesignOfExperiments_Impl.hpp"
+#include "SequentialSearch.hpp"
+#include "SequentialSearch_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -185,7 +185,7 @@ bool Algorithm::isCompatibleProblemType(const Problem& problem) const {
 }
 
 /// @cond
-Algorithm::Algorithm(boost::shared_ptr<detail::Algorithm_Impl> impl)
+Algorithm::Algorithm(std::shared_ptr<detail::Algorithm_Impl> impl)
   : AnalysisObject(impl)
 {}
 

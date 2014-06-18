@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QDomDocument>
@@ -197,11 +197,6 @@ namespace sdd {
     //<RunPeriodEndDay>0</RunPeriodEndDay>
     //<RunPeriodYear>0</RunPeriodYear>
 
-    // DLM: Kyle look here
-    QDomElement hvacAutoSizingElement = doc.createElement("HVACAutoSizing");
-    projectElement.appendChild(hvacAutoSizingElement);
-    hvacAutoSizingElement.appendChild( doc.createTextNode( "1"));
-
     // do materials before constructions 
     std::vector<model::Material> materials = model.getModelObjects<model::Material>();
     std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
@@ -238,7 +233,7 @@ namespace sdd {
     }
 
     std::set<Handle> surfaceConstructions;
-    for (const model::Surface& surface : model.getModelObjects<model::Surface>()){
+    for (const model::Surface& surface : model.getConcreteModelObjects<model::Surface>()){
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction){
         surfaceConstructions.insert(construction->handle());
@@ -247,7 +242,7 @@ namespace sdd {
 
     std::set<Handle> doorConstructions;
     std::set<Handle> fenestrationConstructions;
-    for (const model::SubSurface& subSurface : model.getModelObjects<model::SubSurface>()){
+    for (const model::SubSurface& subSurface : model.getConcreteModelObjects<model::SubSurface>()){
       boost::optional<model::ConstructionBase> construction = subSurface.construction();
       if (construction){
         std::string subSurfaceType = subSurface.subSurfaceType();
@@ -308,7 +303,7 @@ namespace sdd {
     }
 
     // translate site shading
-    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = model.getModelObjects<model::ShadingSurfaceGroup>();
+    std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = model.getConcreteModelObjects<model::ShadingSurfaceGroup>();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
     if (m_progressBar){

@@ -20,8 +20,8 @@
 #ifndef MODEL_SITEWATERMAINSTEMPERATURE_HPP
 #define MODEL_SITEWATERMAINSTEMPERATURE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -104,7 +104,7 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteWaterMainsTemperature_Impl;
 
-  explicit SiteWaterMainsTemperature(boost::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
+  explicit SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
 
   explicit SiteWaterMainsTemperature(const Model& model);
 

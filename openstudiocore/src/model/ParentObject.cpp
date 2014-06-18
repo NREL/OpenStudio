@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/Component.hpp>
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
+#include "ResourceObject.hpp"
+#include "LifeCycleCost.hpp"
+#include "Component.hpp"
 
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/idf/Workspace_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <deque>
 
@@ -111,7 +111,7 @@ ParentObject::ParentObject(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ParentObject_Impl>());
 }
 
-ParentObject::ParentObject(boost::shared_ptr<detail::ParentObject_Impl> p)
+ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p)
   : ModelObject(p)
 {  }
 

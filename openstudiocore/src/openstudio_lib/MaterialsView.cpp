@@ -17,28 +17,28 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MaterialsView.hpp>
+#include "MaterialsView.hpp"
 
-#include <openstudio_lib/MaterialAirGapInspectorView.hpp>
-#include <openstudio_lib/MaterialAirWallInspectorView.hpp>
-#include <openstudio_lib/MaterialInfraredTransparentInspectorView.hpp>
-#include <openstudio_lib/MaterialInspectorView.hpp>
-#include <openstudio_lib/MaterialNoMassInspectorView.hpp>
-#include <openstudio_lib/MaterialRoofVegetationInspectorView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/WindowMaterialBlindInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialGasInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialGasMixtureInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialGlazingGroupThermochromicInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialGlazingInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialGlazingRefractionExtinctionMethodInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialScreenInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialShadeInspectorView.hpp>
-#include <openstudio_lib/WindowMaterialSimpleGlazingSystemInspectorView.hpp>
+#include "MaterialAirGapInspectorView.hpp"
+#include "MaterialAirWallInspectorView.hpp"
+#include "MaterialInfraredTransparentInspectorView.hpp"
+#include "MaterialInspectorView.hpp"
+#include "MaterialNoMassInspectorView.hpp"
+#include "MaterialRoofVegetationInspectorView.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "WindowMaterialBlindInspectorView.hpp"
+#include "WindowMaterialGasInspectorView.hpp"
+#include "WindowMaterialGasMixtureInspectorView.hpp"
+#include "WindowMaterialGlazingGroupThermochromicInspectorView.hpp"
+#include "WindowMaterialGlazingInspectorView.hpp"
+#include "WindowMaterialGlazingRefractionExtinctionMethodInspectorView.hpp"
+#include "WindowMaterialScreenInspectorView.hpp"
+#include "WindowMaterialShadeInspectorView.hpp"
+#include "WindowMaterialSimpleGlazingSystemInspectorView.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QStackedWidget>
 

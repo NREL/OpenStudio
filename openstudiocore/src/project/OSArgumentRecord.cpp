@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OSArgumentRecord.hpp>
-#include <project/OSArgumentRecord_Impl.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyContinuousVariableRecord.hpp>
+#include "OSArgumentRecord.hpp"
+#include "OSArgumentRecord_Impl.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "RubyContinuousVariableRecord.hpp"
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../utilities/document/Table.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace project {
@@ -200,7 +200,7 @@ namespace detail {
     return result;
   }
 
-  void OSArgumentRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OSArgumentRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OSArgumentRecord>(query);
@@ -581,7 +581,7 @@ namespace detail {
 OSArgumentRecord::OSArgumentRecord(
     const ruleset::OSArgument& osArgument,
     RubyMeasureRecord& rubyMeasureRecord)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(osArgument, rubyMeasureRecord)),
         rubyMeasureRecord.projectDatabase())
 {
@@ -591,7 +591,7 @@ OSArgumentRecord::OSArgumentRecord(
 OSArgumentRecord::OSArgumentRecord(
     const ruleset::OSArgument& osArgument,
     RubyContinuousVariableRecord& rubyContinuousVariableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(osArgument, rubyContinuousVariableRecord)),
         rubyContinuousVariableRecord.projectDatabase())
 {
@@ -599,14 +599,14 @@ OSArgumentRecord::OSArgumentRecord(
 }
 
 OSArgumentRecord::OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::OSArgumentRecord_Impl>(
         new detail::OSArgumentRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::OSArgumentRecord_Impl>());
 }
 
-OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl,
+OSArgumentRecord::OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl,
                                                    ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -627,7 +627,7 @@ UpdateByIdQueryData OSArgumentRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -635,7 +635,7 @@ UpdateByIdQueryData OSArgumentRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -649,11 +649,10 @@ UpdateByIdQueryData OSArgumentRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -763,7 +762,7 @@ openstudio::path OSArgumentRecord::defaultValueAsPath() const {
 }
 
 /// @cond
-OSArgumentRecord::OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl)
+OSArgumentRecord::OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

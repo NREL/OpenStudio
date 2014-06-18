@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/ComponentList.hpp>
-#include <shared_gui_components/Component.hpp>
+#include "ComponentList.hpp"
+#include "Component.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QAbstractButton>
 #include <QBoxLayout>
@@ -33,8 +33,8 @@ namespace openstudio {
 
 ComponentList::ComponentList(QWidget * parent)
   : QWidget(parent),
-    m_mainLayout(NULL),
-    m_componentGroup(NULL)
+    m_mainLayout(nullptr),
+    m_componentGroup(nullptr)
 {
   createLayout();
 }
@@ -42,8 +42,8 @@ ComponentList::ComponentList(QWidget * parent)
 ComponentList::ComponentList(const std::vector<Component *> & components,
                              QWidget * parent)
   : QWidget(parent),
-    m_mainLayout(NULL),
-    m_componentGroup(NULL)
+    m_mainLayout(nullptr),
+    m_componentGroup(nullptr)
 {
   createLayout();
   setComponents(components);
@@ -62,11 +62,11 @@ void ComponentList::createLayout()
 
   setStyleSheet(style);
 
-  QVBoxLayout * outerVLayout = new QVBoxLayout();
+  auto outerVLayout = new QVBoxLayout();
   outerVLayout->setContentsMargins(0,0,0,0);
   this->setLayout(outerVLayout);
 
-  QWidget * outerWidget = new QWidget();
+  auto outerWidget = new QWidget();
 
   outerVLayout->addWidget(outerWidget);
 

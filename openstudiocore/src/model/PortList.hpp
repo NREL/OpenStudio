@@ -20,8 +20,8 @@
 #ifndef MODEL_PORTLIST_HPP
 #define MODEL_PORTLIST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -104,7 +104,7 @@ class MODEL_API PortList : public ModelObject {
   /// @cond
   typedef detail::PortList_Impl ImplType;
 
-  explicit PortList(boost::shared_ptr<detail::PortList_Impl> impl);
+  explicit PortList(std::shared_ptr<detail::PortList_Impl> impl);
 
   friend class detail::PortList_Impl;
   friend class Model;

@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ENERGYPLUS_IDD_TEST_IDDTESTFIXTURE_HPP
-#define ENERGYPLUS_IDD_TEST_IDDTESTFIXTURE_HPP
+#ifndef UTILITIES_CORE_TEST_COREFIXTURE_HPP
+#define UTILITIES_CORE_TEST_COREFIXTURE_HPP
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../Logger.hpp"
+#include "../FileLogSink.hpp"
 
 #include <resources.hxx>
 
@@ -32,13 +32,13 @@
 class CoreFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp() {}
 
   // tear down after for each test
   virtual void TearDown() {}
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -52,4 +52,4 @@ public:
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif //ENERGYPLUS_IDD_TEST_IDDTESTFIXTURE_HPP
+#endif //UTILITIES_CORE_TEST_COREFIXTURE_HPP

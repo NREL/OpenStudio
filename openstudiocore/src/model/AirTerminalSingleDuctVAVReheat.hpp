@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
-#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
+#include "ModelAPI.hpp"
 
 namespace openstudio {
 
@@ -145,6 +145,9 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Returns true of the MaximumFlowPerZoneFloorAreaDuringReheat field is set to AutoSize */
   bool isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const;
 
+  /** Resets the MaximumFlowPerZoneFloorAreaDuringReheat field to no value */
+  void resetMaximumFlowPerZoneFloorAreaDuringReheat();
+
   /** Returns the value of the MaximumFlowFractionDuringReheat field. */
   boost::optional<double> maximumFlowFractionDuringReheat();
 
@@ -156,6 +159,9 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   /** Returns true of the MaximumFlowFractionDuringReheat field is set to AutoSize */
   bool isMaximumFlowFractionDuringReheatAutosized() const;
+
+  /** Reset MaximumFlowFractionDuringReheat to no value */
+  void resetMaximumFlowFractionDuringReheat();
 
   /** Returns the value of the MaximumReheatAirTemperature field. */
   double maximumReheatAirTemperature();
@@ -175,7 +181,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctVAVReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
+  explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
  private:
 

@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectActionSetRelationship.hpp>
-#include <ruleset/ModelObjectActionSetRelationship_Impl.hpp>
+#include "ModelObjectActionSetRelationship.hpp"
+#include "ModelObjectActionSetRelationship_Impl.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <model/Component.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Relationship.hpp>
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Relationship.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomElement>
 #include <QDomDocument>
@@ -198,7 +198,7 @@ namespace ruleset {
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
       const std::string& relationshipName, const openstudio::path& componentPath)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentPath)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
@@ -206,7 +206,7 @@ namespace ruleset {
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(
       const std::string& relationshipName, const FileReference& componentReference)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, componentReference)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
@@ -217,7 +217,7 @@ namespace ruleset {
       const FileReference& componentReference,
       const UUID& uuid, 
       const UUID& versionUUID)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(
           new detail::ModelObjectActionSetRelationship_Impl(relationshipName, 
                                                             componentReference, 
                                                             uuid, 
@@ -227,13 +227,13 @@ namespace ruleset {
   }
 
   ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(const QDomElement& element)
-    : ModelObjectActionClause(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(new detail::ModelObjectActionSetRelationship_Impl(element)))
+    : ModelObjectActionClause(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl>(new detail::ModelObjectActionSetRelationship_Impl(element)))
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());
   }
 
   /// @cond
-  ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(boost::shared_ptr<detail::ModelObjectActionSetRelationship_Impl> impl)
+  ModelObjectActionSetRelationship::ModelObjectActionSetRelationship(std::shared_ptr<detail::ModelObjectActionSetRelationship_Impl> impl)
     : ModelObjectActionClause(impl)
   {
     OS_ASSERT(getImpl<detail::ModelObjectActionSetRelationship_Impl>());

@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 // copy from AirTerminalSingleDuctVAVReheat
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirTerminalSingleDuctVAVNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 //#include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
@@ -46,12 +46,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
   OptionalString optS;
   boost::optional<std::string> s;
 
+  std::string baseName = modelObject.name().get();
+
   IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
-  _airDistributionUnit.createName();
+  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
 
   IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat);
 
-  idfObject.setName(modelObject.name().get());
+  idfObject.setName(baseName);
 
   //HVACComponent coil = modelObject.NoReheatCoil();
 

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/HVACSystemsView.hpp>
+#include "HVACSystemsView.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "OSItem.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "ModelObjectItem.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 #include <QStackedWidget>

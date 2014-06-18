@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
+#include "CoilHeatingLowTempRadiantConstFlow.hpp"
+#include "CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
+#include "CoilCoolingLowTempRadiantConstFlow.hpp"
+#include "CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
+#include "ConstructionWithInternalSource.hpp"
+#include "ConstructionWithInternalSource_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -495,18 +495,15 @@ namespace detail {
 
   boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow_Impl::thermalZone() const
   {
-    Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         ++it )
+    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+    for( const auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        return *it;
+        return thermalZone;
       }
     }
     return boost::none;
@@ -782,7 +779,7 @@ void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->removeFromThermalZone();
 }
 /// @cond
-ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(boost::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
+ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

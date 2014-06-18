@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/ControllerOutdoorAir.hpp"
+#include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
@@ -39,7 +39,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -55,15 +55,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   m_idfObjects.push_back(idfObject);
 
   // Name
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name,*s);
-  }
+  std::string name = modelObject.name().get();
+  idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name,name);
+ 
 
   // Controller List
   IdfObject controllerListIdf(IddObjectType::AirLoopHVAC_ControllerList);
-  controllerListIdf.createName();
+  controllerListIdf.setName(name + " Controller List");
   controllerListIdf.clearExtensibleGroups();
 
   m_idfObjects.push_back(controllerListIdf);
@@ -100,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   // Field: Availability Manager List Name //////////////////////////////////
   IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerListIdf.createName();
+  availabilityManagerListIdf.setName(name + " Availability Manager");
   m_idfObjects.push_back(availabilityManagerListIdf);
 
   IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
@@ -134,12 +132,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   ///////////////////////////////////////////////////////////////////////////
   // Field: Outdoor Air Equipment List Name /////////////////////////////////
   IdfObject equipmentListIdf(IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList);
-  equipmentListIdf.createName();
+  equipmentListIdf.setName(name + " Equipment List");
 
   m_idfObjects.push_back(equipmentListIdf);
 
   IdfObject outdoorAirMixerIdf(IddObjectType::OutdoorAir_Mixer);
-  outdoorAirMixerIdf.createName();
+  outdoorAirMixerIdf.setName(name + " Outdoor Air Mixer");
   m_idfObjects.push_back(outdoorAirMixerIdf);
 
   s = modelObject.mixedAirModelObject()->name();

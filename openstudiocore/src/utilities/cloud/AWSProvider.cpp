@@ -16,15 +16,15 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "AWSProvider.hpp"
+#include "AWSProvider_Impl.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/Application.hpp"
+#include "../core/ApplicationPathHelpers.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/String.hpp"
+#include "../core/System.hpp"
 
 #include <OpenStudio.hxx>
 #include <QDateTime>
@@ -40,8 +40,6 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QUrl>
-
-#include <boost/bind.hpp>
 
 #include <algorithm>
 
@@ -485,18 +483,18 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_checkInternetProcess(0),
-        m_checkServiceProcess(0),
-        m_checkValidateProcess(0),
-        m_checkResourcesProcess(0),
-        m_startServerProcess(0),
-        m_startWorkerProcess(0),
-        m_checkServerRunningProcess(0),
-        m_checkWorkerRunningProcess(0),
-        m_stopInstancesProcess(0),
-        m_checkTerminatedProcess(0),
-        m_checkEstimatedChargesProcess(0),
-        m_checkTotalInstancesProcess(0),
+        m_checkInternetProcess(nullptr),
+        m_checkServiceProcess(nullptr),
+        m_checkValidateProcess(nullptr),
+        m_checkResourcesProcess(nullptr),
+        m_startServerProcess(nullptr),
+        m_startWorkerProcess(nullptr),
+        m_checkServerRunningProcess(nullptr),
+        m_checkWorkerRunningProcess(nullptr),
+        m_stopInstancesProcess(nullptr),
+        m_checkTerminatedProcess(nullptr),
+        m_checkEstimatedChargesProcess(nullptr),
+        m_checkTotalInstancesProcess(nullptr),
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
@@ -908,14 +906,14 @@ namespace openstudio{
     bool AWSProvider_Impl::internetAvailable(int msec)
     {
       if (requestInternetAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
           return lastInternetAvailable();
         }
       }
       if (m_checkInternetProcess){
-        m_checkInternetProcess->disconnect(this, 0);
+        m_checkInternetProcess->disconnect(this, nullptr);
         m_checkInternetProcess->kill();
-        m_checkInternetProcess = 0;
+        m_checkInternetProcess = nullptr;
       }
       return false;
     }
@@ -923,14 +921,14 @@ namespace openstudio{
     bool AWSProvider_Impl::serviceAvailable(int msec)
     {
       if (requestServiceAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
       }
       if (m_checkServiceProcess){
-        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->disconnect(this, nullptr);
         m_checkServiceProcess->kill();
-        m_checkServiceProcess = 0;
+        m_checkServiceProcess = nullptr;
       }
       return false;
     }
@@ -938,14 +936,14 @@ namespace openstudio{
     bool AWSProvider_Impl::validateCredentials(int msec)
     {
       if (requestValidateCredentials()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
           return lastValidateCredentials();
         }
       }
       if (m_checkValidateProcess){
-        m_checkValidateProcess->disconnect(this, 0);
+        m_checkValidateProcess->disconnect(this, nullptr);
         m_checkValidateProcess->kill();
-        m_checkValidateProcess = 0;
+        m_checkValidateProcess = nullptr;
       }
       return false;
     }
@@ -953,40 +951,40 @@ namespace openstudio{
     bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
       if (m_checkResourcesProcess){
-        m_checkResourcesProcess->disconnect(this, 0);
+        m_checkResourcesProcess->disconnect(this, nullptr);
         m_checkResourcesProcess->kill();
-        m_checkResourcesProcess = 0;
+        m_checkResourcesProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
         return serverStarted();
       }
       if (m_startServerProcess){
-        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->disconnect(this, nullptr);
         m_startServerProcess->kill();
-        m_startServerProcess = 0;
+        m_startServerProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
         return workersStarted();
       }
       if (m_startWorkerProcess){
-        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->disconnect(this, nullptr);
         m_startWorkerProcess->kill();
-        m_startWorkerProcess = 0;
+        m_startWorkerProcess = nullptr;
       }
       return false;
     }
@@ -994,14 +992,14 @@ namespace openstudio{
     bool AWSProvider_Impl::serverRunning(int msec)
     {
       if (requestServerRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
       }
       if (m_checkServerRunningProcess){
-        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->disconnect(this, nullptr);
         m_checkServerRunningProcess->kill();
-        m_checkServerRunningProcess = 0;
+        m_checkServerRunningProcess = nullptr;
       }
       return false;
     }
@@ -1009,27 +1007,27 @@ namespace openstudio{
     bool AWSProvider_Impl::workersRunning(int msec)
     {
       if (requestWorkersRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
           return lastWorkersRunning();
         }
       }
       if (m_checkWorkerRunningProcess){
-        m_checkWorkerRunningProcess->disconnect(this, 0);
+        m_checkWorkerRunningProcess->disconnect(this, nullptr);
         m_checkWorkerRunningProcess->kill();
-        m_checkWorkerRunningProcess = 0;
+        m_checkWorkerRunningProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForTerminated(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
         return m_instancesStopped;
       }
       if (m_stopInstancesProcess){
-        m_stopInstancesProcess->disconnect(this, 0);
+        m_stopInstancesProcess->disconnect(this, nullptr);
         m_stopInstancesProcess->kill();
-        m_stopInstancesProcess = 0;
+        m_stopInstancesProcess = nullptr;
       }
       return false;
     }
@@ -1037,14 +1035,14 @@ namespace openstudio{
     bool AWSProvider_Impl::terminateCompleted(int msec)
     {
       if (requestTerminateCompleted()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
       }
       if (m_checkTerminatedProcess){
-        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->disconnect(this, nullptr);
         m_checkTerminatedProcess->kill();
-        m_checkTerminatedProcess = 0;
+        m_checkTerminatedProcess = nullptr;
       }
       return false;
     }
@@ -1052,14 +1050,14 @@ namespace openstudio{
     double AWSProvider_Impl::estimatedCharges(int msec)
     {
       if (requestEstimatedCharges()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
           return lastEstimatedCharges();
         }
       }
       if (m_checkEstimatedChargesProcess){
-        m_checkEstimatedChargesProcess->disconnect(this, 0);
+        m_checkEstimatedChargesProcess->disconnect(this, nullptr);
         m_checkEstimatedChargesProcess->kill();
-        m_checkEstimatedChargesProcess = 0;
+        m_checkEstimatedChargesProcess = nullptr;
       }
       return 0.0;
     }
@@ -1067,14 +1065,14 @@ namespace openstudio{
     unsigned AWSProvider_Impl::totalInstances(int msec)
     {
       if (requestTotalInstances()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
           return lastTotalInstances();
         }
       }
       if (m_checkTotalInstancesProcess){
-        m_checkTotalInstancesProcess->disconnect(this, 0);
+        m_checkTotalInstancesProcess->disconnect(this, nullptr);
         m_checkTotalInstancesProcess->kill();
-        m_checkTotalInstancesProcess = 0;
+        m_checkTotalInstancesProcess = nullptr;
       }
       return 0;
     }
@@ -1378,7 +1376,7 @@ namespace openstudio{
       args << toQString(m_awsSettings.region());
     }
 
-    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
+    bool AWSProvider_Impl::waitForFinished(int msec, const std::function<bool ()>& f) {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
       int current = 0;
@@ -1404,62 +1402,62 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestInternetAvailableFinished() const
     {
-      return (m_checkInternetProcess == 0);
+      return (m_checkInternetProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServiceAvailableFinished() const
     {
-      return (m_checkServiceProcess == 0);
+      return (m_checkServiceProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestValidateCredentialsFinished() const
     {
-      return (m_checkValidateProcess == 0);
+      return (m_checkValidateProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServerStartedFinished() const
     {
-      return (m_startServerProcess == 0);
+      return (m_startServerProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestWorkerStartedFinished() const
     {
-      return (m_startWorkerProcess == 0);
+      return (m_startWorkerProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestResourcesAvailableToStartFinished() const
     {
-      return (m_checkResourcesProcess == 0);
+      return (m_checkResourcesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServerRunningFinished() const
     {
-      return (m_checkServerRunningProcess == 0);
+      return (m_checkServerRunningProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestWorkersRunningFinished() const
     {
-      return (m_checkWorkerRunningProcess == 0);
+      return (m_checkWorkerRunningProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTerminateFinished() const
     {
-      return (m_stopInstancesProcess == 0);
+      return (m_stopInstancesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTerminateCompletedFinished() const
     {
-      return (m_checkTerminatedProcess == 0);
+      return (m_checkTerminatedProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestEstimatedChargesFinished() const
     {
-      return (m_checkEstimatedChargesProcess == 0);
+      return (m_checkEstimatedChargesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTotalInstancesFinished() const
     {
-      return (m_checkTotalInstancesProcess == 0);
+      return (m_checkTotalInstancesProcess == nullptr);
     }
 
     ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess * t_qp)
@@ -1476,7 +1474,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckInternetProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckInternetComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1492,7 +1490,7 @@ namespace openstudio{
     
     QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1508,7 +1506,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckValidateProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckValidateComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1524,7 +1522,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckResourcesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckResourcesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1540,7 +1538,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStartServerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1565,7 +1563,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStartWorkerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1595,7 +1593,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckServerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1615,7 +1613,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckWorkerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1631,7 +1629,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStopInstancesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onInstancesStopped(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1657,7 +1655,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckTerminateProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1683,7 +1681,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckEstimatedChargesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1699,7 +1697,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckTotalInstancesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckTotalInstancesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -2018,31 +2016,31 @@ namespace openstudio{
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
     {
       m_lastInternetAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkInternetProcess));
-      m_checkInternetProcess = 0;
+      m_checkInternetProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
     {
       m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
-      m_checkServiceProcess = 0;
+      m_checkServiceProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckValidateComplete(int, QProcess::ExitStatus)
     {
       m_lastValidateCredentials = parseValidateCredentialsResults(handleProcessCompleted(m_checkValidateProcess));
-      m_checkValidateProcess = 0;
+      m_checkValidateProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckResourcesComplete(int, QProcess::ExitStatus)
     {
       m_lastResourcesAvailableToStart = parseResourcesAvailableToStartResults(handleProcessCompleted(m_checkResourcesProcess));
-      m_checkResourcesProcess = 0;
+      m_checkResourcesProcess = nullptr;
     }
     
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
-      m_startServerProcess = 0;
+      m_startServerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onServerStartedError(QProcess::ProcessError error)
@@ -2063,51 +2061,51 @@ namespace openstudio{
 
       m_serverStarted = false;
       m_startServerProcess->deleteLater();
-      m_startServerProcess = 0;
+      m_startServerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
       m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
-      m_startWorkerProcess = 0;
+      m_startWorkerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastServerRunning = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
-      m_checkServerRunningProcess = 0;
+      m_checkServerRunningProcess = nullptr;
     }
     
     void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastWorkerRunning = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
-      m_checkWorkerRunningProcess = 0;
+      m_checkWorkerRunningProcess = nullptr;
     }
     
     void AWSProvider_Impl::onInstancesStopped(int, QProcess::ExitStatus)
     {
       m_instancesStopped = parseInstancesStoppedResults(handleProcessCompleted(m_stopInstancesProcess));
-      m_stopInstancesProcess = 0;
+      m_stopInstancesProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
     {
       m_lastTerminateCompleted = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
-      m_checkTerminatedProcess = 0;
+      m_checkTerminatedProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)
     {
       m_lastEstimatedCharges = parseCheckEstimatedChargesResults(handleProcessCompleted(m_checkEstimatedChargesProcess));
       emit estimatedChargesAvailable();
-      m_checkEstimatedChargesProcess = 0;
+      m_checkEstimatedChargesProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckTotalInstancesComplete(int, QProcess::ExitStatus)
     {
       m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
       emit totalInstancesAvailable();
-      m_checkTotalInstancesProcess = 0;
+      m_checkTotalInstancesProcess = nullptr;
     }
 
     bool AWSProvider_Impl::userAgreementSigned() const {
@@ -2134,7 +2132,7 @@ namespace openstudio{
   } // detail
 
   AWSSettings::AWSSettings()
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl()))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2149,7 +2147,7 @@ namespace openstudio{
                            std::string region,
                            std::string serverInstanceType,
                            std::string workerInstanceType)
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
                                                    userAgreementSigned,
@@ -2163,7 +2161,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
 
-  AWSSettings::AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl)
+  AWSSettings::AWSSettings(const std::shared_ptr<detail::AWSSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2257,7 +2255,7 @@ namespace openstudio{
   AWSSession::AWSSession(const std::string& sessionId,
                          const boost::optional<Url>& serverUrl,
                          const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(sessionId,
                                                  serverUrl,
                                                  workerUrls)))
@@ -2279,7 +2277,7 @@ namespace openstudio{
                          const std::string& region,
                          const std::string& serverInstanceType,
                          const std::string& workerInstanceType)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(uuid,
                                                  versionUUID,
                                                  sessionId,
@@ -2298,7 +2296,7 @@ namespace openstudio{
       OS_ASSERT(getImpl<detail::AWSSession_Impl>());
     }
 
-  AWSSession::AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl)
+  AWSSession::AWSSession(const std::shared_ptr<detail::AWSSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
@@ -2390,11 +2388,11 @@ namespace openstudio{
 
 
   AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
+    : CloudProvider(std::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
   {
   }
 
-  AWSProvider::AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl)
+  AWSProvider::AWSProvider(const std::shared_ptr<detail::AWSProvider_Impl>& impl)
     : CloudProvider(impl)
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());

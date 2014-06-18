@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ResultsTabView.hpp>
+#include "ResultsTabView.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
 #include "OSAppBase.hpp"
 
@@ -34,12 +34,12 @@
 #include <QString>
 #include <QRegExp>
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/JobStatusWidget.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
 

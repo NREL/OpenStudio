@@ -7,7 +7,7 @@
 *
 * \section design_intent_sec Design Intent
 *
-* The design intent of this block is to reuse as much of the EnergyPlus Idd as possible to define objects for Radiance simulations. For example, we hope to use EnergyPlus surfaces, sub surfaces, materials, light shelves, daylight sensors, etc. Where neccesary, the OpenStudio Idd will be extended from EnergyPlus to include lighting layouts, lighting control zones, luminaire photometric distribution files, photosensor orientation, interior partitions, Radiance analysis zones and other data not present in the EnergyPlus Idd. 
+* The design intent of this block is to reuse as much of the EnergyPlus Idd as possible to define objects for Radiance simulations. For example, we hope to use EnergyPlus surfaces, sub surfaces, materials, light shelves, daylight sensors, etc. Where necessary, the OpenStudio Idd will be extended from EnergyPlus to include lighting layouts, lighting control zones, luminaire photometric distribution files, photosensor orientation, interior partitions, Radiance analysis zones and other data not present in the EnergyPlus Idd. 
 *
 * \subsection forward_sec Forward Translator
 *

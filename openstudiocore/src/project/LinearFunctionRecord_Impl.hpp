@@ -20,8 +20,8 @@
 #ifndef PROJECT_LINEARFUNCTIONRECORD_IMPL_HPP
 #define PROJECT_LINEARFUNCTIONRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/FunctionRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "FunctionRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -51,7 +51,7 @@ namespace detail {
     //@}
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Function function() const;
   

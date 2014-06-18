@@ -17,21 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/ModelObject.hpp>
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "ModelObject.hpp"
+
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
-
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Assert.hpp>
-
-#include <utilities/idd/OS_Connection_FieldEnums.hxx>
-
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Containers.hpp>
 
 namespace openstudio {
 namespace model {
@@ -77,9 +72,9 @@ namespace detail {
 
   boost::optional<ModelObject>  Connection_Impl::sourceObject()
   {
-    OptionalModelObject modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(
-        openstudio::OS_ConnectionFields::SourceObject);
-    return modelObject;
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) ) 
+      { return oCandidate->optionalCast<ModelObject>(); }
+    return boost::none;
   }
 
   boost::optional<unsigned> Connection_Impl::sourceObjectPort()
@@ -89,9 +84,9 @@ namespace detail {
 
   boost::optional<ModelObject> Connection_Impl::targetObject()
   {
-    OptionalModelObject modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(
-        openstudio::OS_ConnectionFields::TargetObject);
-    return modelObject;
+    if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) ) 
+      { return oCandidate->optionalCast<ModelObject>(); }
+    return boost::none;
   }
 
   boost::optional<unsigned> Connection_Impl::targetObjectPort()
@@ -139,7 +134,7 @@ Connection::Connection(const Model& model)
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }
 
-Connection::Connection(boost::shared_ptr<detail::Connection_Impl> p)
+Connection::Connection(std::shared_ptr<detail::Connection_Impl> p)
   : ModelObject(p)
 {}
 

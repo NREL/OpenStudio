@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/FanOnOff.hpp>
-#include <model/FanOnOff_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
+#include "SetpointManagerMixedAir.hpp"
+#include "SetpointManagerMixedAir_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
+#include "FanOnOff.hpp"
+#include "FanOnOff_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -217,7 +217,7 @@ SetpointManagerMixedAir::SetpointManagerMixedAir(const Model& model)
 }
 
 SetpointManagerMixedAir::SetpointManagerMixedAir(
-    boost::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
+    std::shared_ptr<detail::SetpointManagerMixedAir_Impl> p)
   : HVACComponent(p)
 {}
 
@@ -300,17 +300,15 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
 
   std::vector<ModelObject> supplyComponents = airLoopHVAC.supplyComponents();
 
-  for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
-         it != supplyComponents.end();
-         ++it )
+  for( const auto & supplyComponent : supplyComponents )
   {
-    if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
+    if( boost::optional<FanVariableVolume> variableFan = supplyComponent.optionalCast<FanVariableVolume>() ) {
       fans.insert(fans.begin(), *variableFan);
     }
-    else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
+    else if( boost::optional<FanConstantVolume> constantFan = supplyComponent.optionalCast<FanConstantVolume>() ) {
       fans.insert(fans.begin(), *constantFan);
     }
-    else if( boost::optional<FanOnOff> onOffFan = it->optionalCast<FanOnOff>() ) {
+    else if( boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>() ) {
       fans.insert(fans.begin(), *onOffFan);
     }
   } 
@@ -336,11 +334,9 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
   {
     std::vector<model::Node> nodes = subsetCastVector<model::Node>(airLoopHVAC.supplyComponents());
 
-    for( std::vector<model::Node>::iterator it = nodes.begin();
-         it != nodes.end();
-         ++it )
+    for( auto & node : nodes )
     {
-      if( boost::optional<model::SetpointManagerMixedAir> spm = it->getSetpointManagerMixedAir() )
+      if( boost::optional<model::SetpointManagerMixedAir> spm = node.getSetpointManagerMixedAir() )
       {
         spm->setFanInletNode(fanInletNode.get());
 

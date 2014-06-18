@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "BCLFixture.hpp"
+#include "../../core/PathHelpers.hpp"
 #include <resources.hxx>
 
-#include <utilities/bcl/BCLFileReference.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../BCLFileReference.hpp"
+#include "../BCLMeasure.hpp"
 
 #include <QFile>
 
@@ -131,4 +131,16 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
 
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
+}
+
+TEST_F(BCLFixture, PatApplicationMeasures)
+{
+  std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
+  ASSERT_EQ(3u, patApplicationMeasures.size());
+
+  BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+
+  BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+
+  BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
 }

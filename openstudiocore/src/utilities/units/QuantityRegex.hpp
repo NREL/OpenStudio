@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTIILITIES_UNITS_QUANTITYREGEX_HPP
-#define UTIILITIES_UNITS_QUANTITYREGEX_HPP
+#ifndef UTILITIES_UNITS_QUANTITYREGEX_HPP
+#define UTILITIES_UNITS_QUANTITYREGEX_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 #include <boost/regex.hpp>
 
 #include <string>

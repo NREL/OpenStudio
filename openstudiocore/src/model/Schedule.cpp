@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
+#include "Model.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -97,7 +97,7 @@ Schedule::Schedule(IddObjectType type,const Model& model)
 }
 
 // constructor from impl
-Schedule::Schedule(boost::shared_ptr<detail::Schedule_Impl> impl)
+Schedule::Schedule(std::shared_ptr<detail::Schedule_Impl> impl)
   : ScheduleBase(impl)
 {
   OS_ASSERT(getImpl<detail::Schedule_Impl>());

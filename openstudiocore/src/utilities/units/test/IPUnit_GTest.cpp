@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
-#include <utilities/units/Scale.hpp>
+#include "../IPUnit.hpp"
+#include "../IPUnit_Impl.hpp"
+#include "../Scale.hpp"
 
-#include <utilities/core/Exception.hpp>
+#include "../../core/Exception.hpp"
 
 using openstudio::Unit;
 using openstudio::UnitSystem;

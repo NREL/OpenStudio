@@ -18,14 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../ProjectDatabase.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
+#include "../../runmanager/lib/RunManager.hpp"
 
-#include <utilities/core/System.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/System.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>

@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <gbxml/Test/gbXMLFixture.hpp>
+#include "gbXMLFixture.hpp"
 
-#include <gbxml/ReverseTranslator.hpp>
-#include <gbxml/ForwardTranslator.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../ForwardTranslator.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../../energyplus/ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Optional.hpp"
 
 #include <resources.hxx>
 

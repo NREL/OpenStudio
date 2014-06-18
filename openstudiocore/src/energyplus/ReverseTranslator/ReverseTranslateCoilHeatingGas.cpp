@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingGas_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../../model/CoilHeatingGas.hpp"
+#include "../../model/CoilHeatingGas_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Coil_Heating_Gas_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -110,7 +110,7 @@ OptionalModelObject ReverseTranslator::translateCoilHeatingGas( const WorkspaceO
   catch (std::exception& e) {
     LOG(Error,"Unable to reverse translate " << workspaceObject.briefDescription() << ", because "
         << e.what() << ".");
-    return false;
+    return boost::none;
   }
 
   return result;

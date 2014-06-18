@@ -17,45 +17,45 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "Meter.hpp"
+#include "Meter_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/algorithm/string.hpp>
@@ -99,7 +99,7 @@ namespace detail {
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
-    BuildingStoryVector stories = model().getModelObjects<BuildingStory>();
+    BuildingStoryVector stories = model().getConcreteModelObjects<BuildingStory>();
     result.insert(result.end(),stories.begin(),stories.end());
 
     // exterior shading groups
@@ -210,7 +210,7 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -335,7 +335,7 @@ namespace detail {
   MeterVector Building_Impl::meters() const
   {
     MeterVector result;
-    MeterVector meters = this->model().getModelObjects<Meter>();
+    MeterVector meters = this->model().getConcreteModelObjects<Meter>();
     for (const Meter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Building == meter.installLocationType().get().value())){
         result.push_back(meter);
@@ -352,13 +352,13 @@ namespace detail {
   std::vector<Space> Building_Impl::spaces() const
   {
     // all spaces in workspace implicitly belong to building
-    return this->model().getModelObjects<Space>();
+    return this->model().getConcreteModelObjects<Space>();
   }
 
   ShadingSurfaceGroupVector Building_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Building")){
         result.push_back(shadingGroup);
       }
@@ -369,12 +369,12 @@ namespace detail {
   std::vector<ThermalZone> Building_Impl::thermalZones() const
   {
     // all thermal zones in workspace implicitly belong to building
-    return this->model().getModelObjects<ThermalZone>();
+    return this->model().getConcreteModelObjects<ThermalZone>();
   }
 
   std::vector<Surface> Building_Impl::exteriorWalls() const {
     SurfaceVector result;
-    SurfaceVector candidates = model().getModelObjects<Surface>();
+    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
     for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
@@ -387,7 +387,7 @@ namespace detail {
 
   std::vector<Surface> Building_Impl::roofs() const {
     SurfaceVector result;
-    SurfaceVector candidates = model().getModelObjects<Surface>();
+    SurfaceVector candidates = model().getConcreteModelObjects<Surface>();
     for (const Surface& candidate : candidates) {
       std::string surfaceType = candidate.surfaceType();
       std::string outsideBoundaryCondition = candidate.outsideBoundaryCondition();
@@ -1104,7 +1104,7 @@ std::vector<std::vector<Point3d> > Building::generateSkylightPattern(double skyl
 }
 
 /// @cond
-Building::Building(boost::shared_ptr<detail::Building_Impl> impl)
+Building::Building(std::shared_ptr<detail::Building_Impl> impl)
   : ParentObject(impl)
 {}
 

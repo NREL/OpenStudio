@@ -17,16 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "UncertaintyDescription.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <analysis/GenericUncertaintyDescription.hpp>
+#include "GenericUncertaintyDescription.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -148,7 +146,7 @@ namespace detail {
         return false;
       }
     }   
-    AttributeVector::iterator it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
+    auto it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
     if (it == m_attributes.end()) {
       return false;
     }
@@ -531,7 +529,7 @@ namespace detail {
 } // detail
 
 UncertaintyDescription UncertaintyDescription::clone() const {
-  boost::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
+  std::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
       new detail::UncertaintyDescription_Impl(*impl()));
   return UncertaintyDescription(cloneImpl);
 }
@@ -605,11 +603,11 @@ void UncertaintyDescription::restoreDefaults() {
   return impl()->restoreDefaults();
 }
 
-UncertaintyDescription::UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
+UncertaintyDescription::UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
   : m_impl(impl)
 {}
 
-boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
+std::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
   return m_impl;
 }
 
@@ -638,7 +636,7 @@ namespace detail {
 
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
 
     GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
                                          attributes);

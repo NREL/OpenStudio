@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACE_HPP
 #define MODEL_SPACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurfaceGroup.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurfaceGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -564,13 +564,16 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit Space(boost::shared_ptr<detail::Space_Impl> impl);
+  explicit Space(std::shared_ptr<detail::Space_Impl> impl);
 
   /// @endcond
  private:
 
   REGISTER_LOGGER("openstudio.model.Space");
 };
+
+/** Intersect surfaces within spaces. */
+MODEL_API void intersectSurfaces(std::vector<Space>& spaces);
 
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces);

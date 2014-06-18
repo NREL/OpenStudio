@@ -82,7 +82,7 @@ if(APPLE)
     PROPERTIES MACOSX_PACKAGE_LOCATION Resources
   )
   set(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
-  set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.resultsviewer")
+  set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.${CMAKE_VERSION_BUILD}.resultsviewer")
   set(MACOSX_BUNDLE_BUNDLE_NAME "ResultsViewer")
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 endif()

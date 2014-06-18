@@ -19,8 +19,8 @@
 
 #include <QVBoxLayout>
 
-#include <openstudio_lib/ScriptsTabView.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "ScriptsTabView.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
 #include "OSAppBase.hpp"
 #include "../shared_gui_components/OSListView.hpp"
@@ -58,6 +58,7 @@ void ScriptsTabView::showEvent(QShowEvent *e)
   boost::optional<openstudio::analysisdriver::SimpleProject> project = OSAppBase::instance()->project();
   if (project)
   {
+    // DLM: why is this necessary?
     OSAppBase::instance()->measureManager().updateMeasures(*project, project->measures(), false);
   }
   variableGroupListView->refreshAllViews();

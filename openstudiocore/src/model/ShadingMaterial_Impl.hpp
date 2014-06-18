@@ -20,7 +20,7 @@
 #ifndef MODEL_SHADINGMATERIAL_IMPL_HPP
 #define MODEL_SHADINGMATERIAL_IMPL_HPP
 
-#include <model/FenestrationMaterial_Impl.hpp>
+#include "FenestrationMaterial_Impl.hpp"
 
 #include <QObject>
 

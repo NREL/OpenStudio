@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SkyTemperature.hpp>
-#include <model/SkyTemperature_Impl.hpp>
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "SkyTemperature.hpp"
+#include "SkyTemperature_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {
@@ -89,7 +89,7 @@ SizingPeriod::SizingPeriod(IddObjectType type,const Model& model)
 }
 
 // constructor
-SizingPeriod::SizingPeriod(boost::shared_ptr<detail::SizingPeriod_Impl> impl)
+SizingPeriod::SizingPeriod(std::shared_ptr<detail::SizingPeriod_Impl> impl)
   : ParentObject(impl)
 {}
 

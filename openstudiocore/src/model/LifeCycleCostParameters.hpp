@@ -20,9 +20,9 @@
 #ifndef MODEL_LIFECYCLECOSTPARAMETERS_HPP
 #define MODEL_LIFECYCLECOSTPARAMETERS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 
@@ -294,7 +294,7 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
   friend class IdfObject;
 
   // constructor
-  explicit LifeCycleCostParameters(boost::shared_ptr<detail::LifeCycleCostParameters_Impl> impl);
+  explicit LifeCycleCostParameters(std::shared_ptr<detail::LifeCycleCostParameters_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.LifeCycleCostParameters");

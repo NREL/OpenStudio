@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DakotaParametersFile.hpp>
-#include <analysis/DakotaParametersFile_Impl.hpp>
-#include <analysis/AnalysisEnums.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "DakotaParametersFile.hpp"
+#include "DakotaParametersFile_Impl.hpp"
+#include "AnalysisEnums.hpp"
+#include "UncertaintyDescription.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/iostreams/filter/newline.hpp>
@@ -576,7 +576,7 @@ boost::optional<DakotaParametersFile> DakotaParametersFile::load(const openstudi
 
   try {
     boost::filesystem::ifstream is(p);
-    boost::shared_ptr<detail::DakotaParametersFile_Impl> impl(new detail::DakotaParametersFile_Impl(is));
+    std::shared_ptr<detail::DakotaParametersFile_Impl> impl(new detail::DakotaParametersFile_Impl(is));
     result = DakotaParametersFile(impl);
   }
   catch (...) {}
@@ -689,7 +689,7 @@ bool DakotaParametersFile::getFunctionValueRequired(int i) const {
 }
 
 /// @cond
-DakotaParametersFile::DakotaParametersFile(boost::shared_ptr<detail::DakotaParametersFile_Impl> impl)
+DakotaParametersFile::DakotaParametersFile(std::shared_ptr<detail::DakotaParametersFile_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

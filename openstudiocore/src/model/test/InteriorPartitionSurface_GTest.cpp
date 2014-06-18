@@ -19,14 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
+#include "../InteriorPartitionSurface.hpp"
+#include "../InteriorPartitionSurface_Impl.hpp"
+#include "../InteriorPartitionSurfaceGroup.hpp"
+#include "../InteriorPartitionSurfaceGroup_Impl.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

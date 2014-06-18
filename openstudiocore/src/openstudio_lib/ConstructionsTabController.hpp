@@ -17,12 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_H
-#define OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_H
+#ifndef OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_HPP
+#define OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -49,11 +47,11 @@ class ConstructionsTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
-    boost::shared_ptr<ConstructionsController> m_constructionsController;
-    boost::shared_ptr<MaterialsController> m_materialsController;
+    std::shared_ptr<DefaultConstructionSetsController> m_defaultConstructionSetsController;
+    std::shared_ptr<ConstructionsController> m_constructionsController;
+    std::shared_ptr<MaterialsController> m_materialsController;
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_H
+#endif // OPENSTUDIO_CONSTRUCTIONSTABCONTROLLER_HPP

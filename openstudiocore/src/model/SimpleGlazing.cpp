@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
+#include "SimpleGlazing.hpp"
+#include "SimpleGlazing_Impl.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -262,7 +262,7 @@ void SimpleGlazing::resetVisibleTransmittance() {
 }
 
 /// @cond
-SimpleGlazing::SimpleGlazing(boost::shared_ptr<detail::SimpleGlazing_Impl> impl)
+SimpleGlazing::SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

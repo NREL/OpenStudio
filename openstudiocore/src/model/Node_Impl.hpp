@@ -20,7 +20,7 @@
 #ifndef MODEL_NODE_IMPL_HPP
 #define MODEL_NODE_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 
@@ -57,6 +57,12 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const;
 
     virtual IddObjectType iddObjectType() const;
+
+    /** This function returns a vector of HVACComponent that are directly downstream
+     *  from this object on an AirLoopHVAC or PlantLoop. 
+     *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+    **/
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
     unsigned inletPort();
 

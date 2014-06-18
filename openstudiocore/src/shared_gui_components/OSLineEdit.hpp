@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSLINEEDIT_H
-#define OPENSTUDIO_OSLINEEDIT_H
+#ifndef SHAREDGUICOMPONENTS_OSLINEEDIT_HPP
+#define SHAREDGUICOMPONENTS_OSLINEEDIT_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QLineEdit>
 
@@ -33,7 +33,7 @@ class OSLineEdit2 : public QLineEdit {
 
  public:
 
-  OSLineEdit2(QWidget * parent = 0);
+  OSLineEdit2(QWidget * parent = nullptr);
 
   virtual ~OSLineEdit2() {}
 
@@ -85,7 +85,7 @@ class OSLineEdit : public QLineEdit
 
   public:
 
-  OSLineEdit(QWidget * parent = 0);
+  OSLineEdit(QWidget * parent = nullptr);
 
   virtual ~OSLineEdit() {}
 
@@ -110,5 +110,5 @@ class OSLineEdit : public QLineEdit
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSLINEEDIT_H
+#endif // SHAREDGUICOMPONENTS_OSLINEEDIT_HPP
 

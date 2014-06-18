@@ -24,7 +24,6 @@
 #include <vector>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio {
 
@@ -60,7 +59,7 @@ struct GenerateIddFactoryOutFiles {
   IddFactoryOutFile iddFieldEnumsIxx;
   IddFactoryOutFile iddFactoryHxx;
   IddFactoryOutFile iddFactoryCxx;
-  std::vector< boost::shared_ptr<IddFactoryOutFile> > iddFactoryIddFileCxxs;
+  std::vector< std::shared_ptr<IddFactoryOutFile> > iddFactoryIddFileCxxs;
   std::map<std::string,std::pair<std::string,bool> > checksumMap; // filename, (checksum, encountered)
   
   GenerateIddFactoryOutFiles(const path& outPath,

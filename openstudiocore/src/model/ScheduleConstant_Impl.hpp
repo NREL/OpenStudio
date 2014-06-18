@@ -20,7 +20,7 @@
 #ifndef MODEL_SCHEDULECONSTANT_IMPL_HPP
 #define MODEL_SCHEDULECONSTANT_IMPL_HPP 
 
-#include <model/Schedule_Impl.hpp>
+#include "Schedule_Impl.hpp"
 
 namespace openstudio {
 namespace model {

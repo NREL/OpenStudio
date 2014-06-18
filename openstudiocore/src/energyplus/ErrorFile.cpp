@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/ErrorFile.hpp>
+#include "ErrorFile.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
@@ -87,7 +87,6 @@ namespace energyplus {
     boost::regex completedUnsuccessful("^\\s*\\*+ EnergyPlus Terminated.*");
 
     // repeat count
-    boost::regex occurredTotalTimes(".*occurred ([0-9]+) total times.*");
 
 
     // read the file line by line using regexes
@@ -121,33 +120,21 @@ namespace energyplus {
 
         LOG(Trace, "Error parsed: " << warningOrErrorString);
 
-        int repeatCount = 0;
-
-        if (boost::regex_search(warningOrErrorString, matches, occurredTotalTimes)) {
-          std::string temp = std::string(matches[1].first, matches[1].second); 
-          repeatCount = atoi(temp.c_str()) - 1;
-        }
-
-        if (repeatCount < 1) repeatCount = 1;
-
 
         // correctly sort warnings and errors
         try{
           ErrorLevel level(warningOrErrorType);
 
-          for (int i = 0; i < repeatCount; ++i)
-          {
-            switch(level.value()){
-              case ErrorLevel::Warning:
-                m_warnings.push_back(warningOrErrorString);
-                break;
-              case ErrorLevel::Severe:
-                m_severeErrors.push_back(warningOrErrorString);
-                break;
-              case ErrorLevel::Fatal:
-                m_fatalErrors.push_back(warningOrErrorString);
-                break;
-            }
+          switch(level.value()){
+            case ErrorLevel::Warning:
+              m_warnings.push_back(warningOrErrorString);
+              break;
+            case ErrorLevel::Severe:
+              m_severeErrors.push_back(warningOrErrorString);
+              break;
+            case ErrorLevel::Fatal:
+              m_fatalErrors.push_back(warningOrErrorString);
+              break;
           }
 
         }catch(...){

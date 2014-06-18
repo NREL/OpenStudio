@@ -19,11 +19,11 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 # DLM@what are the options to distinuguish between OpenStudio::Date and built in Date?
 
-class Calendar_Test < Test::Unit::TestCase
+class Calendar_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

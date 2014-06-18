@@ -17,16 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/CurrentAnalysis_Impl.hpp>
+#include "CurrentAnalysis.hpp"
+#include "CurrentAnalysis_Impl.hpp"
 
-#include <analysis/DataPoint_Impl.hpp>
+#include "../analysis/DataPoint_Impl.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobErrors.hpp>
-
-#include <boost/bind.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/JobErrors.hpp"
 
 using namespace openstudio::analysis;
 
@@ -66,7 +64,7 @@ namespace detail {
   }
 
   CurrentAnalysis CurrentAnalysis_Impl::currentAnalysis() const {
-    CurrentAnalysis result(boost::const_pointer_cast<CurrentAnalysis_Impl>(shared_from_this()));
+    CurrentAnalysis result(std::const_pointer_cast<CurrentAnalysis_Impl>(shared_from_this()));
     return result;
   }
 
@@ -139,16 +137,16 @@ namespace detail {
   }
 
   bool CurrentAnalysis_Impl::isQueuedOSDataPoint(const openstudio::UUID& job) const {
-    analysis::DataPointVector::const_iterator it = std::find_if(m_queuedOSDataPoints.begin(),
-                                                                m_queuedOSDataPoints.end(),
-                                                                boost::bind(jobUUIDsEqual,_1,job));
+    auto it = std::find_if(m_queuedOSDataPoints.begin(),
+                           m_queuedOSDataPoints.end(),
+                           std::bind(jobUUIDsEqual,std::placeholders::_1,job));
     return (it != m_queuedOSDataPoints.end());
   }
 
   bool CurrentAnalysis_Impl::isQueuedDakotaDataPoint(const openstudio::UUID& job) const {
-    analysis::DataPointVector::const_iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
-                                                                m_queuedDakotaDataPoints.end(),
-                                                                boost::bind(jobUUIDsEqual,_1,job));
+    auto it = std::find_if(m_queuedDakotaDataPoints.begin(),
+                           m_queuedDakotaDataPoints.end(),
+                           std::bind(jobUUIDsEqual,std::placeholders::_1,job));
     return (it != m_queuedDakotaDataPoints.end());
   }
 
@@ -165,9 +163,9 @@ namespace detail {
   boost::optional<analysis::DataPoint> CurrentAnalysis_Impl::isQueuedOSDataPoint(
       const analysis::DataPoint& dataPoint) const
   {
-    analysis::DataPointVector::const_iterator it = std::find_if(m_queuedOSDataPoints.begin(),
-                                                                m_queuedOSDataPoints.end(),
-                                                                boost::bind(dataPointsEqual,_1,dataPoint));
+    auto it = std::find_if(m_queuedOSDataPoints.begin(),
+                           m_queuedOSDataPoints.end(),
+                           std::bind(dataPointsEqual,std::placeholders::_1,dataPoint));
     if (it != m_queuedOSDataPoints.end()) {
       return *it;
     }
@@ -177,9 +175,9 @@ namespace detail {
   boost::optional<analysis::DataPoint> CurrentAnalysis_Impl::isQueuedDakotaDataPoint(
       const analysis::DataPoint& dataPoint) const
   {
-    analysis::DataPointVector::const_iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
-                                                                m_queuedDakotaDataPoints.end(),
-                                                                boost::bind(dataPointsEqual,_1,dataPoint));
+    auto it = std::find_if(m_queuedDakotaDataPoints.begin(),
+                           m_queuedDakotaDataPoints.end(),
+                           std::bind(dataPointsEqual,std::placeholders::_1,dataPoint));
     if (it != m_queuedDakotaDataPoints.end()) {
       return *it;
     }
@@ -199,9 +197,9 @@ namespace detail {
   void CurrentAnalysis_Impl::augmentQueuedDakotaDataPoint(const analysis::DataPoint& dataPoint,
                                                           const openstudio::path& dakotaParametersFile)
   {
-    analysis::DataPointVector::iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
-                                                          m_queuedDakotaDataPoints.end(),
-                                                          boost::bind(dataPointsEqual,_1,dataPoint));
+    auto it = std::find_if(m_queuedDakotaDataPoints.begin(),
+                           m_queuedDakotaDataPoints.end(),
+                           std::bind(dataPointsEqual,std::placeholders::_1,dataPoint));
     if (it != m_queuedDakotaDataPoints.end()){
       std::vector<openstudio::path> dakotaParametersFiles = it->dakotaParametersFiles();
       dakotaParametersFiles.push_back(dakotaParametersFile);
@@ -210,9 +208,9 @@ namespace detail {
   }
 
   analysis::DataPoint CurrentAnalysis_Impl::removeCompletedOSDataPoint(const openstudio::UUID& completedJob) {
-    analysis::DataPointVector::iterator it = std::find_if(m_queuedOSDataPoints.begin(),
-                                                          m_queuedOSDataPoints.end(),
-                                                          boost::bind(jobUUIDsEqual,_1,completedJob));
+    auto it = std::find_if(m_queuedOSDataPoints.begin(),
+                           m_queuedOSDataPoints.end(),
+                           std::bind(jobUUIDsEqual,std::placeholders::_1,completedJob));
     OS_ASSERT(it != m_queuedOSDataPoints.end());
     analysis::DataPoint result = *it;
     
@@ -229,9 +227,9 @@ namespace detail {
   }
 
   analysis::DataPoint CurrentAnalysis_Impl::removeCompletedDakotaDataPoint(const openstudio::UUID& completedJob) {
-    analysis::DataPointVector::iterator it = std::find_if(m_queuedDakotaDataPoints.begin(),
-                                                          m_queuedDakotaDataPoints.end(),
-                                                          boost::bind(jobUUIDsEqual,_1,completedJob));
+    auto it = std::find_if(m_queuedDakotaDataPoints.begin(),
+                           m_queuedDakotaDataPoints.end(),
+                           std::bind(jobUUIDsEqual,std::placeholders::_1,completedJob));
     OS_ASSERT(it != m_queuedDakotaDataPoints.end());
     analysis::DataPoint result = *it;
     m_queuedDakotaDataPoints.erase(it);
@@ -303,7 +301,7 @@ namespace detail {
   void CurrentAnalysis_Impl::stopQueuedDakotaJobs(runmanager::RunManager& runManager) {
     // get all jobs in the queued analysis, including child jobs
     std::vector<runmanager::Job> jobs;
-    analysis::DataPointVector::iterator it = m_queuedDakotaDataPoints.begin();
+    auto it = m_queuedDakotaDataPoints.begin();
     while (it != m_queuedDakotaDataPoints.end()) {
       boost::optional<runmanager::Job> job = it->topLevelJob();
       if (job){
@@ -324,9 +322,9 @@ namespace detail {
       // get all jobs to cancel including child jobs
       std::vector<runmanager::Job> jobs;
 
-      DataPointVector::iterator it = std::find_if(m_queuedOSDataPoints.begin(),
-                                                  m_queuedOSDataPoints.end(),
-                                                  boost::bind(dataPointsEqual,_1,*exactDataPoint));
+      auto it = std::find_if(m_queuedOSDataPoints.begin(),
+                             m_queuedOSDataPoints.end(),
+                             std::bind(dataPointsEqual,std::placeholders::_1,*exactDataPoint));
       if (it != m_queuedOSDataPoints.end()) {
         boost::optional<runmanager::Job> job = it->topLevelJob();
         if (job){
@@ -337,7 +335,7 @@ namespace detail {
 
       it = std::find_if(m_queuedDakotaDataPoints.begin(),
                         m_queuedDakotaDataPoints.end(),
-                        boost::bind(dataPointsEqual,_1,*exactDataPoint));
+                        std::bind(dataPointsEqual,std::placeholders::_1,*exactDataPoint));
       if (it != m_queuedDakotaDataPoints.end()) {
         boost::optional<runmanager::Job> job = it->topLevelJob();
         if (job){
@@ -354,7 +352,7 @@ namespace detail {
 
 CurrentAnalysis::CurrentAnalysis(const analysis::Analysis& analysis,
                                  const AnalysisRunOptions& runOptions)
-  : m_impl(boost::shared_ptr<detail::CurrentAnalysis_Impl>(
+  : m_impl(std::shared_ptr<detail::CurrentAnalysis_Impl>(
                new detail::CurrentAnalysis_Impl(analysis,runOptions)))
 {}
 
@@ -366,7 +364,7 @@ AnalysisRunOptions CurrentAnalysis::runOptions() const {
   return getImpl()->runOptions();
 }
 
-boost::shared_ptr<detail::CurrentAnalysis_Impl> CurrentAnalysis::getImpl() const {
+std::shared_ptr<detail::CurrentAnalysis_Impl> CurrentAnalysis::getImpl() const {
   return m_impl;
 }
 
@@ -420,7 +418,7 @@ void CurrentAnalysis::moveToThread(QThread* targetThread) {
 }
 
 /// @cond
-CurrentAnalysis::CurrentAnalysis(boost::shared_ptr<detail::CurrentAnalysis_Impl> impl)
+CurrentAnalysis::CurrentAnalysis(std::shared_ptr<detail::CurrentAnalysis_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

@@ -156,6 +156,9 @@ else
   
 end
 
+# try to minimize file path lengths
+workflow.addParam(OpenStudio::Runmanager::JobParam.new("flatoutdir"))
+
 # make a run manager
 runDir = outPath / OpenStudio::Path.new("gen_eplus/")
 runmanager_path = OpenStudio::Path.new("runmanager.db")
@@ -181,31 +184,29 @@ runmanager.getJobs.each { |job|
     job.errors.errors.each { |err|
       puts "ERROR: " + err
       puts "Radiance export aborted."
-      #make sure it gets to the error log
-      $stderr.puts err
-      abort
     }
-  elsif not job.errors.warnings.empty?
-    puts "The job in '" + job.outdir.to_s + "' has warnings."
+    exit
   end
-
+  
+  if not job.errors.warnings.empty?
+    puts "The job in '" + job.outdir.to_s + "' has warnings."
+    job.errors.warnings.each { |warn|
+      puts "WARN: " + warn
+    }
+  end
+  
   if job.jobType() == "ModelToRad".to_JobType
-    outputFiles = job.outputFiles();
+    outputFiles = job.outputFiles()
 
     outputFiles.each { |file|
       radfile = outPath / OpenStudio::relativePath(file.fullPath, job.outdir)
-      OpenStudio::create_directory(radfile.parent_path().parent_path());
-      OpenStudio::create_directory(radfile.parent_path());
-      OpenStudio::copy_file(file.fullPath, radfile);
-
+      puts "Copying #{file.fullPath} to #{radfile}"
+      OpenStudio::create_directory(radfile.parent_path().parent_path())
+      OpenStudio::create_directory(radfile.parent_path())
+      OpenStudio::copy_file(file.fullPath, radfile)
     }
   end
-
-  job.errors.warnings.each { |warn|
-    puts "WARN: " + warn
-  }
 }
-
 
 # the end
 if options.verbose == 'v'

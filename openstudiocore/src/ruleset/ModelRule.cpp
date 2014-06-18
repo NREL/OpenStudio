@@ -17,19 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelRule_Impl.hpp>
-#include <ruleset/ModelObjectFilterClause.hpp>
-#include <ruleset/ModelObjectFilterClause_Impl.hpp>
-#include <ruleset/ModelObjectActionClause.hpp>
-#include <ruleset/ModelObjectActionClause_Impl.hpp>
+#include "ModelRule.hpp"
+#include "ModelRule_Impl.hpp"
+#include "ModelObjectFilterClause.hpp"
+#include "ModelObjectFilterClause_Impl.hpp"
+#include "ModelObjectActionClause.hpp"
+#include "ModelObjectActionClause_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -115,26 +113,26 @@ std::string ModelRule::xmlElementName()
 }
 
 ModelRule::ModelRule(const std::string& name)
-  : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name)))
+  : Rule(std::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name)))
 {
   OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 ModelRule::ModelRule(const std::string& name, bool active, const UUID& uuid, const UUID& versionUUID,
                      const std::vector<FilterClause>& filters, const std::vector<ActionClause>& actions)
-  : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name,active,uuid,versionUUID,filters,actions)))
+  : Rule(std::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(name,active,uuid,versionUUID,filters,actions)))
 {
   OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 ModelRule::ModelRule(const QDomElement& element)
-  : Rule(boost::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(element)))
+  : Rule(std::shared_ptr<detail::ModelRule_Impl>(new detail::ModelRule_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelRule_Impl>());
 }
 
 /// @cond
-ModelRule::ModelRule(boost::shared_ptr<detail::ModelRule_Impl> impl)
+ModelRule::ModelRule(std::shared_ptr<detail::ModelRule_Impl> impl)
   : Rule(impl)
 {
   OS_ASSERT(getImpl<detail::ModelRule_Impl>());

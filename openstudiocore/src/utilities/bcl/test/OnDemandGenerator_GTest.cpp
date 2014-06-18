@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
+#include "../BCLComponent.hpp"
+#include "../LocalBCL.hpp"
+#include "../RemoteBCL.hpp"
+#include "../OnDemandGenerator.hpp"
 
 using namespace openstudio;
 

@@ -18,13 +18,13 @@
 **********************************************************************/
 
 
-#include <model_editor/BridgeClasses.hpp>
+#include "BridgeClasses.hpp"
 
 
 
 ComboHighlightBridge::ComboHighlightBridge(QObject* parent):
   QObject(parent),
-  m_source(NULL)
+  m_source(nullptr)
 {
 }
 

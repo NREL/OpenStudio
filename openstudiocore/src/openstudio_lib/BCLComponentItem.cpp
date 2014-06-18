@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/BCLComponentItem.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "BCLComponentItem.hpp"
+#include "OSItem.hpp"
+#include "../utilities/bcl/BCLComponent.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 #include <QLabel>
 
 namespace openstudio {

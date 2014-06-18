@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
-#include <utilities/idd/IddRegex.hpp>
+#include "IddFixture.hpp"
+#include "../IddRegex.hpp"
 
 #include <string>
 #include <boost/regex.hpp>

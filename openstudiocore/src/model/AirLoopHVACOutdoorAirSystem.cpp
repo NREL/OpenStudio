@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AvailabilityManagerScheduled.hpp>
-#include <model/AvailabilityManagerScheduled_Impl.hpp>
-#include <model/AirToAirComponent.hpp>
-#include <model/AirToAirComponent_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AvailabilityManagerScheduled.hpp"
+#include "AvailabilityManagerScheduled_Impl.hpp"
+#include "AirToAirComponent.hpp"
+#include "AirToAirComponent_Impl.hpp"
+#include "ControllerOutdoorAir.hpp"
+#include "ControllerOutdoorAir_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_AvailabilityManagerAssignmentList_FieldEnums.hxx>
 #include <utilities/idd/OS_AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -91,7 +91,7 @@ namespace detail {
     return result;
   }
 
-  IddObjectType AirLoopHVACOutdoorAirSystem_Impl::iddObjectType() const {\
+  IddObjectType AirLoopHVACOutdoorAirSystem_Impl::iddObjectType() const {
     return AirLoopHVACOutdoorAirSystem::iddObjectType();
   }
 
@@ -271,6 +271,17 @@ namespace detail {
     return ModelObject_Impl::remove();
   }
 
+  std::vector<HVACComponent> AirLoopHVACOutdoorAirSystem_Impl::edges(bool isDemandComponent)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->mixedAirModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
+  }
+
   std::vector<ModelObject> AirLoopHVACOutdoorAirSystem_Impl::oaComponents() const
   {
     std::vector<ModelObject> modelObjects;
@@ -369,7 +380,7 @@ namespace detail {
   {
     OptionalAirLoopHVAC result;
 
-    AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>(); 
+    AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>(); 
     AirLoopHVACVector::iterator it;
     
     for( it = airLoops.begin();
@@ -624,7 +635,7 @@ AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(Model & model, const Co
 }
 
 AirLoopHVACOutdoorAirSystem::AirLoopHVACOutdoorAirSystem(
-    boost::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
+    std::shared_ptr<detail::AirLoopHVACOutdoorAirSystem_Impl> impl)
   : HVACComponent(impl)
 {
 }

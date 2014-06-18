@@ -20,8 +20,8 @@
 #ifndef UTILITIES_DOCUMENT_TABLEELEMENT_IMPL_HPP
 #define UTILITIES_DOCUMENT_TABLEELEMENT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Optional.hpp"
 
 #include <boost/variant.hpp>
 #include <boost/variant/apply_visitor.hpp>

@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
 #define MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -175,7 +175,7 @@ class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponen
   /// @cond
   typedef detail::ZoneHVACPackagedTerminalAirConditioner_Impl ImplType;
 
-  explicit ZoneHVACPackagedTerminalAirConditioner(boost::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
+  explicit ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
 
   friend class detail::ZoneHVACPackagedTerminalAirConditioner_Impl;
   friend class Model;

@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirToAirComponent.hpp>
-#include <model/AirToAirComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "AirToAirComponent.hpp"
+#include "AirToAirComponent_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -218,11 +218,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextSupplyComponent
 
-      std::vector<ModelObject>::iterator dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
+      auto dropNodeLocation = std::find(oaComponents.begin(),oaComponents.end(),node);
 
       OS_ASSERT( dropNodeLocation != oaComponents.end() );
 
-      for( std::vector<ModelObject>::iterator it = dropNodeLocation;
+      for( auto it = dropNodeLocation;
            it != oaComponents.end();
            ++it )
       {
@@ -241,12 +241,12 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevSupplyComponent
 
-      std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
+      auto rDropNodeLocation = 
         std::find(oaComponents.rbegin(),oaComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != oaComponents.rend() );
 
-      for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
+      for( auto it = rDropNodeLocation;
            it != oaComponents.rend();
            ++it )
       {
@@ -280,7 +280,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
         prevReliefComponentLocation = reliefComponents.begin();
       }
 
-      for( std::vector<ModelObject>::iterator it = prevReliefComponentLocation;
+      for( auto it = prevReliefComponentLocation;
            it != reliefComponents.end();
            ++it )
       {
@@ -347,11 +347,11 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find nextReliefComponent
 
-      std::vector<ModelObject>::iterator dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
+      auto dropNodeLocation = std::find(reliefComponents.begin(),reliefComponents.end(),node);
 
       OS_ASSERT( dropNodeLocation != reliefComponents.end() );
 
-      for( std::vector<ModelObject>::iterator it = dropNodeLocation;
+      for( auto it = dropNodeLocation;
            it != reliefComponents.end();
            ++it )
       {
@@ -370,12 +370,12 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       // Find prevReliefComponent
 
-      std::vector<ModelObject>::reverse_iterator rDropNodeLocation = 
+      auto rDropNodeLocation = 
         std::find(reliefComponents.rbegin(),reliefComponents.rend(),node);
 
       OS_ASSERT( rDropNodeLocation != reliefComponents.rend() );
 
-      for( std::vector<ModelObject>::reverse_iterator it = rDropNodeLocation;
+      for( auto it = rDropNodeLocation;
            it != reliefComponents.rend();
            ++it )
       {
@@ -409,7 +409,7 @@ bool AirToAirComponent_Impl::addToNode(Node & node)
 
       prevSupplyComponentLocation = std::find(oaComponents.begin(),oaComponents.end(),prevSupplyComponent.get());
 
-      for( std::vector<ModelObject>::iterator it = prevSupplyComponentLocation;
+      for( auto it = prevSupplyComponentLocation;
            it != oaComponents.end();
            ++it )
       {
@@ -533,7 +533,7 @@ AirToAirComponent::AirToAirComponent(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::AirToAirComponent_Impl>());
 }     
 
-AirToAirComponent::AirToAirComponent(boost::shared_ptr<detail::AirToAirComponent_Impl> p)
+AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> p)
   : HVACComponent(p)
 {}
 

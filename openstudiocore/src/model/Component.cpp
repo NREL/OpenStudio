@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
+#include "Component.hpp"
+#include "Component_Impl.hpp"
 
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "Version.hpp"
+#include "Version_Impl.hpp"
+#include "ComponentData.hpp"
+#include "ComponentData_Impl.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -57,7 +57,7 @@ namespace detail {
 
   Workspace Component_Impl::clone(bool keepHandles) const {
     // copy everything but objects
-    boost::shared_ptr<Component_Impl> cloneImpl(new Component_Impl(*this,keepHandles));
+    std::shared_ptr<Component_Impl> cloneImpl(new Component_Impl(*this,keepHandles));
     // clone objects
     createAndAddClonedObjects(getWorkspace<Component>().getImpl<Component_Impl>(),cloneImpl,keepHandles);
     // wrap impl and return
@@ -78,7 +78,7 @@ namespace detail {
   }
 
   ComponentData Component_Impl::componentData() const {
-    ComponentDataVector candidates = model().getModelObjects<ComponentData>();
+    ComponentDataVector candidates = model().getConcreteModelObjects<ComponentData>();
     OS_ASSERT(candidates.size() == 1);
     return candidates[0];
   }
@@ -178,7 +178,7 @@ namespace detail {
 } // detail
 
 Component::Component(const openstudio::IdfFile& idfFile)
-  : Model(boost::shared_ptr<detail::Component_Impl>(new detail::Component_Impl(idfFile)))
+  : Model(std::shared_ptr<detail::Component_Impl>(new detail::Component_Impl(idfFile)))
 {
   // construct WorkspaceObject_ImplPtrs
   openstudio::detail::WorkspaceObject_ImplPtrVector objectImplPtrs;
@@ -199,7 +199,7 @@ Component::Component(const openstudio::IdfFile& idfFile)
   }
 
   // 1 ComponentData object
-  ComponentDataVector componentDataObjects = getModelObjects<ComponentData>();
+  ComponentDataVector componentDataObjects = getConcreteModelObjects<ComponentData>();
   if (componentDataObjects.size() != 1) {
     LOG_AND_THROW("Cannot construct Component from IdfFile because the file contains "
       << componentDataObjects.size() << " ComponentData objects.");
@@ -258,13 +258,13 @@ bool Component::save(const openstudio::path& p, bool overwrite) {
 }
 
 /// @cond
-Component::Component(boost::shared_ptr<detail::Component_Impl> impl)
+Component::Component(std::shared_ptr<detail::Component_Impl> impl)
   : Model(impl)
 {}
 /// @endcond
 
 Component::Component(const std::vector<ModelObject>& contents)
-  : Model(boost::shared_ptr<detail::Component_Impl>(new detail::Component_Impl(
+  : Model(std::shared_ptr<detail::Component_Impl>(new detail::Component_Impl(
       *(contents[0].model().getImpl<detail::Model_Impl>()),getHandles<ModelObject>(contents))))
 {
   // create Version object
@@ -276,11 +276,11 @@ Component::Component(const std::vector<ModelObject>& contents)
   WorkspaceObjectVector objects = getImpl<openstudio::detail::Workspace_Impl>()->addObjects(objectImplPtrs);
   OS_ASSERT(objects.size() == static_cast<unsigned>(1));
 
-  ComponentDataVector cdTemp = getModelObjects<ComponentData>();
+  ComponentDataVector cdTemp = getConcreteModelObjects<ComponentData>();
   OS_ASSERT(cdTemp.size() == 1);
   ComponentData componentData = cdTemp[0];
   componentData.setString(OS_ComponentDataFields::UUID,toString(createUUID()));
-  componentData.setInt(OS_ComponentDataFields::CreationTimestamp,time(NULL));
+  componentData.setInt(OS_ComponentDataFields::CreationTimestamp,time(nullptr));
   componentData.createVersionUUID();
 
   // clone objects

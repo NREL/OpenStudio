@@ -27,22 +27,20 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/core/System.hpp>
+#include "../../utilities/core/System.hpp"
 
 #include <QDir>
 #include <QDateTime>
 #include <QMutexLocker>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -84,7 +82,7 @@ namespace detail {
     return "Null Job";
   }
 
-  void NullJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void NullJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     LOG(Info, "Null starting");
 

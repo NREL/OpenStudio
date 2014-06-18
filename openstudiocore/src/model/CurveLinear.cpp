@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
+#include "CurveLinear.hpp"
+#include "CurveLinear_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Linear_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -315,7 +315,7 @@ void CurveLinear::resetOutputUnitType() {
 }
 
 /// @cond
-CurveLinear::CurveLinear(boost::shared_ptr<detail::CurveLinear_Impl> impl)
+CurveLinear::CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

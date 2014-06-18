@@ -28,9 +28,7 @@
 #include <utilities/core/Logger.hpp>
 #include <utilities/core/Containers.hpp>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 #include <QObject>
 #include <QUrl>
@@ -55,7 +53,7 @@ class OSOptionalQuantity;
 namespace detail { 
 
   /** Implementation of IdfObject. */
-  class UTILITIES_API IdfObject_Impl : public QObject, public boost::enable_shared_from_this<IdfObject_Impl> {
+  class UTILITIES_API IdfObject_Impl : public QObject, public std::enable_shared_from_this<IdfObject_Impl> {
     Q_OBJECT;
    public:
 
@@ -210,13 +208,13 @@ namespace detail {
     bool setQuantity (unsigned index, const Quantity q, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
      *  of bounds per IddField.properties()). */
     bool setUnsigned(unsigned index, unsigned value);
     bool setUnsigned(unsigned index, unsigned value, bool checkValidity);
 
     /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
-     *  any reaons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
+     *  any reasons. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out 
      *  of bounds per IddField.properties()). */
     bool setInt(unsigned index, int value);
     bool setInt(unsigned index, int value, bool checkValidity);
@@ -327,17 +325,17 @@ namespace detail {
 
     /** Constructor from text. Parses text and queries the IddFactory for its IddObject. May create
      *  an invalid object. (May even be invalid at enums::Strictness level None.) */
-    static boost::shared_ptr<IdfObject_Impl> load(const std::string& text);
+    static std::shared_ptr<IdfObject_Impl> load(const std::string& text);
 
     /** Constructor from text and an explicit iddObject. May create an invalid object. (May even
      *  be invalid at enums::Strictness level None.) */
-    static boost::shared_ptr<IdfObject_Impl> load(const std::string& text,const IddObject& iddObject);
+    static std::shared_ptr<IdfObject_Impl> load(const std::string& text,const IddObject& iddObject);
 
     /** Serialize this object to os as Idf text. */
     std::ostream& print(std::ostream& os) const;
 
-    /** Serialize just the preceding comments and name of this IdfObject in the formmat used by 
-     *  full object print. If hasFields, the name is follwed by a ','. Otherwise, the name is 
+    /** Serialize just the preceding comments and name of this IdfObject in the format used by 
+     *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is 
      *  followed by a ';'. */
     std::ostream& printName(std::ostream& os, bool hasFields=true) const;
 
@@ -352,8 +350,8 @@ namespace detail {
     /** Get an object that wraps this impl. */
     template<typename T>
     T getObject() const { 
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<IdfObject_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<IdfObject_Impl>(shared_from_this())));
       return result; 
     }
 
@@ -462,7 +460,7 @@ namespace detail {
     REGISTER_LOGGER("utilities.idf.IdfObject");
   };
 
-  typedef boost::shared_ptr<IdfObject_Impl> IdfObject_ImplPtr;
+  typedef std::shared_ptr<IdfObject_Impl> IdfObject_ImplPtr;
 
   typedef std::vector<IdfObject_ImplPtr> IdfObject_ImplPtrVector;
 

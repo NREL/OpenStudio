@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/OutputControlReportingTolerances.hpp>
-#include <model/OutputControlReportingTolerances_Impl.hpp>
+#include "OutputControlReportingTolerances.hpp"
+#include "OutputControlReportingTolerances_Impl.hpp"
 
 #include <utilities/idd/OS_OutputControl_ReportingTolerances_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -206,7 +206,7 @@ void OutputControlReportingTolerances::resetToleranceforTimeCoolingSetpointNotMe
 }
 
 /// @cond
-OutputControlReportingTolerances::OutputControlReportingTolerances(boost::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl)
+OutputControlReportingTolerances::OutputControlReportingTolerances(std::shared_ptr<detail::OutputControlReportingTolerances_Impl> impl)
   : ModelObject(impl)
 {}
 OutputControlReportingTolerances::OutputControlReportingTolerances(Model& model)

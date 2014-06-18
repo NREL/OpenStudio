@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSSWITCH_H
-#define OPENSTUDIO_OSSWITCH_H
+#ifndef SHAREDGUICOMPONENTS_OSSWITCH_HPP
+#define SHAREDGUICOMPONENTS_OSSWITCH_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 #include <QPushButton>
 
 namespace openstudio {
@@ -31,7 +31,7 @@ class OSSwitch2 : public QPushButton {
   Q_OBJECT
  public:
 
-  OSSwitch2(QWidget * parent = 0);
+  OSSwitch2(QWidget * parent = nullptr);
 
   virtual ~OSSwitch2() {}
 
@@ -65,7 +65,7 @@ class OSSwitch : public QPushButton
 
   public:
 
-  OSSwitch(QWidget * parent = 0);
+  OSSwitch(QWidget * parent = nullptr);
 
   virtual ~OSSwitch() {}
 
@@ -90,5 +90,5 @@ class OSSwitch : public QPushButton
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSSWITCH_H
+#endif // SHAREDGUICOMPONENTS_OSSWITCH_HPP
 

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/GenerateIddFactoryOutFiles.hpp>
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "GenerateIddFactoryOutFiles.hpp"
+#include "IddFileFactoryData.hpp"
 
-#include <utilities/core/Checksum.hpp>
+#include "../utilities/core/Checksum.hpp"
 
 #include <boost/regex.hpp>
 
@@ -72,7 +72,7 @@ GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
     m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
 {
   for (const IddFileFactoryData& iddFile : iddFiles) {
-    boost::shared_ptr<IddFactoryOutFile> cxxFile(new 
+    std::shared_ptr<IddFactoryOutFile> cxxFile(new 
         IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx",
                           outPath,
                           outFileHeader));
@@ -88,7 +88,7 @@ void GenerateIddFactoryOutFiles::finalize() {
   finalizeIddFactoryOutFile(iddFieldEnumsIxx);
   finalizeIddFactoryOutFile(iddFactoryHxx);
   finalizeIddFactoryOutFile(iddFactoryCxx);
-  for (boost::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
     finalizeIddFactoryOutFile(*cxxFile);
   }
 

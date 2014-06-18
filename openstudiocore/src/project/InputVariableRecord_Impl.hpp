@@ -20,11 +20,11 @@
 #ifndef PROJECT_INPUTVARIABLERECORD_IMPL_HPP
 #define PROJECT_INPUTVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/VariableRecord_Impl.hpp>
-#include <project/InputVariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "VariableRecord_Impl.hpp"
+#include "InputVariableRecord.hpp"
 
-#include <analysis/AnalysisEnums.hpp>
+#include "../analysis/AnalysisEnums.hpp"
 
 namespace openstudio {
 namespace project {

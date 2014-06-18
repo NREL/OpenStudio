@@ -18,9 +18,9 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

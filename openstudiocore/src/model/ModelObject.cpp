@@ -17,38 +17,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/Relationship.hpp>
-#include <model/ParentObject.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Model_Impl.hpp"
+#include "Component.hpp"
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "Relationship.hpp"
+#include "ParentObject.hpp"
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
+#include "ScheduleTypeRegistry.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
 
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/TimeSeries.hpp"
 
 #include <QMetaProperty>
 
@@ -507,7 +507,7 @@ namespace detail {
         continue;
       }
 
-      std::set<Handle>::const_iterator it = uniqueResourceHandles.find(handle);
+      auto it = uniqueResourceHandles.find(handle);
       if (it != uniqueResourceHandles.end()){
         continue;
       }
@@ -526,7 +526,7 @@ namespace detail {
     std::vector<std::string> variableNames = this->outputVariableNames();
     OptionalString name = this->name();
 
-    for (const OutputVariable& variable : this->model().getModelObjects<OutputVariable>()){
+    for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()){
       std::string keyValue = variable.keyValue();
       std::string variableName = variable.variableName();
 
@@ -1199,7 +1199,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model)
   }
 }
 
-ModelObject::ModelObject(boost::shared_ptr<detail::ModelObject_Impl> p)
+ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(p)
 {}
 

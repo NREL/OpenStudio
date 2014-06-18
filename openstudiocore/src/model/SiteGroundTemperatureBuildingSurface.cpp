@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SiteGroundTemperatureBuildingSurface.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface_Impl.hpp>
+#include "SiteGroundTemperatureBuildingSurface.hpp"
+#include "SiteGroundTemperatureBuildingSurface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_Site_GroundTemperature_BuildingSurface_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -515,7 +515,7 @@ void SiteGroundTemperatureBuildingSurface::resetDecemberGroundTemperature() {
 }
 
 /// @cond
-SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(boost::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl)
+SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(std::shared_ptr<detail::SiteGroundTemperatureBuildingSurface_Impl> impl)
   : ModelObject(impl)
 {}
 SiteGroundTemperatureBuildingSurface::SiteGroundTemperatureBuildingSurface(Model& model)

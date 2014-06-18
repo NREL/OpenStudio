@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OutputVariableRecord.hpp>
-#include <project/OutputVariableRecord_Impl.hpp>
+#include "OutputVariableRecord.hpp"
+#include "OutputVariableRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/OutputAttributeVariableRecord.hpp>
+#include "FunctionRecord.hpp"
+#include "JoinRecord.hpp"
+#include "OutputAttributeVariableRecord.hpp"
 
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/OutputAttributeVariable_Impl.hpp>
+#include "../analysis/OutputAttributeVariable.hpp"
+#include "../analysis/OutputAttributeVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -151,7 +151,7 @@ OutputVariableRecord OutputVariableRecord::factoryFromOutputVariable(const analy
   }
 
   OS_ASSERT(false);
-  return OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl>());
+  return OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl>());
 }
 
 std::vector<OutputVariableRecord> OutputVariableRecord::getOutputVariableRecords(ProjectDatabase& database) {
@@ -193,11 +193,11 @@ analysis::OutputVariable OutputVariableRecord::outputVariable() const {
 }
 
 /// @cond
-OutputVariableRecord::OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl)
+OutputVariableRecord::OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl)
   : VariableRecord(impl)
 {}
 
-OutputVariableRecord::OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl,
+OutputVariableRecord::OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl,
                                            ProjectDatabase database)
   : VariableRecord(impl, database)
 {

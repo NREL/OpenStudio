@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONECAPACITANCEMULTIPLIERRESEARCHSPECIAL_HPP
 #define MODEL_ZONECAPACITANCEMULTIPLIERRESEARCHSPECIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -100,7 +100,7 @@ class MODEL_API ZoneCapacitanceMultiplierResearchSpecial : public ModelObject {
   /// @cond
   typedef detail::ZoneCapacitanceMultiplierResearchSpecial_Impl ImplType;
 
-  explicit ZoneCapacitanceMultiplierResearchSpecial(boost::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
+  explicit ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl);
 
   friend class detail::ZoneCapacitanceMultiplierResearchSpecial_Impl;
   friend class Model;

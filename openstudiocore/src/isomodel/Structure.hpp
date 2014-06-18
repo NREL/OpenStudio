@@ -19,7 +19,7 @@
 #ifndef ISOMODEL_STRUCTURE_HPP
 #define ISOMODEL_STRUCTURE_HPP
 
-#include <utilities/data/Vector.hpp>
+#include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
 namespace isomodel {

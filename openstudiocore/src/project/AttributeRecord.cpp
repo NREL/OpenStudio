@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/VariableRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "FileReferenceRecord.hpp"
+#include "JoinRecord.hpp"
+#include "AlgorithmRecord.hpp"
+#include "VariableRecord.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -281,7 +281,7 @@ namespace detail{
     return result;
   }
 
-  void AttributeRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void AttributeRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AttributeRecord>(query);
     this->bindValues(query);
@@ -768,7 +768,7 @@ namespace detail{
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const FileReferenceRecord& fileReferenceRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, fileReferenceRecord)),
         fileReferenceRecord.projectDatabase())
 {
@@ -779,7 +779,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const AttributeRecord& parentAttributeRecord,
                                  int attributeVectorIndex)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, parentAttributeRecord, attributeVectorIndex)),
         parentAttributeRecord.projectDatabase())
 {
@@ -789,7 +789,7 @@ AttributeRecord::AttributeRecord(const Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
                                  const AlgorithmRecord& algorithmRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute, algorithmRecord)),
         algorithmRecord.projectDatabase())
 {
@@ -799,7 +799,7 @@ AttributeRecord::AttributeRecord(const openstudio::Attribute& attribute,
 
 AttributeRecord::AttributeRecord(const Attribute& attribute,
                                  const VariableRecord& variableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(attribute,variableRecord)),
         variableRecord.projectDatabase())
 {
@@ -820,20 +820,20 @@ void AttributeRecord::constructRelatedRecords(const Attribute& attribute) {
 }
 
 AttributeRecord::AttributeRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::AttributeRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::AttributeRecord_Impl>(
         new detail::AttributeRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
 }
 
-AttributeRecord::AttributeRecord(boost::shared_ptr<detail::AttributeRecord_Impl> impl)
+AttributeRecord::AttributeRecord(std::shared_ptr<detail::AttributeRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::AttributeRecord_Impl>());
@@ -854,7 +854,7 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -862,7 +862,7 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -876,11 +876,10 @@ UpdateByIdQueryData AttributeRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {

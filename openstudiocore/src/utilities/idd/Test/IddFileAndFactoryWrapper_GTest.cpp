@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "IddFixture.hpp"
+#include "../IddFileAndFactoryWrapper.hpp"
 
 using namespace openstudio;
 

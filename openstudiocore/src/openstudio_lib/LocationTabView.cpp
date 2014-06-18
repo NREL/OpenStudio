@@ -17,37 +17,37 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LocationTabView.hpp>
+#include "LocationTabView.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "../openstudio_app/OpenStudioApp.hpp"
 
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileConditionType.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
+#include "../model/DesignDay.hpp"
+#include "../model/DesignDay_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/SizingPeriod.hpp"
+#include "../model/SizingPeriod_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/ClimateZones.hpp"
+#include "../model/ClimateZones_Impl.hpp"
+#include "../model/WeatherFileDays.hpp"
+#include "../model/WeatherFileConditionType.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../runmanager/lib/ConfigOptions.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/smart_ptr.hpp>
 
@@ -515,7 +515,7 @@ void LocationView::onDesignDayBtnClicked()
 
         bool unknownDay = false;
 
-        for (model::DesignDay designDay : ddyModel.getModelObjects<model::DesignDay>()) {
+        for (model::DesignDay designDay : ddyModel.getConcreteModelObjects<model::DesignDay>()) {
           boost::optional<std::string> name;
           name = designDay.name();
 

@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_IMPL_HPP
 #define MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 

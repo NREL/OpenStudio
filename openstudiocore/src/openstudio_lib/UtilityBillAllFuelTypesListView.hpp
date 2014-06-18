@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
-#define OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
+#ifndef OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_HPP
+#define OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_HPP
 
-#include <openstudio_lib/OSCollapsibleItemList.hpp>
+#include "OSCollapsibleItemList.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/DataEnums.hpp>
+#include "../utilities/data/DataEnums.hpp"
 
 #include <boost/optional.hpp>
 
@@ -74,5 +74,5 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_H
+#endif // OPENSTUDIO_UTILITYBILLALLFUELTYPESLISTVIEW_HPP
 

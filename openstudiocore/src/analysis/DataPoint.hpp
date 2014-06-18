@@ -20,11 +20,11 @@
 #ifndef ANALYSIS_DATAPOINT_HPP
 #define ANALYSIS_DATAPOINT_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 #include <QDomDocument>
@@ -293,7 +293,7 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::DataPoint_Impl;
 
-  explicit DataPoint(boost::shared_ptr<detail::DataPoint_Impl> impl);
+  explicit DataPoint(std::shared_ptr<detail::DataPoint_Impl> impl);
   /// @endcond
 
   friend class detail::Problem_Impl;

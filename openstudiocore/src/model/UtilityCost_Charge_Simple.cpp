@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityCost_Charge_Simple.hpp>
-#include <model/UtilityCost_Charge_Simple_Impl.hpp>
+#include "UtilityCost_Charge_Simple.hpp"
+#include "UtilityCost_Charge_Simple_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_UtilityCost_Charge_Simple_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -147,7 +147,7 @@ UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(const Model& model)
 }
 
 // constructor
-UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(boost::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl)
+UtilityCost_Charge_Simple::UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl)
   : ParentObject(impl)
 {}
 

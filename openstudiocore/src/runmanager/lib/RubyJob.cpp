@@ -31,14 +31,11 @@
 #include "WorkItem.hpp"
 #include "JSON.hpp"
 
-#include <utilities/time/DateTime.hpp>
+#include "../../utilities/time/DateTime.hpp"
 
 #include <QDir>
 #include <QDateTime>
 #include <QUrl>
-
-#include <boost/bind.hpp>
-#include <boost/tuple/tuple_comparison.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -115,12 +112,12 @@ namespace detail {
   {
   }
 
-  void RubyJob::mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job) 
+  void RubyJob::mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job) 
   {
 
     // only work on UserScriptJobs
-    boost::shared_ptr<UserScriptJob> usjob = boost::dynamic_pointer_cast<UserScriptJob>(t_job);
-    boost::shared_ptr<UserScriptJob> usparentjob = boost::dynamic_pointer_cast<UserScriptJob>(t_parent);
+    std::shared_ptr<UserScriptJob> usjob = std::dynamic_pointer_cast<UserScriptJob>(t_job);
+    std::shared_ptr<UserScriptJob> usparentjob = std::dynamic_pointer_cast<UserScriptJob>(t_parent);
 
     if (!usjob || !usparentjob)
     {
@@ -149,8 +146,8 @@ namespace detail {
     LOG(Info, "Merging Job " << openstudio::toString(t_job->uuid()) << " into " << openstudio::toString(uuid()));
     
     removeChild(t_job);
-    std::vector<boost::shared_ptr<Job_Impl> > children = t_job->children();
-    std::for_each(children.begin(), children.end(), boost::bind(&Job_Impl::addChild, t_parent, _1));
+    std::vector<std::shared_ptr<Job_Impl> > children = t_job->children();
+    std::for_each(children.begin(), children.end(), std::bind(&Job_Impl::addChild, t_parent, std::placeholders::_1));
 
     std::vector<JobParams> existing_merged_jobs = usjob->m_mergedJobs;
     JobParams job_to_merge = usjob->params();
@@ -273,7 +270,7 @@ namespace detail {
     }
 
     // set up files that need to have "requiredFiles" copied from input to output
-    typedef std::vector<boost::tuple<std::string, std::string, std::string> > copyvectype;
+    typedef std::vector<std::tuple<std::string, std::string, std::string> > copyvectype;
     copyvectype copyfiles = rjb.copyRequiredFiles();
 
     Files inputfiles = allInputFiles();
@@ -283,7 +280,7 @@ namespace detail {
         ++itr)
     {
       try {
-        copyRequiredFiles(inputfiles.getLastByExtension(itr->get<0>()), itr->get<1>(), toPath(itr->get<2>()));
+        copyRequiredFiles(inputfiles.getLastByExtension(std::get<0>(*itr)), std::get<1>(*itr), toPath(std::get<2>(*itr)));
       } catch (const std::exception &e) {
         LOG(Error, "Error establishing file to copy required files from / to: " << e.what());
       }
@@ -521,7 +518,7 @@ namespace detail {
 
     for (size_t i = 0; i <= t_rjb.mergedJobs().size(); ++i)
     {
-      typedef std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > FileReqs;
+      typedef std::vector<std::tuple<FileSelection, FileSource, std::string, std::string> > FileReqs;
 
       FileReqs inputFiles;
       if (i == 0) { 
@@ -557,20 +554,20 @@ namespace detail {
           ++itr)
       {
         try {
-          const Files &source = PickFileSource::pick(itr->get<1>(), allinputfiles, myInputFiles, parentInputFiles);
+          const Files &source = PickFileSource::pick(std::get<1>(*itr), allinputfiles, myInputFiles, parentInputFiles);
 
           Files found;
-          switch (itr->get<0>().value())
+          switch (std::get<0>(*itr).value())
           {
             case FileSelection::Last:
-              found.append(source.getLastByRegex(itr->get<2>()));
+              found.append(source.getLastByRegex(std::get<2>(*itr)));
               break;
             case FileSelection::All:
-              found.append(source.getAllByRegex(itr->get<2>()));
+              found.append(source.getAllByRegex(std::get<2>(*itr)));
               break;
           }
 
-          m_inputfiles.push_back(std::make_pair(i, std::make_pair(found, itr->get<3>())));
+          m_inputfiles.push_back(std::make_pair(i, std::make_pair(found, std::get<3>(*itr))));
         } catch (const std::exception &) {
         }
       }

@@ -136,6 +136,8 @@ workPath = modelPath.parent_path / OpenStudio::Path.new(modelPath.stem) / OpenSt
 # only run period in pre process job
 environmentName = "Run Period 1"
 
+
+
 # loop through each thermal zone
 model.getThermalZones.each do |thermalZone|
 

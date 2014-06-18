@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/TagRecord.hpp>
-#include <project/TagRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/JoinRecord.hpp>
+#include "TagRecord.hpp"
+#include "TagRecord_Impl.hpp"
+#include "FileReferenceRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "JoinRecord.hpp"
 
-#include <utilities/data/Tag.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/data/Tag.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QSqlQuery>
 
@@ -102,7 +102,7 @@ namespace detail {
     return result;
   }
 
-  void TagRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void TagRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<TagRecord>(query);
@@ -208,7 +208,7 @@ namespace detail {
 } // detail
 
 TagRecord::TagRecord(const std::string& tag, const FileReferenceRecord& fileReferenceRecord)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(tag, fileReferenceRecord)), 
                  fileReferenceRecord.projectDatabase())
 {
@@ -216,7 +216,7 @@ TagRecord::TagRecord(const std::string& tag, const FileReferenceRecord& fileRefe
 }
 
 TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(tag, dataPointRecord)), 
                  dataPointRecord.projectDatabase())
 {
@@ -224,14 +224,14 @@ TagRecord::TagRecord(const Tag& tag, const DataPointRecord& dataPointRecord)
 }
 
 TagRecord::TagRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::TagRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::TagRecord_Impl>(
                      new detail::TagRecord_Impl(query,database)), 
                  database)
 {
   OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());
 }
 
-TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl, 
+TagRecord::TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl, 
                      ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
@@ -252,7 +252,7 @@ UpdateByIdQueryData TagRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
+    for (auto it = result.columnValues.begin(), 
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -260,7 +260,7 @@ UpdateByIdQueryData TagRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -274,11 +274,10 @@ UpdateByIdQueryData TagRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -360,7 +359,7 @@ Tag TagRecord::tag() const {
 }
 
 /// @cond
-TagRecord::TagRecord(boost::shared_ptr<detail::TagRecord_Impl> impl)
+TagRecord::TagRecord(std::shared_ptr<detail::TagRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(this->getImpl<detail::TagRecord_Impl>());

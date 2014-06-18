@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RUNMANAGER_TEST_RMKITTESTFIXTURE_HPP
-#define RUNMANAGER_TEST_RMKITTESTFIXTURE_HPP
+#ifndef RUNMANAGER_LIB_TEST_RUNMANAGERTESTFIXTURE_HPP
+#define RUNMANAGER_LIB_TEST_RUNMANAGERTESTFIXTURE_HPP
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../../utilities/core/Logger.hpp"
+#include "../../../utilities/core/FileLogSink.hpp"
 #include <gtest/gtest.h>
 
 class RunManagerTestFixture : public ::testing::Test {
@@ -47,6 +47,6 @@ class RunManagerTestFixture : public ::testing::Test {
         int t_runcount, bool t_kill, int t_min_time, int t_max_time);
 };
 
-#endif //RUNMANAGER_TEST_RMKITTESTFIXTURE_HPP
+#endif //RUNMANAGER_LIB_TEST_RUNMANAGERTESTFIXTURE_HPP
 
 

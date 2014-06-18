@@ -20,14 +20,14 @@
 #ifndef UTILITIES_FILETYPES_EPWFILE_HPP
 #define UTILITIES_FILETYPES_EPWFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
+#include "../time/Time.hpp"
+#include "../time/Date.hpp"
+#include "../time/DateTime.hpp"
+#include "../data/TimeSeries.hpp"
 
 namespace openstudio{
 
@@ -35,7 +35,13 @@ namespace openstudio{
 class IdfObject;
 
 OPENSTUDIO_ENUM(EpwDataField,
-  ((DryBulbTemperature)(Dry Bulb Temperature)(6))
+  ((Year)(Year)(0))
+  ((Month)(Month))
+  ((Day)(Day))
+  ((Hour)(Hour))
+  ((Minute)(Minute))
+  ((DataSourceandUncertaintyFlags)(Data Source and Uncertainty Flags))
+  ((DryBulbTemperature)(Dry Bulb Temperature))
   ((DewPointTemperature)(Dew Point Temperature))
   ((RelativeHumidity)(Relative Humidity))
   ((AtmosphericStationPressure)(Atmospheric Station Pressure))
@@ -72,25 +78,26 @@ OPENSTUDIO_ENUM(EpwDataField,
 class UTILITIES_API EpwDataPoint
 {
 public:
-  EpwDataPoint(std::string line);
-  EpwDataPoint(int year=1,int month=1,int day=1,int hour=0,int minute=0,
-    std::string dataSourceandUncertaintyFlags="",double dryBulbTemperature=99.9,double dewPointTemperature=99.9,
-    double relativeHumidity=999,double atmosphericStationPressure=999999,double extraterrestrialHorizontalRadiation=9999,
-    double extraterrestrialDirectNormalRadiation=9999,double horizontalInfraredRadiationIntensity=9999,
-    double globalHorizontalRadiation=9999,double directNormalRadiation=9999,double diffuseHorizontalRadiation=9999,
-    double globalHorizontalIlluminance=999999,double directNormalIlluminance=999999,double diffuseHorizontalIlluminance=999999,
-    double zenithLuminance=9999,double windDirection=999,double windSpeed=999,int totalSkyCover=99,int opaqueSkyCover=99,
-    double visibility=9999,double ceilingHeight=99999,int presentWeatherObservation=0,int presentWeatherCodes=0,
-    double precipitableWater=999,double aerosolOpticalDepth=.999,double snowDepth=999,double daysSinceLastSnowfall=99,
-    double albedo=999,double liquidPrecipitationDepth=999,double liquidPrecipitationQuantity=99);
+  EpwDataPoint();
+  EpwDataPoint(int year,int month,int day,int hour,int minute,
+    std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,double dewPointTemperature,
+    double relativeHumidity,double atmosphericStationPressure,double extraterrestrialHorizontalRadiation,
+    double extraterrestrialDirectNormalRadiation,double horizontalInfraredRadiationIntensity,
+    double globalHorizontalRadiation,double directNormalRadiation,double diffuseHorizontalRadiation,
+    double globalHorizontalIlluminance,double directNormalIlluminance,double diffuseHorizontalIlluminance,
+    double zenithLuminance,double windDirection,double windSpeed,int totalSkyCover,int opaqueSkyCover,
+    double visibility,double ceilingHeight,int presentWeatherObservation,int presentWeatherCodes,
+    double precipitableWater,double aerosolOpticalDepth,double snowDepth,double daysSinceLastSnowfall,
+    double albedo,double liquidPrecipitationDepth,double liquidPrecipitationQuantity);
   // Static
-  static std::string unitsByName(std::string name);
+  static boost::optional<std::string> unitsByName(std::string name);
   static std::string units(EpwDataField field);
   // Data retrieval
   boost::optional<double> fieldByName(std::string name);
   boost::optional<double> field(EpwDataField id);
   // Conversion
-  std::string toWthString();
+  static boost::optional<EpwDataPoint> fromEpwString(std::string line);
+  boost::optional<std::string> toWthString();
   // One billion getters and setters
   Date date() const;
   void setDate(Date date);
@@ -290,6 +297,9 @@ public:
   /// get the time step
   Time timeStep() const;
 
+  /// get the records per hour
+  int recordsPerHour() const;
+
   /// get the start day of the week
   DayOfWeek startDayOfWeek() const;
 
@@ -335,7 +345,7 @@ private:
   double m_longitude;
   double m_timeZone;
   double m_elevation;
-  Time m_timeStep;
+  int m_recordsPerHour;
   DayOfWeek m_startDayOfWeek;
   Date m_startDate;
   Date m_endDate;

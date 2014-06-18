@@ -20,8 +20,8 @@
 #ifndef MODEL_STEAMEQUIPMENT_HPP
 #define MODEL_STEAMEQUIPMENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 namespace model {
@@ -114,7 +114,7 @@ class MODEL_API SteamEquipment : public SpaceLoadInstance {
   friend class IdfObject;
   friend class Model;
 
-  explicit SteamEquipment(boost::shared_ptr<detail::SteamEquipment_Impl> impl);
+  explicit SteamEquipment(std::shared_ptr<detail::SteamEquipment_Impl> impl);
 
   /// @endcond
  private:

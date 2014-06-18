@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCLXML.hpp>
+#include "BCLXML.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../data/Attribute.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../units/Unit.hpp"
+#include "../units/Quantity.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/String.hpp"
+#include "../core/System.hpp"
 
 #include <QDomDocument>
 #include <QFile>
@@ -413,7 +413,7 @@ namespace openstudio{
 
   bool BCLXML::removeTag(const std::string& tagName)
   {
-    std::vector<std::string>::iterator it = std::find(m_tags.begin(), m_tags.end(), tagName);
+    auto it = std::find(m_tags.begin(), m_tags.end(), tagName);
     if (it != m_tags.end()){
       incrementVersionId();
       m_tags.erase(it);

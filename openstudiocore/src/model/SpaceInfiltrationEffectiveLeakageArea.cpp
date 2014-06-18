@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2011, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
+#include "SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -361,7 +361,7 @@ bool SpaceInfiltrationEffectiveLeakageArea::setWindCoefficient(const Quantity& w
 
 /// @cond
 SpaceInfiltrationEffectiveLeakageArea::SpaceInfiltrationEffectiveLeakageArea(
-    boost::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
+    std::shared_ptr<detail::SpaceInfiltrationEffectiveLeakageArea_Impl> impl)
   : SpaceLoad(impl)
 {}
 /// @endcond

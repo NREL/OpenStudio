@@ -20,8 +20,8 @@
 #ifndef MODEL_DAYLIGHTINGDEVICESHELF_HPP
 #define MODEL_DAYLIGHTINGDEVICESHELF_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -87,7 +87,7 @@ class MODEL_API DaylightingDeviceShelf : public ModelObject {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit DaylightingDeviceShelf(boost::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
+  explicit DaylightingDeviceShelf(std::shared_ptr<detail::DaylightingDeviceShelf_Impl> impl);
 
   /// @endcond
  private:

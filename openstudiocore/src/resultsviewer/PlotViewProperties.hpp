@@ -28,7 +28,7 @@
 #include <QMenu>
 #include <QMdiSubWindow>
 #include <string>
-#include <resultsviewer/PlotView.hpp>
+#include "PlotView.hpp"
 #include <resultsviewer/ui_PlotViewProperties.h>
 #include <qwt/qwt_plot_curve.h>
 
@@ -43,7 +43,7 @@ class PlotViewProperties : public QDialog
   Q_OBJECT
 
 public:
-  PlotViewProperties(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+  PlotViewProperties(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
   virtual ~PlotViewProperties();
 
   void setPlotView(PlotView *PlotViewItem);

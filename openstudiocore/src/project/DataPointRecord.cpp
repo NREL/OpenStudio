@@ -17,43 +17,41 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
-#include <project/DataPointValueRecord.hpp>
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "DataPoint_Measure_JoinRecord_Impl.hpp"
+#include "DataPointValueRecord.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
-#include <project/OptimizationDataPointRecord.hpp>
+#include "AnalysisRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ContinuousVariableRecord.hpp"
+#include "ContinuousVariableRecord_Impl.hpp"
+#include "FunctionRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "MeasureRecord.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
+#include "OptimizationDataPointRecord.hpp"
 
-#include <project/TagRecord.hpp>
+#include "TagRecord.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/Tag.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/PathHelpers.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 using namespace openstudio::analysis;
 
@@ -210,7 +208,7 @@ namespace detail {
     return result;
   }
 
-  void DataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPointRecord>(query);
@@ -300,20 +298,20 @@ namespace detail {
     // order them
     for (const InputVariableRecord& ivr : ivrs) {
       if (ivr.optionalCast<MeasureGroupRecord>()) {
-        MeasureRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             measureRecords.begin(),
             measureRecords.end(),
-            boost::bind(variableRecordIdEquals,_1,ivr.id()));
+            std::bind(variableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != measureRecords.end());
         OS_ASSERT(it->measureVectorIndex());
         result.push_back(QVariant(it->measureVectorIndex().get()));
         measureRecords.erase(it);
       }
       else {
-        DataPointValueRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             cvValueRecords.begin(),
             cvValueRecords.end(),
-            boost::bind(continuousVariableRecordIdEquals,_1,ivr.id()));
+            std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != cvValueRecords.end());
         result.push_back(QVariant(it->dataPointValue()));
         cvValueRecords.erase(it);
@@ -352,10 +350,10 @@ namespace detail {
 
     // order them
     for (const MeasureGroupRecord& mgr : mgrs) {
-      MeasureRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(variableRecordIdEquals,_1,mgr.id()));
+          std::bind(variableRecordIdEquals,std::placeholders::_1,mgr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -389,10 +387,10 @@ namespace detail {
 
     // order them
     for (const ContinuousVariableRecord& cvr : cvrs) {
-      DataPointValueRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(continuousVariableRecordIdEquals,_1,cvr.id()));
+          std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,cvr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -911,7 +909,7 @@ namespace detail {
 DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
                                  AnalysisRecord& analysisRecord,
                                  const ProblemRecord& problemRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(dataPoint,
                                          DataPointRecordType::DataPointRecord,
                                          analysisRecord,
@@ -924,14 +922,14 @@ DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
 }
 
 DataPointRecord::DataPointRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 }
 
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl,
                                  ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -952,7 +950,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -960,7 +958,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -974,7 +972,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // bind all values to avoid parameter mismatch error
@@ -1047,7 +1045,7 @@ DataPointRecord DataPointRecord::factoryFromDataPoint(const analysis::DataPoint&
   }
 
   OS_ASSERT(false);
-  return DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl>());
+  return DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl>());
 }
 
 std::vector<DataPointRecord> DataPointRecord::getDataPointRecords(ProjectDatabase& database) {
@@ -1175,7 +1173,7 @@ void DataPointRecord::clearResults() {
 }
 
 /// @cond
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl)
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond
@@ -1328,7 +1326,7 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
 
   // Delete obsolete tag records
   for (const TagRecord& tagRecord : tagRecords()) {
-    if (std::find_if(tags.begin(),tags.end(),boost::bind(uuidEquals<Tag,UUID>,_1,tagRecord.handle())) == tags.end()) {
+    if (std::find_if(tags.begin(),tags.end(),std::bind(uuidEquals<Tag,UUID>,std::placeholders::_1,tagRecord.handle())) == tags.end()) {
       Record record = tagRecord.cast<Record>();
       analysisRecord.projectDatabase().removeRecord(record);
     }
@@ -1381,7 +1379,7 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
   if (childFileReferences.empty() && !outputAttributes.empty()) {
     // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
     NameFinder<FileReferenceRecord> finder("fake.xml",true);
-    FileReferenceRecordVector::iterator it = std::find_if(
+    auto it = std::find_if(
         oldFileReferenceRecords.begin(),
         oldFileReferenceRecords.end(),
         finder);
@@ -1408,10 +1406,10 @@ std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
     bool save(true);
     if (!isNew) {
       // see if there is already a record
-      FileReferenceRecordVector::iterator it = std::find_if(
+      auto it = std::find_if(
             oldFileReferenceRecords.begin(),
             oldFileReferenceRecords.end(),
-            boost::bind(handleEquals<ObjectRecord,UUID>,_1,childFileReference.uuid()));
+            std::bind(handleEquals<ObjectRecord,UUID>,std::placeholders::_1,childFileReference.uuid()));
       if (it != oldFileReferenceRecords.end()) {
         // found, see if has changed
         if (it->uuidLast() == childFileReference.versionUUID()) {

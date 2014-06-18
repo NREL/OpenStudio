@@ -18,32 +18,32 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../Analysis.hpp"
+#include "../Analysis_Impl.hpp"
+#include "../Problem.hpp"
+#include "../Variable.hpp"
+#include "../DataPoint.hpp"
+#include "../Measure.hpp"
+#include "../MeasureGroup.hpp"
+#include "../MeasureGroup_Impl.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../RubyMeasure_Impl.hpp"
+#include "../RubyContinuousVariable.hpp"
+#include "../ParameterStudyAlgorithm.hpp"
+#include "../ParameterStudyAlgorithm_Impl.hpp"
+#include "../ParameterStudyAlgorithmOptions.hpp"
+#include "../WorkflowStep.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/data/Tag.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>

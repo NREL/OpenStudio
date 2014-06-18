@@ -19,6 +19,8 @@ set(${target_name}_src
   Renderer.cpp
   Utils.hpp
   Utils.cpp
+  WindowGroup.hpp
+  WindowGroup.cpp
 )
 
 set(${target_name}_test_src

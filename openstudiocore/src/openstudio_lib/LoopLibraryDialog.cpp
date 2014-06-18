@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/LoopLibraryDialog.hpp>
+#include "LoopLibraryDialog.hpp"
 #include <QLabel>
 #include <QFrame>
 #include <QPainter>

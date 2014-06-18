@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "IddFileFactoryData.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
+#include "../utilities/idd/IddRegex.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
@@ -99,7 +99,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
   std::string line,trimLine;
   boost::smatch matches;
   int lineNum = 1;
-  boost::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
+  std::shared_ptr<IddFactoryOutFile>& cxxFile = outFiles.iddFactoryIddFileCxxs[iddFileIndex];
 
   // get version
   std::getline(iddFile,line);

@@ -17,104 +17,101 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
+#include "../../model/ZoneHVACEquipmentList.hpp"
+#include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/SizingZone.hpp"
+#include "../../model/SizingZone_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
+#include "../../model/SetpointManagerMixedAir.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../../model/ZoneControlHumidistat.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../../model/SizingPeriod.hpp"
+#include "../../model/SizingPeriod_Impl.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
+#include "../../model/InteriorPartitionSurface_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/InternalMass.hpp"
+#include "../../model/InternalMass_Impl.hpp"
+#include "../../model/InternalMassDefinition.hpp"
+#include "../../model/InternalMassDefinition_Impl.hpp"
+#include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
+#include "../../model/PeopleDefinition.hpp"
+#include "../../model/PeopleDefinition_Impl.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Lights_Impl.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/LightsDefinition_Impl.hpp"
+#include "../../model/Luminaire.hpp"
+#include "../../model/Luminaire_Impl.hpp"
+#include "../../model/LuminaireDefinition.hpp"
+#include "../../model/LuminaireDefinition_Impl.hpp"
+#include "../../model/ElectricEquipment.hpp"
+#include "../../model/ElectricEquipment_Impl.hpp"
+#include "../../model/ElectricEquipmentDefinition.hpp"
+#include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/GasEquipment_Impl.hpp"
+#include "../../model/GasEquipmentDefinition.hpp"
+#include "../../model/GasEquipmentDefinition_Impl.hpp"
+#include "../../model/HotWaterEquipment.hpp"
+#include "../../model/HotWaterEquipment_Impl.hpp"
+#include "../../model/SteamEquipment.hpp"
+#include "../../model/SteamEquipment_Impl.hpp"
+#include "../../model/OtherEquipment.hpp"
+#include "../../model/OtherEquipment_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/IlluminanceMap.hpp"
+#include "../../model/IlluminanceMap_Impl.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../../model/GlareSensor.hpp"
+#include "../../model/GlareSensor_Impl.hpp"
+#include "../../model/LifeCycleCost.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/HVACTemplate_Zone_IdealLoadsAirSystem_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
@@ -122,13 +119,14 @@
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
 #include <utilities/idd/ZoneControl_Thermostat_FieldEnums.hxx>
+#include <utilities/idd/ZoneControl_Humidistat_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/ZoneVentilation_DesignFlowRate_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/geometry/Geometry.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
 
 using namespace openstudio::model;
 
@@ -497,13 +495,11 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     }
   }
 
-  // translate thermostat
+  // translate thermostat and/or humidistat
   if( ( modelObject.equipment().size() > 0 ) || modelObject.useIdealAirLoads() )
   {
     // Thermostat
-    boost::optional<ThermostatSetpointDualSetpoint> thermostat;
-    boost::optional<IdfObject> idfThermostat;
-    if((thermostat = modelObject.thermostatSetpointDualSetpoint()))
+    if( boost::optional<ThermostatSetpointDualSetpoint> thermostat = modelObject.thermostatSetpointDualSetpoint() )
     {
       IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
@@ -528,14 +524,20 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
       zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
 
-      idfThermostat = translateAndMapModelObject(thermostat.get());
-
-      if( idfThermostat )
+      if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
       {
         StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
         values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
         values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
         IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+      }
+    }
+
+    // Humidistat
+    if( boost::optional<ZoneControlHumidistat> humidistat = modelObject.zoneControlHumidistat() )
+    {
+      if( boost::optional<IdfObject> idfHumidistat = translateAndMapModelObject(humidistat.get()) ) {
+        idfHumidistat->setString(ZoneControl_HumidistatFields::ZoneName,modelObject.name().get());
       }
     }
   }
@@ -560,6 +562,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(connectionsObject);
 
     s = modelObject.name().get();
+    std::string name = s;
     connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneName,s);
 
     //set the inlet port list
@@ -569,6 +572,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _inletNodeList = translateAndMapModelObject(inletPortList);
       if(_inletNodeList)
       {
+        _inletNodeList->setName(name + " Inlet Node List");
         s = _inletNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName,s);
       }
@@ -581,6 +585,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       boost::optional<IdfObject> _exhaustNodeList = translateAndMapModelObject(exhaustPortList);
       if(_exhaustNodeList)
       {
+        _exhaustNodeList->setName(name + " Exhaust Node List");
         s = _exhaustNodeList->name().get();
         connectionsObject.setString(openstudio::ZoneHVAC_EquipmentConnectionsFields::ZoneAirExhaustNodeorNodeListName,s);
       }

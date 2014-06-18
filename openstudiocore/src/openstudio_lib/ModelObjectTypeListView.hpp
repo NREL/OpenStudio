@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTTYPELISTVIEW_H
-#define OPENSTUDIO_MODELOBJECTTYPELISTVIEW_H
+#ifndef OPENSTUDIO_MODELOBJECTTYPELISTVIEW_HPP
+#define OPENSTUDIO_MODELOBJECTTYPELISTVIEW_HPP
 
-#include <openstudio_lib/OSCollapsibleItemList.hpp>
+#include "OSCollapsibleItemList.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <boost/optional.hpp>
 
@@ -70,5 +70,5 @@ class ModelObjectTypeListView : public OSCollapsibleItemList
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTTYPELISTVIEW_H
+#endif // OPENSTUDIO_MODELOBJECTTYPELISTVIEW_HPP
 

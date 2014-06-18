@@ -20,11 +20,11 @@
 #ifndef MODEL_COILCOOLINGDXSINGLESPEED_HPP
 #define MODEL_COILCOOLINGDXSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -343,7 +343,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   typedef detail::CoilCoolingDXSingleSpeed_Impl ImplType;
 
-  explicit CoilCoolingDXSingleSpeed(boost::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
+  explicit CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
 
   private:
 

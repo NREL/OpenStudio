@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8.11)
 project(OpenStudio)
 
 set(CMAKE_VERSION_MAJOR 1)
-set(CMAKE_VERSION_MINOR 3)
-set(CMAKE_VERSION_PATCH 4)
+set(CMAKE_VERSION_MINOR 4)
+set(CMAKE_VERSION_PATCH 0)
 
 set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 find_package(Git)
@@ -39,7 +39,7 @@ option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 
 # Search for modules in the openstudiocore dir first to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE_SOURCE_DIR})
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" "${CMAKE_SOURCE_DIR}")
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -76,6 +76,7 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build test runner targets.
 # This is a convenience for Visual Studio users
 option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
+
 
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
@@ -312,8 +313,8 @@ if(MSVC AND NOT Boost_FOUND AND EXISTS "C:/local/boost_1_55_0/")
   endif()
   
   if(EXISTS "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
-    set(Boost_INCLUDE_DIR "C:/local/boost_1_55_0" CACHE PATH "Boost Include Dir" FORCE)
-    set(Boost_LIBRARY_DIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}" CACHE PATH "Boost Library Dir" FORCE)
+    set(BOOST_ROOT "C:/local/boost_1_55_0")
+    set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib${BOOST_ARCH}-msvc-${BOOST_MSVC}")
     find_package(Boost 1.55.0 COMPONENTS filesystem regex program_options system thread date_time serialization log QUIET)
     if(NOT Boost_FOUND)
       message(STATUS "Could NOT find Boost\n${Boost_ERROR_REASON}")
@@ -337,7 +338,9 @@ mark_as_advanced(
   SWIG_VERSION
 )
 
-if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS)
+# Currently MacOS and/or V8 require special builds
+# as of 2014-06-04. This should be re-checked after swig >= 3.0.2 is released
+if(SWIG_FOUND AND NOT BUILD_V8_BINDINGS AND NOT APPLE)
   option(BUILD_SWIG "Build SWIG" OFF)
 else()
   option(BUILD_SWIG "Build SWIG" ON)
@@ -364,7 +367,11 @@ else()
 
   if(WIN32 AND MSVC)
     if(CMAKE_CL_64)
-      message(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
+      if(MSVC12)
+        message(WARNING "Cannot use 32bit mingw build of Ruby 2.0 with 64bit build of OpenStudio, forcing 64bit msvc build of Ruby 2.0")
+      else()
+        message(SEND_ERROR "64bit build of Ruby 2.0 only supported with MSVC12")
+      endif()
     else()
       option(BUILD_RUBY_MINGW32_2_0 "Use mingw32 Ruby 2.0" OFF)
       mark_as_advanced(BUILD_RUBY_MINGW32_2_0)
@@ -386,7 +393,11 @@ endif()
 
 if(CMAKE_CL_64 OR (MSVC AND BUILD_QT))
   if(CMAKE_CL_64)
-    set(NMAKE_ARCH "/amd64")
+    if(MSVC10)
+      set(NMAKE_ARCH "/amd64")
+    elseif(MSVC12)
+      set(NMAKE_ARCH "")
+    endif()
   else()
     set(NMAKE_ARCH "")
   endif()
@@ -411,13 +422,13 @@ endif()
 if(BUILD_NODE)
   # OSX can work with a static ruby library
   ExternalProject_Add(Node
-    URL http://nodejs.org/dist/v0.10.15/node-v0.10.15.tar.gz
+    URL http://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz
     CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
     BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
     INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
   )
   set(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
-  set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.15")
+  set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.28")
 endif()
 
 if(BUILD_V8)
@@ -454,22 +465,22 @@ if(BUILD_RUBY)
   else()
 
     if(CMAKE_CL_64)
-      find_program(NMAKE_EXE nmake)
-
+      #find_program(NMAKE_EXE nmake)
+      
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p353.zip
-        URL_MD5 0f8aeb1f1b1cd606ab9790badabd0fb4
-        PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+        URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+        PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/ruby/ruby-2.0.0-p481/Makefile.sub ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/Makefile.sub
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/configure.bat --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --target=x64-mswin64 --disable-install-doc --disable-win95"
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE}
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE} install
       )
       set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby.exe )
-      set(RUBY_DLL x64-msvcr100-ruby200.dll)
+      set(RUBY_DLL x64-msvcr120-ruby200.dll)
       set(RUBY_DLLPATH "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/${RUBY_DLL}")
-      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr100-ruby200.lib")
+      set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/x64-msvcr120-ruby200.lib")
     else()
       if(BUILD_RUBY_MINGW32_2_0)
         # And windows requires mingw to build ruby, so we just unpackage it locally
@@ -524,8 +535,8 @@ if(BUILD_SWIG)
 
       # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
       ExternalProject_Add(SWIG
-        GIT_REPOSITORY git://github.com/lefticus/swig-v8.git
-        GIT_TAG devel
+        GIT_REPOSITORY git://github.com/lefticus/swig.git
+        GIT_TAG merged_fixes
         # URL http://github.com/lefticus/swig-v8/archive/devel.zip
         PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && /bin/sh -c "PATH=\$PATH:${autoconf_path} ./autogen.sh" && cd - && ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install --disable-ccache
@@ -539,7 +550,7 @@ if(BUILD_SWIG)
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/swig-3.0.0.tar.gz
         URL_MD5 9c8278fad527dda4bf38edffe5acc394
 
-        PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
+        PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/swig_ruby_patch.patch && cp ${CMAKE_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && ../SWIG/Tools/pcre-build.sh
         CONFIGURE_COMMAND ../SWIG/configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE)
         INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-build && $(MAKE) install
@@ -562,7 +573,7 @@ endif()
 if(BUILD_BOOST)
   if(APPLE)
     if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
-      set(apple-frameworks "-stdlib=libc++")
+      set(apple-frameworks "-stdlib=libc++ -std=c++11")
     else()
       set(apple-frameworks "-stdlib=libstdc++")
     endif()
@@ -575,6 +586,7 @@ if(BUILD_BOOST)
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   elseif(UNIX)
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
@@ -584,6 +596,7 @@ if(BUILD_BOOST)
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   else()
     # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't
     # be trying to find it
@@ -616,6 +629,7 @@ if(BUILD_BOOST)
     endif()
 
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
+    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
   endif()
 endif()
 
@@ -762,9 +776,7 @@ ExternalProject_Add(OpenStudioCore
     -DCMAKE_VERSION_PATCH:STRING=${CMAKE_VERSION_PATCH}
     -DCMAKE_VERSION_BUILD:STRING=${CMAKE_VERSION_BUILD}
     -DBOOST_ROOT:STRING=${BOOST_ROOT}
-    -DBOOST_LIBRARYDIR:STRING=${BOOST_ROOT}/lib
-    -DBoost_INCLUDE_DIR:STRING=${Boost_INCLUDE_DIR}
-    -DBoost_LIBRARY_DIR:STRING=${Boost_LIBRARY_DIR}
+    -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
     -DQt5Widgets_DIR:STRING=${Qt5Widgets_DIR}
     -DQt5Sql_DIR:STRING=${Qt5Sql_DIR}
     -DQt5Network_DIR:STRING=${Qt5Network_DIR}

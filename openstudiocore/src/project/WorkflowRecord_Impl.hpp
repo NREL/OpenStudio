@@ -21,11 +21,11 @@
 #define PROJECT_WORKFLOWRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
+#include "ObjectRecord_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/optional.hpp>
 
@@ -79,7 +79,7 @@ namespace detail {
 
     /// save the row for just this object in the database
     /// requires ProjectDatabase as called in ProjectDatabase ctor/dtor
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 

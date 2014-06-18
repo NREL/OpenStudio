@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/ControllerOutdoorAir.hpp"
+#include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
@@ -141,22 +141,20 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVACOutdoorAirSystem( con
           boost::optional<ModelObject> oaComponentModelObject;
           boost::optional<std::string> newOAStreamInletNodeName;
 
-          for( std::vector<WorkspaceObject>::iterator it = equipmentVector.begin();
-               it < equipmentVector.end();
-               ++it )
+          for( const auto & equipmentElem : equipmentVector )
           {
-            switch(it->iddObject().type().value())
+            switch(equipmentElem.iddObject().type().value())
             {
               case openstudio::IddObjectType::EvaporativeCooler_Direct_ResearchSpecial :
               {
-                oaStreamOutletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
+                oaStreamOutletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName);
                 if( oaStreamOutletNodeName )
                 {
                   if( istringEqual(oaStreamOutletNodeName.get(),oaStreamInletNodeName.get()) )
                   {
-                    newOAStreamInletNodeName = it->getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
+                    newOAStreamInletNodeName = equipmentElem.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName);
 
-                    oaComponentModelObject = translateAndMapWorkspaceObject(*it);
+                    oaComponentModelObject = translateAndMapWorkspaceObject(equipmentElem);
                   }
                 }
                 break;

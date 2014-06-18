@@ -18,21 +18,21 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ErrorFile.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
+#include "../../utilities/idd/IddFile.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
 
 #include <resources.hxx>
 

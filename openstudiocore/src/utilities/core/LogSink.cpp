@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/LogSink.hpp>
-#include <utilities/core/LogSink_Impl.hpp>
+#include "LogSink.hpp"
+#include "LogSink_Impl.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "Logger.hpp"
 
 #include <boost/log/common.hpp>
 #include <boost/log/support/regex.hpp>
@@ -43,7 +43,7 @@ namespace openstudio{
   namespace detail{
 
     LogSink_Impl::LogSink_Impl()
-      : m_mutex(new QReadWriteLock()), m_threadId(NULL)
+      : m_mutex(new QReadWriteLock()), m_threadId(nullptr)
     {
       m_sink = boost::shared_ptr<LogSinkBackend>(new LogSinkBackend());
     }
@@ -154,7 +154,7 @@ namespace openstudio{
     {
       QWriteLocker l(m_mutex);
 
-      m_threadId = NULL;
+      m_threadId = nullptr;
 
       this->updateFilter(l);
     }

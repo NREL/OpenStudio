@@ -21,15 +21,12 @@
 #define UTILITIES_DATA_ATTRIBUTE_IMPL_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/data/Attribute.hpp>
+#include "Attribute.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/UUID.hpp>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include "../core/Optional.hpp"
+#include "../core/String.hpp"
+#include "../core/Logger.hpp"
+#include "../core/UUID.hpp"
 
 #include <QVariant>
 #include <QMetaType>
@@ -40,7 +37,7 @@ class QDomDocument;
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API Attribute_Impl : public QObject, public boost::enable_shared_from_this<Attribute_Impl>
+  class UTILITIES_API Attribute_Impl : public QObject, public std::enable_shared_from_this<Attribute_Impl>
   {
 
     Q_OBJECT;
@@ -178,7 +175,7 @@ namespace detail {
       /// get value as string
       std::string valueAsString() const;
 
-      /// set value. throws if wront type.
+      /// set value. throws if wrong type.
       void setValue(const char* value);
 
       /// set value. throws if wrong type.

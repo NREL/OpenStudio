@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LocationTabController.hpp>
+#include "LocationTabController.hpp"
 
-#include <openstudio_lib/LifeCycleCostsTabView.hpp>
-#include <openstudio_lib/LocationTabView.hpp>
-#include <openstudio_lib/UtilityBillsView.hpp>
-#include <openstudio_lib/UtilityBillsController.hpp>
+#include "LifeCycleCostsTabView.hpp"
+#include "LocationTabView.hpp"
+#include "UtilityBillsView.hpp"
+#include "UtilityBillsController.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 #include <QLabel>
 #include <QStackedWidget>
@@ -48,7 +48,7 @@ LocationTabController::LocationTabController(const model::Model & model,
   label->setPixmap(QPixmap(":/images/utility_calibration_warning.png"));
   label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-  m_utilityBillsController = boost::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
+  m_utilityBillsController = std::shared_ptr<UtilityBillsController>(new UtilityBillsController(model));
 
   m_utilityBillsStackedWidget = new QStackedWidget();
   m_warningWidgetIndex = m_utilityBillsStackedWidget->addWidget(label);

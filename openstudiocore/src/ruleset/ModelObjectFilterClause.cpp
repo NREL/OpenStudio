@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterClause.hpp>
-#include <ruleset/ModelObjectFilterClause_Impl.hpp>
+#include "ModelObjectFilterClause.hpp"
+#include "ModelObjectFilterClause_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -56,7 +56,7 @@ namespace detail {
 } // detail
 
 /// @cond
-ModelObjectFilterClause::ModelObjectFilterClause(boost::shared_ptr<detail::ModelObjectFilterClause_Impl> impl)
+ModelObjectFilterClause::ModelObjectFilterClause(std::shared_ptr<detail::ModelObjectFilterClause_Impl> impl)
   : FilterClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterClause_Impl>());

@@ -20,10 +20,10 @@
 #ifndef MODEL_PIPEADIABATIC_HPP
 #define MODEL_PIPEADIABATIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -64,7 +64,7 @@ class MODEL_API PipeAdiabatic : public StraightComponent {
 
   typedef detail::PipeAdiabatic_Impl ImplType;
 
-  explicit PipeAdiabatic(boost::shared_ptr<detail::PipeAdiabatic_Impl> impl);
+  explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
 
  private:
 

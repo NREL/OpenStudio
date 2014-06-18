@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,45 +17,45 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/SizingSystem.hpp"
+#include "../../model/SizingSystem_Impl.hpp"
+#include "../../model/CoilCoolingWater.hpp"
+#include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/CoilHeatingWater.hpp"
+#include "../../model/CoilHeatingWater_Impl.hpp"
+#include "../../model/ControllerWaterCoil.hpp"
+#include "../../model/ControllerWaterCoil_Impl.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../../model/AirLoopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
+#include "../../model/SetpointManagerMixedAir.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../../model/StraightComponent.hpp"
+#include "../../model/StraightComponent_Impl.hpp"
+#include "../../model/WaterToAirComponent.hpp"
+#include "../../model/WaterToAirComponent_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanConstantVolume_Impl.hpp"
+#include "../../model/FanVariableVolume.hpp"
+#include "../../model/FanVariableVolume_Impl.hpp"
+#include "../../model/LifeCycleCost.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ControllerList_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_OutdoorAirSystem_FieldEnums.hxx>
@@ -72,7 +72,7 @@
 #include <utilities/idd/Sizing_System_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio::model;
 
@@ -123,27 +123,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     upperNodes.erase(upperNodes.end() - 1);
   }
 
-  for( std::vector<Node>::iterator it = upperNodes.begin();
-       it != upperNodes.end();
-       ++it )
+  for( 	auto & upperNode : upperNodes )
   {
-    if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+    if( ! upperNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
     {
       SetpointManagerMixedAir spm(t_model);
-      spm.addToNode(*it);
+      spm.addToNode(upperNode);
     }
   } 
 
   if( boost::optional<ModelObject> mo = airLoopHVAC.supplyOutletNode().getImpl<model::detail::Node_Impl>()->setpointManager() )
   {
-    for( std::vector<Node>::iterator it = lowerNodes.begin();
-         it != lowerNodes.end();
-         ++it )
+    for( auto & lowerNode : lowerNodes )
     {
-      if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+      if( ! lowerNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
       {
         HVACComponent spmClone = mo->clone(t_model).cast<HVACComponent>();
-        spmClone.addToNode(*it);
+        spmClone.addToNode(lowerNode);
       }
     }
   }
@@ -154,16 +150,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     std::vector<Node> oaNodes = subsetCastVector<Node>(oaSystem->oaComponents());
     if( outboardOANode )
     {
-      for( std::vector<Node>::iterator it = oaNodes.begin();
-           it != oaNodes.end();
-           ++it )
+      for( auto & oaNode : oaNodes )
       {
-        if( *it != outboardOANode.get() )
+        if( oaNode != outboardOANode.get() )
         {
-          if( ! it->getImpl<model::detail::Node_Impl>()->setpointManager() )
+          if( ! oaNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
           {
             SetpointManagerMixedAir spm(t_model);
-            spm.addToNode(*it);
+            spm.addToNode(oaNode);
           }
         }
       }
@@ -201,22 +195,20 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
   std::vector<ModelObject> controllers;
 
-  for( std::vector<ModelObject>::iterator it = supplyComponents.begin();
-       it < supplyComponents.end();
-       ++it )
+  for( const auto & supplyComponent : supplyComponents )
   {
     boost::optional<ControllerWaterCoil> controller;
 
-    switch(it->iddObject().type().value())
+    switch(supplyComponent.iddObject().type().value())
     {
       case openstudio::IddObjectType::OS_Coil_Cooling_Water :
       {
-        controller = it->cast<CoilCoolingWater>().controllerWaterCoil();
+        controller = supplyComponent.cast<CoilCoolingWater>().controllerWaterCoil();
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Heating_Water :
       {
-        controller = it->cast<CoilHeatingWater>().controllerWaterCoil();
+        controller = supplyComponent.cast<CoilHeatingWater>().controllerWaterCoil();
         break;
       }
       default:
@@ -242,11 +234,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
 
     int i = 1;
 
-    for( std::vector<ModelObject>::iterator it = controllers.begin();
-         it < controllers.end();
-         ++it )
+    for( auto & elem : controllers )
     {
-      boost::optional<IdfObject> _controller = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _controller = translateAndMapModelObject(elem);
 
       if( _controller )
       {
@@ -512,11 +502,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   createAirLoopHVACReturnPath(airLoopHVAC);
 
   std::vector<ModelObject> demandComponents = airLoopHVAC.demandComponents();
-  for( std::vector<ModelObject>::iterator it = demandComponents.begin();
-       it < demandComponents.end();
-       ++it )
+  for( auto & demandComponent : demandComponents )
   {
-    translateAndMapModelObject(*it);
+    translateAndMapModelObject(demandComponent);
   }
 
   return boost::optional<IdfObject>(idfObject);

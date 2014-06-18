@@ -20,14 +20,12 @@
 #ifndef UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 #define UTILITIES_CLOUD_AWSPROVIDER_IMPL_HPP
 
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/core/Path.hpp>
+#include "CloudProvider_Impl.hpp"
+#include "AWSProvider.hpp"
+#include "../core/Path.hpp"
 
 #include <QProcess>
 #include <QTemporaryFile>
-
-#include <boost/function.hpp>
 
 namespace openstudio{
 
@@ -499,7 +497,7 @@ namespace detail{
 
   private:
     
-    bool waitForFinished(int msec, const boost::function<bool ()>& f);
+    bool waitForFinished(int msec, const std::function<bool ()>& f);
     bool requestInternetAvailableFinished() const;
     bool requestServiceAvailableFinished() const;
     bool requestValidateCredentialsFinished() const;

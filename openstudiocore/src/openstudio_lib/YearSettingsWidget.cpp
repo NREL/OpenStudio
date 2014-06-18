@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/YearSettingsWidget.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "YearSettingsWidget.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/filetypes/EpwFile.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -258,16 +258,16 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
            SLOT(scheduleRefresh()) );
 
   QObject::connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                   SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
+                   SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
                    const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
-                   SLOT(onWorkspaceObjectAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                   SLOT(onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
 
   QObject::connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                   SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
+                   SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>,
                    const openstudio::IddObjectType&, const openstudio::UUID&)),
                    this,
-                   SLOT(onWorkspaceObjectRemove(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                   SLOT(onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
 
   connect(m_startWeekBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstStartDayWeekMonthChanged()));
   connect(m_startDayBox,SIGNAL(currentIndexChanged(int)),this,SLOT(onDstStartDayWeekMonthChanged()));
@@ -281,7 +281,7 @@ YearSettingsWidget::YearSettingsWidget(const model::Model & model, QWidget * par
 
 }
 
-void YearSettingsWidget::onWorkspaceObjectAdd(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
+void YearSettingsWidget::onWorkspaceObjectAdd(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
 {
   if(wo->iddObject().type() == IddObjectType::OS_RunPeriodControl_DaylightSavingTime)
   {
@@ -294,7 +294,7 @@ void YearSettingsWidget::onWorkspaceObjectAdd(boost::shared_ptr<openstudio::deta
   }
 }
 
-void YearSettingsWidget::onWorkspaceObjectRemove(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
+void YearSettingsWidget::onWorkspaceObjectRemove(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> wo)
 {
   if(wo->iddObject().type() == IddObjectType::OS_RunPeriodControl_DaylightSavingTime)
   {
@@ -373,7 +373,7 @@ void YearSettingsWidget::refresh()
     boost::optional<EpwFile> epwFile;
     boost::optional<model::WeatherFile> weatherFile = m_model.getOptionalUniqueModelObject<model::WeatherFile>();
     if (weatherFile){
-      boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+      std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
       openstudio::path resourcesPath = openstudio::toPath(doc->modelTempDir()) / openstudio::toPath("resources");
       epwFile = weatherFile->file(resourcesPath);
     }

@@ -17,28 +17,28 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/WorkflowRecord.hpp>
+#include "FunctionRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "WorkflowRecord.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional/optional.hpp>
 
@@ -112,7 +112,7 @@ namespace detail {
     return result;
   }
 
-  void ProblemRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ProblemRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ProblemRecord>(query);
@@ -382,7 +382,7 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -390,7 +390,7 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -404,11 +404,10 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -509,7 +508,7 @@ boost::optional<int> ProblemRecord::combinatorialSize(bool selectedMeasuresOnly)
   return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl,
                              ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -517,7 +516,7 @@ ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
 }
 
 /// @cond
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl)
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
@@ -602,7 +601,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
 }
 
 ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(problem, ProblemRecordType::ProblemRecord, database)),
         database)
 {
@@ -612,7 +611,7 @@ ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& 
 }
 
 ProblemRecord::ProblemRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(query, database)),
         database)
 {

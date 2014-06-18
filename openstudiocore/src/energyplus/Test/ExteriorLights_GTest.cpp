@@ -18,21 +18,21 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <model/ExteriorLights.hpp>
-#include <model/ExteriorLights_Impl.hpp>
-#include <model/ExteriorLightsDefinition.hpp>
-#include <model/ExteriorLightsDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
+#include "../../model/ExteriorLights.hpp"
+#include "../../model/ExteriorLights_Impl.hpp"
+#include "../../model/ExteriorLightsDefinition.hpp"
+#include "../../model/ExteriorLightsDefinition_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 
 #include <utilities/idd/Zone_FieldEnums.hxx>
 

@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/Model.hpp>
+#include "ScheduleCompact.hpp"
+#include "ScheduleCompact_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -220,7 +220,7 @@ ScheduleCompact::ScheduleCompact(const Model& model,const Quantity& constantValu
 }  
 
 // constructor
-ScheduleCompact::ScheduleCompact(boost::shared_ptr<detail::ScheduleCompact_Impl> impl)
+ScheduleCompact::ScheduleCompact(std::shared_ptr<detail::ScheduleCompact_Impl> impl)
   : Schedule(impl)
 {}
 

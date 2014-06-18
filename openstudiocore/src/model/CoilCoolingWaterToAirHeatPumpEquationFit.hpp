@@ -20,8 +20,8 @@
 #ifndef MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
 #define MODEL_COILCOOLINGWATERTOAIRHEATPUMPEQUATIONFIT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToAirComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToAirComponent.hpp"
 
 namespace openstudio {
 
@@ -196,7 +196,7 @@ class MODEL_API CoilCoolingWaterToAirHeatPumpEquationFit : public WaterToAirComp
   /// @cond
   typedef detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl ImplType;
 
-  explicit CoilCoolingWaterToAirHeatPumpEquationFit(boost::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl);
+  explicit CoilCoolingWaterToAirHeatPumpEquationFit(std::shared_ptr<detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl> impl);
 
   friend class detail::CoilCoolingWaterToAirHeatPumpEquationFit_Impl;
   friend class Model;

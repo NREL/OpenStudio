@@ -20,8 +20,8 @@
 #ifndef MODEL_RESOURCEOBJECT_HPP
 #define MODEL_RESOURCEOBJECT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -74,7 +74,7 @@ class MODEL_API ResourceObject : public ParentObject {
   friend class openstudio::IdfObject;
   friend class detail::ResourceObject_Impl;
 
-  explicit ResourceObject(boost::shared_ptr<detail::ResourceObject_Impl> impl);  
+  explicit ResourceObject(std::shared_ptr<detail::ResourceObject_Impl> impl);  
 
  private:
 

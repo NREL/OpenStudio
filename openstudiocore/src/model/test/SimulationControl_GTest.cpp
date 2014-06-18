@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../SimulationControl.hpp"
+#include "../SimulationControl_Impl.hpp"
+#include "../LifeCycleCost.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

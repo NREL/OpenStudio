@@ -22,13 +22,13 @@
 
 #include <QWidget>
 #include <QDialog>
-#include <model/ModelObject.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/StraightComponent.hpp"
+#include "../model/StraightComponent_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
 
 class InspectorGadget;
 class QStackedWidget;

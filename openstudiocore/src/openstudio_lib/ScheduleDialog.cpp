@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/ScheduleDialog.hpp>
-#include <openstudio_lib/SchedulesTabController.hpp>
+#include "ScheduleDialog.hpp"
+#include "SchedulesTabController.hpp"
 
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleDay.hpp>
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleDay.hpp"
 
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QComboBox>

@@ -17,37 +17,39 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/FanVariableVolume_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
+#include "SetpointManagerMixedAir_Impl.hpp"
+#include "SetpointManagerOutdoorAirReset.hpp"
+#include "SetpointManagerOutdoorAirReset_Impl.hpp"
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerScheduled.hpp"
+#include "SetpointManagerScheduled_Impl.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
+#include "SetpointManagerWarmest.hpp"
+#include "SetpointManagerWarmest_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "FanConstantVolume.hpp"
+#include "FanConstantVolume_Impl.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
 #include <utilities/idd/OS_Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::detail::WorkspaceObject_Impl;
 
@@ -99,6 +101,22 @@ namespace detail{
   unsigned Node_Impl::outletPort()
   {
     return OS_NodeFields::OutletPort;
+  }
+
+  std::vector<HVACComponent> Node_Impl::edges(bool isDemandComponent)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->outletModelObject() ) {
+      if( boost::optional<PortList> portList = edgeModelObject->optionalCast<PortList>() ) {
+        if( boost::optional<ThermalZone> thermalZone = portList->thermalZone() ) {
+          edges.push_back(*thermalZone);
+        }
+      }
+      else if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
   }
 
   std::vector<IdfObject> Node_Impl::remove()
@@ -193,14 +211,12 @@ namespace detail{
     */
 
     SetpointManagerSingleZoneReheatVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerSingleZoneReheat>();
-    for( SetpointManagerSingleZoneReheatVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it!=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
-      if( it->getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
+      if( modelObject.getString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName).get() ==
           this->name().get() )
       {
-        return *it;
+        return modelObject;
       }
 
     }
@@ -287,15 +303,13 @@ namespace detail{
   boost::optional<SetpointManagerMixedAir> Node_Impl::getSetpointManagerMixedAir() const
   {
     SetpointManagerMixedAirVector modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerMixedAir>();
-    for( SetpointManagerMixedAirVector::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( it->getString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get() ==
+      if( modelObject.getString(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName).get() ==
           this->name().get() )
       {
-        return *it;
+        return modelObject;
       }
 
     }
@@ -312,16 +326,14 @@ namespace detail{
   boost::optional<SetpointManagerScheduled> Node_Impl::setpointManagerScheduled() const
   {
     std::vector<SetpointManagerScheduled> modelObjects = this->getObject<Node>().getModelObjectSources<SetpointManagerScheduled>();
-    for( std::vector<SetpointManagerScheduled>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -351,16 +363,14 @@ namespace detail{
   {
     std::vector<SetpointManagerFollowOutdoorAirTemperature> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerFollowOutdoorAirTemperature>();
-    for( std::vector<SetpointManagerFollowOutdoorAirTemperature>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -390,16 +400,14 @@ namespace detail{
   {
     std::vector<SetpointManagerOutdoorAirReset> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerOutdoorAirReset>();
-    for( std::vector<SetpointManagerOutdoorAirReset>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -427,16 +435,14 @@ namespace detail{
   {
     std::vector<SetpointManagerWarmest> modelObjects = 
       getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
-    for( std::vector<SetpointManagerWarmest>::iterator it = modelObjects.begin(),itEnd= modelObjects.end();
-         it !=itEnd;
-         ++it )
+    for(const auto & modelObject : modelObjects)
     {
 
-      if( boost::optional<Node> setpointNode = it->setpointNode() )
+      if( boost::optional<Node> setpointNode = modelObject.setpointNode() )
       {
         if( setpointNode->handle() == this->handle() )
         {
-          return *it;
+          return modelObject;
         }
       }
     }
@@ -549,7 +555,7 @@ Node::Node(const Model& model)
   OS_ASSERT(getImpl<detail::Node_Impl>());
 }
 
-Node::Node(boost::shared_ptr<detail::Node_Impl> p)
+Node::Node(std::shared_ptr<detail::Node_Impl> p)
   : StraightComponent(p)
 {}
 

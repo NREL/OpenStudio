@@ -17,27 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearch_Impl.hpp>
+#include "SequentialSearch.hpp"
+#include "SequentialSearch_Impl.hpp"
 
-#include <analysis/SequentialSearchOptions.hpp>
-#include <analysis/SequentialSearchOptions_Impl.hpp>
+#include "SequentialSearchOptions.hpp"
+#include "SequentialSearchOptions_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
+#include "Analysis.hpp"
+#include "DataPoint.hpp"
+#include "OptimizationProblem.hpp"
+#include "OptimizationProblem_Impl.hpp"
+#include "OptimizationDataPoint.hpp"
+#include "OptimizationDataPoint_Impl.hpp"
+#include "DiscreteVariable.hpp"
+#include "DiscreteVariable_Impl.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/document/Table.hpp"
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -72,7 +70,7 @@ namespace detail {
   {}
 
   AnalysisObject SequentialSearch_Impl::clone() const {
-    boost::shared_ptr<SequentialSearch_Impl> impl(new SequentialSearch_Impl(*this));
+    std::shared_ptr<SequentialSearch_Impl> impl(new SequentialSearch_Impl(*this));
     return SequentialSearch(impl);
   }
 
@@ -107,7 +105,7 @@ namespace detail {
     DataPointVector incompletePoints = analysis.dataPointsToQueue();
     DataPointVector::const_iterator it = std::find_if(incompletePoints.begin(),
                                                       incompletePoints.end(),
-                                                      boost::bind(&DataPoint::isTag,_1,"ss"));
+                                                      std::bind(&DataPoint::isTag,std::placeholders::_1,"ss"));
     if (it != incompletePoints.end()) {
       LOG(Info,"Returning because the last iteration has not yet been run.");
       return numAdded;
@@ -225,9 +223,9 @@ namespace detail {
       if (!current->isTag(curveTag)) {
         current->addTag(curveTag);
       }
-      OptimizationDataPointVector::iterator it = std::find(successfulPoints.begin(),
-                                                           successfulPoints.end(),
-                                                           result.back());
+      auto it = std::find(successfulPoints.begin(),
+                          successfulPoints.end(),
+                          result.back());
       successfulPoints.erase(it);
     }
     int otherIndex(0);
@@ -244,7 +242,7 @@ namespace detail {
         DoubleVector currentValues = current->objectiveValues();
         OptionalDouble candidateSlope;
         DoubleVector candidateValues;
-        for (OptimizationDataPointVector::iterator it = successfulPoints.begin();
+        for (auto it = successfulPoints.begin();
              it != successfulPoints.end(); )
         {
           DoubleVector values = it->objectiveValues();
@@ -288,9 +286,9 @@ namespace detail {
         if (!result.back().isTag(curveTag)) {
           result.back().addTag(curveTag);
         }
-        OptimizationDataPointVector::iterator it = std::find(successfulPoints.begin(),
-                                                             successfulPoints.end(),
-                                                             result.back());
+        auto it = std::find(successfulPoints.begin(),
+                            successfulPoints.end(),
+                            result.back());
         successfulPoints.erase(it);
       }
       current = candidate;
@@ -340,7 +338,7 @@ namespace detail {
     std::sort(successfulPoints.begin(),successfulPoints.end(),predicate);
 
     // non-dominated means that you cannot improve one objective without harming the other
-    OptimizationDataPointVector::iterator it = successfulPoints.begin();
+    auto it = successfulPoints.begin();
     DoubleVector currentValues;
     while (it != successfulPoints.end()) {
       // it has next-worst objective i
@@ -589,7 +587,7 @@ namespace detail {
 } // detail
 
 SequentialSearch::SequentialSearch(const SequentialSearchOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::SequentialSearch_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::SequentialSearch_Impl>(
         new detail::SequentialSearch_Impl(options)))
 {
   createCallbackForOptions();
@@ -603,7 +601,7 @@ SequentialSearch::SequentialSearch(const UUID& uuid,
                                    bool failed,
                                    int iter,
                                    const SequentialSearchOptions& options)
-  : OpenStudioAlgorithm(boost::shared_ptr<detail::SequentialSearch_Impl>(
+  : OpenStudioAlgorithm(std::shared_ptr<detail::SequentialSearch_Impl>(
         new detail::SequentialSearch_Impl(uuid,
                                           versionUUID,
                                           displayName,
@@ -647,7 +645,7 @@ std::vector< std::vector<QVariant> > SequentialSearch::getCandidateCombinations(
 }
 
 /// @cond
-SequentialSearch::SequentialSearch(boost::shared_ptr<detail::SequentialSearch_Impl> impl)
+SequentialSearch::SequentialSearch(std::shared_ptr<detail::SequentialSearch_Impl> impl)
   : OpenStudioAlgorithm(impl)
 {}
 /// @endcond

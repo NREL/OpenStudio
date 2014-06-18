@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,17 +20,17 @@
 #ifndef RULESET_OSRUNNER_HPP
 #define RULESET_OSRUNNER_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <ruleset/OSResult.hpp>
+#include "OSResult.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/filetypes/EpwFile.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 

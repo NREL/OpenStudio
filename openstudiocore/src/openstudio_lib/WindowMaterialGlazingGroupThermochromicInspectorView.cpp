@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/WindowMaterialGlazingGroupThermochromicInspectorView.hpp>
+#include "WindowMaterialGlazingGroupThermochromicInspectorView.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
+#include "../model/ThermochromicGlazing.hpp"
+#include "../model/ThermochromicGlazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -72,11 +72,13 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::createLayout()
   label = new QLabel("Optical Data Temperature: ");
   label->setObjectName("H2");
   mainGridLayout->addWidget(label,row++,col);
+  label->hide();
 
-  m_opticalDataTemperature = new OSQuantityEdit(m_isIP);
+  m_opticalDataTemperature = new OSQuantityEdit2("C", "C", "F", m_isIP);
   bool isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), m_opticalDataTemperature, SLOT(onUnitSystemChange(bool)));
   OS_ASSERT(isConnected);
   mainGridLayout->addWidget(m_opticalDataTemperature,row++,0,1,3);
+  m_opticalDataTemperature->hide();
 
   // Window ThermochromicGlazing Glazing Name
 
@@ -116,7 +118,13 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::onUpdate()
 void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::model::ThermochromicGlazing & thermochromicGlazing)
 {
   m_nameEdit->bind(thermochromicGlazing,"name");
-  m_opticalDataTemperature->bind(thermochromicGlazing,"opticalDataTemperature",m_isIP);
+
+  //m_opticalDataTemperature->bind( // TODO
+  //  m_isIP,
+  //  thermochromicGlazing,
+  //  DoubleGetter(std::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
+  //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
+
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 
   this->stackedWidget()->setCurrentIndex(1);

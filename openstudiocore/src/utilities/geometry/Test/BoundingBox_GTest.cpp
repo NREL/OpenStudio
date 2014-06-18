@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/geometry/Point3d.hpp>
+#include "../BoundingBox.hpp"
+#include "../Point3d.hpp"
 
 using namespace openstudio;
 

@@ -119,7 +119,7 @@ namespace boost {
     }
   };
   
-  // Stubbing of boost::function
+  // Stubbing of std::function
   template<typename R>
   class function0
   {

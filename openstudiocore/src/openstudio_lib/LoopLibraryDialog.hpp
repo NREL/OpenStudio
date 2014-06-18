@@ -17,14 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOOPLIBRARYVIEW_H
-#define OPENSTUDIO_LOOPLIBRARYVIEW_H
+#ifndef OPENSTUDIO_LOOPLIBRARYDIALOG_HPP
+#define OPENSTUDIO_LOOPLIBRARYDIALOG_HPP
 
-#include <openstudio_lib/SOConstants.hpp>
+#include "SOConstants.hpp"
 #include <QDialog>
 #include <QPixmap>
 #include <QString>
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 class QScrollArea;
@@ -96,5 +95,5 @@ class LoopItemView : public QWidget
 
 } // namespace openstudio
 
-#endif // OPENSTUDIO_LOOPLIBRARYVIEW_H
+#endif // OPENSTUDIO_LOOPLIBRARYDIALOG_HPP
 

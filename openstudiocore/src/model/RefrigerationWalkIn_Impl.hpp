@@ -20,16 +20,20 @@
 #ifndef MODEL_REFRIGERATIONWALKIN_IMPL_HPP
 #define MODEL_REFRIGERATIONWALKIN_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <model/ThermalZone.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
+#include "RefrigerationWalkInZoneBoundary.hpp"
+#include "ThermalZone.hpp"
 
 namespace openstudio {
+
+class Time;
+
 namespace model {
 
 class Schedule;
 class RefrigerationWalkInZoneBoundary;
+class RefrigerationDefrostCycleParameters;
 
 namespace detail {
 
@@ -131,6 +135,32 @@ namespace detail {
 
     bool isInsulatedFloorUValueDefaulted() const;
 
+    boost::optional<RefrigerationDefrostCycleParameters> optionalWalkinDefrostCycleParameters() const;
+
+    RefrigerationDefrostCycleParameters walkinDefrostCycleParameters();
+
+    boost::optional<int> durationofDefrostCycle() const;
+
+    boost::optional<int> dripDownTime() const;
+
+    boost::optional<openstudio::Time> defrost1StartTime() const;
+
+    boost::optional<openstudio::Time> defrost2StartTime() const;
+
+    boost::optional<openstudio::Time> defrost3StartTime() const;
+
+    boost::optional<openstudio::Time> defrost4StartTime() const;
+
+    boost::optional<openstudio::Time> defrost5StartTime() const;
+
+    boost::optional<openstudio::Time> defrost6StartTime() const;
+
+    boost::optional<openstudio::Time> defrost7StartTime() const;
+
+    boost::optional<openstudio::Time> defrost8StartTime() const;
+
+    std::vector<openstudio::Time> defrostStartTimes() const;
+
     boost::optional<RefrigerationSystem> system() const;
 
     boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
@@ -222,6 +252,48 @@ namespace detail {
     bool setInsulatedFloorUValue(double insulatedFloorUValue);
 
     void resetInsulatedFloorUValue();
+
+    bool setWalkinDefrostCycleParameters(const RefrigerationDefrostCycleParameters& walkinDefrostCycleParameters);
+
+    bool setDurationofDefrostCycle(boost::optional<int> durationofDefrostCycle);
+
+    void resetDurationofDefrostCycle();
+
+    bool setDripDownTime(boost::optional<int> dripDownTime);
+
+    void resetDripDownTime();
+
+    bool setDefrost1StartTime(const openstudio::Time& defrost1StartTime);
+
+    void resetDefrost1StartTime();
+
+    bool setDefrost2StartTime(const openstudio::Time& defrost2StartTime);
+
+    void resetDefrost2StartTime();
+
+    bool setDefrost3StartTime(const openstudio::Time& defrost3StartTime);
+
+    void resetDefrost3StartTime();
+
+    bool setDefrost4StartTime(const openstudio::Time& defrost4StartTime);
+
+    void resetDefrost4StartTime();
+
+    bool setDefrost5StartTime(const openstudio::Time& defrost5StartTime);
+
+    void resetDefrost5StartTime();
+
+    bool setDefrost6StartTime(const openstudio::Time& defrost6StartTime);
+
+    void resetDefrost6StartTime();
+
+    bool setDefrost7StartTime(const openstudio::Time& defrost7StartTime);
+
+    void resetDefrost7StartTime();
+
+    bool setDefrost8StartTime(const openstudio::Time& defrost8StartTime);
+
+    void resetDefrost8StartTime();
 
     bool addToSystem(RefrigerationSystem & system);
 

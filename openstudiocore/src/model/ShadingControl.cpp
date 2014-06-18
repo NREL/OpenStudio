@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ShadingControl.hpp>
-#include <model/ShadingControl_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
-#include <model/Blind.hpp>
-#include <model/Blind_Impl.hpp>
-#include <model/Screen.hpp>
-#include <model/Screen_Impl.hpp>
-#include <model/Shade.hpp>
-#include <model/Shade_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ShadingControl.hpp"
+#include "ShadingControl_Impl.hpp"
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
+#include "Blind.hpp"
+#include "Blind_Impl.hpp"
+#include "Screen.hpp"
+#include "Screen_Impl.hpp"
+#include "Shade.hpp"
+#include "Shade_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ShadingControl_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -256,7 +256,7 @@ void ShadingControl::resetSchedule(){
 
 
 /// @cond
-ShadingControl::ShadingControl(boost::shared_ptr<detail::ShadingControl_Impl> impl)
+ShadingControl::ShadingControl(std::shared_ptr<detail::ShadingControl_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

@@ -17,21 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HeatBalanceAlgorithm.hpp>
-#include <model/HeatBalanceAlgorithm_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "HeatBalanceAlgorithm.hpp"
+#include "HeatBalanceAlgorithm_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatBalanceAlgorithm_FieldEnums.hxx>
-
-#include <utilities/units/Unit.hpp>
-
-#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace model {
@@ -344,7 +340,7 @@ void HeatBalanceAlgorithm::resetMaximumSurfaceConvectionHeatTransferCoefficientV
 
 /// @cond
 /// constructor
-HeatBalanceAlgorithm::HeatBalanceAlgorithm(boost::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl)
+HeatBalanceAlgorithm::HeatBalanceAlgorithm(std::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl)
   : ModelObject(impl)
 {
 }

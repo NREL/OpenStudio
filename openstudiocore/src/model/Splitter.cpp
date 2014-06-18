@@ -17,12 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -63,6 +66,11 @@ boost::optional<ModelObject> Splitter_Impl::inletModelObject()
 boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchIndex)
 {
   return connectedObject( outletPort( branchIndex ) );
+}
+
+std::vector<HVACComponent> Splitter_Impl::edges(bool isDemandComponent)
+{
+  return castVector<HVACComponent>(this->outletModelObjects());
 }
 
 boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject()
@@ -172,7 +180,7 @@ bool Splitter_Impl::isRemovable() const
 
 } // detail
 
-Splitter::Splitter(boost::shared_ptr<detail::Splitter_Impl> p)
+Splitter::Splitter(std::shared_ptr<detail::Splitter_Impl> p)
   : HVACComponent(p)
 {}
 

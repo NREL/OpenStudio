@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 
-#include <utilities/idd/CommentRegex.hpp>
-#include <utilities/idd/Comments.hpp>
+#include "../CommentRegex.hpp"
+#include "../Comments.hpp"
 
 using namespace openstudio::commentRegex;
 using openstudio::makeComment;

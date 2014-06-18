@@ -20,10 +20,10 @@
 #ifndef UTILITIES_BCL_ONDEMANDGENERATOR_HPP
 #define UTILITIES_BCL_ONDEMANDGENERATOR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../core/Enum.hpp"
+#include "../core/Path.hpp"
 
 #include <QVariant>
 
@@ -156,7 +156,7 @@ namespace openstudio{
     /// Get the units of this argument if any
     std::string units() const;
 
-    /// Get the component type (e.g. taxonmy term such as 'Lighting.Indoor Lighting.Lamp') of this argument if any
+    /// Get the component type (e.g. taxonomy term such as 'Lighting.Indoor Lighting.Lamp') of this argument if any
     std::string componentType() const;
 
     /// Get any restrictions on the value of this argument

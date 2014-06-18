@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceTypesTabController.hpp>
-#include <openstudio_lib/SpaceTypesTabView.hpp>
-#include <openstudio_lib/SpaceTypesController.hpp>
+#include "SpaceTypesTabController.hpp"
+#include "SpaceTypesTabView.hpp"
+#include "SpaceTypesController.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
 SpaceTypesTabController::SpaceTypesTabController(const model::Model& model)
   : MainTabController(new SpaceTypesTabView())
 {
-  m_spaceTypesController = boost::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
+  m_spaceTypesController = std::shared_ptr<SpaceTypesController>(new SpaceTypesController(model));
 
   bool isConnected = false;
 

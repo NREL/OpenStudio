@@ -20,8 +20,8 @@
 #ifndef MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_HPP
 #define MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ConstructionBase.hpp>
+#include "ModelAPI.hpp"
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,7 +72,7 @@ class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
   friend class detail::CFactorUndergroundWallConstruction_Impl;
 
   explicit CFactorUndergroundWallConstruction(
-      boost::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
+      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);  
 
   /// @endcond
  private:

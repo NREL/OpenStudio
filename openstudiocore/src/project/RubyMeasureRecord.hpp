@@ -21,11 +21,10 @@
 #define PROJECT_RUBYMEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/MeasureRecord.hpp>
+#include "MeasureRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 namespace openstudio {
@@ -108,11 +107,11 @@ class PROJECT_API RubyMeasureRecord : public MeasureRecord {
   friend class detail::RubyMeasureRecord_Impl;
 
   /** Construct from impl. */
-  RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl,
+  RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl,
                     ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl);
+  explicit RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl);
 
   /// @endcond
  private:

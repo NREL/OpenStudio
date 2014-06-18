@@ -17,12 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelRuleset.hpp>
-#include <ruleset/ModelRuleset_Impl.hpp>
-#include <ruleset/ModelRule.hpp>
-#include <ruleset/ModelRule_Impl.hpp>
-
-#include <boost/bind.hpp>
+#include "ModelRuleset.hpp"
+#include "ModelRuleset_Impl.hpp"
+#include "ModelRule.hpp"
+#include "ModelRule_Impl.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -127,26 +125,26 @@ std::string ModelRuleset::xmlElementName()
 }
 
 ModelRuleset::ModelRuleset(const std::string& name)
-  : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name)))
+  : Ruleset(std::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name)))
 {
   OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 ModelRuleset::ModelRuleset(const std::string& name, const UUID& uuid, const UUID& versionUUID,
                            const std::vector<ModelRule>& rules)
-  : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name,uuid,versionUUID,rules)))
+  : Ruleset(std::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(name,uuid,versionUUID,rules)))
 {
   OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 ModelRuleset::ModelRuleset(const QDomElement& element)
-  : Ruleset(boost::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(element)))
+  : Ruleset(std::shared_ptr<detail::ModelRuleset_Impl>(new detail::ModelRuleset_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());
 }
 
 /// @cond
-ModelRuleset::ModelRuleset(boost::shared_ptr<detail::ModelRuleset_Impl> impl)
+ModelRuleset::ModelRuleset(std::shared_ptr<detail::ModelRuleset_Impl> impl)
   : Ruleset(impl)
 {
   OS_ASSERT(getImpl<detail::ModelRuleset_Impl>());

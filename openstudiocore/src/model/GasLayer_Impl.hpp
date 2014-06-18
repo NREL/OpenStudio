@@ -20,7 +20,7 @@
 #ifndef MODEL_GASLAYER_IMPL_HPP
 #define MODEL_GASLAYER_IMPL_HPP
 
-#include <model/FenestrationMaterial_Impl.hpp>
+#include "FenestrationMaterial_Impl.hpp"
 
 #include <QObject>
 

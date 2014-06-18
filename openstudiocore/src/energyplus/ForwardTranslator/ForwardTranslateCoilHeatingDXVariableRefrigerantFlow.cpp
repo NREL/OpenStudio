@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/CurveCubic_Impl.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

@@ -19,21 +19,21 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Lights.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../Lights.hpp"
+#include "../OutputVariable.hpp"
+#include "../OutputVariable_Impl.hpp"
+#include "../Model_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../utilities/idf/ValidityReport.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/Optional.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

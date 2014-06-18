@@ -20,8 +20,8 @@
 #ifndef MODEL_ELECTRICEQUIPMENTDEFINITION_HPP
 #define MODEL_ELECTRICEQUIPMENTDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {
@@ -133,7 +133,7 @@ class MODEL_API ElectricEquipmentDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ElectricEquipmentDefinition(boost::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl);
+  explicit ElectricEquipmentDefinition(std::shared_ptr<detail::ElectricEquipmentDefinition_Impl> impl);
 
   /// @endcond
  private:

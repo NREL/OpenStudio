@@ -19,13 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/Test/SqlFileFixture.hpp>
+#include "SqlFileFixture.hpp"
 
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../SqlFileTimeSeriesQuery.hpp"
+#include "../SqlFileEnums.hpp"
+#include "../../data/TimeSeries.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../core/Containers.hpp"
 
 #include <resources.hxx>
 

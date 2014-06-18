@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "MeasureRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "JoinRecord.hpp"
+#include "ProjectDatabase.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/UncertaintyDescription.hpp"
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -80,7 +80,7 @@ namespace detail{
     return std::vector<ObjectRecord>();
   }
 
-  void MeasureGroupRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void MeasureGroupRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<MeasureGroupRecord>(query);
     this->bindValues(query);
@@ -229,7 +229,7 @@ namespace detail{
     }
     LOG_AND_THROW("Invalid DiscretMeasure measureVectorIndex "
         << measureVectorIndex << " for MeasureGroup '" << name() << "'.");
-    return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>(),database);
+    return MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl>(),database);
   }
 
   void MeasureGroupRecord_Impl::bindValues(QSqlQuery& query) const
@@ -262,7 +262,7 @@ namespace detail{
 MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGroup,
                                        ProblemRecord& problemRecord,
                                        int variableVectorIndex)
-  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+  : DiscreteVariableRecord(std::shared_ptr<detail::MeasureGroupRecord_Impl>(
         new detail::MeasureGroupRecord_Impl(measureGroup,
                                             problemRecord,
                                             variableVectorIndex)),
@@ -278,7 +278,7 @@ MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGrou
                                        FunctionRecord& functionRecord,
                                        int variableVectorIndex,
                                        boost::optional<double> functionCoefficient)
-  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+  : DiscreteVariableRecord(std::shared_ptr<detail::MeasureGroupRecord_Impl>(
         new detail::MeasureGroupRecord_Impl(measureGroup,
                                             functionRecord,
                                             variableVectorIndex,
@@ -292,7 +292,7 @@ MeasureGroupRecord::MeasureGroupRecord(const analysis::MeasureGroup& measureGrou
 }
 
 MeasureGroupRecord::MeasureGroupRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DiscreteVariableRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl>(
+  : DiscreteVariableRecord(std::shared_ptr<detail::MeasureGroupRecord_Impl>(
         new detail::MeasureGroupRecord_Impl(query, database)),
         database,
         analysis::OptionalDiscreteVariable())
@@ -300,7 +300,7 @@ MeasureGroupRecord::MeasureGroupRecord(const QSqlQuery& query, ProjectDatabase& 
   OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());
 }
 
-MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl,
+MeasureGroupRecord::MeasureGroupRecord(std::shared_ptr<detail::MeasureGroupRecord_Impl> impl,
                                        ProjectDatabase database)
   : DiscreteVariableRecord(impl, database, analysis::OptionalDiscreteVariable())
 {
@@ -308,7 +308,7 @@ MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRec
 }
 
 /// @cond
-MeasureGroupRecord::MeasureGroupRecord(boost::shared_ptr<detail::MeasureGroupRecord_Impl> impl)
+MeasureGroupRecord::MeasureGroupRecord(std::shared_ptr<detail::MeasureGroupRecord_Impl> impl)
   : DiscreteVariableRecord(impl)
 {
   OS_ASSERT(getImpl<detail::MeasureGroupRecord_Impl>());

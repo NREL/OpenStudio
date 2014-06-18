@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "SizingSystem.hpp"
+#include "SizingSystem_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Sizing_System_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -755,7 +755,7 @@ void SizingSystem::setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC)
 }
 
 /// @cond
-SizingSystem::SizingSystem(boost::shared_ptr<detail::SizingSystem_Impl> impl)
+SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

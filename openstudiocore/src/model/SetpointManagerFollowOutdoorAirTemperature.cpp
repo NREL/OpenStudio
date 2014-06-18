@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/OS_SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -249,7 +249,7 @@ SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTempe
   setMinimumSetpointTemperature(6.0);
 }
 
-SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(boost::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
+SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
   : HVACComponent(p)
 {
 }

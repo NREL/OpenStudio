@@ -20,9 +20,9 @@
 #ifndef MODEL_THERMOCHROMICGLAZING_IMPL_HPP
 #define MODEL_THERMOCHROMICGLAZING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
+#include "Glazing_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,6 +92,8 @@ namespace detail {
 
     virtual double visibleReflectance() const;
 
+    double opticalDataTemperature() const;
+
     // TODO: Handle this object's extensible fields.
 
     //@}
@@ -125,6 +127,8 @@ namespace detail {
     virtual bool setVisibleAbsorptance(double value);
 
     virtual bool setVisibleReflectance(double value);
+
+    void  setOpticalDataTemperature(double value);
 
     // TODO: Handle this object's extensible fields.
 

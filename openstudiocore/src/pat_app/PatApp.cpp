@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatApp.hpp>
+#include "PatApp.hpp"
 
 #include <pat_app/AboutBox.hpp>
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/DesignAlternativesTabController.hpp>
-#include <pat_app/DesignAlternativesView.hpp>
-#include <pat_app/ExportXML.hpp>
-#include <pat_app/ExportSpreadsheet.hpp>
-#include <pat_app/HorizontalTabWidget.hpp>
-#include <pat_app/MainRightColumnController.hpp>
-#include <pat_app/MeasuresTabController.hpp>
-#include <pat_app/MeasuresView.hpp>
-#include <pat_app/PatMainMenu.hpp>
-#include <pat_app/PatMainWindow.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
-#include <pat_app/ResultsTabController.hpp>
-#include <pat_app/ResultsView.hpp>
-#include <pat_app/RunTabController.hpp>
-#include <pat_app/RunView.hpp>
-#include <pat_app/StartupView.hpp>
+#include "CloudMonitor.hpp"
+#include "DesignAlternativesTabController.hpp"
+#include "DesignAlternativesView.hpp"
+#include "ExportXML.hpp"
+#include "ExportSpreadsheet.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "MainRightColumnController.hpp"
+#include "MeasuresTabController.hpp"
+#include "MeasuresView.hpp"
+#include "PatMainMenu.hpp"
+#include "PatMainWindow.hpp"
+#include "PatVerticalTabWidget.hpp"
+#include "ResultsTabController.hpp"
+#include "ResultsView.hpp"
+#include "RunTabController.hpp"
+#include "RunView.hpp"
+#include "StartupView.hpp"
 #include <pat_app/VagrantConfiguration.hxx>
 
 #include "../shared_gui_components/BCLMeasureDialog.hpp"
@@ -48,29 +48,29 @@
 #include "../shared_gui_components/ProcessEventsProgressBar.hpp"
 #include "../shared_gui_components/WorkflowTools.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/AnalysisObject.hpp"
+#include "../analysis/AnalysisObject_Impl.hpp"
+#include "../analysisdriver/CurrentAnalysis.hpp"
+#include "../analysisdriver/SimpleProject_Impl.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/CloudProvider.hpp>
-#include <utilities/cloud/CloudProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/CloudProvider.hpp"
+#include "../utilities/cloud/CloudProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -99,8 +99,8 @@ namespace pat {
 
 PatApp::PatApp( int & argc, char ** argv, const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter )
   : QApplication(argc, argv),
-    m_onlineBclDialog(0),
-    m_cloudDialog(0),
+    m_onlineBclDialog(nullptr),
+    m_cloudDialog(nullptr),
     m_measureManager(t_argumentGetter, this)
 {
   bool isConnected = connect(this,SIGNAL(userMeasuresDirChanged()),&m_measureManager,SLOT(updateMeasuresLists()));
@@ -513,7 +513,7 @@ void PatApp::create()
     if(result == QMessageBox::Cancel) return;
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -720,7 +720,7 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
     // setting the seed model may take a long time due to version and energyplus translation
     // this progress bar will ensure process events is called to avoid locking up the app
     // we will disable the app until the processing is complete
-    ProcessEventsProgressBar* processEventsProgressBar = new ProcessEventsProgressBar();
+    auto processEventsProgressBar = new ProcessEventsProgressBar();
     mainWindow->setEnabled(false);
 
     // get original number of variables
@@ -887,7 +887,7 @@ bool PatApp::userInteractiveSaveAsProject()
     m_project->stop();
   }
 
-  NewProjectDialog * dialog = new NewProjectDialog();
+  auto dialog = new NewProjectDialog();
 
   QString projectName;
   if(dialog->exec()){
@@ -1298,16 +1298,16 @@ bool PatApp::openFile(const QString& fileName)
       }
       return true;
     } else {
-      if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
-        QMessageBox::warning(mainWindow,
-                             "Error Opening Project",
-                             QString("Project at '") + fileName + QString("' is not a PAT project."));
-      }
-      else {
+      //if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {
+      //  QMessageBox::warning(mainWindow,
+      //                       "Error Opening Project",
+      //                       QString("Project at '") + fileName + QString("' is not a PAT project."));
+      //}
+      //else {
         QMessageBox::warning(mainWindow,
                              "Error Opening Project",
                              QString("Unable to open project at '") + dirAbsolutePath + QString("'."));
-      }
+      //}
       showStartupView();
     }
   }
@@ -1328,7 +1328,7 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
     analysis.disconnect();
 
     // detach all signals from project
-    disconnect(m_project->getImpl().get(), 0, this, 0);
+    disconnect(m_project->getImpl().get(), nullptr, this, nullptr);
   }
 
   // set this project as current project
@@ -1340,6 +1340,9 @@ void PatApp::attachProject(boost::optional<analysisdriver::SimpleProject> projec
 
     // TODO: Do not create baseline point here. Add SimpleProject::getOptionalBaselineDataPoint
     // and use that. Call this original version when the run button is hit.
+
+    // update built in measures that may have changed if we upgraded versions
+    m_measureManager.updatePatApplicationMeasures(*m_project);
 
     // cache the seed models here
     m_project->seedModel();
@@ -1726,13 +1729,13 @@ NewProjectDialog::NewProjectDialog(QWidget * parent)
 
   setOkButtonAsDefault(true);
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   label = new QLabel("Enter New Project Name",this);
   label->setObjectName("H1");
   upperLayout()->addWidget(label);
 
-  QVBoxLayout * vertLayout = new QVBoxLayout();
+  auto vertLayout = new QVBoxLayout();
   vertLayout->setContentsMargins(20,10,10,10);
   vertLayout->setSpacing(20);
   upperLayout()->addLayout(vertLayout);

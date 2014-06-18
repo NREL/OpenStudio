@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_IMPL_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 

@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Checksum.hpp>
+#include "UUID.hpp"
+#include "String.hpp"
+#include "Checksum.hpp"
 #include <sstream>
 
 #ifdef __APPLE__

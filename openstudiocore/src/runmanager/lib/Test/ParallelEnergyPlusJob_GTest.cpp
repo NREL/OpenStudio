@@ -22,17 +22,17 @@
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
 
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../JobFactory.hpp"
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
 
-#include <model/Model.hpp>
+#include "../../../model/Model.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/IdfObject.hpp"
+#include "../../../utilities/data/EndUses.hpp"
+#include "../../../utilities/data/Attribute.hpp"
+#include "../../../utilities/sql/SqlFile.hpp"
 
 #include <boost/filesystem/path.hpp>
 

@@ -20,11 +20,11 @@
 #ifndef MODEL_UTILITYBILL_HPP
 #define MODEL_UTILITYBILL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
 
@@ -132,7 +132,7 @@ class MODEL_API BillingPeriod : public ModelExtensibleGroup {
   friend class IdfExtensibleGroup;
   friend class detail::UtilityBill_Impl;
 
-  BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index);
+  BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index);
 
   /// @endcond
  private:
@@ -267,7 +267,7 @@ class MODEL_API UtilityBill : public ModelObject {
   /// @cond
   typedef detail::UtilityBill_Impl ImplType;
 
-  explicit UtilityBill(boost::shared_ptr<detail::UtilityBill_Impl> impl);
+  explicit UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl);
 
   friend class detail::UtilityBill_Impl;
   friend class Model;

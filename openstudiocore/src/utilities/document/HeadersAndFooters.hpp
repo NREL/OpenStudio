@@ -20,7 +20,7 @@
 #ifndef UTILITIES_DOCUMENT_HEADERSANDFOOTERS_HPP
 #define UTILITIES_DOCUMENT_HEADERSANDFOOTERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 #include <string>
 
 namespace openstudio {

@@ -1,5 +1,24 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "FileSystemSearch.hpp"
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -102,7 +121,7 @@ namespace runmanager {
       {
 
         // Make sure the signal is coming from the thread we expect it to, and it's not just queued up
-        QStandardItem *qsi = new QStandardItem(filestring);
+        auto qsi = new QStandardItem(filestring);
         qsi->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         qsi->setCheckable(true);
         qsi->setCheckState(Qt::Unchecked);
@@ -226,7 +245,7 @@ namespace runmanager {
       try {
         diritr begin(root);
         diritr end;
-        m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
+        m_thread = std::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
       } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());
@@ -239,7 +258,7 @@ namespace runmanager {
       try {
         diritr begin(root);
         diritr end;
-        m_thread = boost::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
+        m_thread = std::shared_ptr<detail::FileSystemSearchThread>(new detail::FileSystemSearchThread(
               root, begin, end, m_regex, m_fileExtension));
       } catch (const boost::filesystem::filesystem_error &e) {
         LOG(Info, "Error browsing path: " << toString(root) << ": " << e.what());

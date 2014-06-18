@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
+#include "../../model/CurveLinear.hpp"
+#include "../../model/CurveLinear_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Curve_Linear_FieldEnums.hxx>
 

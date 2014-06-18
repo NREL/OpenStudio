@@ -17,85 +17,87 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceLoad.hpp>
-#include <model/SpaceLoad_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "AirLoopHVACSupplyPlenum.hpp"
+#include "AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirLoopHVACReturnPlenum.hpp"
+#include "AirLoopHVACReturnPlenum_Impl.hpp"
+#include "ZoneHVACEquipmentList.hpp"
+#include "ZoneHVACEquipmentList_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "SizingZone.hpp"
+#include "SizingZone_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceLoad.hpp"
+#include "SpaceLoad_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+#include "IlluminanceMap.hpp"
+#include "IlluminanceMap_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "ThermostatSetpointDualSetpoint.hpp"
+#include "ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "ZoneControlHumidistat.hpp"
+#include "ZoneControlHumidistat_Impl.hpp"
+#include "DesignSpecificationOutdoorAir.hpp"
+#include "DesignSpecificationOutdoorAir_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
 namespace openstudio {
 namespace model {
@@ -271,6 +273,17 @@ namespace detail {
 
   IddObjectType ThermalZone_Impl::iddObjectType() const {
     return ThermalZone::iddObjectType();
+  }
+
+  std::vector<HVACComponent> ThermalZone_Impl::edges(bool isDemandComponent)
+  {
+    std::vector<HVACComponent> edges;
+    if( boost::optional<ModelObject> edgeModelObject = this->returnAirModelObject() ) {
+      if( boost::optional<HVACComponent> edgeObject = edgeModelObject->optionalCast<HVACComponent>() ) {
+        edges.push_back(*edgeObject);
+      }
+    }
+    return edges;
   }
 
   int ThermalZone_Impl::multiplier() const {
@@ -961,6 +974,26 @@ namespace detail {
     setString(OS_ThermalZoneFields::ThermostatName, "");
   }
 
+  boost::optional<ZoneControlHumidistat> ThermalZone_Impl::zoneControlHumidistat() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ZoneControlHumidistat>(OS_ThermalZoneFields::HumidistatName);
+  }
+
+  bool ThermalZone_Impl::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
+  {
+    return setPointer(OS_ThermalZoneFields::HumidistatName, humidistat.handle());
+  }
+
+  void ThermalZone_Impl::resetZoneControlHumidistat()
+  {
+    if( boost::optional<ZoneControlHumidistat> humidistat = this->zoneControlHumidistat() )
+    {
+      humidistat->remove();
+    }
+
+    setString(OS_ThermalZoneFields::HumidistatName, "");
+  }
+
   /// Combines all spaces referencing this zone into a single space referencing this zone.
   /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
   /// If this zone has one space referencing it, then that space is returned.
@@ -1237,7 +1270,7 @@ namespace detail {
 
     for (Surface surface : surfaces){
 
-      std::set<Surface>::iterator it = mergedSurfaces.find(surface);
+      auto it = mergedSurfaces.find(surface);
       if (it != mergedSurfaces.end()){
         continue;
       }
@@ -1349,14 +1382,12 @@ namespace detail {
 
     std::vector<ModelObject> comps = this->equipment();
 
-    for( std::vector<ModelObject>::iterator it = comps.begin();
-         it < comps.end();
-         ++it )
+    for( auto & comp : comps )
     {
-      it->remove();
+      comp.remove();
     }
 
-    //detatch it from the zone air node
+    //detach it from the zone air node
     Node airNode = this->zoneAirNode();
 
     airNode.remove();
@@ -1406,11 +1437,9 @@ namespace detail {
 
       std::vector<ModelObject> comps = this->equipment();
 
-      for( std::vector<ModelObject>::iterator it = comps.begin();
-           it < comps.end();
-           ++it )
+      for( auto & comp : comps )
       {
-        it->remove();
+        comp.remove();
       }
 
       if( boost::optional<AirLoopHVAC> airLoop = this->airLoopHVAC() )
@@ -1462,6 +1491,15 @@ namespace detail {
   boost::optional<ModelObject> ThermalZone_Impl::thermostatSetpointDualSetpointAsModelObject() const {
     OptionalModelObject result;
     OptionalThermostatSetpointDualSetpoint intermediate = thermostatSetpointDualSetpoint();
+    if (intermediate) {
+      result = *intermediate;
+    }
+    return result;
+  }
+
+  boost::optional<ModelObject> ThermalZone_Impl::zoneControlHumidistatAsModelObject() const {
+    OptionalModelObject result;
+    OptionalZoneControlHumidistat intermediate = zoneControlHumidistat();
     if (intermediate) {
       result = *intermediate;
     }
@@ -1526,6 +1564,22 @@ namespace detail {
     }
     else {
       resetThermostatSetpointDualSetpoint();
+    }
+    return true;
+  }
+
+  bool ThermalZone_Impl::setZoneControlHumidistatAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalZoneControlHumidistat intermediate = modelObject->optionalCast<ZoneControlHumidistat>();
+      if (intermediate) {
+        return setZoneControlHumidistat(*intermediate);
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      resetZoneControlHumidistat();
     }
     return true;
   }
@@ -1600,15 +1654,13 @@ namespace detail {
 
     std::vector<SizingZone> sizingObjects;
     
-    sizingObjects = model().getModelObjects<SizingZone>();
+    sizingObjects = model().getConcreteModelObjects<SizingZone>();
 
-    for( std::vector<SizingZone>::iterator it = sizingObjects.begin();
-         it < sizingObjects.end();
-         ++it )
+    for( const auto & sizingObject : sizingObjects )
     {
-      if( it->thermalZone().handle() == this->handle() )
+      if( sizingObject.thermalZone().handle() == this->handle() )
       {
-        sizingZone = *it;
+        sizingZone = sizingObject;
       }
     }
 
@@ -1706,11 +1758,9 @@ namespace detail {
 
           std::vector<ModelObject> supplyNodes = airLoop->supplyComponents(Node::iddObjectType());
 
-          for( std::vector<ModelObject>::iterator it = supplyNodes.begin();
-               it != supplyNodes.end();
-               ++it )
+          for( const auto & supplyNode : supplyNodes )
           {
-            if( boost::optional<SetpointManagerSingleZoneReheat> spm = it->cast<Node>().getSetpointManagerSingleZoneReheat() )
+            if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyNode.cast<Node>().getSetpointManagerSingleZoneReheat() )
             {
               if( ! spm->controlZone() )
               {
@@ -1749,15 +1799,13 @@ namespace detail {
   {
     boost::optional<ZoneHVACEquipmentList> result;
 
-    std::vector<ZoneHVACEquipmentList> list = model().getModelObjects<ZoneHVACEquipmentList>();
+    std::vector<ZoneHVACEquipmentList> list = model().getConcreteModelObjects<ZoneHVACEquipmentList>();
 
-    for( std::vector<ZoneHVACEquipmentList>::iterator it = list.begin();
-         it != list.end();
-         ++it )
+    for( const auto & elem : list )
     {
-      if( it->thermalZone().handle() == handle() )
+      if( elem.thermalZone().handle() == handle() )
       {
-        result = *it;
+        result = elem;
       }
     }
 
@@ -1829,15 +1877,13 @@ namespace detail {
 
     std::vector<AirLoopHVACSupplyPlenum> plenums = model().getModelObjects<AirLoopHVACSupplyPlenum>();
 
-    for(std::vector<AirLoopHVACSupplyPlenum>::iterator it = plenums.begin();
-        it != plenums.end();
-        ++it)
+    for(const auto & plenum : plenums)
     {
-      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
       {
         if( tz->handle() == handle() )
         {
-          result = *it;
+          result = plenum;
           break;
         }
       }
@@ -1852,15 +1898,13 @@ namespace detail {
 
     std::vector<AirLoopHVACReturnPlenum> plenums = model().getModelObjects<AirLoopHVACReturnPlenum>();
 
-    for(std::vector<AirLoopHVACReturnPlenum>::iterator it = plenums.begin();
-        it != plenums.end();
-        ++it)
+    for(const auto & plenum : plenums)
     {
-      if( boost::optional<ThermalZone> tz = it->thermalZone() )
+      if( boost::optional<ThermalZone> tz = plenum.thermalZone() )
       {
         if( tz->handle() == handle() )
         {
-          return *it;
+          return plenum;
         }
       }
     }
@@ -1976,7 +2020,7 @@ namespace detail {
         }
         else
         {
-          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
           ModelObject plenumOutletModelObject = *(it + 1);
           unsigned branchIndex = plenum->branchIndexForOutletModelObject(plenumOutletModelObject);
           unsigned port = plenum->connectedObjectPort(plenum->outletPort(branchIndex)).get();
@@ -2072,7 +2116,7 @@ namespace detail {
         }
         else
         {
-          std::vector<ModelObject>::iterator it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
+          auto it = std::find(modelObjects.begin(),modelObjects.end(),plenum.get());
           ModelObject plenumInletModelObject = *(it - 1);
           unsigned branchIndex = plenum->branchIndexForInletModelObject(plenumInletModelObject);
           unsigned port = plenum->connectedObjectPort(plenum->inletPort(branchIndex)).get();
@@ -2489,6 +2533,21 @@ void ThermalZone::resetThermostatSetpointDualSetpoint()
   getImpl<detail::ThermalZone_Impl>()->resetThermostatSetpointDualSetpoint();
 }
 
+boost::optional<ZoneControlHumidistat> ThermalZone::zoneControlHumidistat() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->zoneControlHumidistat();
+}
+
+bool ThermalZone::setZoneControlHumidistat(const ZoneControlHumidistat & humidistat)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setZoneControlHumidistat(humidistat);
+}
+
+void ThermalZone::resetZoneControlHumidistat()
+{
+  getImpl<detail::ThermalZone_Impl>()->resetZoneControlHumidistat();
+}
+
 void ThermalZone::disconnect()
 {
   getImpl<detail::ThermalZone_Impl>()->disconnect();
@@ -2600,7 +2659,7 @@ void ThermalZone::removeReturnPlenum()
 }
 
 /// @cond
-ThermalZone::ThermalZone(boost::shared_ptr<detail::ThermalZone_Impl> impl)
+ThermalZone::ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/bcl/test/BCLFixture.hpp>
+#include "BCLFixture.hpp"
 #include <resources.hxx>
 
-#include <utilities/bcl/BCLXML.hpp>
+#include "../BCLXML.hpp"
 
 using namespace openstudio;
 

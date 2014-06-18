@@ -24292,6 +24292,7 @@ Fan:OnOff,
   A5 , \field Fan Power Ratio Function of Speed Ratio Curve Name
        \type object-list
        \object-list ExponentCurves
+       \object-list CubicCurves
   A6 , \field Fan Efficiency Ratio Function of Speed Ratio Curve Name
        \type object-list
        \object-list QuadraticCubicCurves
@@ -49081,8 +49082,8 @@ Table:MultiVariableLookup,
        \memo When any independent variable value is outside the table limits, linear extrapolation
        \memo is used to predict the table result and is based on the two nearest data points in the
        \memo table for that particularindependent variable.
-       \extensible:20 repeat last twenty fields remembering to move the semi-colon to the last value
-       \min-fields 27
+       \extensible:1 repeat last twenty fields remembering to move the semi-colon to the last value
+       \min-fields 28
   A1 , \field Name
        \required-field
        \type alpha
@@ -49225,16 +49226,12 @@ Table:MultiVariableLookup,
        \default Dimensionless
   N15, \field Number of Independent Variables
        \type integer
-       \minimum> 0
+       \minimum 1
        \maximum 5
-  N16, \field Number of Values for Independent Variable X1
-       \type integer
-  N17, \field Field 1 Determined by the Number of Independent Variables
+       \required-field
+  N16; \field Data
        \type real
-  N18, \field Field 2 Determined by the Number of Independent Variables
-  N19, \field Field 3 Determined by the Number of Independent Variables
        \begin-extensible
-  N20,N21,N22,N23,N24,N25,N26,N27,N28,N29,N30,N31,N32,N33,N34,N35,N36,N37,N38;
 
 \Group Fluid Properties
 

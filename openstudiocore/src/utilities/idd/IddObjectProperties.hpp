@@ -20,9 +20,9 @@
 #ifndef UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP
 #define UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../core/Optional.hpp"
 
 #include <string>
 

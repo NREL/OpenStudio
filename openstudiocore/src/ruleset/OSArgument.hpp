@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 #ifndef RULESET_OSARGUMENT_HPP
 #define RULESET_OSARGUMENT_HPP
 
-#include <ruleset/RulesetAPI.hpp>
+#include "RulesetAPI.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 

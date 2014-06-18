@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/SequentialSearch.hpp>
-#include <analysis/SequentialSearchOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../OptimizationProblem.hpp"
+#include "../Variable.hpp"
+#include "../MeasureGroup.hpp"
+#include "../Measure.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../LinearFunction.hpp"
+#include "../OutputAttributeVariable.hpp"
+#include "../SequentialSearch.hpp"
+#include "../SequentialSearchOptions.hpp"
+#include "../Analysis.hpp"
+#include "../OptimizationDataPoint.hpp"
+#include "../OptimizationDataPoint_Impl.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/document/Table.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/document/Table.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <OpenStudio.hxx>
 

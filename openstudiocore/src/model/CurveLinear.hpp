@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVELINEAR_HPP
 #define MODEL_CURVELINEAR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -113,7 +113,7 @@ class MODEL_API CurveLinear : public Curve {
   /// @cond
   typedef detail::CurveLinear_Impl ImplType;
 
-  explicit CurveLinear(boost::shared_ptr<detail::CurveLinear_Impl> impl);
+  explicit CurveLinear(std::shared_ptr<detail::CurveLinear_Impl> impl);
 
   friend class detail::CurveLinear_Impl;
   friend class Model;

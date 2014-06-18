@@ -20,7 +20,7 @@
 #include <QKeyEvent>
 #include <QTableView>
 
-#include <model_editor/TableView.hpp>
+#include "TableView.hpp"
 
 namespace modeleditor
 {
@@ -54,7 +54,7 @@ void TableView::keyReleaseEvent(QKeyEvent * event)
 bool TableView::getSelectedRows(QModelIndexList& rowList)
 {
  // bool success = false;
-  QItemSelectionModel * selectionMod = NULL;
+  QItemSelectionModel * selectionMod = nullptr;
   selectionMod = selectionModel();
   if(selectionMod){
     //success = true;

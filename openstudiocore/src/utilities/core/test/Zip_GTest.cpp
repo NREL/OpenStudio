@@ -23,9 +23,9 @@
 
 #include <boost/filesystem.hpp>
 
-#include <utilities/core/test/CoreFixture.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "CoreFixture.hpp"
+#include "../UnzipFile.hpp"
+#include "../ZipFile.hpp"
 
 
 #ifdef Q_OS_WIN32

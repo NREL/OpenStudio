@@ -17,25 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "TimeDependentValuation.hpp"
+#include "TimeDependentValuation_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Meter.hpp>
+#include "Model.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Meter.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/URLHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/URLHelpers.hpp"
 
 namespace openstudio {
 namespace model {
@@ -245,16 +245,16 @@ namespace detail {
 
     FuelTypeVector fts = availableFuelTypes();
     MeterVector meters = model().getUniqueModelObject<Facility>().meters();
-    for (unsigned i = 0, n = fts.size(); i < n; ++i) {
+    for (const auto & ft : fts) {
       MeterVector::const_iterator meterIt = std::find_if(meters.begin(),meters.end(),
-          boost::bind(MeterFuelTypeEquals,_1,fts[i]));
+          std::bind(MeterFuelTypeEquals,std::placeholders::_1,ft));
       if (meterIt == meters.end()) {
         std::string urlString;
         OptionalString oUrlString = this->url();
         if (oUrlString){
           urlString = *oUrlString;
         }
-        LOG(Info,"No meter associated with fuel type '" << fts[i].valueName() << "' called out "
+        LOG(Info,"No meter associated with fuel type '" << ft.valueName() << "' called out "
             << "in time dependent valuation file '" << urlString << "'.");
         continue;
       }
@@ -266,7 +266,7 @@ namespace detail {
           urlString = *oUrlString;
         }
         LOG(Info,"No time series data retrieved for " << meterIt->briefDescription() << ". Unable "
-            << "to included fuel type '" << fts[i].valueName() << "' in time dependent valuation "
+            << "to included fuel type '" << ft.valueName() << "' in time dependent valuation "
             << "based on file '" << urlString << "'.");
         continue;
       }
@@ -281,12 +281,12 @@ namespace detail {
         }
         LOG(Info,"Time series data retrieved for " << meterIt->briefDescription() << " is of "
             << "length " << timeSeriesValues.size() << " rather than 8760. Unable "
-            << "to included fuel type '" << fts[i].valueName() << "' in time dependent valuation "
+            << "to included fuel type '" << ft.valueName() << "' in time dependent valuation "
             << "based on file '" << urlString << "'.");
         continue;
       }
       // get TDV column
-      DoubleVector temp = mf_tdvValues(tdvFile,fts[i]);
+      DoubleVector temp = mf_tdvValues(tdvFile,ft);
       Vector tdvValues = createVector(temp);
       OS_ASSERT(tdvValues.size() == 8760u);
 
@@ -406,7 +406,7 @@ namespace detail {
     // find meter
     MeterVector meters = model().getUniqueModelObject<Facility>().meters();
     MeterVector::const_iterator meterIt = std::find_if(meters.begin(),meters.end(),
-        boost::bind(MeterFuelTypeEquals,_1,fuelType));
+        std::bind(MeterFuelTypeEquals,std::placeholders::_1,fuelType));
     if (meterIt == meters.end()) {
       std::string urlString;
       OptionalString oUrlString = this->url();
@@ -669,7 +669,7 @@ TimeDependentValuation::TimeDependentValuation(const Model& model)
 }
 
 TimeDependentValuation::TimeDependentValuation(
-    boost::shared_ptr<detail::TimeDependentValuation_Impl> impl)
+    std::shared_ptr<detail::TimeDependentValuation_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

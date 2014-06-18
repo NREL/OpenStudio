@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSVIEW_H
-#define OPENSTUDIO_SCRIPTSVIEW_H
+#ifndef OPENSTUDIO_SCRIPTSVIEW_HPP
+#define OPENSTUDIO_SCRIPTSVIEW_HPP
 
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "SubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include "../shared_gui_components/OSSwitch.hpp"
 #include "OSVectorController.hpp"
 #include "ScriptItem.hpp"
 #include "OSItemList.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include <QFileSystemWatcher>
 #include <QVBoxLayout>
@@ -260,4 +260,4 @@ class OSArgumentPathEdit : public QWidget {
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCRIPTSVIEW_H
+#endif // OPENSTUDIO_SCRIPTSVIEW_HPP

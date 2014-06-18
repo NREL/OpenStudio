@@ -58,7 +58,7 @@
 #include <boost/config.hpp>
 #include <boost/filesystem/path.hpp>
 
-/** MAKE_PTR_SERIALIZABLE(T) macro is placed inside a publically visiable portion of class T.
+/** MAKE_PTR_SERIALIZABLE(T) macro is placed inside a publicly visible portion of class T.
 *   The macro provides serialization routines.  The class must inherit from SharedFromThis<T>
 *   in Macro.h.
 *
@@ -72,21 +72,21 @@
 friend class boost::serialization::access; \
 virtual std::ostream& toText(std::ostream& os) const { \
   boost::archive::text_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << ptr; \
   return os; \
 } \
 virtual std::string toText() const { std::stringstream os; toText(os); return os.str();} \
 virtual std::ostream& toXml(std::ostream& os) const { \
   boost::archive::xml_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << boost::serialization::make_nvp(#__T__, ptr); \
   return os; \
 } \
 virtual std::string toXml() const { std::stringstream os; toXml(os); return os.str();} \
 virtual std::ostream& toBinary(std::ostream& os) const { \
   boost::archive::binary_oarchive out(os); \
-  ConstPtr ptr = boost::dynamic_pointer_cast<const __T__>(share()); \
+  ConstPtr ptr = std::dynamic_pointer_cast<const __T__>(share()); \
   out << ptr; \
   return os; \
 } \
@@ -123,7 +123,7 @@ static Ptr fromBinary(std::istream& is){ \
 static Ptr fromBinary(const std::string& str) {std::stringstream ss; ss << str; return fromBinary(ss);} \
 
 
-/** MAKE_POD_SERIALIZABLE(T) macro is placed inside a publically visiable portion of class T.
+/** MAKE_POD_SERIALIZABLE(T) macro is placed inside a publicly visible portion of class T.
 *   The macro provides serialization routines.
 *
 *   Example usage:

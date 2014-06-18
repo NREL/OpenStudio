@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurface.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "StandardsInformationConstruction.hpp"
+#include "DaylightingDeviceShelf.hpp"
+#include "ShadingSurface.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurface.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <QPolygon>
 
@@ -876,7 +876,7 @@ namespace detail {
 
     // non-zero intersection
     // could match here but will save that for other discrete operation
-    Surface surface(boost::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
+    Surface surface(std::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
     std::vector<Surface> newSurfaces;
     std::vector<Surface> newOtherSurfaces;
 
@@ -1449,7 +1449,7 @@ namespace detail {
 
     QPolygonF surfacePolygon;
     for (const Point3d& point : faceVertices){
-      if (abs(point.z()) > 0.001){
+      if (std::abs(point.z()) > 0.001){
         LOG(Warn, "Surface point z not on plane, z =" << point.z());
       }
       surfacePolygon << QPointF(point.x(),point.y());
@@ -1466,7 +1466,7 @@ namespace detail {
 
       QPolygonF windowPolygon;
       for (const Point3d& point : viewVertices){
-        if (abs(point.z()) > 0.001){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());
@@ -1492,7 +1492,7 @@ namespace detail {
     
       QPolygonF windowPolygon;
       for (const Point3d& point : daylightingVertices){
-        if (abs(point.z()) > 0.001){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());
@@ -2115,7 +2115,7 @@ std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 }
 
 /// @cond
-Surface::Surface(boost::shared_ptr<detail::Surface_Impl> impl)
+Surface::Surface(std::shared_ptr<detail::Surface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

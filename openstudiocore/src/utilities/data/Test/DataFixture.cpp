@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-// initiallize for each test
+// initialize for each test
 void DataFixture::SetUp() {
 }
 
@@ -31,7 +31,7 @@ void DataFixture::SetUp() {
 void DataFixture::TearDown() {
 }
 
-// initiallize static members
+// initialize static members
 void DataFixture::SetUpTestCase() {
   logFile = FileLogSink(toPath("./DataFixture.log"));
   logFile->setLogLevel(Info);

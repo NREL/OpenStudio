@@ -17,48 +17,48 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
 
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/LightingDesignDay.hpp>
-#include <model/LightingDesignDay_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/SkyTemperature.hpp>
-#include <model/SkyTemperature_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/WeatherFileConditionType.hpp>
-#include <model/WeatherFileConditionType_Impl.hpp>
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileDays_Impl.hpp>
-#include <model/SiteWaterMainsTemperature.hpp>
-#include <model/SiteWaterMainsTemperature_Impl.hpp>
-#include <model/SiteGroundReflectance.hpp>
-#include <model/SiteGroundReflectance_Impl.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface_Impl.hpp>
+#include "ClimateZones.hpp"
+#include "ClimateZones_Impl.hpp"
+#include "DesignDay.hpp"
+#include "DesignDay_Impl.hpp"
+#include "LightingDesignDay.hpp"
+#include "LightingDesignDay_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "SkyTemperature.hpp"
+#include "SkyTemperature_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "TimeDependentValuation.hpp"
+#include "TimeDependentValuation_Impl.hpp"
+#include "WeatherFile.hpp"
+#include "WeatherFile_Impl.hpp"
+#include "WeatherFileConditionType.hpp"
+#include "WeatherFileConditionType_Impl.hpp"
+#include "WeatherFileDays.hpp"
+#include "WeatherFileDays_Impl.hpp"
+#include "SiteWaterMainsTemperature.hpp"
+#include "SiteWaterMainsTemperature_Impl.hpp"
+#include "SiteGroundReflectance.hpp"
+#include "SiteGroundReflectance_Impl.hpp"
+#include "SiteGroundTemperatureBuildingSurface.hpp"
+#include "SiteGroundTemperatureBuildingSurface_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Site_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -123,7 +123,7 @@ namespace detail {
     result.insert(result.end(),sizingPeriods.begin(),sizingPeriods.end());
 
     // lighting design days
-    LightingDesignDayVector lightingDesignDays = model().getModelObjects<LightingDesignDay>();
+    LightingDesignDayVector lightingDesignDays = model().getConcreteModelObjects<LightingDesignDay>();
     result.insert(result.end(),lightingDesignDays.begin(),lightingDesignDays.end());
 
     // time dependent valuation
@@ -131,7 +131,7 @@ namespace detail {
     if (tdv) { result.push_back(*tdv); }
 
     // some SkyTemperatures are children (those that do not explicitly point to something else)
-    SkyTemperatureVector skyTemperatures = model().getModelObjects<SkyTemperature>();
+    SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
     ParentObject siteAsParent = getObject<ParentObject>();
     for (const SkyTemperature& st : skyTemperatures) {
       OptionalParentObject opo = st.parent();
@@ -301,7 +301,7 @@ namespace detail {
   ShadingSurfaceGroupVector Site_Impl::shadingSurfaceGroups() const
   {
     ShadingSurfaceGroupVector result;
-    for (ShadingSurfaceGroup shadingGroup : this->model().getModelObjects<ShadingSurfaceGroup>()){
+    for (ShadingSurfaceGroup shadingGroup : this->model().getConcreteModelObjects<ShadingSurfaceGroup>()){
       if (istringEqual(shadingGroup.shadingSurfaceType(), "Site")){
         result.push_back(shadingGroup);
       }
@@ -484,7 +484,7 @@ bool Site::setActiveClimateZoneInstitution(const std::string& institution) {
 }
 */
 /// @cond
-Site::Site(boost::shared_ptr<detail::Site_Impl> impl)
+Site::Site(std::shared_ptr<detail::Site_Impl> impl)
   : ParentObject(impl)
 {}
 

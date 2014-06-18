@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idd/IddObject_Impl.hpp>
+#include "IddObject.hpp"
+#include "IddObject_Impl.hpp"
 
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/idd/IddRegex.hpp>
+#include "ExtensibleIndex.hpp"
+#include "IddRegex.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/idd/CommentRegex.hpp>
+#include "IddKey.hpp"
+#include "CommentRegex.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/lexical_cast.hpp>
@@ -174,13 +174,13 @@ namespace detail {
                 << "       \\type handle" << std::endl
                 << "       \\required-field";
       IddField handleField = IddField::load("Handle", fieldText.str(), m_name).get();
-      IddFieldVector::iterator it = m_fields.insert(m_fields.begin(),handleField);
+      auto it = m_fields.insert(m_fields.begin(),handleField);
       ++it;
-      for (IddFieldVector::iterator itEnd = m_fields.end(); it != itEnd; ++it) {
+      for (auto itEnd = m_fields.end(); it != itEnd; ++it) {
         it->incrementFieldId(); // by default, applies only to 'A'-type fields
       }
       it = m_extensibleFields.begin();
-      for (IddFieldVector::iterator itEnd = m_extensibleFields.end(); it != itEnd; ++it) {
+      for (auto itEnd = m_extensibleFields.end(); it != itEnd; ++it) {
         it->incrementFieldId(); // by default, applies only to 'A'-type fields
       }
       ++m_properties.minFields;
@@ -252,16 +252,10 @@ namespace detail {
   }
 
   boost::optional<unsigned> IddObject_Impl::nameFieldIndex() const {
-    if (!m_nameFieldCache) {
-      hasNameField();
+    if (hasNameField()) {
+      return m_nameFieldCache->second;
     }
-    OS_ASSERT(m_nameFieldCache);
-
-    OptionalUnsigned result;
-    if (m_nameFieldCache->first) {
-      result = m_nameFieldCache->second;
-    }
-    return result;
+    return boost::none;
   }
 
   bool IddObject_Impl::isRequiredField(unsigned index) const {
@@ -399,18 +393,18 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name, 
+  std::shared_ptr<IddObject_Impl> IddObject_Impl::load(const std::string& name, 
                                                          const std::string& group,
                                                          const std::string& text, 
                                                          IddObjectType type) 
   {
-    boost::shared_ptr<IddObject_Impl> result;
-    result = boost::shared_ptr<IddObject_Impl>(new IddObject_Impl(name,group,type));
+    std::shared_ptr<IddObject_Impl> result;
+    result = std::shared_ptr<IddObject_Impl>(new IddObject_Impl(name,group,type));
 
     try {
       result->parse(text);
     }
-    catch (...) { return boost::shared_ptr<IddObject_Impl>(); }
+    catch (...) { return std::shared_ptr<IddObject_Impl>(); }
 
     return result;
   }
@@ -431,7 +425,7 @@ namespace detail {
       m_properties.print(os);
 
       bool extensibleFields = !m_extensibleFields.empty();
-      for (IddFieldVector::const_iterator it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
+      for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
         if (extensibleFields) {
           it->print(os, false); // don't print ; just yet
         }
@@ -439,7 +433,7 @@ namespace detail {
           it->print(os, (it == itend-1));
         }
       }
-      for (IddFieldVector::const_iterator it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it){
+      for (auto it = m_extensibleFields.begin(), itend = m_extensibleFields.end(); it != itend; ++it){
         it->print(os, (it == itend-1));
       }
 
@@ -495,8 +489,8 @@ namespace detail {
     }
 
     // find the begin extensible field, there should be only one
-    IddFieldVector::iterator extensibleBegin = m_fields.end();
-    for (IddFieldVector::iterator it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
+    auto extensibleBegin = m_fields.end();
+    for (auto it = m_fields.begin(), itend = m_fields.end(); it != itend; ++it){
       if (it->properties().beginExtensible){
         extensibleBegin = it;
         break;
@@ -670,7 +664,7 @@ namespace detail {
 
 IddObject::IddObject()
 {
-  m_impl = boost::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl());
+  m_impl = std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl());
 }
 
 IddObject::IddObject(const IddObject& other)
@@ -807,7 +801,7 @@ boost::optional<IddObject> IddObject::load(const std::string& name,
                                            const std::string& group,
                                            const std::string& text,
                                            IddObjectType type) {
-  boost::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name,group,text,type);
+  std::shared_ptr<detail::IddObject_Impl> p = detail::IddObject_Impl::load(name,group,text,type);
   if (p) { return IddObject(p); }
   else { return boost::none; }
 }
@@ -826,7 +820,7 @@ std::ostream& IddObject::print(std::ostream& os) const
 
 // PRIVATE
 
-IddObject::IddObject(const boost::shared_ptr<detail::IddObject_Impl>& impl) : m_impl(impl) {}
+IddObject::IddObject(const std::shared_ptr<detail::IddObject_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

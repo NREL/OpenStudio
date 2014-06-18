@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
+#include "ScriptItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "ScriptFolderListView.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <QDir>
 #include <QMessageBox>
@@ -63,7 +63,7 @@ ScriptItem::ScriptItem(const openstudio::path& path,
   }
 
 
-  boost::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> osDoc = OSAppBase::instance()->currentDocument();
   connect(this,SIGNAL(argChanged()),osDoc.get(),SLOT(markAsModified()));
 }
 

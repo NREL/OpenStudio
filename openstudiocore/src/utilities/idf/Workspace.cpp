@@ -17,26 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "Workspace.hpp"
+#include "Workspace_Impl.hpp"
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "WorkspaceObject_Impl.hpp"
+#include "IdfFile.hpp"
+#include "URLSearchPath.hpp"
+#include "ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/plot/ProgressBar.hpp>
+#include "../plot/ProgressBar.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/URLHelpers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/StringHelpers.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
+#include "../core/URLHelpers.hpp"
+#include "../core/Compare.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/bind.hpp>
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -59,8 +58,8 @@ namespace detail {
       m_strictnessLevel(level),
       m_iddFileAndFactoryWrapper(iddFileType),
       m_fastNaming(false),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(HandleVector(),boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {}
 
   Workspace_Impl::Workspace_Impl(const IdfFile& idfFile,
@@ -69,8 +68,8 @@ namespace detail {
       m_header(idfFile.header()),
       m_iddFileAndFactoryWrapper(idfFile.iddFileAndFactoryWrapper()),
       m_fastNaming(false),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(HandleVector(),boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(HandleVector(),std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {}
 
   Workspace_Impl::Workspace_Impl(const Workspace_Impl& other,bool keepHandles) :
@@ -78,8 +77,8 @@ namespace detail {
     m_header(other.m_header),
     m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
     m_fastNaming(other.fastNaming()),
-    m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(boost::bind(&Workspace_Impl::getObject,this,_1))))
+    m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
@@ -100,8 +99,8 @@ namespace detail {
       m_header(), // subset of original data--discard header
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(boost::shared_ptr<WorkspaceObjectOrder_Impl>(new
-          WorkspaceObjectOrder_Impl(hs,boost::bind(&Workspace_Impl::getObject,this,_1))))
+      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(new
+          WorkspaceObjectOrder_Impl(hs,std::bind(&Workspace_Impl::getObject,this,std::placeholders::_1))))
   {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
@@ -121,7 +120,7 @@ namespace detail {
 
   Workspace Workspace_Impl::clone(bool keepHandles) const {
     // copy everything but objects
-    boost::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,keepHandles));
+    std::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,keepHandles));
     // clone objects
     createAndAddClonedObjects(workspace().getImpl<Workspace_Impl>(),cloneImpl,keepHandles);
     // wrap impl and return
@@ -134,7 +133,7 @@ namespace detail {
                                         StrictnessLevel level) const
   {
     // copy everything but objects
-    boost::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,handles,keepHandles,level));
+    std::shared_ptr<Workspace_Impl> cloneImpl(new Workspace_Impl(*this,handles,keepHandles,level));
     // clone objects
     createAndAddSubsetClonedObjects(workspace().getImpl<Workspace_Impl>(),cloneImpl,handles,keepHandles);
     // wrap impl and return
@@ -143,7 +142,7 @@ namespace detail {
   }
 
   void Workspace_Impl::swap(Workspace& other) {
-    boost::shared_ptr<Workspace_Impl> otherImpl = other.getImpl<Workspace_Impl>();
+    std::shared_ptr<Workspace_Impl> otherImpl = other.getImpl<Workspace_Impl>();
 
     StrictnessLevel tsl = m_strictnessLevel;
     m_strictnessLevel = otherImpl->m_strictnessLevel;
@@ -217,14 +216,14 @@ namespace detail {
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObject(const Handle& handle) const {
-    OptionalWorkspaceObject result;
-    WorkspaceObjectMap::const_iterator womIt = m_workspaceObjectMap.find(handle);
-    if (womIt != m_workspaceObjectMap.end()) { result = WorkspaceObject(womIt->second); }
-    return result;
+    auto womIt = m_workspaceObjectMap.find(handle);
+    if (womIt != m_workspaceObjectMap.end()) { return WorkspaceObject(womIt->second); }
+    return boost::none;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::objects(bool sorted) const {
     OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject();
+    if (!versionIdd) { return WorkspaceObjectVector(); }
 
     if (sorted) {
       OptionalHandleVector directOrder = order().directOrder();
@@ -234,9 +233,7 @@ namespace detail {
         for (const Handle& h : *directOrder) {
           OptionalWorkspaceObject owo = getObject(h);
           std::pair<HandleSet::iterator,bool> insertResult = setToCheckUniqueness.insert(h);
-          if (owo &&
-              insertResult.second &&
-              (!versionIdd || (owo->iddObject() != versionIdd.get())))
+          if (owo && insertResult.second && (owo->iddObject() != versionIdd.get()) )
           {
             result.push_back(*owo);
           }
@@ -252,7 +249,7 @@ namespace detail {
     WorkspaceObjectVector result;
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
       WorkspaceObject obj = WorkspaceObject(p.second);
-      if (!versionIdd || (obj.iddObject() != versionIdd.get())) {
+      if (obj.iddObject() != versionIdd.get()) {
         result.push_back(obj);
       }
     }
@@ -277,8 +274,9 @@ namespace detail {
 
     HandleVector result;
     OptionalIddObject versionIdd = m_iddFileAndFactoryWrapper.versionObject();
+    if (!versionIdd) { return result; }
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
-      if (!versionIdd || (p.second->iddObject() != versionIdd.get())) {
+      if (p.second->iddObject() != versionIdd.get()) {
         result.push_back(p.first);
       }
     }
@@ -346,12 +344,9 @@ namespace detail {
     }
     else {
       std::string baseName = getBaseName(name);
-      boost::regex baseNameRegex = getBaseNameRegex(baseName);
       for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
         if (OptionalString candidate = p.second->name()) {
-          std::string lcCandidate = candidate.get();
-          boost::to_lower(lcCandidate);
-          if (boost::regex_match(lcCandidate,baseNameRegex)) {
+          if (baseNamesMatch(baseName, *candidate)) {
             result.push_back(WorkspaceObject(p.second));
           }
         }
@@ -361,9 +356,14 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(IddObjectType objectType) const {
-    IddObjectTypeMap::const_iterator loc = m_iddObjectTypeMap.find(objectType);
+    auto loc = m_iddObjectTypeMap.find(objectType);
     if (loc == m_iddObjectTypeMap.end()) { return WorkspaceObjectVector(); }
-    return getObjects(handles(loc->second)); // convert set to vector, then getObjects
+    std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
+    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+      result.push_back( it->second );
+    }
+    return result;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByType(const IddObject& objectType) const {
@@ -379,15 +379,13 @@ namespace detail {
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByTypeAndName(
       IddObjectType objectType,const std::string& name) const
   {
-    OptionalWorkspaceObject result;
     for (const WorkspaceObject& object : getObjectsByType(objectType)) {
       OptionalString candidate = object.name();
       if (candidate && istringEqual(*candidate,name)) {
-        result = object;
-        break;
+        return object;
       }
     }
-    return result;
+    return boost::none;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByTypeAndName(
@@ -396,12 +394,9 @@ namespace detail {
   {
     WorkspaceObjectVector result;
     std::string baseName = getBaseName(name);
-    boost::regex baseNameRegex = getBaseNameRegex(baseName);
     for (const WorkspaceObject& object : getObjectsByType(objectType)) {
       if (OptionalString candidate = object.name()) {
-        std::string lcCandidate = candidate.get();
-        boost::to_lower(lcCandidate);
-        if (boost::regex_match(lcCandidate,baseNameRegex)) {
+        if (baseNamesMatch(baseName, *candidate)) {
           result.push_back(object);
         }
       }
@@ -412,43 +407,45 @@ namespace detail {
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByReference(
       const std::string& referenceName) const
   {
-    IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
-    if (loc == m_idfReferencesMap.end()) {
-      return WorkspaceObjectVector();
+    auto loc = m_idfReferencesMap.find(referenceName);
+    if (loc == m_idfReferencesMap.end()) { return WorkspaceObjectVector(); }
+    std::vector<WorkspaceObject> result;
+    result.reserve(loc->second.size());
+    for( WorkspaceObjectMap::const_iterator it = loc->second.begin(); it != loc->second.end(); ++it ) {
+      result.push_back( it->second );
     }
-    return getObjects(handles(loc->second)); // convert set to vector, then getObjects
+    return result;
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::getObjectsByReference(
       const std::vector<std::string>& referenceNames) const
   {
-    HandleSet hs;
+    WorkspaceObjectMap objectMap;
     for (const std::string& referenceName : referenceNames) {
       IdfReferencesMap::const_iterator loc = m_idfReferencesMap.find(referenceName);
       if (loc != m_idfReferencesMap.end()) {
-        for (const Handle& h : loc->second) {
-          hs.insert(h);
-        }
+        objectMap.insert(loc->second.begin(),loc->second.end());
       }
     }
-    return getObjects(handles(hs)); // convert set to vector, then getObjects
+    std::vector<WorkspaceObject> result;
+    result.reserve(objectMap.size());
+    for( WorkspaceObjectMap::const_iterator it = objectMap.begin(); it != objectMap.end(); ++it ) {
+      result.push_back( it->second );
+    }
+    return result;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getObjectByNameAndReference(
       std::string name,
       const std::vector<std::string>& referenceNames) const
   {
-    OptionalWorkspaceObject result;
-    boost::to_lower(name);
     for (const WorkspaceObject& object : getObjectsByReference(referenceNames)) {
-      std::string candidateName = object.name().get();
-      boost::to_lower(candidateName);
-      if (candidateName == name) {
-        result = object;
-        break;
+      OptionalString candidate = object.name();
+      if (candidate && istringEqual(*candidate,name)) {
+        return object;
       }
     }
-    return result;
+    return boost::none;
   }
 
   bool Workspace_Impl::fastNaming() const
@@ -467,7 +464,7 @@ namespace detail {
   }
 
   // Helper function to start the process of adding an object to the workspace.
-  boost::shared_ptr<WorkspaceObject_Impl> Workspace_Impl::createObject(const IdfObject& object,
+  std::shared_ptr<WorkspaceObject_Impl> Workspace_Impl::createObject(const IdfObject& object,
                                                                        bool keepHandle)
   {
     return WorkspaceObject_ImplPtr(new WorkspaceObject_Impl(object,this,keepHandle));
@@ -475,7 +472,7 @@ namespace detail {
 
   // Helper function to start the process of adding a cloned object to the workspace.
   WorkspaceObject_ImplPtr Workspace_Impl::createObject(
-        const boost::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,
+        const std::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,
         bool keepHandle)
   {
     OS_ASSERT(originalObjectImplPtr);
@@ -485,7 +482,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::addObjects(
-      std::vector<boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+      std::vector<std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
       const std::vector<UHPointer>& pointersIntoWorkspace,
       const std::vector<HUPointer>& pointersFromWorkspace,
       bool driverMethod,
@@ -577,7 +574,7 @@ namespace detail {
   }
 
   std::vector<WorkspaceObject> Workspace_Impl::addClones(
-      std::vector< boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+      std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
       const HandleMap& oldNewHandleMap,
       bool collectionClone,
       const std::vector<UHPointer>& pointersIntoWorkspace,
@@ -755,7 +752,7 @@ namespace detail {
       checkedForNameConflicts = true;
       if (changes) {
         // merge data and create objects
-        IdfObjectVector::const_iterator it(idfObjects.begin()), itEnd(idfObjects.end());
+        auto it(idfObjects.begin()), itEnd(idfObjects.end());
         for (const WorkspaceObject& object : wsObjects) {
           OS_ASSERT(it != itEnd);
           IdfObject mergedObject = object.idfObject();
@@ -771,7 +768,7 @@ namespace detail {
 
     // no name conflicts---directly create and add objects
     OS_ASSERT(newObjects.empty());
-    IdfObjectVector::const_iterator it(idfObjects.begin()), itEnd(idfObjects.end());
+    auto it(idfObjects.begin()), itEnd(idfObjects.end());
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it,keepHandles));
     }
@@ -838,7 +835,7 @@ namespace detail {
     HHPointerVector pointersToRollBackOnFail; // workspace object -> workspace object pointers
                                               // directly added by this method
     i = 0; // step through all of the objects
-    WorkspaceObjectVector::iterator equivIt = equivalentObjects.begin();
+    auto equivIt = equivalentObjects.begin();
     UnsignedVector::const_iterator foundIndicesBegin = foundObjectIndices.begin();
     UnsignedVector::const_iterator foundIndicesEnd = foundObjectIndices.end();
     // loop through Workspace versions of idfObjects
@@ -864,7 +861,7 @@ namespace detail {
           OS_ASSERT(targetIndexInWorking);
           UnsignedVector fieldIndicesObjectToTarget = object.getSourceIndices(target.handle());
           OS_ASSERT(!fieldIndicesObjectToTarget.empty());
-          UnsignedVector::const_iterator targetInFoundObjectsIt = std::find(
+          auto targetInFoundObjectsIt = std::find(
               foundIndicesBegin,foundIndicesEnd,*targetIndexInWorking);
           if (targetInFoundObjectsIt == foundIndicesEnd) {
             // target has no equivalent in this Workspace
@@ -1149,9 +1146,9 @@ namespace detail {
                                               // directly added by this method
     unsigned i = 0; // step through all of the objects
     unsigned j = 0; // index for new objects
-    WorkspaceObjectVector::iterator equivIt = equivalentObjects.begin();
-    UnsignedVector::const_iterator foundIndicesBegin = foundObjectIndices.begin();
-    UnsignedVector::const_iterator foundIndicesEnd = foundObjectIndices.end();
+    auto equivIt = equivalentObjects.begin();
+    auto foundIndicesBegin = foundObjectIndices.begin();
+    auto foundIndicesEnd = foundObjectIndices.end();
     // keep track of outward pointers if objects[0].workspace() == workspace()
     bool sameWorkspace = false;
     if (allObjects[0].workspace() == this->workspace()) {
@@ -1168,7 +1165,7 @@ namespace detail {
         for (const WorkspaceObject target : objectTargets) {
           OptionalUnsigned targetIndexInWorking = working.order().indexInOrder(target.handle());
           OS_ASSERT(targetIndexInWorking);
-          UnsignedVector::const_iterator targetInFoundObjectsIt = std::find(
+          auto targetInFoundObjectsIt = std::find(
               foundIndicesBegin,foundIndicesEnd,*targetIndexInWorking);
           if (targetInFoundObjectsIt != foundIndicesEnd) {
             // set pointer(s) to equivalent object
@@ -1206,7 +1203,7 @@ namespace detail {
           OS_ASSERT(targetIndexInWorking);
           UnsignedVector fieldIndicesObjectToTarget = object.getSourceIndices(target.handle());
           OS_ASSERT(!fieldIndicesObjectToTarget.empty());
-          UnsignedVector::const_iterator targetInFoundObjectsIt = std::find(
+          auto targetInFoundObjectsIt = std::find(
               foundIndicesBegin,foundIndicesEnd,*targetIndexInWorking);
           if (targetInFoundObjectsIt == foundIndicesEnd) {
             // target has no equivalent in this Workspace
@@ -1216,7 +1213,7 @@ namespace detail {
               newObjectsIndexOfTarget = *targetIndexInWorking;
             }
             else {
-              UnsignedVector::const_iterator targetInNotFoundObjectsIt =
+              auto targetInNotFoundObjectsIt =
                   std::find(notFoundObjectIndices.begin(),
                   notFoundObjectIndices.end(),
                   *targetIndexInWorking);
@@ -1429,7 +1426,7 @@ namespace detail {
     WorkspaceObjectVector addResult = Workspace_Impl::addObjects(newObjectPtrs,targets,sources,false);
     if (!addResult.empty()) {
       OS_ASSERT(addResult.size() == 1);
-      // sucessful add, prepare to swap data by preserving current object
+      // successful add, prepare to swap data by preserving current object
       IdfObject idfCurrentObject = currentObject.idfObject();
       // preserve order if directOrder
       if (order().isDirectOrder()) {
@@ -1551,7 +1548,7 @@ namespace detail {
     OptionalIddField iddField = sourceObject.iddObject().getField(index);
     OS_ASSERT(iddField);
     for (const std::string& referenceName : iddField->properties().references) {
-      m_idfReferencesMap[referenceName].insert(targetHandle);
+      m_idfReferencesMap[referenceName].insert(std::make_pair(targetHandle,getObject(targetHandle)->getImpl<WorkspaceObject_Impl>()));
     }
   }
 
@@ -1590,7 +1587,7 @@ namespace detail {
             OS_ASSERT(sourceIddField);
             StringVector sourceFieldRefs = sourceIddField->properties().references;
             if (std::find_if(sourceFieldRefs.begin(),sourceFieldRefs.end(),
-                boost::bind(istringEqual,_1,referenceName)) != sourceFieldRefs.end()) {
+                std::bind(istringEqual,std::placeholders::_1,referenceName)) != sourceFieldRefs.end()) {
               found = true;
               break;
             }
@@ -1598,7 +1595,7 @@ namespace detail {
         }
         // if not, erase the reference
         if (!found) {
-          HandleSet::iterator it = m_idfReferencesMap[referenceName].find(targetObject.handle());
+          auto it = m_idfReferencesMap[referenceName].find(targetObject.handle());
           OS_ASSERT(it != m_idfReferencesMap[referenceName].end());
           m_idfReferencesMap[referenceName].erase(it);
         }
@@ -1642,7 +1639,7 @@ namespace detail {
   }
 
   unsigned Workspace_Impl::numObjectsOfType(IddObjectType type) const {
-    IddObjectTypeMap::const_iterator iotmLoc = m_iddObjectTypeMap.find(type);
+    auto iotmLoc = m_iddObjectTypeMap.find(type);
     if (iotmLoc == m_iddObjectTypeMap.end()) { return 0; }
     return iotmLoc->second.size();
   }
@@ -1652,7 +1649,7 @@ namespace detail {
   }
 
   bool Workspace_Impl::isMember(const Handle& handle) const {
-    WorkspaceObjectMap::const_iterator womIt = m_workspaceObjectMap.find(handle);
+    auto womIt = m_workspaceObjectMap.find(handle);
     return (womIt != m_workspaceObjectMap.end());
   }
 
@@ -1663,9 +1660,9 @@ namespace detail {
       if (istringEqual(referenceName,"AllObjects")) {
         return true;
       }
-      IdfReferencesMap::const_iterator irmLoc = m_idfReferencesMap.find(referenceName);
+      auto irmLoc = m_idfReferencesMap.find(referenceName);
       if (irmLoc != m_idfReferencesMap.end()) {
-        HandleSet::const_iterator it = irmLoc->second.find(handle);
+        auto it = irmLoc->second.find(handle);
         if (it != irmLoc->second.end()) {
           return true;
         }
@@ -1728,8 +1725,8 @@ namespace detail {
     // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
     // Accumulate information about names for later name checking
-    map<string,pair<bool,boost::shared_ptr<WorkspaceObject_Impl> > > mapOfNames;
-    map<string,list <boost::shared_ptr<WorkspaceObject_Impl> > > objectsRepeatNames;
+    map<string,pair<bool,std::shared_ptr<WorkspaceObject_Impl> > > mapOfNames;
+    map<string,list <std::shared_ptr<WorkspaceObject_Impl> > > objectsRepeatNames;
 
     // by-object items
     for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap)
@@ -1740,14 +1737,14 @@ namespace detail {
       OptionalString oName = p.second->name();
       if(oName)
       {
-        map<string,pair<bool,boost::shared_ptr<WorkspaceObject_Impl> > >::iterator itr = mapOfNames.find(*oName);
+        auto itr = mapOfNames.find(*oName);
         if(itr!=mapOfNames.end())
         {
 
           if( !itr->second.first )
           {
             itr->second.first=true;
-            list<boost::shared_ptr<WorkspaceObject_Impl> > l;
+            list<std::shared_ptr<WorkspaceObject_Impl> > l;
             l.push_front(itr->second.second);
             l.push_front(p.second);
             objectsRepeatNames[itr->first] = l;
@@ -1755,14 +1752,14 @@ namespace detail {
           else
           {
 
-            map<string,list <boost::shared_ptr<WorkspaceObject_Impl> > >::iterator j= objectsRepeatNames.find(itr->first);
+            auto j= objectsRepeatNames.find(itr->first);
             OS_ASSERT(j!=objectsRepeatNames.end());
             j->second.push_front( p.second );
           }
         }
         else
         {
-          mapOfNames[*oName] = pair<bool,boost::shared_ptr<WorkspaceObject_Impl> >(false,p.second);
+          mapOfNames[*oName] = pair<bool,std::shared_ptr<WorkspaceObject_Impl> >(false,p.second);
         }
       }
 
@@ -1799,21 +1796,21 @@ namespace detail {
     // Check Name Conflicts
     //worst case, EVERY name is the same, EVERY object has a conflicting reference list.... this in O(n^3)
     //however, that is so unlikely its not even funny
-    for( map<string,list <boost::shared_ptr<WorkspaceObject_Impl> > >::iterator itr = objectsRepeatNames.begin(),iend=objectsRepeatNames.end();itr!=iend;++itr)
+    for(const auto & objectsRepeatName : objectsRepeatNames)
     {
-      boost::shared_ptr<WorkspaceObject_Impl> obj;
+      std::shared_ptr<WorkspaceObject_Impl> obj;
       list<StringVector> checkList;
-      for(list <boost::shared_ptr<WorkspaceObject_Impl> >::iterator j=itr->second.begin(),jend=itr->second.end();j!=jend;++j)
+      for(const auto & elem : objectsRepeatName.second)
       {
-        StringVector refs = (*j)->iddObject().references();
+        StringVector refs = elem->iddObject().references();
         checkList.push_front(refs);
-        obj=*j;
+        obj=elem;
       }
 
-      for(list<StringVector>::iterator y=checkList.begin(),yend=checkList.end();y!=yend;++y)
+      for(auto y=checkList.begin(),yend=checkList.end();y!=yend;++y)
       {
-        list<StringVector>::iterator z = y;
-        list<StringVector>::iterator zend = yend;
+        auto z = y;
+        auto zend = yend;
         ++z;
         for(;z!=zend;++z)
         {
@@ -1895,7 +1892,7 @@ namespace detail {
 
     // add objects and replace handle pointers with names
     WorkspaceObjectVector objs = objects(true); // sorted objects
-    for (WorkspaceObject& obj : objs) {
+    for (const WorkspaceObject& obj : objs) {
       result.addObject(obj.idfObject());
     }
 
@@ -1912,28 +1909,44 @@ namespace detail {
     return result;
   }
 
-  std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
-    //boost::regex nameWithSuffix("([\\w :]*) \\d+");
-    // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
-    boost::regex nameWithSuffix("(.*) \\d+$");
-    boost::smatch m;
-    if (boost::regex_match(objectName,m,nameWithSuffix)) {
-      std::string result(m[1].first,m[1].second);
-      return result;
-    }
-    return objectName;
+  bool Workspace_Impl::baseNamesMatch(const std::string& baseName, const std::string& objectName) const {
+    return istringEqual(baseName, getBaseName(objectName));
   }
 
-  boost::regex Workspace_Impl::getBaseNameRegex(std::string baseName) const {
-    std::stringstream ss;
-    boost::to_lower(baseName);
-    //ss << baseName << "( \\d+)?";
-    // DLM: Making more accepting of different characters in object names, e.g. '(', ')', etc
-    const boost::regex esc("[\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\{\\}\\/\\\\]");
-    const std::string rep("\\\\\\1&");
-    std::string escapedBaseName = regex_replace(baseName, esc, rep, boost::match_default | boost::format_sed);
-    ss << escapedBaseName << "( \\d+)?$";
-    return boost::regex(ss.str());
+  boost::optional<int> Workspace_Impl::getNameSuffix(const std::string& objectName) const {
+    std::size_t found = objectName.find_last_of(' ');
+    if ( found != string::npos ) {
+      std::string strSuffix = objectName.substr(found+1);
+      const char *p = strSuffix.c_str();
+      int suffix = 0;
+      int count = 0;
+      while (*p >= '0' && *p <= '9') {
+          suffix = (suffix * 10) + (*p - '0');
+          ++p;
+          ++count;
+      }
+      if (suffix > 0 && count == strSuffix.size() ) { return suffix; }
+    }
+    return boost::none;
+  }
+
+  std::string Workspace_Impl::getBaseName(const std::string& objectName) const {
+    std::size_t found = objectName.find_last_of(' ');
+    if ( found != string::npos ) {
+      std::string strSuffix = objectName.substr(found+1);
+      const char *p = strSuffix.c_str();
+      int suffix = 0;
+      int count = 0;
+      while (*p >= '0' && *p <= '9') {
+          suffix = (suffix * 10) + (*p - '0');
+          ++p;
+          ++count;
+      }
+      if (suffix > 0 && count == strSuffix.size() ) {
+        return objectName.substr(0, found);
+      }
+    }
+    return objectName;
   }
 
   boost::optional<WorkspaceObject> Workspace_Impl::getEquivalentObject(
@@ -1993,7 +2006,7 @@ namespace detail {
     }
   }
 
-  bool Workspace_Impl::nominallyAddObject(boost::shared_ptr<WorkspaceObject_Impl>& ptr) {
+  bool Workspace_Impl::nominallyAddObject(std::shared_ptr<WorkspaceObject_Impl>& ptr) {
 
     Handle h = ptr->handle();
     if (h.isNull()) { return false; }
@@ -2018,23 +2031,23 @@ namespace detail {
   }
 
   void Workspace_Impl::insertIntoObjectMap(
-      const Handle& handle, const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
     m_workspaceObjectMap[handle] = objectImplPtr;
   }
 
   void Workspace_Impl::insertIntoIddObjectTypeMap(
-      const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
-    m_iddObjectTypeMap[objectImplPtr->iddObject().type()].insert(objectImplPtr->handle());
+    m_iddObjectTypeMap[objectImplPtr->iddObject().type()].insert(std::make_pair(objectImplPtr->handle(),objectImplPtr));
   }
 
   void Workspace_Impl::insertIntoIdfReferencesMap(
-      const boost::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
+      const std::shared_ptr<WorkspaceObject_Impl>& objectImplPtr)
   {
     StringVector references = objectImplPtr->iddObject().references();
     for (const std::string& referenceName : references) {
-      m_idfReferencesMap[referenceName].insert(objectImplPtr->handle());
+      m_idfReferencesMap[referenceName].insert(std::make_pair(objectImplPtr->handle(), objectImplPtr));
     }
   }
   bool Workspace_Impl::resolvePotentialNameConflicts(Workspace& other) {
@@ -2068,7 +2081,7 @@ namespace detail {
           else {
             std::string lName = *currentName;
             boost::to_lower(lName);
-            std::map<std::string,WorkspaceObjectVector>::iterator it = nameObjectMap.find(lName);
+            auto it = nameObjectMap.find(lName);
             if (it == nameObjectMap.end()) {
               nameObjectMap[lName] = WorkspaceObjectVector(1u,object);
             }
@@ -2158,7 +2171,7 @@ namespace detail {
 
     bool keepHandles = idfObjects[0].iddObject().hasHandleField();
 
-    IdfObjectVector::const_iterator it(idfObjects.begin()), itEnd(idfObjects.end());
+    auto it(idfObjects.begin()), itEnd(idfObjects.end());
     for (; it != itEnd; ++it) {
       newObjects.push_back(this->createObject(*it,keepHandles));
     }
@@ -2224,9 +2237,9 @@ namespace detail {
     // IdfReferencesMap
     StringVector references = objectImplPtr->iddObject().references();
     for (const std::string& reference : references) {
-      IdfReferencesMap::iterator irmLoc = m_idfReferencesMap.find(reference);
+      auto irmLoc = m_idfReferencesMap.find(reference);
       OS_ASSERT(irmLoc != m_idfReferencesMap.end());
-      HandleSet::iterator loc = irmLoc->second.find(handle);
+      auto loc = irmLoc->second.find(handle);
       OS_ASSERT(loc != irmLoc->second.end());
       irmLoc->second.erase(loc);
       // erase entry if set is empty
@@ -2234,9 +2247,9 @@ namespace detail {
     }
 
     // IddObjectTypeMap
-    IddObjectTypeMap::iterator iotmLoc = m_iddObjectTypeMap.find(objectImplPtr->iddObject().type());
+    auto iotmLoc = m_iddObjectTypeMap.find(objectImplPtr->iddObject().type());
     OS_ASSERT(iotmLoc != m_iddObjectTypeMap.end());
-    HandleSet::iterator loc = iotmLoc->second.find(handle);
+    auto loc = iotmLoc->second.find(handle);
     OS_ASSERT(loc != iotmLoc->second.end());
     iotmLoc->second.erase(loc);
     // erase entry if set is empty
@@ -2248,7 +2261,7 @@ namespace detail {
     }
 
     // WorkspaceObjectMap
-    WorkspaceObjectMap::iterator womIt = m_workspaceObjectMap.find(handle);
+    auto womIt = m_workspaceObjectMap.find(handle);
     m_workspaceObjectMap.erase(womIt);
 
     return sources;
@@ -2262,7 +2275,7 @@ namespace detail {
     return sources;
   }
 
-  void Workspace_Impl::registerRemovalOfObject(boost::shared_ptr<WorkspaceObject_Impl> ptr,
+  void Workspace_Impl::registerRemovalOfObject(std::shared_ptr<WorkspaceObject_Impl> ptr,
                                                const std::vector<WorkspaceObject>& sources,
                                                const std::vector<Handle>& removedHandles)
   {
@@ -2337,12 +2350,10 @@ namespace detail {
 
     std::vector<std::pair<boost::optional<IddObjectType>, QUrl> > search_paths;
 
-    for (std::vector<URLSearchPath>::const_iterator itr = t_paths.begin();
-         itr != t_paths.end();
-         ++itr)
+    for (const auto & urlSearchPath : t_paths)
     {
-      QUrl searchurl = itr->getUrl();
-      URLSearchPath::Relative relativity = itr->getRelativity();
+      QUrl searchurl = urlSearchPath.getUrl();
+      URLSearchPath::Relative relativity = urlSearchPath.getRelativity();
 
       QUrl updatedsearchurl = searchurl;
 
@@ -2369,7 +2380,7 @@ namespace detail {
       }
 
       QUrl searchpath;
-      search_paths.push_back(std::make_pair(itr->getIddObjectType(), updatedsearchurl));
+      search_paths.push_back(std::make_pair(urlSearchPath.getIddObjectType(), updatedsearchurl));
     }
 
     if (urlobjects.empty())
@@ -2377,15 +2388,13 @@ namespace detail {
       LOG(Debug, "No objects containing URL fields were found in file");
     }
 
-    for (std::vector<WorkspaceObject>::iterator itr = urlobjects.begin();
-        itr != urlobjects.end();
-        ++itr)
+    for (auto & workspaceObject : urlobjects)
     {
-      const unsigned int numfields = itr->numFields();
+      const unsigned int numfields = workspaceObject.numFields();
 
       for (unsigned int i = 0; i < numfields; ++i)
       {
-        boost::optional<QUrl> url = itr->getURL(i);
+        boost::optional<QUrl> url = workspaceObject.getURL(i);
 
         if (url)
         {
@@ -2395,14 +2404,12 @@ namespace detail {
 
           std::vector<QUrl> thisobjectssearchpaths;
 
-          for (std::vector<std::pair<boost::optional<IddObjectType>, QUrl> >::const_iterator searchitr = search_paths.begin();
-               searchitr != search_paths.end();
-               ++searchitr)
+          for (const auto & searchPath : search_paths)
           {
-            if (!searchitr->first || *(searchitr->first) == itr->iddObject().type())
+            if (!searchPath.first || *(searchPath.first) == workspaceObject.iddObject().type())
             {
               //This search criteria applies to this object
-              thisobjectssearchpaths.push_back(searchitr->second);
+              thisobjectssearchpaths.push_back(searchPath.second);
             }
           }
 
@@ -2465,7 +2472,7 @@ namespace detail {
 
             if (destinationURL != *url)
             {
-              itr->setString(i, toString(destinationURL.toString()));
+              workspaceObject.setString(i, toString(destinationURL.toString()));
               LOG(Debug, "File updated, url: " << toString(url->toLocalFile()) << " to: " << toString(destinationURL.toLocalFile()) << " with source of: " << toString(sourceurl.toString()));
               retval.push_back(std::make_pair(sourceurl, toPath(destinationURL.toLocalFile())));
             }
@@ -2492,21 +2499,14 @@ namespace detail {
                                                 const std::vector<WorkspaceObject>& objectsInTheSeries,
                                                 bool fillIn) const
   {
-    IntSet takenValues;
-    std::string baseName = getBaseName(objectName);
-    boost::regex nameRegex = getBaseNameRegex(baseName);
-    boost::smatch m;
+    vector<int> takenValues;
     for (const WorkspaceObject& object : objectsInTheSeries) {
-      std::string name = object.name().get();
-      boost::to_lower(name);
-      if (boost::regex_match(name,m,nameRegex)) {
-        std::string intstr(m[1].first,m[1].second);
-        boost::trim(intstr);
-        if (!intstr.empty()) {
-          takenValues.insert(boost::lexical_cast<int>(intstr));
-        }
+      if (boost::optional<int> takenSuffix = getNameSuffix(*(object.name()))) {
+        takenValues.push_back(*takenSuffix);
       }
     }
+    std::sort(takenValues.begin(), takenValues.end());
+    takenValues.erase(std::unique(takenValues.begin(), takenValues.end()), takenValues.end());
 
     int suffix(1);
     if (fillIn) {
@@ -2525,9 +2525,7 @@ namespace detail {
       }
     }
 
-    std::stringstream ss;
-    ss << baseName << " " << suffix;
-    return ss.str();
+    return getBaseName(objectName) + ' ' + boost::lexical_cast<std::string>(suffix);
   }
 
   std::vector< std::vector<WorkspaceObject> > Workspace_Impl::nameConflicts(
@@ -2536,7 +2534,7 @@ namespace detail {
     std::vector<WorkspaceObjectVector> result;
     IStringSet examinedNames;
 
-    for (WorkspaceObjectVector::const_iterator it = candidates.begin(),
+    for (auto it = candidates.begin(),
          itEnd = candidates.end(); it != itEnd; ++it)
     {
       WorkspaceObject candidate = *it;
@@ -2557,7 +2555,7 @@ namespace detail {
           // create new group
           WorkspaceObjectVector newConflictGroup;
           // get first instance of name
-          for (WorkspaceObjectVector::const_iterator jt = candidates.begin();
+          for (auto jt = candidates.begin();
                jt != it; ++jt)
           {
             if (boost::iequals(*candidateName,jt->name().get())) {
@@ -2603,8 +2601,8 @@ namespace detail {
   }
 
   void Workspace_Impl::createAndAddClonedObjects(
-      const boost::shared_ptr<detail::Workspace_Impl>& thisImpl,
-      boost::shared_ptr<detail::Workspace_Impl> cloneImpl,
+      const std::shared_ptr<detail::Workspace_Impl>& thisImpl,
+      std::shared_ptr<detail::Workspace_Impl> cloneImpl,
       bool keepHandles) const
   {
     detail::WorkspaceObject_ImplPtrVector newObjectImplPtrs;
@@ -2620,8 +2618,8 @@ namespace detail {
   }
 
   void Workspace_Impl::createAndAddSubsetClonedObjects(
-      const boost::shared_ptr<detail::Workspace_Impl>& thisImpl,
-      boost::shared_ptr<detail::Workspace_Impl> cloneImpl,
+      const std::shared_ptr<detail::Workspace_Impl>& thisImpl,
+      std::shared_ptr<detail::Workspace_Impl> cloneImpl,
       const std::vector<Handle>& handles,
       bool keepHandles) const
   {
@@ -3033,7 +3031,7 @@ std::vector<std::pair<QUrl, openstudio::path> > Workspace::locateUrls(
 
 // PROTECTED
 
-Workspace::Workspace(boost::shared_ptr<detail::Workspace_Impl> impl)
+Workspace::Workspace(std::shared_ptr<detail::Workspace_Impl> impl)
   : m_impl(impl)
 {}
 

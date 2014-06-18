@@ -22,13 +22,12 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Enum.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Optional.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <QVariant>
@@ -286,7 +285,7 @@ class UTILITIES_API Attribute {
   /// get value as string
   std::string valueAsString() const;
 
-  /// set value. throws if wront type.
+  /// set value. throws if wrong type.
   void setValue(const char* value);
 
   /// set value. throws if wrong type.
@@ -301,7 +300,7 @@ class UTILITIES_API Attribute {
   /// get value as qvariant
   QVariant valueAsQVariant() const;
 
-  // set value. throws if wront type.
+  // set value. throws if wrong type.
   void setValue(const QVariant& value);
 
   /// find child attribute by name
@@ -330,7 +329,7 @@ class UTILITIES_API Attribute {
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -341,7 +340,7 @@ class UTILITIES_API Attribute {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -354,20 +353,20 @@ class UTILITIES_API Attribute {
   friend class EndUses;
 
   // constructor from impl
-  Attribute(const boost::shared_ptr<detail::Attribute_Impl>& impl);
+  Attribute(const std::shared_ptr<detail::Attribute_Impl>& impl);
 
   /// get the impl
   template<typename T>
-  boost::shared_ptr<T> getImpl() const
+  std::shared_ptr<T> getImpl() const
   {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
  private:
 
   REGISTER_LOGGER("openstudio.Attribute");
 
-  boost::shared_ptr<detail::Attribute_Impl> m_impl;
+  std::shared_ptr<detail::Attribute_Impl> m_impl;
 
 };
 
@@ -401,7 +400,7 @@ UTILITIES_API std::vector<double> getDoubleVectorFromAttribute(const Attribute& 
 UTILITIES_API bool isConsistent(const Attribute& candidate,const AttributeDescription& description);
 
 /** Copies description's display name over to attribute. Will return false if
- *  !isConsistent(attribute,descripton). \relates Attribute */
+ *  !isConsistent(attribute,description). \relates Attribute */
 // DLM: can this be a member of Attribute?
 UTILITIES_API bool prepareForDisplay(Attribute& attribute, const AttributeDescription& description);
 

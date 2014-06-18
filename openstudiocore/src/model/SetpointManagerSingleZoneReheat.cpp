@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
 
 using openstudio::Handle;
@@ -223,7 +223,7 @@ SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& mo
   setMaximumSupplyAirTemperature(99.0);
 }
 
-SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(boost::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
+SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
   : HVACComponent(p)
 {
 }

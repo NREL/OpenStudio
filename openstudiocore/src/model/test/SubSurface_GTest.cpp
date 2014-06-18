@@ -19,21 +19,21 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Construction.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
 
 #include <boost/algorithm/string/case_conv.hpp>
 

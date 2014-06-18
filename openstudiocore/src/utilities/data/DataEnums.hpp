@@ -21,7 +21,7 @@
 #define UTILITIES_DATA_DATAENUMS_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include <utilities/core/Enum.hpp>
+#include "../core/Enum.hpp"
 
 namespace openstudio {
 

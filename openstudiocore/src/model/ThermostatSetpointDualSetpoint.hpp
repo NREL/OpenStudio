@@ -19,7 +19,7 @@
 #ifndef MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 #define MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
 
-#include <model/ModelObject.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,7 +92,7 @@ class MODEL_API ThermostatSetpointDualSetpoint : public ModelObject {
 
   typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
 
-  explicit ThermostatSetpointDualSetpoint(boost::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
+  explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
 
  private:
 

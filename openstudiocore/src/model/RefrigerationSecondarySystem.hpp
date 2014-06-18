@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
 #define MODEL_REFRIGERATIONSECONDARYSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -235,7 +235,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   /// @cond
   typedef detail::RefrigerationSecondarySystem_Impl ImplType;
 
-  explicit RefrigerationSecondarySystem(boost::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl);
+  explicit RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl);
 
   friend class detail::RefrigerationSecondarySystem_Impl;
   friend class Model;

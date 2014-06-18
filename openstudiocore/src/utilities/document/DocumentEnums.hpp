@@ -20,7 +20,7 @@
 #ifndef UTILITIES_DOCUMENT_DOCUMENTENUMS_HPP
 #define UTILITIES_DOCUMENT_DOCUMENTENUMS_HPP
 
-#include <utilities/core/Enum.hpp>
+#include "../core/Enum.hpp"
 
 namespace openstudio {
 

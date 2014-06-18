@@ -18,241 +18,309 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/PlantLoop.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Loop.hpp>
-#include <model/Loop_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ChillerElectricEIR.hpp>
-#include <model/ChillerElectricEIR_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "ModelFixture.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Loop.hpp"
+#include "../ConnectorSplitter.hpp"
+#include "../ConnectorSplitter_Impl.hpp"
+#include "../ConnectorMixer.hpp"
+#include "../ConnectorMixer_Impl.hpp"
+#include "../ChillerElectricEIR.hpp"
+#include "../ChillerElectricEIR_Impl.hpp"
+#include "../PumpVariableSpeed.hpp"
+#include "../PipeAdiabatic.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../LifeCycleCost.hpp"
 
-//#include <utilities/idd/IddEnums.hxx>
+using namespace openstudio::model;
 
-using namespace openstudio;
-
-TEST(PlantLoop,PlantLoop_PlantLoop)
+TEST_F(ModelFixture,PlantLoop_PlantLoop)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT ( 
   {  
-     model::Model m; 
-
-     model::PlantLoop plantLoop(m); 
+     Model m; 
+     PlantLoop plantLoop(m); 
 
      exit(0); 
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(PlantLoop,PlantLoop_supplyComponents)
+TEST_F(ModelFixture,PlantLoop_supplyComponents)
 {
-  model::Model m; 
+  Model m; 
 
   // Empty Plant Loop
   
-  model::PlantLoop plantLoop(m); 
-
+  PlantLoop plantLoop(m); 
   ASSERT_EQ( 5u,plantLoop.supplyComponents().size() );
 
-  boost::optional<model::ModelObject> comp;
-
+  boost::optional<ModelObject> comp;
   comp = plantLoop.supplyComponents()[1];
-
   ASSERT_TRUE(comp);
+  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Splitter,comp->iddObjectType().value());
 
-  ASSERT_EQ(IddObjectType::OS_Connector_Splitter,comp->iddObjectType().value());
-
-  model::ConnectorSplitter splitter = comp->cast<model::ConnectorSplitter>();
-
+  ConnectorSplitter splitter = comp->cast<ConnectorSplitter>();
   comp = splitter.lastOutletModelObject();
-
   ASSERT_TRUE(comp);
+  ASSERT_EQ(openstudio::IddObjectType::OS_Node,comp->iddObjectType().value());
 
-  ASSERT_EQ(IddObjectType::OS_Node,comp->iddObjectType().value());
-
-  model::Node connectorNode = comp->cast<model::Node>();
-
+  Node connectorNode = comp->cast<Node>();
   comp = connectorNode.outletModelObject();
-
   ASSERT_TRUE(comp);
+  ASSERT_EQ(openstudio::IddObjectType::OS_Connector_Mixer,comp->iddObjectType().value());
 
-  ASSERT_EQ(IddObjectType::OS_Connector_Mixer,comp->iddObjectType().value());
-
-  model::ConnectorMixer mixer = comp->cast<model::ConnectorMixer>();
-
+  ConnectorMixer mixer = comp->cast<ConnectorMixer>();
   comp = mixer.outletModelObject();
-
   ASSERT_TRUE(comp);
-
-  model::Node supplyOutletNode = plantLoop.supplyOutletNode();
-
+  Node supplyOutletNode = plantLoop.supplyOutletNode();
   ASSERT_EQ(comp->handle(),supplyOutletNode.handle());
 
   // Add a new component
 
-  model::CurveBiquadratic ccFofT(m);
-  model::CurveBiquadratic eirToCorfOfT(m);
-  model::CurveQuadratic eiToCorfOfPlr(m);
+  CurveBiquadratic ccFofT(m);
+  CurveBiquadratic eirToCorfOfT(m);
+  CurveQuadratic eiToCorfOfPlr(m);
   
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
-
+  ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
   ASSERT_TRUE(chiller.addToNode(supplyOutletNode));
-
   ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
 
   // Add a new supply branch
 
-  model::ChillerElectricEIR chiller2 = chiller.clone(m).cast<model::ChillerElectricEIR>();
+  ChillerElectricEIR chiller2 = chiller.clone(m).cast<ChillerElectricEIR>();
 
   ASSERT_EQ( 1u,splitter.nextBranchIndex() );
   ASSERT_EQ( 1u,mixer.nextBranchIndex() );
-
   ASSERT_TRUE(plantLoop.addSupplyBranchForComponent(chiller2));
-
   ASSERT_EQ( 1u,splitter.nextBranchIndex() );
   ASSERT_EQ( 1u,mixer.nextBranchIndex() );
-
   ASSERT_EQ( 1u,splitter.outletModelObjects().size() );
-
   ASSERT_EQ( 9u,plantLoop.supplyComponents().size() );
 
   // Remove the new supply branch
 
   ASSERT_TRUE(plantLoop.removeSupplyBranchWithComponent(chiller2));
-
   ASSERT_EQ( 7u,plantLoop.supplyComponents().size() );
 }
 
-TEST(PlantLoop,PlantLoop_demandComponents)
+TEST_F(ModelFixture,PlantLoop_demandComponents)
 {
-  model::Model m; 
-  
-  model::PlantLoop plantLoop(m); 
+  Model m; 
+  PlantLoop plantLoop(m); 
   ASSERT_EQ( 5u,plantLoop.demandComponents().size() );
 
-  model::Schedule s = m.alwaysOnDiscreteSchedule();
+  Schedule s = m.alwaysOnDiscreteSchedule();
 
-  model::CoilHeatingWater coil(m,s);
+  CoilHeatingWater coil(m,s);
   plantLoop.addDemandBranchForComponent(coil);
   ASSERT_EQ( 7u,plantLoop.demandComponents().size() );
 
-  model::CoilHeatingWater coil2(m,s);
+  CoilHeatingWater coil2(m,s);
   plantLoop.addDemandBranchForComponent(coil2);
   ASSERT_EQ( 10u,plantLoop.demandComponents().size() );
 
-  model::Splitter splitter = plantLoop.demandSplitter();
+  Splitter splitter = plantLoop.demandSplitter();
   ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil).size() );
   ASSERT_EQ( 3u,plantLoop.demandComponents(splitter,coil2).size() );
 
-  model::Mixer mixer = plantLoop.demandMixer();
+  Mixer mixer = plantLoop.demandMixer();
   ASSERT_EQ( 3u,plantLoop.demandComponents(coil,mixer).size() );
   ASSERT_EQ( 3u,plantLoop.demandComponents(coil2,mixer).size() );
 }
 
-TEST(PlantLoop,PlantLoop_addDemandBranchForComponent)
+TEST_F(ModelFixture,PlantLoop_addDemandBranchForComponent)
 {
-  model::Model m; 
-
-  model::ScheduleCompact s(m);
-  
-  model::PlantLoop plantLoop(m); 
-
-  model::CoilHeatingWater heatingCoil(m,s);
-
-  model::CoilHeatingWater heatingCoil2(m,s);
-
-  model::CoilCoolingWater coolingCoil(m,s);
+  Model m; 
+  ScheduleCompact s(m);
+  PlantLoop plantLoop(m); 
+  CoilHeatingWater heatingCoil(m,s);
+  CoilHeatingWater heatingCoil2(m,s);
+  CoilCoolingWater coolingCoil(m,s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil));
 
-  boost::optional<model::ModelObject> inletModelObject = heatingCoil.waterInletModelObject();
-
-  boost::optional<model::ModelObject> outletModelObject = heatingCoil.waterOutletModelObject();
-
+  boost::optional<ModelObject> inletModelObject = heatingCoil.waterInletModelObject();
+  boost::optional<ModelObject> outletModelObject = heatingCoil.waterOutletModelObject();
   ASSERT_TRUE( inletModelObject );
-
   ASSERT_TRUE( outletModelObject );
 
-  boost::optional<model::Node> inletNode = inletModelObject->optionalCast<model::Node>();
-
-  boost::optional<model::Node> outletNode = outletModelObject->optionalCast<model::Node>();
-
+  boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>();
+  boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>();
   ASSERT_TRUE( inletNode );
-
   ASSERT_TRUE( outletNode );
 
-  boost::optional<model::ModelObject> inletModelObject2 = inletNode->inletModelObject();
-
-  boost::optional<model::ModelObject> outletModelObject2 = outletNode->outletModelObject();
-
+  boost::optional<ModelObject> inletModelObject2 = inletNode->inletModelObject();
+  boost::optional<ModelObject> outletModelObject2 = outletNode->outletModelObject();
   ASSERT_TRUE( inletModelObject2 );
-
   ASSERT_TRUE( outletModelObject2 );
 
   ASSERT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil2));
-
   ASSERT_EQ( (unsigned)10,plantLoop.demandComponents().size() );
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(coolingCoil));
-
   ASSERT_EQ( (unsigned)13,plantLoop.demandComponents().size() );
 }
 
-TEST(PlantLoop,PlantLoop_removeDemandBranchWithComponent)
+TEST_F(ModelFixture,PlantLoop_removeDemandBranchWithComponent)
 {
-  model::Model m; 
-  
-  model::PlantLoop plantLoop(m); 
-
-  model::ScheduleCompact s(m);
-
-  model::CoilHeatingWater heatingCoil(m,s);
+  Model m; 
+  PlantLoop plantLoop(m); 
+  ScheduleCompact s(m);
+  CoilHeatingWater heatingCoil(m,s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil));
-
   ASSERT_EQ( (unsigned)7,plantLoop.demandComponents().size() );
 
-  model::CoilHeatingWater heatingCoil2(m,s);
+  CoilHeatingWater heatingCoil2(m,s);
 
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(heatingCoil2));
-
   ASSERT_EQ( (unsigned)10,plantLoop.demandComponents().size() );
 
-  model::Splitter splitter = plantLoop.demandSplitter();
+  Splitter splitter = plantLoop.demandSplitter();
 
   ASSERT_EQ( (unsigned)2,splitter.nextBranchIndex() );
-
-  std::vector<model::ModelObject> modelObjects = plantLoop.demandComponents(splitter,heatingCoil2);
-
+  std::vector<ModelObject> modelObjects = plantLoop.demandComponents(splitter,heatingCoil2);
   ASSERT_EQ( (unsigned)3,modelObjects.size() );
 
   EXPECT_TRUE(plantLoop.removeDemandBranchWithComponent(heatingCoil2));
-
   ASSERT_EQ( (unsigned)1,splitter.nextBranchIndex() );
 }
 
-TEST(PlantLoop,PlantLoop_Cost)
+TEST_F(ModelFixture,PlantLoop_Cost)
 {
-  model::Model m; 
-  
-  model::PlantLoop plantLoop(m); 
+  Model m; 
+  PlantLoop plantLoop(m); 
 
-  boost::optional<model::LifeCycleCost> cost = model::LifeCycleCost::createLifeCycleCost("Install", plantLoop, 1000.0, "CostPerEach", "Construction");
+  boost::optional<LifeCycleCost> cost = LifeCycleCost::createLifeCycleCost("Install", plantLoop, 1000.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost);
 
   EXPECT_DOUBLE_EQ(1000.0, cost->totalCost());
+}
+
+TEST_F(ModelFixture, PlantLoop_edges)
+{
+  Model m;
+
+  PlantLoop plantLoop(m);
+  PlantLoop plantLoop2(m);
+  ScheduleCompact s(m);
+
+  // supply components
+  CurveBiquadratic ccFofT(m);
+  CurveBiquadratic eirToCorfOfT(m);
+  CurveQuadratic eiToCorfOfPlr(m);
+
+  PumpVariableSpeed pump(m);
+  ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
+  PipeAdiabatic pipe1(m);
+  PipeAdiabatic pipe2(m);
+
+  Node plantOutletNode = plantLoop.supplyOutletNode();
+  Node plantInletNode = plantLoop.supplyInletNode();
+
+  Splitter supplySplitter = plantLoop.supplySplitter();
+  Mixer supplyMixer = plantLoop.supplyMixer();
+
+  pump.addToNode(plantInletNode);
+  plantLoop.addSupplyBranchForComponent(chiller);
+  plantLoop.addSupplyBranchForComponent(pipe1);
+  pipe2.addToNode(plantOutletNode);
+
+  // demand components
+  CoilCoolingWater coil1(m, s);
+  CoilCoolingWater coil2(m, s);
+  plantLoop.addDemandBranchForComponent(coil1);
+  plantLoop.addDemandBranchForComponent(coil2);
+
+  Splitter demandSplitter = plantLoop.demandSplitter();
+  Splitter demandSplitter2 = plantLoop2.demandSplitter();
+
+  plantLoop2.addDemandBranchForComponent(chiller);
+
+  boost::optional<ModelObject> splitter_demand_obj = plantLoop.demandComponent(demandSplitter.handle());
+  ASSERT_TRUE(splitter_demand_obj);
+  EXPECT_EQ(demandSplitter, *splitter_demand_obj);
+  std::vector<HVACComponent> edges = demandSplitter.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be nodes
+  EXPECT_EQ(2, edges.size());
+  bool found_coil_1 = false;
+  bool found_coil_2 = false;
+  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  {
+    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be a coil
+    ASSERT_EQ(1, splitter_edges.size());
+    if( coil1 == splitter_edges[0] ) {
+      found_coil_1 = true;
+    }
+    else if( coil2 == splitter_edges[0] ) {
+      found_coil_2 = true;
+    }
+  }
+  EXPECT_TRUE(found_coil_1);
+  EXPECT_TRUE(found_coil_2);
+
+  boost::optional<ModelObject> pump_obj = plantLoop.supplyComponent(pump.handle());
+  ASSERT_TRUE(pump_obj);
+  EXPECT_EQ(pump, *pump_obj);
+  edges = pump.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Splitter
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(supplySplitter, edges[0]);
+
+  boost::optional<ModelObject> splitter_supply_obj = plantLoop.supplyComponent(supplySplitter.handle());
+  ASSERT_TRUE(splitter_supply_obj);
+  EXPECT_EQ(supplySplitter, *splitter_supply_obj);
+  edges = supplySplitter.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be nodes
+  EXPECT_EQ(2, edges.size());
+  bool found_chiller = false;
+  bool found_pipe = false;
+  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  {
+    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(false); // should be chiller or pipe
+    ASSERT_EQ(1, splitter_edges.size());
+    if( chiller == splitter_edges[0] ) {
+      found_chiller = true;
+    }
+    else if( pipe1 == splitter_edges[0] ) {
+      found_pipe = true;
+    }
+  }
+  EXPECT_TRUE(found_chiller);
+  EXPECT_TRUE(found_pipe);
+
+  boost::optional<ModelObject> supply_mixer_obj = plantLoop.supplyComponent(supplyMixer.handle());
+  ASSERT_TRUE(supply_mixer_obj);
+  EXPECT_EQ(supplyMixer, *supply_mixer_obj);
+  edges = supplyMixer.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Pipe
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(pipe2, edges[0]);
+
+  boost::optional<ModelObject> splitter2_demand_obj = plantLoop2.demandComponent(demandSplitter2.handle());
+  ASSERT_TRUE(splitter2_demand_obj);
+  EXPECT_EQ(demandSplitter2, *splitter2_demand_obj);
+  edges = demandSplitter2.getImpl<detail::HVACComponent_Impl>()->edges(true); // should be node
+  EXPECT_EQ(1, edges.size());
+  bool found_demand_chiller = false;
+  for( std::vector<HVACComponent>::iterator it = edges.begin(); it != edges.end(); ++it )
+  {
+    std::vector<HVACComponent> splitter_edges = (*it).getImpl<detail::HVACComponent_Impl>()->edges(true); // should be chiller
+    ASSERT_EQ(1, splitter_edges.size());
+    if( chiller == splitter_edges[0] ) {
+      found_demand_chiller = true;
+    }
+  }
+  EXPECT_TRUE(found_demand_chiller);
 }

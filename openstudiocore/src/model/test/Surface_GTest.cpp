@@ -19,68 +19,68 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Relationship.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../ResourceObject.hpp"
+#include "../ResourceObject_Impl.hpp"
+#include "../ComponentData.hpp"
+#include "../ComponentData_Impl.hpp"
+#include "../ConstructionBase.hpp"
+#include "../ConstructionBase_Impl.hpp"
+#include "../LayeredConstruction.hpp"
+#include "../LayeredConstruction_Impl.hpp"
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../Material.hpp"
+#include "../Material_Impl.hpp"
+#include "../AirGap.hpp"
+#include "../AirGap_Impl.hpp"
+#include "../AirWallMaterial.hpp"
+#include "../AirWallMaterial_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../DefaultSurfaceConstructions.hpp"
+#include "../DefaultSurfaceConstructions_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../Relationship.hpp"
+#include "../DaylightingDeviceShelf.hpp"
+#include "../InteriorPartitionSurface.hpp"
+#include "../InteriorPartitionSurfaceGroup.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurfaceGroup.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceWatcher.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Finder.hpp>
+#include "../../utilities/core/Finder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -354,14 +354,14 @@ TEST_F(ModelFixture, Surface_Area_In_File)
     ASSERT_TRUE(thermalConductance);
     EXPECT_TRUE(*thermalConductance > 0);
 
-    // check that we can get interior and exterior visible absorbtances
-    OptionalDouble interiorVisibleAbsorbtance = surface.interiorVisibleAbsorbtance();
-    ASSERT_TRUE(interiorVisibleAbsorbtance);
-    EXPECT_TRUE(*interiorVisibleAbsorbtance > 0);
+    // check that we can get interior and exterior visible absorptances
+    OptionalDouble interiorVisibleAbsorptance = surface.interiorVisibleAbsorptance();
+    ASSERT_TRUE(interiorVisibleAbsorptance);
+    EXPECT_TRUE(*interiorVisibleAbsorptance > 0);
 
-    OptionalDouble exteriorVisibleAbsorbtance = surface.exteriorVisibleAbsorbtance();
-    ASSERT_TRUE(exteriorVisibleAbsorbtance);
-    EXPECT_TRUE(*exteriorVisibleAbsorbtance > 0);
+    OptionalDouble exteriorVisibleAbsorptance = surface.exteriorVisibleAbsorptance();
+    ASSERT_TRUE(exteriorVisibleAbsorptance);
+    EXPECT_TRUE(*exteriorVisibleAbsorptance > 0);
 
     // check that construction is returned as resource used by surface
     ResourceObjectVector resources = surface.resources();
@@ -744,20 +744,20 @@ TEST_F(ModelFixture,Surface_IddAssumptions) {
   // if this test starts failing, please re-map the standardsinterface
   StringVector keys = Surface::validOutsideBoundaryConditionValues();
   EXPECT_EQ(14u, keys.size());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Adiabatic",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Surface",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Outdoors",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"Ground",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundFCfactorMethod",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"OtherSideCoefficients",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"OtherSideConditionsModel",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorAverage",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorCore",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundSlabPreprocessorPerimeter",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorAverageWall",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorAverageFloor",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorUpperWall",_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),boost::bind(istringEqual,"GroundBasementPreprocessorLowerWall",_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Adiabatic",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Surface",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Outdoors",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"Ground",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundFCfactorMethod",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideCoefficients",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"OtherSideConditionsModel",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorAverage",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorCore",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundSlabPreprocessorPerimeter",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageWall",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorAverageFloor",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorUpperWall",std::placeholders::_1)) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(),keys.end(),std::bind(istringEqual,"GroundBasementPreprocessorLowerWall",std::placeholders::_1)) == keys.end());
 }
 
 void expect_point_eq(const Point3d& p1, const Point3d& p2)
@@ -3289,6 +3289,100 @@ TEST_F(ModelFixture, ApplyViewAndDaylightingGlassRatios)
         EXPECT_EQ(daylightingGlassConstruction.handle(), result[1].construction()->handle());
         EXPECT_FALSE(result[0].daylightingDeviceShelf());
         EXPECT_EQ(0, result[0].shadingSurfaceGroups().size());
+      }
+    }
+  }
+}
+
+
+TEST_F(ModelFixture, Surface_Intersect_OneToFour){
+
+  double areaTol = 0.000001;
+  double xOrigin = 20.0;
+
+  // space 1 has one large surface, space 2 has 4 rectangles, test that intersection is correct independent of rotation and intersect order
+  for (double rotation = 0; rotation < 360.0; rotation += 10.0){
+    for (unsigned iStart = 0; iStart < 4; ++iStart){
+
+      Transformation t = Transformation::rotation(Vector3d(0,0,1), degToRad(rotation));
+
+      Model model;
+      Space space1(model);
+      Space space2(model);
+
+      Point3dVector points;
+      points.push_back(Point3d(xOrigin,  0, 20));
+      points.push_back(Point3d(xOrigin,  0,  0));
+      points.push_back(Point3d(xOrigin, 10,  0));
+      points.push_back(Point3d(xOrigin, 10, 20));
+      Surface surface(t*points, model);
+      surface.setSpace(space1);
+      EXPECT_NEAR(200.0, surface.grossArea(), areaTol);
+
+      std::vector<Surface> surfaces;
+      for (unsigned i = 0; i < 4; ++i){
+        points.clear();
+        points.push_back(Point3d(xOrigin, 10, (i+1)*5));
+        points.push_back(Point3d(xOrigin, 10,  i*5));
+        points.push_back(Point3d(xOrigin,  0,  i*5));
+        points.push_back(Point3d(xOrigin,  0, (i+1)*5));
+        Surface tempSurface(t*points, model);
+        tempSurface.setSpace(space2);
+        EXPECT_NEAR(50.0, tempSurface.grossArea(), areaTol);
+        surfaces.push_back(tempSurface);
+      }
+
+      // shuffle order of intersection
+      std::vector<unsigned> indices;
+      for (unsigned i = iStart; i < 4; ++i){
+        indices.push_back(i);
+      }
+      for (unsigned i = 0; i < iStart; ++i){
+        indices.push_back(i);
+      }
+      ASSERT_EQ(4u, indices.size());
+
+      std::set<Handle> intersectedSpace1Surfaces;
+
+      double expectedArea = 200.0;
+      for (const unsigned i : indices){
+
+        double totalGrossArea = 0.0;
+        for (const Surface& s : space1.surfaces()){
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
+            totalGrossArea += s.grossArea();
+          }
+        }
+        EXPECT_NEAR(expectedArea, totalGrossArea, areaTol);
+        EXPECT_NEAR(50.0, surfaces[i].grossArea(), areaTol);
+
+        // one of the non-intersected surfaces should intersect
+        boost::optional<Surface> intersectedSurface;
+        for (Surface& s : space1.surfaces()){
+          if (intersectedSpace1Surfaces.find(s.handle()) == intersectedSpace1Surfaces.end()){
+            if (s.intersect(surfaces[i])){
+              intersectedSurface = s;
+              intersectedSpace1Surfaces.insert(s.handle());
+              expectedArea -= 50.0;
+              break;
+            }
+          }
+        }
+        ASSERT_TRUE(intersectedSurface);
+        EXPECT_NEAR(50.0, intersectedSurface->grossArea(), areaTol);
+        EXPECT_NEAR(50.0, surfaces[i].grossArea(), areaTol);
+      }
+
+      EXPECT_EQ(4u, space1.surfaces().size());
+      for (const Surface& s : space1.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
+      }
+
+      EXPECT_EQ(4u, space2.surfaces().size());
+      for (const Surface& s : space2.surfaces()){
+        EXPECT_EQ(4u, s.vertices().size());
+        EXPECT_NEAR(50.0, s.grossArea(), areaTol);
       }
     }
   }

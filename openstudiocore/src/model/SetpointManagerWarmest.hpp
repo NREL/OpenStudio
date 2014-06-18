@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERWARMEST_HPP
 #define MODEL_SETPOINTMANAGERWARMEST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -72,7 +72,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
   /// @cond
   typedef detail::SetpointManagerWarmest_Impl ImplType;
 
-  explicit SetpointManagerWarmest(boost::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
+  explicit SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl);
 
   friend class detail::SetpointManagerWarmest_Impl;
   friend class Model;

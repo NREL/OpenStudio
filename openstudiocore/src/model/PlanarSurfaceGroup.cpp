@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/PlanarSurfaceGroup.hpp>
-#include <model/PlanarSurfaceGroup_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "PlanarSurfaceGroup.hpp"
+#include "PlanarSurfaceGroup_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -229,7 +229,7 @@ openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const
 
 
 /// @cond
-PlanarSurfaceGroup::PlanarSurfaceGroup(boost::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
+PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPTIMIZATIONPROBLEM_HPP
 #define ANALYSIS_OPTIMIZATIONPROBLEM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Problem.hpp>
+#include "AnalysisAPI.hpp"
+#include "Problem.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -118,7 +118,7 @@ class ANALYSIS_API OptimizationProblem : public Problem {
   friend class detail::AnalysisObject_Impl;
   friend class detail::OptimizationProblem_Impl;
 
-  explicit OptimizationProblem(boost::shared_ptr<detail::OptimizationProblem_Impl> impl);
+  explicit OptimizationProblem(std::shared_ptr<detail::OptimizationProblem_Impl> impl);
 
   /// @endcond
  private:

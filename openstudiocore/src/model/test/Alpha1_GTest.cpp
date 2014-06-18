@@ -19,40 +19,40 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Zone.hpp>
-#include <model/Zone_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../Model_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Zone.hpp"
+#include "../Zone_Impl.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../WeatherFile.hpp"
+#include "../WeatherFile_Impl.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ResultsTranslator.hpp>
+#include "../../energyplus/ErrorFile.hpp"
+#include "../../energyplus/ReverseTranslator.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../energyplus/ResultsTranslator.hpp"
 
 #include <runmanager/Test/EnergyPlusBin.hxx>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../../runmanager/lib/Job.hpp"
+#include "../../runmanager/lib/JobFactory.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/filetypes/EpwFile.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 #include <boost/algorithm/string/case_conv.hpp>
 

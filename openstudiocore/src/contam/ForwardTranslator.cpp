@@ -1,50 +1,50 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
-#include <contam/ForwardTranslator.hpp>
-#include <contam/WindPressure.hpp>
+#include "ForwardTranslator.hpp"
+#include "WindPressure.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/RunPeriod.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/PortList.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/RunPeriod.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <boost/math/constants/constants.hpp>
 
@@ -170,7 +170,7 @@ void ForwardTranslator::clear()
   m_startDateTime = boost::optional<DateTime>();
   m_endDateTime = boost::optional<DateTime>();
   m_translateHVAC = true;
-  m_progressBar = 0;
+  m_progressBar = nullptr;
 }
 
 int ForwardTranslator::tableLookup(QMap<std::string,int> map, std::string str, const char *name)
@@ -365,7 +365,7 @@ boost::optional<double> ForwardTranslator::exteriorDeltaP() const
 
 bool ForwardTranslator::setExteriorFlowRate(double flow, double n, double deltaP)
 {
-  if(flow > 0 && m_n > 0 && m_deltaP > 0)
+  if(flow > 0 && n > 0 && deltaP > 0)
   {
     m_flow = boost::optional<double>(flow);
     m_n = boost::optional<double>(n);
@@ -505,7 +505,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
     }
   }
   // Get stories
-  std::vector<openstudio::model::BuildingStory> stories = model.getModelObjects<openstudio::model::BuildingStory>();
+  std::vector<openstudio::model::BuildingStory> stories = model.getConcreteModelObjects<openstudio::model::BuildingStory>();
   // It appears that we will need for each story to have an elevation
   for (const openstudio::model::BuildingStory& buildingStory : stories)
   {
@@ -914,7 +914,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
       if(std::find(available.begin(), available.end(), "Zone Mean Air Temperature")!=available.end())
       {
         // Loop through and get a time series for each zone we can find
-        for (model::ThermalZone thermalZone : model.getModelObjects<model::ThermalZone>())
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
         {
           boost::optional<std::string> name = thermalZone.name();
           if(!name)
@@ -956,7 +956,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
         LOG(Warn, "Zone equipment not yet accounted for.");
         // get sizing results, get flow rate schedules for each zone's inlet, return, and exhaust nodes
         // This should be moved to inside the contam translator
-        for (model::ThermalZone thermalZone : model.getModelObjects<model::ThermalZone>())
+        for (model::ThermalZone thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
         {
           // todo: this does not include OA from zone equipment (PTAC, PTHP, etc) or exhaust fans
 

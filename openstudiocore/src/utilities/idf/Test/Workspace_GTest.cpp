@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../Workspace.hpp"
+#include "../Workspace_Impl.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../WorkspaceObjectOrder.hpp"
+#include "../URLSearchPath.hpp"
+#include "../ValidityReport.hpp"
+#include "../IdfExtensibleGroup.hpp"
+#include "../WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -44,17 +44,17 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/Test/IdfTestQObjects.hpp>
+#include "../WorkspaceWatcher.hpp"
+#include "IdfTestQObjects.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../core/Application.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../../time/Time.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../../core/Compare.hpp"
+#include "../../core/StringStreamLogSink.hpp"
 
 #include <resources.hxx>
 
@@ -81,7 +81,7 @@ TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
   openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile);
+  boost::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
   copyOfIdfFile.print(outFile); outFile.close();
 }
 
@@ -1126,6 +1126,108 @@ TEST_F(IdfFixture,Workspace_DefaultNames) {
   EXPECT_EQ("Zone 3",zone.name().get());
 
   EXPECT_EQ(static_cast<unsigned>(5),ws.numObjectsOfType(IddObjectType::Zone));
+}
+
+TEST_F(IdfFixture,Workspace_ComplexNames) {
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject oObject = ws.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject building = *oObject;
+  ASSERT_TRUE(building.name());
+  EXPECT_EQ("",building.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  WorkspaceObject zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone 1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (least) favorite zone"));
+  EXPECT_EQ("My (least) favorite zone 2",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            2",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1  1",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone ",zone.name().get());
+
+  oObject = ws.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(oObject);
+  zone = *oObject;
+  EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone  1",zone.name().get());
+
+  EXPECT_EQ(static_cast<unsigned>(15),ws.numObjectsOfType(IddObjectType::Zone));
 }
 
 TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {

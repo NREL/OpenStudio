@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Matrix.hpp>
+#include "Matrix.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/math/FloatCompare.hpp>
+#include "../core/Optional.hpp"
+#include "../math/FloatCompare.hpp"
 
 #include <random>
 
@@ -272,7 +272,7 @@ namespace openstudio{
     // create a generator
     boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
-    // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hangining on Windows 7,
+    // ETH@20120723 Started seeing this as DataFixture.Matrix_RandMatrix hanging on Windows 7,
     // with BoostPro installer.
     // handle degenerate case
     OptionalDouble singlePoint;
@@ -363,7 +363,7 @@ namespace openstudio{
     for (unsigned i = 0; i < N; ++i){
 
       A(i,i) = 1.0; // must be self connected
-      if ( abs(matrix(i,i) - 1.0) > tol){
+      if ( std::abs(matrix(i,i) - 1.0) > tol){
         // warn
       }
 

@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Logger.hpp>
+#include "Logger.hpp"
 
 #include <boost/log/common.hpp>
 #include <boost/log/core/record.hpp>
@@ -128,7 +128,7 @@ namespace openstudio{
   {
     QReadLocker l(m_mutex);
 
-    LoggerMapType::iterator it = m_loggerMap.find(logChannel);
+    auto it = m_loggerMap.find(logChannel);
     if (it == m_loggerMap.end()){
       //LoggerType newLogger(keywords::channel = logChannel, keywords::severity = Debug);
       LoggerType newLogger(keywords::channel = logChannel);
@@ -153,7 +153,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
 
     return (it != m_sinks.end());
   }
@@ -162,7 +162,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
     if (it == m_sinks.end()){
 
       // Drop the read lock and grab a write lock - we need to add the new file to the map
@@ -181,7 +181,7 @@ namespace openstudio{
   {
     QWriteLocker l(m_mutex);
 
-    SinkSetType::iterator it = m_sinks.find(sink);
+    auto it = m_sinks.find(sink);
     if (it != m_sinks.end()){
 
       // Drop the read lock and grab a write lock - we need to add the new file to the map

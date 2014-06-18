@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/Configuration.hpp>
-#include <runmanager/lib/AddTool.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "Configuration.hpp"
+#include "AddTool.hpp"
+#include "JobFactory.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -39,7 +39,7 @@ namespace runmanager {
       const QStyleOptionViewItem &/* option */,
       const QModelIndex &/* index */) const
   {
-    QSpinBox *editor = new QSpinBox(parent);
+    auto editor = new QSpinBox(parent);
     editor->setMinimum(-1);
     editor->setMaximum(100);
     editor->setSpecialValueText("-");
@@ -96,14 +96,12 @@ namespace runmanager {
       const QStyleOptionViewItem &/* option */,
       const QModelIndex &/* index */) const
   {
-    QComboBox *editor = new QComboBox(parent);
+    auto editor = new QComboBox(parent);
     std::set<int> values = ToolType::getValues();
 
-    for (std::set<int>::const_iterator itr = values.begin();
-         itr != values.end();
-         ++itr)
+    for (const auto & value : values)
     {
-      editor->addItem(toQString(ToolType::valueDescription(*itr)));
+      editor->addItem(toQString(ToolType::valueDescription(value)));
     }
     return editor;
   }

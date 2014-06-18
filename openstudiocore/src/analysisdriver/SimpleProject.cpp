@@ -17,63 +17,63 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/SimpleProject_Impl.hpp>
+#include "SimpleProject.hpp"
+#include "SimpleProject_Impl.hpp"
 
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "CurrentAnalysis.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "AnalysisDriverEnums.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSettingsRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/AnalysisRecord.hpp"
+#include "../project/CloudSessionRecord.hpp"
+#include "../project/CloudSettingsRecord.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DakotaAlgorithmRecord.hpp"
+#include "../project/DakotaAlgorithmRecord_Impl.hpp"
 
-#include <analysis/Algorithm.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/Variable.hpp>
+#include "../analysis/Algorithm.hpp"
+#include "../analysis/Analysis_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
+#include "../analysis/Variable.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -98,10 +98,14 @@ namespace detail {
                                          const SimpleProjectOptions& options)
     : m_projectDir(completeAndNormalize(projectDir)),
       m_analysisDriver(analysisDriver),
-      m_analysis(analysis),
+      m_alternativeModelMeasureUUID(BCLMeasure::alternativeModelMeasure().uuid()),
+      m_standardReportMeasureUUID(BCLMeasure::standardReportMeasure().uuid()),
+      m_calibrationReportMeasureUUID(BCLMeasure::calibrationReportMeasure().uuid()),
+      m_analysis(analysis),   
       m_cloudSessionSettingsDirty(false),
       m_logFile(projectDir / toPath("project.log"))
   {
+
     bool test = m_analysisDriver.connect(SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)), this, SIGNAL(analysisStatusChanged(analysisdriver::AnalysisStatus)));
     OS_ASSERT(test);
 
@@ -127,7 +131,7 @@ namespace detail {
   }
 
   SimpleProject SimpleProject_Impl::simpleProject() const {
-    return SimpleProject(boost::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
+    return SimpleProject(std::const_pointer_cast<SimpleProject_Impl>(shared_from_this()));
   }
 
   openstudio::path SimpleProject_Impl::projectDir() const {
@@ -218,10 +222,10 @@ namespace detail {
       }
     }
     for (const BCLMeasure& gone : toRemove) {
-      std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(gone.uuid());
+      auto it1 = m_measures.find(gone.uuid());
       OS_ASSERT(it1 != m_measures.end());
       m_measures.erase(it1);
-      std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(gone.uuid());
+      auto it2 = m_measureArguments.find(gone.uuid());
       if (it2 != m_measureArguments.end()) {
         m_measureArguments.erase(it2);
       }
@@ -238,7 +242,7 @@ namespace detail {
       }
     }
     if (candidateDirs.size() > result.size()) {
-      StringVector::iterator it = candidateDirs.begin();
+      auto it = candidateDirs.begin();
       while (it != candidateDirs.end()) {
         if (std::find(resultDirs.begin(),resultDirs.end(),*it) != resultDirs.end()) {
           it = candidateDirs.erase(it);
@@ -250,7 +254,7 @@ namespace detail {
       for (const std::string& newDir : candidateDirs) {
         if (OptionalBCLMeasure newMeasure = BCLMeasure::load(dir / toPath(newDir))) {
           UUID newUUID = newMeasure->uuid();
-          std::map<UUID,BCLMeasure>::iterator it = m_measures.find(newUUID);
+          auto it = m_measures.find(newUUID);
           if (it != m_measures.end()) {
             m_measures.erase(it);
             LOG(Warn,"There are measures with duplicate UUIDs in this project.");
@@ -268,7 +272,7 @@ namespace detail {
   boost::optional<BCLMeasure> SimpleProject_Impl::getMeasureByUUID(const UUID& uuid) const {
     OptionalBCLMeasure result;
     // check map
-    std::map<UUID,BCLMeasure>::iterator it = m_measures.find(uuid);
+    auto it = m_measures.find(uuid);
     if (it != m_measures.end()) {
       // make sure measure is still there
       if ((boost::filesystem::exists(it->second.directory()) &&
@@ -293,7 +297,7 @@ namespace detail {
           OptionalBCLMeasure candidate = BCLMeasure::load(dit->path());
           if (candidate) {
             UUID candidateUUID = candidate->uuid();
-            std::map<UUID,BCLMeasure>::iterator it = m_measures.find(candidateUUID);
+            auto it = m_measures.find(candidateUUID);
             if (it != m_measures.end()) {
               m_measures.erase(it);
             }
@@ -558,7 +562,7 @@ namespace detail {
               found = false;
               break;
             }
-            if (rpert.measureUUID() != alternativeModelMeasureUUID()) {
+            if (rpert.measureUUID() != m_alternativeModelMeasureUUID) {
               found = false;
               break;
             }
@@ -595,7 +599,7 @@ namespace detail {
                itEnd = params.children.end(); it != itEnd; ++it)
           {
             if (it->value == "bcl_measure_uuid") {
-              if (openstudio::toUUID(it->children.at(0).value) == standardReportMeasureUUID()) {
+              if (openstudio::toUUID(it->children.at(0).value) == m_standardReportMeasureUUID) {
                 result = step;
                 break;
               }
@@ -615,7 +619,7 @@ namespace detail {
   bool SimpleProject_Impl::shouldIncludeCalibrationReports() const {
     bool result(false);
     if (OptionalModel model = seedModel()) {
-      result = (model->getModelObjects<model::UtilityBill>().size() > 0);
+      result = (model->getConcreteModelObjects<model::UtilityBill>().size() > 0);
     }
     return result;
   }
@@ -642,7 +646,7 @@ namespace detail {
                itEnd = params.children.end(); it != itEnd; ++it)
           {
             if (it->value == "bcl_measure_uuid") {
-              if (openstudio::toUUID(it->children.at(0).value) == calibrationReportMeasureUUID()) {
+              if (openstudio::toUUID(it->children.at(0).value) == m_calibrationReportMeasureUUID) {
                 result = step;
                 break;
               }
@@ -809,7 +813,7 @@ namespace detail {
     }
     if ((!analysis().weatherFile()) || (!boost::filesystem::exists(analysis().weatherFile()->path()))) {
       // ETH@20130313 - Thought about not registering failure of setAnalysisWeatherFile, because not
-      // running EnergyPlus, and therefore not setting a weather file, is a legitamite workflow. However,
+      // running EnergyPlus, and therefore not setting a weather file, is a legitimate workflow. However,
       // in PAT there is no way to remove the EnergyPlus job, so not having a weather file really is a
       // problem.
       result = result && setAnalysisWeatherFile();
@@ -1220,7 +1224,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,alternativeModelMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_alternativeModelMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure replaceModelMeasure = insertMeasure(*it);
     RubyMeasure swapModel(replaceModelMeasure,false); // false so not used in algorithms
@@ -1401,7 +1405,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,standardReportMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_standardReportMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1449,7 +1453,7 @@ namespace detail {
     std::vector<BCLMeasure>::const_iterator it = std::find_if(
           patMeasures.begin(),
           patMeasures.end(),
-          boost::bind(uuidEquals<BCLMeasure,openstudio::UUID>,_1,calibrationReportMeasureUUID()));
+          std::bind(uuidEquals<BCLMeasure,openstudio::UUID>,std::placeholders::_1,m_calibrationReportMeasureUUID));
     OS_ASSERT(it != patMeasures.end());
     BCLMeasure bclMeasure = insertMeasure(*it);
 
@@ -1670,7 +1674,7 @@ namespace detail {
     openstudio::path newPath = destinationDirectory / modelPath.filename();
     boost::filesystem::copy_file(modelPath,newPath,boost::filesystem::copy_option::overwrite_if_exists);
 
-    // pick up auxillary data
+    // pick up auxiliary data
     openstudio::path companionFolder = modelPath.parent_path() / modelPath.stem();
     if (boost::filesystem::exists(companionFolder) &&
         boost::filesystem::is_directory(companionFolder))
@@ -1989,14 +1993,14 @@ namespace detail {
                     << toString(dir) << ".");
     }
     BCLMeasure result = *measureCopy;
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(result.uuid());
+    auto it1 = m_measures.find(result.uuid());
     if (it1 != m_measures.end()) {
       m_measures.erase(it1);
     }
     std::pair<std::map<UUID,BCLMeasure>::const_iterator,bool> insertResult =
         m_measures.insert(std::map<UUID,BCLMeasure>::value_type(result.uuid(),result));
     OS_ASSERT(insertResult.second);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(result.uuid());
+    auto it2 = m_measureArguments.find(result.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }
@@ -2005,7 +2009,7 @@ namespace detail {
 
   void SimpleProject_Impl::removeMeasure(const BCLMeasure& measure) {
     OS_ASSERT(completeAndNormalize(measure.directory().parent_path()) == completeAndNormalize(scriptsDir()));
-    std::map<UUID,BCLMeasure>::iterator it1 = m_measures.find(measure.uuid());
+    auto it1 = m_measures.find(measure.uuid());
     OS_ASSERT(it1 != m_measures.end());
     try {
       boost::filesystem::remove_all(measure.directory());
@@ -2015,7 +2019,7 @@ namespace detail {
           << " from file system, because " << e.what() << ".");
     }
     m_measures.erase(it1);
-    std::map<UUID,std::vector<ruleset::OSArgument> >::iterator it2 = m_measureArguments.find(measure.uuid());
+    auto it2 = m_measureArguments.find(measure.uuid());
     if (it2 != m_measureArguments.end()) {
       m_measureArguments.erase(it2);
     }
@@ -2027,18 +2031,6 @@ namespace detail {
       removeMeasure(*existing);
     }
     return addMeasure(measure);
-  }
-
-  openstudio::UUID SimpleProject_Impl::alternativeModelMeasureUUID() {
-    return toUUID("{d234ecee-c118-44e7-a381-db0a8917d751}");
-  }
-
-  openstudio::UUID SimpleProject_Impl::standardReportMeasureUUID() {
-    return toUUID("fc337100-8634-404e-8966-01243d292a79");
-  }
-
-  openstudio::UUID SimpleProject_Impl::calibrationReportMeasureUUID() {
-    return toUUID("e6642d40-7366-4647-8724-53a37991d579");
   }
 
 } // detail
@@ -2090,7 +2082,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
   {
     if (boost::filesystem::is_regular_file(it->status()))
     {
-      // check for osp extenstion
+      // check for osp extension
       openstudio::path p = it->path();
       std::string ext = getFileExtension(p);
       if (ext != "osp") {
@@ -2129,7 +2121,7 @@ boost::optional<SimpleProject> SimpleProject::open(const openstudio::path& proje
     return result;
   }
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           OptionalAnalysis(),
@@ -2197,7 +2189,7 @@ boost::optional<SimpleProject> SimpleProject::create(const openstudio::path& pro
 
   saveAnalysis(analysis,analysisDriver);
 
-  result = SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl>(
+  result = SimpleProject(std::shared_ptr<detail::SimpleProject_Impl>(
                            new detail::SimpleProject_Impl(projectDir,
                                                           analysisDriver,
                                                           analysis,
@@ -2401,12 +2393,12 @@ bool SimpleProject::saveAs(const openstudio::path& newProjectDir) const {
   return getImpl()->saveAs(newProjectDir);
 }
 
-boost::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
+std::shared_ptr<detail::SimpleProject_Impl> SimpleProject::getImpl() const {
   return m_impl;
 }
 
 /// @cond
-SimpleProject::SimpleProject(boost::shared_ptr<detail::SimpleProject_Impl> impl)
+SimpleProject::SimpleProject(std::shared_ptr<detail::SimpleProject_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond
@@ -2585,7 +2577,7 @@ AnalysisRunOptions standardRunOptions(const SimpleProject& project) {
   runOptions.setQueueSize(24);
 
   // DLM: in the future would be good to set JobCleanUpBehavior to standard
-  // however there seem to be intermittant failures when this is done (bug 1077)
+  // however there seem to be intermittent failures when this is done (bug 1077)
   // for now keep this setting, should also be a user option for debugging
   // ETH: changing back to standard, i think the bugs have been squashed
   runOptions.setJobCleanUpBehavior(analysisdriver::JobCleanUpBehavior::standard);

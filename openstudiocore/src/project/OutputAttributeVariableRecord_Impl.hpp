@@ -20,8 +20,8 @@
 #ifndef PROJECT_OUTPUTATTRIBUTEVARIABLERECORD_IMPL_HPP
 #define PROJECT_OUTPUTATTRIBUTEVARIABLERECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OutputVariableRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "OutputVariableRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -60,7 +60,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> resources() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Variable variable() const;
 

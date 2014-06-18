@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/OutputAttributeVariable_Impl.hpp>
+#include "OutputAttributeVariable.hpp"
+#include "OutputAttributeVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "DataPoint.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/core/Exception.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -56,7 +56,7 @@ namespace detail {
   {}
 
   AnalysisObject OutputAttributeVariable_Impl::clone() const {
-    boost::shared_ptr<OutputAttributeVariable_Impl> impl(new OutputAttributeVariable_Impl(*this));
+    std::shared_ptr<OutputAttributeVariable_Impl> impl(new OutputAttributeVariable_Impl(*this));
     return OutputAttributeVariable(impl);
   }
 
@@ -124,7 +124,7 @@ namespace detail {
 OutputAttributeVariable::OutputAttributeVariable(
     const std::string& name,
     const std::string& attributeName)
-  : OutputVariable(boost::shared_ptr<detail::OutputAttributeVariable_Impl>(
+  : OutputVariable(std::shared_ptr<detail::OutputAttributeVariable_Impl>(
                            new detail::OutputAttributeVariable_Impl(name,attributeName)))
 {}
 
@@ -135,7 +135,7 @@ OutputAttributeVariable::OutputAttributeVariable(
     const std::string& displayName,
     const std::string& description,
     const std::string& attributeName)
-  : OutputVariable(boost::shared_ptr<detail::OutputAttributeVariable_Impl>(
+  : OutputVariable(std::shared_ptr<detail::OutputAttributeVariable_Impl>(
                            new detail::OutputAttributeVariable_Impl(uuid,
                                                                     versionUUID,
                                                                     name,
@@ -153,7 +153,7 @@ void OutputAttributeVariable::setAttributeName(const std::string& attributeName)
 }
 
 /// @cond
-OutputAttributeVariable::OutputAttributeVariable(boost::shared_ptr<detail::OutputAttributeVariable_Impl> impl)
+OutputAttributeVariable::OutputAttributeVariable(std::shared_ptr<detail::OutputAttributeVariable_Impl> impl)
   : OutputVariable(impl)
 {}
 /// @endcond

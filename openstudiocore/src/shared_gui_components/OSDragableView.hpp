@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSDRAGABLEVIEW_H
-#define OPENSTUDIO_OSDRAGABLEVIEW_H
+#ifndef SHAREDGUICOMPONENTS_OSDRAGABLEVIEW_HPP
+#define SHAREDGUICOMPONENTS_OSDRAGABLEVIEW_HPP
 
 #include <QWidget>
 
@@ -43,7 +43,7 @@ class OSDragableView : public QWidget
 
   public:
 
-  OSDragableView(QWidget * parent = 0);
+  OSDragableView(QWidget * parent = nullptr);
 
   virtual ~OSDragableView() {}
 
@@ -72,5 +72,5 @@ class OSDragableView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSDRAGABLEVIEW_H
+#endif // SHAREDGUICOMPONENTS_OSDRAGABLEVIEW_HPP
 

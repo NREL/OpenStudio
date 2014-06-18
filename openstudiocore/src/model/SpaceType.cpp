@@ -17,65 +17,64 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
 
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
+#include "People.hpp"
+#include "People_Impl.hpp"
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
+#include "Lights.hpp"
+#include "Lights_Impl.hpp"
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
+#include "Luminaire.hpp"
+#include "Luminaire_Impl.hpp"
+#include "ElectricEquipment.hpp"
+#include "ElectricEquipment_Impl.hpp"
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "GasEquipment.hpp"
+#include "GasEquipment_Impl.hpp"
+#include "GasEquipmentDefinition.hpp"
+#include "GasEquipmentDefinition_Impl.hpp"
+#include "HotWaterEquipment.hpp"
+#include "HotWaterEquipment_Impl.hpp"
+#include "SteamEquipment.hpp"
+#include "SteamEquipment_Impl.hpp"
+#include "OtherEquipment.hpp"
+#include "OtherEquipment_Impl.hpp"
+#include "SpaceInfiltrationDesignFlowRate.hpp"
+#include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "DesignSpecificationOutdoorAir.hpp"
+#include "DesignSpecificationOutdoorAir_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -314,7 +313,7 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -416,7 +415,7 @@ namespace detail {
     if (standardsSpaceType){
       finder.addTarget(*standardsSpaceType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -453,7 +452,7 @@ namespace detail {
     std::vector<Space> result;
 
     Handle handle = this->handle();
-    for (const Space& space : this->model().getModelObjects<Space>()){
+    for (const Space& space : this->model().getConcreteModelObjects<Space>()){
       OptionalSpaceType spaceType = space.spaceType();
       if (spaceType){
         if (spaceType->handle() == handle){
@@ -1171,7 +1170,7 @@ namespace detail {
   double SpaceType_Impl::floorArea() const
   {
     double result = 0;
-    for (const Space& space : this->model().getModelObjects<Space>()){
+    for (const Space& space : this->model().getConcreteModelObjects<Space>()){
       boost::optional<SpaceType> spaceType = space.spaceType();
       if (spaceType && spaceType->handle() == this->handle()){
         result += space.multiplier()*space.floorArea();
@@ -1341,14 +1340,13 @@ namespace detail {
   template <typename T>
   void SpaceType_Impl::removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep) {
     int count(0);
-    for (typename std::vector<T>::iterator it = instances.begin(), itEnd = instances.end();
-         it != itEnd; ++it)
+    for (auto & instance : instances)
     {
-      if (*it == instanceToKeep) {
+      if (instance == instanceToKeep) {
         ++count;
         continue;
       }
-      it->remove();
+      instance.remove();
     }
     OS_ASSERT(count == 1);
   }
@@ -1708,7 +1706,7 @@ double SpaceType::floorArea() const
 }
 
 /// @cond
-SpaceType::SpaceType(boost::shared_ptr<detail::SpaceType_Impl> impl)
+SpaceType::SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

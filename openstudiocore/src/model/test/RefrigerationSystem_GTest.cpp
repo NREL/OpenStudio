@@ -19,38 +19,38 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationCondenserAirCooled_Impl.hpp>
-#include <model/RefrigerationCondenserEvaporativeCooled.hpp>
-#include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
-#include <model/RefrigerationCondenserWaterCooled.hpp>
-#include <model/RefrigerationCondenserWaterCooled_Impl.hpp>
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCondenserCascade_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationSecondarySystem_Impl.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
+#include "../RefrigerationSystem.hpp"
+#include "../RefrigerationSystem_Impl.hpp"
+#include "../RefrigerationAirChiller.hpp"
+#include "../RefrigerationAirChiller_Impl.hpp"
+#include "../RefrigerationCompressor.hpp"
+#include "../RefrigerationCompressor_Impl.hpp"
+#include "../RefrigerationCondenserAirCooled.hpp"
+#include "../RefrigerationCondenserAirCooled_Impl.hpp"
+#include "../RefrigerationCondenserEvaporativeCooled.hpp"
+#include "../RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+#include "../RefrigerationCondenserWaterCooled.hpp"
+#include "../RefrigerationCondenserWaterCooled_Impl.hpp"
+#include "../RefrigerationCondenserCascade.hpp"
+#include "../RefrigerationCondenserCascade_Impl.hpp"
+#include "../RefrigerationCase.hpp"
+#include "../RefrigerationCase_Impl.hpp"
+#include "../RefrigerationWalkIn.hpp"
+#include "../RefrigerationWalkIn_Impl.hpp"
+#include "../RefrigerationSecondarySystem.hpp"
+#include "../RefrigerationSecondarySystem_Impl.hpp"
+#include "../RefrigerationSubcoolerLiquidSuction.hpp"
+#include "../RefrigerationSubcoolerLiquidSuction_Impl.hpp"
+#include "../RefrigerationSubcoolerMechanical.hpp"
+#include "../RefrigerationSubcoolerMechanical_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

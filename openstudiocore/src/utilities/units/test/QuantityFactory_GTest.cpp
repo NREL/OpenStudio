@@ -19,14 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
+#include "../QuantityFactory.hpp"
+#include "../ScaleFactory.hpp"
 
-#include <utilities/core/Exception.hpp>
+#include "../../core/Exception.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/pointer_cast.hpp>
 
 using openstudio::Unit;
@@ -37,8 +36,8 @@ using openstudio::createQuantity;
 
 using openstudio::Exception;
 
-using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
+using std::shared_ptr;
+using std::dynamic_pointer_cast;
 
 TEST_F(UnitsFixture,QuantityFactory_ReturnQuantityObjects) {
   LOG(Debug,"QuantityFactory_ReturnQuantityObjects");

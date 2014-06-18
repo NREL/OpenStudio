@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/FSUDaceAlgorithmRecord.hpp>
-#include <project/FSUDaceAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "FSUDaceAlgorithmRecord.hpp"
+#include "FSUDaceAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
-#include <analysis/FSUDaceAlgorithm.hpp>
-#include <analysis/FSUDaceAlgorithm_Impl.hpp>
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
+#include "../analysis/FSUDaceAlgorithm.hpp"
+#include "../analysis/FSUDaceAlgorithm_Impl.hpp"
+#include "../analysis/FSUDaceAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {
@@ -76,7 +76,7 @@ namespace detail {
     return result;
   }
 
-  void FSUDaceAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void FSUDaceAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FSUDaceAlgorithmRecord>(query);
@@ -206,7 +206,7 @@ namespace detail {
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const analysis::FSUDaceAlgorithm& fsudaceAlgorithm,
                                                AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
         new detail::FSUDaceAlgorithmRecord_Impl(fsudaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         fsudaceAlgorithm)
@@ -217,7 +217,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const analysis::FSUDaceAlgorithm&
 }
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl>(
         new detail::FSUDaceAlgorithmRecord_Impl(query, database)),
         database,
         boost::none)
@@ -226,7 +226,7 @@ FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(const QSqlQuery& query, ProjectDa
 }
 
 FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(
-  boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
+  std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::none)
 {
@@ -290,7 +290,7 @@ analysis::FSUDaceAlgorithm FSUDaceAlgorithmRecord::fsudaceAlgorithm() const {
 }
 
 /// @cond
-FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl)
+FSUDaceAlgorithmRecord::FSUDaceAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

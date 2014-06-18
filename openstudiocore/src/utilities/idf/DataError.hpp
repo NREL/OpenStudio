@@ -20,14 +20,14 @@
 #ifndef UTILITIES_IDF_DATAERROR_HPP
 #define UTILITIES_IDF_DATAERROR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/ValidityEnums.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "ValidityEnums.hpp"
+#include "Handle.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 
@@ -96,7 +96,7 @@ class UTILITIES_API DataError {
   REGISTER_LOGGER("utilities.idf.DataError");
 };
 
-/** Set comparitor for DataError. \relates DataError */
+/** Set comparator for DataError. \relates DataError */
 struct UTILITIES_API DataErrorLess {
   bool operator()(const DataError& left, const DataError& right) const;
 };

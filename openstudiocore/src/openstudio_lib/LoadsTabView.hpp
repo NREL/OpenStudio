@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOADSTABVIEW_H
-#define OPENSTUDIO_LOADSTABVIEW_H
+#ifndef OPENSTUDIO_LOADSTABVIEW_HPP
+#define OPENSTUDIO_LOADSTABVIEW_HPP
 
-#include <openstudio_lib/SubTabView.hpp>
+#include "SubTabView.hpp"
 
 namespace openstudio {
 
@@ -40,4 +40,4 @@ public slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOADSTABVIEW_H
+#endif // OPENSTUDIO_LOADSTABVIEW_HPP

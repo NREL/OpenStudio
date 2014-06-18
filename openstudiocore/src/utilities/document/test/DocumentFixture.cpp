@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/test/DocumentFixture.hpp>
-#include <utilities/document/Section.hpp>
-#include <utilities/document/Table.hpp>
-#include <utilities/document/Text.hpp>
+#include "DocumentFixture.hpp"
+#include "../Section.hpp"
+#include "../Table.hpp"
+#include "../Text.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;

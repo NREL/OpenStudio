@@ -20,11 +20,11 @@
 #ifndef MODEL_THERMALZONE_IMPL_HPP
 #define MODEL_THERMALZONE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -35,6 +35,7 @@ class IlluminanceMap;
 class RenderingColor;
 class HVACTemplateZoneIdealLoadsAirSystem;
 class ThermostatSetpointDualSetpoint;
+class ZoneControlHumidistat;
 class ThermalZone;
 class SizingZone;
 class PortList;
@@ -93,6 +94,7 @@ namespace detail {
     Q_PROPERTY(bool useIdealAirLoads READ useIdealAirLoads WRITE setUseIdealAirLoads);
 
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> thermostatSetpointDualSetpoint READ thermostatSetpointDualSetpointAsModelObject WRITE setThermostatSetpointDualSetpointAsModelObject RESET resetThermostatSetpointDualSetpoint);
+    Q_PROPERTY(boost::optional<openstudio::model::ModelObject> zoneControlHumidistat READ zoneControlHumidistatAsModelObject WRITE setZoneControlHumidistatAsModelObject RESET resetZoneControlHumidistat);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> primaryDaylightingControl READ primaryDaylightingControlAsModelObject WRITE setPrimaryDaylightingControlAsModelObject RESET resetPrimaryDaylightingControl);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> secondaryDaylightingControl READ secondaryDaylightingControlAsModelObject WRITE setSecondaryDaylightingControlAsModelObject RESET resetSecondaryDaylightingControl);
     Q_PROPERTY(boost::optional<openstudio::model::ModelObject> illuminanceMap READ illuminanceMapAsModelObject WRITE setIlluminanceMapAsModelObject RESET resetIlluminanceMap);
@@ -134,6 +136,12 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const;
 
+    /** This function returns a vector of HVACComponent that are directly downstream
+     *  from this object on an AirLoopHVAC or PlantLoop. 
+     *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+    **/
+    virtual std::vector<HVACComponent> edges(bool isDemandComponent);
+
     /** @name Getters */
     //@{
 
@@ -164,6 +172,8 @@ namespace detail {
     std::string zoneConditioningEquipmentListName() const;
 
     boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
+
+    boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
     double fractionofZoneControlledbyPrimaryDaylightingControl() const;
     
@@ -222,6 +232,10 @@ namespace detail {
     bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
 
     void resetThermostatSetpointDualSetpoint();
+
+    bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
+
+    void resetZoneControlHumidistat();
 
     bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
     
@@ -434,6 +448,7 @@ namespace detail {
     openstudio::Quantity fractionofZoneControlledbySecondaryDaylightingControl_IP() const;    
 
     boost::optional<ModelObject> thermostatSetpointDualSetpointAsModelObject() const;
+    boost::optional<ModelObject> zoneControlHumidistatAsModelObject() const;
     boost::optional<ModelObject> primaryDaylightingControlAsModelObject() const;
     boost::optional<ModelObject> secondaryDaylightingControlAsModelObject() const;
     boost::optional<ModelObject> illuminanceMapAsModelObject() const;
@@ -442,6 +457,7 @@ namespace detail {
     std::vector<ModelObject> spacesAsModelObjects() const;
 
     bool setThermostatSetpointDualSetpointAsModelObject(const boost::optional<ModelObject>& modelObject);
+    bool setZoneControlHumidistatAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setPrimaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setSecondaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setIlluminanceMapAsModelObject(const boost::optional<ModelObject>& modelObject);

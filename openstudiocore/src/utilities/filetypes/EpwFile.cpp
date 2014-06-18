@@ -17,10 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "EpwFile.hpp"
+#include "../idf/IdfObject.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/Checksum.hpp>
+#include "../core/Checksum.hpp"
+#include "../core/Assert.hpp"
+#include "../units/QuantityConverter.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -34,6 +36,45 @@
 #include <cmath>
 
 namespace openstudio{
+
+EpwDataPoint::EpwDataPoint()
+{
+  m_year=1;
+  m_month=1;
+  m_day=1;
+  m_hour=1;
+  m_minute=0,
+  m_dataSourceandUncertaintyFlags="";
+  m_dryBulbTemperature="99.9";
+  m_dewPointTemperature="99.9",
+  m_relativeHumidity="999";
+  m_atmosphericStationPressure="999999";
+  m_extraterrestrialHorizontalRadiation="9999";
+  m_extraterrestrialDirectNormalRadiation="9999";
+  m_horizontalInfraredRadiationIntensity="9999",
+  m_globalHorizontalRadiation="9999";
+  m_directNormalRadiation="9999";
+  m_diffuseHorizontalRadiation="9999",
+  m_globalHorizontalIlluminance="999999";
+  m_directNormalIlluminance="999999";
+  m_diffuseHorizontalIlluminance="999999";
+  m_zenithLuminance="9999";
+  m_windDirection="999";
+  m_windSpeed="999";
+  m_totalSkyCover=99;
+  m_opaqueSkyCover=99,
+  m_visibility="9999";
+  m_ceilingHeight="99999";
+  m_presentWeatherObservation=0;
+  m_presentWeatherCodes=0;
+  m_precipitableWater="999";
+  m_aerosolOpticalDepth=".999";
+  m_snowDepth="999";
+  m_daysSinceLastSnowfall="99",
+  m_albedo="999";
+  m_liquidPrecipitationDepth="999";
+  m_liquidPrecipitationQuantity="99";
+}
 
 EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,
@@ -90,66 +131,76 @@ EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
   setLiquidPrecipitationQuantity(liquidPrecipitationQuantity);
 }
 
-EpwDataPoint::EpwDataPoint(std::string line)
+boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(std::string line)
 {
+  EpwDataPoint pt;
   QStringList list = QString().fromStdString(line).split(',');
   // Require 35 items in the list
-  if(list.size() != 35)
-  {
-    std::cout << "Bad input line" << std::endl;
-    return;
+  if(list.size() < 35) {
+    // JWD: Should this just use the entries that are there and fill in the rest as unavailable?
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size());
+    return boost::optional<EpwDataPoint>();
+  } else if(list.size() > 35) {
+    LOG_FREE(Error,"openstudio.EpwFile","Expected 35 fields in EPW data, got " << list.size() << ", additional data will be ignored");
+    return boost::optional<EpwDataPoint>();
   }
   // Use the appropriate setter on each field
-  setYear(list[0].toStdString());
-  setMonth(list[1].toStdString());
-  setDay(list[2].toStdString());
-  setHour(list[3].toStdString());
-  setMinute(list[4].toStdString());
-  setDataSourceandUncertaintyFlags(list[5].toStdString());
-  setDryBulbTemperature(list[6].toStdString());
-  setDewPointTemperature(list[7].toStdString());
-  setRelativeHumidity(list[8].toStdString());
-  setAtmosphericStationPressure(list[9].toStdString());
-  setExtraterrestrialHorizontalRadiation(list[10].toStdString());
-  setExtraterrestrialDirectNormalRadiation(list[11].toStdString());
-  setHorizontalInfraredRadiationIntensity(list[12].toStdString());
-  setGlobalHorizontalRadiation(list[13].toStdString());
-  setDirectNormalRadiation(list[14].toStdString());
-  setDiffuseHorizontalRadiation(list[15].toStdString());
-  setGlobalHorizontalIlluminance(list[16].toStdString());
-  setDirectNormalIlluminance(list[17].toStdString());
-  setDiffuseHorizontalIlluminance(list[18].toStdString());
-  setZenithLuminance(list[19].toStdString());
-  setWindDirection(list[20].toStdString());
-  setWindSpeed(list[21].toStdString());
-  setTotalSkyCover(list[22].toStdString());
-  setOpaqueSkyCover(list[23].toStdString());
-  setVisibility(list[24].toStdString());
-  setCeilingHeight(list[25].toStdString());
-  setPresentWeatherObservation(list[26].toStdString());
-  setPresentWeatherCodes(list[27].toStdString());
-  setPrecipitableWater(list[28].toStdString());
-  setAerosolOpticalDepth(list[29].toStdString());
-  setSnowDepth(list[30].toStdString());
-  setDaysSinceLastSnowfall(list[31].toStdString());
-  setAlbedo(list[32].toStdString());
-  setLiquidPrecipitationDepth(list[33].toStdString());
-  setLiquidPrecipitationQuantity(list[34].toStdString());
+  if(!pt.setYear(list[EpwDataField::Year].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setMonth(list[EpwDataField::Month].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setDay(list[EpwDataField::Day].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  if(!pt.setHour(list[EpwDataField::Hour].toStdString())) {
+    return boost::optional<EpwDataPoint>();
+  }
+  // The minute field is not set here - it is set based upon the header data
+  pt.setDataSourceandUncertaintyFlags(list[EpwDataField::DataSourceandUncertaintyFlags].toStdString());
+  pt.setDryBulbTemperature(list[EpwDataField::DryBulbTemperature].toStdString());
+  pt.setDewPointTemperature(list[EpwDataField::DewPointTemperature].toStdString());
+  pt.setRelativeHumidity(list[EpwDataField::RelativeHumidity].toStdString());
+  pt.setAtmosphericStationPressure(list[EpwDataField::AtmosphericStationPressure].toStdString());
+  pt.setExtraterrestrialHorizontalRadiation(list[EpwDataField::ExtraterrestrialHorizontalRadiation].toStdString());
+  pt.setExtraterrestrialDirectNormalRadiation(list[EpwDataField::ExtraterrestrialDirectNormalRadiation].toStdString());
+  pt.setHorizontalInfraredRadiationIntensity(list[EpwDataField::HorizontalInfraredRadiationIntensity].toStdString());
+  pt.setGlobalHorizontalRadiation(list[EpwDataField::GlobalHorizontalRadiation].toStdString());
+  pt.setDirectNormalRadiation(list[EpwDataField::DirectNormalRadiation].toStdString());
+  pt.setDiffuseHorizontalRadiation(list[EpwDataField::DiffuseHorizontalRadiation].toStdString());
+  pt.setGlobalHorizontalIlluminance(list[EpwDataField::GlobalHorizontalIlluminance].toStdString());
+  pt.setDirectNormalIlluminance(list[EpwDataField::DirectNormalIlluminance].toStdString());
+  pt.setDiffuseHorizontalIlluminance(list[EpwDataField::DiffuseHorizontalIlluminance].toStdString());
+  pt.setZenithLuminance(list[EpwDataField::ZenithLuminance].toStdString());
+  pt.setWindDirection(list[EpwDataField::WindDirection].toStdString());
+  pt.setWindSpeed(list[EpwDataField::WindSpeed].toStdString());
+  pt.setTotalSkyCover(list[EpwDataField::TotalSkyCover].toStdString());
+  pt.setOpaqueSkyCover(list[EpwDataField::OpaqueSkyCover].toStdString());
+  pt.setVisibility(list[EpwDataField::Visibility].toStdString());
+  pt.setCeilingHeight(list[EpwDataField::CeilingHeight].toStdString());
+  pt.setPresentWeatherObservation(list[EpwDataField::PresentWeatherObservation].toStdString());
+  pt.setPresentWeatherCodes(list[EpwDataField::PresentWeatherCodes].toStdString());
+  pt.setPrecipitableWater(list[EpwDataField::PrecipitableWater].toStdString());
+  pt.setAerosolOpticalDepth(list[EpwDataField::AerosolOpticalDepth].toStdString());
+  pt.setSnowDepth(list[EpwDataField::SnowDepth].toStdString());
+  pt.setDaysSinceLastSnowfall(list[EpwDataField::DaysSinceLastSnowfall].toStdString());
+  pt.setAlbedo(list[EpwDataField::Albedo].toStdString());
+  pt.setLiquidPrecipitationDepth(list[EpwDataField::LiquidPrecipitationDepth].toStdString());
+  pt.setLiquidPrecipitationQuantity(list[EpwDataField::LiquidPrecipitationQuantity].toStdString());
+  return boost::optional<EpwDataPoint>(pt);
 }
 
-std::string EpwDataPoint::unitsByName(std::string name)
+boost::optional<std::string> EpwDataPoint::unitsByName(std::string name)
 {
   EpwDataField id;
-  try
-  {
+  try {
     id = EpwDataField(name);
-  }
-  catch(...)
-  {
+  } catch(...) {
     // Could do a warning message here
-    return std::string();
+    return boost::optional<std::string>();
   }
-  return units(id);
+  return boost::optional<std::string>(units(id));
 }
 
 std::string EpwDataPoint::units(EpwDataField field)
@@ -407,7 +458,7 @@ static double psat(double T)
   return exp(rhs);
 }
 
-std::string EpwDataPoint::toWthString()
+boost::optional<std::string> EpwDataPoint::toWthString()
 {
   QStringList output;
   QString date = QString("%1/%2").arg(m_month).arg(m_day);
@@ -417,25 +468,31 @@ std::string EpwDataPoint::toWthString()
   boost::optional<double> value = dryBulbTemperature();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing dry bulb temperature on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
-  double drybulb = value.get()+273.15;
+  boost::optional<double> optdrybulb = openstudio::convert(value.get(), "C", "K");
+  OS_ASSERT(optdrybulb);
+  double drybulb = optdrybulb.get();
   output << QString("%1").arg(drybulb);
   value = atmosphericStationPressure();
   if(!value)
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing atmospheric station pressure on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   double p = value.get();
   output << m_atmosphericStationPressure;
   if(!windSpeed())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind speed on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windSpeed;
   if(!windDirection())
   {
-    LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    LOG_FREE(Error,"openstudio.EpwFile",QString("Missing wind direction on %1 at %2").arg(date).arg(hms).toStdString());
+    return boost::optional<std::string>();
   }
   output << m_windDirection;
   double pw;
@@ -445,9 +502,12 @@ std::string EpwDataPoint::toWthString()
     value = dewPointTemperature();
     if(!value)
     {
-      LOG_FREE_AND_THROW("openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      LOG_FREE(Error,"openstudio.EpwFile",QString("Cannot compute humidity ratio on %1 at %2").arg(date).arg(hms).toStdString());
+      return boost::optional<std::string>();
     }
-    double dewpoint = value.get()+273.15;
+    boost::optional<double> optdewpoint = openstudio::convert(value.get(), "C", "K");
+    OS_ASSERT(optdewpoint);
+    double dewpoint = optdewpoint.get();
     pw = psat(dewpoint);
   }
   else // Have relative humidity
@@ -463,7 +523,7 @@ std::string EpwDataPoint::toWthString()
   output << "0";
   // Pass on snow and rain
   output << "0" << "0";
-  return output.join("\t").toStdString();
+  return boost::optional<std::string>(output.join("\t").toStdString());
 }
 
 Date EpwDataPoint::date() const
@@ -518,7 +578,7 @@ bool EpwDataPoint::setYear(std::string year)
   {
     return false;
   }
-  m_year = value;
+  setYear(value);
   return true;
 }
 
@@ -529,8 +589,8 @@ int EpwDataPoint::month() const
 
 bool EpwDataPoint::setMonth(int month)
 {
-  if(1 > month || 12 < month)
-  {
+  if(1 > month || 12 < month) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value " << month << " out of range");
     return false;
   }
   m_month = month;
@@ -541,12 +601,11 @@ bool EpwDataPoint::setMonth(std::string month)
 {
   bool ok;
   int value = QString().fromStdString(month).toInt(&ok);
-  if(1 > value || 12 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Month value '" << month << "' cannot be converted into an integer");
     return false;
   }
-  m_month = value;
-  return true;
+  return setMonth(value);
 }
 
 int EpwDataPoint::day() const
@@ -556,8 +615,8 @@ int EpwDataPoint::day() const
 
 bool EpwDataPoint::setDay(int day)
 {
-  if(1 > day || 31 < day)
-  {
+  if(1 > day || 31 < day) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value " << day << " out of range");
     return false;
   }
   m_day = day;
@@ -568,12 +627,11 @@ bool EpwDataPoint::setDay(std::string day)
 {
   bool ok;
   int value = QString().fromStdString(day).toInt(&ok);
-  if(1 > value || 31 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Day value '" << day << "' cannot be converted into an integer");
     return false;
-  }
-  m_day = value;
-  return true;
+  } 
+  return setDay(value);
 }
 
 int EpwDataPoint::hour() const
@@ -583,8 +641,8 @@ int EpwDataPoint::hour() const
 
 bool EpwDataPoint::setHour(int hour)
 {
-  if(1 > hour || 24 < hour)
-  {
+  if(1 > hour || 24 < hour) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value " << hour << " out of range");
     return false;
   }
   m_hour = hour;
@@ -595,12 +653,11 @@ bool EpwDataPoint::setHour(std::string hour)
 {
   bool ok;
   int value = QString().fromStdString(hour).toInt(&ok);
-  if(1 > value || 24 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Hour value '" << hour << "' cannot be converted into an integer");
     return false;
   }
-  m_hour = value;
-  return true;
+  return setHour(value);
 }
 
 int EpwDataPoint::minute() const
@@ -610,8 +667,8 @@ int EpwDataPoint::minute() const
 
 bool EpwDataPoint::setMinute(int minute)
 {
-  if(0 > minute || 59 < minute)
-  {
+  if(0 > minute || 59 < minute) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value " << minute << " out of range");
     return false;
   }
   m_minute = minute;
@@ -622,12 +679,11 @@ bool EpwDataPoint::setMinute(std::string minute)
 {
   bool ok;
   int value = QString().fromStdString(minute).toInt(&ok);
-  if(0 > value || 59 < value || !ok)
-  {
+  if(!ok) {
+    LOG_FREE(Error,"openstudio.EpwFile","Minute value '" << minute << "' cannot be converted into an integer");
     return false;
   }
-  m_minute = value;
-  return true;
+  return setMinute(value);
 }
 
 std::string EpwDataPoint::dataSourceandUncertaintyFlags() const
@@ -665,13 +721,12 @@ bool EpwDataPoint::setDryBulbTemperature(std::string dryBulbTemperature)
 {
   bool ok;
   double value = QString().fromStdString(dryBulbTemperature).toDouble(&ok);
-  if(-70 >= value || !ok)
+  if(!ok)
   {
     m_dryBulbTemperature = "99.9";
     return false;
   }
-  m_dryBulbTemperature = QString().fromStdString(dryBulbTemperature);
-  return true;
+  return setDryBulbTemperature(value);
 }
 
 boost::optional<double> EpwDataPoint::dewPointTemperature() const
@@ -699,13 +754,12 @@ bool EpwDataPoint::setDewPointTemperature(std::string dewPointTemperature)
 {
   bool ok;
   double value = QString().fromStdString(dewPointTemperature).toDouble(&ok);
-  if(-70 >= value || !ok)
+  if(!ok)
   {
     m_dewPointTemperature = "99.9";
     return false;
   }
-  m_dewPointTemperature = QString().fromStdString(dewPointTemperature);
-  return true;
+  return setDewPointTemperature(value);
 }
 
 boost::optional<double> EpwDataPoint::relativeHumidity() const
@@ -733,13 +787,12 @@ bool EpwDataPoint::setRelativeHumidity(std::string relativeHumidity)
 {
   bool ok;
   double value = QString().fromStdString(relativeHumidity).toDouble(&ok);
-  if(0 > value || 110 < value || !ok)
+  if(!ok)
   {
     m_relativeHumidity = "999";
     return false;
   }
-  m_relativeHumidity = QString().fromStdString(relativeHumidity);
-  return true;
+  return setRelativeHumidity(value);
 }
 
 boost::optional<double> EpwDataPoint::atmosphericStationPressure() const
@@ -767,13 +820,12 @@ bool EpwDataPoint::setAtmosphericStationPressure(std::string atmosphericStationP
 {
   bool ok;
   double value = QString().fromStdString(atmosphericStationPressure).toDouble(&ok);
-  if(31000 >= value || !ok)
+  if(!ok)
   {
     m_atmosphericStationPressure = "999999";
     return false;
   }
-  m_atmosphericStationPressure = QString().fromStdString(atmosphericStationPressure);
-  return true;
+  return setAtmosphericStationPressure(value);
 }
 
 boost::optional<double> EpwDataPoint::extraterrestrialHorizontalRadiation() const
@@ -801,13 +853,12 @@ bool EpwDataPoint::setExtraterrestrialHorizontalRadiation(std::string extraterre
 {
   bool ok;
   double value = QString().fromStdString(extraterrestrialHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_extraterrestrialHorizontalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialHorizontalRadiation = QString().fromStdString(extraterrestrialHorizontalRadiation);
-  return true;
+  return setExtraterrestrialHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::extraterrestrialDirectNormalRadiation() const
@@ -835,13 +886,12 @@ bool EpwDataPoint::setExtraterrestrialDirectNormalRadiation(std::string extrater
 {
   bool ok;
   double value = QString().fromStdString(extraterrestrialDirectNormalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_extraterrestrialDirectNormalRadiation = "9999";
     return false;
   }
-  m_extraterrestrialDirectNormalRadiation = QString().fromStdString(extraterrestrialDirectNormalRadiation);
-  return true;
+  return setExtraterrestrialDirectNormalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::horizontalInfraredRadiationIntensity() const
@@ -869,13 +919,12 @@ bool EpwDataPoint::setHorizontalInfraredRadiationIntensity(std::string horizonta
 {
   bool ok;
   double value = QString().fromStdString(horizontalInfraredRadiationIntensity).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_horizontalInfraredRadiationIntensity = "9999";
     return false;
   }
-  m_horizontalInfraredRadiationIntensity = QString().fromStdString(horizontalInfraredRadiationIntensity);
-  return true;
+  return setHorizontalInfraredRadiationIntensity(value);
 }
 
 boost::optional<double> EpwDataPoint::globalHorizontalRadiation() const
@@ -903,13 +952,12 @@ bool EpwDataPoint::setGlobalHorizontalRadiation(std::string globalHorizontalRadi
 {
   bool ok;
   double value = QString().fromStdString(globalHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_globalHorizontalRadiation = "9999";
     return false;
   }
-  m_globalHorizontalRadiation = QString().fromStdString(globalHorizontalRadiation);
-  return true;
+  return setGlobalHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::directNormalRadiation() const
@@ -937,13 +985,12 @@ bool EpwDataPoint::setDirectNormalRadiation(std::string directNormalRadiation)
 {
   bool ok;
   double value = QString().fromStdString(directNormalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_directNormalRadiation = "9999";
     return false;
   }
-  m_directNormalRadiation = QString().fromStdString(directNormalRadiation);
-  return true;
+  return setDirectNormalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::diffuseHorizontalRadiation() const
@@ -971,13 +1018,12 @@ bool EpwDataPoint::setDiffuseHorizontalRadiation(std::string diffuseHorizontalRa
 {
   bool ok;
   double value = QString().fromStdString(diffuseHorizontalRadiation).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_diffuseHorizontalRadiation = "9999";
     return false;
   }
-  m_diffuseHorizontalRadiation = QString().fromStdString(diffuseHorizontalRadiation);
-  return true;
+  return setDiffuseHorizontalRadiation(value);
 }
 
 boost::optional<double> EpwDataPoint::globalHorizontalIlluminance() const
@@ -1005,13 +1051,12 @@ bool EpwDataPoint::setGlobalHorizontalIlluminance(std::string globalHorizontalIl
 {
   bool ok;
   double value = QString().fromStdString(globalHorizontalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_globalHorizontalIlluminance = "999999";
     return false;
   }
-  m_globalHorizontalIlluminance = QString().fromStdString(globalHorizontalIlluminance);
-  return true;
+  return setGlobalHorizontalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::directNormalIlluminance() const
@@ -1039,13 +1084,12 @@ bool EpwDataPoint::setDirectNormalIlluminance(std::string directNormalIlluminanc
 {
   bool ok;
   double value = QString().fromStdString(directNormalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_directNormalIlluminance = "999999";
     return false;
   }
-  m_directNormalIlluminance = QString().fromStdString(directNormalIlluminance);
-  return true;
+  return setDirectNormalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::diffuseHorizontalIlluminance() const
@@ -1073,13 +1117,12 @@ bool EpwDataPoint::setDiffuseHorizontalIlluminance(std::string diffuseHorizontal
 {
   bool ok;
   double value = QString().fromStdString(diffuseHorizontalIlluminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_diffuseHorizontalIlluminance = "999999";
     return false;
   }
-  m_diffuseHorizontalIlluminance = QString().fromStdString(diffuseHorizontalIlluminance);
-  return true;
+  return setDiffuseHorizontalIlluminance(value);
 }
 
 boost::optional<double> EpwDataPoint::zenithLuminance() const
@@ -1107,13 +1150,12 @@ bool EpwDataPoint::setZenithLuminance(std::string zenithLuminance)
 {
   bool ok;
   double value = QString().fromStdString(zenithLuminance).toDouble(&ok);
-  if(0 > value || !ok)
+  if(!ok)
   {
     m_zenithLuminance = "9999";
     return false;
   }
-  m_zenithLuminance = QString().fromStdString(zenithLuminance);
-  return true;
+  return setZenithLuminance(value);
 }
 
 boost::optional<double> EpwDataPoint::windDirection() const
@@ -1141,13 +1183,12 @@ bool EpwDataPoint::setWindDirection(std::string windDirection)
 {
   bool ok;
   double value = QString().fromStdString(windDirection).toDouble(&ok);
-  if(0 > value || 360 < value || !ok)
+  if(!ok)
   {
     m_windDirection = "999";
     return false;
   }
-  m_windDirection = QString().fromStdString(windDirection);
-  return true;
+  return setWindDirection(value);
 }
 
 boost::optional<double> EpwDataPoint::windSpeed() const
@@ -1175,13 +1216,12 @@ bool EpwDataPoint::setWindSpeed(std::string windSpeed)
 {
   bool ok;
   double value = QString().fromStdString(windSpeed).toDouble(&ok);
-  if(0 > value || 40 < value || !ok)
+  if(!ok)
   {
     m_windSpeed = "999";
     return false;
   }
-  m_windSpeed = QString().fromStdString(windSpeed);
-  return true;
+  return setWindSpeed(value);
 }
 
 int EpwDataPoint::totalSkyCover() const
@@ -1204,13 +1244,12 @@ bool EpwDataPoint::setTotalSkyCover(std::string totalSkyCover)
 {
   bool ok;
   int value = QString().fromStdString(totalSkyCover).toInt(&ok);
-  if(0 > value || 10 < value || !ok)
+  if(!ok)
   {
     m_totalSkyCover = 99;
     return false;
   }
-  m_totalSkyCover = value;
-  return true;
+  return setTotalSkyCover(value);
 }
 
 int EpwDataPoint::opaqueSkyCover() const
@@ -1233,13 +1272,12 @@ bool EpwDataPoint::setOpaqueSkyCover(std::string opaqueSkyCover)
 {
   bool ok;
   int value = QString().fromStdString(opaqueSkyCover).toInt(&ok);
-  if(0 > value || 10 < value || !ok)
+  if(!ok)
   {
     m_opaqueSkyCover = 99;
     return false;
   }
-  m_opaqueSkyCover = value;
-  return true;
+  return setOpaqueSkyCover(value);
 }
 
 boost::optional<double> EpwDataPoint::visibility() const
@@ -1556,7 +1594,6 @@ boost::optional<EpwFile> EpwFile::load(const openstudio::path& p, bool storeData
   return result;
 }
 
-
 openstudio::path EpwFile::path() const
 {
   return m_path;
@@ -1614,7 +1651,13 @@ double EpwFile::elevation() const
 
 Time EpwFile::timeStep() const
 {
-  return m_timeStep;
+  OS_ASSERT((60 % m_recordsPerHour) == 0);
+  return Time(0,0,60/m_recordsPerHour);
+}
+
+int EpwFile::recordsPerHour() const
+{
+  return m_recordsPerHour;
 }
 
 DayOfWeek EpwFile::startDayOfWeek() const
@@ -1753,19 +1796,21 @@ bool EpwFile::translateToWth(openstudio::path path, std::string description)
   firstPt.setDateTime(dateTime);
 
   stream <<"!Date\tTime\tTa [K]\tPb [Pa]\tWs [m/s]\tWd [deg]\tHr [g/kg]\tIth [kJ/m^2]\tIdn [kJ/m^2]\tTs [K]\tRn [-]\tSn [-]\n";
-  try
-  {
-    stream << firstPt.toWthString() << '\n';
-    for(unsigned int i=0;i<data().size();i++)
-    {
-      stream << data()[i].toWthString() << '\n';
-    }
-  }
-  catch(...)
-  {
+  boost::optional<std::string> output = firstPt.toWthString();
+  if(!output) {
     LOG(Error, "Translation to WTH has failed");
     fp.close();
     return false;
+  }
+  stream << output.get() << '\n';
+  for(unsigned int i=0;i<data().size();i++) {
+    output = data()[i].toWthString();
+    if(!output) {
+      LOG(Error, "Translation to WTH has failed");
+      fp.close();
+      return false;
+    }
+    stream << output.get() << '\n';
   }
   fp.close();
   return true;
@@ -1823,12 +1868,17 @@ bool EpwFile::parse(bool storeData)
   }
 
   // read rest of file
+  int lineNumber = 8;
   boost::optional<Date> startDate;
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
+  OS_ASSERT((60 % m_recordsPerHour) == 0);
+  int minutesPerRecord = 60/m_recordsPerHour;
+  int currentMinute = 0;
   while(std::getline(ifs, line)){
+    lineNumber++;
     boost::regex dateRegex("^(.*?),(.*?),(.*?),.*");
     boost::smatch matches;
     if (boost::regex_search(line, matches, dateRegex)){
@@ -1856,17 +1906,31 @@ bool EpwFile::parse(bool storeData)
         }
         lastDate = date;
       }catch(...){
-        LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+        LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         ifs.close();
         return false;
       }
       if(storeData)
       {
-        EpwDataPoint pt(line);
-        m_data.push_back(pt);
+        boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwString(line);
+        if(m_recordsPerHour!=1)
+        {
+          currentMinute += minutesPerRecord;
+          if(currentMinute >= 60) { // This could really be ==, but >= is used for safety
+            currentMinute = 0;
+          }
+          pt->setMinute(currentMinute);
+        }
+        if(pt) {
+          m_data.push_back(pt.get());
+        } else {
+          LOG(Error,"Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
+          ifs.close();
+          return false;
+        }
       }
     }else{
-      LOG(Error, "Could not read line " << line << ", EPW file '" << m_path << "'");
+      LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
       ifs.close();
       return false;
     }
@@ -1876,11 +1940,11 @@ bool EpwFile::parse(bool storeData)
   ifs.close();
 
   if (!startDate){
-    LOG(Error, "Could not find start date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find start date in data section of EPW file '" << m_path << "'");
     return false;
   }
   if (!endDate){
-    LOG(Error, "Could not find end date in data section, EPW file '" << m_path << "'");
+    LOG(Error, "Could not find end date in data section of EPW file '" << m_path << "'");
     return false;
   }
 
@@ -1888,27 +1952,28 @@ bool EpwFile::parse(bool storeData)
       (m_startDate.dayOfMonth() != startDate->dayOfMonth()) ||
       (m_endDate.monthOfYear() != endDate->monthOfYear()) ||
       (m_endDate.dayOfMonth() != endDate->dayOfMonth())){
-    LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
+    LOG(Error, "Header start and end dates do not match data in EPW file '" << m_path << "'");
     return false;
   }
 
   if (realYear){
     if (m_startDayOfWeek != startDate->dayOfWeek()){
-      LOG(Error, "Header start and end dates do not match data, EPW file '" << m_path << "'");
-      return false;
-    }
+      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '" << m_path << "', data will be treated as typical");
+      // The flag needs to be changed so we can do the wrapAround check below
+      realYear = false;
+    } else {
+      // set dates with years
+      m_startDate = startDate.get();
+      m_startDateActualYear = startDate->year();
 
-    // set dates with years
-    m_startDate = startDate.get();
-    m_startDateActualYear = startDate->year();
-
-    m_endDate = endDate.get();
-    m_endDateActualYear = endDate->year();
-  }else{
-    if (wrapAround){
-      LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
-      return false;
+      m_endDate = endDate.get();
+      m_endDateActualYear = endDate->year();
     }
+  }
+
+  if(!realYear && wrapAround) {
+    LOG(Error, "Wrap around years not supported for TMY data, EPW file '" << m_path << "'");
+    return false;
   }
 
   return result;
@@ -1919,7 +1984,7 @@ bool EpwFile::parseLocation(const std::string& line)
   bool result = true;
 
   // LOCATION,Chicago Ohare Intl Ap,IL,USA,TMY3,725300,41.98,-87.92,-6.0,201.0
-  boost::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)$");
+  boost::regex locationRegex("^LOCATION,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
   boost::smatch matches;
   if (boost::regex_search(line, matches, locationRegex)){
     std::string city = std::string(matches[1].first, matches[1].second); boost::trim(city);
@@ -1972,7 +2037,7 @@ bool EpwFile::parseDataPeriod(const std::string& line)
   bool result = true;
 
   // DATA PERIODS,1,1,Data,Sunday, 1/ 1,12/31
-  boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),(.*?)$");
+  boost::regex dataPeriodRegex("^DATA PERIODS,(.*?),(.*?),(.*?),(.*?),(.*?),([^,]*).*?$");
   boost::smatch matches;
   if (boost::regex_search(line, matches, dataPeriodRegex)){
     std::string nDataPeriods =  std::string(matches[1].first, matches[1].second); boost::trim(nDataPeriods);
@@ -1992,7 +2057,11 @@ bool EpwFile::parseDataPeriod(const std::string& line)
       result = false;
     }
     try{
-      m_timeStep = Time(boost::lexical_cast<double>(timeStep) / 24.0);
+      m_recordsPerHour = boost::lexical_cast<int>(timeStep);
+      if((60 % m_recordsPerHour) != 0) {
+        LOG(Error, "Number of records per hour of " << m_recordsPerHour << " does not result in integral number of minutes between records in EPW file '" << m_path<<"'");
+        result = false;
+      }
     }catch(...){
       result = false;
     }

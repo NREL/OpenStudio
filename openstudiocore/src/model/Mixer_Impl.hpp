@@ -19,7 +19,7 @@
 #ifndef MODEL_MIXER_IMPL_HPP
 #define MODEL_MIXER_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 
@@ -64,6 +64,12 @@ class MODEL_API Mixer_Impl : public HVACComponent_Impl
   virtual unsigned nextBranchIndex();
 
   virtual void removePortForBranch(unsigned branchIndex);
+
+  /** This function returns a vector of HVACComponent that are directly downstream
+   *  from this object on an AirLoopHVAC or PlantLoop. 
+   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+  **/
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   bool isRemovable() const;
 

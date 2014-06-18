@@ -18,37 +18,37 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/ZoneHVACLowTempRadiantVarFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../../model/ZoneHVACLowTempRadiantVarFlow.hpp"
+#include "../../model/ZoneHVACLowTempRadiantVarFlow_Impl.hpp"
+#include "../../model/CoilCoolingLowTempRadiantVarFlow.hpp"
+#include "../../model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp"
+#include "../../model/CoilHeatingLowTempRadiantVarFlow.hpp"
+#include "../../model/CoilHeatingLowTempRadiantVarFlow_Impl.hpp"
+#include "../../model/ConstructionWithInternalSource.hpp"
+#include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
+#include "../../model/DefaultSurfaceConstructions.hpp"
+#include "../../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
 #include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <resources.hxx>
 

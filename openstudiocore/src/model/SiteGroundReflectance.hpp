@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2011, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_SITEGROUNDREFLECTANCE_HPP
 #define MODEL_SITEGROUNDREFLECTANCE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -160,7 +160,7 @@ class MODEL_API SiteGroundReflectance : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SiteGroundReflectance_Impl;
 
-  explicit SiteGroundReflectance(boost::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
+  explicit SiteGroundReflectance(std::shared_ptr<detail::SiteGroundReflectance_Impl> impl);
 
   explicit SiteGroundReflectance(Model& model);
 

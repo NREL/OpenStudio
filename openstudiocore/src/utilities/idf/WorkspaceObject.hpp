@@ -20,8 +20,8 @@
 #ifndef UTILITIES_IDF_WORKSPACEOBJECT_HPP
 #define UTILITIES_IDF_WORKSPACEOBJECT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IdfObject.hpp"
 
 namespace openstudio {
 
@@ -151,7 +151,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   friend class detail::WorkspaceObject_Impl;
   friend class WorkspaceExtensibleGroup;
 
-  WorkspaceObject(boost::shared_ptr<detail::WorkspaceObject_Impl> impl);
+  WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl);
 
  private:
  

@@ -20,8 +20,8 @@
 #ifndef MODEL_DAYLIGHTINGCONTROL_IMPL_HPP
 #define MODEL_DAYLIGHTINGCONTROL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceItem_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceItem_Impl.hpp"
 
 namespace openstudio {
 

@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/document/Table.hpp>
+#include "../Table.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../../core/Logger.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
+#include "../../core/Containers.hpp"
+#include "../../time/Time.hpp"
+#include "../../units/UnitFactory.hpp"
+#include "../../units/QuantityFactory.hpp"
+#include "../../units/QuantityConverter.hpp"
 
 #include <resources.hxx>
 
@@ -209,7 +209,7 @@ TEST(Table, UnitConversion) {
   EXPECT_EQ("kg",unitStr);
   p = resourcesPath()/toPath("utilities/Table/HeightWeightSI.csv");
   boost::filesystem::ofstream outFile(p);
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?true:false);
   table.printToStream(outFile,TableFormat(TableFormat::CSV));
   outFile.close();
 
@@ -232,7 +232,7 @@ TEST(Table, UnitConversion) {
   }
   p = resourcesPath()/toPath("utilities/Table/EUISI.csv");
   outFile.open(p);
-  ASSERT_TRUE(outFile);
+  ASSERT_TRUE(outFile?true:false);
   table.printToStream(outFile,TableFormat(TableFormat::CSV));
   outFile.close();
 

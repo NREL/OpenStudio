@@ -19,14 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../RefrigerationCase.hpp"
+#include "../RefrigerationCase_Impl.hpp"
+#include "../RefrigerationDefrostCycleParameters.hpp"
+#include "../RefrigerationDefrostCycleParameters_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -711,4 +713,167 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData)
 	EXPECT_DOUBLE_EQ( -5.56, testObjectClone2.designEvaporatorTemperatureorBrineInletTemperature().get() );
 	EXPECT_EQ( "OffCycle", testObjectClone2.caseDefrostType() );
     EXPECT_EQ( "None", testObjectClone2.defrostEnergyCorrectionCurveType() );
+}
+
+TEST_F(ModelFixture, RefrigerationCase_DefrostCycleParameters)
+{
+    Model model;
+    ScheduleCompact cds(model);
+    RefrigerationCase testObject = RefrigerationCase(model, cds);
+
+    std::vector<RefrigerationDefrostCycleParameters> refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    RefrigerationCase testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+
+    EXPECT_FALSE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    testObjectClone.remove();
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_TRUE(testObject.setDurationofDefrostCycle(10));
+    EXPECT_DOUBLE_EQ(10, *testObject.durationofDefrostCycle());
+
+    EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    EXPECT_TRUE(testObject.setDripDownTime(5));
+    EXPECT_DOUBLE_EQ(5, *testObject.dripDownTime());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    Time testTime = Time(0, 1, 15);
+    EXPECT_TRUE(testObject.setDefrost1StartTime(Time(0, 1, 15)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost1StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost1StartTime()->minutes());
+
+    testTime = Time(0, 2, 16);
+    EXPECT_TRUE(testObject.setDefrost2StartTime(Time(0, 2, 16)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost2StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost2StartTime()->minutes());
+
+    testTime = Time(0, 3, 17);
+    EXPECT_TRUE(testObject.setDefrost3StartTime(Time(0, 3, 17)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost3StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost3StartTime()->minutes());
+
+    testTime = Time(0, 4, 18);
+    EXPECT_TRUE(testObject.setDefrost4StartTime(Time(0, 4, 18)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost4StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost4StartTime()->minutes());
+
+    testTime = Time(0, 5, 19);
+    EXPECT_TRUE(testObject.setDefrost5StartTime(Time(0, 5, 19)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost5StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost5StartTime()->minutes());
+
+    testTime = Time(0, 6, 20);
+    EXPECT_TRUE(testObject.setDefrost6StartTime(Time(0, 6, 20)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost6StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost6StartTime()->minutes());
+
+    testTime = Time(0, 7, 21);
+    EXPECT_TRUE(testObject.setDefrost7StartTime(Time(0, 7, 21)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost7StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost7StartTime()->minutes());
+
+    testTime = Time(0, 8, 22);
+    EXPECT_TRUE(testObject.setDefrost8StartTime(Time(0, 8, 22)));
+    EXPECT_DOUBLE_EQ(testTime.hours(), testObject.defrost8StartTime()->hours());
+    EXPECT_DOUBLE_EQ(testTime.minutes(), testObject.defrost8StartTime()->minutes());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(1, refrigerationCaseDefrostCycleParameters.size());
+
+    testObjectClone = testObject.clone(model).cast<RefrigerationCase>();
+
+    EXPECT_TRUE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    EXPECT_TRUE(testObjectClone.setDurationofDefrostCycle(10));
+
+    EXPECT_TRUE(testObjectClone.getImpl<openstudio::model::detail::RefrigerationCase_Impl>()->optionalCaseDefrostCycleParameters());
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(2, refrigerationCaseDefrostCycleParameters.size());
+
+    testObject.remove();
+    testObjectClone.remove();
+
+    refrigerationCaseDefrostCycleParameters = model.getConcreteModelObjects<RefrigerationDefrostCycleParameters>();
+    EXPECT_EQ(0, refrigerationCaseDefrostCycleParameters.size());
+}
+
+TEST_F(ModelFixture, RefrigerationCase_PerDoor)
+{
+    Model model;
+    ScheduleCompact cds(model);
+    RefrigerationCase testObject = RefrigerationCase(model, cds);
+
+    EXPECT_EQ("UnitLength", testObject.unitType());
+    EXPECT_TRUE(testObject.setUnitType("NumberOfDoors"));
+    EXPECT_EQ("NumberOfDoors", testObject.unitType());
+    
+    EXPECT_FALSE(testObject.numberOfDoors());
+    EXPECT_TRUE(testObject.setNumberOfDoors(5));
+    ASSERT_TRUE(testObject.numberOfDoors());
+    EXPECT_EQ(5, testObject.numberOfDoors().get());
+    EXPECT_FALSE(testObject.setNumberOfDoors(0));
+
+    EXPECT_FALSE(testObject.ratedTotalCoolingCapacityperDoor());
+    EXPECT_TRUE(testObject.setRatedTotalCoolingCapacityperDoor(999.9));
+    ASSERT_TRUE(testObject.ratedTotalCoolingCapacityperDoor());
+    EXPECT_EQ(999.9, testObject.ratedTotalCoolingCapacityperDoor().get());
+    EXPECT_FALSE(testObject.setRatedTotalCoolingCapacityperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.standardCaseFanPowerperDoor());
+    EXPECT_TRUE(testObject.setStandardCaseFanPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.standardCaseFanPowerperDoor());
+    EXPECT_EQ(999.9, testObject.standardCaseFanPowerperDoor().get());
+    EXPECT_FALSE(testObject.setStandardCaseFanPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.operatingCaseFanPowerperDoor());
+    EXPECT_TRUE(testObject.setOperatingCaseFanPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.operatingCaseFanPowerperDoor());
+    EXPECT_EQ(999.9, testObject.operatingCaseFanPowerperDoor().get());
+    EXPECT_FALSE(testObject.setOperatingCaseFanPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.standardCaseLightingPowerperDoor());
+    EXPECT_TRUE(testObject.setStandardCaseLightingPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.standardCaseLightingPowerperDoor());
+    EXPECT_EQ(999.9, testObject.standardCaseLightingPowerperDoor().get());
+    EXPECT_FALSE(testObject.setStandardCaseLightingPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.installedCaseLightingPowerperDoor());
+    EXPECT_TRUE(testObject.setInstalledCaseLightingPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.installedCaseLightingPowerperDoor());
+    EXPECT_EQ(999.9, testObject.installedCaseLightingPowerperDoor().get());
+    EXPECT_FALSE(testObject.setInstalledCaseLightingPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.caseAntiSweatHeaterPowerperDoor());
+    EXPECT_TRUE(testObject.setCaseAntiSweatHeaterPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.caseAntiSweatHeaterPowerperDoor());
+    EXPECT_EQ(999.9, testObject.caseAntiSweatHeaterPowerperDoor().get());
+    EXPECT_FALSE(testObject.setCaseAntiSweatHeaterPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.minimumAntiSweatHeaterPowerperDoor());
+    EXPECT_TRUE(testObject.setMinimumAntiSweatHeaterPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.minimumAntiSweatHeaterPowerperDoor());
+    EXPECT_EQ(999.9, testObject.minimumAntiSweatHeaterPowerperDoor().get());
+    EXPECT_FALSE(testObject.setMinimumAntiSweatHeaterPowerperDoor(-1.0));
+
+    EXPECT_FALSE(testObject.caseDefrostPowerperDoor());
+    EXPECT_TRUE(testObject.setCaseDefrostPowerperDoor(999.9));
+    ASSERT_TRUE(testObject.caseDefrostPowerperDoor());
+    EXPECT_EQ(999.9, testObject.caseDefrostPowerperDoor().get());
+    EXPECT_FALSE(testObject.setCaseDefrostPowerperDoor(-1.0));   
 }

@@ -19,7 +19,7 @@
 #ifndef MODEL_SPLITTER_IMPL_HPP
 #define MODEL_SPLITTER_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 
@@ -54,6 +54,12 @@ class MODEL_API Splitter_Impl : public HVACComponent_Impl
   /** Returns the next available outlet port.  This will be the first port 
    *  with no connected objects */
   virtual unsigned nextOutletPort() = 0;
+
+  /** This function returns a vector of HVACComponent that are directly downstream
+   *  from this object on an AirLoopHVAC or PlantLoop. 
+   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+  **/
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   /** Returns the optional ModelObject connected to the inlet port.  
    *  If there is no connected object then the optional will be false. 

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_DistrictCooling_IMPL_HPP
-#define MODEL_DistrictCooling_IMPL_HPP
+#ifndef MODEL_DISTRICTCOOLING_IMPL_HPP
+#define MODEL_DISTRICTCOOLING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -118,7 +118,7 @@ namespace detail {
 
 
 
-#endif // MODEL_DistrictCooling_IMPL_HPP
+#endif // MODEL_DISTRICTCOOLING_IMPL_HPP
 
 
 

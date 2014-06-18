@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/LinearFunctionRecord.hpp>
-#include <project/LinearFunctionRecord_Impl.hpp>
+#include "LinearFunctionRecord.hpp"
+#include "LinearFunctionRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/VariableRecord.hpp>
-#include <project/ProblemRecord.hpp>
+#include "JoinRecord.hpp"
+#include "VariableRecord.hpp"
+#include "ProblemRecord.hpp"
 
-#include <analysis/Function.hpp>
-#include <analysis/Function_Impl.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/Variable.hpp>
+#include "../analysis/Function.hpp"
+#include "../analysis/Function_Impl.hpp"
+#include "../analysis/LinearFunction.hpp"
+#include "../analysis/Variable.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Optional.hpp"
 
 using namespace openstudio::analysis;
 
@@ -59,7 +59,7 @@ namespace detail {
     OS_ASSERT(query.isSelect());
   }
 
-  void LinearFunctionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void LinearFunctionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<LinearFunctionRecord>(query);
@@ -128,7 +128,7 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
                                            ProblemRecord& problemRecord,
                                            const FunctionType& functionType,
                                            int functionVectorIndex)
-  : FunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl>(
+  : FunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl>(
         new detail::LinearFunctionRecord_Impl(linearFunction,
                                               problemRecord,
                                               functionType,
@@ -167,14 +167,14 @@ LinearFunctionRecord::LinearFunctionRecord(const analysis::LinearFunction& linea
 }
 
 LinearFunctionRecord::LinearFunctionRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : FunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl>(
+  : FunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl>(
         new detail::LinearFunctionRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::LinearFunctionRecord_Impl>());
 }
 
-LinearFunctionRecord::LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
+LinearFunctionRecord::LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl,
                                            ProjectDatabase database)
   : FunctionRecord(impl, database)
 {
@@ -231,7 +231,7 @@ analysis::LinearFunction LinearFunctionRecord::linearFunction() const {
 }
 
 /// @cond
-LinearFunctionRecord::LinearFunctionRecord(boost::shared_ptr<detail::LinearFunctionRecord_Impl> impl)
+LinearFunctionRecord::LinearFunctionRecord(std::shared_ptr<detail::LinearFunctionRecord_Impl> impl)
   : FunctionRecord(impl)
 {}
 /// @endcond

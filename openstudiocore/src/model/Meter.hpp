@@ -20,8 +20,8 @@
 #ifndef MODEL_METER_HPP
 #define MODEL_METER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -188,7 +188,7 @@ class MODEL_API Meter : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Meter(boost::shared_ptr<detail::Meter_Impl> impl);
+  explicit Meter(std::shared_ptr<detail::Meter_Impl> impl);
 
   /// @endcond
  private:

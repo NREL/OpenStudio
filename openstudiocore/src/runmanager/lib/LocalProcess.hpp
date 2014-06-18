@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCALPROCESS_HPP__
-#define OPENSTUDIO_LOCALPROCESS_HPP__
+#ifndef RUNMANAGER_LIB_LOCALPROCESS_HPP
+#define RUNMANAGER_LIB_LOCALPROCESS_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Path.hpp"
 #include "Job_Impl.hpp"
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 #include <QProcess>
 #include <QFileSystemWatcher>
@@ -141,7 +141,7 @@ namespace detail {
 
 
       /// Used to watch the local filesystem for updates
-      boost::shared_ptr<QFileSystemWatcher> m_fswatcher;
+      std::shared_ptr<QFileSystemWatcher> m_fswatcher;
 
       /// List of files that are known about
       FileSet m_outfiles;
@@ -187,4 +187,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_LOCALPROCESS_HPP

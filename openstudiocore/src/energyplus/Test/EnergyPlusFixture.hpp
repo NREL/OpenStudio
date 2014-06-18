@@ -22,9 +22,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/core/Path.hpp"
 
 #include <vector>
 #include <string>
@@ -37,7 +37,7 @@ class EnergyPlusFixture : public ::testing::Test {
   /// tear down after each test
   virtual void TearDown();
 
-  /// initiallize static members
+  /// initialize static members
   static void SetUpTestCase();
 
   /// tear down static members

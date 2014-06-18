@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADINGCONTROL_IMPL_HPP
 #define MODEL_SHADINGCONTROL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

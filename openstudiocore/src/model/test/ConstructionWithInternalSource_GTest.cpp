@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../ConstructionWithInternalSource.hpp"
+#include "../ConstructionWithInternalSource_Impl.hpp"
 
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -17,32 +17,32 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceTypeInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "SpaceTypeInspectorView.hpp"
+#include "ModelObjectItem.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/SpaceLoadInstancesWidget.hpp>
-#include <openstudio_lib/RenderingColorWidget.hpp>
+#include "OSVectorController.hpp"
+#include "OSDropZone.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
+#include "RenderingColorWidget.hpp"
 
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
 
 
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
@@ -51,7 +51,7 @@
 #include <utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx>
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -231,7 +231,7 @@ void SpaceTypeDesignSpecificationOutdoorAirVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
+  for (const model::SpaceInfiltrationDesignFlowRate& spaceInfiltrationDesignFlowRate : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationDesignFlowRate>()){
     attachOtherModelObject(spaceInfiltrationDesignFlowRate);
   }
 }
@@ -313,7 +313,7 @@ void SpaceTypeSpaceInfiltrationDesignFlowRateVectorController::onMakeNewItem()
 void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
+  for (const model::SpaceInfiltrationEffectiveLeakageArea& spaceInfiltrationEffectiveLeakageArea : modelObject.model().getConcreteModelObjects<model::SpaceInfiltrationEffectiveLeakageArea>()){
     attachOtherModelObject(spaceInfiltrationEffectiveLeakageArea);
   }
 }
@@ -395,7 +395,7 @@ void SpaceTypeSpaceInfiltrationEffectiveLeakageAreaVectorController::onMakeNewIt
 void SpaceTypeSpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  for (const model::Space& space : modelObject.model().getModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -474,7 +474,7 @@ void SpaceTypeSpacesVectorController::onDrop(const OSItemId& itemId)
 void SpaceTypeUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  for (const model::Space& space : model.getModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -491,7 +491,7 @@ void SpaceTypeUnassignedSpacesVectorController::onChangeRelationship(const model
 std::vector<OSItemId> SpaceTypeUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  for (const model::Space& space : m_model->getModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getConcreteModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (space.isSpaceTypeDefaulted()){
         result.push_back(modelObjectToItemId(space, false));

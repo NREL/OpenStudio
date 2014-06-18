@@ -20,15 +20,15 @@
 #ifndef ANALYSIS_PROBLEM_HPP
 #define ANALYSIS_PROBLEM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "Measure.hpp"
+#include "WorkflowStep.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 
@@ -409,7 +409,7 @@ class ANALYSIS_API Problem : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::Problem_Impl;
 
-  explicit Problem(boost::shared_ptr<detail::Problem_Impl> impl);
+  explicit Problem(std::shared_ptr<detail::Problem_Impl> impl);
 
   friend class Analysis;              // for calling setParent
   friend class detail::Analysis_Impl; // for calling setParent

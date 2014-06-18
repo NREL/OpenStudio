@@ -20,10 +20,10 @@
 #ifndef UTILITIES_IDD_IDDFIELD_HPP
 #define UTILITIES_IDD_IDDFIELD_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "IddFieldProperties.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <string>
 #include <ostream>
@@ -137,10 +137,10 @@ class UTILITIES_API IddField {
  private:
   ///@cond
   // pointer to impl
-  boost::shared_ptr<detail::IddField_Impl> m_impl;
+  std::shared_ptr<detail::IddField_Impl> m_impl;
 
   // construct from impl
-  IddField(const boost::shared_ptr<detail::IddField_Impl>& impl);
+  IddField(const std::shared_ptr<detail::IddField_Impl>& impl);
   ///@endcond
 
   // configure logging

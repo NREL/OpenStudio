@@ -17,16 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/Ruleset.hpp>
-#include <ruleset/Ruleset_Impl.hpp>
-#include <ruleset/ModelRuleset.hpp>
+#include "Ruleset.hpp"
+#include "Ruleset_Impl.hpp"
+#include "ModelRuleset.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -124,7 +122,7 @@ boost::optional<Ruleset> Ruleset::factoryFromXml(const QDomElement& element)
 }
 
 /// @cond
-Ruleset::Ruleset(boost::shared_ptr<detail::Ruleset_Impl> impl)
+Ruleset::Ruleset(std::shared_ptr<detail::Ruleset_Impl> impl)
   : RulesetObject(impl)
 {
   OS_ASSERT(getImpl<detail::Ruleset_Impl>());

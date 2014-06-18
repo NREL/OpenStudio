@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/sql/SqlFile_Impl.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
+#include "SqlFile.hpp"
+#include "SqlFile_Impl.hpp"
+#include "SqlFileTimeSeriesQuery.hpp"
 
-#include <utilities/document/Table.hpp>
+#include "../document/Table.hpp"
 
 namespace openstudio{
 
@@ -31,7 +31,7 @@ SqlFile::SqlFile()
 SqlFile::SqlFile(const openstudio::path& path)
 {
   try{
-    m_impl = boost::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(path) << "' error:" << e.what());
   }
@@ -42,7 +42,7 @@ SqlFile::SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_ep
     const openstudio::Calendar &t_calendar)
 {
   try{
-    m_impl = boost::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(t_path) << "' error:" << e.what());
   }
@@ -1763,7 +1763,7 @@ Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,
   }
 
   if (allNull) {
-    LOG_FREE(Info,"openstudio.sql.SqlFile","No non-null montly end-use data for "
+    LOG_FREE(Info,"openstudio.sql.SqlFile","No non-null monthly end-use data for "
              << fuelType.valueDescription() << ". If this is unexpected, make sure that "
              << "the EnergyPlus simulation completed successfully and that the appropriate "
              << "Building Energy Performance tabular report was requested.");

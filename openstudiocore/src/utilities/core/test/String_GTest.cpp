@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/StringHelpers.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Serialization.hpp>
+#include "../Containers.hpp"
+#include "../String.hpp"
+#include "../StringHelpers.hpp"
+#include "../Path.hpp"
+#include "../Serialization.hpp"
 
 #include <boost/regex.hpp>
 

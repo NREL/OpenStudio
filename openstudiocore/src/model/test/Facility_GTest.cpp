@@ -19,25 +19,25 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ComponentCostAdjustments.hpp>
-#include <model/ComponentCostAdjustments_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/LifeCycleCostUsePriceEscalation.hpp>
-#include <model/LifeCycleCostUsePriceEscalation_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "../ComponentCostAdjustments.hpp"
+#include "../ComponentCostAdjustments_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Meter.hpp"
+#include "../Meter_Impl.hpp"
+#include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
+#include "../LifeCycleCostParameters.hpp"
+#include "../LifeCycleCostParameters_Impl.hpp"
+#include "../LifeCycleCostUsePriceEscalation.hpp"
+#include "../LifeCycleCostUsePriceEscalation_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/EndUses.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/EndUses.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

@@ -17,18 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Application.hpp>
+#include "../utilities/core/Application.hpp"
 
 #include <QApplication>
-#include <QtGlobal>
 
-#include <utilities/core/Path.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <model/Model.hpp>
-#include <model/Building.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
 #include <resources.hxx>
 
-#include <model_editor/ModelEditor.hpp>
+#include "ModelEditor.hpp"
 #include <model_editor/treeitem.h>
 #include <model_editor/treemodel.h>
 

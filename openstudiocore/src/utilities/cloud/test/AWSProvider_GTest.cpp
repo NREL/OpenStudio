@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "../AWSProvider.hpp"
+#include "../AWSProvider_Impl.hpp"
 
 #include <string>
 

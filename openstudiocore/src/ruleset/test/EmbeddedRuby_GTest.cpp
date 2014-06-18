@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../OSArgument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 #include <vector>
 #include <map>
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 // Pretty much the only safe place to include these files is here (or another app)
 // and in this order
-#include <utilities/core/RubyInterpreter.hpp>
+#include "../../utilities/core/RubyInterpreter.hpp"
 
 // This one is a bit more globally accessible, but no one can instantiate the template without the two above
-#include <ruleset/RubyUserScriptArgumentGetter_Impl.hpp>
+#include "../EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -59,11 +59,12 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   modules.push_back("openstudiomodelresources");
   modules.push_back("openstudiomodelgeometry");
   modules.push_back("openstudiomodelhvac");
+  modules.push_back("openstudiomodelrefrigeration");
   modules.push_back("openstudioenergyplus");
   modules.push_back("openstudioruleset");
 
   // Initialize the embedded Ruby interpreter
-  boost::shared_ptr<openstudio::detail::RubyInterpreter>
+  std::shared_ptr<openstudio::detail::RubyInterpreter>
     ri(new openstudio::detail::RubyInterpreter(getOpenStudioRubyPath(),
                                                getOpenStudioRubyScriptsPath(),
                                                modules));
@@ -104,8 +105,8 @@ TEST_F(RulesetFixture, UserScript_EmbeddedRubyTest) {
   EXPECT_EQ(v[2], 3*2+8);
 
   // Initialize the argument getter
-  boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
-    rsc(new openstudio::ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(ri));
+  std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter>
+    rsc(new openstudio::ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(ri));
 
   // Test calling the actual function we are concerned about
   std::vector<OSArgument> args;

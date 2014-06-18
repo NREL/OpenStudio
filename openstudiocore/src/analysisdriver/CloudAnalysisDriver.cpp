@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+#include "CloudAnalysisDriver.hpp"
+#include "CloudAnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/AdvancedStatus.hpp>
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/AdvancedStatus.hpp"
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/data/Tag.hpp>
-#include <utilities/idf/URLSearchPath.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/data/Tag.hpp"
+#include "../utilities/idf/URLSearchPath.hpp"
 
 #include <QTimer>
 
@@ -381,7 +381,7 @@ namespace detail {
       }
       else {
         // if failed before, trying again now, so un-register the failure
-        DataPointVector::iterator it = std::find(m_detailsFailures.begin(),m_detailsFailures.end(),actualDataPoint);
+        auto it = std::find(m_detailsFailures.begin(),m_detailsFailures.end(),actualDataPoint);
         if (it != m_detailsFailures.end()) {
           m_detailsFailures.erase(it);
         }
@@ -788,7 +788,7 @@ namespace detail {
       if (success) {
 
         OS_ASSERT(m_waitingQueue.size() >= m_batchSize);
-        DataPointVector::iterator batchStart = m_waitingQueue.end();
+        auto batchStart = m_waitingQueue.end();
         for (unsigned i = 0; i < m_batchSize; ++i) {
           --batchStart;
         }
@@ -1014,7 +1014,7 @@ namespace detail {
       std::set<UUID> completeUUIDs(temp.begin(),temp.end());
       LOG(Debug,"There are " << completeUUIDs.size() << " complete DataPoints on the server.");
       // complete points could be running or waiting
-      DataPointVector::iterator it = m_waitingQueue.begin();
+      auto it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (completeUUIDs.find(it->uuid()) != completeUUIDs.end()) {
           DataPoint completePoint = *it;
@@ -1172,7 +1172,7 @@ namespace detail {
     if (success) {
       // move DataPoints from waiting to running
       std::set<UUID> runningUUIDs(temp.begin(),temp.end());
-      DataPointVector::iterator it = m_waitingQueue.begin();
+      auto it = m_waitingQueue.begin();
       while (it != m_waitingQueue.end()) {
         if (runningUUIDs.find(it->uuid()) != runningUUIDs.end()) {
           DataPoint nowRunning = *it;
@@ -1293,7 +1293,7 @@ namespace detail {
       LOG(Debug,"Received reply to request for data points ready for download. There are "
           << readyUUIDs.size() << ".");
       unsigned initialSize = m_preDetailsQueue.size();
-      DataPointVector::iterator it = m_preDetailsQueue.begin();
+      auto it = m_preDetailsQueue.begin();
       while (it != m_preDetailsQueue.end()) {
         if (readyUUIDs.find(it->uuid()) != readyUUIDs.end()) {
           m_detailsQueue.push_back(*it);
@@ -2110,7 +2110,7 @@ namespace detail {
 
 CloudAnalysisDriver::CloudAnalysisDriver(const CloudSession& session,
                                          const SimpleProject& project)
-  : m_impl(boost::shared_ptr<detail::CloudAnalysisDriver_Impl>(
+  : m_impl(std::shared_ptr<detail::CloudAnalysisDriver_Impl>(
              new detail::CloudAnalysisDriver_Impl(session,project)))
 {}
 
@@ -2228,7 +2228,7 @@ void CloudAnalysisDriver::moveToThread(QThread* targetThread) {
 }
 
 /// @cond
-CloudAnalysisDriver::CloudAnalysisDriver(boost::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
+CloudAnalysisDriver::CloudAnalysisDriver(std::shared_ptr<detail::CloudAnalysisDriver_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

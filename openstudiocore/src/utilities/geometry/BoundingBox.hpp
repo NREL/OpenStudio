@@ -21,8 +21,8 @@
 #ifndef UTILITIES_GEOMETRY_BOUNDINGBOX_HPP
 #define UTILITIES_GEOMETRY_BOUNDINGBOX_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 

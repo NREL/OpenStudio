@@ -17,47 +17,47 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../SimpleProject.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/OutputAttributeVariable.hpp>
-#include <analysis/LinearFunction.hpp>
-#include <analysis/NormalDistribution.hpp>
-#include <analysis/LognormalDistribution.hpp>
-#include <analysis/TriangularDistribution.hpp>
-#include <analysis/HistogramPointDistribution.hpp>
-#include <analysis/HistogramBinDistribution.hpp>
-#include <analysis/GammaDistribution.hpp>
-#include <analysis/LoguniformDistribution.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyContinuousVariable.hpp"
+#include "../../analysis/OutputAttributeVariable.hpp"
+#include "../../analysis/LinearFunction.hpp"
+#include "../../analysis/NormalDistribution.hpp"
+#include "../../analysis/LognormalDistribution.hpp"
+#include "../../analysis/TriangularDistribution.hpp"
+#include "../../analysis/HistogramPointDistribution.hpp"
+#include "../../analysis/HistogramBinDistribution.hpp"
+#include "../../analysis/GammaDistribution.hpp"
+#include "../../analysis/LoguniformDistribution.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/ProblemRecord.hpp"
+#include "../../project/ProblemRecord_Impl.hpp"
 
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/RubyJob.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/ConfigOptions.hpp"
+#include "../../runmanager/lib/RubyJob.hpp"
+#include "../../runmanager/lib/RubyJobUtils.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/StringHelpers.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/StringHelpers.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -68,8 +68,8 @@
 // includes for embedded Ruby argument getter
 // put these in cpp, after all other openstudio includes
 // otherwise ruby.h will get you, sometime, somewhere
-#include <utilities/core/RubyInterpreter.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter_Impl.hpp>
+#include "../../utilities/core/RubyInterpreter.hpp"
+#include "../../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::ruleset;
@@ -79,7 +79,7 @@ using namespace openstudio::analysisdriver;
 
 // static variables
 boost::optional<openstudio::FileLogSink> AnalysisDriverFixture::logFile;
-boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> AnalysisDriverFixture::argumentGetter;
+std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> AnalysisDriverFixture::argumentGetter;
 
 void AnalysisDriverFixture::SetUp() {}
 
@@ -108,13 +108,13 @@ void AnalysisDriverFixture::SetUpTestCase() {
   modules.push_back("openstudioruleset");
 
   // Initialize the embedded Ruby interpreter
-  boost::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
+  std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(getOpenStudioRubyPath(),
                                                 getOpenStudioRubyScriptsPath(),
                                                 modules));
   // Initialize the argument getter
-  argumentGetter = boost::shared_ptr<RubyUserScriptArgumentGetter>(
-      new ruleset::detail::RubyUserScriptArgumentGetter_Impl<openstudio::detail::RubyInterpreter>(rubyInterpreter));
+  argumentGetter = std::shared_ptr<RubyUserScriptArgumentGetter>(
+      new ruleset::EmbeddedRubyUserScriptArgumentGetter<openstudio::detail::RubyInterpreter>(rubyInterpreter));
 }
 
 void AnalysisDriverFixture::TearDownTestCase() {

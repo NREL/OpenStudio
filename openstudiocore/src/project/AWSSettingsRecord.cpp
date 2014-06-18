@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AWSSettingsRecord.hpp>
-#include <project/AWSSettingsRecord_Impl.hpp>
+#include "AWSSettingsRecord.hpp"
+#include "AWSSettingsRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
+#include "JoinRecord.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -83,7 +83,7 @@ namespace detail {
     m_workerInstanceType = value.toString().toStdString();
   }
 
-  void AWSSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
+  void AWSSettingsRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase>& database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AWSSettingsRecord>(query);
     this->bindValues(query);
@@ -223,7 +223,7 @@ namespace detail {
 } // detail
 
 AWSSettingsRecord::AWSSettingsRecord(const AWSSettings& awsSettings, ProjectDatabase& database)
-  : CloudSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl>(
+  : CloudSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl>(
         new detail::AWSSettingsRecord_Impl(awsSettings, database)),
         database)
 {
@@ -231,7 +231,7 @@ AWSSettingsRecord::AWSSettingsRecord(const AWSSettings& awsSettings, ProjectData
 }
 
 AWSSettingsRecord::AWSSettingsRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : CloudSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl>(
+  : CloudSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl>(
         new detail::AWSSettingsRecord_Impl(query, database)),
         database)
 {
@@ -286,11 +286,11 @@ AWSSettings AWSSettingsRecord::awsSettings() const {
 }
 
 /// @cond
-AWSSettingsRecord::AWSSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl> impl)
+AWSSettingsRecord::AWSSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl> impl)
   : CloudSettingsRecord(impl)
 {}
 
-AWSSettingsRecord::AWSSettingsRecord(boost::shared_ptr<detail::AWSSettingsRecord_Impl> impl,
+AWSSettingsRecord::AWSSettingsRecord(std::shared_ptr<detail::AWSSettingsRecord_Impl> impl,
                                      ProjectDatabase database)
   : CloudSettingsRecord(impl, database)
 {

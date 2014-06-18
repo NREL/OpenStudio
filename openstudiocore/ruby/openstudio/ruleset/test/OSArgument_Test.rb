@@ -19,7 +19,7 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 class TestScript < OpenStudio::Ruleset::UtilityUserScript
 
@@ -34,7 +34,7 @@ class TestScript < OpenStudio::Ruleset::UtilityUserScript
 
 end
 
-class OSArgument_Test < Test::Unit::TestCase
+class OSArgument_Test < MiniTest::Unit::TestCase
 
   def test_DeprecatedNames
 

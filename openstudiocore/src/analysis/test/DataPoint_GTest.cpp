@@ -18,19 +18,19 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "../Analysis.hpp"
+#include "../DataPoint.hpp"
+#include "../DataPoint_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/core/Containers.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>

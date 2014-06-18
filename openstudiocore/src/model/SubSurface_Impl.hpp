@@ -20,8 +20,8 @@
 #ifndef MODEL_SUBSURFACE_IMPL_HPP
 #define MODEL_SUBSURFACE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurface_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurface_Impl.hpp"
 
 namespace openstudio {
 namespace model {

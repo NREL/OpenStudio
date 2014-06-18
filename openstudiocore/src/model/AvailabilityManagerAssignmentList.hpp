@@ -20,8 +20,8 @@
 #ifndef MODEL_AVAILABILITYMANAGERASSIGNMENTLIST_HPP
 #define MODEL_AVAILABILITYMANAGERASSIGNMENTLIST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -54,7 +54,7 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
   /// @cond
   typedef detail::AvailabilityManagerAssignmentList_Impl ImplType;
 
-  explicit AvailabilityManagerAssignmentList(boost::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl);
+  explicit AvailabilityManagerAssignmentList(std::shared_ptr<detail::AvailabilityManagerAssignmentList_Impl> impl);
 
   friend class detail::AvailabilityManagerAssignmentList_Impl;
   friend class Model;

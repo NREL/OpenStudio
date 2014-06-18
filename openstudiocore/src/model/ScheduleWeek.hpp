@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEWEEK_HPP
 #define MODEL_SCHEDULEWEEK_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -126,7 +126,7 @@ class MODEL_API ScheduleWeek : public ResourceObject {
   friend class openstudio::IdfObject;
   friend class detail::ScheduleWeek_Impl;
 
-  explicit ScheduleWeek(boost::shared_ptr<detail::ScheduleWeek_Impl> impl);
+  explicit ScheduleWeek(std::shared_ptr<detail::ScheduleWeek_Impl> impl);
 
   /// @endcond
  private:

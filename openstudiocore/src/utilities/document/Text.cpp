@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Text.hpp>
-#include <utilities/document/Text_Impl.hpp>
-#include <utilities/document/DocumentRegex.hpp>
+#include "Text.hpp"
+#include "Text_Impl.hpp"
+#include "DocumentRegex.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../core/Containers.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/archive/archive_exception.hpp>
@@ -96,14 +96,14 @@ namespace detail {
       append(paragraph); 
       return;
     }
-    StringVector::iterator it = m_paragraphs.begin();
+    auto it = m_paragraphs.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_paragraphs.insert(it,paragraph);
   }
 
   void Text_Impl::erase(unsigned index) {
     if (index < numParagraphs()) {
-      StringVector::iterator it = m_paragraphs.begin();
+      auto it = m_paragraphs.begin();
       for (unsigned i = 0; i < index; ++i, ++it) {}
       m_paragraphs.erase(it);
     }

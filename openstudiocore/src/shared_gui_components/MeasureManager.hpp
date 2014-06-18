@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MEASUREMANAGER_HPP
-#define OPENSTUDIO_MEASUREMANAGER_HPP
+#ifndef SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
+#define SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP
 
 #include "LocalLibraryController.hpp"
-#include <analysisdriver/SimpleProject.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
 #include <vector>
 #include <map>
 #include <QSharedPointer>
@@ -47,8 +47,40 @@ namespace osversion {
 
 class LocalLibraryController;
 
+/***
+* MeasureManager provides a single interface for finding measures on the user's computer in a variety of places.  
+*
+* It also manages checking if a newer version of a given measure is available on the user's computer and updating
+* a SimpleProject to use the updated measure.  Measures directories are searched in the following order 
+* 1) pat application measures, 2) my measures, 3) bcl measures.  This supports the following use cases:
+*
+* A user has started a measure in their my measures directory, then uploaded to BCL, then downloaded that measure then
+* a measure with the same uid will exist in both my measures and the bcl measures.  The my measures version is prefered.
+* 
+* A user has downloaded a measure from the bcl to their local bcl and manually copied the directory to my measures.  
+* This use case is not supported but in this case the my measures version is preferred.
+*
+* A user has manually downloaded a measure from the bcl to their my measures directory as well as downloaded it to their local bcl.  
+* In this case the my measures version is preferred.
+*
+* A user has downloaded a copy of a built in measure from the bcl to their local bcl.  
+* In this case the built in version is preferred.
+* 
+* A user has manually downloaded a copy of a built in measure from the bcl to their my measures directory.  
+* In this case the built in version is preferred.
+*
+* A user has downloaded a copy of a built in measure from the bcl to their local bcl then duplicated it to my measures.  
+* In this case there is no uuid conflict.
+* 
+* A user has manually downloaded a copy of a built in measure from the bcl to their my measures directory then duplicated it to my measures.  
+* In this case there is no uuid conflict.
+*
+* A user has manually copies a measure in their my measures directory to their my measures directory.  
+* In this case only one of the measures is displayed.
+*
+**/
 #if defined(openstudio_lib_EXPORTS) || defined(COMPILING_FROM_OSAPP)
-#include <openstudio_lib/OpenStudioAPI.hpp>
+#include "../openstudio_lib/OpenStudioAPI.hpp"
 class OPENSTUDIO_API MeasureManager : public QObject
 #else
 class MeasureManager : public QObject
@@ -57,17 +89,24 @@ class MeasureManager : public QObject
   Q_OBJECT;
 
   public:
+    // Constructor taking a RubyUserScriptArgumentGetter
     MeasureManager(const QSharedPointer<ruleset::RubyUserScriptArgumentGetter> &t_argumentGetter, BaseApp *t_app);
 
     virtual ~MeasureManager() {}
 
-    // Measures downloaded from the BCL and shipped with the Pat application.
-    std::vector<BCLMeasure> bclMeasures();
+    // Returns true if given measure is a pat application measure
+    bool isPatApplicationMeasure(const UUID & id) const;
+
+    // Measures shipped with the PAT application.
+    std::vector<BCLMeasure> patApplicationMeasures() const;
+
+    // Measures downloaded from the BCL.
+    std::vector<BCLMeasure> bclMeasures() const;
 
     // Measures saved in the user's home directory.
-    std::vector<BCLMeasure> myMeasures();
+    std::vector<BCLMeasure> myMeasures() const;
 
-    // Retrieve measures from both bclMeasures and myMeasures by id.
+    // Retrieve a measure from patApplicationMeasures, myMeasures, and bclMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 
     /// Updates an individial measure. Does not ask for user approval, approval is assumed.
@@ -96,6 +135,12 @@ class MeasureManager : public QObject
     /// Update the UI display for all measures. Does not re-get the arguments nor
     /// update the measures in the project at all
     void updateMeasuresLists();
+
+    /// For all measures in the "patApplicationMeasures" list which have changed relative to the version
+    /// in the project, update the project to the new version
+    /// 
+    /// Does not ask for user approval
+    void updatePatApplicationMeasures(analysisdriver::SimpleProject &t_project);
 
     /// Updates the UI for all measures.
     /// For all measures in the "myMeasures" list which have changed relative to the version
@@ -129,8 +174,9 @@ class MeasureManager : public QObject
     REGISTER_LOGGER("openstudio.MeasureManager");
 
     BaseApp *m_app;
-    std::map<UUID,BCLMeasure> m_bclMeasures;
+    std::map<UUID,BCLMeasure> m_patApplicationMeasures;
     std::map<UUID,BCLMeasure> m_myMeasures;
+    std::map<UUID,BCLMeasure> m_bclMeasures;
     QSharedPointer<ruleset::RubyUserScriptArgumentGetter> m_argumentGetter;
     QSharedPointer<LocalLibraryController> m_libraryController;
 };
@@ -138,4 +184,4 @@ class MeasureManager : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_MEASUREMANAGER_HPP
+#endif // SHAREDGUICOMPONENTS_MEASUREMANAGER_HPP

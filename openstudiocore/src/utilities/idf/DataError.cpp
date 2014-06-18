@@ -18,14 +18,14 @@
  **********************************************************************/
 
 #include <iomanip>
-#include <utilities/idf/DataError.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "DataError.hpp"
+#include "IdfObject.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "../idd/IddObject.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Compare.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Optional.hpp"
 
 namespace openstudio {
 

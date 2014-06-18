@@ -20,14 +20,13 @@
 #ifndef UTILITIES_BCL_BCLMEASURE_HPP
 #define UTILITIES_BCL_BCLMEASURE_HPP
 
-#include <utilities/bcl/BCLXML.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/UtilitiesAPI.hpp>
+#include "BCLXML.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../data/Attribute.hpp"
+#include "../UtilitiesAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace openstudio{
@@ -85,6 +84,12 @@ namespace openstudio{
 
     /// Load all measures in the PAT application's measures directory.
     static std::vector<BCLMeasure> patApplicationMeasures();
+
+    static BCLMeasure alternativeModelMeasure();
+
+    static BCLMeasure standardReportMeasure();
+
+    static BCLMeasure calibrationReportMeasure();
 
     /// Returns the path to the PAT application's measures directory.
     static openstudio::path patApplicationMeasuresDir();

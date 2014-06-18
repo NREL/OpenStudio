@@ -16,13 +16,13 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/OSServer.hpp>
-#include <utilities/cloud/OSServer_Impl.hpp>
+#include "OSServer.hpp"
+#include "OSServer_Impl.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Application.hpp"
+#include "../core/System.hpp"
+#include "../core/Json.hpp"
+#include "../core/Assert.hpp"
 
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -39,7 +39,7 @@ namespace openstudio{
 
     OSServer_Impl::OSServer_Impl(const QUrl& url)
       : QObject(), m_url(url), m_networkAccessManager(new QNetworkAccessManager()),
-        m_networkReply(0), m_mutex(new QMutex()),
+        m_networkReply(nullptr), m_mutex(new QMutex()),
         m_lastAvailable(false),
         m_lastProjectUUIDs(), 
         m_lastCreateProjectSuccess(false),
@@ -431,7 +431,7 @@ namespace openstudio{
         ++current;
       }
 
-      QObject::disconnect(m_networkReply, 0, this, 0);
+      QObject::disconnect(m_networkReply, nullptr, this, nullptr);
       resetNetworkReply();
       m_mutex->unlock();
 
@@ -1755,14 +1755,14 @@ namespace openstudio{
       if (m_networkReply) {
         m_networkReply->blockSignals(true);
         m_networkReply->deleteLater();
-        m_networkReply = 0;
+        m_networkReply = nullptr;
       };
     }
 
   }
 
   OSServer::OSServer(const QUrl& url)
-    : m_impl(boost::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
+    : m_impl(std::shared_ptr<detail::OSServer_Impl>(new detail::OSServer_Impl(url)))
   {
   }
 

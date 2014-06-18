@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LIFECYCLECOSTSTABVIEW_H
-#define OPENSTUDIO_LIFECYCLECOSTSTABVIEW_H
+#ifndef OPENSTUDIO_LIFECYCLECOSTSTABVIEW_HPP
+#define OPENSTUDIO_LIFECYCLECOSTSTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/Model.hpp>
+#include "../model/LifeCycleCostParameters.hpp"
+#include "../model/Model.hpp"
 
 #include <QWidget>
 
@@ -124,4 +124,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_LIFECYCLECOSTSTABVIEW_H
+#endif // OPENSTUDIO_LIFECYCLECOSTSTABVIEW_HPP

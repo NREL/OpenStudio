@@ -55,7 +55,7 @@
 %include <utilities/core/System.i>
 #endif
 
-%template(QSqlDatabasePtr) boost::shared_ptr<QSqlDatabase>;
+%template(QSqlDatabasePtr) std::shared_ptr<QSqlDatabase>;
 %template(FileReferenceTypeVector) std::vector<openstudio::FileReferenceType>;
 %template(OptionalFileReferenceType) boost::optional<openstudio::FileReferenceType>;
 %ignore std::vector<openstudio::FileReference>::vector(size_type);

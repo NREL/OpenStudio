@@ -19,15 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/document/test/DocumentFixture.hpp>
+#include "DocumentFixture.hpp"
 
-#include <utilities/document/Document.hpp>
-#include <utilities/document/HeadersAndFooters.hpp>
-#include <utilities/document/Section.hpp>
+#include "../Document.hpp"
+#include "../HeadersAndFooters.hpp"
+#include "../Section.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../core/Path.hpp"
+#include "../../core/PathHelpers.hpp"
+#include "../../core/Containers.hpp"
 
 #include <resources.hxx>
 

@@ -18,19 +18,19 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingGas.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/ThermalZone.hpp>
+#include "ModelFixture.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeReheat.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingGas.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../ThermalZone.hpp"
 
 using namespace openstudio::model; 
 

@@ -17,26 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OptimizationDataPointRecord.hpp>
-#include <project/OptimizationDataPointRecord_Impl.hpp>
+#include "OptimizationDataPointRecord.hpp"
+#include "OptimizationDataPointRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/DataPointValueRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
+#include "JoinRecord.hpp"
+#include "AnalysisRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "DataPointValueRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/Problem.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace project {
@@ -71,7 +71,7 @@ namespace detail {
     return result;
   }
 
-  void OptimizationDataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OptimizationDataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OptimizationDataPointRecord>(query);
@@ -185,7 +185,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
     const analysis::OptimizationDataPoint& optimizationDataPoint,
     AnalysisRecord& analysisRecord,
     const OptimizationProblemRecord& problemRecord)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(optimizationDataPoint,
                                                      analysisRecord,
                                                      problemRecord)),
@@ -217,7 +217,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
                                                          ProjectDatabase& database)
-  : DataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
+  : DataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl>(
         new detail::OptimizationDataPointRecord_Impl(query, database)),
         database)
 {
@@ -225,7 +225,7 @@ OptimizationDataPointRecord::OptimizationDataPointRecord(const QSqlQuery& query,
 }
 
 OptimizationDataPointRecord::OptimizationDataPointRecord(
-    boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
+    std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl,
     ProjectDatabase database)
   : DataPointRecord(impl, database)
 {
@@ -293,7 +293,7 @@ analysis::OptimizationDataPoint OptimizationDataPointRecord::optimizationDataPoi
 }
 
 /// @cond
-OptimizationDataPointRecord::OptimizationDataPointRecord(boost::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
+OptimizationDataPointRecord::OptimizationDataPointRecord(std::shared_ptr<detail::OptimizationDataPointRecord_Impl> impl)
   : DataPointRecord(impl)
 {}
 /// @endcond

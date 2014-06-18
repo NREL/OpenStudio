@@ -20,17 +20,14 @@
 #ifndef ANALYSISDRIVER_CURRENTANALYSIS_IMPL_HPP
 #define ANALYSISDRIVER_CURRENTANALYSIS_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisRunOptions.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
 
 #include <QObject>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 namespace openstudio {
 
@@ -49,7 +46,7 @@ namespace detail {
   bool dataPointsEqual(const analysis::DataPoint& dataPoint1, const analysis::DataPoint& dataPoint2);
 
   /** CurrentAnalysis_Impl is the implementation class for CurrentAnalysis.*/
-  class ANALYSISDRIVER_API CurrentAnalysis_Impl : public QObject, public boost::enable_shared_from_this<CurrentAnalysis_Impl> {
+  class ANALYSISDRIVER_API CurrentAnalysis_Impl : public QObject, public std::enable_shared_from_this<CurrentAnalysis_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */

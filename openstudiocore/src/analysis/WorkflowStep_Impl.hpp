@@ -20,12 +20,12 @@
 #ifndef ANALYSIS_WORKFLOWSTEP_IMPL_HPP
 #define ANALYSIS_WORKFLOWSTEP_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
-#include <analysis/InputVariable.hpp>
+#include "InputVariable.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
 namespace openstudio {
 namespace analysis {

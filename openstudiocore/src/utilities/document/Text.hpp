@@ -20,8 +20,8 @@
 #ifndef UTILITIES_DOCUMENT_TEXT_HPP
 #define UTILITIES_DOCUMENT_TEXT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/document/SectionElement.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "SectionElement.hpp"
 
 namespace openstudio {
 

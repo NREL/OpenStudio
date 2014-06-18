@@ -22,16 +22,16 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <model/ParentObject_Impl.hpp>
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/ModelExplorer.hpp>
+#include "../model/ParentObject_Impl.hpp"
+#include "InspectorGadget.hpp"
+#include "ModelExplorer.hpp"
 #include <model_editor/modeltest.h>
 #include <model_editor/treemodel.h>
-#include <model_editor/TreeView.hpp>
+#include "TreeView.hpp"
 
-#include <model_editor/TreeViewWidget.hpp>
+#include "TreeViewWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -40,8 +40,8 @@ namespace modeleditor
 
 TreeViewWidget::TreeViewWidget(openstudio::model::Model& model, QWidget *parent)
   : ViewWidget(parent),
-  mTreeView(NULL),
-  mTreeModel(NULL)
+  mTreeView(nullptr),
+  mTreeModel(nullptr)
 {
   mSplitterSetting = "TreeViewWidgetSplitterSizes";
   createWidgets();
@@ -60,8 +60,8 @@ TreeViewWidget::TreeViewWidget(openstudio::model::Model& model, QWidget *parent)
 
 TreeViewWidget::TreeViewWidget(QWidget *parent)
   : ViewWidget(parent),
-  mTreeView(NULL),
-  mTreeModel(NULL)
+  mTreeView(nullptr),
+  mTreeModel(nullptr)
 {
   mSplitterSetting = "TreeViewWidgetSplitterSizes";
   createWidgets();

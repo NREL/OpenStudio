@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../OSArgument.hpp"
 
 #include <vector>
 #include <map>

@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_THERMALZONESVIEW_H
-#define OPENSTUDIO_THERMALZONESVIEW_H
+#ifndef OPENSTUDIO_THERMALZONESVIEW_HPP
+#define OPENSTUDIO_THERMALZONESVIEW_HPP
 
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelSubTabView.hpp>
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/Schedule.hpp>
+#include "OSVectorController.hpp"
+#include "ModelObjectVectorController.hpp"
+#include "ModelObjectInspectorView.hpp"
+#include "ModelSubTabView.hpp"
+#include "../model/Model.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/Schedule.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QWidget>
 #include <QHash>
@@ -100,6 +100,8 @@ class ThermalZoneView : public ModelObjectInspectorView
 {
   class CoolingScheduleVectorController;
   class HeatingScheduleVectorController;
+  class HumidifyingScheduleVectorController;
+  class DehumidifyingScheduleVectorController;
 
   Q_OBJECT
 
@@ -123,6 +125,8 @@ signals:
 
   void enableThermostatClicked(model::ThermalZone &, bool);
 
+  void enableHumidistatClicked(model::ThermalZone &, bool);
+
   void modelObjectSelected(model::OptionalModelObject & modelObject, bool readOnly);
 
   void toggleUnitsClicked(bool);
@@ -138,6 +142,8 @@ protected:
 private slots:
 
   void onThermostatButtonClicked(bool);
+
+  void onHumidistatButtonClicked(bool);
 
   void onZoneHVACEquipmentItemClicked(OSItem* item);
 
@@ -155,15 +161,17 @@ private:
 
   OSSwitch * m_thermostatButton;
 
+  OSSwitch * m_humidistatButton;
+
   QWidget * m_zoneNameWidget;
 
-  boost::shared_ptr<OSObjectListCBDS> m_scheduleDataSource;
+  std::shared_ptr<OSObjectListCBDS> m_scheduleDataSource;
 
   bool m_dirty;
 
-  boost::shared_ptr<ZoneEquipmentVectorController> m_equipmentVectorController;
+  std::shared_ptr<ZoneEquipmentVectorController> m_equipmentVectorController;
 
-  boost::shared_ptr<ZoneEquipmentVectorController> m_spacesVectorController;
+  std::shared_ptr<ZoneEquipmentVectorController> m_spacesVectorController;
 
   CoolingScheduleVectorController * m_coolingThermostatVectorController;
 
@@ -172,6 +180,14 @@ private:
   OSDropZone * m_coolingThermostatDropZone;
 
   OSDropZone * m_heatingThermostatDropZone;
+
+  HumidifyingScheduleVectorController * m_humidifyingHumidistatVectorController;
+
+  DehumidifyingScheduleVectorController * m_dehumidifyingHumidistatVectorController;
+
+  OSDropZone * m_humidifyingHumidistatDropZone;
+
+  OSDropZone * m_dehumidifyingHumidistatDropZone;
 
   OSQuantityEdit * m_coolingDesignSupplyAirTemperatureEdit;
 
@@ -233,6 +249,60 @@ private:
     public:
 
     boost::optional<model::ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint();
+
+    protected:
+
+    std::vector<OSItemId> makeVector();
+
+    void onChangeRelationship(
+           const openstudio::model::ModelObject& modelObject, 
+           int index, 
+           Handle newHandle, 
+           Handle oldHandle);
+
+    void onObjectRemoved(const openstudio::model::ModelObject& modelObject, 
+                         const openstudio::IddObjectType& iddObjectType, 
+                         const openstudio::UUID& handle);
+
+    void onRemoveItem(OSItem* item);
+
+    void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+
+    void onDrop(const OSItemId& itemId);
+  };
+
+  class HumidifyingScheduleVectorController : public ModelObjectVectorController
+  {
+    public:
+
+    boost::optional<model::ZoneControlHumidistat> zoneControlHumidistat();
+
+    protected:
+
+    std::vector<OSItemId> makeVector();
+
+    void onChangeRelationship(
+           const openstudio::model::ModelObject& modelObject, 
+           int index, 
+           Handle newHandle, 
+           Handle oldHandle);
+
+    void onObjectRemoved(const openstudio::model::ModelObject& modelObject, 
+                         const openstudio::IddObjectType& iddObjectType, 
+                         const openstudio::UUID& handle);
+
+    void onRemoveItem(OSItem* item);
+
+    void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId);
+
+    void onDrop(const OSItemId& itemId);
+  };
+
+  class DehumidifyingScheduleVectorController : public ModelObjectVectorController
+  {
+    public:
+
+    boost::optional<model::ZoneControlHumidistat> zoneControlHumidistat();
 
     protected:
 
@@ -333,5 +403,5 @@ class ModelObjectPropertyView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_THERMALZONESVIEW_H
+#endif // OPENSTUDIO_THERMALZONESVIEW_HPP
 

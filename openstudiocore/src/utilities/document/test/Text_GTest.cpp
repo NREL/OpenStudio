@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/document/Text.hpp>
+#include "../Text.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../core/Path.hpp"
+#include "../../core/Containers.hpp"
 
 #include <resources.hxx>
 

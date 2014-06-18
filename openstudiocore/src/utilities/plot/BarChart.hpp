@@ -20,12 +20,12 @@
 #ifndef UTILITIES_PLOT_BARCHART_HPP
 #define UTILITIES_PLOT_BARCHART_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/plot/Chart.hpp>
-#include <utilities/core/Path.hpp>
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
+#include "Chart.hpp"
+#include "../core/Path.hpp"
 
 namespace openstudio{
 
@@ -89,7 +89,7 @@ namespace openstudio{
     void setYLabels(const std::vector<std::string>& yLabels);
 
     /// set the colors of the bar chart
-    /// if rows = 1, then colors is size of number of colums
+    /// if rows = 1, then colors is size of number of columns
     /// if rows > 1, then colors is size of number of rows
     void setColors(const std::vector<Color>& colors);
 
@@ -148,7 +148,7 @@ namespace openstudio{
     void addBarChart(const std::string& group, const BarChart& chart);
 
     /// set the font and size of the title, use font size = 0 to hide
-    /// note that titles of the individual charts are suppresed
+    /// note that titles of the individual charts are suppressed
     void setTitleFont(unsigned fontSize, const Font& font);
 
     /// set the font and size of the x labels, use font size = 0 to hide

@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/SizingZone.hpp"
+#include "../../model/SizingZone_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 

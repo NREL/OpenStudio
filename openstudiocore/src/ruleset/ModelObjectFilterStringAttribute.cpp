@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterStringAttribute.hpp>
-#include <ruleset/ModelObjectFilterStringAttribute_Impl.hpp>
+#include "ModelObjectFilterStringAttribute.hpp"
+#include "ModelObjectFilterStringAttribute_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <boost/regex.hpp>
 
@@ -152,26 +152,26 @@ std::string ModelObjectFilterStringAttribute::xmlElementName()
 }
 
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const std::string& attributeName,const RulesetStringPredicate& predicate, const std::string& testValue)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const std::string& attributeName,const RulesetStringPredicate& predicate, const std::string& testValue,
                                                                    const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(attributeName, predicate, testValue, uuid, versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const QDomElement& element)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(element)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>(new detail::ModelObjectFilterStringAttribute_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());
 }
 
 /// @cond
-ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const boost::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>& impl)
+ModelObjectFilterStringAttribute::ModelObjectFilterStringAttribute(const std::shared_ptr<detail::ModelObjectFilterStringAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterStringAttribute_Impl>());

@@ -19,7 +19,7 @@
 
 
 
-#include <utilities/core/System.hpp>
+#include "System.hpp"
 #include "Application.hpp"
 
 #include <boost/lexical_cast.hpp>

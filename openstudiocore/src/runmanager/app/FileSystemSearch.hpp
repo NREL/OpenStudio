@@ -1,14 +1,32 @@
-#ifndef __runmanager_filesystemsearch_hpp__
-#define __runmanager_filesystemsearch_hpp__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_APP_FILESYSTEMSEARCH_HPP
+#define RUNMANAGER_APP_FILESYSTEMSEARCH_HPP
 
 
 #include <vector>
 #include <string>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <QStandardItemModel>
 #include <boost/regex.hpp>
-#include <utilities/core/Logger.hpp>
-#include <boost/bind.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include <QThread>
 #include <boost/filesystem.hpp>
 
@@ -28,7 +46,7 @@ namespace runmanager {
               const InItr &end,
               const QRegExp &regex, const std::string &extension)
             : m_canceled(false),
-              m_fileBuilder(boost::bind(&FileSystemSearchThread::buildFileList<InItr>,
+              m_fileBuilder(std::bind(&FileSystemSearchThread::buildFileList<InItr>,
                   this, rootpath, begin, end, regex, extension))
           {
           }
@@ -165,7 +183,7 @@ namespace runmanager {
           }
 
         volatile bool m_canceled;
-        boost::function<void ()> m_fileBuilder;
+        std::function<void ()> m_fileBuilder;
     };
   }
 
@@ -252,7 +270,7 @@ namespace runmanager {
       openstudio::path m_rootPath;
       bool m_recursive;
       std::string m_fileExtension;
-      boost::shared_ptr<detail::FileSystemSearchThread> m_thread;
+      std::shared_ptr<detail::FileSystemSearchThread> m_thread;
 
       QRegExp m_regex;
 
@@ -266,4 +284,4 @@ namespace runmanager {
 }
 
 
-#endif
+#endif // RUNMANAGER_APP_FILESYSTEMSEARCH_HPP

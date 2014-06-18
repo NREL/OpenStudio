@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/FunctionRecord.hpp>
-#include <project/FunctionRecord_Impl.hpp>
+#include "FunctionRecord.hpp"
+#include "FunctionRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/LinearFunctionRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/VariableRecord.hpp>
+#include "JoinRecord.hpp"
+#include "LinearFunctionRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "VariableRecord.hpp"
 
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
+#include "../analysis/LinearFunction.hpp"
+#include "../analysis/LinearFunction_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -103,7 +103,7 @@ namespace detail {
     return result;
   }
 
-  void FunctionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void FunctionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<FunctionRecord>(query);
@@ -238,7 +238,7 @@ namespace detail {
 
 } // detail
 
-FunctionRecord::FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl,
+FunctionRecord::FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl,
                                ProjectDatabase database)
   : ObjectRecord(impl,database)
 {
@@ -259,7 +259,7 @@ UpdateByIdQueryData FunctionRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -267,7 +267,7 @@ UpdateByIdQueryData FunctionRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -281,11 +281,10 @@ UpdateByIdQueryData FunctionRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -333,7 +332,7 @@ FunctionRecord FunctionRecord::factoryFromFunction(const analysis::Function& fun
   }
 
   OS_ASSERT(false);
-  return FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl>());
+  return FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl>());
 }
 
 std::vector<FunctionRecord> FunctionRecord::getFunctionRecords(ProjectDatabase& database) {
@@ -387,7 +386,7 @@ analysis::Function FunctionRecord::function() const {
 }
 
 /// @cond
-FunctionRecord::FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl)
+FunctionRecord::FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/app/MainWindow.hpp>
+#include "MainWindow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/System.hpp"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -214,7 +214,7 @@ int doUI(int argc, char*argv[])
 
       while (retry)
       {
-        openstudio::runmanager::MainWindow w(0,0,newdb);
+        openstudio::runmanager::MainWindow w(nullptr,nullptr,newdb);
         newdb = false;
         w.show();
     

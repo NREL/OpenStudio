@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SubTabController.hpp>
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSItemSelector.hpp>
-#include <openstudio_lib/OSItemSelectorButtons.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "SubTabController.hpp"
+#include "SubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectListView.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSItemSelector.hpp"
+#include "OSItemSelectorButtons.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

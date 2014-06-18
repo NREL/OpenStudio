@@ -17,24 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef DATAFIXTURE_H
-#define DATAFIXTURE_H
+#ifndef UTILITIES_DATA_TEST_DATAFIXTURE_HPP
+#define UTILITIES_DATA_TEST_DATAFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
 class DataFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp();
 
   // tear down after for each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -48,4 +48,4 @@ public:
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // DATAFIXTURE_H
+#endif // UTILITIES_DATA_TEST_DATAFIXTURE_HPP

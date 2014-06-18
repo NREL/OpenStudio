@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <project/Test/ProjectVersioningFixture.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "ProjectVersioningFixture.hpp"
+#include "../ProjectDatabase.hpp"
 
 #include <boost/filesystem.hpp>
 

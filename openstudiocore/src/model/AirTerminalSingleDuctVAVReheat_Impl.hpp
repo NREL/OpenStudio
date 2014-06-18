@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_AirTerminalSingleDuctVAVReheat_IMPL_HPP
-#define MODEL_AirTerminalSingleDuctVAVReheat_IMPL_HPP
+#ifndef MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_IMPL_HPP
+#define MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -130,6 +130,8 @@ namespace detail {
 
     boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 
+    void resetMaximumFlowPerZoneFloorAreaDuringReheat();
+
     void setMaximumFlowPerZoneFloorAreaDuringReheat( double value );
 
     void autosizeMaximumFlowPerZoneFloorAreaDuringReheat();
@@ -143,6 +145,8 @@ namespace detail {
     void autosizeMaximumFlowFractionDuringReheat();
 
     bool isMaximumFlowFractionDuringReheatAutosized() const;
+
+    void resetMaximumFlowFractionDuringReheat();
 
     double maximumReheatAirTemperature();
 

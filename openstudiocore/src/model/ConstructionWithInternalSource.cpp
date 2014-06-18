@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/Model.hpp>
+#include "ConstructionWithInternalSource.hpp"
+#include "ConstructionWithInternalSource_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "OpaqueMaterial.hpp"
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_InternalSource_FieldEnums.hxx>
 
 namespace openstudio {
@@ -190,7 +190,7 @@ namespace detail {
     double tubeSpacing = this->tubeSpacing();
 
     Model model = this->model();
-    for (const ConstructionWithInternalSource& other : model.getModelObjects<ConstructionWithInternalSource>()) {
+    for (const ConstructionWithInternalSource& other : model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
       
       if (other.sourcePresentAfterLayerNumber() != reverseSourcePresentAfterLayerNumber){
         continue;
@@ -318,7 +318,7 @@ ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructi
 
 /// @cond
 ConstructionWithInternalSource::ConstructionWithInternalSource(
-    boost::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl)
+    std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl)
   : LayeredConstruction(impl)
 {}
 /// @endcond

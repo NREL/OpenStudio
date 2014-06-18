@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/document/SectionHeading.hpp>
+#include "../SectionHeading.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../../core/Path.hpp"
 
 #include <resources.hxx>
 

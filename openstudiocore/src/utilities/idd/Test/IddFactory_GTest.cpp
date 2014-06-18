@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../IddFieldProperties.hpp"
+#include "../IddKey.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../../units/QuantityConverter.hpp"
+#include "../../units/Quantity.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../core/Containers.hpp"
+#include "../../core/Compare.hpp"
 
 #include <OpenStudio.hxx>
 

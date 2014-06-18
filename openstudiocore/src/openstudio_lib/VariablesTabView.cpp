@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/VariablesTabView.hpp>
+#include "VariablesTabView.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/OutputVariable.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/OutputVariable_Impl.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -252,7 +252,7 @@ namespace openstudio {
     }
 
     // add all variables to map, allow only one variable per variable name in this application 
-    for (openstudio::model::OutputVariable outputVariable : m_model.getModelObjects<openstudio::model::OutputVariable>())
+    for (openstudio::model::OutputVariable outputVariable : m_model.getConcreteModelObjects<openstudio::model::OutputVariable>())
     {
       if (outputVariableMap.count(outputVariable.variableName()) == 0)
       {

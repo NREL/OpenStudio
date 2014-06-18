@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
+#include "Model.hpp"
+#include "WaterUseConnections.hpp"
+#include "WaterUseConnections_Impl.hpp"
+#include "WaterUseEquipment.hpp"
+#include "WaterUseEquipment_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterUse_Connections_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 namespace openstudio {
 
@@ -192,11 +192,9 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & elem : groups )
     {
-      WorkspaceExtensibleGroup group = it->cast<WorkspaceExtensibleGroup>();
+      WorkspaceExtensibleGroup group = elem.cast<WorkspaceExtensibleGroup>();
 
       boost::optional<WorkspaceObject> wo = group.getTarget(OS_WaterUse_ConnectionsExtensibleFields::WaterUseEquipmentName);
        
@@ -233,11 +231,9 @@ namespace detail {
 
     int i = 0;
 
-    for( std::vector<WaterUseEquipment>::iterator it = equipment.begin();
-         it != equipment.end();
-         ++it )
+    for( const auto & elem : equipment )
     {
-      if( it->handle() == _waterUseEquipment.handle() )
+      if( elem.handle() == _waterUseEquipment.handle() )
       {
         eraseExtensibleGroup(i);
 
@@ -326,7 +322,7 @@ bool WaterUseConnections::removeWaterUseEquipment(WaterUseEquipment & waterUseEq
 }
 
 /// @cond
-WaterUseConnections::WaterUseConnections(boost::shared_ptr<detail::WaterUseConnections_Impl> impl)
+WaterUseConnections::WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

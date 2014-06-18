@@ -22,23 +22,23 @@
 #include <QSplitter>
 #include <QStringList>
 
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/ModelExplorer.hpp>
+#include "InspectorGadget.hpp"
+#include "ModelExplorer.hpp"
 #include <model_editor/tablemodel.h>
-#include <model_editor/TableView.hpp>
-#include <model_editor/ClassViewWidget.hpp>
+#include "TableView.hpp"
+#include "ClassViewWidget.hpp"
 
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace modeleditor
 {
 
 ClassViewWidget::ClassViewWidget(openstudio::model::Model& model, QWidget *parent)
   : ViewWidget(parent),
-  mTableView(NULL),
-  mTableModel(NULL)
+  mTableView(nullptr),
+  mTableModel(nullptr)
 {
   mSplitterSetting = "ClassViewWidgetSplitterSizes";
   createWidgets();
@@ -55,8 +55,8 @@ ClassViewWidget::ClassViewWidget(openstudio::model::Model& model, QWidget *paren
 
 ClassViewWidget::ClassViewWidget(QWidget *parent)
   : ViewWidget(parent),
-  mTableView(NULL),
-  mTableModel(NULL)
+  mTableView(nullptr),
+  mTableModel(nullptr)
 {
   mSplitterSetting = "ClassViewWidgetSplitterSizes";
   createWidgets();

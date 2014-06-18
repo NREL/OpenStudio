@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingControl.hpp>
-#include <model/ShadingControl_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/DaylightingDeviceShelf_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ShadingControl.hpp"
+#include "ShadingControl_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
+#include "DaylightingDeviceShelf.hpp"
+#include "DaylightingDeviceShelf_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
 
@@ -1116,7 +1116,7 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 }
 
 /// @cond
-SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
+SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

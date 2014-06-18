@@ -20,18 +20,17 @@
 #ifndef UTILITIES_IDF_IMFFILE_HPP
 #define UTILITIES_IDF_IMFFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
+#include "IdfObject.hpp"
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "../idd/IddObject.hpp"
+#include "../idd/IddFileAndFactoryWrapper.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../core/Path.hpp"
+#include "../core/Containers.hpp"
 
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <ostream>
 #include <vector>
 #include <map>

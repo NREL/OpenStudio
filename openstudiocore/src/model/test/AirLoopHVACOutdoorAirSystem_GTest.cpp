@@ -18,16 +18,22 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../ControllerOutdoorAir_Impl.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../Schedule.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVAC.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
 
-TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_AirLoopHVACOutdoorAirSystem)
+TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_AirLoopHVACOutdoorAirSystem)
 {
   Model model = Model();
   OptionalModelObject modelObject;
@@ -38,7 +44,7 @@ TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_AirLoopHVACOutdoorA
   ASSERT_EQ( openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem, oaSystem.iddObjectType().value() );
 }
 
-TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_controllerOutdoorAir)
+TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_controllerOutdoorAir)
 {
   Model model = Model();
   OptionalModelObject modelObject;
@@ -49,7 +55,7 @@ TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_controllerOutdoorAi
   ASSERT_EQ( openstudio::IddObjectType::OS_Controller_OutdoorAir, oaSystem.getControllerOutdoorAir().iddObjectType().value() );
 }
 
-TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_clone)
+TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_clone)
 {
   Model model = Model();
   Model model2 = Model();
@@ -65,3 +71,24 @@ TEST(AirLoopHVACOutdoorAirSystem,AirLoopHVACOutdoorAirSystem_clone)
   ASSERT_EQ( openstudio::IddObjectType::OS_Controller_OutdoorAir, oaSystem2.getControllerOutdoorAir().iddObjectType().value() );
 }
 
+TEST_F(ModelFixture,AirLoopHVACOutdoorAirSystem_edges)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirLoopHVAC airLoop(m);
+  ControllerOutdoorAir controllerOutdoorAir(m);
+  AirLoopHVACOutdoorAirSystem outdoorAirSystem(m,controllerOutdoorAir);
+  CoilHeatingElectric coil(m, s);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  outdoorAirSystem.addToNode(supplyOutletNode);
+  coil.addToNode(supplyOutletNode);
+  boost::optional<ModelObject> testObject = airLoop.supplyComponent(outdoorAirSystem.handle());
+  ASSERT_TRUE(testObject);
+  EXPECT_EQ(outdoorAirSystem, *testObject);
+  std::vector<HVACComponent> edges = outdoorAirSystem.getImpl<detail::HVACComponent_Impl>()->edges(false); // should be Node
+  ASSERT_EQ(1, edges.size());
+  edges = edges[0].getImpl<detail::HVACComponent_Impl>()->edges(false); // should be CoilHeatingElectric
+  ASSERT_EQ(1, edges.size());
+  EXPECT_EQ(coil, edges[0]);
+}

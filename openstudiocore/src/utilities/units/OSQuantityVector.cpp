@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/TemperatureUnit.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
+#include "OSQuantityVector.hpp"
+#include "Quantity.hpp"
+#include "ScaleFactory.hpp"
+#include "TemperatureUnit.hpp"
+#include "TemperatureUnit_Impl.hpp"
+#include "IPUnit.hpp"
+#include "IPUnit_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../math/FloatCompare.hpp"
+#include "../data/Vector.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Containers.hpp"
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 

@@ -1,7 +1,26 @@
-#ifndef UTILITIES_CORE_RUBYINTERPRETER
-#define UTILITIES_CORE_RUBYINTERPRETER
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
-#include <utilities/core/RubyException.hpp>
+#ifndef UTILITIES_CORE_RUBYINTERPRETER_HPP
+#define UTILITIES_CORE_RUBYINTERPRETER_HPP
+
+#include "RubyException.hpp"
 
 #include <QDir>
 
@@ -647,7 +666,8 @@ namespace openstudio
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath(RUBY_ARCHLIB))).native()).c_str());
 #endif
 
-#if defined(WIN32) && (defined(_M_X64) || defined(__amd64__))
+#if defined(WIN32) 
+  #if (defined(_M_X64) || defined(__amd64__))
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/x64-msvcr100"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
@@ -656,6 +676,16 @@ namespace openstudio
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
             ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/x64-mswin64_10"))).native()).c_str());
+  #else
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/site_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby/2.0.0/i386-mingw32"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/vendor_ruby"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0"))).native()).c_str());
+            ruby_incpush(openstudio::toString(((rubypath / openstudio::toPath("lib/ruby/2.0.0/i386-mingw32"))).native()).c_str());
+  #endif
 #endif
           }
 
@@ -1784,4 +1814,4 @@ namespace openstudio
 #endif
 
 
-#endif // UTILITIES_CORE_RUBYINTERPRETER
+#endif // UTILITIES_CORE_RUBYINTERPRETER_HPP

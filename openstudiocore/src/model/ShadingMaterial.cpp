@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -52,7 +52,7 @@ ShadingMaterial::ShadingMaterial(IddObjectType type,const Model& model)
 }
 
 /// @cond
-ShadingMaterial::ShadingMaterial(boost::shared_ptr<detail::ShadingMaterial_Impl> impl)
+ShadingMaterial::ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl)
   : FenestrationMaterial(impl)
 {}
 /// @endcond

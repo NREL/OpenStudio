@@ -20,9 +20,9 @@
 #ifndef UTILITIES_DOCUMENT_SECTION_IMPL_HPP
 #define UTILITIES_DOCUMENT_SECTION_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/document/SectionElement_Impl.hpp>
-#include <utilities/document/SectionHeading.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "SectionElement_Impl.hpp"
+#include "SectionHeading.hpp"
 
 namespace openstudio {
 

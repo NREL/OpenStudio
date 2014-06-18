@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ProgramControl.hpp>
-#include <model/ProgramControl_Impl.hpp>
+#include "ProgramControl.hpp"
+#include "ProgramControl_Impl.hpp"
 
 #include <utilities/idd/OS_ProgramControl_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -114,7 +114,7 @@ void ProgramControl::resetNumberofThreadsAllowed() {
 }
 
 /// @cond
-ProgramControl::ProgramControl(boost::shared_ptr<detail::ProgramControl_Impl> impl)
+ProgramControl::ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/BusyWidget.hpp>
+#include "BusyWidget.hpp"
 
 #include <QPainter>
 #include <QPaintEvent>
@@ -41,7 +41,7 @@ BusyWidget::BusyWidget(QWidget * parent)
   //QPixmap pixmap = QPixmap(":/shared_gui_components/images/rotating_arrow.png").scaled(25,25);
   QPixmap pixmap = QPixmap(":/shared_gui_components/images/rotating_arrow.png");
 
-  m_pixmap = boost::shared_ptr<QPixmap>(new QPixmap(pixmap));
+  m_pixmap = std::shared_ptr<QPixmap>(new QPixmap(pixmap));
 
   m_rotation = 0.0;
 

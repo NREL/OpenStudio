@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithmOptions_Impl.hpp>
+#include "DDACEAlgorithmOptions.hpp"
+#include "DDACEAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
-#include <utilities/math/Primes.hpp>
+#include "../utilities/math/Primes.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 #include <stdlib.h>
 
@@ -46,7 +46,7 @@ namespace detail {
   {}
 
   AlgorithmOptions DDACEAlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<DDACEAlgorithmOptions_Impl> impl(new DDACEAlgorithmOptions_Impl(*this));
+    std::shared_ptr<DDACEAlgorithmOptions_Impl> impl(new DDACEAlgorithmOptions_Impl(*this));
     return DDACEAlgorithmOptions(impl);
   }
 
@@ -195,7 +195,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return DDACEAlgorithmOptions(map["ddace_algorithm_type"].toString().toStdString(),
                                  attributes);
   }
@@ -203,13 +203,13 @@ namespace detail {
 } // detail
 
 DDACEAlgorithmOptions::DDACEAlgorithmOptions(const DDACEAlgorithmType& algorithmType)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::DDACEAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::DDACEAlgorithmOptions_Impl>(
         new detail::DDACEAlgorithmOptions_Impl(algorithmType)))
 {}
 
 DDACEAlgorithmOptions::DDACEAlgorithmOptions(const DDACEAlgorithmType& algorithmType,
                                              const std::vector<Attribute>& options)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::DDACEAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::DDACEAlgorithmOptions_Impl>(
         new detail::DDACEAlgorithmOptions_Impl(algorithmType, options)))
 {}
 
@@ -282,7 +282,7 @@ void DDACEAlgorithmOptions::clearSymbols() {
 }
 
 /// @cond
-DDACEAlgorithmOptions::DDACEAlgorithmOptions(boost::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl)
+DDACEAlgorithmOptions::DDACEAlgorithmOptions(std::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl)
   : DakotaAlgorithmOptions(impl)
 {}
 /// @endcond

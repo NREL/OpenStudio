@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Vector_Test < Test::Unit::TestCase
+class Vector_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

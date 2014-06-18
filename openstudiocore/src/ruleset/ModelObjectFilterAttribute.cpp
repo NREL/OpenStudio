@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterAttribute.hpp>
-#include <ruleset/ModelObjectFilterAttribute_Impl.hpp>
+#include "ModelObjectFilterAttribute.hpp"
+#include "ModelObjectFilterAttribute_Impl.hpp"
 
 namespace openstudio {
 namespace ruleset {
@@ -74,7 +74,7 @@ namespace detail {
 
 /// @cond
 ModelObjectFilterAttribute::ModelObjectFilterAttribute(
-    boost::shared_ptr<detail::ModelObjectFilterAttribute_Impl> impl)
+    std::shared_ptr<detail::ModelObjectFilterAttribute_Impl> impl)
   : ModelObjectFilterClause(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterAttribute_Impl>());

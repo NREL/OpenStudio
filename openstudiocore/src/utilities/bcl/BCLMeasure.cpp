@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "BCLMeasure.hpp"
+#include "LocalBCL.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/ApplicationPathHelpers.hpp"
+#include "../core/System.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/FileReference.hpp"
+#include "../data/Attribute.hpp"
+#include "../core/Assert.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -311,6 +311,18 @@ namespace openstudio{
       result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
     }
     return result;
+  }
+
+  BCLMeasure BCLMeasure::alternativeModelMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
+  }
+
+  BCLMeasure BCLMeasure::standardReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("StandardReports"));
+  }
+
+  BCLMeasure BCLMeasure::calibrationReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()

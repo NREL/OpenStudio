@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
+#include "IPUnit.hpp"
+#include "IPUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -65,13 +65,13 @@ namespace detail {
 
   Unit IPUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::IP);
-    boost::shared_ptr<IPUnit_Impl> impl(new IPUnit_Impl(*this));
+    std::shared_ptr<IPUnit_Impl> impl(new IPUnit_Impl(*this));
     return IPUnit(impl).cast<Unit>();
   }
 
   void IPUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -127,14 +127,14 @@ namespace detail {
 IPUnit::IPUnit(const IPExpnt& exponents,
                int scaleExponent,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::IPUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 IPUnit::IPUnit(const std::string& scaleAbbreviation,
                const IPExpnt& exponents,
                const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::IPUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
@@ -151,8 +151,8 @@ void IPUnit::lbfToLbm() {
 }
 
 /// @cond
-IPUnit::IPUnit(boost::shared_ptr<detail::IPUnit_Impl> impl)
-  : Unit(boost::dynamic_pointer_cast<detail::Unit_Impl>(impl))
+IPUnit::IPUnit(std::shared_ptr<detail::IPUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

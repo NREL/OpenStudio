@@ -16,13 +16,13 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/cloud/OSServer.hpp>
+#include "VagrantProvider.hpp"
+#include "VagrantProvider_Impl.hpp"
+#include "OSServer.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../core/System.hpp"
 
 #include <QSettings>
 #include <QProcess>
@@ -32,8 +32,6 @@
 #include <QMutex>
 #include <QFile>
 #include <QDir>
-
-#include <boost/bind.hpp>
 
 namespace openstudio{
   namespace detail{
@@ -378,15 +376,15 @@ namespace openstudio{
         m_vagrantSettings(),
         m_vagrantSession(toString(createUUID()), boost::none, std::vector<Url>()),
         m_networkAccessManager(new QNetworkAccessManager()),
-        m_networkReply(0),
-        m_checkServiceProcess(0),
-        m_startServerProcess(0),
-        m_startWorkerProcess(0),
-        m_checkServerRunningProcess(0),
-        m_checkWorkerRunningProcess(0),
-        m_stopServerProcess(0),
-        m_stopWorkerProcess(0),
-        m_checkTerminatedProcess(0),
+        m_networkReply(nullptr),
+        m_checkServiceProcess(nullptr),
+        m_startServerProcess(nullptr),
+        m_startWorkerProcess(nullptr),
+        m_checkServerRunningProcess(nullptr),
+        m_checkWorkerRunningProcess(nullptr),
+        m_stopServerProcess(nullptr),
+        m_stopWorkerProcess(nullptr),
+        m_checkTerminatedProcess(nullptr),
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
@@ -559,14 +557,14 @@ namespace openstudio{
     bool VagrantProvider_Impl::internetAvailable(int msec)
     {
       if (requestInternetAvailable()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestInternetAvailableRequestFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestInternetAvailableRequestFinished, this))){
           return lastInternetAvailable();
         }
       }
       if (m_networkReply){
         m_networkReply->blockSignals(true);
         m_networkReply->deleteLater();
-        m_networkReply = 0;
+        m_networkReply = nullptr;
       }
       return false;
     }
@@ -574,14 +572,14 @@ namespace openstudio{
     bool VagrantProvider_Impl::serviceAvailable(int msec)
     {
       if (requestServiceAvailable()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
       }
       if (m_checkServiceProcess){
-        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->disconnect(this, nullptr);
         m_checkServiceProcess->kill();
-        m_checkServiceProcess = 0;
+        m_checkServiceProcess = nullptr;
       }
       return false;
     }
@@ -589,7 +587,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::validateCredentials(int msec)
     {
       if (requestValidateCredentials()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestValidateCredentialsFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestValidateCredentialsFinished, this))){
           return lastValidateCredentials();
         }
       }
@@ -600,7 +598,7 @@ namespace openstudio{
     bool VagrantProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
@@ -610,26 +608,26 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::waitForServer(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::serverStarted, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::serverStarted, this))){
         return m_serverStarted;
       }
       if (m_startServerProcess){
-        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->disconnect(this, nullptr);
         m_startServerProcess->kill();
-        m_startServerProcess = 0;
+        m_startServerProcess = nullptr;
       }
       return false;
     }
 
     bool VagrantProvider_Impl::waitForWorkers(int msec) 
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::workersStarted, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::workersStarted, this))){
         return m_workerStarted;
       }
       if (m_startWorkerProcess){
-        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->disconnect(this, nullptr);
         m_startWorkerProcess->kill();
-        m_startWorkerProcess = 0;
+        m_startWorkerProcess = nullptr;
       }
       return false;
     }
@@ -637,14 +635,14 @@ namespace openstudio{
     bool VagrantProvider_Impl::serverRunning(int msec)
     {
       if (requestServerRunning()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
       }
       if (m_checkServerRunningProcess){
-        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->disconnect(this, nullptr);
         m_checkServerRunningProcess->kill();
-        m_checkServerRunningProcess = 0;
+        m_checkServerRunningProcess = nullptr;
       }
       return false;
     }
@@ -652,32 +650,32 @@ namespace openstudio{
     bool VagrantProvider_Impl::workersRunning(int msec)
     {
       if (requestWorkersRunning()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestWorkersRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestWorkersRunningFinished, this))){
           return lastWorkersRunning();
         }
       }
       if (m_checkWorkerRunningProcess){
-        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->disconnect(this, nullptr);
         m_checkWorkerRunningProcess->kill();
-        m_checkWorkerRunningProcess = 0;
+        m_checkWorkerRunningProcess = nullptr;
       }
       return false;
     }
 
     bool VagrantProvider_Impl::waitForTerminated(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateFinished, this))){
+      if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestTerminateFinished, this))){
         return (m_serverStopped && m_workerStopped);
       }
       if (m_stopServerProcess){
-        m_stopServerProcess->disconnect(this, 0);
+        m_stopServerProcess->disconnect(this, nullptr);
         m_stopServerProcess->kill();
-        m_stopServerProcess = 0;
+        m_stopServerProcess = nullptr;
       }
       if (m_stopWorkerProcess){
-        m_stopWorkerProcess->disconnect(this, 0);
+        m_stopWorkerProcess->disconnect(this, nullptr);
         m_stopWorkerProcess->kill();
-        m_stopWorkerProcess = 0;
+        m_stopWorkerProcess = nullptr;
       }
       return false;
     }
@@ -685,14 +683,14 @@ namespace openstudio{
     bool VagrantProvider_Impl::terminateCompleted(int msec)
     {
       if (requestTerminateCompleted()){
-        if (waitForFinished(msec, boost::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
+        if (waitForFinished(msec, std::bind(&VagrantProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
       }
       if (m_checkTerminatedProcess){
-        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->disconnect(this, nullptr);
         m_checkTerminatedProcess->kill();
-        m_checkTerminatedProcess = 0;
+        m_checkTerminatedProcess = nullptr;
       }
       return false;
     }
@@ -720,7 +718,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeCheckServiceProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -781,7 +779,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeStartServerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -821,7 +819,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeStartWorkerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -862,7 +860,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeCheckServerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -899,7 +897,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeCheckWorkerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -936,7 +934,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeStopServerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       p->setWorkingDirectory(toQString(m_vagrantSettings.serverPath()));
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
           this, SLOT(onServerStopped(int, QProcess::ExitStatus)));
@@ -951,7 +949,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeStopWorkerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       p->setWorkingDirectory(toQString(m_vagrantSettings.workerPath()));
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
           this, SLOT(onWorkerStopped(int, QProcess::ExitStatus)));
@@ -998,7 +996,7 @@ namespace openstudio{
 
     QProcess *VagrantProvider_Impl::makeCheckTerminateProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1043,7 +1041,7 @@ namespace openstudio{
       }
 
       m_networkReply->deleteLater();
-      m_networkReply = 0;
+      m_networkReply = nullptr;
     }
 
 
@@ -1067,7 +1065,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
     {
       m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
-      m_checkServiceProcess = 0;
+      m_checkServiceProcess = nullptr;
     }
 
     bool VagrantProvider_Impl::parseServerStartedResults(const ProcessResults &t_results)
@@ -1079,7 +1077,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
-      m_startServerProcess = 0;
+      m_startServerProcess = nullptr;
 
       if (m_serverStarted)
       {
@@ -1097,7 +1095,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
       m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
-      m_startWorkerProcess = 0;
+      m_startWorkerProcess = nullptr;
 
       if (m_workerStarted)
       {
@@ -1116,7 +1114,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
       bool running = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
-      m_checkServerRunningProcess = 0;
+      m_checkServerRunningProcess = nullptr;
 
       if (m_vagrantSettings.haltOnStop()){
         if (running) {
@@ -1138,7 +1136,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       bool running = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
-      m_checkWorkerRunningProcess = 0;
+      m_checkWorkerRunningProcess = nullptr;
 
       if (m_vagrantSettings.haltOnStop()){
         if (running){
@@ -1158,7 +1156,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onServerStopped(int, QProcess::ExitStatus)
     {
       m_serverStopped = parseServerStoppedResults(handleProcessCompleted(m_stopServerProcess));
-      m_stopServerProcess = 0;
+      m_stopServerProcess = nullptr;
       
       m_stopWorkerProcess = makeStopWorkerProcess();
     }
@@ -1171,7 +1169,7 @@ namespace openstudio{
     void VagrantProvider_Impl::onWorkerStopped(int, QProcess::ExitStatus)
     {
       m_workerStopped = parseWorkerStoppedResults(handleProcessCompleted(m_stopWorkerProcess));
-      m_stopWorkerProcess = 0;
+      m_stopWorkerProcess = nullptr;
 
       if (m_serverStopped && m_workerStopped){
         emit CloudProvider_Impl::terminated();
@@ -1187,9 +1185,9 @@ namespace openstudio{
 
     void VagrantProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
     {
-      // note, it's important that this functon is always called, to clean up the QProcess object
+      // note, it's important that this function is always called, to clean up the QProcess object
       bool terminated = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
-      m_checkTerminatedProcess = 0;
+      m_checkTerminatedProcess = nullptr;
 
       if (m_vagrantSettings.haltOnStop()){
         if (terminated) {
@@ -1245,7 +1243,7 @@ namespace openstudio{
       return;
     }
 
-    bool VagrantProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f)
+    bool VagrantProvider_Impl::waitForFinished(int msec, const std::function<bool ()>& f)
     {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
@@ -1272,12 +1270,12 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::requestInternetAvailableRequestFinished() const
     {
-      return (m_networkReply == 0);
+      return (m_networkReply == nullptr);
     }
 
     bool VagrantProvider_Impl::requestServiceAvailableFinished() const
     {
-      return (m_checkServiceProcess == 0);
+      return (m_checkServiceProcess == nullptr);
     }
 
     bool VagrantProvider_Impl::requestValidateCredentialsFinished() const
@@ -1292,12 +1290,12 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::requestServerRunningFinished() const
     {
-      return (m_checkServerRunningProcess == 0);
+      return (m_checkServerRunningProcess == nullptr);
     }
 
     bool VagrantProvider_Impl::requestWorkersRunningFinished() const
     {
-      return (m_checkWorkerRunningProcess == 0);
+      return (m_checkWorkerRunningProcess == nullptr);
     }
 
     bool VagrantProvider_Impl::requestTerminateFinished() const
@@ -1307,13 +1305,13 @@ namespace openstudio{
 
     bool VagrantProvider_Impl::requestTerminateCompletedFinished() const
     {
-      return (m_checkTerminatedProcess == 0);
+      return (m_checkTerminatedProcess == nullptr);
     }
 
   }// detail
 
   VagrantSettings::VagrantSettings()
-    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl()))
+    : CloudSettings(std::shared_ptr<detail::VagrantSettings_Impl>(new detail::VagrantSettings_Impl()))
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
@@ -1329,7 +1327,7 @@ namespace openstudio{
                                    const std::string& username, 
                                    bool terminationDelayEnabled, 
                                    unsigned terminationDelay)
-    : CloudSettings(boost::shared_ptr<detail::VagrantSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::VagrantSettings_Impl>(
                         new detail::VagrantSettings_Impl(uuid,
                                                          versionUUID,
                                                          userAgreementSigned,
@@ -1345,7 +1343,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
   }
 
-  VagrantSettings::VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl)
+  VagrantSettings::VagrantSettings(const std::shared_ptr<detail::VagrantSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantSettings_Impl>());
@@ -1448,7 +1446,7 @@ namespace openstudio{
   VagrantSession::VagrantSession(const std::string& sessionId, 
                                  const boost::optional<Url>& serverUrl, 
                                  const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::VagrantSession_Impl>(
                        new detail::VagrantSession_Impl(sessionId, 
                                                        serverUrl, 
                                                        workerUrls)))
@@ -1461,7 +1459,7 @@ namespace openstudio{
                                  const std::string& sessionId, 
                                  const boost::optional<Url>& serverUrl, 
                                  const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::VagrantSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::VagrantSession_Impl>(
                        new detail::VagrantSession_Impl(uuid,
                                                        versionUUID,
                                                        sessionId, 
@@ -1471,7 +1469,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
   }
 
-  VagrantSession::VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl)
+  VagrantSession::VagrantSession(const std::shared_ptr<detail::VagrantSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantSession_Impl>());
@@ -1482,12 +1480,12 @@ namespace openstudio{
   }
 
   VagrantProvider::VagrantProvider()
-    : CloudProvider(boost::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl()))
+    : CloudProvider(std::shared_ptr<detail::VagrantProvider_Impl>(new detail::VagrantProvider_Impl()))
   {
     OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());
   }
 
-  VagrantProvider::VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl)
+  VagrantProvider::VagrantProvider(const std::shared_ptr<detail::VagrantProvider_Impl>& impl)
     : CloudProvider(impl)
   {
     OS_ASSERT(getImpl<detail::VagrantProvider_Impl>());

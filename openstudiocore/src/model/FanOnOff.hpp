@@ -20,9 +20,9 @@
 #ifndef MODEL_FANONOFF_HPP
 #define MODEL_FANONOFF_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -128,7 +128,7 @@ class MODEL_API FanOnOff : public StraightComponent {
   /// @cond
   typedef detail::FanOnOff_Impl ImplType;
 
-  explicit FanOnOff(boost::shared_ptr<detail::FanOnOff_Impl> impl);
+  explicit FanOnOff(std::shared_ptr<detail::FanOnOff_Impl> impl);
 
   friend class detail::FanOnOff_Impl;
   friend class Model;

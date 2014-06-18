@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/BarChart.hpp>
+#include "../BarChart.hpp"
 
 TEST(BarChart, Test1)
 {

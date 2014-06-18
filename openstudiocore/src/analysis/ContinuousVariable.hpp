@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_CONTINUOUSVARIABLE_HPP
 #define ANALYSIS_CONTINUOUSVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/InputVariable.hpp>
+#include "AnalysisAPI.hpp"
+#include "InputVariable.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -105,7 +105,7 @@ class ANALYSIS_API ContinuousVariable : public InputVariable {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit ContinuousVariable(boost::shared_ptr<detail::ContinuousVariable_Impl> impl);
+  explicit ContinuousVariable(std::shared_ptr<detail::ContinuousVariable_Impl> impl);
 
   /// @endcond
  private:

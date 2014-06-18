@@ -20,7 +20,7 @@
 #ifndef GENERATEIDDFACTORY_GENERATEIDDFACTORY_HPP
 #define GENERATEIDDFACTORY_GENERATEIDDFACTORY_HPP
 
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "IddFileFactoryData.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>

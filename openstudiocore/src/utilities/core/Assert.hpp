@@ -25,8 +25,8 @@
 !!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES BOOST_ASSERT!!!
 *****************************************************************************/
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Logger.hpp"
 
 #include <sstream>
 

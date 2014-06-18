@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/FrechetDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "FrechetDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 FrechetDistribution::FrechetDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(FrechetDistribution::type())))
 {}
 
 FrechetDistribution::FrechetDistribution(double alpha, double beta) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(FrechetDistribution::type())))
 {
   setAlpha(alpha);
@@ -65,7 +65,7 @@ void FrechetDistribution::setBeta(double value) {
   impl()->setAttribute(Attribute("betas",value),false);
 }
 
-FrechetDistribution::FrechetDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+FrechetDistribution::FrechetDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == FrechetDistribution::type());

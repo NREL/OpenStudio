@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP
 #define MODEL_CURVEEXPONENTIALSKEWNORMAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -126,7 +126,7 @@ class MODEL_API CurveExponentialSkewNormal : public Curve {
   /// @cond
   typedef detail::CurveExponentialSkewNormal_Impl ImplType;
 
-  explicit CurveExponentialSkewNormal(boost::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl);
+  explicit CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl);
 
   friend class detail::CurveExponentialSkewNormal_Impl;
   friend class Model;

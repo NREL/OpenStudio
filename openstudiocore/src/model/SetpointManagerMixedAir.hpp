@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERMIXEDAIR_HPP
 
 #include "ModelAPI.hpp"
-#include <model/HVACComponent.hpp>
+#include "HVACComponent.hpp"
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -106,7 +106,7 @@ class MODEL_API SetpointManagerMixedAir : public HVACComponent
 
   typedef detail::SetpointManagerMixedAir_Impl ImplType;
 
-  explicit SetpointManagerMixedAir(boost::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
+  explicit SetpointManagerMixedAir(std::shared_ptr<detail::SetpointManagerMixedAir_Impl> impl);
 
   private:
 

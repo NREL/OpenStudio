@@ -20,8 +20,8 @@
 #ifndef MODEL_LAYEREDCONSTRUCTION_HPP
 #define MODEL_LAYEREDCONSTRUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ConstructionBase.hpp>
+#include "ModelAPI.hpp"
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
 namespace model {
@@ -165,7 +165,7 @@ class MODEL_API LayeredConstruction : public ConstructionBase {
 
   LayeredConstruction(IddObjectType type,const Model& model);
 
-  explicit LayeredConstruction(boost::shared_ptr<detail::LayeredConstruction_Impl> impl);
+  explicit LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl);
   
   /// @endcond
  private:

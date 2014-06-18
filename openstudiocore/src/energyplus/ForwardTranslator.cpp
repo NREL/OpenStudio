@@ -19,34 +19,35 @@
 
 #include "EnergyPlusAPI.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/ConcreteModelObjects.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/ConstructionWithInternalSource.hpp"
+#include "../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/RunPeriodControlSpecialDays.hpp"
+#include "../model/RunPeriodControlSpecialDays_Impl.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
+#include "../model/ConcreteModelObjects.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/time/Time.hpp"
 #include <utilities/idd/FluidProperties_Name_FieldEnums.hxx>
 #include <utilities/idd/FluidProperties_GlycolConcentration_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -59,7 +60,7 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QFile>
 #include <QTextStream>
@@ -106,7 +107,7 @@ Workspace ForwardTranslator::translateModelObject( ModelObject & modelObject )
   Model modelCopy;
   modelObject.clone(modelCopy);
 
-  m_progressBar = NULL;
+  m_progressBar = nullptr;
 
   return translateModelPrivate(modelCopy, false);
 }
@@ -167,7 +168,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   resolveMatchedSubSurfaceConstructionConflicts(model);
 
   // check for spaces not in a thermal zone
-  for (Space space : model.getModelObjects<Space>()){
+  for (Space space : model.getConcreteModelObjects<Space>()){
     if (!space.thermalZone()){
       LOG(Warn, "Space " << space.name().get() << " is not associated with a ThermalZone, it will not be translated.");
       space.remove();
@@ -176,12 +177,12 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
 
   // next thing to do is combine all spaces in each thermal zone
   // after this each zone will have 0 or 1 spaces and each space will have 0 or 1 zone
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()){
     thermalZone.combineSpaces();
   }
 
   // remove unused space types
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
   for (SpaceType spaceType : spaceTypes){
     std::vector<Space> spaces = spaceType.spaces();
     if (spaces.empty()){
@@ -198,7 +199,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   //Fix for Bug 717 - Take any OtherEquipment objects that still point to a spacetype and make
   //a new instance of them for every space that that spacetype points to then delete the one
   //that pointed to a spacetype
-  std::vector<OtherEquipment> otherEquipments = model.getModelObjects<OtherEquipment>();
+  std::vector<OtherEquipment> otherEquipments = model.getConcreteModelObjects<OtherEquipment>();
   for (OtherEquipment otherEquipment : otherEquipments){
     boost::optional<SpaceType> spaceTypeOfOtherEquipment = otherEquipment.spaceType();
     if (spaceTypeOfOtherEquipment){
@@ -221,7 +222,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
     // we will not warn users because these objects are not exposed in the GUI
-    for (model::RunPeriodControlSpecialDays holiday : model.getModelObjects<model::RunPeriodControlSpecialDays>()){ 
+    for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()){ 
       holiday.remove();
     }
   }
@@ -233,7 +234,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model.lifeCycleCostParameters();
       if (!lifeCycleCostParameters){
         // only warn if costs are present
-        if (!model.getModelObjects<LifeCycleCost>().empty()){
+        if (!model.getConcreteModelObjects<LifeCycleCost>().empty()){
           LOG(Warn, "No LifeCycleCostParameters but LifeCycleCosts are present, adding default LifeCycleCostParameters.");
         }
         
@@ -287,7 +288,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     m_idfObjects.push_back(globalGeometryRules);
 
     // create meters for utility bill objects
-    std::vector<UtilityBill> utilityBills = model.getModelObjects<UtilityBill>();
+    std::vector<UtilityBill> utilityBills = model.getConcreteModelObjects<UtilityBill>();
     for (UtilityBill utilityBill : utilityBills){
       // these meters and variables will be translated later
       Meter consumptionMeter = utilityBill.consumptionMeter();
@@ -299,21 +300,21 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   translateSchedules(model);
 
   // get air loops in sorted order
-  std::vector<AirLoopHVAC> airLoops = model.getModelObjects<AirLoopHVAC>();
+  std::vector<AirLoopHVAC> airLoops = model.getConcreteModelObjects<AirLoopHVAC>();
   std::sort(airLoops.begin(), airLoops.end(), WorkspaceObjectNameLess());
   for (AirLoopHVAC airLoop : airLoops){
     translateAndMapModelObject(airLoop);
   }
 
   // get AirConditionerVariableRefrigerantFlow objects in sorted order
-  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getModelObjects<AirConditionerVariableRefrigerantFlow>();
+  std::vector<AirConditionerVariableRefrigerantFlow> vrfs = model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlow>();
   std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
   for (AirConditionerVariableRefrigerantFlow vrf : vrfs){
     translateAndMapModelObject(vrf);
   }
 
   // get plant loops in sorted order
-  std::vector<PlantLoop> plantLoops = model.getModelObjects<PlantLoop>();
+  std::vector<PlantLoop> plantLoops = model.getConcreteModelObjects<PlantLoop>();
   std::sort(plantLoops.begin(), plantLoops.end(), WorkspaceObjectNameLess());
   for (PlantLoop plantLoop : plantLoops){
     translateAndMapModelObject(plantLoop);
@@ -359,8 +360,8 @@ struct ChildSorter {
   // sort first by position in iddObjectTypes and then by name
   bool operator()(const model::ModelObject& a, const model::ModelObject& b) const
   {
-    std::vector<IddObjectType>::const_iterator ita = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), a.iddObject().type());
-    std::vector<IddObjectType>::const_iterator itb = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), b.iddObject().type());
+    auto ita = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), a.iddObject().type());
+    auto itb = std::find(m_iddObjectTypes.begin(), m_iddObjectTypes.end(), b.iddObject().type());
   
     if (ita < itb){
       return true;
@@ -1001,6 +1002,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateHeatExchangerAirToAirSensibleAndLatent(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_HeatExchanger_FluidToFluid :
+    {
+      model::HeatExchangerFluidToFluid mo = modelObject.cast<HeatExchangerFluidToFluid>();
+      retVal = translateHeatExchangerFluidToFluid(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_HotWaterEquipment :
     {
       model::HotWaterEquipment hotWaterEquipment = modelObject.cast<HotWaterEquipment>();
@@ -1514,6 +1521,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSubSurface(subSurface);
       break;
     }
+  case openstudio::IddObjectType::OS_Table_MultiVariableLookup :
+    {
+      model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
+      retVal = translateTableMultiVariableLookup(table);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermalZone :
     {
       model::ThermalZone zone = modelObject.cast<ThermalZone>();
@@ -1594,6 +1607,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       // no-op
       return retVal;
+    }
+  case openstudio::IddObjectType::OS_ZoneControl_Humidistat :
+    {
+      model::ZoneControlHumidistat mo = modelObject.cast<ZoneControlHumidistat>();
+      retVal = translateZoneControlHumidistat(mo);
+      break;
     }
   case openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric :
     {
@@ -1701,10 +1720,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     // sort these objects as well
     std::sort(children.begin(), children.end(), ChildSorter(types));
     
-    for(ModelObjectVector::iterator c=children.begin(),cend=children.end();c!=cend;++c)
+    for(auto & elem : children)
     {
-      if (std::find(types.begin(),types.end(),c->iddObject().type()) != types.end()) {
-        translateAndMapModelObject(*c);
+      if (std::find(types.begin(),types.end(),elem.iddObject().type()) != types.end()) {
+        translateAndMapModelObject(elem);
       }
     }
   }
@@ -1858,6 +1877,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Curve_RectangularHyperbola2);
   result.push_back(IddObjectType::OS_Curve_Sigmoid);
   result.push_back(IddObjectType::OS_Curve_Triquadratic);
+  result.push_back(IddObjectType::OS_Table_MultiVariableLookup);
   result.push_back(IddObjectType::OS_DistrictCooling);
   result.push_back(IddObjectType::OS_DistrictHeating); 
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
@@ -2090,7 +2110,7 @@ model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Mo
 
 model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction)
 {
-  std::map<Handle, ConstructionBase>::iterator it = m_constructionHandleToReversedConstructions.find(construction.handle());
+  auto it = m_constructionHandleToReversedConstructions.find(construction.handle());
   if (it != m_constructionHandleToReversedConstructions.end()){
     return it->second;
   }
@@ -2140,7 +2160,7 @@ void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model&
 
   std::set<Handle> processedSurfaces;
 
-  model::SurfaceVector surfaces = model.getModelObjects<model::Surface>();
+  model::SurfaceVector surfaces = model.getConcreteModelObjects<model::Surface>();
   for (model::Surface surface : surfaces){
 
     if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()){
@@ -2287,7 +2307,7 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
 
   std::set<Handle> processedSubSurfaces;
 
-  model::SubSurfaceVector subSurfaces = model.getModelObjects<model::SubSurface>();
+  model::SubSurfaceVector subSurfaces = model.getConcreteModelObjects<model::SubSurface>();
   for (model::SubSurface subSurface : subSurfaces){
 
     if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()){
@@ -2545,7 +2565,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   sstm << glycolType << "_" << glycolConcentration;
   std::string glycolName = sstm.str();
 
-  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+  for( auto it = m_idfObjects.begin();
      it != m_idfObjects.end();
      ++it )
   {
@@ -2584,7 +2604,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   boost::optional<IdfObject> idfObject;
   boost::optional<IdfFile> idfFile;
 
-  for( std::vector<IdfObject>::iterator it = m_idfObjects.begin();
+  for( auto it = m_idfObjects.begin();
      it != m_idfObjects.end();
      ++it )
   {
@@ -2609,7 +2629,7 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
   if(idfFile){
     std::vector<IdfObject> fluidObjects = idfFile->objects();
 
-    for( std::vector<IdfObject>::iterator it = fluidObjects.begin();
+    for( auto it = fluidObjects.begin();
        it != fluidObjects.end();
        ++it )
     {
@@ -2619,6 +2639,152 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
       m_idfObjects.push_back(*it);
     }
   }
+
+  return idfObject;
+}
+
+boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::string & name,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & defaultDay,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & summerDesignDay,
+                                                                   const std::vector< std::pair<openstudio::Time, double> > & winterDesignDay) {
+
+  IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
+
+  idfObject.setName(name);
+
+  StringVector values;
+  values.push_back("Through: 12/31");
+  IdfExtensibleGroup eg = idfObject.pushExtensibleGroup(values);
+  OS_ASSERT(!eg.empty());
+
+  if(!summerDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
+    values[0] = "For: SummerDesignDay";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+
+    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = summerDesignDay.begin();
+         it != summerDesignDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Summer Design Day must have a value for all 24 hours");
+    }
+  }
+
+  if(!winterDesignDay.empty()) {
+    bool hasEndTime = false;
+    double endTimeValue;
+    values[0] = "For: WinterDesignDay";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+
+    for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = winterDesignDay.begin();
+         it != winterDesignDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+    if(hasEndTime) {
+      values[0] = "Until: 24:00";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,endTimeValue);
+      OS_ASSERT(ok);
+    } else {
+      LOG(Error, "Winter Design Day must have a value for all 24 hours");
+    }
+  }
+
+  if(!summerDesignDay.empty() || !winterDesignDay.empty()) {
+    values[0] = "For: AllOtherDays";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+  } else {
+    values[0] = "For: AllDays";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+  }
+
+  bool hasEndTime = false;
+  double endTimeValue;
+  for( std::vector< std::pair<openstudio::Time, double> >::const_iterator it = defaultDay.begin();
+         it != defaultDay.end();
+         ++it )
+    {
+      int minutes = it->first.minutes();
+      int hours = it->first.hours();
+      if(0 == minutes && 0 == hours) {
+        hasEndTime = true;
+        endTimeValue = it->second;
+        continue;
+      }
+      values[0] = "Until: " + std::string(hours < 10 ? "0" : "") + boost::lexical_cast<std::string>(hours) + std::string(minutes < 10 ? ":0" : ":") + boost::lexical_cast<std::string>(minutes);
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      values[0] = "";
+      eg = idfObject.pushExtensibleGroup(values);
+      OS_ASSERT(!eg.empty());
+      bool ok = eg.setDouble(0,it->second);
+      OS_ASSERT(ok);
+    }
+  if(hasEndTime) {
+    values[0] = "Until: 24:00";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    values[0] = "";
+    eg = idfObject.pushExtensibleGroup(values);
+    OS_ASSERT(!eg.empty());
+    bool ok = eg.setDouble(0,endTimeValue);
+    OS_ASSERT(ok);
+  } else {
+      LOG(Error, "Default Day must have a value for all 24 hours");
+    }
+
+  m_idfObjects.push_back(idfObject);
 
   return idfObject;
 }

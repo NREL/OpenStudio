@@ -24,7 +24,7 @@
 #include <QPainter>
 #include <QPushButton>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -46,7 +46,7 @@ void OSHeader::paintEvent(QPaintEvent *)
 OSCollapsibleView::OSCollapsibleView(QWidget * parent)
   : QWidget(parent)
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setSpacing(0);
   setLayout(mainVLayout);

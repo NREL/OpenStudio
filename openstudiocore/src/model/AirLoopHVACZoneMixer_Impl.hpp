@@ -20,7 +20,7 @@
 #ifndef MODEL_AIRLOOPHVACZONEMIXER_IMPL_HPP
 #define MODEL_AIRLOOPHVACZONEMIXER_IMPL_HPP
 
-#include <model/Mixer_Impl.hpp>
+#include "Mixer_Impl.hpp"
 
 namespace openstudio {
 

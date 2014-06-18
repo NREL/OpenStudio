@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/MainWindow.hpp>
+#include "MainWindow.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 
 #include <QApplication>
 

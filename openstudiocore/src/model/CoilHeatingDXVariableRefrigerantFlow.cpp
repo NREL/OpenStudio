@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow.hpp>
-#include <model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "CoilHeatingDXVariableRefrigerantFlow.hpp"
+#include "CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -318,7 +318,7 @@ bool CoilHeatingDXVariableRefrigerantFlow::setHeatingCapacityModifierFunctionofF
 }
 
 /// @cond
-CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
+CoilHeatingDXVariableRefrigerantFlow::CoilHeatingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilHeatingDXVariableRefrigerantFlow_Impl> impl)
   : HVACComponent(impl)
 {}
 /// @endcond

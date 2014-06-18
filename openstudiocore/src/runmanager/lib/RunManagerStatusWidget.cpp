@@ -61,13 +61,11 @@ namespace runmanager {
   {
     std::vector<Job> jobs = m_runmanager->getJobs(getSelectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (const auto & job : jobs)
     {
-      if (!itr->parent())
+      if (!job.parent())
       {
-        m_runmanager->remove(*itr);
+        m_runmanager->remove(job);
       }
     }
 
@@ -294,11 +292,9 @@ namespace runmanager {
   {
     std::vector<Job> jobs = m_runmanager->getJobs(getSelectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
-      itr->setTreeCanceled(!itr->canceled());
+      job.setTreeCanceled(!job.canceled());
     }
   }
 
@@ -306,14 +302,12 @@ namespace runmanager {
   {
     std::vector<Job> jobs = m_runmanager->getJobs(getSelectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
       // Only the top level needs to be forced the others will see themselves as
       // out of date after the top level is re-run
-      itr->setTreeRunnable(false);
-      itr->setRunnable(true);
+      job.setTreeRunnable(false);
+      job.setRunnable(true);
     }
   }
 

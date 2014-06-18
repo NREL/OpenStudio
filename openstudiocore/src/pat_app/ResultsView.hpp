@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RESULTSVIEW_H
-#define OPENSTUDIO_RESULTSVIEW_H
+#ifndef PATAPP_RESULTSVIEW_HPP
+#define PATAPP_RESULTSVIEW_HPP
 
-#include <pat_app/PatMainTabView.hpp>
+#include "PatMainTabView.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
 #include <QAbstractButton>
 
@@ -263,4 +263,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_RESULTSVIEW_H
+#endif // PATAPP_RESULTSVIEW_HPP

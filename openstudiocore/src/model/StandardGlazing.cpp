@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
+#include "StandardGlazing.hpp"
+#include "StandardGlazing_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -637,11 +637,11 @@ namespace detail {
     return *od;
   }
 
-  boost::optional<double> StandardGlazing_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> StandardGlazing_Impl::interiorVisibleAbsorptance() const {
     return 1.0 - (*(getVisibleTransmittance()) + interiorVisibleReflectance());
   }
 
-  boost::optional<double> StandardGlazing_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> StandardGlazing_Impl::exteriorVisibleAbsorptance() const {
     return 1.0 - (*(getVisibleTransmittance()) + exteriorVisibleReflectance());
   }
 
@@ -1138,7 +1138,7 @@ bool StandardGlazing::setThermalResistance(double value) {
 }
 
 /// @cond
-StandardGlazing::StandardGlazing(boost::shared_ptr<detail::StandardGlazing_Impl> impl)
+StandardGlazing::StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

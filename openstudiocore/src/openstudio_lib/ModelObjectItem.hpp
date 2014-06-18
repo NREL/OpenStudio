@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTITEM_H
-#define OPENSTUDIO_MODELOBJECTITEM_H
+#ifndef OPENSTUDIO_MODELOBJECTITEM_HPP
+#define OPENSTUDIO_MODELOBJECTITEM_HPP
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <QWidget>
 
@@ -70,5 +70,5 @@ class ModelObjectItem : public OSItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTITEM_H
+#endif // OPENSTUDIO_MODELOBJECTITEM_HPP
 

@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../ScheduleTypeRegistry.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../../utilities/idf/ValidityReport.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

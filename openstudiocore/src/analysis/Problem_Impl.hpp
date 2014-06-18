@@ -20,13 +20,13 @@
 #ifndef ANALYSIS_PROBLEM_IMPL_HPP
 #define ANALYSIS_PROBLEM_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
-#include <analysis/Function.hpp>
-#include <analysis/Problem.hpp>
+#include "Function.hpp"
+#include "Problem.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 

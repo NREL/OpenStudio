@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -68,14 +68,11 @@ namespace detail {
 
   boost::optional<Loop> HVACComponent_Impl::loop() const
   {
-    boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC();
-    boost::optional<PlantLoop> plantLoop = this->plantLoop();
-
-    if( airLoopHVAC )
+    if( boost::optional<AirLoopHVAC> airLoopHVAC = this->airLoopHVAC() )
     {
       return airLoopHVAC->optionalCast<Loop>();
     }
-    else if( plantLoop )
+    else if( boost::optional<PlantLoop> plantLoop = this->plantLoop() )
     {
       return plantLoop->optionalCast<Loop>();
     }
@@ -93,29 +90,21 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACVector airLoops = this->model().getModelObjects<AirLoopHVAC>();
+      AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
 
-      for( AirLoopHVACVector::iterator it = airLoops.begin(),itEnd=airLoops.end();
-      it != itEnd;
-      ++it )
+      for( auto & airLoop : airLoops)
       {
-        OptionalAirLoopHVAC airLoop = it->optionalCast<AirLoopHVAC>();
-        if(airLoop)
+        if( airLoop.component(this->handle()) )
         {
-          if( airLoop->component(this->handle()) )
+          m_airLoopHVAC = airLoop;
+          return airLoop;
+        }
+        if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop.airLoopHVACOutdoorAirSystem() )
+        {
+          if( oaSystem->component(this->handle()) )
           {
             m_airLoopHVAC = airLoop;
-
             return airLoop;
-          }
-          if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem() )
-          {
-            if( oaSystem->component(this->handle()) )
-            {
-              m_airLoopHVAC = airLoop;
-
-              return airLoop;
-            }
           }
         }
       }
@@ -132,17 +121,14 @@ namespace detail {
     }
     else
     {
-      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getModelObjects<AirLoopHVACOutdoorAirSystem>();
+      AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>();
 
-      for( AirLoopHVACOutdoorAirSystemVector::iterator it = oaLoops.begin(),itEnd=oaLoops.end();
-      it != itEnd;
-      ++it )
+      for(auto & oaLoop : oaLoops)
       {
-        if( it->component(this->handle()) )
+        if( oaLoop.component(this->handle()) )
         {
-          m_airLoopHVACOutdoorAirSystem = *it;
-
-          return *it;
+          m_airLoopHVACOutdoorAirSystem = oaLoop;
+          return oaLoop;
         }
       }
     }
@@ -158,21 +144,14 @@ namespace detail {
     }
     else
     {
-      std::vector<PlantLoop> plantLoops = this->model().getModelObjects<PlantLoop>();
+      std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-      for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-      it != itEnd;
-      ++it )
+      for( auto & plantLoop : plantLoops )
       {
-        OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
-        if(plantLoop)
+        if( plantLoop.component(this->handle()) )
         {
-          if( plantLoop->component(this->handle()) )
-          {
-            m_plantLoop = plantLoop;
-
-            return plantLoop;
-          }
+          m_plantLoop = plantLoop;
+          return plantLoop;
         }
       }
     }
@@ -246,35 +225,34 @@ namespace detail {
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::airLoopHVACAsModelObject() const {
-    OptionalModelObject result;
-    OptionalAirLoopHVAC intermediate = airLoopHVAC();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalAirLoopHVAC intermediate = airLoopHVAC()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::plantLoopAsModelObject() const {
-    OptionalModelObject result;
-    OptionalPlantLoop intermediate = plantLoop();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalPlantLoop intermediate = plantLoop()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   boost::optional<ModelObject> HVACComponent_Impl::airLoopHVACOutdoorAirSystemAsModelObject() const {
-    OptionalModelObject result;
-    OptionalAirLoopHVACOutdoorAirSystem intermediate = airLoopHVACOutdoorAirSystem();
-    if (intermediate) {
-      result = *intermediate;
+    if (OptionalAirLoopHVACOutdoorAirSystem intermediate = airLoopHVACOutdoorAirSystem()) {
+      return *intermediate;
     }
-    return result;
+    return boost::none;
   }
 
   ModelObject HVACComponent_Impl::clone(Model model) const
   {
     return ModelObject_Impl::clone(model);
+  }
+
+  std::vector<HVACComponent> HVACComponent_Impl::edges(bool isDemandComponent)
+  {
+    return std::vector<HVACComponent>();
   }
 
   boost::optional<HVACComponent> HVACComponent_Impl::containingHVACComponent() const
@@ -294,7 +272,7 @@ namespace detail {
 
 } // detail
 
-HVACComponent::HVACComponent(boost::shared_ptr<detail::HVACComponent_Impl> p)
+HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
   : ParentObject(p)
 {}
 

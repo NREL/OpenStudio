@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_BTUUNIT_HPP
 #define UTILITIES_UNITS_BTUUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -109,7 +109,7 @@ class UTILITIES_API BTUUnit : public Unit {
   /// @cond
   typedef detail::BTUUnit_Impl ImplType;
 
-  explicit BTUUnit(boost::shared_ptr<detail::BTUUnit_Impl> impl);
+  explicit BTUUnit(std::shared_ptr<detail::BTUUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::BTUUnit_Impl;

@@ -17,26 +17,26 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/DefaultConstructionSetInspectorView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "DefaultConstructionSetInspectorView.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/MainWindow.hpp>
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "MainWindow.hpp"
 
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ComponentData.hpp>
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultSubSurfaceConstructions.hpp"
+#include "../model/DefaultSubSurfaceConstructions_Impl.hpp"
+#include "../model/DefaultSurfaceConstructions.hpp"
+#include "../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ComponentData.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
 #include <utilities/idd/OS_DefaultSubSurfaceConstructions_FieldEnums.hxx>
 #include <utilities/idd/OS_DefaultSurfaceConstructions_FieldEnums.hxx>

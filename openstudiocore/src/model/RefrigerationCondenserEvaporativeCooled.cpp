@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationCondenserEvaporativeCooled.hpp>
-#include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
+#include "RefrigerationCondenserEvaporativeCooled.hpp"
+#include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
 
 // WaterStorageTank object not used
-//#include <model/WaterStorageTank.hpp>
-//#include <model/WaterStorageTank_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+//#include "WaterStorageTank.hpp"
+//#include "WaterStorageTank_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Condenser_EvaporativeCooled_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -936,7 +936,7 @@ void RefrigerationCondenserEvaporativeCooled::resetCondensatePipingRefrigerantIn
 }
 
 /// @cond
-RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled(boost::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl)
+RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled(std::shared_ptr<detail::RefrigerationCondenserEvaporativeCooled_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

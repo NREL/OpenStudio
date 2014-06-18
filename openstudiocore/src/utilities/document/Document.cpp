@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/document/Document.hpp>
-#include <utilities/document/DocumentRegex.hpp>
-#include <utilities/document/SectionHeading.hpp>
-#include <utilities/document/SectionHeading_Impl.hpp>
-#include <utilities/document/Section.hpp>
-#include <utilities/document/Section_Impl.hpp>
-#include <utilities/document/Table.hpp>
-#include <utilities/document/Table_Impl.hpp>
-#include <utilities/document/Text.hpp>
-#include <utilities/document/Text_Impl.hpp>
+#include "Document.hpp"
+#include "DocumentRegex.hpp"
+#include "SectionHeading.hpp"
+#include "SectionHeading_Impl.hpp"
+#include "Section.hpp"
+#include "Section_Impl.hpp"
+#include "Table.hpp"
+#include "Table_Impl.hpp"
+#include "Text.hpp"
+#include "Text_Impl.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../core/PathHelpers.hpp"
 
 #include <boost/archive/archive_exception.hpp>
 
@@ -177,7 +177,7 @@ void Document::insert(unsigned index, const SectionElement& element) {
     append(element); 
     return;
   }
-  SectionElementVector::iterator it = m_contents.begin();
+  auto it = m_contents.begin();
   for (unsigned i = 0; i < index; ++i, ++it) {}
   m_contents.insert(it,element);
 }
@@ -195,7 +195,7 @@ Section Document::insertSection(unsigned index,const std::string& headingText) {
 
 void Document::erase(unsigned index) {
   if (index < numElements()) {
-    SectionElementVector::iterator it = m_contents.begin();
+    auto it = m_contents.begin();
     for (unsigned i = 0; i < index; ++i, ++it) {}
     m_contents.erase(it);
   }
@@ -297,7 +297,7 @@ bool Document::save(const openstudio::path& p, bool overwrite) const {
           return false;
         }
         catch (...) {
-          LOG(Error,"Error serializing Document to boost serializaiton text format (.osd).");
+          LOG(Error,"Error serializing Document to boost serialization text format (.osd).");
           return false;
         }
       }

@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/RunManagerStatus.hpp>
+#include "RunManagerStatus.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 namespace openstudio {
 namespace runmanager {

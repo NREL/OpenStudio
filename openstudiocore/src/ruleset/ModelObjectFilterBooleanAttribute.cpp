@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelObjectFilterBooleanAttribute.hpp>
-#include <ruleset/ModelObjectFilterBooleanAttribute_Impl.hpp>
+#include "ModelObjectFilterBooleanAttribute.hpp"
+#include "ModelObjectFilterBooleanAttribute_Impl.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 #include <QDomDocument>
 #include <QDomElement>
@@ -114,26 +114,26 @@ std::string ModelObjectFilterBooleanAttribute::xmlElementName()
 }
 
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const std::string& attributeName, bool testValue)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const std::string& attributeName, bool testValue,
                                                                      const UUID& uuid, const UUID& versionUUID)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue, uuid, versionUUID)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(attributeName, testValue, uuid, versionUUID)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const QDomElement& element)
-  : ModelObjectFilterAttribute(boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(element)))
+  : ModelObjectFilterAttribute(std::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>(new detail::ModelObjectFilterBooleanAttribute_Impl(element)))
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());
 }
 
 /// @cond
-ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const boost::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>& impl)
+ModelObjectFilterBooleanAttribute::ModelObjectFilterBooleanAttribute(const std::shared_ptr<detail::ModelObjectFilterBooleanAttribute_Impl>& impl)
   : ModelObjectFilterAttribute(impl)
 {
   OS_ASSERT(getImpl<detail::ModelObjectFilterBooleanAttribute_Impl>());

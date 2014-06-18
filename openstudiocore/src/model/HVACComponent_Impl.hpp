@@ -20,10 +20,10 @@
 #define MODEL_HVACCOMPONENT_IMPL_HPP
 
 
-#include <model/ParentObject_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/PlantLoop.hpp>
+#include "ParentObject_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "PlantLoop.hpp"
 
 namespace openstudio {
 
@@ -84,6 +84,12 @@ class MODEL_API HVACComponent_Impl : public ParentObject_Impl {
   virtual bool isRemovable() const;
 
   virtual ModelObject clone(Model model) const;
+
+  /** This function returns a vector of HVACComponent that are directly downstream
+   *  from this object on an AirLoopHVAC or PlantLoop. 
+   *  @param[in]  isDemandComponent  Boolean passed in whether object is a demand or supply component
+  **/
+  virtual std::vector<HVACComponent> edges(bool isDemandComponent);
 
   virtual boost::optional<HVACComponent> containingHVACComponent() const;
 

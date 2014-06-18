@@ -19,13 +19,13 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 require 'fileutils'
 require 'openstudio/energyplus/find_energyplus'
 
 
-class ModelToRad_Test < Test::Unit::TestCase
+class ModelToRad_Test < MiniTest::Unit::TestCase
   
   #def setup
   

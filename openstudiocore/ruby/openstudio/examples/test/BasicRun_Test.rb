@@ -19,10 +19,9 @@
 
 require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
+require 'minitest/autorun'
 
-require 'test/unit'
-
-class BasicRun_Test < Test::Unit::TestCase
+class BasicRun_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

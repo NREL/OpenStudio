@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/DesignAlternativesView.hpp>
+#include "DesignAlternativesView.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -42,27 +42,27 @@ DesignAlternativesTabView::DesignAlternativesTabView()
 {
   setTitle("Select Measures and Create Design Alternatives");
 
-  QSplitter * splitter = new QSplitter(Qt::Horizontal);
+  auto splitter = new QSplitter(Qt::Horizontal);
 
   viewSwitcher->setView(splitter);
 
   // Left content
 
-  QWidget * leftContent = new QWidget();
+  auto leftContent = new QWidget();
   leftContent->setMinimumWidth(270);
   splitter->addWidget(leftContent);
 
-  QVBoxLayout * mainLeftContentVLayout = new QVBoxLayout();
+  auto mainLeftContentVLayout = new QVBoxLayout();
   mainLeftContentVLayout->setContentsMargins(0,0,0,0);
   mainLeftContentVLayout->setSpacing(0);
   mainLeftContentVLayout->setAlignment(Qt::AlignTop);
   leftContent->setLayout(mainLeftContentVLayout);
 
-  QWidget * header = new QWidget();
+  auto header = new QWidget();
   header->setObjectName("Header");
   header->setStyleSheet("QWidget#Header { background: #D5D5D5; border-bottom: 1px solid #8C8C8C;}");
 
-  QVBoxLayout * headerVLayout = new QVBoxLayout();
+  auto headerVLayout = new QVBoxLayout();
   headerVLayout->setContentsMargins(5,5,5,5);
   headerVLayout->setSpacing(5);
   header->setLayout(headerVLayout);
@@ -73,7 +73,7 @@ DesignAlternativesTabView::DesignAlternativesTabView()
   leftTitleLabel->setObjectName("H2");
   headerVLayout->addWidget(leftTitleLabel);
 
-  QHBoxLayout * selectionButtonLayout = new QHBoxLayout();
+  auto selectionButtonLayout = new QHBoxLayout();
   selectionButtonLayout->setContentsMargins(0,0,0,0);
   selectionButtonLayout->setSpacing(5);
   selectionButtonLayout->setAlignment(Qt::AlignLeft);
@@ -107,16 +107,16 @@ namespace altstab {
 DesignAltsView::DesignAltsView()
   : QWidget()
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,0,0,0);
   mainVLayout->setSpacing(0);
   setLayout(mainVLayout);
 
-  QWidget * header = new QWidget();
+  auto header = new QWidget();
   header->setObjectName("Header");
   header->setStyleSheet("QWidget#Header { background: #D5D5D5; border-bottom: 1px solid #8C8C8C;}");
 
-  QVBoxLayout * headerVLayout = new QVBoxLayout();
+  auto headerVLayout = new QVBoxLayout();
   headerVLayout->setAlignment(Qt::AlignTop);
   headerVLayout->setContentsMargins(5,5,5,5);
   headerVLayout->setSpacing(5);
@@ -126,7 +126,7 @@ DesignAltsView::DesignAltsView()
   headerTitleLabel->setObjectName("H2");
   headerVLayout->addWidget(headerTitleLabel);
 
-  QHBoxLayout * headerButtonHLayout = new QHBoxLayout();
+  auto headerButtonHLayout = new QHBoxLayout();
   headerButtonHLayout->setAlignment(Qt::AlignLeft);
   headerButtonHLayout->setContentsMargins(0,0,0,0);
   headerButtonHLayout->setSpacing(5);
@@ -153,7 +153,7 @@ DesignAltsView::DesignAltsView()
 }
 
 VariableGroupItemView::VariableGroupItemView()
-  : OSCollapsibleView(0)
+  : OSCollapsibleView(nullptr)
 {
   variableGroupHeaderView = new DarkGradientHeader();
   setHeader(variableGroupHeaderView);
@@ -166,7 +166,7 @@ VariableGroupItemView::VariableGroupItemView()
 }
 
 VariableItemView::VariableItemView()
-  : OSCollapsibleView(0)
+  : OSCollapsibleView(nullptr)
 {
   variableHeaderView = new QLabel();
   variableHeaderView->setObjectName("H2");
@@ -183,7 +183,7 @@ VariableItemView::VariableItemView()
 MeasureItemView::MeasureItemView()
   : QAbstractButton()
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(20,5,5,5);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);
@@ -217,7 +217,7 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline)
 {
   setFixedHeight(40);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,0,5,0);
   mainHLayout->setSpacing(5);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -226,7 +226,7 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline)
   mainHLayout->addWidget(toggleButton);
 
   QRegExp nameRegex("^\\S.*");
-  QRegExpValidator* validator = new QRegExpValidator(nameRegex, this);
+  auto validator = new QRegExpValidator(nameRegex, this);
 
   designAltNameEdit = new QLineEdit();
   designAltNameEdit->setAcceptDrops(false);
@@ -251,7 +251,7 @@ DesignAltHeaderView::DesignAltHeaderView(bool t_isBaseline)
 DesignAltContentView::DesignAltContentView(bool t_isBaseline)
   : QWidget()
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(25,0,5,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
@@ -291,7 +291,7 @@ void DesignAltContentView::onDescriptionTextChanged()
 }
 
 DesignAltItemView::DesignAltItemView(bool t_isBaseline)
-  : OSCollapsibleView(0)
+  : OSCollapsibleView(nullptr)
 {
   designAltHeaderView = new DesignAltHeaderView(t_isBaseline);
   setHeader(designAltHeaderView);

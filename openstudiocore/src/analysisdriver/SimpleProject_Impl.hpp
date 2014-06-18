@@ -20,28 +20,26 @@
 #ifndef ANALYSISDRIVER_SIMPLEPROJECT_IMPL_HPP
 #define ANALYSISDRIVER_SIMPLEPROJECT_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "AnalysisDriver.hpp"
+#include "CloudAnalysisDriver.hpp"
 
-#include <analysis/Analysis.hpp>
+#include "../analysis/Analysis.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/idf/Workspace.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "../utilities/cloud/CloudProvider.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -75,7 +73,7 @@ class AnalysisStatus;
 namespace detail {
 
   /** SimpleProject_Impl is the implementation class for SimpleProject. */
-  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject, public boost::enable_shared_from_this<SimpleProject_Impl> {
+  class ANALYSISDRIVER_API SimpleProject_Impl : public QObject, public std::enable_shared_from_this<SimpleProject_Impl> {
     Q_OBJECT;
    public:
     /** @name Constructors and Destructors */
@@ -117,11 +115,11 @@ namespace detail {
 
     /** Returns the analysis seed model, if it is positively specified, can be located, and is an
      *  OpenStudio Model (not an EnergyPlus IDF). */
-    boost::optional<model::Model> seedModel(ProgressBar* progressBar = NULL) const;
+    boost::optional<model::Model> seedModel(ProgressBar* progressBar = nullptr) const;
 
     /** Returns the analysis seed if it is an IDF, or the seed model translated to IDF
      *  otherwise. */
-    boost::optional<Workspace> seedIdf(ProgressBar* progressBar = NULL) const;
+    boost::optional<Workspace> seedIdf(ProgressBar* progressBar = nullptr) const;
 
     /** Returns the BCLMeasures in this project's scripts directory. */
     std::vector<BCLMeasure> measures() const;
@@ -209,7 +207,7 @@ namespace detail {
      *  models. The user is responsible for deleting any such measures that are no longer
      *  needed/desired. */
     std::pair<bool,std::vector<BCLMeasure> > setSeed(const FileReference& currentSeedLocation,
-                                                     ProgressBar* progressBar = NULL);
+                                                     ProgressBar* progressBar = nullptr);
 
     /** Looks for measure by UUID, returning this project's copy if found, adding and returning
      *  the new project-specific copy otherwise. */
@@ -342,6 +340,9 @@ namespace detail {
 
     openstudio::path m_projectDir;
     analysisdriver::AnalysisDriver m_analysisDriver;
+    openstudio::UUID m_alternativeModelMeasureUUID;
+    openstudio::UUID m_standardReportMeasureUUID;
+    openstudio::UUID m_calibrationReportMeasureUUID;
     mutable boost::optional<analysis::Analysis> m_analysis; // mutable for lazy load on open
     mutable boost::optional<CloudAnalysisDriver> m_cloudAnalysisDriver; // mutable for lazy load
     mutable boost::optional<CloudSession> m_cloudSession;   // mutable for lazy load on open
@@ -374,14 +375,14 @@ namespace detail {
 
     /** Version translates the OSM at modelPath, and saves it back to disk. Returns true if model
      *  successfully translated and saved. */
-    bool upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar = NULL);
+    bool upgradeModel(const openstudio::path& modelPath, ProgressBar* progressBar = nullptr);
 
     /** Look for the seedModel's weather file and set the analysis weather file to match if
      *  located. */
-    bool setAnalysisWeatherFile(ProgressBar* progressBar = NULL);
+    bool setAnalysisWeatherFile(ProgressBar* progressBar = nullptr);
 
     /** Import measures in the seed model workflow as fixed measures. */
-    std::vector<BCLMeasure> importSeedModelMeasures(ProgressBar* progressBar = NULL);
+    std::vector<BCLMeasure> importSeedModelMeasures(ProgressBar* progressBar = nullptr);
 
     bool isPATFixedMeasure(const analysis::WorkflowStep& step) const;
 
@@ -399,12 +400,6 @@ namespace detail {
     /** Copies measure into this project's scripts directory, overwriting the existing measure
      *  with the same UUID. */
     BCLMeasure overwriteMeasure(const BCLMeasure& measure);
-
-    static openstudio::UUID alternativeModelMeasureUUID();
-
-    static openstudio::UUID standardReportMeasureUUID();
-
-    static openstudio::UUID calibrationReportMeasureUUID();
   };
 
 } // detail

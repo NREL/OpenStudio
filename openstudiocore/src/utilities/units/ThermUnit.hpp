@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_THERMUNIT_HPP
 #define UTILITIES_UNITS_THERMUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -109,7 +109,7 @@ class UTILITIES_API ThermUnit : public Unit {
   /// @cond
   typedef detail::ThermUnit_Impl ImplType;
 
-  explicit ThermUnit(boost::shared_ptr<detail::ThermUnit_Impl> impl);
+  explicit ThermUnit(std::shared_ptr<detail::ThermUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::ThermUnit_Impl;

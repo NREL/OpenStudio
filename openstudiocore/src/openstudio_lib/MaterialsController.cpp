@@ -17,29 +17,29 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MaterialsController.hpp>
+#include "MaterialsController.hpp"
 
-#include <openstudio_lib/MaterialsView.hpp>
+#include "MaterialsView.hpp"
 
-#include <model/AirGap.hpp>
-#include <model/AirWallMaterial.hpp>
-#include <model/Blind.hpp>
-#include <model/InfraredTransparentMaterial.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/Gas.hpp>
-#include <model/GasMixture.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/Screen.hpp>
-#include <model/Shade.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/ThermochromicGlazing.hpp>
+#include "../model/AirGap.hpp"
+#include "../model/AirWallMaterial.hpp"
+#include "../model/Blind.hpp"
+#include "../model/InfraredTransparentMaterial.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/Gas.hpp"
+#include "../model/GasMixture.hpp"
+#include "../model/RefractionExtinctionGlazing.hpp"
+#include "../model/RoofVegetation.hpp"
+#include "../model/Screen.hpp"
+#include "../model/Shade.hpp"
+#include "../model/SimpleGlazing.hpp"
+#include "../model/StandardGlazing.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/ThermochromicGlazing.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
