@@ -81,31 +81,13 @@ Component::Component(const BCLMeasure & bclMeasure,
       }
     }
   }else{
-    // This measure has already been downloaded
-    if (LocalBCL::instance().getMeasure(this->uid(), this->versionId())){
-      if(m_checkBox){
-        m_checkBox->setChecked(true);
-        m_checkBox->setEnabled(false);
-        m_updateAvailable = false;
-      }
-    // This measure has an update
-    }else if (LocalBCL::instance().getMeasure(this->uid())){
-      if(m_checkBox){
-        m_checkBox->setChecked(false);
-        m_checkBox->setEnabled(true);
-        m_updateAvailable = true;
-        if (m_msg){
-          m_msg->setText("An update is available for this measure");
-          m_msg->setShown(true);
-        }
-      }
-    // This measure has not yet been downloaded
-    }else{
-      if(m_checkBox){
-        m_checkBox->setChecked(false);
-        m_checkBox->setEnabled(true);
-        m_updateAvailable = false;
-      }
+    // This measures has been pre-filtered and is known to require an update
+    m_checkBox->setChecked(false);
+    m_checkBox->setEnabled(true);
+    m_updateAvailable = true;
+    if (m_msg){
+      m_msg->setText("An update is available for this measure");
+      m_msg->setShown(true);
     }
   }
 }

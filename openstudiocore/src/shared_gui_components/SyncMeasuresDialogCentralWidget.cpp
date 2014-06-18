@@ -214,6 +214,8 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
   bool showMessage = true;
 
   m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
+
+  // DLM: close the dialog?
 }
 
 void SyncMeasuresDialogCentralWidget::on_getComponentsByPage(int pageIdx)
