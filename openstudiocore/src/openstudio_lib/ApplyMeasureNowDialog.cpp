@@ -410,8 +410,14 @@ void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager:
       this->okButton()->setDisabled(true);
     }
     this->backButton()->setEnabled(true);
-    displayResults();
+
+    QTimer::singleShot(0, this, SLOT(requestDisplayResults()));
   }
+}
+
+void ApplyMeasureNowDialog::requestDisplayResults()
+{
+  displayResults();
 }
 
 void ApplyMeasureNowDialog::displayResults()

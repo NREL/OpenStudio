@@ -85,7 +85,7 @@ protected slots:
 protected:
 
   void closeEvent(QCloseEvent * event);
-  
+
 private slots:
 
   void disableOkButton(bool disable);
@@ -95,6 +95,8 @@ private slots:
   void requestReload();
 
   void showAdvancedOutput();
+
+  void requestDisplayResults();
 
 signals:
 
