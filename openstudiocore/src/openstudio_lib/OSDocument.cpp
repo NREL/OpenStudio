@@ -88,8 +88,11 @@
 
 #include <analysis/DataPoint.hpp>
 #include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
 #include <analysis/NullMeasure.hpp>
 #include <analysis/Problem.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 
 #include <runmanager/lib/WorkItem.hpp>
 
@@ -185,6 +188,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
     if (m_simpleProject)
     {
+      // DLM: this does not seem very robust?
       // fix up workflow as needed
       bool save = false;
       openstudio::analysis::Problem problem = m_simpleProject->analysis().problem();
@@ -218,6 +222,32 @@ OSDocument::OSDocument( openstudio::model::Model library,
       {
         m_simpleProject->save();
       }
+
+      // check that all Ruby scripts exist, duplicates code in PatApp::openFile
+      std::stringstream ss;
+      BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
+        boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
+        if (measureGroup){
+          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+            boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
+            if (rubyMeasure){
+              boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
+              if (!bclMeasure){
+                ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
+              }
+            }
+          }
+        }
+      }
+      if (ss.str().size() > 0){
+        ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
+        LOG(Warn,ss.str());
+        // DLM: which dialog should be parent?
+        QMessageBox::warning(0, 
+                             QString("Error opening measure and run data."),
+                             toQString(ss.str()),
+                             QMessageBox::Ok);
+      }
     
     }
     else {
@@ -241,6 +271,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
       ss << "to OpenStudio@NREL.gov, along with a description of this model's history. Thank ";
       ss << "you, and sorry for the inconvenience.";
       LOG(Warn,ss.str());
+      // DLM: which dialog should be parent?
       QMessageBox::warning(0, 
                            QString("Error opening measure and run data."),
                            toQString(ss.str()),
@@ -1330,6 +1361,7 @@ boost::optional<model::Component> OSDocument::getComponent(const OSItemId& itemI
         //OS_ASSERT(boost::filesystem::exists(oscPath));
 
         osversion::VersionTranslator translator;
+        //translator.setAllowNewerVersions(false); // DLM: allow to open newer versions?
 
         modelComponent = translator.loadComponent(oscPath);
       }

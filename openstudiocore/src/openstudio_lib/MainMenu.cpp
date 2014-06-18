@@ -85,17 +85,17 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
 
   action = new QAction(tr("IDF"), this);
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("gbXML"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importgbXMLClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importgbXMLClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("SDD"), this); 
   importMenu->addAction(action);
-  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()));
+  isConnected = connect(action, SIGNAL(triggered()), this, SIGNAL(importSDDClicked()), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   QMenu * exportMenu = m_fileMenu->addMenu(tr("Export"));
@@ -170,7 +170,7 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   OS_ASSERT(isConnected);
 
   action = new QAction(tr("Change BCL Login Information"),this);
-  m_preferencesMenu->addAction(action);
+  //m_preferencesMenu->addAction(action);
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(changeBclLogin()));
   OS_ASSERT(isConnected);
 
@@ -196,12 +196,12 @@ MainMenu::MainMenu(bool isIP, bool isPlugin, QWidget *parent) :
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(applyMeasureClicked()));
   OS_ASSERT(isConnected);
 
-  action = new QAction(tr("Download Measures"),this);
+  action = new QAction(tr("Find Measures"),this);
   m_measureMenu->addAction(action);
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadMeasuresClicked()));
   OS_ASSERT(isConnected);
 
-  action = new QAction(tr("Download Components"),this);
+  action = new QAction(tr("Find Components"),this);
   m_measureMenu->addAction(action); 
   isConnected = connect(action, SIGNAL(triggered()),this,SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);

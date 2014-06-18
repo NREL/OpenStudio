@@ -106,15 +106,11 @@ void SyncMeasuresDialog::createLayout()
 
 void SyncMeasuresDialog::findUpdates()
 {
-  std::vector<BCLMeasure> measures;
+  // DLM: measure manager will filter out duplicate measures for us
+  m_measureManager->updateMeasuresLists();
+  std::vector<BCLMeasure> measures = m_measureManager->combinedMeasures();
 
-  std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-
-  std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-
-  measures = localBCLMeasures;
-
-  measures.insert(measures.end(), userMeasures.begin(),userMeasures.end());
+  // DLM: should we sort these in any way?
 
   m_measuresNeedingUpdates.clear();
 
@@ -136,6 +132,9 @@ void SyncMeasuresDialog::findUpdates()
       }
     }
   }
+
+  // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
+  // just say "No updates available and quit"
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 

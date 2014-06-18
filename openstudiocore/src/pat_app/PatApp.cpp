@@ -51,8 +51,14 @@
 #include <analysis/Analysis.hpp>
 #include <analysis/AnalysisObject.hpp>
 #include <analysis/AnalysisObject_Impl.hpp>
+#include <analysis/MeasureGroup.hpp>
+#include <analysis/MeasureGroup_Impl.hpp>
+#include <analysis/RubyMeasure.hpp>
+#include <analysis/RubyMeasure_Impl.hpp>
 #include <analysisdriver/CurrentAnalysis.hpp>
 #include <analysisdriver/SimpleProject_Impl.hpp>
+
+#include <project/ProjectDatabase.hpp>
 
 #include <runmanager/lib/RubyJobUtils.hpp>
 #include <runmanager/lib/RunManager.hpp>
@@ -71,6 +77,9 @@
 #include <utilities/core/PathHelpers.hpp>
 #include <utilities/core/System.hpp>
 #include <utilities/core/ZipFile.hpp>
+#include <utilities/idf/IdfFile.hpp>
+
+#include <OpenStudio.hxx>
 
 #include <boost/filesystem.hpp>
 
@@ -726,6 +735,20 @@ bool PatApp::setSeed(const FileReference& currentSeedLocation) {
     // get original number of variables
     int nvars = m_project->analysis().problem().numVariables();
 
+    // check that the version is compatible
+    boost::optional<VersionString> candidate = IdfFile::loadVersionOnly(currentSeedLocation.path());
+    VersionString osVersion(openStudioVersion());
+    if (!candidate){
+      LOG(Error, "Cannot determine OpenStudio version for file at '" << toString(currentSeedLocation.path()) << "'");
+      mainWindow->setEnabled(true);
+      return false;
+    }else if (*candidate > osVersion){
+      LOG(Error, "OpenStudio version for file at '" << toString(currentSeedLocation.path()) << "' is '" << *candidate 
+        << "' which is newer than current Openstudio version '" << osVersion << "'");
+      mainWindow->setEnabled(true);
+      return false;
+    }
+
     // set seed model
     result = m_project->setSeed(currentSeedLocation, processEventsProgressBar);
     if (result.first){
@@ -1278,6 +1301,21 @@ bool PatApp::openFile(const QString& fileName)
     boost::optional<openstudio::analysisdriver::SimpleProject> project = analysisdriver::openPATProject(projectDir, options);
     if(project.is_initialized()){
       OS_ASSERT(project->isPATProject());
+
+      project::ProjectDatabase projectDatabase = project->projectDatabase();
+      openstudio::VersionString projectVersion(projectDatabase.version());
+      openstudio::VersionString currentOSVersion(openStudioVersion());
+      if (projectVersion > currentOSVersion){
+        std::stringstream ss;
+        ss << "Unable to open project at '" << toString(projectDir) << "'." << std::endl;
+        ss << "Project has version of '" << projectVersion << "' which is newer than current OpenStudio version '" << currentOSVersion << "'.";
+        QMessageBox::warning(mainWindow,
+                             "Error Opening Project",
+                             QString(ss.str().c_str()));
+        showStartupView();
+        return false;
+      }
+
       attachProject(project);
       mainWindow->setWindowTitle("");
       mainWindow->setWindowFilePath(dir.absolutePath());
@@ -1287,6 +1325,7 @@ bool PatApp::openFile(const QString& fileName)
       } else {
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
+
       openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
       osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
       if (boost::filesystem::exists(osmForThisOsp)) {
@@ -1296,6 +1335,33 @@ bool PatApp::openFile(const QString& fileName)
                              toQString(osmForThisOsp) + 
                              QString("'. For best results, 'Save as ...' this project elsewhere before continuing your work."));
       }
+
+      // check that all Ruby scripts exist, duplicates code in OSDocument::OSDocument
+      std::stringstream ss;
+      BOOST_FOREACH(const analysis::InputVariable& inputVariable, project->analysis().problem().variables()){
+        boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
+        if (measureGroup){
+          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+            boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
+            if (rubyMeasure){
+              boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
+              if (!bclMeasure){
+                ss << "Cannot find measure '" << rubyMeasure->name() << "' in scripts directory." << std::endl;
+              }
+            }
+          }
+        }
+      }
+      if (ss.str().size() > 0){
+        ss << std::endl << "Ensure that all measures are correctly located in the scripts directory.";
+        LOG(Warn,ss.str());
+        // DLM: which dialog should be parent?
+        QMessageBox::warning(0, 
+                             QString("Error opening measure and run data."),
+                             toQString(ss.str()),
+                             QMessageBox::Ok);
+      }
+
       return true;
     } else {
       //if (analysisdriver::OptionalSimpleProject plainProject = analysisdriver::SimpleProject::open(projectDir,options)) {

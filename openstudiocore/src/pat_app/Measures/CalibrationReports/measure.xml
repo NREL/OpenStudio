@@ -1,7 +1,7 @@
 <measure>
   <name>Calibration Reports</name>
   <uid>e6642d40-7366-4647-8724-53a37991d579</uid>
-  <version_id>47cc96db-f38f-49fe-8c21-0d603d4233be</version_id>
+  <version_id>1ce0c03c-3930-4afd-9de2-f5a346c42cb8</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -25,7 +25,7 @@
       <filename>CalibrationReports_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>14861B8E</checksum>
+      <checksum>3BE1A784</checksum>
     </file>
     <file>
       <filename>report.html.in</filename>
