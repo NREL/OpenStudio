@@ -100,7 +100,6 @@ void WaitDialog::on_cancelButton(bool checked)
 
 void WaitDialog::closeEvent(QCloseEvent *e)
 {
-  e->accept(); // TODO
 }
 
 } // openstudio
