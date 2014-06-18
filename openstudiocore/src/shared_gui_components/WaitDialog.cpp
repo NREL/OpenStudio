@@ -79,7 +79,7 @@ void WaitDialog::createWidgets()
   // BUTTONS
 
   this->okButton()->hide();
-  this->m_cancelButton->setDefault(true);
+  this->m_cancelButton->hide();
 
   // OS SETTINGS
 

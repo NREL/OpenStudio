@@ -807,8 +807,6 @@ void ApplyMeasureNowDialog::requestReload()
   QString fileToLoad = toQString(*m_reloadPath);
   int startTabIndex = OSAppBase::instance()->currentDocument()->verticalTabIndex();
   emit reloadFile(fileToLoad, true, startTabIndex);
-
-  removeWorkingDir();
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
