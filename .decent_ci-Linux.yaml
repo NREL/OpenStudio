@@ -2,5 +2,6 @@ compilers:
   - name: "gcc"
     version: "4.8"
     cmake_extra_flags: -DBUILD_TESTING:BOOL=ON
+    num_parallel_builds: 4
   - name: cppcheck
     compiler_extra_flags: --enable=warning
