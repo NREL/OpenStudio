@@ -1239,13 +1239,18 @@ namespace detail {
         // only attempt this for things that look like ruby scripts
         if (t_path.extension() == openstudio::toPath(".rb"))
         {
+          /// \todo delete this block. Testing fixing up paths regardless
+          /// of if they exist or not.
+          /*
           try {
             if (boost::filesystem::exists(t_path)) {
               return t_path;
             }
           } catch (const std::exception &) {
             // keep moving
-          }
+          }*/
+
+         
 
           openstudio::path head = t_path;
           openstudio::path tail;
