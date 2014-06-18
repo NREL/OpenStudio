@@ -77,10 +77,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_jobItemView(0),
   m_timer(0),
   m_stopRequested(false),
-  m_showStdError(0),
-  m_showStdOut(0),
-  m_stdError(QString()),
-  m_stdOut(QString()),
+  m_showAdvancedOutput(0),
+  m_advancedOutput(QString()),
   m_workingDir(openstudio::path())
 {
   setWindowTitle("Apply Measure Now");
@@ -180,21 +178,16 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
-  m_showStdError = new QPushButton("Show StdError Messages"); 
-  isConnected = connect(m_showStdError,SIGNAL(clicked(bool)),this,SLOT(showStdError()));
-  OS_ASSERT(isConnected);
+  layout->addStretch(); 
 
-  m_showStdOut = new QPushButton("Show StdOut Messages");
-  isConnected = connect(m_showStdOut,SIGNAL(clicked(bool)),this,SLOT(showStdOut()));
+  m_showAdvancedOutput = new QPushButton("Advanced Output"); 
+  isConnected = connect(m_showAdvancedOutput,SIGNAL(clicked(bool)),this,SLOT(showAdvancedOutput()));
   OS_ASSERT(isConnected);
 
   layout->addStretch();
 
   QHBoxLayout * hLayout = new QHBoxLayout();
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdError);
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdOut);
+  hLayout->addWidget(m_showAdvancedOutput);
   hLayout->addStretch();
   layout->addLayout(hLayout);
 
@@ -441,8 +434,6 @@ void ApplyMeasureNowDialog::displayResults()
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
-  m_showStdError->setEnabled(false);
-  m_showStdOut->setEnabled(false);
 
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
@@ -453,7 +444,7 @@ void ApplyMeasureNowDialog::displayResults()
     this->okButton()->setDisabled(true);
   }
 
-  m_stdError.clear();
+  m_advancedOutput.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -462,19 +453,11 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdErrPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdError = toQString(stdMessage);
+      m_advancedOutput = toQString(stdMessage);
     }catch(std::exception&){
-    }
-
-    if (m_stdError.isEmpty()){
-      m_showStdError->setEnabled(false);
-    }else{
-      m_showStdError->setEnabled(true);
-      
     }
   //}
 
-  m_stdOut.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -483,17 +466,11 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdOutPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdOut = toQString(stdMessage);
+      m_advancedOutput += toQString(stdMessage);
     }catch(std::exception&){
     }
-
-    if (m_stdOut.isEmpty()){
-      m_showStdOut->setEnabled(false);
-    }else{
-      m_showStdOut->setEnabled(true);
-    }
   //}
-  
+ 
 }
 
 void ApplyMeasureNowDialog::removeWorkingDir()
@@ -846,21 +823,12 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
   this->okButton()->setDisabled(disable);
 }
 
-void ApplyMeasureNowDialog::showStdError()
+void ApplyMeasureNowDialog::showAdvancedOutput()
 {
-  if(m_stdError.isEmpty()){
-    QMessageBox::information(this, QString("StdError Messages"), QString("No StdError messages."));
+  if(m_advancedOutput.isEmpty()){
+    QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("StdError Messages"), m_stdError);
-  }
-}
-
-void ApplyMeasureNowDialog::showStdOut()
-{
-  if(m_stdOut.isEmpty()){
-    QMessageBox::information(this, QString("StdOut Messages"), QString("No StdOut messages."));
-  }else{
-    QMessageBox::information(this, QString("StdOut Messages"), m_stdOut);
+    QMessageBox::information(this, QString("Advanced Output"), m_advancedOutput);
   }
 }
 

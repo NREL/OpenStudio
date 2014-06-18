@@ -94,9 +94,7 @@ private slots:
 
   void requestReload();
 
-  void showStdError();
-
-  void showStdOut();
+  void showAdvancedOutput();
 
 signals:
 
@@ -150,13 +148,9 @@ private:
 
   bool m_stopRequested;
 
-  QPushButton * m_showStdError;
+  QPushButton * m_showAdvancedOutput;
 
-  QPushButton * m_showStdOut;
-
-  QString m_stdError;
-
-  QString m_stdOut;
+  QString m_advancedOutput;
 
   openstudio::path m_workingDir;
 
