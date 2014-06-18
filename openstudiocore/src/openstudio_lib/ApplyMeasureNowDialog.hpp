@@ -152,9 +152,9 @@ private:
 
   QPushButton * m_showStdOut;
 
-  QString m_StdError;
+  QString m_stdError;
 
-  QString m_StdOut;
+  QString m_stdOut;
 
 };
 
