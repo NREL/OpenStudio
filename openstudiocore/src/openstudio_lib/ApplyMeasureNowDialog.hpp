@@ -90,8 +90,6 @@ private slots:
 
   void disableOkButton(bool disable);
 
-  void runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus);
-
   void requestReload();
 
   void showAdvancedOutput();
@@ -145,8 +143,6 @@ private:
   int m_argumentsOkPageIdx;
 
   QLabel * m_jobPath;
-
-  bool m_stopRequested;
 
   QPushButton * m_showAdvancedOutput;
 

@@ -104,6 +104,8 @@ MeasureManager &OSAppBase::measureManager()
 
 void OSAppBase::updateSelectedMeasureState()
 {
+  // DLM: this slot seems out of place here, seems like the connection from the measure list to enabling duplicate buttons, etc 
+  // should be tighter
   boost::shared_ptr<OSDocument> document = currentDocument();
 
   if (document)
@@ -113,6 +115,7 @@ void OSAppBase::updateSelectedMeasureState()
     if (mainRightColumnController)
     {
       if (measureManager().isMeasureSelected()){
+        // DLM: this logic is why we cannot remove m_applyMeasureNowDialog as member of OSDocument
         if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
           document->m_applyMeasureNowDialog->displayMeasure();
           document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);

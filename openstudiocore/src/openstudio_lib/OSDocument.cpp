@@ -1391,8 +1391,8 @@ void OSDocument::openMeasuresDlg()
   if(this->modified()){
 
     QMessageBox * messageBox = new QMessageBox(this->mainWindow());
-    messageBox->setText("Save model?");
-    messageBox->setInformativeText("You must save model before you apply a measure!");
+    messageBox->setText("You must save your model before applying a measure.");
+    messageBox->setInformativeText("Do you want to save your model now?");
     messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
     messageBox->setDefaultButton(QMessageBox::Save);
     messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
@@ -1419,11 +1419,17 @@ void OSDocument::openMeasuresDlg()
 
   // open modal dialog
   m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-  m_applyMeasureNowDialog->exec();
   
+  // connect signal before exec dialog
   bool isConnected = false;
   isConnected = connect(m_applyMeasureNowDialog.get(), SIGNAL(toolsUpdated()), this, SIGNAL(toolsUpdated()));
   OS_ASSERT(isConnected);
+
+  m_applyMeasureNowDialog->exec();
+
+  // DLM: kill the dialog here as there is logic in the destructor that resets application state
+  // DLM: this seems overly complicated
+  m_applyMeasureNowDialog.reset();
 }
 
 void OSDocument::openChangeMeasuresDirDlg()

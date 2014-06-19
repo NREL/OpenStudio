@@ -76,7 +76,6 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_argumentsFailedTextEdit(0),
   m_jobItemView(0),
   m_timer(0),
-  m_stopRequested(false),
   m_showAdvancedOutput(0),
   m_advancedOutput(QString()),
   m_workingDir(openstudio::path())
@@ -92,6 +91,12 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
 {
+  // DLM: would be nice if this was not needed..
+  // restore app state, the app's library controller was swapped out in createWidgets
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  if (app){
+    app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+  }
 }
 
 QSize ApplyMeasureNowDialog::sizeHint() const
@@ -122,6 +127,8 @@ void ApplyMeasureNowDialog::createWidgets()
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
+
+  // DLM: this is changing application state, needs to be undone in the destructor
   app->measureManager().setLibraryController(m_localLibraryController); 
   app->measureManager().updateMeasuresLists();
 
@@ -384,10 +391,6 @@ void ApplyMeasureNowDialog::runMeasure()
 
   m_job = wf.create(m_workingDir, modelPath);
 
-  bool isConnected = false;
-  isConnected = m_job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), this, SLOT(runManagerStatusChange(const openstudio::runmanager::AdvancedStatus&)));
-  OS_ASSERT(isConnected);
-
   // DLM: you could make rm a class member then you would not have to call waitForFinished here
   runmanager::RunManager rm;
   bool queued = rm.enqueue(*m_job, true);
@@ -397,17 +400,6 @@ void ApplyMeasureNowDialog::runMeasure()
   rm.waitForFinished ();
 
   QTimer::singleShot(0, this, SLOT(displayResults()));
-}
-
-void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
-{
-  if(advancedStatus.value() == runmanager::AdvancedStatusEnum::Idle){
-    if(m_stopRequested == true){
-      m_stopRequested = false;
-      this->okButton()->setDisabled(true);
-    }
-    this->backButton()->setEnabled(true);
-  }
 }
 
 void ApplyMeasureNowDialog::displayResults()
@@ -421,6 +413,7 @@ void ApplyMeasureNowDialog::displayResults()
 
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
   m_timer->stop();
+
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
   if (m_reloadPath){
@@ -430,6 +423,7 @@ void ApplyMeasureNowDialog::displayResults()
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
+  this->cancelButton()->setEnabled(true);
 
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
@@ -744,7 +738,7 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     if(m_job){
       m_job->requestStop();
-      m_stopRequested = true;
+      this->cancelButton()->setDisabled(true);
       this->okButton()->setDisabled(true);
       return;
     }
@@ -756,10 +750,6 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
-
-  // DLM: this is required in order to restore app state? should this be in the destructor instead?
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   // DLM: m_job->requestStop() might still be working, don't try to delete this here
   //removeWorkingDir();
@@ -789,13 +779,8 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
     // N/A
     OS_ASSERT(false);
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
-    
-    // hide this widget to prevent any more mouse events
-    // DLM: any way to clear mouse event queue?
-    this->hide();
-
     // reload the model
-    QTimer::singleShot(0, this, SLOT(requestReload()));
+    requestReload();
   }
 }
 
@@ -805,12 +790,10 @@ void ApplyMeasureNowDialog::requestReload()
   OS_ASSERT(m_reloadPath);
   QString fileToLoad = toQString(*m_reloadPath);
   int startTabIndex = OSAppBase::instance()->currentDocument()->verticalTabIndex();
-
-  // DLM: do we need to restore app state here?
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
-
   emit reloadFile(fileToLoad, true, startTabIndex);
+
+  // close the dialog
+  close();
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
@@ -823,10 +806,6 @@ void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
     e->ignore();
     return;
   } 
-
-  // DLM: this is required in order to restore app state? should this be in the destructor instead?
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   e->accept();
 }
@@ -841,7 +820,7 @@ void ApplyMeasureNowDialog::showAdvancedOutput()
   if(m_advancedOutput.isEmpty()){
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("Advanced Output"), m_advancedOutput);
+    QMessageBox::information(this, QString("Advanced Output"), QString("Advanced output:\n") + m_advancedOutput);
   }
 }
 
