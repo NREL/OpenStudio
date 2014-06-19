@@ -34,7 +34,7 @@ namespace openstudio {
 
 ModelObjectTypeListView::ModelObjectTypeListView(const model::Model& model, 
                                                  bool addScrollArea, 
-                                                 OSItem::Type headerType, 
+                                                 OSItemType headerType, 
                                                  bool showLocalBCL,
                                                  QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)
@@ -43,7 +43,7 @@ ModelObjectTypeListView::ModelObjectTypeListView(const model::Model& model,
 
 ModelObjectTypeListView::ModelObjectTypeListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
                                                  const model::Model& model, bool addScrollArea, 
-                                                 OSItem::Type headerType, bool showLocalBCL, QWidget * parent )
+                                                 OSItemType headerType, bool showLocalBCL, QWidget * parent )
   : OSCollapsibleItemList(addScrollArea, parent), 
     m_modelObjectTypesAndNames(modelObjectTypesAndNames), 
     m_model(model), m_headerType(headerType), m_showLocalBCL(showLocalBCL)

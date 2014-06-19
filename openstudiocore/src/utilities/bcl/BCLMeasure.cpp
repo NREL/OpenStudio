@@ -154,12 +154,12 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << measureString;
       file.close();
-    }
 
-    BCLFileReference measureScriptFileReference(measureScriptPath, true);
-    measureScriptFileReference.setUsageType("script");
-    measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
-    m_bclXML.addFile(measureScriptFileReference);
+      BCLFileReference measureScriptFileReference(measureScriptPath, true);
+      measureScriptFileReference.setUsageType("script");
+      measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
+      m_bclXML.addFile(measureScriptFileReference);
+    }
 
     // write test
     {
@@ -171,11 +171,11 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << testString;
       file.close();
-    }
 
-    BCLFileReference measureTestFileReference(measureTestPath, true);
-    measureTestFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestFileReference);
+      BCLFileReference measureTestFileReference(measureTestPath, true);
+      measureTestFileReference.setUsageType("test");
+      m_bclXML.addFile(measureTestFileReference);
+    }
 
     // write test osm
     { 
@@ -194,6 +194,25 @@ namespace openstudio{
         m_bclXML.addFile(measureTestOSMFileReference);
       }
     }
+
+    // write test epw
+    {
+      if (!testEPWString.isEmpty()){
+        QFile file(toQString(testEPWPath));
+        bool opened = file.open(QIODevice::WriteOnly);
+        if (!opened){
+          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
+        }
+        QTextStream textStream(&file);
+        textStream << testEPWString;
+        file.close();
+
+        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
+        measureTestEPWFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestEPWFileReference);
+      }
+    }
+
 
     // write resource
     {

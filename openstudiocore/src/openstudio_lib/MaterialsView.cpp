@@ -50,7 +50,7 @@ MaterialsView::MaterialsView(bool isIP,
                              const QString& tabLabel,
                              bool hasSubTabs,
                              QWidget * parent)
-: ModelSubTabView(new ModelObjectTypeListView(MaterialsView::modelObjectTypesAndNames(), model, true, OSItem::COLLAPSIBLE_LIST_HEADER, parent),
+: ModelSubTabView(new ModelObjectTypeListView(MaterialsView::modelObjectTypesAndNames(), model, true, OSItemType::CollapsibleListHeader, parent),
   new MaterialsInspectorView(isIP, model, parent),
   parent)
 {

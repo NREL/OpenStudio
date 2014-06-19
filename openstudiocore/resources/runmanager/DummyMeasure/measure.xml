@@ -1,52 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<measure xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<name>Set Window to Wall Ratio by Facade</name>
-	<uid>f347ae80-48b4-4c40-bfd4-6c5139b38136</uid>
-	<version_id>401f10f4-f5df-4a6b-a949-9f9173d5824e</version_id>
-	<description>Description should be asked for upon creation.</description>
-	<modeler_description>Modeler description needs to be hand-edited.</modeler_description>
-	<provenances>
-		<provenance>
-			<author>jturner</author>
-			<datetime>2013-02-20T15:00:00Z</datetime>
-		</provenance>
-		<provenance_required>true</provenance_required>
-	</provenances>
-	<tags>
-		<tag>Envelope</tag>
-	</tags>
-	<attributes>
-		<attribute>
-			<name>Measure Type</name>
-			<value>ModelMeasure</value>
-			<datatype>string</datatype>
-		</attribute>
-		<attribute>
-			<name>Measure Function</name>
-			<value>Measure</value>
-			<datatype>string</datatype>
-		</attribute>
-		<attribute>
-			<name>Requires EnergyPlus Results</name>
-			<value>false</value>
-			<datatype>boolean</datatype>
-		</attribute>
-		<attribute>
-			<name>Uses SketchUp API</name>
-			<value>false</value>
-			<datatype>boolean</datatype>
-		</attribute>
-	</attributes>
-	<files>
-		<file>
-			<version>
-				<software_program>OpenStudio</software_program>
-				<identifier>0.10.2</identifier>
-			</version>
-			<filename>measure.rb</filename>
-			<filetype>rb</filetype>
-			<usage_type>script</usage_type>
-			<checksum>37114538</checksum>
-		</file>
-	</files>
+<measure>
+  <name>Set Window to Wall Ratio by Facade</name>
+  <uid>f347ae80-48b4-4c40-bfd4-6c5139b38136</uid>
+  <version_id>14e742bb-387c-4f2c-8105-ba73c4bb26f4</version_id>
+  <description>Description should be asked for upon creation.</description>
+  <modeler_description>Modeler description needs to be hand-edited.</modeler_description>
+  <provenances/>
+  <tags>
+    <tag>Envelope</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>0.10.2</identifier>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>3400E0B1</checksum>
+    </file>
+  </files>
 </measure>

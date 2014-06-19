@@ -112,7 +112,6 @@ namespace openstudio {
 
     private slots:
       void playButtonClicked(bool);
-      void openRunManagerClicked();
       void runManagerStatsChanged();
       void outputDataAdded(const openstudio::UUID &, const std::string &t_data);
       void treeChanged(const openstudio::UUID &t_uuid);

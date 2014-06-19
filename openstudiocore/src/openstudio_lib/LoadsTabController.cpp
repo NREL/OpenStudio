@@ -38,8 +38,8 @@ LoadsTabController::LoadsTabController(bool isIP, const model::Model& model)
                         m_LoadsController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_LoadsController.get(), SIGNAL(openLibDlgClicked()),

@@ -43,7 +43,7 @@ OSCollapsibleItemList::OSCollapsibleItemList(bool addScrollArea, QWidget * paren
   m_itemsDraggable(false),
   m_itemsRemoveable(false),
   m_showFilterLayout(false),
-  m_itemsType(OSItem::LIST_ITEM)
+  m_itemsType(OSItemType::ListItem)
 { 
   this->setObjectName("GrayWidget"); 
 
@@ -112,12 +112,12 @@ void OSCollapsibleItemList::setItemsRemoveable(bool itemsRemoveable)
   }
 }
 
-OSItem::Type OSCollapsibleItemList::itemsType() const
+OSItemType OSCollapsibleItemList::itemsType() const
 {
   return m_itemsType;
 }
 
-void OSCollapsibleItemList::setItemsType(OSItem::Type type)
+void OSCollapsibleItemList::setItemsType(OSItemType type)
 {
   m_itemsType = type;
   for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){

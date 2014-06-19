@@ -21,15 +21,18 @@
 #define SHAREDGUICOMPONENTS_LOCALLIBRARYVIEW_HPP
 
 #include "OSDragableView.hpp"
+
 #include "HeaderViews.hpp"
-#include <QWidget>
+
 #include <QPoint>
+#include <QWidget>
 
 class QPushButton;
 class QLabel;
 
 namespace openstudio{
 
+class MeasureBadge;
 class OSViewSwitcher;
   
 class LocalLibraryView : public QWidget
@@ -44,19 +47,11 @@ class LocalLibraryView : public QWidget
 
   OSViewSwitcher * mainViewSwitcher;
 
-  QPushButton * bclMeasuresButton;
-
-  QPushButton * myMeasuresButton;
-
   QPushButton * duplicateMeasureButton;
 
   QPushButton * addMeasureButton;
 
   QPushButton * myMeasuresFolderButton;
-
-  QPushButton * updateMyMeasuresButton;
-
-  QPushButton * updateBCLMeasuresButton;
 
   QPushButton * addBCLMeasureButton;
 };
@@ -111,7 +106,7 @@ class LibraryItemView : public OSDragableView
 
   QLabel * label;
   QLabel * m_measureTypeBadge;
-  QLabel * m_bclBadge;
+  MeasureBadge * m_measureBadge;
 
   public slots:
 

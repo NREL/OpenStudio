@@ -54,7 +54,7 @@ class OSCollapsibleView : public QWidget
 
   public:
 
-  OSCollapsibleView(QWidget * parent=nullptr);
+  OSCollapsibleView(bool alwaysExpanded = false, QWidget * parent=nullptr);
 
   virtual ~OSCollapsibleView() {}
 
@@ -79,6 +79,8 @@ class OSCollapsibleView : public QWidget
   OSViewSwitcher * m_headerContainer;
 
   OSViewSwitcher * m_contentContainer;
+
+  bool m_alwaysExpanded;
 };
 
 } // openstudio

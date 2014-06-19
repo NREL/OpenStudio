@@ -398,16 +398,16 @@ namespace detail {
       return results;
     }
 
-    Files outputFiles = this->outputFiles();
+    Files oFiles = outputFiles();
 
     // search for stderr file in case of failure
     boost::optional<FileInfo> stderrFile;
     try { 
-      stderrFile = outputFiles.getLastByFilename("stderr"); 
+      stderrFile = oFiles.getLastByFilename("stderr"); 
     } catch (...) {
     }
 
-    std::vector<FileInfo> files = outputFiles.files();
+    std::vector<FileInfo> files = oFiles.files();
 
     // loop over all merged jobs
     bool errorAssigned = false;
@@ -444,54 +444,59 @@ namespace detail {
       }
 
       JobErrors e; // default is failed case
-      try {
-        openstudio::path p = jobfiles.getLastByExtension("ossr").fullPath;
-        boost::optional<openstudio::ruleset::OSResult> osresult = openstudio::ruleset::OSResult::load(p);
-        if (osresult)
-        {
-          ErrorInfo ei;
-          ei.osResult(*osresult);
-          e = ei.errors();
 
-          // these errors are reported with this merged job
-          for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = e.allErrors.begin();
-               itr != e.allErrors.end();
-               ++itr)
+      // there's no way to collate the errors if the job has never run
+      if (lastRun() && !isRunning())
+      {
+        try {
+          openstudio::path p = jobfiles.getLastByExtension("ossr").fullPath;
+          boost::optional<openstudio::ruleset::OSResult> osresult = openstudio::ruleset::OSResult::load(p);
+          if (osresult)
           {
-            std::string error = itr->first.valueName() + itr->second;
-            reportedErrors.insert(error);
-          }
-        } 
-      } catch (const std::exception &) {
+            ErrorInfo ei;
+            ei.osResult(*osresult);
+            e = ei.errors();
 
-        // if this was the first merged job without an ossr we know this was the error
-        if (!errorAssigned){
-
-          // look through all JobErrors from all the merged jobs
-          JobErrors thisErrors = this->errors();
-          for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = thisErrors.allErrors.begin();
-               itr != thisErrors.allErrors.end();
-               ++itr)
-          {
-            std::string error = itr->first.valueName() + itr->second;
-            if (reportedErrors.find(error) == reportedErrors.end()){
-              // error not yet reported, report here
-              e.addError(itr->first, itr->second);
+            // these errors are reported with this merged job
+            for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = e.allErrors.begin();
+                itr != e.allErrors.end();
+                ++itr)
+            {
+              std::string error = itr->first.valueName() + itr->second;
+              reportedErrors.insert(error);
             }
-          }
+          } 
+        } catch (const std::exception &) {
 
-          // assign stderrFile here if it exists
-          if (stderrFile){
-            // should have at least one error here
-            if (e.errors().empty()){
-              e.addError(ErrorType::Error, "Merged job failed.");
+          // if this was the first merged job without an ossr we know this was the error
+          if (!errorAssigned){
+
+            // look through all JobErrors from all the merged jobs
+            JobErrors thisErrors = errors();
+            for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = thisErrors.allErrors.begin();
+                itr != thisErrors.allErrors.end();
+                ++itr)
+            {
+              std::string error = itr->first.valueName() + itr->second;
+              if (reportedErrors.find(error) == reportedErrors.end()){
+                // error not yet reported, report here
+                e.addError(itr->first, itr->second);
+              }
             }
-            jobfiles.append(*stderrFile);
-          }else{
-            e.addError(ErrorType::Error, "Merged job failed but cannot find stderr file, check " + toString(this->outdir(false)) + " for output.");
-          }
 
-          errorAssigned = true;
+            // assign stderrFile here if it exists
+            if (stderrFile){
+              // should have at least one error here
+              if (e.errors().empty()){
+                e.addError(ErrorType::Error, "Merged job failed.");
+              }
+              jobfiles.append(*stderrFile);
+            }else{
+              e.addError(ErrorType::Error, "Merged job failed but cannot find stderr file, check " + toString(outdir(false)) + " for output.");
+            }
+
+            errorAssigned = true;
+          }
         }
       }
 

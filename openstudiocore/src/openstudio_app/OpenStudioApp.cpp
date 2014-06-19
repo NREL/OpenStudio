@@ -25,6 +25,7 @@
 #include "../openstudio_lib/OSDocument.hpp"
 #include "../openstudio_lib/FileOperations.hpp"
 
+#include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -88,6 +89,7 @@
 #include "../energyplus/ForwardTranslator.hpp"
 #include "../energyplus/ReverseTranslator.hpp"
 
+#include "../gbxml/ReverseTranslator.hpp"
 #include "../sdd/ReverseTranslator.hpp"
 
 #include <QAbstractButton>
@@ -99,6 +101,7 @@
 #include <QFileOpenEvent>
 #include <QMessageBox>
 #include <QStringList>
+#include <QThread>
 #include <QTimer>
 #include <QWidget>
 
@@ -117,7 +120,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   setApplicationName("OpenStudio");
 
   QFile f(":/library/OpenStudioPolicy.xml");
-
 
   openstudio::model::AccessPolicyStore::Instance().loadFile(f);
 
@@ -138,6 +140,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
     connect( m_startupMenu.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
     connect( m_startupMenu.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+    connect( m_startupMenu.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
     connect( m_startupMenu.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
     connect( m_startupMenu.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
     //connect( m_startupMenu.get(), SIGNAL(loadLibraryClicked()), this,SLOT(loadLibrary()) );
@@ -153,6 +156,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   connect( m_startupView.get(), SIGNAL( newFromTemplate( NewFromTemplateEnum ) ), this, SLOT( newFromTemplateSlot( NewFromTemplateEnum ) ) ) ;
   connect( m_startupView.get(), SIGNAL( openClicked() ), this, SLOT( open() ) ) ;
   connect( m_startupView.get(), SIGNAL( importClicked() ), this, SLOT( importIdf() ) ) ;
+  connect( m_startupView.get(), SIGNAL( importgbXMLClicked() ), this, SLOT( importgbXML() ) ) ;
   connect( m_startupView.get(), SIGNAL( importSDDClicked() ), this, SLOT( importSDD() ) ) ;
 
   bool openedCommandLine = false;
@@ -165,7 +169,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
     // look for file path in args 0
     QFileInfo info(args.at(0)); // handles windows links and "\"
     QString fileName = info.absoluteFilePath();
+
     osversion::VersionTranslator versionTranslator;
+    versionTranslator.setAllowNewerVersions(false);
+
     boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
     if( model ){
 
@@ -178,6 +185,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -228,15 +236,19 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
 
   //
   //*************************************************************************************
-
 }
 
 bool OpenStudioApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
-  {
+  { 
+    waitDialog()->setVisible(true);
+
     osversion::VersionTranslator versionTranslator;
+    versionTranslator.setAllowNewerVersions(false);
+
     boost::optional<openstudio::model::Model> temp = modelFromOSM(toPath(fileName), versionTranslator);
+
     if (temp) {
       model::Model model = temp.get();
 
@@ -260,6 +272,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -280,6 +293,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
 
       versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
     }
+    waitDialog()->setVisible(false);
   }
   return false;
 }
@@ -287,6 +301,7 @@ bool OpenStudioApp::openFile(const QString& fileName)
 void OpenStudioApp::buildCompLibraries()
 {
   osversion::VersionTranslator versionTranslator;
+  versionTranslator.setAllowNewerVersions(false);
 
   path p = resourcesPath() / toPath("MinimalTemplate.osm");
   OS_ASSERT(exists(p));
@@ -338,6 +353,7 @@ void OpenStudioApp::newFromTemplateSlot( NewFromTemplateEnum newFromTemplateEnum
   connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
   connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
   connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+  connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
   connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
   connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
   connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -418,6 +434,7 @@ void OpenStudioApp::importIdf()
         connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
         connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
         connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+        connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
         connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
         connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
         connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -461,9 +478,33 @@ void OpenStudioApp::importIdf()
   }
 }
 
+void OpenStudioApp::importgbXML()
+{
+  import(GBXML);
+}
+
 void OpenStudioApp::importSDD()
 {
+  import(SDD);
+}
+
+void OpenStudioApp::import(OpenStudioApp::fileType type)
+{
   QWidget * parent = nullptr;
+
+  std::vector<LogMessage> translatorErrors, translatorWarnings;
+   
+  QString fileExtension;
+  if(type == SDD){
+    fileExtension = "SDD";
+  } else if(type == GBXML) {
+    fileExtension = "gbXML";
+  } else {
+    // should never get here
+    OS_ASSERT(false);
+  }
+  QString text("Import ");
+  text.append(fileExtension);
 
   if( this->currentDocument() )
   {
@@ -471,7 +512,7 @@ void OpenStudioApp::importSDD()
   }
 
   QString fileName = QFileDialog::getOpenFileName( parent,
-                                                   tr("Import SDD"),
+                                                   tr(text.toStdString().c_str()),
                                                    QDir::homePath(),
                                                    tr("(*.xml)") );
 
@@ -479,8 +520,17 @@ void OpenStudioApp::importSDD()
   {
     boost::optional<model::Model> model;
 
-    sdd::ReverseTranslator trans;
-    model = trans.loadModel(toPath(fileName));
+    if(type == SDD){
+      sdd::ReverseTranslator trans;
+      model = trans.loadModel(toPath(fileName));
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } else if(type == GBXML) {
+      gbxml::ReverseTranslator trans;
+      model = trans.loadModel(toPath(fileName));
+      translatorErrors = trans.errors();
+      translatorWarnings = trans.warnings();
+    } 
 
     if( model )
     {
@@ -507,6 +557,7 @@ void OpenStudioApp::importSDD()
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
       connect( m_osDocument.get(), SIGNAL(importClicked()), this,SLOT(importIdf()) );
+      connect( m_osDocument.get(), SIGNAL(importgbXMLClicked()), this,SLOT(importgbXML()) );
       connect( m_osDocument.get(), SIGNAL(importSDDClicked()), this,SLOT(importSDD()) );
       connect( m_osDocument.get(), SIGNAL(loadFileClicked()), this,SLOT(open()) );
       connect( m_osDocument.get(), SIGNAL(osmDropped(QString)), this,SLOT(openFromDrag(QString)) );
@@ -521,31 +572,27 @@ void OpenStudioApp::importSDD()
 
       QString log;
 
-      std::vector<LogMessage> messages = trans.errors();
-
-      for( const auto & message : messages )
+      for( const auto & error : translatorErrors )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(message.logMessage()));
+        log.append(QString::fromStdString(error.logMessage()));
         log.append("\n");
         log.append("\n");
       }
 
-      messages = trans.warnings();
-
-      for( const auto & message : messages )
+      for( const auto & warning : translatorWarnings )
       {
         errorsOrWarnings = true;
 
-        log.append(QString::fromStdString(message.logMessage()));
+        log.append(QString::fromStdString(warning.logMessage()));
         log.append("\n");
         log.append("\n");
       }
 
       if (errorsOrWarnings){
         QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
-        messageBox.setText("Errors or warnings occurred on SDD import.");
+        messageBox.setText("Errors or warnings occurred on " + fileExtension + " import.");
         messageBox.setDetailedText(log);
         messageBox.exec();
       }
@@ -556,7 +603,7 @@ void OpenStudioApp::importSDD()
 
       QMessageBox messageBox; // (parent); ETH: ... but is hidden, so don't actually use
       messageBox.setText("Could not import SDD file.");
-      messageBox.setDetailedText(QString("Could not import SDD file at ") + fileName);
+      messageBox.setDetailedText(QString("Could not import " + fileExtension + " file at ") + fileName);
       messageBox.exec();
     }
   }
@@ -647,6 +694,7 @@ void OpenStudioApp::onCloseClicked()
 
 void OpenStudioApp::open()
 {
+
   QWidget * parent = nullptr;
 
   if( this->currentDocument() )
@@ -660,7 +708,7 @@ void OpenStudioApp::open()
                                                    tr("(*.osm)") );
 
   if (!fileName.length()) return;
-  
+
   openFile(fileName);
 }
 
@@ -679,6 +727,8 @@ void OpenStudioApp::loadLibrary()
     if( ! (fileName == "") )
     {
       osversion::VersionTranslator versionTranslator;
+      versionTranslator.setAllowNewerVersions(false);
+
       boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
       if( model ) {
         this->currentDocument()->setComponentLibrary(*model);
@@ -732,6 +782,38 @@ void  OpenStudioApp::showAbout()
   about.setStyleSheet("qproperty-alignment: AlignCenter;");
   about.setWindowTitle("About " + applicationName());
   about.exec();
+}
+
+void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int startTabIndex)
+{
+  OS_ASSERT(m_osDocument);
+
+  QFileInfo info(fileToLoad); // handles windows links and "\"
+  QString fileName = info.absoluteFilePath();
+  osversion::VersionTranslator versionTranslator;
+  boost::optional<openstudio::model::Model> model = modelFromOSM(toPath(fileName), versionTranslator);
+  if( model ){ 
+    
+    bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
+    this->setQuitOnLastWindowClosed(false);
+    
+    m_osDocument->setModel(*model, modified);
+
+    versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
+
+    this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
+
+  }else{
+    // todo: show error message
+  }
+
+  processEvents();
+
+  OS_ASSERT(startTabIndex >= 0);
+  OS_ASSERT(startTabIndex <= OSDocument::RESULTS_SUMMARY);
+  if(startTabIndex){
+    m_osDocument->showTab(startTabIndex);
+  }
 }
 
 openstudio::path OpenStudioApp::resourcesPath() const
@@ -848,5 +930,23 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
   }
 }
 
-} // openstudio
+void OpenStudioApp::revertToSaved()
+{
+  QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
 
+  QFile testFile(fileName);
+  if(!testFile.exists()) return;
+
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::question(mainWidget(), QString("Revert to Saved"), QString("Are you sure you want to revert to the last saved version?"), QMessageBox::Yes|QMessageBox::No, QMessageBox::No);
+  if (reply == QMessageBox::Yes) 
+  {
+    // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
+    this->currentDocument()->markAsUnmodified();
+
+    openFile(fileName);
+  }
+
+}
+
+} // openstudio

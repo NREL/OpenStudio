@@ -138,6 +138,12 @@ class OSVERSION_API VersionTranslator {
    *  refactored. */
   std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
 
+  /** Returns true if loading newer versions is allowable. Defaults to true. */
+  bool allowNewerVersions() const;
+
+  /** Set whether or not loading newer versions is allowed. */
+  void setAllowNewerVersions(bool allowNewerVersions);
+
   //@}  
  private:
   REGISTER_LOGGER("openstudio.osversion.VersionTranslator");
@@ -147,6 +153,7 @@ class OSVERSION_API VersionTranslator {
   std::vector<VersionString> m_startVersions;
 
   VersionString m_originalVersion;
+  bool m_allowNewerVersions;
   std::map<VersionString, IdfFile> m_map;
   StringStreamLogSink m_logSink;
   std::vector<IdfObject> m_deprecated, m_untranslated, m_new;

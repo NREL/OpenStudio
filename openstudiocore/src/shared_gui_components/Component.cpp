@@ -19,9 +19,12 @@
 
 #include "Component.hpp"
 
+#include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/Unit.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -36,6 +39,58 @@
 #define OPENSTUDIO_TYPE "OpenStudio Type"
 
 namespace openstudio {
+
+Component::Component(const BCLMeasure & bclMeasure,
+  bool showAbridgedView,
+  bool showCheckBox,
+  QWidget * parent)
+  : QAbstractButton(parent),
+  m_name(QString()),
+  m_uid(QString()),
+  m_versionId(QString()),
+  m_description(QString()),
+  m_fidelityLevel(QString()),
+  m_attributes(std::vector<Attribute>()),
+  m_files(std::vector<BCLFile>()),
+  m_fileReferences(std::vector<BCLFileReference>()),
+  m_provenances(std::vector<BCLProvenance>()),
+  m_tags(std::vector<std::string>()),
+  m_showAbridgedView(showAbridgedView),
+  m_showCheckBox(showCheckBox),
+  m_checkBox(NULL),
+  m_msg(NULL)
+{
+  setCheckable(true);
+  parseBCLMeasure(bclMeasure);
+  if(m_showAbridgedView){
+    createAbridgedLayout();
+  }
+  else{
+    createCompleteLayout();
+  }
+
+  // This measure was created with a newer version of OpenStudio
+  if (!m_available){
+    if(m_checkBox){
+      m_checkBox->setChecked(false);
+      m_checkBox->setEnabled(false);
+      m_updateAvailable = false;
+      if (m_msg){
+        m_msg->setText("This measure requires a newer version of OpenStudio");
+        m_msg->setShown(true);
+      }
+    }
+  }else{
+    // This measures has been pre-filtered and is known to require an update
+    m_checkBox->setChecked(false);
+    m_checkBox->setEnabled(true);
+    m_updateAvailable = true;
+    if (m_msg){
+      m_msg->setText("An update is available for this measure");
+      m_msg->setShown(true);
+    }
+  }
+}
 
 Component::Component(const BCLSearchResult & bclSearchResult,
   bool showAbridgedView,
@@ -147,6 +202,7 @@ Component::Component(bool showAbridgedView,
   m_fidelityLevel(QString()),
   m_attributes(std::vector<Attribute>()),
   m_files(std::vector<BCLFile>()),
+  m_fileReferences(std::vector<BCLFileReference>()),
   m_provenances(std::vector<BCLProvenance>()),
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
@@ -174,6 +230,7 @@ Component::Component(const Component & other)
     m_fidelityLevel = other.m_fidelityLevel;
     m_attributes = other.m_attributes;
     m_files = other.m_files;
+    m_fileReferences = other.m_fileReferences;
     m_provenances = other.m_provenances;
     m_tags = other.m_tags;
     m_showAbridgedView = other.m_showAbridgedView;
@@ -208,6 +265,7 @@ Component & Component::operator=(const Component & other)
     m_fidelityLevel = other.m_fidelityLevel;
     m_attributes = other.m_attributes;
     m_files = other.m_files;
+    m_fileReferences = other.m_fileReferences;
     m_provenances = other.m_provenances;
     m_tags = other.m_tags;
     m_showAbridgedView = other.m_showAbridgedView;
@@ -252,6 +310,32 @@ void Component::setChecked(bool checked)
 {
   QAbstractButton::setChecked(checked);
   emit clicked(checked);
+}
+
+void Component::parseBCLMeasure(const BCLMeasure & bclMeasure)
+{
+  m_componentType = bclMeasure.measureType().enumName().c_str();
+  m_name = bclMeasure.name().c_str();
+  m_uid = bclMeasure.uid().c_str();
+  m_versionId = bclMeasure.versionId().c_str();
+  m_description = bclMeasure.description().c_str();
+
+  m_attributes = bclMeasure.attributes();
+  m_fileReferences = bclMeasure.files();
+  m_tags = bclMeasure.tags();
+
+  std::string softwareProgramVersion;
+  Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
+    if (fileReference.usageType() == "script" && fileReference.softwareProgram() == "OpenStudio"){
+      softwareProgramVersion = fileReference.softwareProgramVersion();
+      break;
+    }
+  }
+  if (!softwareProgramVersion.empty() && VersionString(softwareProgramVersion) > VersionString(openStudioVersion())){
+    m_available = false;
+  }else{
+    m_available = true;
+  }
 }
 
 void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
@@ -316,7 +400,7 @@ void Component::createAbridgedLayout()
         }
       }
     }
-    else if(m_componentType == "measure"){
+    else if(m_componentType == "measure" || m_componentType == "MeasureType"){
       if(string.toStdString() == "Measure Type"){
         openstudio::AttributeValueType type = attribute.valueType();
         if(type == AttributeValueType::String){
@@ -395,34 +479,47 @@ void Component::createCompleteLayout()
 
     openstudio::AttributeValueType type = attribute.valueType();
 
-    if(type == AttributeValueType::Double){
-      string = string.setNum(attribute.valueAsDouble());
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
+    if(type == AttributeValueType::Boolean){
+      bool success = attribute.valueAsBoolean();
+      if(success){
+        string = "true";
+      } else {
+        string = "false";
       }
+    }
+    else if(type == AttributeValueType::Double){
+      string = string.setNum(attribute.valueAsDouble());
+    }
+    else if(type == AttributeValueType::Quantity){
+      Quantity quantity = attribute.valueAsQuantity();
+      string = string.setNum(quantity.value());
+      string += " ";
+      string += quantity.prettyUnitsString().c_str();
+    }
+    else if(type == AttributeValueType::Unit){
+      Unit unit = attribute.valueAsUnit();
+      string = unit.prettyString().c_str();
     }
     else if(type == AttributeValueType::Integer){
       string = string.setNum(attribute.valueAsInteger());
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
-      }
     }
+    else if(type == AttributeValueType::Unsigned){
+      string = string.setNum(attribute.valueAsUnsigned());
+    } 
     else if(type == AttributeValueType::String){
       string = attribute.valueAsString().c_str();
-      if(optionalUnits){
-        string += " ";
-        std::string temp = optionalUnits.get();
-        string += temp.c_str();
-      }
+    }
+    else if(type == AttributeValueType::AttributeVector){
+      AttributeVector attributeVector = attribute.valueAsAttributeVector();
+      // TODO handle this case
     }
     else{
       // should never get here
-      // see utility::bcl for utilized types
-      OS_ASSERT(false);
+    }
+    if(optionalUnits){
+      string += " ";
+      std::string temp = optionalUnits.get();
+      string += temp.c_str();
     }
     item = new QTableWidgetItem(string);
     tableWidget->setItem(tableWidget->rowCount() - 1, 1, item);
@@ -452,6 +549,19 @@ void Component::createCompleteLayout()
     //mainLayout->addWidget(label);
 
     //label = new QLabel(file.identifier().c_str());
+    //mainLayout->addWidget(label);
+  }
+  Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
+    label = new QLabel(fileReference.fileName().c_str());
+    mainLayout->addWidget(label);
+
+    //label = new QLabel(fileReference.fileType().c_str());
+    //mainLayout->addWidget(label);
+
+    //label = new QLabel(fileReference.softwareProgram().c_str());
+    //mainLayout->addWidget(label);
+
+    //label = new QLabel(fileReference.softwareProgramVersion().c_str());
     //mainLayout->addWidget(label);
   }
 

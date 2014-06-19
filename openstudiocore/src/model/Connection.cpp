@@ -114,22 +114,10 @@ namespace detail {
     this->setUnsigned(openstudio::OS_ConnectionFields::InletPort,port);
   }
 
-  boost::optional<std::string> Connection_Impl::createName(bool overwrite) {
-    if (OptionalUnsigned index = iddObject().nameFieldIndex())
-    {
-      OptionalString oName = name();
-      if (!oName || oName->empty() || overwrite) {
-        std::string newName = handle().toString().toStdString();
-        return setName(newName);
-      }
-    }
-    return boost::none;
-  }
-
 } // detail
 
 Connection::Connection(const Model& model)
-  : ModelObject(Connection::iddObjectType(),model)
+  : ModelObject(Connection::iddObjectType(), model, true)
 {
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }

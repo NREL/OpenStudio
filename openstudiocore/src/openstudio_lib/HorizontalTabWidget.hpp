@@ -45,6 +45,8 @@ class HorizontalTabWidget : public QWidget
                int id,
                const QString & label );
 
+  void hideTab(QWidget * widget, bool hide);
+
   public slots:
 
   void setCurrentId(int id);
@@ -77,7 +79,7 @@ class HorizontalTabWidget : public QWidget
 
   std::vector<QPushButton *> m_tabButtons; 
 
-  std::vector<int> m_ids; 
+  std::vector<int> m_ids;
 
 };
 

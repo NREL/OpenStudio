@@ -82,7 +82,7 @@ namespace detail {
     }
   }
 
-  IdfObject_Impl::IdfObject_Impl(IddObjectType type) 
+  IdfObject_Impl::IdfObject_Impl(IddObjectType type, bool fastName) 
     : m_handle(openstudio::createUUID())
   {
     OptionalIddObject candidate = IddFactory::instance().getObject(type);
@@ -92,10 +92,19 @@ namespace detail {
       bool ok = setString(0,toString(m_handle));
       OS_ASSERT(ok);
     }
+    if( fastName ){
+      boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
+      if ( nameFieldIndex ) {
+        bool ok = setString(*nameFieldIndex,toString(createUUID()));
+        OS_ASSERT(ok);
+      } else {
+        LOG(Error, "Requested setting name field to UUID but object of type '" << this->m_iddObject.name() << "' has no name field");
+      }
+    }
     resizeToMinFields();
   }
 
-  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject)
+  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, bool fastName)
     : m_handle(openstudio::createUUID()),
       m_iddObject(iddObject)
   {
@@ -103,12 +112,22 @@ namespace detail {
       bool ok = setString(0,toString(m_handle));
       OS_ASSERT(ok);
     }
+    if( fastName ){
+      boost::optional<unsigned> nameFieldIndex = this->m_iddObject.nameFieldIndex();
+      if ( nameFieldIndex ) {
+        bool ok = setString(*nameFieldIndex,toString(createUUID()));
+        OS_ASSERT(ok);
+      } else {
+        LOG(Error, "Requested setting name field to UUID but object of type '" << this->m_iddObject.name() << "' has no name field");
+      }
+    }
     resizeToMinFields();
   }
 
-  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, bool minimal)
+  IdfObject_Impl::IdfObject_Impl(const IddObject& iddObject, bool fastName, bool minimal)
     : m_iddObject(iddObject)
   {
+    OS_ASSERT(!fastName);
     OS_ASSERT(minimal);
   }
 
@@ -1202,7 +1221,7 @@ namespace detail {
                                                          const IddObject& iddObject)
   {
     std::shared_ptr<IdfObject_Impl> result;
-    IdfObject_Impl idfObjectImpl(iddObject,true);
+    IdfObject_Impl idfObjectImpl(iddObject,false,true);
 
     try {
       idfObjectImpl.parse(text,false);
@@ -1942,15 +1961,15 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
 // CONSTRUCTORS
 
-IdfObject::IdfObject(IddObjectType type) 
+IdfObject::IdfObject(IddObjectType type, bool fastName) 
 {
-  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, fastName));
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(const IddObject& iddObject)
+IdfObject::IdfObject(const IddObject& iddObject, bool fastName)
 {
-  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, fastName));
   OS_ASSERT(m_impl);
 }
 

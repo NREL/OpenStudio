@@ -60,8 +60,6 @@ namespace detail {
 
     void setTargetObjectPort(unsigned port);
 
-    boost::optional<std::string> createName(bool overwrite);
-
    private:
 
     REGISTER_LOGGER("openstudio.model.Connection");

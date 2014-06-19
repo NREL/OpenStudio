@@ -63,7 +63,7 @@ class LocalLibraryController : public QObject
 
   QPointer<LocalLibraryView> localLibraryView;
 
-  LocalLibraryController(openstudio::BaseApp *t_app);
+  LocalLibraryController(openstudio::BaseApp *t_app, bool onlyShowModelMeasures = false);
 
   virtual ~LocalLibraryController();
 
@@ -74,17 +74,13 @@ class LocalLibraryController : public QObject
 
   public slots:
 
-  void showMyMeasures(bool down);
-
-  void showBCLMeasures(bool down);
+  void showMeasures();
 
   void showMyMeasuresFolder();
 
   private slots:
   void addMeasure();
   void duplicateSelectedMeasure();
-  void updateMyMeasures();
-  void updateBCLMeasures();
   void downloadUpdatedBCLMeasures();
   void openBclDlg();
 
@@ -93,13 +89,14 @@ class LocalLibraryController : public QObject
 
   BaseApp *m_app;
 
-  QPointer<OSListView> userLibraryView;
-
-  QPointer<OSListView> bclLibraryView;
+  QPointer<OSListView> libraryView;
 
   QSharedPointer<LibraryTypeListController> createLibraryListController(const QDomDocument & taxonomy,LocalLibrary::LibrarySource source);
 
   QSettings m_settings;
+
+  bool m_onlyShowModelMeasures;
+
 };
 
 class LibraryTypeItem : public OSListItem
@@ -214,7 +211,8 @@ class LibrarySubGroupItem : public OSListItem
 
   LibrarySubGroupItem(const QString & name, const QString & taxonomyTag, 
                       LocalLibrary::LibrarySource source,
-                      BaseApp *t_app);
+                      BaseApp *t_app,
+                      bool onlyShowModelMeasures);
 
   virtual ~LibrarySubGroupItem() {}
 
@@ -333,7 +331,8 @@ class LibraryListController : public OSListController
 
   LibraryListController(const QString & taxonomyTag, 
                         LocalLibrary::LibrarySource source,
-                        BaseApp *t_app);
+                        BaseApp *t_app,
+                        bool onlyShowModelMeasures);
 
   virtual ~LibraryListController() {}
 
@@ -353,11 +352,14 @@ class LibraryListController : public OSListController
   void createItems();
 
   BaseApp *m_app;
+
   QString m_taxonomyTag;
 
   LocalLibrary::LibrarySource m_source;
 
   std::vector<QSharedPointer<LibraryItem> > m_items;
+
+  bool m_onlyShowModelMeasures;
 };
 
 

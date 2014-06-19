@@ -33,6 +33,8 @@ class QPushButton;
 
 namespace openstudio {
 
+class SyncMeasuresDialog;
+
 namespace pat {
 
 namespace measuretab {
@@ -67,6 +69,17 @@ class MeasuresTabView : public PatMainTabView
   QLabel * baselineLabel;
 
   QPushButton * selectBaselineButton;
+
+  private:
+
+  QPushButton * m_updateMeasuresButton;
+
+  boost::shared_ptr<SyncMeasuresDialog> m_syncMeasuresDialog;
+
+  private slots:
+
+  void openUpdateMeasuresDlg();
+
 };
 
 } // pat

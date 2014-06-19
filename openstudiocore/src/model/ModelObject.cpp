@@ -1183,8 +1183,8 @@ bool ModelObject::setParent(ParentObject& newParent)
   return getImpl<detail::ModelObject_Impl>()->setParent(newParent);
 }
 
-ModelObject::ModelObject(IddObjectType type, const Model& model)
-  : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type),false))
+ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
+  : WorkspaceObject(model.getImpl<detail::Model_Impl>()->createObject(IdfObject(type, fastName),false))
 {
   // create object of correct type
   OS_ASSERT(getImpl<detail::ModelObject_Impl>());

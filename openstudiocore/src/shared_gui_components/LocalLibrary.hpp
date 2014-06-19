@@ -27,7 +27,8 @@ namespace openstudio{
     enum LibrarySource
     {
       BCL,
-      USER
+      USER,
+      COMBINED
     };
   };
 

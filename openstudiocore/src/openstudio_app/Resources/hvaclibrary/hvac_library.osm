@@ -631,7 +631,7 @@ OS:Coil:Heating:Water,
 
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
   {30e9aca9-a12e-4e4a-a264-c97ec8fd62a2}, ! Handle
-  OS:AirTerminal:SingleDuct:ParallelPIU:Reheat 1, ! Name
+  Parallel PIU Terminal w CAV Fan and Electric Reheat, ! Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, ! Availability Schedule Name
   Autosize,                               ! Maximum Primary Air Flow Rate {m3/s}
   Autosize,                               ! Maximum Secondary Air Flow Rate {m3/s}

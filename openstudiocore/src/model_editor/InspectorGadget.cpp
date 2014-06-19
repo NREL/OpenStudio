@@ -424,6 +424,7 @@ void InspectorGadget::parseItem(QVBoxLayout* layout,
 
   switch( prop.type.value() )
   {
+
   case IddFieldType::IntegerType:
     {
       layoutText(layout,parent,field,level,name,curVal,index,comment,exists,true,false);
@@ -492,9 +493,21 @@ void InspectorGadget::parseItem(QVBoxLayout* layout,
       }
       break;
     }
+  case IddFieldType::NodeType:
+    {
+      break;
+    }
+  case IddFieldType::URLType:
+    {
+      break;
+    }
+  case IddFieldType::HandleType:
+    {
+      break;
+    }
   default:
     {
-      cout<<"InspectorGadget::parseItem has failed"<<endl;
+      LOG(Error, "InspectorGadget::parseItem has failed, unknown IddFieldType " << prop.type.valueDescription());
     }
     
   }

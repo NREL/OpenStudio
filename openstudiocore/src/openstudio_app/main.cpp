@@ -74,8 +74,6 @@ int main(int argc, char *argv[])
   while(cont) {
     cont = false;
 
-
-
     std::vector<std::string> modules;
     modules.push_back("openstudioutilitiescore");
     modules.push_back("openstudioutilitiesbcl");

@@ -104,14 +104,4 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndCrash)
   EXPECT_FALSE(errorFile.completedSuccessfully());
 }
 
-TEST_F(EnergyPlusFixture,ErrorFile_RepeatingWarnings)
-{
-  openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/RepeatingWarnings.err");
 
-  ErrorFile errorFile(path);
-  EXPECT_EQ(8931u, errorFile.warnings().size());
-  EXPECT_EQ(static_cast<unsigned>(0), errorFile.severeErrors().size());
-  EXPECT_EQ(static_cast<unsigned>(0), errorFile.fatalErrors().size());
-  EXPECT_TRUE(errorFile.completed());
-  EXPECT_TRUE(errorFile.completedSuccessfully());
-}

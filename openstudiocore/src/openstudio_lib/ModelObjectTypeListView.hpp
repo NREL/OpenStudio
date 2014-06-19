@@ -40,12 +40,12 @@ class ModelObjectTypeListView : public OSCollapsibleItemList
   public:
     ModelObjectTypeListView(const model::Model& model, 
                             bool addScrollArea, 
-                            OSItem::Type headerType,
+                            OSItemType headerType,
                             bool showLocalBCL = false,
                             QWidget * parent = 0);
 
     ModelObjectTypeListView(const std::vector<std::pair<IddObjectType, std::string> >& modelObjectTypesAndNames,
-                            const model::Model& model, bool addScrollArea, OSItem::Type headerType,
+                            const model::Model& model, bool addScrollArea, OSItemType headerType,
                             bool showLocalBCL = false,
                             QWidget * parent = 0);
 
@@ -62,7 +62,7 @@ class ModelObjectTypeListView : public OSCollapsibleItemList
     std::vector<std::pair<IddObjectType, std::string> > m_modelObjectTypesAndNames;
 
     model::Model m_model;
-    OSItem::Type m_headerType;
+    OSItemType m_headerType;
     bool m_showLocalBCL;
 };
 

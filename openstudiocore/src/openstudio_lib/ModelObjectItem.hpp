@@ -44,7 +44,7 @@ class ModelObjectItem : public OSItem
 
     ModelObjectItem(const openstudio::model::ModelObject& modelObject,
                     bool isDefaulted,
-                    OSItem::Type type,
+                    OSItemType type,
                     QWidget * parent = 0 );
 
     virtual ~ModelObjectItem() {}

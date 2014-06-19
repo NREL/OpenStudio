@@ -55,8 +55,8 @@ public:
   bool itemsRemoveable() const;
   void setItemsRemoveable(bool itemsRemoveable);
 
-  OSItem::Type itemsType() const;
-  void setItemsType(OSItem::Type type);
+  OSItemType itemsType() const;
+  void setItemsType(OSItemType type);
 
   bool showFilterLayout() const;
   void setShowFilterLayout(const bool showFilterLayout);
@@ -84,7 +84,7 @@ private:
   bool m_itemsDraggable;
   bool m_itemsRemoveable;
   bool m_showFilterLayout;
-  OSItem::Type m_itemsType;
+  OSItemType m_itemsType;
 };
 
 } // openstudio
