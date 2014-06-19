@@ -2062,6 +2062,7 @@ OS:Material,
        \type real
        \required-field
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
   N3, \field Density
        \type real
@@ -2245,6 +2246,7 @@ OS:Material:RoofVegetation,
        \note Typical ecoroof soils range from 0.3 to 0.5
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum 0.2
        \maximum 1.5
        \default 0.35
@@ -2364,6 +2366,7 @@ OS:WindowMaterial:Blind,
        \note default is for aluminum
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
        \default 221.0
   N6, \field Slat Beam Solar Transmittance
@@ -2529,14 +2532,17 @@ OS:WindowMaterial:Gas,
        \note Used only if Gas Type = Custom
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
   N3, \field Conductivity Coefficient B
        \note Used only if Gas Type = Custom
        \type real
        \units W/m-K2
+       \ip-units Btu-in/hr-ft2-R2
   N4, \field Conductivity Coefficient C
        \note Used only if Gas Type = Custom
        \type real
        \units W/m-K3
+       \ip-units Btu-in/hr-ft2-R3
   N5, \field Viscosity Coefficient A
        \note Used only if Gas Type = Custom
        \type real
@@ -2717,6 +2723,7 @@ OS:WindowMaterial:Glazing,
   N11, \field Conductivity
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
        \default 0.9
   N12, \field Dirt Correction Factor for Solar and Visible Transmittance
@@ -2804,6 +2811,7 @@ OS:WindowMaterial:Glazing:RefractionExtinctionMethod,
   N8, \field Conductivity
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
        \default 0.9
   N9, \field Dirt Correction Factor for Solar and Visible Transmittance
@@ -2866,6 +2874,7 @@ OS:WindowMaterial:Screen,
        \note Default is for aluminum.
        \type real
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
        \default 221.0
   N5, \field Screen Material Spacing
@@ -2998,6 +3007,7 @@ OS:WindowMaterial:Shade,
        \type real
        \default 0.1
        \units W/m-K
+       \ip-units Btu-in/hr-ft2-R
        \minimum> 0
   N9, \field Shade to Glass Distance
        \type real
@@ -10027,6 +10037,7 @@ OS:GroundHeatExchanger:Vertical,
   N5,   \field Ground Thermal Conductivity
         \type real
         \units W/m-K
+        \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
   N6,   \field Ground Thermal Heat Capacity
         \type real
@@ -10044,10 +10055,12 @@ OS:GroundHeatExchanger:Vertical,
   N9,   \field Grout Thermal Conductivity
         \type real
         \units W/m-K
+        \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
   N10,  \field Pipe Thermal Conductivity
         \type real
         \units W/m-K
+        \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
   N11,  \field Pipe Out Diameter
         \type real
