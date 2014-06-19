@@ -759,7 +759,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Sizing_Zone :
     {
-      //modelObject = translateSizingZone(workspaceObject );
+      modelObject = translateSizingZone(workspaceObject );
       break;
     }
   case openstudio::IddObjectType::SteamEquipment :
