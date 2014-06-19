@@ -757,6 +757,7 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
 
+  // DLM: this is required in order to restore app state? should this be in the destructor instead?
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
@@ -804,6 +805,11 @@ void ApplyMeasureNowDialog::requestReload()
   OS_ASSERT(m_reloadPath);
   QString fileToLoad = toQString(*m_reloadPath);
   int startTabIndex = OSAppBase::instance()->currentDocument()->verticalTabIndex();
+
+  // DLM: do we need to restore app state here?
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+
   emit reloadFile(fileToLoad, true, startTabIndex);
 }
 
@@ -811,6 +817,16 @@ void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 {
   //DLM: don't do this here in case we are going to load the model
   //removeWorkingDir();
+
+  // DLM: do not allow closing window while running
+  if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx){
+    e->ignore();
+    return;
+  } 
+
+  // DLM: this is required in order to restore app state? should this be in the destructor instead?
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
   e->accept();
 }
