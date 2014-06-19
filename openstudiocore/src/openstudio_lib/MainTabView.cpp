@@ -262,11 +262,7 @@ int MainTabView::currentId() const
 
 int MainTabView::currentIndex() const
 {
-  if(m_hasSubTab){
-    return m_stackedWidget->currentIndex();
-  } else {
-    return -1;
-  }
+  return m_stackedWidget->currentIndex();
 }
 
 bool MainTabView::setCurrentSubTab(int index)

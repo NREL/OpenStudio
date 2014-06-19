@@ -826,7 +826,7 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int sta
   OS_ASSERT(startTabIndex >= 0);
   OS_ASSERT(startTabIndex <= OSDocument::RESULTS_SUMMARY);
   if(startTabIndex){
-    m_osDocument->showTab(startTabIndex);
+    m_osDocument->showTab(startTabIndex); // TODO whoa!  is this really needed?
   }
 }
 

@@ -135,7 +135,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_onlineBclDialog(NULL),
     m_localLibraryDialog(NULL),
     m_savePath(filePath),
-    m_isPlugin(isPlugin)
+    m_startTabIndex(0),
+    m_startSubTabIndex(0)
 {
   bool isConnected = false;
 
@@ -411,22 +412,31 @@ void OSDocument::showFirstTab()
   m_mainWindow->show();
 }
 
-void OSDocument::showTab(int tabIndex, int subTabIndex)
+void OSDocument::showStartTabAndStartSubTab()
 {
-  m_mainWindow->selectVerticalTabByIndex(tabIndex);
-
-  if(subTabIndex > 0){
-    QTimer::singleShot(0, this, SLOT(showSubTab()));
-  }
+  QTimer::singleShot(0, this, SLOT(showStartTab()));
 }
 
-void OSDocument::showSubTab()
+void OSDocument::showStartTab()
+{
+  m_mainWindow->selectVerticalTabByIndex(m_startTabIndex);
+
+  QTimer::singleShot(0, this, SLOT(showStartSubTab()));
+}
+
+void OSDocument::showStartSubTab()
 {
   int tabIndex = verticalTabIndex();
+  OS_ASSERT(m_startTabIndex == tabIndex);
 
-  boost::shared_ptr<MainTabView> mainTabView = m_mainWindow->verticalTabByIndex(tabIndex);
+  boost::shared_ptr<MainTabView> mainTabView = m_mainWindow->verticalTabByIndex(m_startTabIndex);
 
-  mainTabView->setCurrentSubTab(2);
+  mainTabView->setCurrentSubTab(m_startSubTabIndex);
+}
+
+void OSDocument::showTab(int tabIndex)
+{
+  m_mainWindow->selectVerticalTabByIndex(tabIndex);
 }
 
 int OSDocument::subTabIndex()
@@ -484,13 +494,13 @@ void OSDocument::setModel(const model::Model& model, bool modified)
 
   m_model = model;
 
-  int startTabIndex = 0;
-  int startSubTabIndex = 0;
+  m_startTabIndex = 0;
+  m_startSubTabIndex = 0;
 
   boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
   if(currentDocument){
-    startTabIndex = app->currentDocument()->verticalTabIndex();
-    startSubTabIndex = app->currentDocument()->subTabIndex();
+    m_startTabIndex = app->currentDocument()->verticalTabIndex();
+    m_startSubTabIndex = app->currentDocument()->subTabIndex();
   }
 
   // Main Right Column
@@ -848,7 +858,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_mainWindow->setVisible(wasVisible);
 
   if(currentDocument){
-    this->showTab(startTabIndex,startSubTabIndex);
+    QTimer::singleShot(0, this, SLOT(showStartTabAndStartSubTab())); 
   } else {
     QTimer::singleShot(0, this, SLOT(showFirstTab())); 
   }

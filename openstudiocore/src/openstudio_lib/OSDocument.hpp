@@ -286,9 +286,13 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void showFirstTab();
 
-  void showTab(int tabIndex, int subTabIndex = 0);
+  void showStartTabAndStartSubTab();
 
-  void showSubTab();
+  void showStartTab();
+
+  void showStartSubTab();
+
+  void showTab(int tabIndex);
  
   void initializeModel();
 
@@ -388,6 +392,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   int m_mainTabId;
   int m_subTabId;
   bool m_isPlugin;
+
+  int m_startTabIndex;
+  int m_startSubTabIndex;
 };
 
 } // openstudio
