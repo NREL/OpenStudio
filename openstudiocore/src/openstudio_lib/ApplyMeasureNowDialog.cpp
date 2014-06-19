@@ -380,13 +380,8 @@ void ApplyMeasureNowDialog::runMeasure()
 
   runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
 
-  openstudio::path p = getApplicationRunDirectory();
-  QString arg("-I");
-  arg.append(toQString(p));
-  rjb.addToolArgument(arg.toStdString());
-
-  p = getOpenStudioRubyIncludePath();
-  arg = "-I";
+  openstudio::path p = getOpenStudioRubyIncludePath();
+  QString arg = "-I";
   arg.append(toQString(p));
   rjb.addToolArgument(arg.toStdString());
 
