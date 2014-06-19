@@ -260,5 +260,29 @@ int MainTabView::currentId() const
   }
 }
 
+int MainTabView::currentIndex() const
+{
+  if(m_hasSubTab){
+    return m_stackedWidget->currentIndex();
+  } else {
+    return -1;
+  }
+}
+
+bool MainTabView::setCurrentSubTab(int index)
+{
+  if(m_hasSubTab){
+    if(index >= m_stackedWidget->count()){
+      return false;
+    } else {
+      setCurrentIndex(index);
+      return true;
+    }
+  } else {
+    return false;
+  }
+  return false;
+}
+
 } // namespace openstudio
 

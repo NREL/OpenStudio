@@ -410,12 +410,34 @@ void OSDocument::showFirstTab()
 
   m_mainWindow->show();
 }
-  
-void OSDocument::showTab(int tabIndex)
+
+void OSDocument::showTab(int tabIndex, int subTabIndex)
 {
   m_mainWindow->selectVerticalTabByIndex(tabIndex);
 
-  m_mainWindow->show();
+  if(subTabIndex > 0){
+    QTimer::singleShot(0, this, SLOT(showSubTab()));
+  }
+}
+
+void OSDocument::showSubTab()
+{
+  int tabIndex = verticalTabIndex();
+
+  boost::shared_ptr<MainTabView> mainTabView = m_mainWindow->verticalTabByIndex(tabIndex);
+
+  mainTabView->setCurrentSubTab(2);
+}
+
+int OSDocument::subTabIndex()
+{
+  int tabIndex = verticalTabIndex();
+  boost::shared_ptr<MainTabView> mainTabView = m_mainWindow->verticalTabByIndex(tabIndex);
+  if(mainTabView){
+    return mainTabView->currentIndex();
+  } else {
+    return -1;
+  }
 }
 
 void OSDocument::initializeModel()
@@ -463,9 +485,12 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_model = model;
 
   int startTabIndex = 0;
+  int startSubTabIndex = 0;
+
   boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
   if(currentDocument){
     startTabIndex = app->currentDocument()->verticalTabIndex();
+    startSubTabIndex = app->currentDocument()->subTabIndex();
   }
 
   // Main Right Column
@@ -823,7 +848,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_mainWindow->setVisible(wasVisible);
 
   if(currentDocument){
-    app->currentDocument()->showTab(startTabIndex);
+    this->showTab(startTabIndex,startSubTabIndex);
   } else {
     QTimer::singleShot(0, this, SLOT(showFirstTab())); 
   }

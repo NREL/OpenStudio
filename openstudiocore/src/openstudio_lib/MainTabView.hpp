@@ -49,6 +49,12 @@ public:
   // Returns -1 if there are no sub tabs.
   int currentId() const;
 
+  // Returns the index of the current sub tab.
+  // Returns -1 if there are no sub tabs.
+  int currentIndex() const;
+
+  bool setCurrentSubTab(int index);
+
 signals:
 
   void tabSelected(int id);

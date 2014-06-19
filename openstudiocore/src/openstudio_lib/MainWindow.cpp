@@ -22,6 +22,7 @@
 #include <openstudio_lib/LibraryTabWidget.hpp>
 #include <openstudio_lib/LoopLibraryDialog.hpp>
 #include <openstudio_lib/MainMenu.hpp>
+#include <openstudio_lib/MainTabView.hpp>
 #include <openstudio_lib/VerticalTabWidget.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -231,6 +232,12 @@ void MainWindow::selectVerticalTab(int id)
 void MainWindow::selectVerticalTabByIndex(int index)
 {
   m_verticalTabWidget->setCurrentIndex(index);
+}
+
+boost::shared_ptr<MainTabView> MainWindow::verticalTabByIndex(int index)
+{
+  boost::shared_ptr<MainTabView> mainTabView = boost::shared_ptr<MainTabView>( qobject_cast<MainTabView *>(m_verticalTabWidget->pageStack()->widget(index)) );
+  return mainTabView;
 }
 
 int MainWindow::verticalTabIndex()

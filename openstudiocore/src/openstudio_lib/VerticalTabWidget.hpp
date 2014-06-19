@@ -50,6 +50,8 @@ class VerticalTabWidget : public QWidget
 
   int verticalTabIndex();
 
+  QStackedWidget * pageStack() { return m_pageStack; } 
+
   signals:
 
   void tabSelected(int id);

@@ -166,7 +166,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
 //  ScriptFolderListView* scriptFolderListView();
 
+  // Returns the index of the current tab.
   int verticalTabIndex();
+
+  // Returns the index of the current sub tab.
+  // Returns -1 if there are no sub tabs.
+  int subTabIndex();
 
   enum VerticalTabID
   {
@@ -281,7 +286,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void showFirstTab();
 
-  void showTab(int tabIndex);
+  void showTab(int tabIndex, int subTabIndex = 0);
+
+  void showSubTab();
  
   void initializeModel();
 

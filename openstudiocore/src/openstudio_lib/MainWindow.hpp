@@ -22,6 +22,8 @@
 
 #include <QMainWindow>
 
+#include <boost/shared_ptr.hpp>
+
 class QStackedWidget;
 
 class QSplitter;
@@ -29,6 +31,8 @@ class QSplitter;
 namespace openstudio {
 
 class HorizontalTabWidget;
+
+class MainTabView;
 
 class VerticalTabWidget;
 
@@ -58,6 +62,8 @@ class MainWindow : public QMainWindow
   void selectVerticalTab(int id);
 
   void selectVerticalTabByIndex(int index);
+
+  boost::shared_ptr<MainTabView> verticalTabByIndex(int index);
 
   int verticalTabIndex();
 
