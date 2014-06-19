@@ -68,9 +68,11 @@ public:
 
   QSize sizeHint() const;
 
-  void displayMeasure();  
-  
+  void displayMeasure();
+
   QSharedPointer<EditController> m_editController;
+
+  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
 protected slots:
 
@@ -83,7 +85,7 @@ protected slots:
 protected:
 
   void closeEvent(QCloseEvent * event);
-  
+
 private slots:
 
   void disableOkButton(bool disable);
@@ -92,9 +94,9 @@ private slots:
 
   void requestReload();
 
-  void showStdError();
+  void showAdvancedOutput();
 
-  void showStdOut();
+  void requestDisplayResults();
 
 signals:
 
@@ -112,6 +114,8 @@ private:
 
   void searchForExistingResults(const openstudio::path &t_runDir);
 
+  void removeWorkingDir();
+
   boost::optional<BCLMeasure> m_bclMeasure;
 
   QSharedPointer<measuretab::MeasureItem> m_currentMeasureItem;
@@ -121,8 +125,6 @@ private:
   boost::optional<model::Model> m_model;
 
   boost::optional<openstudio::path> m_reloadPath;
-
-  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
   QStackedWidget * m_mainPaneStackedWidget;
 
@@ -148,13 +150,11 @@ private:
 
   bool m_stopRequested;
 
-  QPushButton * m_showStdError;
+  QPushButton * m_showAdvancedOutput;
 
-  QPushButton * m_showStdOut;
+  QString m_advancedOutput;
 
-  QString m_stdError;
-
-  QString m_stdOut;
+  openstudio::path m_workingDir;
 
 };
 

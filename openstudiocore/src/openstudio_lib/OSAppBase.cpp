@@ -113,13 +113,18 @@ void OSAppBase::updateSelectedMeasureState()
     if (mainRightColumnController)
     {
       if (measureManager().isMeasureSelected()){
-        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
+        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+          document->m_applyMeasureNowDialog->displayMeasure();
+          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(true);
+        } else {
+          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(true);
+        }
       }else{
-        mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
-      }
-
-      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
-        document->m_applyMeasureNowDialog->displayMeasure();
+        if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+          document->m_applyMeasureNowDialog->m_localLibraryController->localLibraryView->duplicateMeasureButton->setEnabled(false);
+        } else {
+          mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
+        }
       }
     }
   }

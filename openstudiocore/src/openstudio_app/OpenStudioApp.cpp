@@ -246,8 +246,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
 {
   if(fileName.length() > 0)
   { 
-    waitDialog()->setVisible(true);
-
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
@@ -267,6 +265,9 @@ bool OpenStudioApp::openFile(const QString& fileName)
         processEvents();
       }
 
+      waitDialog()->setVisible(true);
+      processEvents();
+
       m_osDocument = boost::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
@@ -285,6 +286,8 @@ bool OpenStudioApp::openFile(const QString& fileName)
       connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
       connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
 
+      waitDialog()->setVisible(false);
+
       m_startupView->hide();
 
       versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
@@ -297,7 +300,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
 
       versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
     }
-    waitDialog()->setVisible(false);
   }
   return false;
 }

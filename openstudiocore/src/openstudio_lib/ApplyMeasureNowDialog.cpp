@@ -77,10 +77,9 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_jobItemView(0),
   m_timer(0),
   m_stopRequested(false),
-  m_showStdError(0),
-  m_showStdOut(0),
-  m_stdError(QString()),
-  m_stdOut(QString())
+  m_showAdvancedOutput(0),
+  m_advancedOutput(QString()),
+  m_workingDir(openstudio::path())
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -179,21 +178,16 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
-  m_showStdError = new QPushButton("Show StdError Messages"); 
-  isConnected = connect(m_showStdError,SIGNAL(clicked(bool)),this,SLOT(showStdError()));
-  OS_ASSERT(isConnected);
+  layout->addStretch(); 
 
-  m_showStdOut = new QPushButton("Show StdOut Messages");
-  isConnected = connect(m_showStdOut,SIGNAL(clicked(bool)),this,SLOT(showStdOut()));
+  m_showAdvancedOutput = new QPushButton("Advanced Output"); 
+  isConnected = connect(m_showAdvancedOutput,SIGNAL(clicked(bool)),this,SLOT(showAdvancedOutput()));
   OS_ASSERT(isConnected);
 
   layout->addStretch();
 
   QHBoxLayout * hLayout = new QHBoxLayout();
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdError);
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdOut);
+  hLayout->addWidget(m_showAdvancedOutput);
   hLayout->addStretch();
   layout->addLayout(hLayout);
 
@@ -356,20 +350,18 @@ void ApplyMeasureNowDialog::runMeasure()
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
-  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
-  openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
+  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
+  openstudio::path modelPath = m_workingDir / openstudio::toPath("modelClone.osm");
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
-  bool success = false;
-  success = removeDirectory(outDir);
-  OS_ASSERT(success);
+  removeWorkingDir();
   
   // save cloned model to temp directory
   m_model->save(modelPath,true); 
 
   // remove? this is shown only in debug (EW)
   QString path("Measure Output Location: ");
-  path.append(toQString(outDir));
+  path.append(toQString(m_workingDir));
   m_jobPath->setText(path);
 
   analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
@@ -390,7 +382,7 @@ void ApplyMeasureNowDialog::runMeasure()
   wf.add(co.getTools());
   wf.setInputFiles(modelPath, openstudio::path());
 
-  m_job = wf.create(outDir, modelPath);
+  m_job = wf.create(m_workingDir, modelPath);
 
   bool isConnected = false;
   isConnected = m_job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), this, SLOT(runManagerStatusChange(const openstudio::runmanager::AdvancedStatus&)));
@@ -413,8 +405,14 @@ void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager:
       this->okButton()->setDisabled(true);
     }
     this->backButton()->setEnabled(true);
-    displayResults();
+
+    QTimer::singleShot(0, this, SLOT(requestDisplayResults()));
   }
+}
+
+void ApplyMeasureNowDialog::requestDisplayResults()
+{
+  displayResults();
 }
 
 void ApplyMeasureNowDialog::displayResults()
@@ -437,8 +435,6 @@ void ApplyMeasureNowDialog::displayResults()
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
-  m_showStdError->setEnabled(false);
-  m_showStdOut->setEnabled(false);
 
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
@@ -449,7 +445,7 @@ void ApplyMeasureNowDialog::displayResults()
     this->okButton()->setDisabled(true);
   }
 
-  m_stdError.clear();
+  m_advancedOutput.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -458,19 +454,11 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdErrPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdError = toQString(stdMessage);
+      m_advancedOutput = toQString(stdMessage);
     }catch(std::exception&){
-    }
-
-    if (m_stdError.isEmpty()){
-      m_showStdError->setEnabled(false);
-    }else{
-      m_showStdError->setEnabled(true);
-      
     }
   //}
 
-  m_stdOut.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -479,17 +467,16 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdOutPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdOut = toQString(stdMessage);
+      m_advancedOutput += toQString(stdMessage);
     }catch(std::exception&){
     }
-
-    if (m_stdOut.isEmpty()){
-      m_showStdOut->setEnabled(false);
-    }else{
-      m_showStdOut->setEnabled(true);
-    }
   //}
-  
+ 
+}
+
+void ApplyMeasureNowDialog::removeWorkingDir()
+{
+  removeDirectory(m_workingDir);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -777,6 +764,8 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
+  removeWorkingDir();
+
   OSDialog::on_cancelButton(checked);
 }
 
@@ -823,7 +812,9 @@ void ApplyMeasureNowDialog::requestReload()
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 {
-  e->accept(); // TODO
+  removeWorkingDir();
+
+  e->accept();
 }
 
 void ApplyMeasureNowDialog::disableOkButton(bool disable)
@@ -831,21 +822,12 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
   this->okButton()->setDisabled(disable);
 }
 
-void ApplyMeasureNowDialog::showStdError()
+void ApplyMeasureNowDialog::showAdvancedOutput()
 {
-  if(m_stdError.isEmpty()){
-    QMessageBox::information(this, QString("StdError Messages"), QString("No StdError messages."));
+  if(m_advancedOutput.isEmpty()){
+    QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("StdError Messages"), m_stdError);
-  }
-}
-
-void ApplyMeasureNowDialog::showStdOut()
-{
-  if(m_stdOut.isEmpty()){
-    QMessageBox::information(this, QString("StdOut Messages"), QString("No StdOut messages."));
-  }else{
-    QMessageBox::information(this, QString("StdOut Messages"), m_stdOut);
+    QMessageBox::information(this, QString("Advanced Output"), m_advancedOutput);
   }
 }
 

@@ -79,7 +79,7 @@ void WaitDialog::createWidgets()
   // BUTTONS
 
   this->okButton()->hide();
-  this->m_cancelButton->setDefault(true);
+  this->m_cancelButton->hide();
 
   // OS SETTINGS
 
@@ -100,7 +100,6 @@ void WaitDialog::on_cancelButton(bool checked)
 
 void WaitDialog::closeEvent(QCloseEvent *e)
 {
-  e->accept(); // TODO
 }
 
 } // openstudio
