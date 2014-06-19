@@ -100,6 +100,9 @@ void WaitDialog::on_cancelButton(bool checked)
 
 void WaitDialog::closeEvent(QCloseEvent *e)
 {
+  // DLM: do not accept the event, we don't allow this dialog to close
+  // would be better to set window flags to not have the close button
+  e->ignore();
 }
 
 } // openstudio

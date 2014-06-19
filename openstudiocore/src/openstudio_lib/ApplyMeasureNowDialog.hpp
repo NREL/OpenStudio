@@ -96,7 +96,7 @@ private slots:
 
   void showAdvancedOutput();
 
-  void requestDisplayResults();
+  void displayResults();
 
 signals:
 
@@ -109,8 +109,6 @@ private:
   void createWidgets();
 
   void runMeasure();
-
-  void displayResults();
 
   void searchForExistingResults(const openstudio::path &t_runDir);
 

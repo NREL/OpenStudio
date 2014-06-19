@@ -184,7 +184,7 @@ void ApplyMeasureNowDialog::createWidgets()
   isConnected = connect(m_showAdvancedOutput,SIGNAL(clicked(bool)),this,SLOT(showAdvancedOutput()));
   OS_ASSERT(isConnected);
 
-  layout->addStretch();
+  //layout->addStretch();
 
   QHBoxLayout * hLayout = new QHBoxLayout();
   hLayout->addWidget(m_showAdvancedOutput);
@@ -395,6 +395,8 @@ void ApplyMeasureNowDialog::runMeasure()
   std::vector<runmanager::Job> jobs = rm.getJobs();
   OS_ASSERT(jobs.size() == 1);
   rm.waitForFinished ();
+
+  QTimer::singleShot(0, this, SLOT(displayResults()));
 }
 
 void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
@@ -405,14 +407,7 @@ void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager:
       this->okButton()->setDisabled(true);
     }
     this->backButton()->setEnabled(true);
-
-    QTimer::singleShot(0, this, SLOT(requestDisplayResults()));
   }
-}
-
-void ApplyMeasureNowDialog::requestDisplayResults()
-{
-  displayResults();
 }
 
 void ApplyMeasureNowDialog::displayResults()
@@ -455,6 +450,7 @@ void ApplyMeasureNowDialog::displayResults()
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
       m_advancedOutput = toQString(stdMessage);
+      m_advancedOutput += QString("\n");
     }catch(std::exception&){
     }
   //}
@@ -764,7 +760,8 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
 
-  removeWorkingDir();
+  // DLM: m_job->requestStop() might still be working, don't try to delete this here
+  //removeWorkingDir();
 
   OSDialog::on_cancelButton(checked);
 }
@@ -812,7 +809,8 @@ void ApplyMeasureNowDialog::requestReload()
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 {
-  removeWorkingDir();
+  //DLM: don't do this here in case we are going to load the model
+  //removeWorkingDir();
 
   e->accept();
 }

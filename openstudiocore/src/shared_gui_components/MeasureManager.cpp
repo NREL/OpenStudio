@@ -393,8 +393,14 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
     }
 
     if (m_patApplicationMeasures.find(itr->uuid()) != m_patApplicationMeasures.end()){
-      // do not attempt to update built in measures
+      // do not attempt to update built in measures with different version in bcl
       LOG(Warn, "Skipping update of built in measure");
+      continue;
+    }
+
+    if (m_myMeasures.find(itr->uuid()) != m_myMeasures.end()){
+      // do not attempt to update user measures with different version in bcl
+      LOG(Warn, "Skipping update of user measure");
       continue;
     }
 
