@@ -212,11 +212,8 @@ namespace detail {
   {
     directoryChanged(openstudio::toQString(m_outdir));
 
-    {
-      QMutexLocker l(&m_mutex);
-      m_fileCheckTimer.start(2000); // check for updated files every 2 seconds.
-      connect(&m_fileCheckTimer, SIGNAL(timeout()), this, SLOT(directoryChanged()));
-    }
+    m_fileCheckTimer.start(2000); // check for updated files every 2 seconds.
+    connect(&m_fileCheckTimer, SIGNAL(timeout()), this, SLOT(directoryChanged()));
 
 
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Starting));
@@ -375,10 +372,7 @@ namespace detail {
 
     std::for_each(diff.begin(), diff.end(), boost::bind(&LocalProcess::emitUpdatedFileInfo, this, _1));
 
-    {
-      QMutexLocker l(&m_mutex);
-      m_process.checkProcessStatus();
-    }
+    m_process.checkProcessStatus();
   }
 
 
@@ -476,10 +470,7 @@ namespace detail {
 
   void LocalProcess::processZombied(QProcess::ProcessError /*t_e*/)
   {
-    {
-      QMutexLocker l(&m_mutex);
-      m_fileCheckTimer.stop();
-    }
+    m_fileCheckTimer.stop();
 
     LOG(Info, "Process appears to be zombied"); 
 
@@ -496,10 +487,6 @@ namespace detail {
 
   void LocalProcess::processError(QProcess::ProcessError t_e)
   {
-    QProcess::ProcessState state;
-
-    {
-      QMutexLocker l(&m_mutex);
 
       m_fileCheckTimer.stop();
       QFileInfo qfi(toQString(m_tool.localBinPath));
@@ -513,8 +500,7 @@ namespace detail {
           << " outdirexists: " << outdirfi.isFile()
           << " outdirisdirectory: " << outdirfi.isDir());
 
-      state = m_process.state();
-    }
+    QProcess::ProcessState state = m_process.state();
 
     if (state != QProcess::Running
         && t_e == QProcess::WriteError)
@@ -544,18 +530,13 @@ namespace detail {
 
   void LocalProcess::processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus)
   {
-    {
-      QMutexLocker l(&m_mutex);
-
-      m_fileCheckTimer.stop();
-    }
+    m_fileCheckTimer.stop();
 
     directoryChanged(openstudio::toQString(m_outdir));
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Finishing));
 
     if (!stopped())
     {
-      QMutexLocker l(&m_mutex);
       handleOutput(m_process.readAllStandardOutput(), false);
       handleOutput(m_process.readAllStandardError(), true);
     }
@@ -573,7 +554,6 @@ namespace detail {
 
     if (!stopped())
     {
-      QMutexLocker l(&m_mutex);
       handleOutput(m_process.readAllStandardError(), true);
     }
   }
@@ -583,7 +563,6 @@ namespace detail {
     directoryChanged(openstudio::toQString(m_outdir));
     if (!stopped())
     {
-      QMutexLocker l(&m_mutex);
       handleOutput(m_process.readAllStandardOutput(), false);
     }
   }
@@ -597,7 +576,6 @@ namespace detail {
 
     // If there is stdin to write and the process has not already finished by the time we process
     // this signal...
-    QMutexLocker l(&m_mutex);
     if (!m_stdin.empty() && m_process.state() != QProcess::Running)
     {
       // write the stdin
@@ -607,7 +585,6 @@ namespace detail {
 
   bool LocalProcess::running() const
   {
-    QMutexLocker l(&m_mutex);
     return m_process.state() == QProcess::Running
       || m_process.state() == QProcess::Starting;
   }
