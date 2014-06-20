@@ -118,7 +118,7 @@ class OpenStudioApp : public OSAppBase
 
   void showAbout();
 
-  virtual void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
+  virtual void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs);
 
   void revertToSaved();
 
@@ -141,7 +141,7 @@ class OpenStudioApp : public OSAppBase
 
   void import(fileType type);
 
-  bool openFile(const QString& fileName);
+  bool openFile(const QString& fileName, bool restoreTabs = false);
 
   void buildCompLibraries();
 

@@ -50,6 +50,8 @@ class VerticalTabWidget : public QWidget
 
   int verticalTabIndex();
 
+  QWidget* verticalTabWidgetByIndex(int index);
+
   signals:
 
   void tabSelected(int id);

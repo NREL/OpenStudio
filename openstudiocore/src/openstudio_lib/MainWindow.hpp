@@ -30,6 +30,8 @@ namespace openstudio {
 
 class HorizontalTabWidget;
 
+class MainTabView;
+
 class VerticalTabWidget;
 
 class MainWindow : public QMainWindow
@@ -58,6 +60,8 @@ class MainWindow : public QMainWindow
   void selectVerticalTab(int id);
 
   void selectVerticalTabByIndex(int index);
+
+  MainTabView* verticalTabByIndex(int index);
 
   int verticalTabIndex();
 
