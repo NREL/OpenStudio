@@ -22,8 +22,6 @@
 
 #include <QMainWindow>
 
-#include <boost/shared_ptr.hpp>
-
 class QStackedWidget;
 
 class QSplitter;
@@ -63,7 +61,7 @@ class MainWindow : public QMainWindow
 
   void selectVerticalTabByIndex(int index);
 
-  boost::shared_ptr<MainTabView> verticalTabByIndex(int index);
+  MainTabView* verticalTabByIndex(int index);
 
   int verticalTabIndex();
 

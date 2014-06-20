@@ -242,7 +242,7 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   //*************************************************************************************
 }
 
-bool OpenStudioApp::openFile(const QString& fileName)
+bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
 {
   if(fileName.length() > 0)
   { 
@@ -257,7 +257,15 @@ bool OpenStudioApp::openFile(const QString& fileName)
       bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
       this->setQuitOnLastWindowClosed(false);
 
+      int startTabIndex = 0;
+      int startSubTabIndex = 0;
       if( m_osDocument ){
+        
+        if (restoreTabs){
+          startTabIndex = m_osDocument->verticalTabIndex();
+          startSubTabIndex = m_osDocument->subTabIndex();
+        }
+
         if( !closeDocument() ) { 
           this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
           return false;
@@ -272,7 +280,10 @@ bool OpenStudioApp::openFile(const QString& fileName)
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model, 
-                                                                   fileName) );
+                                                                   fileName, 
+                                                                   false, 
+                                                                   startTabIndex, 
+                                                                   startSubTabIndex) );
 
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -798,7 +809,7 @@ void  OpenStudioApp::showAbout()
   about.exec();
 }
 
-void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int startTabIndex)
+void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs)
 {
   OS_ASSERT(m_osDocument);
 
@@ -811,23 +822,17 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int sta
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
     this->setQuitOnLastWindowClosed(false);
     
-    m_osDocument->setModel(*model, modified);
+    m_osDocument->setModel(*model, modified, saveCurrentTabs);
 
     versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
 
     this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
 
   }else{
-    // todo: show error message
+    QMessageBox::warning (m_osDocument->mainWindow(), QString("Failed to load model"), QString("Failed to load model"));
   }
 
   processEvents();
-
-  OS_ASSERT(startTabIndex >= 0);
-  OS_ASSERT(startTabIndex <= OSDocument::RESULTS_SUMMARY);
-  if(startTabIndex){
-    m_osDocument->showTab(startTabIndex); // TODO whoa!  is this really needed?
-  }
 }
 
 openstudio::path OpenStudioApp::resourcesPath() const
@@ -962,7 +967,7 @@ void OpenStudioApp::revertToSaved()
     // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
     this->currentDocument()->markAsUnmodified();
 
-    openFile(fileName);
+    openFile(fileName, true);
   }
 
 }

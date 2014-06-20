@@ -96,7 +96,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
               openstudio::model::Model hvacLibrary,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
-              QString filePath = QString(), bool isPlugin = false);
+              QString filePath = QString(), 
+              bool isPlugin = false, 
+              int startTabIndex = 0, 
+              int startSubTabIndex = 0);
 
   virtual ~OSDocument();
 
@@ -108,7 +111,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Sets the model associated with this document.
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
-  void setModel(const model::Model& model, bool modified);
+  void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
   // Returns the RunManager for this document.
   runmanager::RunManager runManager();
@@ -284,15 +287,11 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
-  void showFirstTab();
+  //void showFirstTab();
 
   void showStartTabAndStartSubTab();
 
-  void showStartTab();
-
-  void showStartSubTab();
-
-  void showTab(int tabIndex);
+  //void showTab(int tabIndex);
  
   void initializeModel();
 

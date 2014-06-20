@@ -161,8 +161,7 @@ void MainTabView::select()
        ++it ){
     if( *it == button ){
       break;
-    }
-    else{
+    } else {
       index++;
     }
   } 
@@ -248,11 +247,11 @@ void MainTabView::resizeEvent( QResizeEvent * event )
   m_mainWidget->resize(newSize);
 }
 
-int MainTabView::currentId() const
+int MainTabView::subTabId() const
 {
   if( m_hasSubTab )
   {
-    return m_ids[m_stackedWidget->currentIndex()];
+    return m_ids[subTabIndex()];
   }
   else
   {
@@ -260,22 +259,20 @@ int MainTabView::currentId() const
   }
 }
 
-int MainTabView::currentIndex() const
+int MainTabView::subTabIndex() const
 {
   return m_stackedWidget->currentIndex();
 }
 
-bool MainTabView::setCurrentSubTab(int index)
+bool MainTabView::selectSubTabByIndex(int index)
 {
   if(m_hasSubTab){
-    if(index >= m_stackedWidget->count()){
+    if(index < 0 || index >= m_stackedWidget->count()){
       return false;
     } else {
       setCurrentIndex(index);
       return true;
     }
-  } else {
-    return false;
   }
   return false;
 }

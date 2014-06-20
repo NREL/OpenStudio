@@ -234,9 +234,9 @@ void MainWindow::selectVerticalTabByIndex(int index)
   m_verticalTabWidget->setCurrentIndex(index);
 }
 
-boost::shared_ptr<MainTabView> MainWindow::verticalTabByIndex(int index)
+MainTabView* MainWindow::verticalTabByIndex(int index)
 {
-  boost::shared_ptr<MainTabView> mainTabView = boost::shared_ptr<MainTabView>( qobject_cast<MainTabView *>(m_verticalTabWidget->pageStack()->widget(index)) );
+  MainTabView* mainTabView = qobject_cast<MainTabView *>(m_verticalTabWidget->verticalTabWidgetByIndex(index));
   return mainTabView;
 }
 

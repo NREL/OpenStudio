@@ -50,7 +50,7 @@ class VerticalTabWidget : public QWidget
 
   int verticalTabIndex();
 
-  QStackedWidget * pageStack() { return m_pageStack; } 
+  QWidget* verticalTabWidgetByIndex(int index);
 
   signals:
 
