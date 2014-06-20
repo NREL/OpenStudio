@@ -106,6 +106,10 @@ class MeasureManager : public QObject
     // Measures saved in the user's home directory.
     std::vector<BCLMeasure> myMeasures() const;
 
+    // Get combined list of measures without duplicates, uses same logic as getMeasure
+    // If includePatApplicationMeasures is false then pat application measures will not be included, otherwise they will be.
+    std::vector<BCLMeasure> combinedMeasures(bool includePatApplicationMeasures=true) const;
+
     // Retrieve a measure from patApplicationMeasures, myMeasures, and bclMeasures by id.
     boost::optional<BCLMeasure> getMeasure(const UUID & id);
 

@@ -79,7 +79,7 @@ void WaitDialog::createWidgets()
   // BUTTONS
 
   this->okButton()->hide();
-  this->m_cancelButton->setDefault(true);
+  this->m_cancelButton->hide();
 
   // OS SETTINGS
 
@@ -100,7 +100,9 @@ void WaitDialog::on_cancelButton(bool checked)
 
 void WaitDialog::closeEvent(QCloseEvent *e)
 {
-  e->accept(); // TODO
+  // DLM: do not accept the event, we don't allow this dialog to close
+  // would be better to set window flags to not have the close button
+  e->ignore();
 }
 
 } // openstudio

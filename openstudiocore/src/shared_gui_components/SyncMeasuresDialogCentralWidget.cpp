@@ -98,7 +98,7 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 
   //*******************************************************************
 
-  QPushButton * lowerPushButton = new QPushButton("Update");
+  lowerPushButton = new QPushButton("Update");
   isConnected = connect(lowerPushButton, SIGNAL(clicked()), this, SLOT(lowerPushButtonClicked()));
   OS_ASSERT(isConnected);
 
@@ -209,11 +209,13 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
     ++index;
   }
 
-  if(newMeasures.empty()) return;
+  if(!newMeasures.empty()){
+    bool showMessage = true;
+    m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
+  }
 
-  bool showMessage = true;
+  emit closeDlg();
 
-  m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
 }
 
 void SyncMeasuresDialogCentralWidget::on_getComponentsByPage(int pageIdx)

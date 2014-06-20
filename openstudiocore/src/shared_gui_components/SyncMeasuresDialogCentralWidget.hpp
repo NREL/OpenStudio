@@ -24,6 +24,8 @@
 
 #include <utilities/bcl/BCLMeasure.hpp>
 
+class QPushButton;
+
 namespace openstudio {
 
 class BCLComponent;
@@ -51,6 +53,7 @@ public:
 
   Component * checkedComponent() const;
   void setMeasures(const std::vector<BCLMeasure> & measures);
+  QPushButton * lowerPushButton;
 
 protected:
 
@@ -70,6 +73,7 @@ signals:
   void componentClicked(bool checked);
   void getComponentsByPage(int pageNum);
   void noComponents();
+  void closeDlg();
 
 private slots:
   void upperPushButtonClicked();

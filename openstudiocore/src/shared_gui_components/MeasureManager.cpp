@@ -393,8 +393,14 @@ void MeasureManager::updateBCLMeasures(analysisdriver::SimpleProject &t_project)
     }
 
     if (m_patApplicationMeasures.find(itr->uuid()) != m_patApplicationMeasures.end()){
-      // do not attempt to update built in measures
+      // do not attempt to update built in measures with different version in bcl
       LOG(Warn, "Skipping update of built in measure");
+      continue;
+    }
+
+    if (m_myMeasures.find(itr->uuid()) != m_myMeasures.end()){
+      // do not attempt to update user measures with different version in bcl
+      LOG(Warn, "Skipping update of user measure");
       continue;
     }
 
@@ -663,6 +669,46 @@ bool MeasureManager::isMeasureSelected()
 QSharedPointer<ruleset::RubyUserScriptArgumentGetter> MeasureManager::argumentGetter() const
 {
   return m_argumentGetter;
+}
+
+std::vector<BCLMeasure> MeasureManager::combinedMeasures(bool includePatApplicationMeasures) const
+{
+  std::vector<BCLMeasure> result;
+  std::set<UUID> resultUUIDs;
+  
+  if (includePatApplicationMeasures){
+    // insert pat application measures
+    for (std::map<UUID,BCLMeasure>::const_iterator it = m_patApplicationMeasures.begin(), itend = m_patApplicationMeasures.end(); it != itend; ++it){
+      if (resultUUIDs.find(it->first) == resultUUIDs.end()){
+        resultUUIDs.insert(it->first);
+        result.push_back(it->second);
+      }else{
+        LOG(Error, "UUID of built in measure at '" << it->second.directory() << "' conflicts with other measure, other measure will be used instead");
+      }
+    }
+  }
+
+  // insert my measures
+  for (std::map<UUID,BCLMeasure>::const_iterator it = m_myMeasures.begin(), itend = m_myMeasures.end(); it != itend; ++it){
+    if (resultUUIDs.find(it->first) == resultUUIDs.end()){
+      resultUUIDs.insert(it->first);
+      result.push_back(it->second);
+    }else{
+      LOG(Error, "UUID of user measure at '" << it->second.directory() << "' conflicts with other measure, other measure will be used instead");
+    }
+  }
+
+   // insert bcl measures
+  for (std::map<UUID,BCLMeasure>::const_iterator it = m_bclMeasures.begin(), itend = m_bclMeasures.end(); it != itend; ++it){
+    if (resultUUIDs.find(it->first) == resultUUIDs.end()){
+      resultUUIDs.insert(it->first);
+      result.push_back(it->second);
+    }else{
+      LOG(Error, "UUID of user measure at '" << it->second.directory() << "' conflicts with other measure, other measure will be used instead");
+    }
+  }
+
+  return result;
 }
 
 boost::optional<BCLMeasure> MeasureManager::getMeasure(const UUID & id)

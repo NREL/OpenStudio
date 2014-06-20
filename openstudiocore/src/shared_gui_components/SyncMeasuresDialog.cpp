@@ -74,6 +74,9 @@ void SyncMeasuresDialog::createLayout()
   isConnected = connect(m_centralWidget, SIGNAL(noComponents()), this, SLOT(on_noComponents()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(m_centralWidget, SIGNAL(closeDlg()), this, SLOT(closeDlg()));
+  OS_ASSERT(isConnected);
+
   QScrollArea * centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);
   centralScrollArea->setObjectName("GrayWidget");
@@ -96,19 +99,18 @@ void SyncMeasuresDialog::createLayout()
   mainLayout->addWidget(splitter);
 
   setLayout(mainLayout);
+
+  m_centralWidget->lowerPushButton->setFocus();
+
 }
 
 void SyncMeasuresDialog::findUpdates()
 {
-  std::vector<BCLMeasure> measures;
+  // DLM: measure manager will filter out duplicate measures for us
+  m_measureManager->updateMeasuresLists();
+  std::vector<BCLMeasure> measures = m_measureManager->combinedMeasures();
 
-  std::vector<BCLMeasure> localBCLMeasures = BCLMeasure::localBCLMeasures();
-
-  std::vector<BCLMeasure> userMeasures = BCLMeasure::userMeasures();
-
-  measures = localBCLMeasures;
-
-  measures.insert(measures.end(), userMeasures.begin(),userMeasures.end());
+  // DLM: should we sort these in any way?
 
   m_measuresNeedingUpdates.clear();
 
@@ -130,6 +132,9 @@ void SyncMeasuresDialog::findUpdates()
       }
     }
   }
+
+  // DLM: if m_measuresNeedingUpdates is empty should we do something else?  
+  // just say "No updates available and quit"
 
   m_centralWidget->setMeasures(m_measuresNeedingUpdates);
 
@@ -161,6 +166,11 @@ void SyncMeasuresDialog::on_noComponents()
   m_expandedComponent = new Component();
   m_expandedComponent->setCheckable(false);
   m_rightScrollArea->setWidget(m_expandedComponent);
+}
+
+void SyncMeasuresDialog::closeDlg()
+{
+  QDialog::close();
 }
 
 } // namespace openstudio
