@@ -61,10 +61,17 @@ namespace openstudio {
 
       size_t stringSize = static_cast<size_t>(readSize);
       std::string str(buffer, stringSize);
-      str.erase( std::remove_if( str.begin(), str.end(), openstudio::detail::checksumIgnore ), str.end() );
-      stringSize = str.size();
+
+      std::string strCopy;
+      strCopy.reserve( str.length() );
+
+      std::remove_copy_if( str.begin(),
+                           str.end(),
+                           std::back_inserter( strCopy ),
+                           openstudio::detail::checksumIgnore );
+      stringSize = strCopy.size();
       
-      crc.process_bytes(str.c_str(), stringSize);
+      crc.process_bytes(strCopy.c_str(), stringSize);
     } while ( is );
     
     std::stringstream ss;
