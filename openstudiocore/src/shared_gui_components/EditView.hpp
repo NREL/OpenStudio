@@ -40,7 +40,7 @@ class EditNullView : public QWidget
 
   public:
 
-  EditNullView();
+  EditNullView(const QString & text = "Select a Measure to Edit");
   virtual ~EditNullView() {}
 
   protected:
@@ -54,7 +54,7 @@ class EditRubyMeasureView : public QWidget
 
   public:
 
-  EditRubyMeasureView();
+  EditRubyMeasureView(bool applyMeasureNow);
   virtual ~EditRubyMeasureView() {}
 
   QLineEdit * nameLineEdit;

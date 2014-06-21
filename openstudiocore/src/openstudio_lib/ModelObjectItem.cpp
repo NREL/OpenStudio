@@ -19,6 +19,10 @@
 
 #include <openstudio_lib/ModelObjectItem.hpp>
 
+#include <openstudio_lib/OSItem.hpp>
+
+#include <shared_gui_components/MeasureBadge.hpp>
+
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject_Impl.hpp>
 #include <model/ComponentData.hpp>
@@ -47,7 +51,7 @@ QString modelToSourceId(const openstudio::model::Model& model)
 
 ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObject,
                                  bool isDefaulted,
-                                 OSItem::Type type,
+                                 OSItemType type,
                                  QWidget * parent )
   : OSItem(modelObjectToItemId(modelObject, isDefaulted), type, parent),
     m_handle(modelObject.handle()),
@@ -62,7 +66,7 @@ ModelObjectItem::ModelObjectItem(const openstudio::model::ModelObject& modelObje
   OS_ASSERT(isConnected);
 
   if (!modelObject.getModelObjectSources<model::ComponentData>().empty()){
-    m_bclBadge->setVisible(true);
+    m_measureBadge->setMeasureBadgeType(MeasureBadgeType::BCLMeasure);
   }
 }
 

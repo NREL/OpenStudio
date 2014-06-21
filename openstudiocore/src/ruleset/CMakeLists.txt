@@ -3,31 +3,30 @@ SET( target_name openstudio_ruleset )
 INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR}/ )
 
 SET( ${target_name}_src
-  RulesetAPI.hpp
   mainpage.hpp
-
-  OSArgument.hpp
-  OSArgument.cpp
-  OSResult.hpp
-  OSResult.cpp
-  OSRunner.hpp
-  OSRunner.cpp
-
-  UserScript.hpp
-  UserScript.cpp
-  ModelUserScript.hpp
   ModelUserScript.cpp
-  WorkspaceUserScript.hpp
-  WorkspaceUserScript.cpp
-  ReportingUserScript.hpp
+  ModelUserScript.hpp
+  OSArgument.cpp
+  OSArgument.hpp
+  OSResult.cpp
+  OSResult.hpp
+  OSRunner.cpp
+  OSRunner.hpp
   ReportingUserScript.cpp
-  TranslationUserScript.hpp
-  TranslationUserScript.cpp
-  UtilityUserScript.hpp
-  UtilityUserScript.cpp
-  RubyUserScriptArgumentGetter.hpp
-  RubyUserScriptArgumentGetter_Impl.hpp
+  ReportingUserScript.hpp
   RubyUserScriptArgumentGetter.cpp
+  RubyUserScriptArgumentGetter.hpp
+  RulesetAPI.hpp
+  TranslationUserScript.cpp
+  TranslationUserScript.hpp
+  UserScript.cpp
+  UserScript.hpp
+  UtilityUserScript.cpp
+  UtilityUserScript.hpp
+  WorkspaceUserScript.cpp
+  WorkspaceUserScript.hpp
+  RubyUserScriptArgumentGetter.cpp
+  EmbeddedRubyUserScriptArgumentGetter.hpp
 )
 
 SET( ${target_name}_test_src

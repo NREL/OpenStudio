@@ -49,7 +49,7 @@ LoadsView::LoadsView(bool isIP, const openstudio::model::Model& model, QWidget *
                      : ModelSubTabView(new ModelObjectTypeListView(LoadsView::modelObjectTypesAndNames(), 
                                                                    model, 
                                                                    true, 
-                                                                   OSItem::COLLAPSIBLE_LIST_HEADER, 
+                                                                   OSItemType::CollapsibleListHeader, 
                                                                    parent),
                                        new LoadsInspectorView(isIP, model,parent),
                                        parent)

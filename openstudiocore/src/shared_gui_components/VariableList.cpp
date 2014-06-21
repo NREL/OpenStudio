@@ -56,7 +56,7 @@
 #include <QRadioButton>
 
 #include <boost/bind.hpp>
-
+#include <boost/foreach.hpp>
 
 namespace openstudio{
 
@@ -175,12 +175,10 @@ VariableListController::VariableListController(MeasureType measureType, bool fil
 {
 }
 
-
 MeasureType VariableListController::measureType() const
 {
   return m_measureType;
 }
-
 
 QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 {
@@ -337,8 +335,6 @@ void VariableListController::addFixedItemForDroppedMeasure(QDropEvent *event)
   addItemForDroppedMeasureImpl(event, true);
 }
 
-
-
 void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed)
 {
   if( boost::optional<analysisdriver::SimpleProject> project = m_app->project() )
@@ -357,6 +353,14 @@ void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bo
 
     // accept the event to make the icon refresh
     event->accept();
+
+    // don't allow user to drag standard reports or other built in measures 
+    if (m_app->measureManager().isPatApplicationMeasure(id)){
+      QMessageBox::warning( m_app->mainWidget(), 
+          "Cannot add measure", 
+          "This measure conflicts with a built in measure and cannot be added. Create a duplicate of this measure to add to this project.");
+      return;
+    }
 
     // check if we have data points other than the baseline
     if (project->analysis().dataPoints().size() > 1){
@@ -573,6 +577,18 @@ void VariableItem::remove()
           QMessageBox::No );
       if (test == QMessageBox::No){
         return;
+      }
+    }
+  }
+
+  // if any of this variable's measures are being edited, clear the edit controller
+  MeasureItem* measureItem = m_app->editController()->measureItem();
+  if (measureItem){
+    analysis::RubyMeasure rubyMeasure = measureItem->measure();
+    BOOST_FOREACH(const analysis::Measure& measure, m_variable.measures(false)){
+      if (measure == rubyMeasure){
+        m_app->editController()->reset();
+        break;
       }
     }
   }
@@ -827,6 +843,7 @@ MeasureItem::MeasureItem(const analysis::RubyMeasure & measure, openstudio::Base
     m_app(t_app),
     m_measure(measure)
 {
+  OS_ASSERT(m_measure.usesBCLMeasure());
 }
 
 analysis::RubyMeasure MeasureItem::measure() const
@@ -855,20 +872,29 @@ QString MeasureItem::description() const
 
 QString MeasureItem::modelerDescription() const
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
+  QString result;
 
-  return QString::fromStdString(m_measure.measure()->modelerDescription());
+  boost::optional<BCLMeasure> bclMeasure = m_measure.bclMeasure();
+  if (bclMeasure){
+    result = QString::fromStdString(bclMeasure->modelerDescription());
+  }else{
+    LOG(Error, "Cannot load BCLMeasure '" << toString(m_measure.bclMeasureUUID()) << "' from '" << toString(m_measure.bclMeasureDirectory()) << "'");
+  }
+  return result; 
 }
 
 QString MeasureItem::scriptFileName() const
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
-
   QString scriptName;
 
-  if( boost::optional<openstudio::path> path = m_measure.measure()->primaryRubyScriptPath() )
-  {
-    scriptName = toQString(path->leaf());
+  boost::optional<BCLMeasure> bclMeasure = m_measure.bclMeasure();
+  if (bclMeasure){
+    if( boost::optional<openstudio::path> path = m_measure.measure()->primaryRubyScriptPath() )
+    {
+      scriptName = toQString(path->leaf());
+    }
+  }else{
+    LOG(Error, "Cannot load BCLMeasure '" << toString(m_measure.bclMeasureUUID()) << "' from '" << toString(m_measure.bclMeasureDirectory()) << "'");
   }
 
   return scriptName;
@@ -876,8 +902,6 @@ QString MeasureItem::scriptFileName() const
 
 void MeasureItem::setDescription(const QString & description)
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
-
   // ETH: Was setting description on the measure itself (m_measure.measure()), however, this
   // description should be attached to the instantiated measure, not the global measure.
   m_measure.setDescription(description.toStdString());
@@ -943,7 +967,10 @@ void MeasureItem::remove()
     }
   }
 
-  m_app->editController()->reset();
+  // if this measure is being edited, clear the edit controller
+  if (m_app->editController()->measureItem() == this){
+    m_app->editController()->reset();
+  }
 
   qobject_cast<MeasureListController *>(controller())->removeItemForMeasure(m_measure);
 }
@@ -970,6 +997,8 @@ void MeasureItem::setSelected(bool isSelected)
       m_app->editController()->reset();
     }
   }
+
+  //TODO
 }
 
 QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)

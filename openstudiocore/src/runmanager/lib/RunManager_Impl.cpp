@@ -218,6 +218,17 @@ namespace detail {
         m_configOptions = boost::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
       }
 
+      void fixupData()
+      {
+        QMutexLocker l(&m_mutex);
+
+        // delete multiplied out job errors from previous runs of EnergyPlus
+        if (litesql::select<RunManagerDB::JobErrors>(m_db).count() > 0)
+        {
+          m_db.query("delete from joberrors_ where  value_ Glob \"*total times*\" and id_ not in (select min(id_) from joberrors_  where value_ Glob  \"*total times*\" group by type_, jobUuid_, errorType_, value_) ; commit; vacuum; begin;");
+        }
+      }
+
       void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
       {
         QMutexLocker l(&m_mutex);
@@ -960,7 +971,9 @@ namespace detail {
              itr != t_params.end();
              ++itr)
         {
-          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(itr->value)));
+          JobParam param(itr->value);
+          param.value = fixupPath(param.value);
+          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(param)));
         }
 
         std::map<openstudio::UUID, JobParams> retval;
@@ -1206,6 +1219,79 @@ namespace detail {
         }
       }
 
+      static std::string fixupPath(const std::string &t_path)
+      {
+        return openstudio::toString(fixupPath(openstudio::toPath(t_path)));
+      }
+
+      static openstudio::path fixupPath(const openstudio::path &t_path)
+      {
+        openstudio::path modified = fixupPathImpl(t_path);
+        if (modified != t_path)
+        {
+          LOG(Debug, "Fixed up path from: " << openstudio::toString(t_path) << " to " << openstudio::toString(modified));
+        }
+        return modified;
+      }
+
+      static openstudio::path fixupPathImpl(const openstudio::path &t_path)
+      {
+        // only attempt this for things that look like ruby scripts
+        if (t_path.extension() == openstudio::toPath(".rb"))
+        {
+          /// \todo delete this block. Testing fixing up paths regardless
+          /// of if they exist or not.
+          /*
+          try {
+            if (boost::filesystem::exists(t_path)) {
+              return t_path;
+            }
+          } catch (const std::exception &) {
+            // keep moving
+          }*/
+
+         
+
+          openstudio::path head = t_path;
+          openstudio::path tail;
+
+          while (head.has_parent_path())
+          {
+            // LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
+
+            if (!tail.empty())
+            {
+              tail = head.filename() / tail;
+            } else {
+              tail = head.filename();
+            }
+
+            head = head.parent_path();
+
+            if (*tail.begin() == openstudio::toPath("openstudio")
+                && (head.filename() == openstudio::toPath("ruby")
+                  || head.filename() == openstudio::toPath("Ruby")))
+            {
+              try {
+                openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
+                // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+                if (boost::filesystem::exists(potentialNewPath))
+                {
+                  return potentialNewPath;
+                }
+              } catch (const std::exception &) {
+                // couldn't check if path exists, so returning original
+                return t_path;
+              }
+            }
+
+          }
+        }
+
+        // all other options failed, return original 
+        return t_path;
+      }
+
       template<typename JobFileType, typename RequiredFileType>
       static std::map<openstudio::UUID, Files> loadJobFiles(const std::vector<JobFileType> &t_files, const std::vector<RequiredFileType> &t_requiredFiles)
       {
@@ -1225,6 +1311,7 @@ namespace detail {
              ++itr)
         {
           openstudio::path fullpath = itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath);
+          fullpath = fixupPath(fullpath);
 
           DateTime dt;
           if (!fullpath.empty() && boost::filesystem::exists(fullpath))
@@ -1237,7 +1324,7 @@ namespace detail {
               itr->fileName,
               dt,
               itr->key,
-              itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath)
+              fullpath
               );
 
           const std::list<std::pair<QUrl, openstudio::path> > &theseRequiredFiles = requiredFiles[itr->id];
@@ -1247,7 +1334,14 @@ namespace detail {
                ++itr2)
           {
             try {
-              f.addRequiredFile(itr2->first, itr2->second);
+              QUrl url = itr2->first;
+              if (itr2->first.scheme() == "file")
+              {
+                openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()));
+                url = QUrl::fromLocalFile(openstudio::toQString(p));
+              }
+
+              f.addRequiredFile(url, itr2->second);
             } catch (const std::runtime_error &) {
               LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->first.toString()) << "' to '" << openstudio::toString(itr2->second));
               throw;
@@ -1516,6 +1610,8 @@ namespace detail {
         SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
         SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
     }
+
+    m_dbholder->fixupData();
 
     // make sure a QApplication exists, it is required for the
     // Q-Model related code to work properly

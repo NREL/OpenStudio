@@ -13,16 +13,10 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
 
 # source files
 SET( ${target_name}_SRC
-  # TODO Deprecate these files
-  #ScriptsController.cpp
-  #ScriptsController.hpp
-  #ScriptsView.cpp
-  #ScriptsView.hpp
-
+  ApplyMeasureNowDialog.cpp
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.cpp
   BCLComponentItem.hpp
-  BuildingComponentController.cpp
-  BuildingComponentController.hpp
   BuildingInspectorView.cpp
   BuildingInspectorView.hpp
   BuildingStoriesController.cpp
@@ -395,6 +389,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/LocalLibraryView.hpp
   ../shared_gui_components/LostCloudConnectionDialog.cpp
   ../shared_gui_components/LostCloudConnectionDialog.hpp
+  ../shared_gui_components/MeasureBadge.cpp
+  ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.cpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.cpp
@@ -440,12 +436,18 @@ SET( ${target_name}_SRC
   ../shared_gui_components/PageNavigator.hpp
   ../shared_gui_components/ProcessEventsProgressBar.cpp
   ../shared_gui_components/ProcessEventsProgressBar.hpp
+  ../shared_gui_components/SyncMeasuresDialog.cpp
+  ../shared_gui_components/SyncMeasuresDialog.hpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.cpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TIDItemModel.cpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.cpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.cpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WaitDialog.cpp
+  ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/WorkflowTools.cpp
   ../shared_gui_components/WorkflowTools.hpp 
 
@@ -459,13 +461,8 @@ SET( ${target_name}_SRC
 
 # moc files
 SET( ${target_name}_moc
-
-  # TODO Deprecate these files
-  #ScriptsController.hpp
-  #ScriptsView.hpp
-
+  ApplyMeasureNowDialog.hpp
   BCLComponentItem.hpp
-  BuildingComponentController.hpp
   BuildingInspectorView.hpp
   BuildingStoriesController.hpp
   BuildingStoriesTabController.hpp
@@ -649,6 +646,7 @@ SET( ${target_name}_moc
   ../shared_gui_components/LostCloudConnectionDialog.hpp
   ../shared_gui_components/LocalLibraryController.hpp
   ../shared_gui_components/LocalLibraryView.hpp
+  ../shared_gui_components/MeasureBadge.hpp
   ../shared_gui_components/MeasureDragData.hpp
   ../shared_gui_components/MeasureManager.hpp
   ../shared_gui_components/OSCheckBox.hpp
@@ -669,9 +667,12 @@ SET( ${target_name}_moc
   ../shared_gui_components/OSUnsignedEdit.hpp
   ../shared_gui_components/OSViewSwitcher.hpp
   ../shared_gui_components/PageNavigator.hpp
+  ../shared_gui_components/SyncMeasuresDialog.hpp
+  ../shared_gui_components/SyncMeasuresDialogCentralWidget.hpp
   ../shared_gui_components/TIDItemModel.hpp
   ../shared_gui_components/VariableList.hpp
   ../shared_gui_components/VariableView.hpp
+  ../shared_gui_components/WaitDialog.hpp
   ../shared_gui_components/NetworkProxyDialog.hpp
 
 )
@@ -708,6 +709,8 @@ SET( depends
   openstudio_ruleset
   openstudio_analysis
   openstudio_analysisdriver
+  openstudio_sdd
+  openstudio_gbxml
   ${QT_LIBS}
   #${RUBY_LIBRARY}
 )

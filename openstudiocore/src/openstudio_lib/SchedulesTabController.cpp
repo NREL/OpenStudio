@@ -89,8 +89,8 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
                         m_schedulesView, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(m_scheduleSetsController.get(), SIGNAL(openBclDlgClicked()),
-                        this, SIGNAL(openBclDlgClicked()));
+  isConnected = connect(m_scheduleSetsController.get(), SIGNAL(downloadComponentsClicked()),
+                        this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(m_scheduleSetsController.get(), SIGNAL(openLibDlgClicked()),

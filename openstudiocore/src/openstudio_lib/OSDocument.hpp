@@ -21,7 +21,7 @@
 #define OPENSTUDIO_OSDOCUMENT_H
 
 #include <openstudio_lib/OpenStudioAPI.hpp>
-#include "../shared_gui_components/OSQObjectController.hpp"
+#include <shared_gui_components/OSQObjectController.hpp>
 
 #include <model/Model.hpp>
 #include <model/ModelObject.hpp>
@@ -30,7 +30,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QSharedPointer>
 
 #include <boost/smart_ptr.hpp>
 
@@ -86,6 +85,8 @@ class OSItemId;
 
 class BuildingComponentDialog;
 
+class ApplyMeasureNowDialog;
+
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
 
@@ -95,7 +96,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
               openstudio::model::Model hvacLibrary,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
-              QString filePath = QString(), bool isPlugin = false);
+              QString filePath = QString(), 
+              bool isPlugin = false, 
+              int startTabIndex = 0, 
+              int startSubTabIndex = 0);
 
   virtual ~OSDocument();
 
@@ -104,6 +108,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Returns the model associated with this document.
   model::Model model();
+
+  // Sets the model associated with this document.
+  // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
+  void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
   // Returns the RunManager for this document.
   runmanager::RunManager runManager();
@@ -160,7 +168,13 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 //  const ScriptFolderListView* scriptFolderListView() const;
 
 //  ScriptFolderListView* scriptFolderListView();
-  void openMeasuresBclDlg();
+
+  // Returns the index of the current tab.
+  int verticalTabIndex();
+
+  // Returns the index of the current sub tab.
+  // Returns -1 if there are no sub tabs.
+  int subTabIndex();
 
   enum VerticalTabID
   {
@@ -190,11 +204,16 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   boost::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
+  // DLM: would like for this to not be a member variable since it is only used as a modal dialog with a well defined lifetime
+  boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
+
  signals:
 
   void closeClicked();
 
   void importClicked();
+
+  void importgbXMLClicked();
 
   void importSDDClicked();
 
@@ -214,7 +233,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void modelSaving(const openstudio::path &t_path);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
 
@@ -224,6 +243,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void treeChanged(const openstudio::UUID &t_uuid);
 
+  void enableRevertToSaved(bool enable);
+
  public slots:
 
   void markAsModified();
@@ -232,11 +253,17 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void runComplete();
 
-  void exportIdf(); 
+  void exportIdf();
 
-  void save();
+  void exportgbXML();
 
-  void saveAs();
+  void exportSDD();
+
+  // returns if a file was saved
+  bool save();
+
+  // returns if a file was saved
+  bool saveAs();
 
   void showRunManagerPreferences();
 
@@ -248,13 +275,25 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void openBclDlg();
 
+  void openMeasuresBclDlg();
+
+  void openMeasuresDlg();
+
+  void openChangeMeasuresDirDlg();
+
  private slots:
 
   void onVerticalTabSelected(int id); 
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
-  void showFirstTab();
+  //void showFirstTab();
+
+  void showStartTabAndStartSubTab();
+
+  //void showTab(int tabIndex);
+ 
+  void initializeModel();
 
   void toggleUnits(bool displayIP);
 
@@ -264,7 +303,19 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void on_closeMeasuresBclDlg();
 
+  void changeBclLogin();
+
+  void updateWindowFilePath();
+
  private:
+
+  enum fileType{
+    SDD,
+    GBXML
+  };
+
+  void exportFile(fileType type);
+
   friend class OpenStudioApp;
 
   REGISTER_LOGGER("openstudio.OSDocument");
@@ -340,6 +391,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   int m_mainTabId;
   int m_subTabId;
   bool m_isPlugin;
+
+  int m_startTabIndex;
+  int m_startSubTabIndex;
 };
 
 } // openstudio

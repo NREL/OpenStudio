@@ -780,9 +780,6 @@ IF (UNIX AND NOT APPLE)
 
 ENDIF ()
 
-# build epw2wea for supporting gendaymtx
-ADD_SUBDIRECTORY( src/epw2wea )
-
 # csharp, after loading projects
 IF(BUILD_CSHARP_BINDINGS)
   ADD_SUBDIRECTORY( csharp )
@@ -896,7 +893,6 @@ export(TARGETS
   FILE "${TARGETS_FILE}")
 
 SET(all_exe_targets
-  epw2wea
   GenerateIddFactory
   ModelEditor
   gbXMLToIdf
@@ -935,7 +931,7 @@ INSTALL(FILES "${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffi
 
 
 # Install additional Documents, such as release notes
-install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_3_0_20140328.pdf" DESTINATION . )
+install( FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_1_4_0_20140620.pdf" DESTINATION . )
 
 ###############################################################################
 

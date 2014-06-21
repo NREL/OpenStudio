@@ -114,9 +114,15 @@ namespace openstudio {
     bool result = true;
     bool test = true;
 
-    LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
-
+    QDir srcDir(srcPath);
     QDir dstDir(dstPath);
+
+    if (srcDir.canonicalPath() == dstDir.canonicalPath()){
+      LOG_FREE(Warn, "synchDirStructures", "Cannot synch destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "' because they resolve to the same location");
+      return true; // already synched
+    }
+
+    LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
 
     // remove all files in dst as well as any directories in dst that are not in src
     Q_FOREACH(const QFileInfo &dstItemInfo, dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
@@ -557,20 +563,8 @@ namespace openstudio {
         analysisdriver::AnalysisRunOptions runOptions = standardRunOptions(*p);
         std::vector<runmanager::WorkItem> workitems(prob.createWorkflow(p->baselineDataPoint(), runOptions.rubyIncludeDirectory()).toWorkItems());
 
-        // DLM: this should be passed from app level
-        openstudio::path resourcesPath;
-        if (applicationIsRunningFromBuildDirectory()){
-          resourcesPath = getApplicationSourceDirectory() / openstudio::toPath("src/openstudio_app/Resources");
-        } else {
-          resourcesPath = getApplicationRunDirectory() / openstudio::toPath("../share/openstudio-" + openStudioVersion() + "/OSApp");
-        }
-
-        // find reporting measures
-        openstudio::path standardReportsPath = resourcesPath / openstudio::toPath("measures/StandardReports/");
-        openstudio::path calibrationReportsPath = resourcesPath / openstudio::toPath("measures/CalibrationReports/");
-
-        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure(standardReportsPath);
-        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure(calibrationReportsPath);
+        openstudio::BCLMeasure standardReportsMeasure = openstudio::BCLMeasure::standardReportMeasure();
+        openstudio::BCLMeasure calibrationReportsMeasure = openstudio::BCLMeasure::calibrationReportMeasure();
 
         // DLM: always add this measure even if the user has their own copy, this is more clear
         //bool standardReportsFound = findBCLMeasureWorkItem(workitems, standardReportsMeasure.uuid());

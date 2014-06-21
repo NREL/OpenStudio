@@ -27,6 +27,20 @@
 
 namespace openstudio {
 
+  namespace detail {
+
+    bool checksumIgnore(char c) 
+    { 
+      // ignore all whitespace
+      //bool result = (c == ' ' || c == '\t' || c == '\n' ||  c == '\v'	|| c == '\f' || c == '\r');
+
+      // ignore just line feed
+      bool result = (c == '\r');
+
+      return result;
+    }
+  }
+
   /// return 8 character hex checksum of string
   std::string checksum(const std::string& s)
   {
@@ -42,7 +56,15 @@ namespace openstudio {
       const std::streamsize n = 1024;
       char  buffer[n];
       is.read(buffer, n);
-      crc.process_bytes(buffer, static_cast<size_t>(is.gcount()));
+      std::streamsize readSize = is.gcount();
+      //crc.process_bytes(buffer, readSize);
+
+      size_t stringSize = static_cast<size_t>(readSize);
+      std::string str(buffer, stringSize);
+      str.erase( std::remove_if( str.begin(), str.end(), openstudio::detail::checksumIgnore ), str.end() );
+      stringSize = str.size();
+      
+      crc.process_bytes(str.c_str(), stringSize);
     } while ( is );
     
     std::stringstream ss;

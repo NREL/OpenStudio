@@ -1,7 +1,7 @@
 <measure>
   <name>Standard Reports</name>
   <uid>fc337100-8634-404e-8966-01243d292a79</uid>
-  <version_id>155b60ed-df4d-416f-95c4-b619f6972a39</version_id>
+  <version_id>1da31602-8ce8-4d8d-8cf7-6dc4206c433b</version_id>
   <description>Change me</description>
   <modeler_description>Change me</modeler_description>
   <provenances/>
@@ -25,19 +25,19 @@
       <filename>StandardReports_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>8C62A700</checksum>
+      <checksum>F8EF9C7D</checksum>
     </file>
     <file>
       <filename>ExampleModel.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>0D4162D2</checksum>
+      <checksum>F769B601</checksum>
     </file>
     <file>
       <filename>report.html.in</filename>
       <filetype>in</filetype>
       <usage_type>resource</usage_type>
-      <checksum>093FE760</checksum>
+      <checksum>08BEC29E</checksum>
     </file>
     <file>
       <version>
@@ -47,7 +47,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>B6B97009</checksum>
+      <checksum>C9EC2947</checksum>
     </file>
   </files>
 </measure>

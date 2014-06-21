@@ -66,10 +66,10 @@ namespace detail {
     IdfObject_Impl(const IdfObject_Impl& other, bool keepHandle=false);
 
     /** Constructor from type. Equivalent to IdfObject(IddFactory::instance.iddObject(type)). */
-    explicit IdfObject_Impl(IddObjectType type);
+    explicit IdfObject_Impl(IddObjectType type, bool fastName=false);
 
     /** Constructor from iddObject. */
-    explicit IdfObject_Impl(const IddObject& iddObject);
+    explicit IdfObject_Impl(const IddObject& iddObject, bool fastName=false);
 
     /** Constructor from underlying data. Used by WorkspaceObject_Impl. */
     IdfObject_Impl(const Handle& handle,
@@ -426,7 +426,7 @@ namespace detail {
     // CONSTRUCTION HELPERS
 
     /** Minimal constructor from iddObject for use by IdfObject_Impl::load. */
-    IdfObject_Impl(const IddObject& iddObject, bool minimal);
+    IdfObject_Impl(const IddObject& iddObject, bool fastName, bool minimal);
 
     // Resizes m_fields to m_iddObject.numFieldsInDefaultObject(). Called to make sure that 
     // IdfObject satisfies Strictness::None.

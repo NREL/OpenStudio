@@ -24292,6 +24292,7 @@ Fan:OnOff,
   A5 , \field Fan Power Ratio Function of Speed Ratio Curve Name
        \type object-list
        \object-list ExponentCurves
+       \object-list CubicCurves
   A6 , \field Fan Efficiency Ratio Function of Speed Ratio Curve Name
        \type object-list
        \object-list QuadraticCubicCurves

@@ -125,7 +125,7 @@ class ParseOptions
       end
       opts.on("--x", "Use single-phase method") do |x|
         options.x = x
-        options.y = "false"
+        options.z = ""
       end
       opts.on("--z", "Use three-phase DC method") do |z|
         options.x = ""
@@ -171,7 +171,6 @@ end
 
 options = ParseOptions.parse(ARGV)
 
-
 # Read simsettings from model export 2013.01.10 RPG 
 # TODO: read settings directly from model
 options.tregVars = ""
@@ -198,7 +197,16 @@ File.open("#{outPath}/options/vmx.opt", "r") do |file|
   options.vmx = tempIO
 end
 
-
+if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
+  perlpath = ""
+  if OpenStudio::applicationIsRunningFromBuildDirectory()
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+  else
+    perlpath = OpenStudio::getApplicationRunDirectory().parent_path() / OpenStudio::Path.new("strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin")
+  end
+  puts "Adding path for local perl: " + perlpath.to_s
+  ENV["PATH"] = ENV["PATH"] + ";" + perlpath.to_s
+end
 
 if !which('perl')
   puts "Perl could not be found in path, exiting"
@@ -231,7 +239,6 @@ if options.verbose == 'v'
 
 end
 
-# utility function
 # make float.round() sorta work in ruby v1.8 like it does in v1.9, enough for our purposes
 class Numeric
   def round_to_str( decimals=0 )
@@ -288,15 +295,12 @@ def mergeSpaces(t_space_names_to_calculate, t_outPath)
         f.write IO.read("#{t_outPath}/numeric/#{space_name}.sns")
       end
 
-
       if File.exists?("#{t_outPath}/numeric/#{space_name}.glr")
         f.write IO.read("#{t_outPath}/numeric/#{space_name}.glr")
       end
     end
   end
 end
-
-
 
 def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calculate, t_radMaps, t_opts_map, t_simCores, t_catCommand)
   perlPrefix = ""
@@ -326,17 +330,16 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   File.open("#{t_outPath}/skies/dc.sky", "w") do |file|
     file << radEnvSphere
   end
-  puts "wrote sky: #{t_outPath}/skies/dc.sky"
 
   binDir = "#{t_outPath}/output/dc/merged_space/maps"
   FileUtils.mkdir_p("#{binDir}") unless File.exists?("#{binDir}")
 
   procsUsed = ""
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-    puts "rcontrib does not support multiple cores on Windows"
+    puts "Radiance does not support multiple cores on Windows"
     procsUsed = ""
   else
-    puts "rcontrib using #{t_simCores} core(s)"
+    puts "MP Radiance using #{t_simCores} core(s)"
     procsUsed = "-n #{t_simCores}"
   end
 
@@ -344,111 +347,164 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
   if t_options.x == true
     rtrace_args = "#{t_options.vmx}"
     puts "#{Time.now.getutc}: creating model_dc.oct"
-    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
+    system("oconv \"#{t_outPath}/materials/materials.rad\" model.rad \
+      \"#{t_outPath}/skies/dc.sky\" > model_dc.oct")
     puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
     system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
-#    if t_options.verbose == 'v'
-      puts "#{Time.now.getutc}: computing daylight coefficients..."
-      puts "#{Time.now.getutc}: computing daylight matrix ONLY (single phase)."
-#    end
+    puts "#{Time.now.getutc}: computing daylight coefficients..."
+    puts "#{Time.now.getutc}: computing daylight matrix ONLY (single phase)."
 
     # do map
-    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" | rcontrib #{rtrace_args} #{procsUsed} \
-      -I+ -fo #{t_options.tregVars} -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" -m skyglow model_dc.oct")
+    exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
+      | rcontrib #{rtrace_args} #{procsUsed} -I+ -fo #{t_options.tregVars} \
+      -o \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \
+      -m skyglow model_dc.oct")
+    puts "#{Time.now.getutc}: daylight coefficients computed, \
+    stored in #{t_outPath}/output/dc/merged_space/maps"
+  end # compute DC (single phase)
 
-#    if t_options.verbose == 'v'
-      puts "#{Time.now.getutc}: daylight coefficients computed, stored in #{t_outPath}/output/dc/merged_space/maps"
-#    end
+  # "three phase" method
+  if t_options.z == true
 
-    # do control point views, if requested
-    # NOTE: this needs work. RPG 2012.02.18
-    if t_options.glare == true
-      t_space_names_to_calculate.each do |space_name|
-        rtrace_args = "#{opts_img}"
-        # TODO: add support for saving views from OpenStudio and for specifying views here
-        binDir="#{t_outPath}/output/dc/#{space_name}/views"
-        Dir.mkdir("#{binDir}") unless File.exists?("#{binDir}")
+    # TODO actually generate the necessary DMX files
+    # rpg777 this is copy and pasted from the old code
+    binPairs = Array.new
+    matrixGroups = Array.new
+    aziVectorX = ""
+    aziVectorY = ""
+    puts "Warning: using unsupported 3-phase method"
+    #puts "Using 3-phase method"
+    system("oconv #{t_outPath}/materials/materials.rad #{t_outPath}/materials/materials_vmx.rad model.rad #{t_outPath}/skies/dc.sky > #{t_outPath}/octrees/model_dc.oct")
+    #read DC materials file
+    windowMaps = File::open("#{t_outPath}/bsdf/mapping.rad")
+    # get materials, compute vectors
+    # plan (2D) only for now
+      #t_space_names_to_calculate.each do |space_name|
+      windowMaps.each do |row|
+          #row[0..-1].each do |azi|
+          matchVmx = /glaz_(.*?)_azi-(.*?)_tn-(.*).vmx/.match(row)
+          space_name = matchVmx[1]
+          # DLM: aziVector is not actually a vector right?  just the angle in radians?
+          aziVector = matchVmx[2]
+          glazingTransmissivity = matchVmx[3]
+          aziAngle = aziVector.to_f * (180 / Math::PI)
+          # swap sin and cos so we get vectors that align with compass headings (which makes sense to this idiot -->(RPG).)
+          aziVectorX = Math::sin(aziVector.to_f)
+          aziVectorY = Math::cos(aziVector.to_f)
+          viewVectorX = -aziVectorX
+          viewVectorY = -aziVectorY
+          # sanity checks
+          puts "window azimuth: #{aziAngle}"
+          puts "daylight vector (window to sky): #{aziVectorX.round_to_str(2)},#{aziVectorY.round_to_str(2)},0.00"
+          puts "view vector (window to interior): #{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0.00"
+          binPairs << " -b 'kbin(#{viewVectorX.round_to_str(2)},#{viewVectorY.round_to_str(2)},0,0,0,1)' -m glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}"
+          # compute daylight matri(ces)
+          system("#{t_catCommand} #{t_outPath}/materials/materials_vmx.rad #{t_outPath}/scene/glazing/#{space_name}_glaz_#{aziVector}.rad > #{t_outPath}/window_temp.rad")
 
-#        if t_options.verbose == 'v'
-          puts "#{Time.now.getutc}: computing daylight coefficients for #{space_name}"
-#        end
-        view_def = ""
-        dims = t_options.dims
-        view_def ="-x #{dims} -y #{dims} -vf #{Dir.pwd}/numeric/#{space_name}.sns"
-        if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-          vwrays_out = `vwrays -d #{view_def}`.strip
-          exec_statement("vwrays -ff #{view_def} | rcontrib #{rtrace_args = "#{t_options.vmx}"} -V- -fo -ffc #{vwrays_out} \
-            -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}_treg%03d.hdr\" -m skyglow model_dc.oct")
-        else
-          exec_statement("vwrays -ff #{view_def} | rcontrib #{t_options.vmx} -n #{t_simCores} -V- -fo -ffc \
-            $(vwrays -d #{view_def}) -f #{t_options.tregVars} -o \"#{binDir}/#{space_name}treg%03d.hdr\" -m skyglow model_dc.oct")
-          # create "contact sheet" of DC images for reference/troubleshooting
-          if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-            hdrs = Dir.glob("#{binDir}/*.hdr")
-            # there is a limit on the length of the command line on Windows systems -- just one of the OS's great many shortcomings.
-            hdrs = hdrs[0..12]
-            exec_statement("pcompos -a 10 #{hdrs.join(' ')} | pfilt -x /6 -y /6 | ra_bmp -e +2 - \"#{binDir}/#{space_name}contact-sheet.bmp\"")
-          else
-            exec_statement("pcompos -a 10 #{binDir}/*.hdr | pfilt -x /6 -y /6 | ra_tiff -e +2 -z - \"#{binDir}/#{space_name}contact-sheet.tif\"")
-          end
-        end
-        puts "#{Time.now.getutc}: done computing daylight coefficients for #{space_name}"
+          exec_statement("#{perlPrefix}genklemsamp#{perlExtension} #{t_options.klemsDensity} -vd #{aziVectorX.round_to_str(2)} #{aziVectorY.round_to_str(2)} 0.00 #{t_outPath}/window_temp.rad \
+          | rcontrib #{t_options.klemsDensity} #{t_options.tregVars} -m skyglow -fa #{t_outPath}/octrees/model_dc.oct > \
+                         #{t_outPath}/output/dc/merged_space/maps/glaz_#{space_name}_azi-#{aziVector}_tn-#{glazingTransmissivity}.dmx")
+          #end
       end
+      #end
+    # compute view matri(ces)
+    puts "computing view matri(ces) for merged_space.map..."
+    if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM) #Windows commands
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | \
+        rcontrib #{rtrace_args} -I+ -fo #{t_options.klemsDensity} #{t_options.tregVars} \
+       -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx -m skyglow model_dc.oct")
+    else #UNIX commands
+      exec_statement("#{t_catCommand} #{t_outPath}/numeric/merged_space.map | \
+        rcontrib #{rtrace_args} -n #{t_simCores} -I+ -fa #{t_options.klemsDensity} #{t_options.tregVars} \
+      -o #{t_outPath}/output/dc/merged_space/maps/%s.vmx #{binPairs} #{t_outPath}/octrees/model_dc.oct")
     end
+
   end
+end # def(calculateDaylightCoeffecients)
 
-end
+def execSimulation(t_cmds, t_mapping, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
-def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
-  #if t_verbose == 'v'
-    puts "#{Time.now.getutc}: simulation command: #{t_cmd}"
-  #end        
   puts "#{Time.now.getutc}: Executing simulation"
-  tempIO = IO.popen(t_cmd)
-
-
-  val_lines = tempIO.readlines("\n")
-  tempIO.close
-
-  linenum = 0
-
-  puts "#{Time.now.getutc}: Parsing result"
-  values = []
- 
-  has_header = false
-  if not val_lines.empty?
-    has_header = /RADIANCE/.match(val_lines[0])
-  end
-  header_read = false
+  puts "#{Time.now.getutc}: simulation commands: #{t_cmds}"
   
-  val_lines.each do |val|
-    if has_header and not header_read
-      if /^\s?\d/.match(val)
-        header_read = true
-      else
-        next
+  allValues = []
+
+  t_cmds.each do | command | 
+  
+    tempIO = IO.popen(command)
+    
+    puts "#{Time.now.getutc}: Parsing result"
+    
+    cmdValues = []
+    
+    line_num = 0
+    data_num = 0
+    has_header = false
+    header_read = false
+    tempIO.each_line("\n") do |line| 
+    
+      if line_num == 0
+        has_header = /RADIANCE/.match(line)
+      end
+      line_num += 1
+    
+      if has_header and not header_read
+        if /^\s?\d/.match(line)
+          header_read = true
+        else
+          next
+        end
+      end
+      
+      values = OpenStudio::Radiance::parseGenDayMtxLine(line)
+      if values.size != 8760
+        abort "Unable to parse line, not enough hours found (line: #{line_num}): #{values}\nOriginal Line: #{line}"
+      end
+      
+      line_num = line_num + 1
+      cmdValues << values
+      
+    end
+
+    tempIO.close
+    
+    allValues << cmdValues
+  end
+
+  values = []
+
+  # this might be slow, but the idea is that we are looping over each window's contributions
+  # if the particular index should contribute light, then we add it to the value
+  #
+  # example: the index of values might be:
+  # [window1open, window1closed, window2open, window2closed, window3open, window3closed]
+  #
+  # After calling the t_mapping function for all of the window state indexes for a particular hour we
+  # might get a light contribution map that looks like:
+  #
+  # [true, false, false, true, true, false]
+  #
+  # Saying for that hour of the day, window1 and window3 blinds were open, but window2 blinds were closed.
+  #
+  # The result is the summation of each window's vLambda contributions.
+  allValues.size().times do |index|
+    allValues[index].size().times do |row|
+      values[row] = [] if values[row].nil?
+      8760.times do |hour|
+        values[row][hour] = 0 if values[row][hour].nil?
+        if t_mapping.call(index, hour)
+          # does this index and hour match the mapping function? that is, should this index
+          # of data be used with this hour?
+          values[row][hour] = allValues[index][row][hour] + values[row][hour]
+        end 
       end
     end
-    
-    line = OpenStudio::Radiance::parseGenDayMtxLine(val)
-    if line.size != 8760
-      abort "Unable to parse line, not enough hours found (line: #{linenum}): #{line}\nOriginal Line: #{val}"
-#    else
-#      puts "Line Parsed: #{line}"
-    end
-    linenum = linenum + 1
-    values << line
-  end
-
-  puts "Generated #{linenum} lines"
-
-  if values.empty?
-    puts "ERROR: simulation command generated no results: #{t_cmd}"
   end
 
   puts "#{Time.now.getutc}: writing output"
 
+  # now proceed on, as we have all of the contributions we want
   allhours = []
 
   8760.times do |hour|
@@ -480,7 +536,6 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
           index = index + 1
         end
 
-
         if File.exists?("#{t_outPath}/numeric/#{space_name}.glr") and t_radGlareSensorViews[space_name]
           glareinput = values.slice(index, t_radGlareSensorViews[space_name].size)
 
@@ -509,7 +564,6 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
         end
       end
 
-
       splitvalues[space_name] = [space, illum, glaresensors]
     end
 
@@ -519,8 +573,6 @@ def execSimulation(t_cmd, t_verbose, t_space_names_to_calculate, t_spaceWidths, 
   puts "Returning annual results"
   return allhours;
 end
-
-
 
 def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, t_site_latitude, t_site_longitude, t_site_stdmeridian, t_outPath, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews)
 
@@ -553,15 +605,55 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Run the simulation 
   puts "Running annual simulation"
+  
 
+  simulations = []
+  windowMapping = nil
 
-  # Use ascii piping on Windows, binary on unixish OS's
-  if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
-    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep  -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+  # exec_statement("gendaymtx -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+  exec_statement("gendaymtx -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+
+  if t_options.z == true
+    # 3-phase
+
+    dmx_mapping_data = []
+
+    # expected file name:
+    Dir.glob("#{t_outPath}/output/dc/merged_space/maps/*.dmx") do |dmx_file|
+      # TODO parse filename here to get these things
+      # @rpg777
+      # azimuth, window_group, blinds_closed = someparsingfunction(dmx_file)
+      azimuth = 1
+      window_group = "group"
+      blinds_closed = false
+
+      simulations << "dctimestep -if -n 8760 \"#{dmx_file}\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+      
+      dmx_mapping_data << [azimuth, window_group, blinds_closed]
+    end
+
+    windowMapping = lambda { |index, hour| 
+      data = dmx_mapping_data[index]
+      # TODO are blinds open for this point in space time?
+      # @rpg777
+      # blindsopen = magicalFunction(data[0], data[1], hour)
+      blindsopen = false
+      
+      return data[2] == blindsopen;
+    }
+
   else
-    rawValues = execSimulation("gendaymtx  -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" | dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\"  ", t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
+    # 2-phase 
+    #
+    # yo Rob!! (no floats, temp for debuging)
+    # simulations << "dctimestep -if -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+    simulations << "dctimestep -n 8760 \"#{t_outPath}/output/dc/merged_space/maps/merged_space.dmx\" \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" "
+
+    # set window mapping to always be 'true, use this one'
+    windowMapping = lambda { |index, hour| return 0 }
   end
 
+  rawValues = execSimulation(simulations, windowMapping, t_options.verbose, t_space_names_to_calculate, t_spaceWidths, t_spaceHeights, t_radGlareSensorViews, t_outPath)
 
   dcVectors = nil
 
@@ -589,9 +681,7 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   end
 
   return values, dcVectors;
-
-end
-
+end #def
 
 def getTimeSeries(t_sqlFile, t_envPeriod)
   diffHorizIllumAll = []; dirNormIllumAll = [];
@@ -628,7 +718,6 @@ def getTimeSeries(t_sqlFile, t_envPeriod)
   return diffHorizIllumAll, dirNormIllumAll, diffEfficacyAll, dirNormEfficacyAll, solarAltitudeAll, solarAzimuthAll, diffHorizUnits, dirNormUnits
 
 end
-
 
 def buildSimulationTimes(t_sqlFile, t_envPeriod, t_options, t_diffHorizIllumAll, t_dirNormIllumAll, t_diffEfficacyAll, t_dirNormEfficacyAll, t_solarAltitudeAll, t_solarAzimuthAll)
 
@@ -742,8 +831,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
       else
         puts "Performing annual simulation"
       end
-
-
 
       simTimes.each_index do |i|
         spaceWidth = t_spaceWidths[space_name]
@@ -940,9 +1027,6 @@ def annualSimulation(t_sqlFile, t_options, t_epwFile, t_space_names_to_calculate
   end
 end
 
-
-
-
 # help those poor Windows users out
 perlExtension = ""
 catCommand = "cat"
@@ -1022,26 +1106,16 @@ end
 weaPath = nil
 smxPath = nil
 
-# convert epw to other weather file type
+# reduce/convert epw data to Daysim-style ".wea" input format
 if (!epwFile.empty?)
   epwFilePath = epwFile.get().path()
   weaPath = outPath / OpenStudio::Path.new("in.wea")
 
-  epw2weapath = nil
+  epw2weapath = OpenStudio::Path.new(ENV['EPW2WEAPATH'])
 
-  if (/darwin/.match(RUBY_PLATFORM))
-    if (OpenStudio::applicationIsRunningFromBuildDirectory())
-      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("epw2wea")
-    else
-      epw2weapath = OpenStudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / OpenStudio::Path.new("bin") / OpenStudio::Path.new("epw2wea")
-    end
-  else
-    epw2weapath = OpenStudio::getApplicationRunDirectory() / OpenStudio::Path.new("epw2wea")
-  end
   puts "Executing epw2wea: #{epw2weapath}"
   exec_statement("\"#{epw2weapath.to_s}\" \"#{epwFilePath.to_s}\" \"#{weaPath.to_s}\"")
 end
-
 
 site_name = site.getString(1, true).get
 site_latitude = site.getString(2, true).get
@@ -1097,7 +1171,6 @@ building.spaces.each do |space|
     spaceHeights[space_name] = map.numberofYGridPoints
   end
 
-
   # get daylighting control points
   space.daylightingControls.each do |control|
     radDaylightingControls[space_name] = ""
@@ -1133,7 +1206,6 @@ space_names_to_calculate = filtered_space_names_to_calculate
 
 # run radiance
 # check for Radiance installation
-#
 
 puts "#{Time.now.getutc}: checking for radiance"
 
@@ -1166,22 +1238,17 @@ end
 Dir.chdir("#{outPath}")
 puts "\nRunning radiance in directory '#{Dir.pwd}'"
 
-
 mergeSpaces(space_names_to_calculate, outPath)
 
-
-#
 # calculate daylight coefficients, if selected (single phase)
-#
 if options.dc == true
   calculateDaylightCoeffecients(outPath, options, space_names_to_calculate, radMaps, opts_map, simCores, catCommand)
 end
 
-#Annual simulation
-#run genskyvec, dctimestep, for timestep results from DCs. Defaults to all spaces, can specify spaces/months/days at command line
-#TODO: check results and verify format of grids
+# Annual simulation
+# run genskyvec, dctimestep, for timestep results from DCs. Defaults to all spaces, 
+# can specify spaces/months/days at command line
 if options.dcts == true
   values, dcVectors = runSimulation(space_names_to_calculate, sqlFile, options, simCores, site_latitude, site_longitude, site_stdmeridian, outPath, spaceWidths, spaceHeights, radGlareSensorViews)
   annualSimulation(sqlFile, options, epwFile, space_names_to_calculate, radMaps, spaceWidths, spaceHeights, radMapPoints, radGlareSensorViews, simCores, site_latitude, site_longitude, site_stdmeridian, outPath, building, values, dcVectors)
 end
-

@@ -192,12 +192,12 @@ void OSCollapsibleItem::setItemsRemoveable(bool itemsRemoveable)
   m_itemList->setItemsRemoveable(itemsRemoveable);
 }
 
-OSItem::Type OSCollapsibleItem::itemsType() const
+OSItemType OSCollapsibleItem::itemsType() const
 {
   return m_itemList->itemsType();
 }
 
-void OSCollapsibleItem::setItemsType(OSItem::Type type)
+void OSCollapsibleItem::setItemsType(OSItemType type)
 {
   m_itemList->setItemsType(type);
 }

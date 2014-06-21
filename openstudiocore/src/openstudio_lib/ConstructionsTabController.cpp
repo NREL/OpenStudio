@@ -56,8 +56,8 @@ ConstructionsTabController::ConstructionsTabController(bool isIP, const model::M
                         m_materialsController->subTabView(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_defaultConstructionSetsController.get(), SIGNAL(openLibDlgClicked()),

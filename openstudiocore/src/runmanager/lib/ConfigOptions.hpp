@@ -150,6 +150,11 @@ namespace runmanager {
       static openstudio::runmanager::ToolInfo toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &rad);
 
       //! Convert a pair returned from getToolLocation to a ToolInfo object
+      //! appropriate for creating a rtrace job
+      //! \param[in] rad results from getToolLocations create ToolInfo from
+      static openstudio::runmanager::ToolInfo toEpw2Wea(const std::pair<ToolVersion, ToolLocationInfo> &eplus);
+
+      //! Convert a pair returned from getToolLocation to a ToolInfo object
       //! appropriate for creating a ruby RubyJob
       //! \param[in] ruby results from getToolLocations create ToolInfo from
       static openstudio::runmanager::ToolInfo toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &ruby);

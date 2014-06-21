@@ -123,29 +123,29 @@ class CalibrationReports_Test < Test::Unit::TestCase
 
     # check for varying demand
     model.getUtilityBills.each do |utilityBill|
-        if not utilityBill.peakDemandUnitConversionFactor.empty?
-            hasVaryingDemand = false
-            modelPeakDemand = 0.0
-            count = 0
-            utilityBill.billingPeriods.each do |billingPeriod|
-                peakDemand = billingPeriod.modelPeakDemand
-                if not peakDemand.empty?
-                    temp = peakDemand.get
-                    if count == 0
-                        modelPeakDemand = temp
-                    else
-                        if modelPeakDemand != temp
-                            hasVaryingDemand = true
-                            break
-                        end
-                    end
-                    count = count + 1
-                end
+      if not utilityBill.peakDemandUnitConversionFactor.empty?
+        hasVaryingDemand = false
+        modelPeakDemand = 0.0
+        count = 0
+        utilityBill.billingPeriods.each do |billingPeriod|
+          peakDemand = billingPeriod.modelPeakDemand
+          if not peakDemand.empty?
+            temp = peakDemand.get
+            if count == 0
+              modelPeakDemand = temp
+            else
+              if modelPeakDemand != temp
+                hasVaryingDemand = true
+                break
+              end
             end
-            if count > 1
-                assert(hasVaryingDemand)
-            end
+            count = count + 1
+          end
         end
+        if count > 1
+          assert(hasVaryingDemand)
+        end
+      end
     end
 
   end
@@ -223,29 +223,111 @@ class CalibrationReports_Test < Test::Unit::TestCase
 
     # check for varying demand
     model.getUtilityBills.each do |utilityBill|
-        if not utilityBill.peakDemandUnitConversionFactor.empty?
-            hasVaryingDemand = false
-            modelPeakDemand = 0.0
-            count = 0
-            utilityBill.billingPeriods.each do |billingPeriod|
-                peakDemand = billingPeriod.modelPeakDemand
-                if not peakDemand.empty?
-                    temp = peakDemand.get
-                    if count == 0
-                        modelPeakDemand = temp
-                    else
-                        if modelPeakDemand != temp
-                            hasVaryingDemand = true
-                            break
-                        end
-                    end
-                    count = count + 1
-                end
+      if not utilityBill.peakDemandUnitConversionFactor.empty?
+        hasVaryingDemand = false
+        modelPeakDemand = 0.0
+        count = 0
+        utilityBill.billingPeriods.each do |billingPeriod|
+          peakDemand = billingPeriod.modelPeakDemand
+          if not peakDemand.empty?
+            temp = peakDemand.get
+            if count == 0
+              modelPeakDemand = temp
+            else
+              if modelPeakDemand != temp
+                hasVaryingDemand = true
+                break
+              end
             end
-            if count > 1
-                assert(hasVaryingDemand)
-            end
+            count = count + 1
+          end
         end
+        if count > 1
+            assert(hasVaryingDemand)
+        end
+      end
+    end
+
+  end
+  
+  # the actual test
+  def test_CalibrationReports_NoDemand
+
+    assert(File.exist?(modelPath()))
+    assert(File.exist?(sqlPath()))
+
+    # create an instance of the measure
+    measure = CalibrationReports.new
+
+    # create an instance of a runner
+    runner = OpenStudio::Ruleset::OSRunner.new
+
+    # get arguments and test that they are what we are expecting
+    arguments = measure.arguments()
+    assert_equal(0, arguments.size)
+    
+    # load model, remove demand, save to new file
+    vt = OpenStudio::OSVersion::VersionTranslator.new
+    model = vt.loadModel(modelPath())
+    assert((not model.empty?))
+    model = model.get
+    utilityBills = model.getUtilityBills
+    assert_equal(2, utilityBills.size())
+    utilityBills.each do |utilityBill|
+      if utilityBill.fuelType == "Electricity".to_FuelType
+        utilityBill.billingPeriods.each do |billingPeriod|
+          billingPeriod.resetPeakDemand
+        end
+      end
+    end
+    utilityBills = model.getUtilityBills
+    assert_equal(2, utilityBills.size())
+    
+    newModelPath = modelPath().gsub("ExampleModel.osm", "ExampleModelNoDemand.osm")
+    model.save(OpenStudio::Path.new(newModelPath), true)
+    
+    # set up runner, this will happen automatically when measure is run in PAT
+    runner.setLastOpenStudioModelPath(OpenStudio::Path.new(newModelPath))
+    runner.setLastEnergyPlusSqlFilePath(OpenStudio::Path.new(sqlPath()))
+
+    # set argument values to good values and run the measure
+    argument_map = OpenStudio::Ruleset::OSArgumentMap.new
+    measure.run(runner, argument_map)
+    result = runner.result
+    show_output(result)
+    assert(result.value.valueName == "Success")
+    assert(result.warnings.size == 0)
+    assert(result.info.size == 0)
+
+    assert(File.exist?(reportPath()))
+
+    # get the last model and sql file
+
+    model = runner.lastOpenStudioModel
+    assert((not model.empty?))
+    model = model.get
+
+    sqlFile = runner.lastEnergyPlusSqlFile
+    assert((not sqlFile.empty?))
+    sqlFile = sqlFile.get
+
+    model.setSqlFile(sqlFile)
+
+    # must have a runPeriod
+    runPeriod = model.runPeriod
+    assert((not runPeriod.empty?))
+
+    # must have a calendarYear
+    yearDescription = model.yearDescription
+    assert((not yearDescription.empty?))
+    calendarYear = yearDescription.get.calendarYear
+    assert((not calendarYear.empty?))
+
+    # check for no demand
+    model.getUtilityBills.each do |utilityBill|
+      utilityBill.billingPeriods.each do |billingPeriod|
+        assert(billingPeriod.peakDemand.empty?)
+      end
     end
 
   end

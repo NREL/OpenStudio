@@ -3,8 +3,8 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.7 )
 PROJECT(OpenStudio)
 
 SET(CMAKE_VERSION_MAJOR 1)
-SET(CMAKE_VERSION_MINOR 3)
-SET(CMAKE_VERSION_PATCH 6)
+SET(CMAKE_VERSION_MINOR 4)
+SET(CMAKE_VERSION_PATCH 0)
 
 SET(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
 FIND_PACKAGE(Git)
@@ -30,7 +30,7 @@ OPTION( NIGHTLY_BUILD "Use configurations for Nightly Build" OFF )
 SET(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 
 # Search for modules in the openstudiocore dir first to override cmake ones
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" ${CMAKE_SOURCE_DIR})
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" "${CMAKE_SOURCE_DIR}")
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -394,8 +394,8 @@ IF(BUILD_RUBY)
       # Ruby 1.8 cannot be built for 64bit windows because of faulty assumptions in the code,
       # and Ruby 2.0 isn't shipped in any way we can link to it, so for now we build our own
       ExternalProject_Add(Ruby
-        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p353.zip
-        URL_MD5 0f8aeb1f1b1cd606ab9790badabd0fb4
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+        URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
         PATCH_COMMAND "${CMAKE_COMMAND}" -E copy ${CMAKE_SOURCE_DIR}/dependencies/mkexports.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/mkexports.rb
         CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/win32/configure.bat --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --target=x64-mswin64 --disable-install-doc --disable-win95"
         BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-build && ${NMAKE_EXE}

@@ -78,8 +78,8 @@ SubTabController::SubTabController(SubTabView* subTabView)
                         this, SLOT(doPurge()));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(subTabView, SIGNAL(openBclDlgClicked()),
-                        this, SIGNAL(openBclDlgClicked()));
+  isConnected = connect(subTabView, SIGNAL(downloadComponentsClicked()),
+                        this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = connect(subTabView, SIGNAL(openLibDlgClicked()),

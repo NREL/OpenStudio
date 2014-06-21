@@ -202,7 +202,29 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   EXPECT_EQ(thermalZone.handle(), inspectorDialog->selectedObjectHandles()[0]);
 
   EXPECT_FALSE(spaceWatcher.dirty());
-  EXPECT_FALSE(thermalZoneWatcher.dirty());
+  EXPECT_TRUE(thermalZoneWatcher.dirty()); // created new field for humidistat
+
+  spaceWatcher.clearState();
+  thermalZoneWatcher.clearState();
+
+  EXPECT_FALSE(spaceWatcher.dirty());
+  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
+
+  EXPECT_TRUE(inspectorDialog->setIddObjectType(Space::iddObjectType()));
+  EXPECT_EQ(Space::iddObjectType(), inspectorDialog->iddObjectType());
+  ASSERT_EQ(1u, inspectorDialog->selectedObjectHandles().size());
+  EXPECT_EQ(space.handle(), inspectorDialog->selectedObjectHandles()[0]);
+
+  EXPECT_FALSE(spaceWatcher.dirty());
+  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
+
+  EXPECT_TRUE(inspectorDialog->setIddObjectType(ThermalZone::iddObjectType()));
+  EXPECT_EQ(ThermalZone::iddObjectType(), inspectorDialog->iddObjectType());
+  ASSERT_EQ(1u, inspectorDialog->selectedObjectHandles().size());
+  EXPECT_EQ(thermalZone.handle(), inspectorDialog->selectedObjectHandles()[0]);
+
+  EXPECT_FALSE(spaceWatcher.dirty());
+  EXPECT_FALSE(thermalZoneWatcher.dirty()); 
 }
 
 TEST_F(ModelEditorFixture, InspectorDialog_SketchUpPlugin)

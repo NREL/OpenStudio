@@ -42,8 +42,8 @@ FacilityTabController::FacilityTabController(bool isIP, const model::Model& mode
                         m_facilityController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = QObject::connect(m_facilityController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_facilityController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_facilityController.get(), SIGNAL(openLibDlgClicked()),

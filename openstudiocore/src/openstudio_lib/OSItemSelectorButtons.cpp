@@ -138,7 +138,7 @@ OSItemSelectorButtons::OSItemSelectorButtons(QWidget * parent)
   //m_openBclDlgButton->hide();
   //m_vLayout->addWidget(m_openBclDlgButton);
   //
-  //isConnected = connect(m_openBclDlgButton,SIGNAL(clicked()),this,SIGNAL(openBclDlgClicked()));
+  //isConnected = connect(m_openBclDlgButton,SIGNAL(clicked()),this,SIGNAL(downloadComponentsClicked()));
   //OS_ASSERT(isConnected);
 }
 

@@ -40,13 +40,21 @@ class MainMenu : public QMenuBar
 
   void exportClicked();
 
+  void exportgbXMLClicked();
+
+  void exportSDDClicked();
+
   void importClicked();
+
+  void importgbXMLClicked();
 
   void importSDDClicked();
 
   void loadFileClicked();
 
   void loadLibraryClicked();
+
+  void revertFileClicked(); 
 
   void saveAsFileClicked(); 
 
@@ -68,11 +76,19 @@ class MainMenu : public QMenuBar
 
   void toggleUnitsClicked(bool displayIP);
 
-  void openBclDlgClicked();
-
   void openLibDlgClicked();
 
   void configureProxyClicked();
+
+  void applyMeasureClicked();
+
+  void downloadMeasuresClicked();
+
+  void downloadComponentsClicked();
+
+  void changeMyMeasuresDir();
+
+  void changeBclLogin();
 
   private:
 
@@ -80,9 +96,9 @@ class MainMenu : public QMenuBar
 
   QMenu * m_fileMenu;
 
-  QMenu * m_helpMenu;
+  QMenu * m_measureMenu;
 
-  QMenu * m_windowMenu;
+  QMenu * m_helpMenu;
 
   QMenu * m_preferencesMenu;
 
@@ -90,13 +106,17 @@ class MainMenu : public QMenuBar
 
   QAction * m_displaySIUnitsAction;
 
-  QAction * m_openBclDlgAction;
-
   QAction * m_openLibDlgAction;
 
   QAction * m_configureProxy;
 
+  QAction * m_revertToSavedAction;
+
   bool m_isIP;
+
+  public slots:
+
+  void enableRevertToSavedAction(bool enable);
 
   private slots:
 
