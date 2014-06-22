@@ -941,6 +941,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateEvaporativeCoolerDirectResearchSpecial(evap);
       break;
     }
+  case openstudio::IddObjectType::OS_EvaporativeCooler_Indirect_ResearchSpecial :
+    {
+      model::EvaporativeCoolerIndirectResearchSpecial evap = modelObject.cast<EvaporativeCoolerIndirectResearchSpecial>();
+      retVal = translateEvaporativeCoolerIndirectResearchSpecial(evap);
+      break;
+    }
   case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed :
     {
       model::EvaporativeFluidCoolerSingleSpeed evap = modelObject.cast<EvaporativeFluidCoolerSingleSpeed>();

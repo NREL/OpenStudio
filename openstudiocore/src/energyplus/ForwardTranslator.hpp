@@ -108,6 +108,7 @@ class DistrictCooling;
 class DistrictHeating;
 class ElectricEquipment;
 class EvaporativeCoolerDirectResearchSpecial;
+class EvaporativeCoolerIndirectResearchSpecial;
 class EvaporativeFluidCoolerSingleSpeed;
 class ExteriorLights;
 class FanConstantVolume;
@@ -462,6 +463,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFanZoneExhaust( model::FanZoneExhaust & modelObject );
 
   boost::optional<IdfObject> translateEvaporativeCoolerDirectResearchSpecial( model::EvaporativeCoolerDirectResearchSpecial & modelObject );
+
+  boost::optional<IdfObject> translateEvaporativeCoolerIndirectResearchSpecial( model::EvaporativeCoolerIndirectResearchSpecial & modelObject );
 
   boost::optional<IdfObject> translateFFactorGroundFloorConstruction( model::FFactorGroundFloorConstruction & modelObject );
 
