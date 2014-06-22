@@ -114,8 +114,8 @@
 #include <model/ElectricEquipment.hpp>
 #include <model/ElectricEquipmentDefinition.hpp>
 #include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
+#include <model/EvaporativeCoolerIndirectResearchSpecial.hpp>
 #include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
-#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
 #include <model/ExteriorLights.hpp>
 #include <model/ExteriorLightsDefinition.hpp>
 #include <model/Facility.hpp>
@@ -374,6 +374,8 @@
 #include <model/ElectricEquipment_Impl.hpp>
 #include <model/ElectricEquipmentDefinition_Impl.hpp>
 #include <model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp>
+#include <model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp>
+#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
 #include <model/ExteriorLights_Impl.hpp>
 #include <model/ExteriorLightsDefinition_Impl.hpp>
 #include <model/Facility_Impl.hpp>

@@ -323,6 +323,9 @@ SET( ${target_name}_src
   EvaporativeCoolerDirectResearchSpecial.hpp
   EvaporativeCoolerDirectResearchSpecial_Impl.hpp
   EvaporativeCoolerDirectResearchSpecial.cpp
+  EvaporativeCoolerIndirectResearchSpecial.hpp
+  EvaporativeCoolerIndirectResearchSpecial_Impl.hpp
+  EvaporativeCoolerIndirectResearchSpecial.cpp
   EvaporativeFluidCoolerSingleSpeed.hpp
   EvaporativeFluidCoolerSingleSpeed_Impl.hpp
   EvaporativeFluidCoolerSingleSpeed.cpp
