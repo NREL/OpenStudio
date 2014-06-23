@@ -8553,6 +8553,7 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \object-list ZoneMixers
   A9,  \field Fan Name
        \note Fan type must be Fan:ConstantVolume
+       \required-field
        \type object-list
        \object-list FansCV
   A10, \field Reheat Coil Name

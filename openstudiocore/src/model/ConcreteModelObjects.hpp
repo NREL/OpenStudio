@@ -33,6 +33,7 @@
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctSeriesPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctVAVNoReheat.hpp>
@@ -293,6 +294,7 @@
 #include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
 #include <model/AirTerminalSingleDuctConstantVolumeReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
+#include <model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctVAVNoReheat_Impl.hpp>

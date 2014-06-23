@@ -71,6 +71,9 @@ SET( ${target_name}_src
   AirTerminalSingleDuctParallelPIUReheat.hpp
   AirTerminalSingleDuctParallelPIUReheat_Impl.hpp
   AirTerminalSingleDuctParallelPIUReheat.cpp
+  AirTerminalSingleDuctSeriesPIUReheat.hpp
+  AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp
+  AirTerminalSingleDuctSeriesPIUReheat.cpp
   AirTerminalSingleDuctUncontrolled.hpp
   AirTerminalSingleDuctUncontrolled_Impl.hpp
   AirTerminalSingleDuctUncontrolled.cpp
