@@ -171,18 +171,27 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctSeri
     {
       if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
       {
-        _reheatCoil->setString(Coil_Heating_GasFields::AirInletNodeName,mixerOutletNodeName);
+        _reheatCoil->setString(Coil_Heating_GasFields::AirInletNodeName,fanOutletNodeName);
         _reheatCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,outletNodeName.get());
       }
       else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
       {
-        _reheatCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,mixerOutletNodeName);
+        _reheatCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,fanOutletNodeName);
         _reheatCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,outletNodeName.get());
       }
       else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
       {
-        _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,mixerOutletNodeName);
+        _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,fanOutletNodeName);
         _reheatCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName.get());
+        boost::optional<WaterToAirComponent> waterCoil = coil.optionalCast<WaterToAirComponent>();
+        OS_ASSERT(waterCoil);
+        if( boost::optional<ModelObject> mo = waterCoil->waterOutletModelObject()  )
+        {
+          if( boost::optional<Node> node = mo->optionalCast<Node>() )
+          {
+            idfObject.setString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HotWaterorSteamInletNodeName,node->name().get());
+          }
+        }
       }
     }
   }
