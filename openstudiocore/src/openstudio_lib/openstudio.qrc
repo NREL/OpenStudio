@@ -50,6 +50,7 @@
     <file>images/delete_press.png</file>
     <file>images/direct-air.png</file>
     <file>images/directEvap.png</file>
+    <file>images/indirectEvap.png</file>
     <file>images/divider_dots.png</file>
     <file>images/districtcooling.png</file>
     <file>images/districtheating.png</file>
@@ -264,6 +265,7 @@
     <file>images/mini_icons/default_surface_construction_set.png</file>
     <file>images/mini_icons/direct-air.png</file>
     <file>images/mini_icons/directEvap.png</file>
+    <file>images/mini_icons/indirectEvap.png</file>
     <file>images/mini_icons/districtcooling.png</file>
     <file>images/mini_icons/districtheating.png</file>    
     <file>images/mini_icons/electric_equipment.png</file>

@@ -253,6 +253,8 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   setSecondaryFanTotalEfficiency(0.6);
   setSecondaryFanDeltaPressure(124.6);
   setDewpointEffectivenessFactor(0.9);
+  setDriftLossFraction(0.0);
+  resetBlowdownConcentrationRatio();
 }
 
 IddObjectType EvaporativeCoolerIndirectResearchSpecial::iddObjectType() {

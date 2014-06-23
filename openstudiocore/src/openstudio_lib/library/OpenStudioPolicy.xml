@@ -140,6 +140,17 @@
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_EvaporativeCooler_Indirect_ResearchSpecial">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Primary Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Primary Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Cooler Flow Ratio" Access="HIDDEN"/>
+    <rule IddField="Control Type" Access="HIDDEN"/>
+    <rule IddField="Secondary Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Sensor Node Name" Access="HIDDEN"/>
+    <rule IddField="Relief Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Water Supply Storage Tank Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_EvaporativeFluidCooler_SingleSpeed">
     <rule IddField="Water Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Water Outlet Node Name" Access="HIDDEN"/>
