@@ -415,6 +415,16 @@
     <rule IddField="Fan Name" Access="LOCKED"/>
     <rule IddField="Reheat Coil Name" Access="LOCKED"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AirTerminal_SingleDuct_SeriesPIU_Reheat">
+    <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
+    <rule IddField="Supply Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Secondary Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Reheat Coil Air Inlet Node" Access="HIDDEN"/>
+    <rule IddField="Zone Mixer Name" Access="HIDDEN"/>
+    <rule IddField="Fan Name" Access="LOCKED"/>
+    <rule IddField="Reheat Coil Name" Access="LOCKED"/>
+  </POLICY>
   <POLICY IddObjectType="OS_AirTerminal_SingleDuct_VAV_Reheat">
     <rule IddField="Availability Schedule Name" Access="HIDDEN"/>
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>

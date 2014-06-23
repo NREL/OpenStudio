@@ -1144,6 +1144,7 @@ SET( ${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeCooledBeam_GTest.cpp
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
+  test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctUncontrolled_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp

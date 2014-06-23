@@ -691,6 +691,46 @@ OS:Coil:Heating:Electric,
   ,                                       ! Air Inlet Node Name
   ;                                       ! Air Outlet Node Name
 
+OS:Fan:ConstantVolume,
+  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Handle
+  Series PIU Fan,                  !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Fan Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Handle
+  Series PIU Coil,                !- Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
+  {1c4961f3-614c-4530-854d-18b47804b9f6}, !- Handle
+  Series Fan Powered Terminal, !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  autosize,                               !- Minimum Primary Air Flow Fraction
+  ,                                       !- Supply Air Inlet Node
+  ,                                       !- Secondary Air Inlet Node
+  ,                                       !- Outlet Node
+  ,                                       !- Reheat Coil Air Inlet Node
+  ,                                       !- Zone Mixer Name
+  {6bab1791-64db-4620-aff4-f0682054ce4f}, !- Fan Name
+  {f5afd62c-fd37-470c-b61a-89f2683ddc8b}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
+
 OS:AirLoopHVAC:OutdoorAirSystem,
   {4b8b842c-2628-4074-aaa1-e3636b179cce}, !- Handle
   Air Loop HVAC Outdoor Air System 1,     !- Name
