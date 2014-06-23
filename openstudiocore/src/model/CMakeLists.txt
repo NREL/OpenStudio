@@ -1191,6 +1191,7 @@ SET( ${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/ElectricEquipment_GTest.cpp
   test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
+  test/EvaporativeCoolerIndirectResearchSpecial_GTest.cpp
   test/EvaporativeFluidCoolerSingleSpeed_GTest.cpp
   test/Facility_GTest.cpp
   test/FanVariableVolume_GTest.cpp

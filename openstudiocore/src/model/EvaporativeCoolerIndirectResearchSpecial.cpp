@@ -22,6 +22,8 @@
 
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 #include <model/ScheduleTypeLimits.hpp>
 #include <model/ScheduleTypeRegistry.hpp>
 
@@ -239,6 +241,23 @@ namespace detail {
   unsigned EvaporativeCoolerIndirectResearchSpecial_Impl::outletPort()
   {
     return OS_EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNode;
+  }
+
+
+  bool EvaporativeCoolerIndirectResearchSpecial_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
+    {
+      if( ! airLoop->demandComponent(node.handle()) )
+      {
+        if( StraightComponent_Impl::addToNode( node ) )
+        {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
 } // detail
