@@ -1,4 +1,4 @@
-results_repository : lefticus/openstudio_build_results
+results_repository : NREL/OpenStudioBuildResults
 results_path : _posts
 results_base_url : https://lefticus.github.io/openstudio_build_results
 tests_dir : OpenStudioCore-prefix/src/OpenStudioCore-build
