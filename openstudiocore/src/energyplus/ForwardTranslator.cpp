@@ -442,6 +442,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateAirTerminalSingleDuctParallelPIUReheat(airTerminal);
       break;
     }
+  case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat :
+    {
+      model::AirTerminalSingleDuctSeriesPIUReheat airTerminal = modelObject.cast<AirTerminalSingleDuctSeriesPIUReheat>();
+      retVal = translateAirTerminalSingleDuctSeriesPIUReheat(airTerminal);
+      break;
+    }
   case openstudio::IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled :
     {
       model::AirTerminalSingleDuctUncontrolled airTerminal = modelObject.cast<AirTerminalSingleDuctUncontrolled>();

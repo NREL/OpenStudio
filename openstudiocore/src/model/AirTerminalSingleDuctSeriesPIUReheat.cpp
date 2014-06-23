@@ -438,6 +438,7 @@ AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(const
   autosizeMaximumAirFlowRate();
   autosizeMaximumPrimaryAirFlowRate();
   autosizeMinimumPrimaryAirFlowFraction();
+  autosizeMaximumHotWaterorSteamFlowRate();
   setMinimumHotWaterorSteamFlowRate(0.0);
   setConvergenceTolerance(0.001);
 }
