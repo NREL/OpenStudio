@@ -1757,8 +1757,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   // Name
   QDomElement nameElement = fanElement.firstChildElement("Name");
 
-  // OverallEff
-  QDomElement overallEffElement = fanElement.firstChildElement("OverallEff");
+  // TotEffSim
+  QDomElement totEffSimElement = fanElement.firstChildElement("TotEffSim");
 
   // MtrfEff 
   QDomElement mtrEffElement = fanElement.firstChildElement("MtrEff");
@@ -1813,12 +1813,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
         fan.setName(nameElement.text().toStdString());
 
-        // OverallEff
-        boost::optional<double> overallEff;
-        value = overallEffElement.text().toDouble(&ok);
+        // TotEffSim
+        boost::optional<double> totEffSim;
+        value = totEffSimElement.text().toDouble(&ok);
         if( ok )
         {
-          overallEff = value;
+          totEffSim = value;
         }
 
         // MtrEff
@@ -1829,10 +1829,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
           mtrEff = value;
         }
 
-        if( overallEff && mtrEff )
+        if( mtrEff )
         {
-          fan.setFanEfficiency(overallEff.get() * mtrEff.get());
           fan.setMotorEfficiency(mtrEff.get());
+        }
+
+        if( totEffSim )
+        {
+          fan.setFanEfficiency(totEffSim.get());
         }
 
         // FlowCap
@@ -1883,12 +1887,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
       fan.setName(nameElement.text().toStdString());
 
-      // OverallEff
-      boost::optional<double> overallEff;
-      value = overallEffElement.text().toDouble(&ok);
+      // TotEffSim
+      boost::optional<double> totEffSim;
+      value = totEffSimElement.text().toDouble(&ok);
       if( ok )
       {
-        overallEff = value;
+        totEffSim = value;
       }
 
       // MtrEff
@@ -1899,10 +1903,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
         mtrEff = value;
       }
 
-      if( overallEff && mtrEff )
+      if( mtrEff )
       {
-        fan.setFanEfficiency(overallEff.get() * mtrEff.get());
         fan.setMotorEfficiency(mtrEff.get());
+      }
+
+      if( totEffSim )
+      {
+        fan.setFanEfficiency(totEffSim.get());
       }
 
       // FlowCap
@@ -1941,12 +1949,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     fan.setName(nameElement.text().toStdString());
 
-    // OverallEff
-    boost::optional<double> overallEff;
-    value = overallEffElement.text().toDouble(&ok);
+    // TotEffSim
+    boost::optional<double> totEffSim;
+    value = totEffSimElement.text().toDouble(&ok);
     if( ok )
     {
-      overallEff = value;
+      totEffSim = value;
     }
 
     // MtrEff
@@ -1957,10 +1965,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
       mtrEff = value;
     }
 
-    if( overallEff && mtrEff )
+    if( mtrEff )
     {
-      fan.setFanEfficiency(overallEff.get() * mtrEff.get());
       fan.setMotorEfficiency(mtrEff.get());
+    }
+
+    if( totEffSim )
+    {
+      fan.setFanEfficiency(totEffSim.get());
     }
 
     // FlowCap
