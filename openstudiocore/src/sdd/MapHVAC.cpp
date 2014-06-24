@@ -138,6 +138,10 @@
 #include <model/Splitter_Impl.hpp>
 #include <model/Mixer.hpp>
 #include <model/Mixer_Impl.hpp>
+#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
+#include <model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp>
+#include <model/EvaporativeCoolerIndirectResearchSpecial.hpp>
+#include <model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp>
 #include <model/DaylightingControl.hpp>
 
 #include <utilities/units/QuantityConverter.hpp>
@@ -867,6 +871,21 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
               controller->setMaximumActuatedFlow(maxFlow * 1.25);
             }
+          }
+        }
+        // EvapClr
+        else if( istringEqual(airSegmentChildElement.tagName().toStdString(),"EvapClr") )
+        {
+          if( boost::optional<model::ModelObject> mo = 
+                translateEvapClr(airSegmentChildElement,doc,model) )
+          {
+            OS_ASSERT(mo);
+
+            lastComponent = mo;
+
+            model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
+
+            hvacComponent.addToNode(dropNode.get());
           }
         }
 
@@ -2002,6 +2021,119 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
   return result;
 }
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvapClr(
+  const QDomElement& element,
+  const QDomDocument& doc,
+  openstudio::model::Model& model)
+{
+  boost::optional<model::ModelObject> result;
+  bool ok;
+  double value;
+
+  model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+
+  if( ! istringEqual(element.tagName().toStdString(),"EvapClr") )
+  {
+    return result;
+  }
+
+  QDomElement typeElement = element.firstChildElement("Type");
+  QDomElement nameElement = element.firstChildElement("Name");
+
+  if( typeElement.text().compare("Direct",Qt::CaseInsensitive) == 0 )
+  {
+    model::EvaporativeCoolerDirectResearchSpecial evap(model,schedule);
+
+    evap.setName(nameElement.text().toStdString());
+    
+    QDomElement effElement = element.firstChildElement("Eff");
+    value = effElement.text().toDouble(&ok);
+    if( ok )
+    {
+      evap.setCoolerEffectiveness(value);
+    }
+
+    QDomElement pumpPwrElement = element.firstChildElement("PumpPwr");
+    value = pumpPwrElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"Btu/h","W").get();
+      evap.setRecirculatingWaterPumpPowerConsumption(value);
+    }
+
+    evap.setBlowdownConcentrationRatio(3.0);
+
+    result = evap;
+  }
+  else if( typeElement.text().compare("Indirect",Qt::CaseInsensitive) == 0 )
+  {
+    model::EvaporativeCoolerIndirectResearchSpecial evap(model);
+
+    evap.setName(nameElement.text().toStdString());
+
+    QDomElement effElement = element.firstChildElement("Eff");
+    value = effElement.text().toDouble(&ok);
+    if( ok )
+    {
+      evap.setCoolerMaximumEffectiveness(value);
+    }
+
+    QDomElement pumpPwrElement = element.firstChildElement("PumpPwr");
+    value = pumpPwrElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"Btu/h","W").get();
+      evap.setRecirculatingWaterPumpPowerConsumption(value);
+    }
+
+    QDomElement secFanFlowCapElement = element.firstChildElement("SecFanFlowCap");
+    value = secFanFlowCapElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"cfm","m^3/s").get();
+      evap.setSecondaryFanFlowRate(value);
+    }
+
+    QDomElement secFanTotEffElemenet = element.firstChildElement("SecFanTotEff");
+    value = secFanTotEffElemenet.text().toDouble(&ok);
+    if( ok )
+    {
+      evap.setSecondaryFanTotalEfficiency(value);
+    }
+
+    QDomElement secFanTotStaticPressElement = element.firstChildElement("SecFanTotStaticPress");
+    value = secFanTotStaticPressElement.text().toDouble(&ok);
+    if( ok )
+    {
+      // Convert in WC to Pa
+      evap.setSecondaryFanDeltaPressure(value * 249.0889 );
+    }
+
+    QDomElement indirectDewPtEffElement = element.firstChildElement("IndirectDewPtEff");
+    value = indirectDewPtEffElement.text().toDouble(&ok);
+    if( ok )
+    {
+      evap.setDewpointEffectivenessFactor(value);
+    }
+    // TODO: reset dewpoint effectiveness
+
+    evap.setBlowdownConcentrationRatio(3.0);
+
+    // TODO: SecAirSrc
+
+    result = evap;
+  }
+  else
+  {
+    LOG(Error,nameElement.text().toStdString() << " is an unsupported type: defaulting to direct evaporative cooling");
+    model::EvaporativeCoolerDirectResearchSpecial evap(model,schedule);
+    result = evap;
+  }
+
+  return result;
+}
+
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoilCooling(
   const QDomElement& coolingCoilElement, 
