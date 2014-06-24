@@ -2122,6 +2122,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvap
 
     // TODO: SecAirSrc
 
+    evap.resetDriftLossFraction();
+
     result = evap;
   }
   else
