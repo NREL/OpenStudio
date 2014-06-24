@@ -195,25 +195,6 @@ namespace openstudio{
       }
     }
 
-    // write test epw
-    {
-      if (!testEPWString.isEmpty()){
-        QFile file(toQString(testEPWPath));
-        bool opened = file.open(QIODevice::WriteOnly);
-        if (!opened){
-          LOG_AND_THROW("Cannot write test epw file to '" << toString(testEPWPath) << "'");
-        }
-        QTextStream textStream(&file);
-        textStream << testEPWString;
-        file.close();
-
-        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
-        measureTestEPWFileReference.setUsageType("test");
-        m_bclXML.addFile(measureTestEPWFileReference);
-      }
-    }
-
-
     // write resource
     {
       if (!resourceFileString.isEmpty()){

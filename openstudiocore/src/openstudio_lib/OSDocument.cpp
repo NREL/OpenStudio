@@ -225,10 +225,10 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
       // check that all Ruby scripts exist, duplicates code in PatApp::openFile
       std::stringstream ss;
-      BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
+      for (const analysis::InputVariable& inputVariable : problem.variables()){
         boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
         if (measureGroup){
-          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+          for (const analysis::Measure& measure : measureGroup->measures(false)){
             boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
             if (rubyMeasure){
               boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
@@ -462,7 +462,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_model = model;
 
   int startTabIndex = 0;
-  boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
+  std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
   if(currentDocument){
     startTabIndex = app->currentDocument()->verticalTabIndex();
   }

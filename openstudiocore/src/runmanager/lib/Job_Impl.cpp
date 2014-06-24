@@ -1011,7 +1011,7 @@ namespace detail {
 
   bool Job_Impl::childrenTreesOutOfDate() const
   {
-    std::vector<boost::shared_ptr<Job_Impl> > children;
+    std::vector<std::shared_ptr<Job_Impl> > children;
 
     {
       // scope for RAII mutex

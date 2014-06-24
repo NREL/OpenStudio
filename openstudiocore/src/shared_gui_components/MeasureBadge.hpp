@@ -22,14 +22,9 @@
 
 #include <QLabel>
 
-#include "../utilities/core/Enum.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio {
-
-OPENSTUDIO_ENUM(MeasureBadgeType,
-  ((BCLMeasure))
-  ((MyMeasure))
-);
 
 class MeasureBadge : public QLabel
 {

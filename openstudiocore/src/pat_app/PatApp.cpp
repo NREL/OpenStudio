@@ -1326,7 +1326,7 @@ bool PatApp::openFile(const QString& fileName)
         QTimer::singleShot(0, this, SLOT(markAsUnmodified()));
       }
 
-      openstudio::path osmForThisOsp = project->projectDir().parent_path() / toPath(project->projectDir().stem());
+      openstudio::path osmForThisOsp = project->projectDir().parent_path() / project->projectDir().stem();
       osmForThisOsp = setFileExtension(osmForThisOsp,"osm");
       if (boost::filesystem::exists(osmForThisOsp)) {
         QMessageBox::warning(mainWindow,
@@ -1338,10 +1338,10 @@ bool PatApp::openFile(const QString& fileName)
 
       // check that all Ruby scripts exist, duplicates code in OSDocument::OSDocument
       std::stringstream ss;
-      BOOST_FOREACH(const analysis::InputVariable& inputVariable, project->analysis().problem().variables()){
+      for (const analysis::InputVariable& inputVariable : project->analysis().problem().variables()){
         boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
         if (measureGroup){
-          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+          for (const analysis::Measure& measure : measureGroup->measures(false)){
             boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
             if (rubyMeasure){
               boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();

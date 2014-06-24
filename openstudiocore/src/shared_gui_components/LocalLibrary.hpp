@@ -20,6 +20,7 @@
 #ifndef SHAREDGUICOMPONENTS_LOCALLIBRARY_HPP
 #define SHAREDGUICOMPONENTS_LOCALLIBRARY_HPP
 
+#include <utilities/core/Enum.hpp>
 
 namespace openstudio{
 
@@ -31,6 +32,19 @@ namespace openstudio{
       COMBINED
     };
   };
+
+  OPENSTUDIO_ENUM(AspectRatio,
+    ((Square))
+    ((Rectangle))
+  );
+
+  OPENSTUDIO_ENUM(OSItemType,
+    ((CollapsibleListHeader)) // has the arrow
+    ((ListItem))              // regular item
+    ((LibraryItem))           // library or my model item
+    ((DropzoneSquare))        // in scrolling drop zone
+    ((DropzoneRectangle))     // for fixed drop zone 
+  );
 
 
 } // openstudio

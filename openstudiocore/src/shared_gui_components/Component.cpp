@@ -77,7 +77,7 @@ Component::Component(const BCLMeasure & bclMeasure,
       m_updateAvailable = false;
       if (m_msg){
         m_msg->setText("This measure requires a newer version of OpenStudio");
-        m_msg->setShown(true);
+        m_msg->setVisible(true);
       }
     }
   }else{
@@ -87,7 +87,7 @@ Component::Component(const BCLMeasure & bclMeasure,
     m_updateAvailable = true;
     if (m_msg){
       m_msg->setText("An update is available for this measure");
-      m_msg->setShown(true);
+      m_msg->setVisible(true);
     }
   }
 }
