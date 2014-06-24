@@ -3386,7 +3386,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       if( terminalFound ) { break; }
     }
 
-    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RtnPlenumZnRef");
+    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RetPlenumZnRef");
     boost::optional<model::ThermalZone> returnPlenumZone;
     returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().toStdString()); 
     if( returnPlenumZone )
