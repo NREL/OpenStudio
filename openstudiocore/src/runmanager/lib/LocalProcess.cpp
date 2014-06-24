@@ -90,7 +90,7 @@ namespace detail {
       m_parameters(t_parameters), m_outdir(t_outdir),
       m_expectedOutputFiles(t_expectedOutputFiles),
       m_stdin(t_stdin),
-      m_copiedRequiredFiles(copyRequiredFiles(t_requiredFiles, t_outdir))
+      m_copiedRequiredFiles(copyRequiredFiles(t_tool, t_requiredFiles, t_basePath))
   {
     LOG(Info, "Creating LocalProcess");
 
@@ -130,7 +130,7 @@ namespace detail {
     directoryChanged(openstudio::toQString(m_outdir));
   }
 
-  std::set<openstudio::path> LocalProcess::copyRequiredFiles(const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
+  std::set<openstudio::path> LocalProcess::copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
       const openstudio::path &t_basePath)
   {
     using namespace boost::filesystem;
@@ -152,7 +152,7 @@ namespace detail {
         {
           frompath = baserelative;
         } else {
-          frompath = m_tool.localBinPath.parent_path() / frompath;
+          frompath = t_tool.localBinPath.parent_path() / frompath;
         }
       }
 
@@ -487,18 +487,20 @@ namespace detail {
 
   void LocalProcess::processError(QProcess::ProcessError t_e)
   {
+    m_fileCheckTimer.stop();
+    QFileInfo qfi(toQString(m_tool.localBinPath));
+    QFileInfo outdirfi(toQString(m_outdir));
+    LOG(Error, "LocalProcess processError: " << t_e 
+        << " exe: " << toString(m_tool.localBinPath)
+        << " workingdir: " << toString(m_outdir)
+        << " fileexists: " << qfi.isFile()
+        << " fileexecutable: " << qfi.isExecutable()
+        << " ErrorValue: " << t_e
+        << " outdirexists: " << outdirfi.isFile()
+        << " outdirisdirectory: " << outdirfi.isDir());
 
-      m_fileCheckTimer.stop();
-      QFileInfo qfi(toQString(m_tool.localBinPath));
-      QFileInfo outdirfi(toQString(m_outdir));
-      LOG(Error, "LocalProcess processError: " << t_e 
-          << " exe: " << toString(m_tool.localBinPath)
-          << " workingdir: " << toString(m_outdir)
-          << " fileexists: " << qfi.isFile()
-          << " fileexecutable: " << qfi.isExecutable()
-          << " ErrorValue: " << t_e
-          << " outdirexists: " << outdirfi.isFile()
-          << " outdirisdirectory: " << outdirfi.isDir());
+    QCoreApplication::processEvents();
+    directoryChanged(openstudio::toQString(m_outdir));
 
     QProcess::ProcessState state = m_process.state();
 
@@ -511,9 +513,7 @@ namespace detail {
       emit error(t_e);
     }
 
-    QCoreApplication::processEvents();
-    directoryChanged(openstudio::toQString(m_outdir));
-  }
+ }
 
   void LocalProcess::handleOutput(const QByteArray &qba, bool stderror)
   {

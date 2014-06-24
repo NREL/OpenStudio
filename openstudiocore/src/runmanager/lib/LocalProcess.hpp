@@ -111,7 +111,7 @@ namespace detail {
 
       static void kill(QProcess &t_process, bool t_force); //< Does an appropriate process tree kill on Windows
 
-      std::set<openstudio::path> copyRequiredFiles(const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
+      static std::set<openstudio::path> copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
           const openstudio::path &t_basePath);
 
       /// Immutable members, do not need thread mutex protection
