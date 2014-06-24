@@ -32,6 +32,8 @@
 #include <model/FanVariableVolume.hpp>
 #include <model/FanOnOff.hpp>
 #include <model/FanOnOff_Impl.hpp>
+#include <model/FanZoneExhaust.hpp>
+#include <model/FanZoneExhaust_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilHeatingGas.hpp>
@@ -2844,6 +2846,80 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
        ++it )
   {
     it->setDesignSpecificationOutdoorAir(designSpecificationOutdoorAir);
+  }
+
+  // Exhaust Fan(s)
+
+  QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowRtSim");
+  QDomElement exhFanNameElement = thermalZoneElement.firstChildElement("ExhFanName");
+
+  value = exhFlowRtSimElement.text().toDouble(&ok);
+  if( ok && (! exhFanNameElement.isNull()) )
+  {
+    model::FanZoneExhaust exhaustFan(model);
+    exhaustFan.setName(exhFanNameElement.text().toStdString());
+
+    value = unitToUnit(value,"cfm","m^3/s").get();
+    exhaustFan.setMaximumFlowRate(value);
+
+    QDomElement exhAvailSchRefElement = thermalZoneElement.firstChildElement("ExhAvailSchRef");
+    std::string exhAvailSchRef = escapeName(exhAvailSchRefElement.text());
+    boost::optional<model::Schedule> exhAvailSch = model.getModelObjectByName<model::Schedule>(exhAvailSchRef);
+    if( exhAvailSch )
+    {
+      exhaustFan.setAvailabilitySchedule(exhAvailSch.get());
+    }
+
+    QDomElement exhTotEffElement = thermalZoneElement.firstChildElement("ExhTotEff");
+    value = exhTotEffElement.text().toDouble(&ok);
+    if( ok )
+    {
+      exhaustFan.setFanEfficiency(value);
+    }
+
+    QDomElement exhTotStaticPressElement = thermalZoneElement.firstChildElement("ExhTotStaticPress");
+    value = exhTotStaticPressElement.text().toDouble(&ok);
+    if( ok )
+    {
+      // Convert in WC to Pa
+      exhaustFan.setPressureRise(value * 249.0889 );
+    }
+
+    QDomElement exhFlowSchRefElement = thermalZoneElement.firstChildElement("ExhFlowSchRef");
+    std::string exhFlowSchRef = escapeName(exhFlowSchRefElement.text());
+    boost::optional<model::Schedule> exhFlowSch = model.getModelObjectByName<model::Schedule>(exhFlowSchRef);
+    if( exhFlowSch )
+    {
+      exhaustFan.setFlowFractionSchedule(exhFlowSch.get());
+    }
+
+    QDomElement exhOperModeElement = thermalZoneElement.firstChildElement("ExhOperMode");
+    if( exhOperModeElement.text().compare("DecoupledFromSystem",Qt::CaseInsensitive) == 0 )
+    {
+      exhaustFan.setSystemAvailabilityManagerCouplingMode("Decoupled");
+    }
+    else if( exhOperModeElement.text().compare("CoupledToSystem",Qt::CaseInsensitive) == 0 )
+    {
+      exhaustFan.setSystemAvailabilityManagerCouplingMode("Coupled");
+    }
+
+    QDomElement exhMinTempSchRefElement = thermalZoneElement.firstChildElement("ExhMinTempSchRef");
+    std::string exhMinTempSchRef = escapeName(exhMinTempSchRefElement.text());
+    boost::optional<model::Schedule> exhMinTempSch = model.getModelObjectByName<model::Schedule>(exhMinTempSchRef);
+    if( exhMinTempSch )
+    {
+      exhaustFan.setMinimumZoneTemperatureLimitSchedule(exhMinTempSch.get());
+    }
+
+    QDomElement exhBalancedSchRefElement = thermalZoneElement.firstChildElement("ExhBalancedSchRef");
+    std::string exhBalancedSchRef = escapeName(exhBalancedSchRefElement.text());
+    boost::optional<model::Schedule> exhBalancedSch = model.getModelObjectByName<model::Schedule>(exhBalancedSchRef);
+    if( exhBalancedSch )
+    {
+      exhaustFan.setBalancedExhaustFractionSchedule(exhBalancedSch.get());
+    }
+
+    exhaustFan.addToThermalZone(thermalZone);
   }
 
   // Daylighting
