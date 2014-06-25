@@ -165,7 +165,7 @@ void PatMainWindow::hideRightColumn()
 
 QString PatMainWindow::lastPath() const
 {
-  return m_lastPath;
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
 }
 
 void PatMainWindow::setLastPath(const QString& t_lastPath)
