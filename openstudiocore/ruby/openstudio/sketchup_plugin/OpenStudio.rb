@@ -24,7 +24,7 @@ new_plugin = Sketchup.find_support_file("Startup.rb", "Plugins/OpenStudio")
 new_version = nil
 if new_plugin
 
-  # peak at Startup.rb to figure out version
+  # peek at Startup.rb to figure out version
   new_version = "Unknown"
   File.open(new_plugin, 'r') do |file|
     while line = file.gets
@@ -45,7 +45,7 @@ old_plugin = Sketchup.find_support_file("Energy+.idd", "Plugins/OpenStudio")
 old_version = nil
 if old_plugin
   
-  # peak at Idd to figure out version
+  # peek at Idd to figure out version
   old_version = "Unknown"
   File.open(old_plugin, 'r') do |file|
     line = file.gets
