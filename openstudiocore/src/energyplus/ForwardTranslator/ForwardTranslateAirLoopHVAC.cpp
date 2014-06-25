@@ -116,11 +116,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
   {
     // Note if we don't have a fan this is going to be a problem for EnergyPlus,
     // but at this point it will be allowed in OS
-    upperNodes = subsetCastVector<Node>(supplyComponents);
+    lowerNodes = subsetCastVector<Node>(supplyComponents);
     // We should at least have a supply inlet and outlet node
-    OS_ASSERT(upperNodes.size() >= 2);
-    upperNodes.erase(upperNodes.begin());
-    upperNodes.erase(upperNodes.end() - 1);
+    OS_ASSERT(lowerNodes.size() >= 2);
+    lowerNodes.erase(lowerNodes.begin());
+    lowerNodes.erase(lowerNodes.end() - 1);
   }
 
   for( std::vector<Node>::iterator it = upperNodes.begin();
