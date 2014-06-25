@@ -463,12 +463,15 @@ void PatApp::open()
     if(result == QMessageBox::Cancel) return;
   }
 
+  QString dir = QDir().exists(mainWindow->lastPath()) ? mainWindow->lastPath() : QDir::homePath();
+
   QString fileName = QFileDialog::getOpenFileName( mainWindow,
                                                    tr("Open Project"),
-                                                   QDir::homePath(),
+                                                   dir,
                                                    tr("(project.osp)") );
   if (!fileName.length()) return;
 
+  mainWindow->setLastPath(QFileInfo(fileName).path());
   userInteractiveOpenProject(fileName);
 }
 
