@@ -123,6 +123,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudio");
 
+  readSettings();
+
   QFile f(":/library/OpenStudioPolicy.xml");
 
   openstudio::model::AccessPolicyStore::Instance().loadFile(f);
@@ -398,11 +400,13 @@ void OpenStudioApp::importIdf()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Import Idf"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.idf)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<IdfFile> idfFile;
 
     idfFile = openstudio::IdfFile::load(toPath(fileName),IddFileType::EnergyPlus);
@@ -534,11 +538,13 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr(text.toStdString().c_str()),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.xml)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<model::Model> model;
 
     if(type == SDD){
@@ -729,11 +735,13 @@ void OpenStudioApp::open()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Open"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.osm)") );
 
   if (!fileName.length()) return;
 
+  setLastPath(QFileInfo(fileName).path());
+  
   openFile(fileName);
 }
 
@@ -951,6 +959,33 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
     messageBox.setText(QString("Failed to open file at ") + fileName + QString("."));
     messageBox.exec();
   }
+}
+
+void OpenStudioApp::readSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  setLastPath(settings.value("lastPath", QDir::homePath()).toString());
+}
+
+void OpenStudioApp::writeSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  settings.setValue("lastPath", lastPath());
+}
+
+QString OpenStudioApp::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
+}
+
+void OpenStudioApp::setLastPath(const QString& t_lastPath)
+{
+  m_lastPath = t_lastPath;
+  writeSettings();
 }
 
 void OpenStudioApp::revertToSaved()
