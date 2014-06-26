@@ -2464,7 +2464,7 @@ namespace detail {
     // been created correctly by the 1.0.4 to 1.0.5 update method.
   }
 
-  void ProjectDatabase_Impl::update_1_3_5_to_1_3_6(const VersionString& startVersion) {
+  void ProjectDatabase_Impl::update_1_4_0_to_1_4_1(const VersionString& startVersion) {
 
     bool didStartTransaction = startTransaction();
     OS_ASSERT(didStartTransaction);
