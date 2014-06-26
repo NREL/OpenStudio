@@ -26,6 +26,7 @@
 #include <shared_gui_components/LocalLibraryView.hpp>
 #include <shared_gui_components/MeasureManager.hpp>
 #include <shared_gui_components/OSViewSwitcher.hpp>
+#include <shared_gui_components/TextEditDialog.hpp>
 #include <shared_gui_components/VariableList.hpp>
 
 #include <openstudio_lib/MainRightColumnController.hpp>
@@ -87,6 +88,9 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   openstudio::OSAppBase * app = OSAppBase::instance();
   bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, bool, bool)), app, SLOT(reloadFile(const QString&, bool, bool)), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
+
+  m_advancedOutputDialog = new TextEditDialog("Advanced Output");
+
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
@@ -815,11 +819,13 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
 }
 
 void ApplyMeasureNowDialog::showAdvancedOutput()
-{
+{ 
   if(m_advancedOutput.isEmpty()){
     QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("Advanced Output"), QString("Advanced output:\n") + m_advancedOutput);
+    m_advancedOutputDialog->setText(m_advancedOutput);
+    m_advancedOutputDialog->exec();
+    m_advancedOutputDialog->raise();
   }
 }
 

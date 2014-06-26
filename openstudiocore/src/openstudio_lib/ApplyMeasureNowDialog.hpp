@@ -23,13 +23,7 @@
 #include <shared_gui_components/HeaderViews.hpp>
 #include <shared_gui_components/OSDialog.hpp>
 #include <shared_gui_components/OSListView.hpp>
-
-#include <analysis/Problem.hpp>
-#include <analysis/RubyMeasure.hpp>
-
 #include <shared_gui_components/VariableList.hpp>
-
-#include <utilities/bcl/BCLMeasure.hpp>
 
 #include <model/Model.hpp>
 
@@ -48,6 +42,8 @@ namespace openstudio{
 class DateTime;
 class EditController;
 class LocalLibraryController;
+
+class TextEditDialog;
 
 // Local Forward Decs
 class DataPointJobItemView;
@@ -149,6 +145,8 @@ private:
   QString m_advancedOutput;
 
   openstudio::path m_workingDir;
+
+  TextEditDialog * m_advancedOutputDialog;
 
 };
 
