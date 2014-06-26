@@ -302,6 +302,8 @@ SET( ${target_name}_SRC
   SurfaceInspectorView.hpp
   ThermalZonesController.cpp
   ThermalZonesController.hpp
+  ThermalZonesGridView.cpp
+  ThermalZonesGridView.hpp
   ThermalZonesTabController.cpp
   ThermalZonesTabController.hpp
   ThermalZonesTabView.cpp
@@ -603,6 +605,7 @@ SET( ${target_name}_moc
   SummaryTabView.hpp
   SurfaceInspectorView.hpp
   ThermalZonesController.hpp
+  ThermalZonesGridView.hpp
   ThermalZonesTabController.hpp
   ThermalZonesTabView.hpp
   ThermalZonesView.hpp
