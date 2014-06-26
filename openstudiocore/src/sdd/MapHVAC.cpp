@@ -87,6 +87,7 @@
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctSeriesPIUReheat.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
@@ -3897,6 +3898,73 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     result = terminal;
   }
+  else if( istringEqual("SeriesFanBox",typeElement.text().toStdString()) )
+  {
+    model::Schedule schedule = alwaysOnSchedule(model);
+
+    // CoilHtg
+    QDomElement coilHtgElement = trmlUnitElement.firstChildElement("CoilHtg");
+    boost::optional<model::ModelObject> coil;
+    coil = translateCoilHeating(coilHtgElement,doc,model);
+    if( ! coil )
+    {
+      coil = model::CoilHeatingElectric(model,schedule);
+    }
+    model::HVACComponent hvacComponentCoil = coil->cast<model::HVACComponent>();
+
+    // Fan
+    QDomElement fanElement = trmlUnitElement.firstChildElement("Fan");
+    boost::optional<model::ModelObject> fan;
+    fan = translateFan(fanElement,doc,model);
+    if( ! fan )
+    {
+      fan = model::FanConstantVolume(model,schedule);
+    }
+    model::HVACComponent hvacComponentFan = fan->cast<model::HVACComponent>();
+
+    // Terminal
+    model::AirTerminalSingleDuctSeriesPIUReheat terminal(model,hvacComponentFan,hvacComponentCoil);
+    if( primaryAirFlow )
+    {
+      terminal.setMaximumAirFlowRate(primaryAirFlow.get());
+    }
+
+    // Maximum and Minimum Primary Air Flow Rate
+    if( boost::optional<model::FanConstantVolume> constantFan = hvacComponentFan.optionalCast<model::FanConstantVolume>() )
+    {
+      if( boost::optional<double> flow = constantFan->maximumFlowRate() )
+      {
+        terminal.setMaximumPrimaryAirFlowRate(flow.get());
+        if( primaryAirFlowMin )
+        {
+          terminal.setMinimumPrimaryAirFlowFraction(primaryAirFlowMin.get() / flow.get());
+        }
+      }
+    }
+    else if( boost::optional<model::FanVariableVolume> variableFan = hvacComponentFan.optionalCast<model::FanVariableVolume>() )
+    {
+      if( boost::optional<double> flow = variableFan->maximumFlowRate() )
+      {
+        terminal.setMaximumPrimaryAirFlowRate(flow.get());
+        if( primaryAirFlowMin )
+        {
+          terminal.setMinimumPrimaryAirFlowFraction(primaryAirFlowMin.get() / flow.get());
+        }
+      }
+    }
+
+    // Hot Water Related Properties
+    if( boost::optional<model::CoilHeatingWater> waterCoil = hvacComponentCoil.optionalCast<model::CoilHeatingWater>() )
+    {
+      terminal.setConvergenceTolerance(0.001); 
+      if( boost::optional<double> flow = waterCoil->maximumWaterFlowRate() )
+      {
+        terminal.setMaximumHotWaterorSteamFlowRate(flow.get());
+      }
+    }
+
+    result = terminal;
+  }
   else if( istringEqual("ParallelFanBox",typeElement.text().toStdString()) )
   {
     model::Schedule schedule = alwaysOnSchedule(model);
@@ -3983,28 +4051,6 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     if( ok )
     {
       terminal.setFanOnFlowFraction(value);
-    }
-
-    result = terminal;
-  }
-  else if( istringEqual("SeriesFanBox",typeElement.text().toStdString()) )
-  {
-    model::Schedule schedule = alwaysOnSchedule(model);
-
-    model::CoilHeatingElectric coil(model,schedule);
-
-    model::FanConstantVolume fan(model,schedule);
-
-    model::AirTerminalSingleDuctParallelPIUReheat terminal(model,schedule,fan,coil);
-
-    if( primaryAirFlow )
-    {
-      terminal.setMaximumPrimaryAirFlowRate(primaryAirFlow.get());
-    }
-
-    if( primaryAirFlow && primaryAirFlowMin )
-    {
-      terminal.setMinimumPrimaryAirFlowFraction(primaryAirFlowMin.get() / primaryAirFlow.get());
     }
 
     result = terminal;
