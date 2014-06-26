@@ -79,7 +79,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_timer(0),
   m_showAdvancedOutput(0),
   m_advancedOutput(QString()),
-  m_workingDir(openstudio::path())
+  m_workingDir(openstudio::path()),
+  m_advancedOutputDialog(0)
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -100,6 +101,10 @@ ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
   openstudio::OSAppBase * app = OSAppBase::instance();
   if (app){
     app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+  }
+
+  if(m_advancedOutputDialog){
+    delete m_advancedOutputDialog;
   }
 }
 
