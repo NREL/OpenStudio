@@ -34,6 +34,10 @@
 #include <model/FanOnOff_Impl.hpp>
 #include <model/FanZoneExhaust.hpp>
 #include <model/FanZoneExhaust_Impl.hpp>
+#include <model/CoilHeatingWaterToAirHeatPumpEquationFit.hpp>
+#include <model/CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp>
+#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
+#include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
 #include <model/CoilCoolingDXSingleSpeed.hpp>
 #include <model/CoilCoolingDXTwoSpeed.hpp>
 #include <model/CoilHeatingGas.hpp>
@@ -116,6 +120,8 @@
 #include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
 #include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
+#include <model/ZoneHVACWaterToAirHeatPump.hpp>
+#include <model/ZoneHVACWaterToAirHeatPump_Impl.hpp>
 #include <model/ZoneHVACFourPipeFanCoil.hpp>
 #include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
 #include <model/ZoneHVACBaseboardConvectiveElectric.hpp>
@@ -1497,225 +1503,303 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else if( istringEqual(coilHeatingTypeElement.text().toStdString(),"HeatPump") )
   {
-    // HtPumpCap_fTempCrvRef
-    boost::optional<model::Curve> totalHeatingCapacityFunctionofTemperatureCurve;
-    QDomElement totalHeatingCapacityFunctionofTemperatureCurveElement = 
-      heatingCoilElement.firstChildElement("HtPumpCap_fTempCrvRef");
-    totalHeatingCapacityFunctionofTemperatureCurve = 
-      model.getModelObjectByName<model::Curve>(
-        totalHeatingCapacityFunctionofTemperatureCurveElement.text().toStdString());
-
-    if( ! totalHeatingCapacityFunctionofTemperatureCurve )
+    QDomElement cndsrTypeElement = heatingCoilElement.firstChildElement("CndsrType");
+    if(cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0)
     {
-      model::CurveCubic _totalHeatingCapacityFunctionofTemperatureCurve(model);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.027626);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.000148716);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4xPOW3(0.0000034992);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
-      _totalHeatingCapacityFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+      model::CoilHeatingWaterToAirHeatPumpEquationFit coil(model);
+      result = coil;
+      coil.setName(nameElement.text().toStdString());
 
-      totalHeatingCapacityFunctionofTemperatureCurve = _totalHeatingCapacityFunctionofTemperatureCurve;
-    }
+      // Plant
+      QDomElement fluidSegNameElement = heatingCoilElement.firstChildElement("FluidSegInRef");
+      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text(),doc,model);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coil);
+      }
 
-    // HtPumpCap_fFlowCrvRef
-    boost::optional<model::Curve> totalHeatingCapacityFunctionofFlowFractionCurve;
-    QDomElement totalHeatingCapacityFunctionofFlowFractionCurveElement = 
-      heatingCoilElement.firstChildElement("HtPumpCap_fFlowCrvRef");
-    totalHeatingCapacityFunctionofFlowFractionCurve = 
-      model.getModelObjectByName<model::Curve>(
-        totalHeatingCapacityFunctionofFlowFractionCurveElement.text().toStdString());
+      if( ! autosize() )
+      {
+        // Look for a sibling fan to figure out what the flow capacity should be
+        QDomElement flowCapElement;
+        QDomElement airSegElement = heatingCoilElement.parentNode().toElement();
+        if( ! airSegElement.isNull() )
+        {
+          QDomElement fanElement = airSegElement.firstChildElement("Fan");
+          if( ! fanElement.isNull() )
+          {
+            flowCapElement = fanElement.firstChildElement("FlowCapSim");
+          }
+        }
 
-    if( ! totalHeatingCapacityFunctionofFlowFractionCurve )
-    {
-      model::CurveCubic _totalHeatingCapacityFunctionofFlowFractionCurve(model);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient4xPOW3(0.0);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
-      _totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
+        value = flowCapElement.text().toDouble(&ok);
+        if( ok ) 
+        {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          coil.setRatedAirFlowRate(value);
+        }
+      }
 
-      totalHeatingCapacityFunctionofFlowFractionCurve = _totalHeatingCapacityFunctionofFlowFractionCurve;
-    }
+      if( ! autosize() )
+      {
+        QDomElement fluidFlowRtDsgnSimElement = heatingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
+        value = fluidFlowRtDsgnSimElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"gal/min","m^3/s").get();
+          coil.setRatedWaterFlowRate(value);
+        }
+      }
 
-    // HtPumpEIR_fTempCrvRef 
-    boost::optional<model::Curve> energyInputRatioFunctionofTemperatureCurve;
-    QDomElement energyInputRatioFunctionofTemperatureCurveElement = 
-      heatingCoilElement.firstChildElement("HtPumpEIR_fTempCrvRef");
-    energyInputRatioFunctionofTemperatureCurve = 
-      model.getModelObjectByName<model::Curve>(
-        energyInputRatioFunctionofTemperatureCurveElement.text().toStdString());
-
-    if( ! energyInputRatioFunctionofTemperatureCurve )
-    {
-      model::CurveCubic _energyInputRatioFunctionofTemperatureCurve(model);
-      _energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
-      _energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
-      _energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
-      _energyInputRatioFunctionofTemperatureCurve.setCoefficient4xPOW3(-0.000023328);
-      _energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
-      _energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
-
-      energyInputRatioFunctionofTemperatureCurve = _energyInputRatioFunctionofTemperatureCurve;
-    }
-
-    // HtPumpEIR_fFlowCrvRef
-    boost::optional<model::Curve> energyInputRatioFunctionofFlowFractionCurve;
-    QDomElement energyInputRatioFunctionofFlowFractionCurveElement = 
-      heatingCoilElement.firstChildElement("HtPumpEIR_fFlowCrvRef");
-    energyInputRatioFunctionofFlowFractionCurve = 
-      model.getModelObjectByName<model::Curve>(
-        energyInputRatioFunctionofFlowFractionCurveElement.text().toStdString());
-
-    if( ! energyInputRatioFunctionofFlowFractionCurve )
-    {
-      model::CurveQuadratic _energyInputRatioFunctionofFlowFractionCurve(model);
-      _energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
-      _energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
-      _energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
-      _energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
-      _energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
-
-      energyInputRatioFunctionofFlowFractionCurve = _energyInputRatioFunctionofFlowFractionCurve;
-    }
-
-    // HtPumpEIR_fPLFCrvRef 
-    boost::optional<model::Curve> partLoadFractionCorrelationCurve;
-    QDomElement partLoadFractionCorrelationCurveElement = 
-      heatingCoilElement.firstChildElement("HtPumpEIR_fPLFCrvRef");
-    partLoadFractionCorrelationCurve = 
-      model.getModelObjectByName<model::Curve>(
-        partLoadFractionCorrelationCurveElement.text().toStdString());
-
-    if( ! partLoadFractionCorrelationCurve )
-    {
-      model::CurveQuadratic _partLoadFractionCorrelationCurve(model);
-      _partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
-      _partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
-      _partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
-      _partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
-      _partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
-
-      partLoadFractionCorrelationCurve = _partLoadFractionCorrelationCurve;
-    }
-
-    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-    model::CoilHeatingDXSingleSpeed heatingCoil( model,
-                                                 schedule,
-                                                 totalHeatingCapacityFunctionofTemperatureCurve.get(),
-                                                 totalHeatingCapacityFunctionofFlowFractionCurve.get(),
-                                                 energyInputRatioFunctionofTemperatureCurve.get(),
-                                                 energyInputRatioFunctionofFlowFractionCurve.get(),
-                                                 partLoadFractionCorrelationCurve.get() ); 
-
-    // Name
-    heatingCoil.setName(nameElement.text().toStdString());
-
-    // FlowCapSim
-    if( flowCap )
-    {
-      heatingCoil.setRatedAirFlowRate(flowCap.get());
-    }
-
-    // CapTotGrossRtdSim
-    if( capTotGrossRtd )
-    {
-      heatingCoil.setRatedTotalHeatingCapacity(capTotGrossRtd.get());
-    }
-
-    // HtPumpEIR
-    QDomElement htPumpEIRElement = heatingCoilElement.firstChildElement("HtPumpEIR");
-    value = htPumpEIRElement.text().toDouble(&ok);
-    if( ok ) 
-    { 
-      heatingCoil.setRatedCOP(1.0 / value);
-    } 
-
-    // HtPumpCprsrLockoutTemp
-    QDomElement htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
-    value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
-    if( ok )
-    {
-      value = unitToUnit(value,"F","C").get();
-      heatingCoil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
-    }
-
-    // HtPumpCrankcaseHtCap
-    QDomElement htPumpCrankcaseHtCapElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseHtrCapSim");
-    value = htPumpCrankcaseHtCapElement.text().toDouble(&ok);
-    if( ok )
-    {
-      value = unitToUnit(value,"Btu/h","W").get();
-      heatingCoil.setCrankcaseHeaterCapacity(value);
-    }
-
-    // HtPumpCrankcaseCtrlTemp
-    QDomElement htPumpCrankcaseCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseCtrlTemp");
-    value = htPumpCrankcaseCtrlTempElement.text().toDouble(&ok);
-    if( ok )
-    {
-      value = unitToUnit(value,"F","C").get();
-      heatingCoil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(value);
-    }
-
-    // HtPumpDefHtSrc
-    QDomElement htPumpDefHtSrcElement = heatingCoilElement.firstChildElement("HtPumpDefHtSrc");
-    if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"Electric") )
-    {
-      heatingCoil.setDefrostStrategy("Resistive");
-    }
-    else if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"HotGas") )
-    {
-      heatingCoil.setDefrostStrategy("ReverseCycle");
-
-      model::CurveBiquadratic defrostCurve(model);
-      defrostCurve.setName(heatingCoil.name().get() + " Defrost Curve");
-      defrostCurve.setCoefficient1Constant(1.0);
-      heatingCoil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(defrostCurve);
-    }
-
-    // HtPumpDefHtrCapSim
-    if( ! autosize() )
-    {
-      QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtrCapSim");
-      value = htPumpDefHtCapElement.text().toDouble(&ok);
+      QDomElement capTotRtdSimElement = heatingCoilElement.firstChildElement("CapTotRtdSim");
+      value = capTotRtdSimElement.text().toDouble(&ok);
       if( ok )
       {
         value = unitToUnit(value,"Btu/h","W").get();
-        heatingCoil.setResistiveDefrostHeaterCapacity(value);
+        coil.setRatedHeatingCapacity(value);
       }
+
+      QDomElement htPumpCOPElement = heatingCoilElement.firstChildElement("HtPumpCOP");
+      value = htPumpCOPElement.text().toDouble(&ok);
+      if( ok )
+      {
+        coil.setRatedHeatingCoefficientofPerformance(value);
+      }
+
+      coil.setHeatingCapacityCoefficient1(-5.50102734);
+      coil.setHeatingCapacityCoefficient2(-0.96688754);
+      coil.setHeatingCapacityCoefficient3(7.70755007);
+      coil.setHeatingCapacityCoefficient4(0.031928881);
+      coil.setHeatingCapacityCoefficient5(0.028112522);
+
+      coil.setHeatingPowerConsumptionCoefficient1(-7.47517858);
+      coil.setHeatingPowerConsumptionCoefficient2(6.40876653);
+      coil.setHeatingPowerConsumptionCoefficient3(1.99711665);
+      coil.setHeatingPowerConsumptionCoefficient4(-0.050682973);
+      coil.setHeatingPowerConsumptionCoefficient5(0.011385145);
     }
     else
     {
-      heatingCoil.autosizeResistiveDefrostHeaterCapacity();
-    }
+      // HtPumpCap_fTempCrvRef
+      boost::optional<model::Curve> totalHeatingCapacityFunctionofTemperatureCurve;
+      QDomElement totalHeatingCapacityFunctionofTemperatureCurveElement = 
+        heatingCoilElement.firstChildElement("HtPumpCap_fTempCrvRef");
+      totalHeatingCapacityFunctionofTemperatureCurve = 
+        model.getModelObjectByName<model::Curve>(
+          totalHeatingCapacityFunctionofTemperatureCurveElement.text().toStdString());
 
-    // HtPumpDefCtrl 
-    QDomElement htPumpDefCtrlElement = heatingCoilElement.firstChildElement("HtPumpDefCtrl");
-    if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"OnDemand") )
-    {
-      heatingCoil.setDefrostControl("OnDemand");
-    }
-    else if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"TimedCycle") )
-    {
-      heatingCoil.setDefrostControl("Timed");
-    }
+      if( ! totalHeatingCapacityFunctionofTemperatureCurve )
+      {
+        model::CurveCubic _totalHeatingCapacityFunctionofTemperatureCurve(model);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient1Constant(0.758746);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient2x(0.027626);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient3xPOW2(0.000148716);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setCoefficient4xPOW3(0.0000034992);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+        _totalHeatingCapacityFunctionofTemperatureCurve.setMaximumValueofx(20.0);
 
-    // HtPumpDefCtrlTemp
-    QDomElement htPumpDefCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpDefCtrlTemp");
-    value = htPumpDefCtrlTempElement.text().toDouble(&ok);
-    if( ok )
-    {
-      value = unitToUnit(value,"F","C").get();
-      heatingCoil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(value);
+        totalHeatingCapacityFunctionofTemperatureCurve = _totalHeatingCapacityFunctionofTemperatureCurve;
+      }
+
+      // HtPumpCap_fFlowCrvRef
+      boost::optional<model::Curve> totalHeatingCapacityFunctionofFlowFractionCurve;
+      QDomElement totalHeatingCapacityFunctionofFlowFractionCurveElement = 
+        heatingCoilElement.firstChildElement("HtPumpCap_fFlowCrvRef");
+      totalHeatingCapacityFunctionofFlowFractionCurve = 
+        model.getModelObjectByName<model::Curve>(
+          totalHeatingCapacityFunctionofFlowFractionCurveElement.text().toStdString());
+
+      if( ! totalHeatingCapacityFunctionofFlowFractionCurve )
+      {
+        model::CurveCubic _totalHeatingCapacityFunctionofFlowFractionCurve(model);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient1Constant(0.84);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient2x(0.16);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setCoefficient4xPOW3(0.0);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setMinimumValueofx(0.5);
+        _totalHeatingCapacityFunctionofFlowFractionCurve.setMaximumValueofx(1.5);
+
+        totalHeatingCapacityFunctionofFlowFractionCurve = _totalHeatingCapacityFunctionofFlowFractionCurve;
+      }
+
+      // HtPumpEIR_fTempCrvRef 
+      boost::optional<model::Curve> energyInputRatioFunctionofTemperatureCurve;
+      QDomElement energyInputRatioFunctionofTemperatureCurveElement = 
+        heatingCoilElement.firstChildElement("HtPumpEIR_fTempCrvRef");
+      energyInputRatioFunctionofTemperatureCurve = 
+        model.getModelObjectByName<model::Curve>(
+          energyInputRatioFunctionofTemperatureCurveElement.text().toStdString());
+
+      if( ! energyInputRatioFunctionofTemperatureCurve )
+      {
+        model::CurveCubic _energyInputRatioFunctionofTemperatureCurve(model);
+        _energyInputRatioFunctionofTemperatureCurve.setCoefficient1Constant(1.19248);
+        _energyInputRatioFunctionofTemperatureCurve.setCoefficient2x(-0.0300438);
+        _energyInputRatioFunctionofTemperatureCurve.setCoefficient3xPOW2(0.00103745);
+        _energyInputRatioFunctionofTemperatureCurve.setCoefficient4xPOW3(-0.000023328);
+        _energyInputRatioFunctionofTemperatureCurve.setMinimumValueofx(-20.0);
+        _energyInputRatioFunctionofTemperatureCurve.setMaximumValueofx(20.0);
+
+        energyInputRatioFunctionofTemperatureCurve = _energyInputRatioFunctionofTemperatureCurve;
+      }
+
+      // HtPumpEIR_fFlowCrvRef
+      boost::optional<model::Curve> energyInputRatioFunctionofFlowFractionCurve;
+      QDomElement energyInputRatioFunctionofFlowFractionCurveElement = 
+        heatingCoilElement.firstChildElement("HtPumpEIR_fFlowCrvRef");
+      energyInputRatioFunctionofFlowFractionCurve = 
+        model.getModelObjectByName<model::Curve>(
+          energyInputRatioFunctionofFlowFractionCurveElement.text().toStdString());
+
+      if( ! energyInputRatioFunctionofFlowFractionCurve )
+      {
+        model::CurveQuadratic _energyInputRatioFunctionofFlowFractionCurve(model);
+        _energyInputRatioFunctionofFlowFractionCurve.setCoefficient1Constant(1.3824);
+        _energyInputRatioFunctionofFlowFractionCurve.setCoefficient2x(-0.4336);
+        _energyInputRatioFunctionofFlowFractionCurve.setCoefficient3xPOW2(0.0512);
+        _energyInputRatioFunctionofFlowFractionCurve.setMinimumValueofx(0.0);
+        _energyInputRatioFunctionofFlowFractionCurve.setMaximumValueofx(1.0);
+
+        energyInputRatioFunctionofFlowFractionCurve = _energyInputRatioFunctionofFlowFractionCurve;
+      }
+
+      // HtPumpEIR_fPLFCrvRef 
+      boost::optional<model::Curve> partLoadFractionCorrelationCurve;
+      QDomElement partLoadFractionCorrelationCurveElement = 
+        heatingCoilElement.firstChildElement("HtPumpEIR_fPLFCrvRef");
+      partLoadFractionCorrelationCurve = 
+        model.getModelObjectByName<model::Curve>(
+          partLoadFractionCorrelationCurveElement.text().toStdString());
+
+      if( ! partLoadFractionCorrelationCurve )
+      {
+        model::CurveQuadratic _partLoadFractionCorrelationCurve(model);
+        _partLoadFractionCorrelationCurve.setCoefficient1Constant(0.75);
+        _partLoadFractionCorrelationCurve.setCoefficient2x(0.25);
+        _partLoadFractionCorrelationCurve.setCoefficient3xPOW2(0.0);
+        _partLoadFractionCorrelationCurve.setMinimumValueofx(0.0);
+        _partLoadFractionCorrelationCurve.setMaximumValueofx(1.0);
+
+        partLoadFractionCorrelationCurve = _partLoadFractionCorrelationCurve;
+      }
+
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+
+      model::CoilHeatingDXSingleSpeed heatingCoil( model,
+                                                   schedule,
+                                                   totalHeatingCapacityFunctionofTemperatureCurve.get(),
+                                                   totalHeatingCapacityFunctionofFlowFractionCurve.get(),
+                                                   energyInputRatioFunctionofTemperatureCurve.get(),
+                                                   energyInputRatioFunctionofFlowFractionCurve.get(),
+                                                   partLoadFractionCorrelationCurve.get() ); 
+
+      // Name
+      heatingCoil.setName(nameElement.text().toStdString());
+
+      // FlowCapSim
+      if( flowCap )
+      {
+        heatingCoil.setRatedAirFlowRate(flowCap.get());
+      }
+
+      // CapTotGrossRtdSim
+      if( capTotGrossRtd )
+      {
+        heatingCoil.setRatedTotalHeatingCapacity(capTotGrossRtd.get());
+      }
+
+      // HtPumpEIR
+      QDomElement htPumpEIRElement = heatingCoilElement.firstChildElement("HtPumpEIR");
+      value = htPumpEIRElement.text().toDouble(&ok);
+      if( ok ) 
+      { 
+        heatingCoil.setRatedCOP(1.0 / value);
+      } 
+
+      // HtPumpCprsrLockoutTemp
+      QDomElement htPumpCprsrLockoutTempElement = heatingCoilElement.firstChildElement("HtPumpCprsrLockoutTemp");
+      value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        heatingCoil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
+      }
+
+      // HtPumpCrankcaseHtCap
+      QDomElement htPumpCrankcaseHtCapElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseHtrCapSim");
+      value = htPumpCrankcaseHtCapElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"Btu/h","W").get();
+        heatingCoil.setCrankcaseHeaterCapacity(value);
+      }
+
+      // HtPumpCrankcaseCtrlTemp
+      QDomElement htPumpCrankcaseCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpCrankcaseCtrlTemp");
+      value = htPumpCrankcaseCtrlTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        heatingCoil.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(value);
+      }
+
+      // HtPumpDefHtSrc
+      QDomElement htPumpDefHtSrcElement = heatingCoilElement.firstChildElement("HtPumpDefHtSrc");
+      if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"Electric") )
+      {
+        heatingCoil.setDefrostStrategy("Resistive");
+      }
+      else if( istringEqual(htPumpDefHtSrcElement.text().toStdString(),"HotGas") )
+      {
+        heatingCoil.setDefrostStrategy("ReverseCycle");
+
+        model::CurveBiquadratic defrostCurve(model);
+        defrostCurve.setName(heatingCoil.name().get() + " Defrost Curve");
+        defrostCurve.setCoefficient1Constant(1.0);
+        heatingCoil.setDefrostEnergyInputRatioFunctionofTemperatureCurve(defrostCurve);
+      }
+
+      // HtPumpDefHtrCapSim
+      if( ! autosize() )
+      {
+        QDomElement htPumpDefHtCapElement = heatingCoilElement.firstChildElement("HtPumpDefHtrCapSim");
+        value = htPumpDefHtCapElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"Btu/h","W").get();
+          heatingCoil.setResistiveDefrostHeaterCapacity(value);
+        }
+      }
+      else
+      {
+        heatingCoil.autosizeResistiveDefrostHeaterCapacity();
+      }
+
+      // HtPumpDefCtrl 
+      QDomElement htPumpDefCtrlElement = heatingCoilElement.firstChildElement("HtPumpDefCtrl");
+      if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"OnDemand") )
+      {
+        heatingCoil.setDefrostControl("OnDemand");
+      }
+      else if( istringEqual(htPumpDefCtrlElement.text().toStdString(),"TimedCycle") )
+      {
+        heatingCoil.setDefrostControl("Timed");
+      }
+
+      // HtPumpDefCtrlTemp
+      QDomElement htPumpDefCtrlTempElement = heatingCoilElement.firstChildElement("HtPumpDefCtrlTemp");
+      value = htPumpDefCtrlTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        heatingCoil.setMaximumOutdoorDryBulbTemperatureforDefrostOperation(value);
+      }
+
+      // DefrostTimePeriodFraction
+      heatingCoil.setDefrostTimePeriodFraction(0.058333);
+
+      result = heatingCoil;
     }
-
-    // DefrostTimePeriodFraction
-    heatingCoil.setDefrostTimePeriodFraction(0.058333);
-
-    result = heatingCoil;
   }
   else
   {
@@ -1805,7 +1889,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
       QDomElement znSysTypeElement = parentElement.firstChildElement("Type");
 
-      if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 )
+      if( znSysTypeElement.text().compare("FPFC",Qt::CaseInsensitive) == 0 || 
+          znSysTypeElement.text().compare("PTHP",Qt::CaseInsensitive) == 0 )
       {
         model::Schedule schedule = alwaysOnSchedule(model);
 
@@ -2194,14 +2279,100 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   if( istringEqual(coilCoolingTypeElement.text().toStdString(),"DirectExpansion") )
   {
     // Name
-
     QDomElement nameElement = coolingCoilElement.firstChildElement("Name");
 
     // NumClgStages
-
     QDomElement numClgStagesElement = coolingCoilElement.firstChildElement("NumClgStages");
 
-    if( numClgStagesElement.text().toInt() == 1 || numClgStagesElement.isNull() )
+    // CndsrType
+    QDomElement cndsrTypeElement = coolingCoilElement.firstChildElement("CndsrType");
+
+    if( cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0 )
+    {
+      model::CoilCoolingWaterToAirHeatPumpEquationFit coil(model);
+      result = coil;
+
+      coil.setName(nameElement.text().toStdString());
+
+      // Plant
+      QDomElement fluidSegNameElement = coolingCoilElement.firstChildElement("FluidSegInRef");
+      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text(),doc,model);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coil);
+      }
+
+      if( ! autosize() )
+      {
+        value = flowCapElement.text().toDouble(&ok);
+        if( ok ) 
+        {
+          value = unitToUnit(value,"cfm","m^3/s").get();
+          coil.setRatedAirFlowRate(value);
+        }
+      }
+
+      if( ! autosize() )
+      {
+        QDomElement fluidFlowRtDsgnSimElement = coolingCoilElement.firstChildElement("FluidFlowRtDsgnSim");
+        value = fluidFlowRtDsgnSimElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"gal/min","m^3/s").get();
+          coil.setRatedAirFlowRate(value);
+        }
+      }
+
+      QDomElement capTotGrossRtdSimElement = coolingCoilElement.firstChildElement("CapTotGrossRtdSim");
+      value = capTotGrossRtdSimElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"Btu/h","W").get();
+        coil.setRatedTotalCoolingCapacity(value);
+      }
+
+      if( ! autosize() )
+      {
+        QDomElement capSensGrossRtdSimElement = coolingCoilElement.firstChildElement("CapSensGrossRtdSim");
+        value = capSensGrossRtdSimElement.text().toDouble(&ok);
+        if( ok )
+        {
+          value = unitToUnit(value,"Btu/h","W").get();
+          coil.setRatedSensibleCoolingCapacity(value);
+        }
+      }
+
+      QDomElement dxEIRElement = coolingCoilElement.firstChildElement("DXEIR");
+      value = dxEIRElement.text().toDouble(&ok);
+      if( ok )
+      {
+        coil.setRatedCoolingCoefficientofPerformance( 1.0 / value );
+      }
+
+      coil.setTotalCoolingCapacityCoefficient1(-0.68126221);
+      coil.setTotalCoolingCapacityCoefficient2(1.99529297);
+      coil.setTotalCoolingCapacityCoefficient3(-0.93611888);
+      coil.setTotalCoolingCapacityCoefficient4(0.02081177);
+      coil.setTotalCoolingCapacityCoefficient5(0.008438868);
+
+      coil.setSensibleCoolingCapacityCoefficient1(2.24209455);
+      coil.setSensibleCoolingCapacityCoefficient2(7.28913391);
+      coil.setSensibleCoolingCapacityCoefficient3(-9.06079896);
+      coil.setSensibleCoolingCapacityCoefficient4(-0.36729404);
+      coil.setSensibleCoolingCapacityCoefficient5(0.218826161);
+      coil.setSensibleCoolingCapacityCoefficient6(0.00901534);
+
+      coil.setCoolingPowerConsumptionCoefficient1(-3.20456384);
+      coil.setCoolingPowerConsumptionCoefficient2(0.47656454);
+      coil.setCoolingPowerConsumptionCoefficient3(3.16734236);
+      coil.setCoolingPowerConsumptionCoefficient4(0.10244637);
+      coil.setCoolingPowerConsumptionCoefficient5(-0.038132556);
+
+      coil.setNominalTimeforCondensateRemovaltoBegin(0.0);
+      coil.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
+
+    }
+    else if( numClgStagesElement.text().toInt() == 1 || numClgStagesElement.isNull() )
     {
       model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
@@ -5305,6 +5476,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     return boost::none;
   }
 
+  boost::optional<model::ModelObject> result;
+
   // Name
   std::string name = element.firstChildElement("Name").text().toStdString();
 
@@ -5428,7 +5601,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       ptac.setSupplyAirFanOperatingModeSchedule(schedule);
     }
 
-    return ptac;
+    result = ptac;
   }
   else if( istringEqual(type,"PTHP") )
   {
@@ -5561,69 +5734,124 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       LOG(Warn,name << " creating a default heating coil");
     }
 
-    // PTHP
+    boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp;
+    boost::optional<model::ZoneHVACWaterToAirHeatPump> wshp;
 
-    model::ZoneHVACPackagedTerminalHeatPump pthp(model,
+    if( heatingCoil->optionalCast<model::CoilHeatingWaterToAirHeatPumpEquationFit>() )
+    {
+      if( coolingCoil.optionalCast<model::CoilCoolingWaterToAirHeatPumpEquationFit>() )
+      {
+        wshp = model::ZoneHVACWaterToAirHeatPump(model,
                                                  schedule.get(),
                                                  fan,
                                                  heatingCoil.get(),
                                                  coolingCoil,
                                                  suppHeatingCoil.get());
-
-    if( flowCap )
+        result = wshp;
+      }
+      else
+      {
+        LOG(Error,name << " heating and cooling coil must both be water to air heat pump coils");
+        coolingCoil.remove();
+        heatingCoil->remove();
+        fan.remove();
+      }
+    }
+    else
     {
-      pthp.setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
-      pthp.setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
-      pthp.setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
+      pthp = model::ZoneHVACPackagedTerminalHeatPump(model,
+                                                     schedule.get(),
+                                                     fan,
+                                                     heatingCoil.get(),
+                                                     coolingCoil,
+                                                     suppHeatingCoil.get());
+      result = pthp;
     }
 
-    // Name
-
-    pthp.setName(name);
-
-    // HtPumpSuppTemp
-
-    bool ok;
-
-    double value = htPumpSuppTempElement.text().toDouble(&ok);
-
-    if( ok )
+    if( pthp )
     {
-      value = unitToUnit(value,"F","C").get();
+      if( flowCap )
+      {
+        pthp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
+        pthp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
+        pthp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
+      }
 
-      pthp.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
-    }
+      // Name
+      pthp->setName(name);
 
-    // HtPumpCprsrLockoutTemp
+      // HtPumpSuppTemp
+      value = htPumpSuppTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        pthp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
+      }
 
-    value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
-
-    if( ok )
-    {
-      value = unitToUnit(value,"F","C").get();
-
-      pthp.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
-    }
+      // HtPumpCprsrLockoutTemp
+      value = htPumpCprsrLockoutTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        pthp->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(value);
+      }
   
-    // FanCtrl
-    
-    QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+      // FanCtrl
+      QDomElement fanCtrlElement = element.firstChildElement("FanCtrl"); 
+      if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
+      {
+        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
+        pthp->setSupplyAirFanOperatingModeSchedule(schedule);
+      }
 
-    if( istringEqual(fanCtrlElement.text().toStdString(),"Continuous") )
-    {
-      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-      pthp.setSupplyAirFanOperatingModeSchedule(schedule);
+      // htgDsgnSupAirTemp
+      if( htgDsgnSupAirTemp )
+      {
+        pthp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
+      }
     }
-
-    // htgDsgnSupAirTemp
-
-    if( htgDsgnSupAirTemp )
+    else if( wshp )
     {
-      pthp.setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
-    }
+      // Name
+      wshp->setName(name);
 
-    return pthp;
+      wshp->setSupplyAirFlowRateDuringCoolingOperation(flowCap.get());
+      wshp->setSupplyAirFlowRateDuringHeatingOperation(flowCap.get());
+      wshp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(flowCap.get());
+
+      wshp->setMaximumCyclingRate(2.5);
+      wshp->setHeatPumpTimeConstant(60.0);
+      wshp->setFractionofOnCyclePowerUse(0.01);
+
+      QDomElement htPumpFanDelayElement = element.firstChildElement("HtPumpFanDelay");
+      value = htPumpFanDelayElement.text().toDouble(&ok);
+      if( ok )
+      {
+        wshp->setHeatPumpFanDelayTime(value);
+      }
+      else
+      {
+        wshp->setHeatPumpFanDelayTime(60.0);
+      }
+
+      if( htgDsgnSupAirTemp )
+      {
+        wshp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
+      }
+
+      value = htPumpSuppTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        value = unitToUnit(value,"F","C").get();
+        wshp->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(value);
+      }
+
+      // Not yet supported by OS
+      //QDomElement htPumpWtrFlowCtrlElement = element.firstChildElement("HtPumpWtrFlowCtrl");
+      //if( ! htPumpWtrFlowCtrlElement.isNull() )
+      //{
+      //}
+    }
   }
   else if( istringEqual(type,"Baseboard") )
   {
@@ -5637,6 +5865,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     {
       // ZoneHVAC Baseboard Convective Electric
       model::ZoneHVACBaseboardConvectiveElectric baseboard(model);
+      result = baseboard;
       
       // Nominal Capacity
       boost::optional<double> nomHtgCap;
@@ -5660,10 +5889,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       }
 
       // Name
-
       baseboard.setName(name);
-
-      return baseboard;
     }
     else if (istringEqual(htgCoilType, "HotWater") )
     {
@@ -5704,15 +5930,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
       // ZoneHVAC Baseboard Convective Electric
       model::ZoneHVACBaseboardConvectiveWater baseboard(model, schedule.get(), coil);
+      result = baseboard;
 
       // Name
-
       baseboard.setName(name);
-
-      return baseboard;
     }
-
-    return boost::none;
   }
   else if( istringEqual(type,"FPFC") )
   {
@@ -5784,6 +6006,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     
     // FPFC (Four Pipe Fan Coil)
     model::ZoneHVACFourPipeFanCoil fpfc(model,schedule.get(),fan,coolingCoil,heatingCoil);
+    result = fpfc;
 
     // pull the max air flow rate from the fan and set in the fpfc
     if( flowCap )
@@ -5868,14 +6091,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     }
 
     // Name
-
     fpfc.setName(name);
-
-    return fpfc;
-
   }
 
-  return boost::none;
+  return result;
 }
 
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvDblQuad(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
