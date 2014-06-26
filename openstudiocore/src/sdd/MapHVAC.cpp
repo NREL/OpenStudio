@@ -72,7 +72,9 @@
 #include <model/CurveQuadratic.hpp>
 #include <model/CurveBiquadratic.hpp>
 #include <model/CoolingTowerSingleSpeed.hpp>
+#include <model/CoolingTowerSingleSpeed_Impl.hpp>
 #include <model/CoolingTowerVariableSpeed.hpp>
+#include <model/CoolingTowerVariableSpeed_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
@@ -4078,214 +4080,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   QDomElement typeElement = fluidSysElement.firstChildElement("Type");
 
-  // TempCtrl
-
-  QDomElement tempCtrlElement = fluidSysElement.firstChildElement("TempCtrl");
-
-  // Fixed
-  if( istringEqual(tempCtrlElement.text().toStdString(),"Fixed") )
-  {
-    QDomElement fixedSupTempElement = fluidSysElement.firstChildElement("FixedSupTemp");
-
-    double fixedSupTemp = 21.1;
-
-    value = fixedSupTempElement.text().toDouble(&ok);
-
-    if( ok )
-    {
-      fixedSupTemp = unitToUnit(value,"F","C").get();
-    }
-    else
-    {
-      QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
-      value = dsgnSupWtrTempElement.text().toDouble(&ok);
-      if( ok )
-      {
-        fixedSupTemp = unitToUnit(value,"F","C").get();
-
-        LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for fixed supply temperature");
-      }
-      else
-      {
-        LOG(Error,plantLoop.name().get() << " Control type is fixed, but a valid temperature was not provided");
-      }
-    }
-
-    model::ScheduleRuleset schedule(model);
-
-    schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
-    model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
-    scheduleDay.addValue(Time(1.0),fixedSupTemp);
-
-    model::SetpointManagerScheduled spm(model,schedule);
-
-    supplyOutletNode.addSetpointManager(spm);
-  }
-  else if( istringEqual(tempCtrlElement.text().toStdString(),"Scheduled") )
-  {
-    QDomElement tempSetPtSchRefElement = fluidSysElement.firstChildElement("TempSetptSchRef");
-
-    boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(tempSetPtSchRefElement.text().toStdString());
-
-    if( ! schedule )
-    {
-      LOG(Error,plantLoop.name().get() << " Control type is scheduled, but a valid schedule could not be found.");
-
-      model::ScheduleRuleset schedule(model);
-
-      schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
-      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
-      scheduleDay.addValue(Time(1.0),21.1);
-    }
-
-    model::SetpointManagerScheduled spm(model,schedule.get());
-
-    supplyOutletNode.addSetpointManager(spm);
-  }
-  else if( istringEqual(tempCtrlElement.text().toStdString(),"WetBulbReset") )
-  {
-    model::SetpointManagerFollowOutdoorAirTemperature spm(model);
-
-    spm.setReferenceTemperatureType("OutdoorAirWetBulb");
-
-    supplyOutletNode.addSetpointManager(spm);
-
-    boost::optional<double> rstSupHi;
-    boost::optional<double> rstSupLow;
-
-    // RstSupHi
-    QDomElement rstSupHiElement = fluidSysElement.firstChildElement("RstSupHi");
-    value = rstSupHiElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstSupHi = unitToUnit(value,"F","C").get();
-    }
-
-    // RstSupLow
-    QDomElement rstSupLoElement = fluidSysElement.firstChildElement("RstSupLow");
-    value = rstSupLoElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstSupLow = unitToUnit(value,"F","C").get();
-    }
-
-    if( rstSupLow && rstSupHi )
-    {
-      spm.setMinimumSetpointTemperature(rstSupLow.get());
-
-      spm.setMaximumSetpointTemperature(rstSupHi.get());
-    }
-
-    // WetBulbApproach
-    QDomElement wetBulbApproachElement = fluidSysElement.firstChildElement("WetBulbApproach");
-    value = wetBulbApproachElement.text().toDouble(&ok);
-    if( ok )
-    {
-      spm.setOffsetTemperatureDifference(value * 5.0 / 9.0);
-    }
-  }
-  else if( istringEqual(tempCtrlElement.text().toStdString(),"OutsideAirReset") )
-  {
-    model::SetpointManagerOutdoorAirReset spm(model);
-
-    supplyOutletNode.addSetpointManager(spm);
-
-    boost::optional<double> rstSupHi;
-    boost::optional<double> rstSupLow;
-    boost::optional<double> rstOutdrHi;
-    boost::optional<double> rstOutdrLow;
-
-    // RstSupHi
-    QDomElement rstSupHiElement = fluidSysElement.firstChildElement("RstSupHi");
-    value = rstSupHiElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstSupHi = unitToUnit(value,"F","C").get();
-    }
-
-    // RstSupLow
-    QDomElement rstSupLoElement = fluidSysElement.firstChildElement("RstSupLow");
-    value = rstSupLoElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstSupLow = unitToUnit(value,"F","C").get();
-    }
-
-    // RstOutdrHi
-    QDomElement rstOutDrHiElement = fluidSysElement.firstChildElement("RstOutdrHi");
-    value = rstOutDrHiElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstOutdrHi = unitToUnit(value,"F","C").get();
-    }
-
-    // RstOutdrLow
-    QDomElement rstOutDrLoElement = fluidSysElement.firstChildElement("RstOutdrLow");
-    value = rstOutDrLoElement.text().toDouble(&ok);
-    if( ok )
-    {
-      rstOutdrLow = unitToUnit(value,"F","C").get();
-    }
-
-    if( rstSupHi && rstSupLow && rstOutdrHi && rstOutdrLow )
-    {
-      if( rstOutdrHi > rstOutdrLow )
-      {
-        spm.setOutdoorHighTemperature(rstOutdrHi.get());
-        spm.setSetpointatOutdoorHighTemperature(rstSupHi.get());
-        spm.setOutdoorLowTemperature(rstOutdrLow.get());
-        spm.setSetpointatOutdoorLowTemperature(rstSupLow.get());
-      }
-      else
-      {
-        spm.setOutdoorHighTemperature(rstOutdrLow.get());
-        spm.setSetpointatOutdoorHighTemperature(rstSupLow.get());
-        spm.setOutdoorLowTemperature(rstOutdrHi.get());
-        spm.setSetpointatOutdoorLowTemperature(rstSupHi.get());
-      }
-    }
-    else
-    {
-      LOG(Warn,nameElement.text().toStdString() << " requests OA reset control, but does not define setpoints."
-        << "  Using OpenStudio defaults.");
-    }
-  }
-  else if( istringEqual(tempCtrlElement.text().toStdString(),"LoadReset") )
-  {
-    QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
-    value = dsgnSupWtrTempElement.text().toDouble(&ok);
-    if( ok )
-    {
-      value = unitToUnit(value,"F","C").get();
-
-      model::ScheduleRuleset schedule(model);
-
-      schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
-      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
-      scheduleDay.addValue(Time(1.0),value);
-
-      model::SetpointManagerScheduled spm(model,schedule);
-
-      supplyOutletNode.addSetpointManager(spm);
-
-      LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for LoadReset temperature control.  This control scheme is not fully implemented.");
-    }
-    else
-    {
-      LOG(Error,plantLoop.name().get() << " no setpoint for LoadReset temperature control.");
-    }
-  }
-  else
-  {
-    LOG(Error,plantLoop.name().get() << " does not have a setpoint.");
-  }
-
   // DsgnSupWtrTemp
   QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
   value = dsgnSupWtrTempElement.text().toDouble(&ok);
@@ -4637,6 +4431,331 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       //  plantLoop.setMinimumLoopFlowRate(minimum(createVector(minimums)));
       //}
     }
+  }
+
+  // TempCtrl
+  QDomElement tempCtrlElement = fluidSysElement.firstChildElement("TempCtrl");
+
+  // Fixed
+  if( istringEqual(tempCtrlElement.text().toStdString(),"Fixed") )
+  {
+    QDomElement fixedSupTempElement = fluidSysElement.firstChildElement("FixedSupTemp");
+
+    double fixedSupTemp = 21.1;
+
+    value = fixedSupTempElement.text().toDouble(&ok);
+
+    if( ok )
+    {
+      fixedSupTemp = unitToUnit(value,"F","C").get();
+    }
+    else
+    {
+      QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
+      value = dsgnSupWtrTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        fixedSupTemp = unitToUnit(value,"F","C").get();
+
+        LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for fixed supply temperature");
+      }
+      else
+      {
+        LOG(Error,plantLoop.name().get() << " Control type is fixed, but a valid temperature was not provided");
+      }
+    }
+
+    model::ScheduleRuleset schedule(model);
+
+    schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
+
+    model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+    scheduleDay.addValue(Time(1.0),fixedSupTemp);
+
+    model::SetpointManagerScheduled spm(model,schedule);
+
+    supplyOutletNode.addSetpointManager(spm);
+  }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"Scheduled") )
+  {
+    QDomElement tempSetPtSchRefElement = fluidSysElement.firstChildElement("TempSetptSchRef");
+
+    boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(tempSetPtSchRefElement.text().toStdString());
+
+    if( ! schedule )
+    {
+      LOG(Error,plantLoop.name().get() << " Control type is scheduled, but a valid schedule could not be found.");
+
+      model::ScheduleRuleset schedule(model);
+
+      schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
+
+      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+      scheduleDay.addValue(Time(1.0),21.1);
+    }
+
+    model::SetpointManagerScheduled spm(model,schedule.get());
+
+    supplyOutletNode.addSetpointManager(spm);
+  }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"WetBulbReset") )
+  {
+    model::SetpointManagerFollowOutdoorAirTemperature spm(model);
+
+    spm.setReferenceTemperatureType("OutdoorAirWetBulb");
+
+    supplyOutletNode.addSetpointManager(spm);
+
+    boost::optional<double> rstSupHi;
+    boost::optional<double> rstSupLow;
+
+    // RstSupHi
+    QDomElement rstSupHiElement = fluidSysElement.firstChildElement("RstSupHi");
+    value = rstSupHiElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupHi = unitToUnit(value,"F","C").get();
+    }
+
+    // RstSupLow
+    QDomElement rstSupLoElement = fluidSysElement.firstChildElement("RstSupLow");
+    value = rstSupLoElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupLow = unitToUnit(value,"F","C").get();
+    }
+
+    if( rstSupLow && rstSupHi )
+    {
+      spm.setMinimumSetpointTemperature(rstSupLow.get());
+
+      spm.setMaximumSetpointTemperature(rstSupHi.get());
+    }
+
+    // WetBulbApproach
+    QDomElement wetBulbApproachElement = fluidSysElement.firstChildElement("WetBulbApproach");
+    value = wetBulbApproachElement.text().toDouble(&ok);
+    if( ok )
+    {
+      spm.setOffsetTemperatureDifference(value * 5.0 / 9.0);
+    }
+  }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"OutsideAirReset") )
+  {
+    model::SetpointManagerOutdoorAirReset spm(model);
+
+    supplyOutletNode.addSetpointManager(spm);
+
+    boost::optional<double> rstSupHi;
+    boost::optional<double> rstSupLow;
+    boost::optional<double> rstOutdrHi;
+    boost::optional<double> rstOutdrLow;
+
+    // RstSupHi
+    QDomElement rstSupHiElement = fluidSysElement.firstChildElement("RstSupHi");
+    value = rstSupHiElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupHi = unitToUnit(value,"F","C").get();
+    }
+
+    // RstSupLow
+    QDomElement rstSupLoElement = fluidSysElement.firstChildElement("RstSupLow");
+    value = rstSupLoElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstSupLow = unitToUnit(value,"F","C").get();
+    }
+
+    // RstOutdrHi
+    QDomElement rstOutDrHiElement = fluidSysElement.firstChildElement("RstOutdrHi");
+    value = rstOutDrHiElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstOutdrHi = unitToUnit(value,"F","C").get();
+    }
+
+    // RstOutdrLow
+    QDomElement rstOutDrLoElement = fluidSysElement.firstChildElement("RstOutdrLow");
+    value = rstOutDrLoElement.text().toDouble(&ok);
+    if( ok )
+    {
+      rstOutdrLow = unitToUnit(value,"F","C").get();
+    }
+
+    if( rstSupHi && rstSupLow && rstOutdrHi && rstOutdrLow )
+    {
+      if( rstOutdrHi > rstOutdrLow )
+      {
+        spm.setOutdoorHighTemperature(rstOutdrHi.get());
+        spm.setSetpointatOutdoorHighTemperature(rstSupHi.get());
+        spm.setOutdoorLowTemperature(rstOutdrLow.get());
+        spm.setSetpointatOutdoorLowTemperature(rstSupLow.get());
+      }
+      else
+      {
+        spm.setOutdoorHighTemperature(rstOutdrLow.get());
+        spm.setSetpointatOutdoorHighTemperature(rstSupLow.get());
+        spm.setOutdoorLowTemperature(rstOutdrHi.get());
+        spm.setSetpointatOutdoorLowTemperature(rstSupHi.get());
+      }
+    }
+    else
+    {
+      LOG(Warn,nameElement.text().toStdString() << " requests OA reset control, but does not define setpoints."
+        << "  Using OpenStudio defaults.");
+    }
+  }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"LoadReset") )
+  {
+    QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
+    value = dsgnSupWtrTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      value = unitToUnit(value,"F","C").get();
+
+      model::ScheduleRuleset schedule(model);
+
+      schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
+
+      model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+
+      scheduleDay.addValue(Time(1.0),value);
+
+      model::SetpointManagerScheduled spm(model,schedule);
+
+      supplyOutletNode.addSetpointManager(spm);
+
+      LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for LoadReset temperature control.  This control scheme is not fully implemented.");
+    }
+    else
+    {
+      LOG(Error,plantLoop.name().get() << " no setpoint for LoadReset temperature control.");
+    }
+  }
+  else if( istringEqual(tempCtrlElement.text().toStdString(),"FixedDualSetpoint") )
+  {
+    // It would be better to use setpoint manager dual setpoint, but
+    // until it is available we use component setpoint operation and but 
+    // scheduled SPMs on the heating and cooling components.
+
+    QDomElement fixedSupTempElement = fluidSysElement.firstChildElement("FixedSupTemp");
+    double fixedSupTemp = 10.0;
+    value = fixedSupTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      fixedSupTemp = unitToUnit(value,"F","C").get();
+    }
+
+    QDomElement htgFixedSupTempElement = fluidSysElement.firstChildElement("HtgFixedSupTemp");
+    double htgFixedSupTemp = 26.7;
+    value = htgFixedSupTempElement.text().toDouble(&ok);
+    if( ok )
+    {
+      htgFixedSupTemp = unitToUnit(value,"F","C").get();
+    }
+
+    model::ScheduleRuleset schedule(model);
+    schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
+    model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+    scheduleDay.addValue(Time(1.0),fixedSupTemp);
+
+    model::ScheduleRuleset heatingSchedule(model);
+    heatingSchedule.setName(plantLoop.name().get() + " Heating Supply Temp Schedule");
+    model::ScheduleDay heatingScheduleDay = heatingSchedule.defaultDaySchedule();
+    heatingScheduleDay.addValue(Time(1.0),htgFixedSupTemp);
+
+    model::SetpointManagerScheduled spm(model,schedule);
+    spm.setName(plantLoop.name().get() + " Supply Outlet SPM");
+    supplyOutletNode.addSetpointManager(spm);
+
+    // "Heating" components
+    std::vector<model::BoilerHotWater> boilers = 
+    subsetCastVector<model::BoilerHotWater>(plantLoop.supplyComponents(model::BoilerHotWater::iddObjectType()));
+    for(std::vector<model::BoilerHotWater>::iterator it = boilers.begin();
+        it != boilers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->outletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,heatingSchedule);
+      spm2.setName(it->name().get() + " SPM");
+      node->addSetpointManager(spm2);
+    }
+
+    std::vector<model::WaterHeaterMixed> waterHeaters =
+    subsetCastVector<model::WaterHeaterMixed>(plantLoop.supplyComponents(model::WaterHeaterMixed::iddObjectType()));
+    for(std::vector<model::WaterHeaterMixed>::iterator it = waterHeaters.begin();
+        it != waterHeaters.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->supplyOutletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,heatingSchedule);
+      spm2.setName(it->name().get() + " SPM");
+      node->addSetpointManager(spm2);
+    }
+
+    // "Cooling" components
+    std::vector<model::ChillerElectricEIR> chillers =
+    subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
+    for(std::vector<model::ChillerElectricEIR>::iterator it = chillers.begin();
+        it != chillers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->supplyOutletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,schedule);
+      spm2.setName(it->name().get() + " SPM");
+      node->addSetpointManager(spm2);
+    }
+
+    std::vector<model::CoolingTowerVariableSpeed> variableTowers =
+    subsetCastVector<model::CoolingTowerVariableSpeed>(plantLoop.supplyComponents(model::CoolingTowerVariableSpeed::iddObjectType()));
+    for(std::vector<model::CoolingTowerVariableSpeed>::iterator it = variableTowers.begin();
+        it != variableTowers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->outletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,schedule);
+      spm2.setName(it->name().get() + " SPM");
+      node->addSetpointManager(spm2);
+    }
+
+    std::vector<model::CoolingTowerSingleSpeed> constantTowers =
+    subsetCastVector<model::CoolingTowerSingleSpeed>(plantLoop.supplyComponents(model::CoolingTowerSingleSpeed::iddObjectType()));
+    for(std::vector<model::CoolingTowerSingleSpeed>::iterator it = constantTowers.begin();
+        it != constantTowers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->outletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,schedule);
+      spm2.setName(it->name().get() + " SPM");
+      node->addSetpointManager(spm2);
+    }
+  }
+  else
+  {
+    LOG(Error,plantLoop.name().get() << " does not have a setpoint.");
   }
 
   return plantLoop;
