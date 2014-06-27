@@ -70,6 +70,7 @@
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
+#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
@@ -1069,7 +1070,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if(istringEqual(clgCtrlElement.text().toStdString(),"NoSATControl"))
   {
@@ -1077,7 +1078,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
+
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"WarmestResetFlowFirst") ||
            istringEqual(clgCtrlElement.text().toStdString(),"WarmestReset") )
@@ -1091,7 +1093,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManagerWarmest(spm);
+    spm.addToNode(supplyOutletNode);
 
     if( istringEqual("SZVAVAC",airSystemTypeElement.text().toStdString()) || 
         istringEqual("SZVAVHP",airSystemTypeElement.text().toStdString()) ) 
@@ -1144,7 +1146,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(clgCtrlElement.text().toStdString(),"OutsideAirReset") )
   {
@@ -1152,7 +1154,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     deckSPM = spm;
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -3197,9 +3199,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   {
     model::Node supplyOutletNode = airLoopHVAC->supplyOutletNode();
 
-    boost::optional<model::SetpointManagerSingleZoneReheat> spm; 
+    boost::optional<model::SetpointManagerSingleZoneReheat> spm;
 
-    spm = supplyOutletNode.getSetpointManagerSingleZoneReheat();
+    std::vector<model::SetpointManagerSingleZoneReheat> _setpointManagers = subsetCastVector<model::SetpointManagerSingleZoneReheat>(supplyOutletNode.setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      spm = _setpointManagers.front();
+    }
 
     // Only set the control zone if there is a SetpointManagerSingleZoneReheat on the supply outlet node
     if( spm && ! airSystemElement.isNull() )
@@ -3725,7 +3730,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     model::SetpointManagerScheduled spm(model,schedule);
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"Scheduled") )
   {
@@ -3748,7 +3753,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     model::SetpointManagerScheduled spm(model,schedule.get());
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(tempCtrlElement.text().toStdString(),"WetBulbReset") )
   {
@@ -3756,7 +3761,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     spm.setReferenceTemperatureType("OutdoorAirWetBulb");
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -3796,7 +3801,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   {
     model::SetpointManagerOutdoorAirReset spm(model);
 
-    supplyOutletNode.addSetpointManager(spm);
+    spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
     boost::optional<double> rstSupLow;
@@ -3876,7 +3881,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       model::SetpointManagerScheduled spm(model,schedule);
 
-      supplyOutletNode.addSetpointManager(spm);
+      spm.addToNode(supplyOutletNode);
 
       LOG(Warn,plantLoop.name().get() << " Using DsgnSupWtrTemp for LoadReset temperature control.  This control scheme is not fully implemented.");
     }

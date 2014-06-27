@@ -121,12 +121,14 @@ namespace detail{
 
   void Node_Impl::addSetpointManager(SetpointManagerSingleZoneReheat & singleZoneReheat)
   {
+    LOG(Warn, "Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerSingleZoneReheat::addToNode");
     Node node = this->getObject<Node>();
     singleZoneReheat.addToNode(node);
   }
 
   void Node_Impl::removeSetpointManagerSingleZoneReheat()
   {
+    LOG(Warn, "Node::removeSetpointManagerSingleZoneReheat has been deprecated and will be removed in a future release, please use SetpointManagerSingleZoneReheat::remove");
     if( boost::optional<SetpointManagerSingleZoneReheat> spm = this->getSetpointManagerSingleZoneReheat() )
     {
       spm->remove();
@@ -135,28 +137,25 @@ namespace detail{
 
   boost::optional<SetpointManagerSingleZoneReheat> Node_Impl::getSetpointManagerSingleZoneReheat() const
   {
-    SetpointManagerSingleZoneReheatVector _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerSingleZoneReheat>();
-    for(SetpointManagerSingleZoneReheatVector::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::getSetpointManagerSingleZoneReheat has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerSingleZoneReheat> _setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void  Node_Impl::addSetpointManager(SetpointManagerMixedAir & mixedAir)
   {
+    LOG(Warn, "Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerMixedAir::addToNode");
     Node node = this->getObject<Node>();
     mixedAir.addToNode(node);
   }
 
   void Node_Impl::removeSetpointManagerMixedAir()
   {
+    LOG(Warn, "Node::removeSetpointManagerMixedAir has been deprecated and will be removed in a future release, please use SetpointManagerMixedAir::remove");
     if( boost::optional<SetpointManagerMixedAir> spm = this->getSetpointManagerMixedAir() )
     {
       spm->remove();
@@ -165,44 +164,36 @@ namespace detail{
 
   boost::optional<SetpointManagerMixedAir> Node_Impl::getSetpointManagerMixedAir() const
   {
-    SetpointManagerMixedAirVector _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerMixedAir>();
-    for(SetpointManagerMixedAirVector::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::getSetpointManagerMixedAir has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerMixedAir> _setpointManagers = subsetCastVector<SetpointManagerMixedAir>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void Node_Impl::addSetpointManager( SetpointManagerScheduled & setPointManager )
   {
+    LOG(Warn, "Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerScheduled::addToNode");
     Node node = this->getObject<Node>();
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerScheduled> Node_Impl::setpointManagerScheduled() const
   {
-    std::vector<SetpointManagerScheduled> _setpointManagers = this->getObject<Node>().getModelObjectSources<SetpointManagerScheduled>();
-    for(std::vector<SetpointManagerScheduled>::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::setpointManagerScheduled has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerScheduled> _setpointManagers = subsetCastVector<SetpointManagerScheduled>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void Node_Impl::removeSetpointManagerScheduled()
   {
+    LOG(Warn, "Node::removeSetpointManagerScheduled has been deprecated and will be removed in a future release, please use SetpointManagerScheduled::remove");
     if( boost::optional<SetpointManagerScheduled> spm = this->setpointManagerScheduled() )
     {
       spm->remove();
@@ -213,29 +204,25 @@ namespace detail{
 
   void Node_Impl::addSetpointManager( SetpointManagerFollowOutdoorAirTemperature & setPointManager )
   {
+    LOG(Warn, "Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerFollowOutdoorAirTemperature::addToNode");
     Node node = this->getObject<Node>();
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerFollowOutdoorAirTemperature> Node_Impl::setpointManagerFollowOutdoorAirTemperature() const
   {
-    std::vector<SetpointManagerFollowOutdoorAirTemperature> _setpointManagers = 
-      getObject<Node>().getModelObjectSources<SetpointManagerFollowOutdoorAirTemperature>();
-    for(std::vector<SetpointManagerFollowOutdoorAirTemperature>::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::setpointManagerFollowOutdoorAirTemperature has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerFollowOutdoorAirTemperature> _setpointManagers = subsetCastVector<SetpointManagerFollowOutdoorAirTemperature>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void Node_Impl::removeSetpointManagerFollowOutdoorAirTemperature()
   {
+    LOG(Warn, "Node::removeSetpointManagerFollowOutdoorAirTemperature has been deprecated and will be removed in a future release, please use SetpointManagerFollowOutdoorAirTemperature::remove");
     if( boost::optional<SetpointManagerFollowOutdoorAirTemperature> spm = this->setpointManagerFollowOutdoorAirTemperature() )
     {
       spm->remove();
@@ -246,29 +233,25 @@ namespace detail{
 
   void Node_Impl::addSetpointManager( SetpointManagerOutdoorAirReset & setPointManager )
   {
+    LOG(Warn, "Node::addSetpointManager has been deprecated and will be removed in a future release, please use SetpointManagerOutdoorAirReset::addToNode");
     Node node = this->getObject<Node>();
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerOutdoorAirReset> Node_Impl::setpointManagerOutdoorAirReset() const
   {
-    std::vector<SetpointManagerOutdoorAirReset> _setpointManagers = 
-      getObject<Node>().getModelObjectSources<SetpointManagerOutdoorAirReset>();
-    for(std::vector<SetpointManagerOutdoorAirReset>::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::setpointManagerOutdoorAirReset has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerOutdoorAirReset> _setpointManagers = subsetCastVector<SetpointManagerOutdoorAirReset>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void Node_Impl::removeSetpointManagerOutdoorAirReset()
   {
+    LOG(Warn, "Node::removeSetpointManagerOutdoorAirReset has been deprecated and will be removed in a future release, please use SetpointManagerOutdoorAirReset::remove");
     if( boost::optional<SetpointManagerOutdoorAirReset> spm = this->setpointManagerOutdoorAirReset() )
     {
       spm->remove();
@@ -277,29 +260,25 @@ namespace detail{
 
   void Node_Impl::addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager )
   {
+    LOG(Warn, "Node::addSetpointManagerWarmest has been deprecated and will be removed in a future release, please use SetpointManagerWarmest::addToNode");
     Node node = this->getObject<Node>();
     setPointManager.addToNode(node);
   }
 
   boost::optional<SetpointManagerWarmest> Node_Impl::setpointManagerWarmest() const
   {
-    std::vector<SetpointManagerWarmest> _setpointManagers = 
-      getObject<Node>().getModelObjectSources<SetpointManagerWarmest>();
-    for(std::vector<SetpointManagerWarmest>::iterator it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it )
-    {
-      OptionalNode setpointNode = it->setpointNode();
-      if( setpointNode && ( setpointNode->handle() == this->handle() ) )
-      {
-        return *it;
-      }
+    LOG(Warn, "Node::setpointManagerWarmest has been deprecated and will be removed in a future release, please use Node::setpointManagers");
+    std::vector<SetpointManagerWarmest> _setpointManagers = subsetCastVector<SetpointManagerWarmest>(this->setpointManagers());
+    if( !_setpointManagers.empty() ) {
+      return _setpointManagers.front();
+    } else {
+      return boost::none;
     }
-    return boost::none;
   }
 
   void Node_Impl::removeSetpointManagerWarmest()
   {
+    LOG(Warn, "Node::removeSetpointManagerWarmest has been deprecated and will be removed in a future release, please use SetpointManagerWarmest::remove");
     if( boost::optional<SetpointManagerWarmest> spm = this->setpointManagerWarmest() )
     {
       spm->remove();
