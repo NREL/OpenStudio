@@ -55,15 +55,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   m_idfObjects.push_back(idfObject);
 
   // Name
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name,*s);
-  }
+  std::string name = modelObject.name().get();
+  idfObject.setString(openstudio::AirLoopHVAC_OutdoorAirSystemFields::Name,name);
+ 
 
   // Controller List
   IdfObject controllerListIdf(IddObjectType::AirLoopHVAC_ControllerList);
-  controllerListIdf.createName();
+  controllerListIdf.setName(name + " Controller List");
   controllerListIdf.clearExtensibleGroups();
 
   m_idfObjects.push_back(controllerListIdf);
@@ -100,7 +98,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
 
   // Field: Availability Manager List Name //////////////////////////////////
   IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-  availabilityManagerListIdf.createName();
+  availabilityManagerListIdf.setName(name + " Availability Manager");
   m_idfObjects.push_back(availabilityManagerListIdf);
 
   IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
@@ -134,12 +132,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACOutdoorAirSyst
   ///////////////////////////////////////////////////////////////////////////
   // Field: Outdoor Air Equipment List Name /////////////////////////////////
   IdfObject equipmentListIdf(IddObjectType::AirLoopHVAC_OutdoorAirSystem_EquipmentList);
-  equipmentListIdf.createName();
+  equipmentListIdf.setName(name + " Equipment List");
 
   m_idfObjects.push_back(equipmentListIdf);
 
   IdfObject outdoorAirMixerIdf(IddObjectType::OutdoorAir_Mixer);
-  outdoorAirMixerIdf.createName();
+  outdoorAirMixerIdf.setName(name + " Outdoor Air Mixer");
   m_idfObjects.push_back(outdoorAirMixerIdf);
 
   s = modelObject.mixedAirModelObject()->name();

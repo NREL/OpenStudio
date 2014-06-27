@@ -11,7 +11,6 @@
   #include <utilities/idd/IddFactory.hxx>
   #include <utilities/idd/IddFileAndFactoryWrapper.hpp>
   #include <utilities/idd/IddEnums.hxx>
-  #include <utilities/idd/IddFieldEnums.hxx>
   #include <utilities/idd/ExtensibleIndex.hpp>
   #include <utilities/idd/IddObjectProperties.hpp>
   #include <utilities/idd/Comments.hpp>
@@ -64,7 +63,10 @@
 %include <utilities/idd/IddEnums.hxx>
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
-%include <utilities/idd/IddFieldEnums.ixx>
+  %{
+    #include <utilities/idd/IddFieldEnums.hxx>
+  %}
+  %include <utilities/idd/IddFieldEnums.ixx>
 #endif
 
 %template(IddObjectTypeSet) std::set<openstudio::IddObjectType>;

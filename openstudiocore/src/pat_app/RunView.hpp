@@ -325,7 +325,6 @@ public slots:
   void requestUpdate();
 
 private:
-  static std::vector<std::pair<std::string, int> > collateMessages(const std::vector<std::string> &t_messages);
 
   analysis::WorkflowStepJob m_workflowStepJob;
 

@@ -145,6 +145,9 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
   /** Returns true of the MaximumFlowPerZoneFloorAreaDuringReheat field is set to AutoSize */
   bool isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() const;
 
+  /** Resets the MaximumFlowPerZoneFloorAreaDuringReheat field to no value */
+  void resetMaximumFlowPerZoneFloorAreaDuringReheat();
+
   /** Returns the value of the MaximumFlowFractionDuringReheat field. */
   boost::optional<double> maximumFlowFractionDuringReheat();
 
@@ -156,6 +159,9 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   /** Returns true of the MaximumFlowFractionDuringReheat field is set to AutoSize */
   bool isMaximumFlowFractionDuringReheatAutosized() const;
+
+  /** Reset MaximumFlowFractionDuringReheat to no value */
+  void resetMaximumFlowFractionDuringReheat();
 
   /** Returns the value of the MaximumReheatAirTemperature field. */
   double maximumReheatAirTemperature();

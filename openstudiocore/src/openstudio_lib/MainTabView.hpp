@@ -47,7 +47,14 @@ public:
 
   // Returns the id of the current sub tab.
   // Returns -1 if there are no sub tabs.
-  int currentId() const;
+  int subTabId() const;
+
+  // Returns the index of the current sub tab.
+  // Returns -1 if there are no sub tabs.
+  int subTabIndex() const;
+
+  // Public method for setting the current sub tab.
+  bool selectSubTabByIndex(int index);
 
 signals:
 

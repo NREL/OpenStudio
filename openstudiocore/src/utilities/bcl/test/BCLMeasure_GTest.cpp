@@ -129,3 +129,33 @@ TEST_F(BCLFixture, BCLMeasure_CTor)
   boost::optional<BCLMeasure> measure = BCLMeasure::load(dir);
   ASSERT_TRUE(measure);
 }
+
+TEST_F(BCLFixture, PatApplicationMeasures)
+{
+  std::vector<BCLMeasure> patApplicationMeasures = BCLMeasure::patApplicationMeasures();
+  ASSERT_EQ(3u, patApplicationMeasures.size());
+
+  bool updated;
+
+  BCLMeasure alternativeModelMeasure = BCLMeasure::alternativeModelMeasure();
+  updated = alternativeModelMeasure.checkForUpdates();
+  ASSERT_FALSE(updated);
+  if (updated){
+    alternativeModelMeasure.save();
+  }
+
+  BCLMeasure standardReportMeasure = BCLMeasure::standardReportMeasure();
+  updated = standardReportMeasure.checkForUpdates();
+  ASSERT_FALSE(updated);
+  if (updated){
+    standardReportMeasure.save();
+  }
+
+  BCLMeasure calibrationReportMeasure = BCLMeasure::calibrationReportMeasure();
+  updated = calibrationReportMeasure.checkForUpdates();
+  ASSERT_FALSE(updated);
+  if (updated){
+    calibrationReportMeasure.save();
+  }
+
+}

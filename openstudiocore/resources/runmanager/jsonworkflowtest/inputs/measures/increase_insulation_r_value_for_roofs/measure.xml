@@ -1,11 +1,11 @@
 <measure>
   <name>Set R-value of Insulation for Roofs to a Specific Value</name>
   <uid>c6b78646-be8e-425b-af79-fdbbcd0d58d5</uid>
-  <version_id>031f771c-37ee-40db-991d-44493cd516f6</version_id>
+  <version_id>dc15e1d0-b77d-4914-a91f-91a4b575b8ac</version_id>
   <description>Set the R-Value of roof insulation to a specified value.  Higher R-Values provide better insulation, lowering heat loss and heat gain through the roof.</description>
-  <modeler_description>Set the R-Value (ft^2*h*R/Btu) of the insulation material layer in all roofs in the model to a specified value.  Find constructions used for roofs, make copies of these and assign them to the appropriate construction sets or surfaces. Identify which layer of the construction is the insulation layer. This could be a Material, No Mass Material, or Air Gap Material. If the Insulation layer is "Material? the thickness will be changed to attain the desired R-Value. If the insulation layer is "No Mass Material? or "Air Gap Material? the Thermal Resistance will be directly entered.  If the construction doesn't appear to have an insulation layer, it will not be altered. Surfaces with "Adiabatic" boundary conditions are not specifically assumed to be interior or exterior. As a result constructions used on "Adiabatic" surfaces will not be altered. Constructions used on attic floors will not be altered.&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
-&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
-The resulting construction will retain the cost data from the source construction, however material and installation cost can be increased which will affect replacement cost if it happens during the analysis period. Additionally a one-time cost can be added to reflect any retrofit costs that occur at some point prior to replacement.&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
+  <modeler_description>Set the R-Value (ft^2*h*R/Btu) of the insulation material layer in all roofs in the model to a specified value.  Find constructions used for roofs, make copies of these and assign them to the appropriate construction sets or surfaces. Identify which layer of the construction is the insulation layer. This could be a Material, No Mass Material, or Air Gap Material. If the Insulation layer is "Material? the thickness will be changed to attain the desired R-Value. If the insulation layer is "No Mass Material? or "Air Gap Material? the Thermal Resistance will be directly entered.  If the construction doesn't appear to have an insulation layer, it will not be altered. Surfaces with "Adiabatic" boundary conditions are not specifically assumed to be interior or exterior. As a result constructions used on "Adiabatic" surfaces will not be altered. Constructions used on attic floors will not be altered.&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
+&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
+The resulting construction will retain the cost data from the source construction, however material and installation cost can be increased which will affect replacement cost if it happens during the analysis period. Additionally a one-time cost can be added to reflect any retrofit costs that occur at some point prior to replacement.&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;&#xd;
   </modeler_description>
   <provenances/>
   <tags>
@@ -35,24 +35,6 @@ The resulting construction will retain the cost data from the source constructio
   </attributes>
   <files>
     <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>938A1BB0</checksum>
-    </file>
-    <file>
-      <filename>ReverseTranslatedModel.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>20C95654</checksum>
-    </file>
-    <file>
-      <filename>IncreaseInsulationRValueForRoofs_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>88738B17</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>0.11.5</identifier>
@@ -60,7 +42,7 @@ The resulting construction will retain the cost data from the source constructio
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>95488DB8</checksum>
+      <checksum>AB2F288B</checksum>
     </file>
   </files>
 </measure>

@@ -168,12 +168,12 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << measureString;
       file.close();
-    }
 
-    BCLFileReference measureScriptFileReference(measureScriptPath, true);
-    measureScriptFileReference.setUsageType("script");
-    measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
-    m_bclXML.addFile(measureScriptFileReference);
+      BCLFileReference measureScriptFileReference(measureScriptPath, true);
+      measureScriptFileReference.setUsageType("script");
+      measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
+      m_bclXML.addFile(measureScriptFileReference);
+    }
 
     // write test
     {
@@ -185,11 +185,11 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << testString;
       file.close();
-    }
 
-    BCLFileReference measureTestFileReference(measureTestPath, true);
-    measureTestFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestFileReference);
+      BCLFileReference measureTestFileReference(measureTestPath, true);
+      measureTestFileReference.setUsageType("test");
+      m_bclXML.addFile(measureTestFileReference);
+    }
 
     // write test osm
     { 
@@ -202,12 +202,12 @@ namespace openstudio{
         QTextStream textStream(&file);
         textStream << testOSMString;
         file.close();
+
+        BCLFileReference measureTestOSMFileReference(testOSMPath, true);
+        measureTestOSMFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestOSMFileReference);
       }
     }
-
-    BCLFileReference measureTestOSMFileReference(testOSMPath, true);
-    measureTestOSMFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestOSMFileReference);
 
     // write test epw
     {
@@ -220,12 +220,13 @@ namespace openstudio{
         QTextStream textStream(&file);
         textStream << testEPWString;
         file.close();
+
+        BCLFileReference measureTestEPWFileReference(testEPWPath, true);
+        measureTestEPWFileReference.setUsageType("test");
+        m_bclXML.addFile(measureTestEPWFileReference);
       }
     }
 
-    BCLFileReference measureTestEPWFileReference(testEPWPath, true);
-    measureTestEPWFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestEPWFileReference);
 
     // write resource
     {
@@ -238,12 +239,12 @@ namespace openstudio{
         QTextStream textStream(&file);
         textStream << resourceFileString;
         file.close();
+
+        BCLFileReference resourceFileReference(resourceFilePath, true);
+        resourceFileReference.setUsageType("resource");
+        m_bclXML.addFile(resourceFileReference);
       }
     }
-
-    BCLFileReference resourceFileReference(resourceFilePath, true);
-    resourceFileReference.setUsageType("resource");
-    m_bclXML.addFile(resourceFileReference);
 
     // set rest of measure fields
     m_bclXML.setName(name);
@@ -343,6 +344,18 @@ namespace openstudio{
       result = getApplicationRunDirectory().parent_path() / openstudio::toPath("share/openstudio-" + openStudioVersion() + "/pat/Measures/");
     }
     return result;
+  }
+
+  BCLMeasure BCLMeasure::alternativeModelMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("ReplaceModel"));
+  }
+
+  BCLMeasure BCLMeasure::standardReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("StandardReports"));
+  }
+
+  BCLMeasure BCLMeasure::calibrationReportMeasure() {
+    return BCLMeasure(patApplicationMeasuresDir() / toPath("CalibrationReports"));
   }
 
   std::vector<BCLMeasure> BCLMeasure::localBCLMeasures()

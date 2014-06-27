@@ -30,25 +30,52 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
   def arguments(model)
     result = OpenStudio::Ruleset::OSArgumentVector.new
 
-    choices = OpenStudio::StringVector.new
-    
+    construction_hash = Hash.new
     model.getConstructions.each do |c|
       c.layers.each do |layer|
-        if not layer.to_ShadingMaterial.empty?
-          choices << ("Construction " + c.name.get)
+        if not layer.to_FenestrationMaterial.empty?
+          construction_hash[c.name.get] = c
           break
-        end
+        end        
       end
     end
+
+    construction_handles = OpenStudio::StringVector.new
+    construction_names = OpenStudio::StringVector.new
+    
+    construction_handles << OpenStudio::toUUID("").to_s
+    construction_names << "*None*"
+    
+    construction_hash.sort.map do |construction_name, construction|
+      construction_handles << construction.handle.to_s
+      construction_names << construction_name
+    end
+    
+    construction = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("construction", construction_handles, construction_names, true)
+    construction.setDisplayName("Choose shaded construction.")
+    construction.setDefaultValue("*None*")
+    result << construction
+    
+    material_hash = Hash.new
     model.getShadingMaterials.each do |sm|
-      choices << ("Material " + sm.name.get)
+      material_hash[sm.name.get] = sm
     end
-    operation = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("operation", choices, false)
-    operation.setDisplayName("Add Shading Control For")
-    if not choices.empty?
-      operation.setDefaultValue(choices[0])
+    
+    material_handles = OpenStudio::StringVector.new
+    material_names = OpenStudio::StringVector.new
+    
+    material_handles << OpenStudio::toUUID("").to_s
+    material_names << "*None*"
+    
+    material_hash.sort.map do |material_name, material|
+      material_handles << material.handle.to_s
+      material_names << material_name
     end
-    result << operation
+    
+    material = OpenStudio::Ruleset::OSArgument::makeChoiceArgument("material", material_handles, material_names, true)
+    material.setDisplayName("Choose shading material.")
+    material.setDefaultValue("*None*")
+    result << material
     
     return result
   end
@@ -63,50 +90,39 @@ class AddShadingControls < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    operation = runner.getStringArgumentValue("operation",user_arguments)
+    construction = runner.getOptionalWorkspaceObjectChoiceValue("construction",user_arguments,model) #model is passed in because of argument type
+    material = runner.getOptionalWorkspaceObjectChoiceValue("material",user_arguments,model) #model is passed in because of argument type
     
-    remove = true
-    shadingControl = nil
-    
-    if match_data = /Construction (.*)/.match(operation)
-      remove = false
-      name = match_data[1]
-      
-      shadingConstruction = nil
-      model.getConstructions.each do |c|
-        if name == c.name.get
-          shadingConstruction = c
-          break
-        end
-      end
-      
-      if not shadingConstruction
-        runner.registerError("Could not find Construction '" + name + "'.")     
-        return(false)
-      end
-      
-      shadingControl = OpenStudio::Model::ShadingControl.new(shadingConstruction)
-      
-    elsif match_data = /Material (.*)/.match(operation)
-      remove = false
-      name = match_data[1]
-      
-      shadingMaterial = nil
-      model.getShadingMaterials.each do |sm|
-        if name == sm.name.get
-          shadingMaterial = sm
-          break
-        end
-      end
-      
-      if not shadingMaterial
-        runner.registerError("Could not find ShadingMaterial '" + name + "'.")     
-        return(false)
-      end
-      
-      shadingControl = OpenStudio::Model::ShadingControl.new(shadingMaterial)
-      
+    if not construction.empty? and not construction.get.to_Construction.empty?
+      construction = construction.get.to_Construction.get
+    else
+      construction = nil
     end
+    
+    if not material.empty? and not material.get.to_ShadingMaterial.empty?
+      material = material.get.to_ShadingMaterial.get
+    else
+      material = nil
+    end
+    
+    if construction and material
+      runner.registerWarning("Selected both shading material and a shaded construction, creating shading control for both.")     
+      shadingControl = OpenStudio::Model::ShadingControl.new(construction)
+      runner.registerInfo("Created shading control #{shadingControl.name.get}.")    
+      shadingControl = OpenStudio::Model::ShadingControl.new(material)
+      runner.registerInfo("Created shading control #{shadingControl.name.get}.")  
+    elsif construction
+      shadingControl = OpenStudio::Model::ShadingControl.new(construction)
+      runner.registerInfo("Created shading control #{shadingControl.name.get}.")  
+    elsif material
+      shadingControl = OpenStudio::Model::ShadingControl.new(material)
+      runner.registerInfo("Created shading control #{shadingControl.name.get}.")  
+    else
+      runner.registerError("Need to choose either a shading material or a shaded construction.")     
+      return(false)
+    end
+    
+    return(true)
   end
 end
 

@@ -63,7 +63,8 @@ namespace openstudio {
 namespace osversion {
 
 VersionTranslator::VersionTranslator()
-  : m_originalVersion("0.0.0")
+  : m_originalVersion("0.0.0"),
+    m_allowNewerVersions(true)
 {
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.osversion\\.VersionTranslator"));
@@ -91,7 +92,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("1.0.3")] = &VersionTranslator::update_1_0_2_to_1_0_3;
   m_updateMethods[VersionString("1.2.3")] = &VersionTranslator::update_1_2_2_to_1_2_3;
   m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::update_1_3_4_to_1_3_5;
-  // m_updateMethods[VersionString("1.3.5")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("1.4.1")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -152,6 +153,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("1.3.2"));
   m_startVersions.push_back(VersionString("1.3.3"));
   m_startVersions.push_back(VersionString("1.3.4"));
+  m_startVersions.push_back(VersionString("1.3.5"));
+  m_startVersions.push_back(VersionString("1.4.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, 
@@ -246,6 +249,16 @@ std::vector<IdfObject> VersionTranslator::newObjects() const {
 
 std::vector< std::pair<IdfObject,IdfObject> > VersionTranslator::refactoredObjects() const {
   return m_refactored;
+}
+
+bool VersionTranslator::allowNewerVersions() const
+{
+  return m_allowNewerVersions;
+}
+
+void VersionTranslator::setAllowNewerVersions(bool allowNewerVersions)
+{
+  m_allowNewerVersions = allowNewerVersions;
 }
 
 boost::optional<model::Model> VersionTranslator::updateVersion(std::istream& is, 
@@ -360,18 +373,26 @@ void VersionTranslator::initializeMap(std::istream& is) {
     return;
   }
   if (currentVersion > VersionString(openStudioVersion())) {
-    // if currentVersion is just one ahead, may be a developer using the cloud. 
-    // let it pass as if currentVersion == openStudioVersion(), with a warning
-    if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
-      LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
-          << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
-          << "Proceeding as if these versions are the same. Use with caution.");
-      currentVersion = VersionString(openStudioVersion());
-    }
-    else {
-      // if currentVersion is farther ahead, log error and return nothing
+    if (m_allowNewerVersions){
+      // if currentVersion is just one ahead, may be a developer using the cloud. 
+      // let it pass as if currentVersion == openStudioVersion(), with a warning
+      if (VersionString(openStudioVersion()).isNextVersion(currentVersion)) {
+        LOG(Warn,"Version extracted from file '" << currentVersion.str() << "' is one "
+            << "increment ahead of OpenStudio Version " << openStudioVersion() << ". "
+            << "Proceeding as if these versions are the same. Use with caution.");
+        currentVersion = VersionString(openStudioVersion());
+      }
+      else {
+        // if currentVersion is farther ahead, log error and return nothing
+        LOG(Error,"Version extracted from file '" << currentVersion.str()
+            << "' is not supported by OpenStudio Version " << openStudioVersion()
+            << ". Please check http://openstudio.nrel.gov for updates.");
+        return;
+      }
+    }else{
+      // log error and return nothing
       LOG(Error,"Version extracted from file '" << currentVersion.str()
-          << "' is not supported by OpenStudio Version " << openStudioVersion()
+          << "' is newer than current OpenStudio Version " << openStudioVersion()
           << ". Please check http://openstudio.nrel.gov for updates.");
       return;
     }

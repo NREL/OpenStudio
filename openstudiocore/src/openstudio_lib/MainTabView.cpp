@@ -161,8 +161,7 @@ void MainTabView::select()
        ++it ){
     if( *it == button ){
       break;
-    }
-    else{
+    } else {
       index++;
     }
   } 
@@ -248,16 +247,34 @@ void MainTabView::resizeEvent( QResizeEvent * event )
   m_mainWidget->resize(newSize);
 }
 
-int MainTabView::currentId() const
+int MainTabView::subTabId() const
 {
   if( m_hasSubTab )
   {
-    return m_ids[m_stackedWidget->currentIndex()];
+    return m_ids[subTabIndex()];
   }
   else
   {
     return -1;
   }
+}
+
+int MainTabView::subTabIndex() const
+{
+  return m_stackedWidget->currentIndex();
+}
+
+bool MainTabView::selectSubTabByIndex(int index)
+{
+  if(m_hasSubTab){
+    if(index < 0 || index >= m_stackedWidget->count()){
+      return false;
+    } else {
+      setCurrentIndex(index);
+      return true;
+    }
+  }
+  return false;
 }
 
 } // namespace openstudio

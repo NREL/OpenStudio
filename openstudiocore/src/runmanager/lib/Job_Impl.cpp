@@ -1043,9 +1043,16 @@ namespace detail {
 
   bool Job_Impl::childrenTreesOutOfDate() const
   {
-    QReadLocker l(&m_mutex);
-    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = m_children.begin();
-        itr != m_children.end();
+    std::vector<boost::shared_ptr<Job_Impl> > children;
+
+    {
+      // scope for RAII mutex
+      QReadLocker l(&m_mutex);
+      children = m_children;
+    }
+
+    for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = children.begin();
+        itr != children.end();
         ++itr)
     {
       if ((*itr)->treeOutOfDate())
@@ -1543,11 +1550,17 @@ namespace detail {
     else {
       temp = errors();
     }
+
+    // it's possible there are no mergedjobresults available yet, but this is a mergedjob
+    if (!temp)
+    {
+      temp = errors();
+    }
+
     JobErrors err = *temp;
 
     QReadLocker l(&m_mutex);
 
-    //err.result = ruleset::OSResultValue::Success; // assume we succeeded until we failed
 
     for (std::vector<boost::shared_ptr<Job_Impl> >::const_iterator itr = m_children.begin();
         itr != m_children.end();

@@ -22,6 +22,7 @@
 #include <openstudio_lib/LibraryTabWidget.hpp>
 #include <openstudio_lib/LoopLibraryDialog.hpp>
 #include <openstudio_lib/MainMenu.hpp>
+#include <openstudio_lib/MainTabView.hpp>
 #include <openstudio_lib/VerticalTabWidget.hpp>
 
 #include <utilities/core/Assert.hpp>
@@ -93,29 +94,63 @@ MainWindow::MainWindow(bool isPlugin, QWidget *parent) :
   MainMenu * mainMenu = new MainMenu(m_displayIP, m_isPlugin);
   bool isConnected = connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
-  isConnected = connect(mainMenu, SIGNAL(openBclDlgClicked()), this, SIGNAL(openBclDlgClicked()));
+  isConnected = connect(mainMenu, SIGNAL(downloadComponentsClicked()), this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
   isConnected = connect(mainMenu, SIGNAL(openLibDlgClicked()), this, SIGNAL(openLibDlgClicked()));
   OS_ASSERT(isConnected);
 
   this->setMenuBar(mainMenu);
 
-  connect(mainMenu, SIGNAL(exportClicked()), this, SIGNAL(exportClicked()));
-  connect(mainMenu, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
-  connect(mainMenu, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
-  connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
-  connect(mainMenu, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
-  connect(mainMenu, SIGNAL(saveAsFileClicked()), this, SIGNAL(saveAsFileClicked()));
-  connect(mainMenu, SIGNAL(saveFileClicked()), this, SIGNAL(saveFileClicked()));
-  connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
-  connect(mainMenu, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
-  connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
-  connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
-  connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
-  connect(mainMenu, SIGNAL(showRunManagerPreferencesClicked()),this,SIGNAL(showRunManagerPreferencesClicked()));
-  connect(mainMenu, SIGNAL(showRubyConsoleClicked()),this,SIGNAL(showRubyConsoleClicked()));
-  connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)),this,SIGNAL(toggleUnitsClicked(bool)));
-  connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
+  isConnected = connect(mainMenu, SIGNAL(exportClicked()), this, SIGNAL(exportClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(exportgbXMLClicked()), this, SIGNAL(exportgbXMLClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(exportSDDClicked()), this, SIGNAL(exportSDDClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(importClicked()), this, SIGNAL(importClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(importgbXMLClicked()), this, SIGNAL(importgbXMLClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(importSDDClicked()), this, SIGNAL(importSDDClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(loadFileClicked()), this, SIGNAL(loadFileClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(loadLibraryClicked()), this, SIGNAL(loadLibraryClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(saveAsFileClicked()), this, SIGNAL(saveAsFileClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(saveFileClicked()), this, SIGNAL(saveFileClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(revertFileClicked()), this, SIGNAL(revertFileClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(newClicked()), this, SIGNAL(newClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(exitClicked()),this,SIGNAL(exitClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(helpClicked()),this,SIGNAL(helpClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(aboutClicked()),this,SIGNAL(aboutClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(scanForToolsClicked()),this,SIGNAL(scanForToolsClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(showRunManagerPreferencesClicked()),this,SIGNAL(showRunManagerPreferencesClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(showRubyConsoleClicked()),this,SIGNAL(showRubyConsoleClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(toggleUnitsClicked(bool)),this,SIGNAL(toggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(changeMyMeasuresDir()),this,SIGNAL(changeMyMeasuresDir()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(applyMeasureClicked()),this,SIGNAL(applyMeasureClicked()));
+  OS_ASSERT(isConnected); 
+  isConnected = connect(mainMenu, SIGNAL(downloadMeasuresClicked()),this,SIGNAL(downloadMeasuresClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(changeBclLogin()),this,SIGNAL(changeBclLogin()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(mainMenu, SIGNAL(configureProxyClicked()),this,SLOT(configureProxyClicked()));
+  OS_ASSERT(isConnected);
+  isConnected = connect(this, SIGNAL(enableRevertToSaved(bool)),mainMenu,SLOT(enableRevertToSavedAction(bool)));
+  OS_ASSERT(isConnected);
 }
 
 QSize MainWindow::sizeHint() const
@@ -177,6 +212,11 @@ void MainWindow::addVerticalTab( QWidget * widget,
   m_verticalTabWidget->addTab(widget,id,toolTip,selectedImagePath,unSelectedImagePath);
 }
 
+void MainWindow::deleteAllVerticalTabs()
+{
+  m_verticalTabWidget->deleteAllTabs();
+}
+
 //void MainWindow::addHorizontalTab( QWidget * widget,
 //                                   int id,
 //                                   const QString & label )
@@ -187,6 +227,22 @@ void MainWindow::addVerticalTab( QWidget * widget,
 void MainWindow::selectVerticalTab(int id)
 {
   m_verticalTabWidget->setCurrentId(id);
+}
+
+void MainWindow::selectVerticalTabByIndex(int index)
+{
+  m_verticalTabWidget->setCurrentIndex(index);
+}
+
+MainTabView* MainWindow::verticalTabByIndex(int index)
+{
+  MainTabView* mainTabView = qobject_cast<MainTabView *>(m_verticalTabWidget->verticalTabWidgetByIndex(index));
+  return mainTabView;
+}
+
+int MainWindow::verticalTabIndex()
+{
+  return m_verticalTabWidget->verticalTabIndex();
 }
 
 //void MainWindow::selectHorizontalTab(int id)
@@ -221,6 +277,11 @@ bool MainWindow::displayIP()
   return m_displayIP;
 }
 
+void MainWindow::enableRevertToSavedAction(bool enable)
+{
+  emit enableRevertToSaved(enable);
+}
+
 void MainWindow::readSettings()
 {
   QString organizationName = QCoreApplication::organizationName();
@@ -228,6 +289,7 @@ void MainWindow::readSettings()
   QSettings settings(organizationName, applicationName);
   QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
   QSize size = settings.value("size", QSize(600, 400)).toSize();
+  m_lastPath = settings.value("lastPath", QDir::homePath()).toString();
   resize(size);
   move(pos);
   restoreGeometry(settings.value("geometry").toByteArray());
@@ -245,6 +307,11 @@ void MainWindow::writeSettings()
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState());
   settings.setValue("displayIP", m_displayIP);
+}
+
+QString MainWindow::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
 }
 
 void MainWindow::toggleUnits(bool displayIP)

@@ -754,7 +754,7 @@ namespace detail {
       update_1_0_6_to_1_0_7(dbv);
     }
 
-    if ((dbv != osv) || (!dbv.fidelityEqual(osv))) {
+    if (dbv < osv) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
       OS_ASSERT(didStartTransaction);
@@ -762,6 +762,8 @@ namespace detail {
       save();
       bool test = this->commitTransaction();
       OS_ASSERT(test);
+    }else if (dbv > osv){
+      LOG(Warn, "Database version '" << dbv << "' is greater than OpenStudio version '" << osv << "'");
     }
   }
 
