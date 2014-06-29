@@ -214,6 +214,9 @@ std::string EpwDataPoint::units(EpwDataField field)
   case EpwDataField::DewPointTemperature:
     string = "C";
     break;
+  case EpwDataField::RelativeHumidity:
+    //string = "None";
+    break;
   case EpwDataField::AtmosphericStationPressure:
     string = "Pa";
     break;
@@ -253,11 +256,23 @@ std::string EpwDataPoint::units(EpwDataField field)
   case EpwDataField::WindSpeed:
     string = "m/s";
     break;
+  case EpwDataField::TotalSkyCover:
+    //string = "None";
+    break;
+  case EpwDataField::OpaqueSkyCover:
+    //string = "None";
+    break;
   case EpwDataField::Visibility:
     string = "km";
     break;
   case EpwDataField::CeilingHeight:
     string = "m";
+    break;
+  case EpwDataField::PresentWeatherObservation:
+    //string = "None";
+    break;
+  case EpwDataField::PresentWeatherCodes:
+    //string = "None";
     break;
   case EpwDataField::PrecipitableWater:
     string = "mm";
@@ -267,6 +282,12 @@ std::string EpwDataPoint::units(EpwDataField field)
     break;
   case EpwDataField::SnowDepth:
     string = "cm";
+    break;
+  case EpwDataField::DaysSinceLastSnowfall:
+    //string = "None";
+    break;
+  case EpwDataField::Albedo:
+    //string = "None";
     break;
   case EpwDataField::LiquidPrecipitationDepth:
     string = "mm";
