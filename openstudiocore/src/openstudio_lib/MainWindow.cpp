@@ -289,6 +289,7 @@ void MainWindow::readSettings()
   QSettings settings(organizationName, applicationName);
   QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
   QSize size = settings.value("size", QSize(600, 400)).toSize();
+  m_lastPath = settings.value("lastPath", QDir::homePath()).toString();
   resize(size);
   move(pos);
   restoreGeometry(settings.value("geometry").toByteArray());
@@ -306,6 +307,11 @@ void MainWindow::writeSettings()
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState());
   settings.setValue("displayIP", m_displayIP);
+}
+
+QString MainWindow::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
 }
 
 void MainWindow::toggleUnits(bool displayIP)

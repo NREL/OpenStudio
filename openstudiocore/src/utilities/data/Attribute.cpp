@@ -1867,7 +1867,7 @@ namespace detail {
       std::pair<std::set<std::string>::iterator,bool> insertResult = attributeNames.insert(attribute.name());
       if (!insertResult.second) {
         LOG_FREE_AND_THROW("openstudio.Attribute","Asked to create a flat json serialization "
-                           << "of a vector of attributes with non-unique names.");
+                           << "of a vector of attributes with non-unique names including '" << attribute.name() << "'.");
       }
       QString qName = toQString(attribute.name());
 

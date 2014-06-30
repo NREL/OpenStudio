@@ -1038,9 +1038,11 @@ void OSDocument::openSidebar()
 void OSDocument::exportIdf()
 {
 
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
+  
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr("Export Idf"),
-                                                  QDir::homePath(),
+                                                  defaultDir,
                                                   tr("(*.idf)") );
 
   if( ! fileName.isEmpty() )
@@ -1080,9 +1082,11 @@ void OSDocument::exportFile(fileType type)
     OS_ASSERT(false);
   }
 
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
+  
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr(text.toStdString().c_str()),
-                                                  QDir::homePath(),
+                                                  defaultDir,
                                                   tr("(*.xml)") );
 
   if( ! fileName.isEmpty() )
@@ -1214,18 +1218,12 @@ bool OSDocument::saveAs()
 {
   bool fileSaved = false;
 
-  QString filePath, defaultDir;
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
 
-  if (!this->savePath().length()){
-    defaultDir = QDir::homePath();
-  }else{
-    defaultDir = toQString(openstudio::toPath(this->savePath()).parent_path());
-  }
-
-  filePath = QFileDialog::getSaveFileName( this->mainWindow(),
-                                           tr("Save"),
-                                           defaultDir,
-                                           tr("(*.osm)") );
+  QString filePath = QFileDialog::getSaveFileName( this->mainWindow(),
+                                                  tr("Save"),
+                                                  defaultDir,
+                                                  tr("(*.osm)") );
 
   if( ! filePath.isEmpty() )
   {

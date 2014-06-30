@@ -20,26 +20,30 @@
 $OPENSTUDIO_SKETCHUPPLUGIN_VERSION = "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.${CMAKE_VERSION_BUILD}"
 $OPENSTUDIO_SKETCHUPPLUGIN_DEVELOPER_MENU = false
 
-# Using this require to get around the fact that SketchUp's Ruby interpreter does not know
-# about dl/import
-require 'OpenStudio/OpenStudio-config'
+begin
+  # Using this require to get around the fact that SketchUp's Ruby interpreter does not know
+  # about dl/import
+  require 'OpenStudio/OpenStudio-config'
 
-minimum_version = ''
-minimum_version_key = ''
-if (RUBY_PLATFORM =~ /mswin/)  # Windows
-  minimum_version = '7.0.0000'
-  minimum_version_key = '000700000000'
-elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
-  minimum_version = '7.0.0000'
-  minimum_version_key = '000700000000'
-end
+  minimum_version = ''
+  minimum_version_key = ''
+  if (RUBY_PLATFORM =~ /mswin/)  # Windows
+    minimum_version = '7.0.0000'
+    minimum_version_key = '000700000000'
+  elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
+    minimum_version = '7.0.0000'
+    minimum_version_key = '000700000000'
+  end
 
-installed_version = Sketchup.version
-installed_version_key = ''; installed_version.split('.').each { |e| installed_version_key += e.rjust(4, '0') }
+  installed_version = Sketchup.version
+  installed_version_key = ''; installed_version.split('.').each { |e| installed_version_key += e.rjust(4, '0') }
 
-if (installed_version_key < minimum_version_key)
-  UI.messagebox("OpenStudio is only compatible with SketchUp version " + minimum_version +
-    " or higher.\nThe installed version is " + installed_version + ".  The plugin was not loaded.", MB_OK)
-else
-  load("openstudio/sketchup_plugin/lib/PluginManager.rb")
+  if (installed_version_key < minimum_version_key)
+    UI.messagebox("OpenStudio is only compatible with SketchUp version " + minimum_version +
+      " or higher.\nThe installed version is " + installed_version + ".  The plugin was not loaded.", MB_OK)
+  else
+    load("openstudio/sketchup_plugin/lib/PluginManager.rb")
+  end
+rescue LoadError
+  UI.messagebox("The OpenStudio SketchUp Plug-In is only compatible with OS 10.8 and later", MB_OK)
 end
