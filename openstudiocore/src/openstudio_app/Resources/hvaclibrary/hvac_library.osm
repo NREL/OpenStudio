@@ -209,7 +209,7 @@ OS:SetpointManager:Scheduled,
 OS:SetpointManager:MixedAir,
   {b27ac206-d7fc-4ada-aacc-4806c3f43a7b}, ! Handle
   OS:SetpointManager:MixedAir 1,          ! Name
-  ,                                       ! Control Variable
+  Temperature,                            ! Control Variable
   ,                                       ! Reference Setpoint Node Name
   ,                                       ! Fan Inlet Node Name
   ,                                       ! Fan Outlet Node Name
@@ -221,7 +221,8 @@ OS:SetpointManager:SingleZone:Reheat,
   -99,                                    ! Minimum Supply Air Temperature {C}
   99,                                     ! Maximum Supply Air Temperature {C}
   ,                                       ! Control Zone Name
-  ;                                       ! Setpoint Node or NodeList Name
+  ,                                       ! Setpoint Node or NodeList Name
+  Temperature;                            ! Control Variable
 
 OS:SetpointManager:Warmest,
   {4f12e925-01e9-4ce2-9f56-daa5d024ac5d}, !- Handle

@@ -59,17 +59,11 @@
 #include <model/PlantLoop_Impl.hpp>
 #include <model/SetpointManager.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
 #include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
 #include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
 #include <model/RenderingColor.hpp>
 #include <model/RenderingColor_Impl.hpp>
 #include <model/Node.hpp>
@@ -2103,31 +2097,6 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           break;
         }
       }
-
-      // if( node->getSetpointManagerMixedAir() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_mixed.png"));
-      // }
-      // else if( node->getSetpointManagerSingleZoneReheat() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_singlezone.png"));
-      // }  
-      // else if( node->setpointManagerScheduled() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-      // }  
-      // else if( node->setpointManagerFollowOutdoorAirTemperature() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-      // }  
-      // else if( node->setpointManagerOutdoorAirReset() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-      // }  
-      // else if( node->setpointManagerWarmest() )
-      // {
-      //   painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
-      // }  
     }  
   }
 }
@@ -2275,31 +2244,6 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           break;
         }
       }
-
-      // if( node->getSetpointManagerMixedAir() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed_right.png"));
-      // }
-      // else if( node->getSetpointManagerSingleZoneReheat() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone_right.png"));
-      // }  
-      // else if( node->setpointManagerScheduled() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled_right.png"));
-      // }  
-      // else if( node->setpointManagerFollowOutdoorAirTemperature() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair_right.png"));
-      // }  
-      // else if( node->setpointManagerOutdoorAirReset() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair_right.png"));
-      // }  
-      // else if( node->setpointManagerWarmest() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
-      // }  
     }  
   }
 }
@@ -2396,32 +2340,6 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           break;
         }
       }
-
-
-      // if( node->getSetpointManagerMixedAir() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_mixed.png"));
-      // }
-      // else if( node->getSetpointManagerSingleZoneReheat() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_singlezone.png"));
-      // }  
-      // else if( node->setpointManagerScheduled() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_scheduled.png"));
-      // }  
-      // else if( node->setpointManagerFollowOutdoorAirTemperature() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_follow_outdoorair.png"));
-      // }  
-      // else if( node->setpointManagerOutdoorAirReset() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_outdoorair.png"));
-      // }  
-      // else if( node->setpointManagerWarmest() )
-      // {
-      //   painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
-      // }  
     }  
   }
 }
@@ -3267,60 +3185,8 @@ void NodeContextButtonItem::onRemoveSPMActionTriggered()
         {
           emit removeModelObjectClicked( *it );
           break;
-          
-          // if( it->iddObjectType() == SetpointManagerMixedAir::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // else if( it->iddObjectType() == SetpointManagerSingleZoneReheat::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // else if( it->iddObjectType() == SetpointManagerScheduled::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // else if( it->iddObjectType() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // else if( it->iddObjectType() == SetpointManagerOutdoorAirReset::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
-          // {
-          //   emit removeModelObjectClicked( *it );
-          // }
-          // break;
         }
       }
-
-      // if(OptionalSetpointManagerSingleZoneReheat spm = node.getSetpointManagerSingleZoneReheat())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
-      // else if(OptionalSetpointManagerMixedAir spm = node.getSetpointManagerMixedAir())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
-      // else if(OptionalSetpointManagerOutdoorAirReset spm = node.setpointManagerOutdoorAirReset())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
-      // else if(boost::optional<SetpointManagerScheduled> spm = node.setpointManagerScheduled())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
-      // else if(boost::optional<SetpointManagerWarmest> spm = node.setpointManagerWarmest())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
-      // else if(boost::optional<SetpointManagerFollowOutdoorAirTemperature> spm = 
-      //         node.setpointManagerFollowOutdoorAirTemperature())
-      // {
-      //   emit removeModelObjectClicked( spm.get() );
-      // }
     }
   }
 }
