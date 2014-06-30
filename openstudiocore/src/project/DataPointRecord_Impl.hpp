@@ -127,14 +127,14 @@ namespace detail {
 
     boost::optional<FileReferenceRecord> sqlOutputDataRecord() const;
 
-    /** Returns the FileReferenceRecords that point to this DataPointRecord's XML output data. */
+    /** \deprecated Will always return empty vector; call attributeRecords() instead. */
     std::vector<FileReferenceRecord> xmlOutputDataRecords() const;
 
     boost::optional<openstudio::UUID> topLevelJobUUID() const;
 
     std::vector<TagRecord> tagRecords() const;
 
-    /** Assembles all the AttributeRecords associated with xmlOutputDataRecords(). */
+    /** Returns this DataPointRecord's attributeRecords. */
     std::vector<AttributeRecord> attributeRecords() const;
 
     virtual analysis::DataPoint dataPoint() const;
