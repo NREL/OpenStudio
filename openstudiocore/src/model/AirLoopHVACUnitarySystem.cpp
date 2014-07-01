@@ -1155,7 +1155,7 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(const Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitarySystem_Impl>());
 
   bool ok = true;
-  ok = setControlType("Load");
+  ok = getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("Load");
   OS_ASSERT(ok);
   ok = setDehumidificationControlType("None");
   OS_ASSERT(ok);
@@ -1226,13 +1226,13 @@ std::vector<std::string> AirLoopHVACUnitarySystem::supplyAirFlowRateMethodWhenNo
                         OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 }
 
-std::string AirLoopHVACUnitarySystem::controlType() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
-}
-
-bool AirLoopHVACUnitarySystem::isControlTypeDefaulted() const {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isControlTypeDefaulted();
-}
+//std::string AirLoopHVACUnitarySystem::controlType() const {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
+//}
+//
+//bool AirLoopHVACUnitarySystem::isControlTypeDefaulted() const {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isControlTypeDefaulted();
+//}
 
 boost::optional<ThermalZone> AirLoopHVACUnitarySystem::controllingZoneorThermostatLocation() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->controllingZoneorThermostatLocation();
@@ -1478,13 +1478,13 @@ bool AirLoopHVACUnitarySystem::isAncilliaryOffCycleElectricPowerDefaulted() cons
 //   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->designSpecificationMultispeedHeatPumpObject();
 // }
 
-bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
-  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
-}
-
-void AirLoopHVACUnitarySystem::resetControlType() {
-  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControlType();
-}
+//bool AirLoopHVACUnitarySystem::setControlType(std::string controlType) {
+//  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControlType(controlType);
+//}
+//
+//void AirLoopHVACUnitarySystem::resetControlType() {
+//  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetControlType();
+//}
 
 bool AirLoopHVACUnitarySystem::setControllingZoneorThermostatLocation(const ThermalZone& thermalZone) {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setControllingZoneorThermostatLocation(thermalZone);
