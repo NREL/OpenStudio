@@ -671,8 +671,8 @@ if(BUILD_QT)
     # the below code circumvents that by calling make through a call to "sh"
     message(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add(Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
-      URL_MD5 a78408c887c04c34ce615da690e0b4c8
+      URL http://download.qt-project.org/official_releases/qt/5.3/5.3.1/single/qt-everywhere-opensource-src-5.3.1.tar.gz
+      URL_MD5 a355749e4f200a6392ecad151d1d0cdc
       CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake tests -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND  /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && make"
