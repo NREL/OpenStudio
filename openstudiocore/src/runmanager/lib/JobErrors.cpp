@@ -59,6 +59,10 @@ std::vector<std::pair<int, std::string> > JobErrors::errorsByTypeWithCount(const
       boost::smatch matches;
       if (boost::regex_search(itr->second, matches, occurredTotalTimes)) {
         std::string temp = std::string(matches[1].first, matches[1].second); 
+        // note that we subtract one here because the repeating EnergyPlus warnings that we are
+        // parsing out are listed once when they first occur, then again with a "total times" count.
+        // If we don't subtract 1 then we end up with an off by 1 error for each repeated warning
+        // in the total count.
         repeatCount = atoi(temp.c_str()) - 1;
       }
 

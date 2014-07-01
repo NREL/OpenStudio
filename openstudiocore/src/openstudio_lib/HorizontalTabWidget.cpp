@@ -18,14 +18,18 @@
  **********************************************************************/
 
 #include "HorizontalTabWidget.hpp"
-#include <QStackedWidget>
-#include <QPixmap>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QStyleOption>
+
+#include "../utilities/core/Assert.hpp"
+
+#include <QBoxLayout>
 #include <QPainter>
+#include <QPixmap>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QStyleOption>
+
 #include <vector>
+
 #include <algorithm>
 
 namespace openstudio {
@@ -139,6 +143,11 @@ void HorizontalTabWidget::setCurrentIndex(int index)
   {  
     QPushButton * button = m_tabButtons[i];
 
+    if(button->isHidden()){
+      button->move(0,0);
+      continue;
+    }
+
     QString style;
 
     style.append("QPushButton { border: none; background-color: #808080; ");
@@ -201,6 +210,36 @@ void HorizontalTabWidget::paintEvent ( QPaintEvent * event )
   opt.init(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+void HorizontalTabWidget::hideTab(QWidget * widget, bool hide)
+{
+  int index = m_pageStack->indexOf(widget);
+  OS_ASSERT(index >= 0);
+  
+  int currentIndex = m_pageStack->currentIndex();
+  if(currentIndex == index){
+    if(currentIndex + 1 < m_pageStack->count()){
+      currentIndex++;
+    } else if (currentIndex != 0) {
+      currentIndex = 0;
+    } else {
+      // index and currentIndex are both 0
+      // can't hide both the tab and the page
+      return;
+    }
+  }
+
+  QPushButton * button = 0;
+  button = m_tabButtons.at(index);
+  OS_ASSERT(button);
+  if(hide){
+    button->hide();
+  } else {
+    button->show();
+  }
+
+  setCurrentIndex(currentIndex);
 }
 
 } // namespace openstudio

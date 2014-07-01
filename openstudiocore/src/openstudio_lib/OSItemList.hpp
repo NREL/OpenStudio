@@ -60,8 +60,8 @@ class OSItemList : public OSItemSelector {
   bool itemsRemoveable() const;
   void setItemsRemoveable(bool itemsRemoveable);
 
-  OSItem::Type itemsType() const;
-  void setItemsType(OSItem::Type type);
+  OSItemType itemsType() const;
+  void setItemsType(OSItemType type);
 
 public slots:
 
@@ -98,7 +98,7 @@ private:
   OSItem * m_selectedItem;
   bool m_itemsDraggable;
   bool m_itemsRemoveable;
-  OSItem::Type m_type;
+  OSItemType m_type;
   bool m_dirty;
 
 };

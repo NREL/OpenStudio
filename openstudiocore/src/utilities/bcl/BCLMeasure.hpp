@@ -54,6 +54,11 @@ namespace openstudio{
     ((ReportingMeasure)(Reporting Measure)) 
   );
 
+  OPENSTUDIO_ENUM( MeasureBadgeType,
+    ((BCLMeasure))
+    ((MyMeasure))
+  );
+
   /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
   **/
   class UTILITIES_API BCLMeasure {

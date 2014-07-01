@@ -17,55 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCRIPTSCONTROLLER_HPP
-#define OPENSTUDIO_SCRIPTSCONTROLLER_HPP
+#ifndef MEASUREBADGE_H
+#define MEASUREBADGE_H
 
-#include "SubTabController.hpp"
+#include <QLabel>
+
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio {
 
-class ScriptFolderListView;
-
-class ScriptsController : public SubTabController
+class MeasureBadge : public QLabel
 {
   Q_OBJECT
 
   public:
 
-    ScriptsController(const openstudio::path &t_scriptsPath);
+    void setMeasureBadgeType(MeasureBadgeType type);
 
-    virtual ~ScriptsController() {}
-
-    const ScriptFolderListView* scriptFolderListView() const;
-
-    ScriptFolderListView* scriptFolderListView();
-
-  signals:
-    void updateRubyInterpreterWarning();
-    void toolsUpdated();
-
-  protected:
-
-    virtual void onSelectItem(OSItem *item);
-
-    virtual void onAddItem();
-
-    virtual void onCopyItem();
-
-    virtual void onRemoveItem(OSItem *item);
-
-    virtual void onReplaceItem(OSItem *item, const OSItemId& replacementItemId);
-
-    virtual void onPurgeItems();
-
-    virtual void onDrop(const OSItemId& itemId);
-
-    virtual void onInspectItem(OSItem* item);
-
-  private:
-    REGISTER_LOGGER("openstudio::ScriptsController");
 };
 
-} // openstudio
+} // namespace openstudio
 
-#endif // OPENSTUDIO_SCRIPTSCONTROLLER_HPP
+#endif // MEASUREBADGE_H

@@ -220,13 +220,6 @@ RunView::RunView(const model::Model & model,
   m_outputWindow->setReadOnly(true);
   mainLayout->addWidget(m_outputWindow, 6, 1);
 
-  // Open RunManager externally button area
-  QPushButton *openrunmanagerbutton = new QPushButton("Open RunManager\nfor Multiple Runs");
-  mainLayout->addWidget(openrunmanagerbutton, 0, 2);
-  isConnected = connect(openrunmanagerbutton, SIGNAL(clicked(bool)), this, SLOT(openRunManagerClicked()));
-  OS_ASSERT(isConnected);
-
-
   updateRunManagerStats(t_runManager);
 }
 
@@ -485,26 +478,6 @@ void RunView::playButtonClicked(bool t_checked)
     // we are starting the simulations
     openstudio::runmanager::RunManager rm = runManager();
     startRunManager(rm, m_modelPath, m_tempFolder, m_radianceButton->isChecked(), requireCalibrationReports, this);
-  }
-}
-
-void RunView::openRunManagerClicked()
-{
-  LOG(Debug, "openRunManagerClicked");
-
-#ifdef Q_OS_MAC
-  openstudio::path runmanager
-    = openstudio::getApplicationRunDirectory().parent_path().parent_path().parent_path() / openstudio::toPath("RunManager.app/Contents/MacOS/RunManager");
-#else
-  openstudio::path runmanager
-    = openstudio::getApplicationRunDirectory() / openstudio::toPath("RunManager");
-#endif
-
-  LOG(Debug, "Starting RunManager in: " << openstudio::toString(runmanager));
-
-  if (!QProcess::startDetached(openstudio::toQString(runmanager), QStringList()))
-  {
-    QMessageBox::critical(this, "Unable to launch RunManager", "RunManager was not found in the expected location:\n" + openstudio::toQString(runmanager));
   }
 }
 

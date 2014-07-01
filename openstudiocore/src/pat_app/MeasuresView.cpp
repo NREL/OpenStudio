@@ -18,21 +18,28 @@
 **********************************************************************/
 
 #include "MeasuresView.hpp"
-#include "../shared_gui_components/OSViewSwitcher.hpp"
-#include "../shared_gui_components/OSListView.hpp"
-#include "../shared_gui_components/HeaderViews.hpp"
+
+#include "PatApp.hpp"
+#include "PatMainWindow.hpp"
+
 #include "../shared_gui_components/Buttons.hpp"
+#include "../shared_gui_components/HeaderViews.hpp"
+#include "../shared_gui_components/OSListView.hpp"
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/SyncMeasuresDialog.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+
+#include <QDragEnterEvent>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPainter>
+#include <QPixmap>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QStyleOption>
 #include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPixmap>
-#include <QDragEnterEvent>
 
 namespace openstudio{
   
@@ -102,8 +109,46 @@ MeasuresTabView::MeasuresTabView()
   variableGroupListView->setContentsMargins(0,0,0,0);
   variableGroupListView->setSpacing(0);
   mainContentVLayout->addWidget(variableGroupListView);
+
+  QString style;
+  style.append("QWidget#Footer {");
+  style.append("border-top: 1px solid black; ");
+  style.append("background-color: qlineargradient(x1:0,y1:0,x2:0,y2:1,stop: 0 #B6B5B6, stop: 1 #737172); ");
+  style.append("}");
+
+  QWidget * footer = new QWidget();
+  footer->setObjectName("Footer");
+  footer->setStyleSheet(style);
+  mainContentVLayout->addWidget(footer);
+
+  QHBoxLayout * layout = new QHBoxLayout();
+  layout->setSpacing(0);
+  footer->setLayout(layout);
+
+  m_updateMeasuresButton = new BlueButton();
+  m_updateMeasuresButton->setText("Sync Project Measures with Library");
+  m_updateMeasuresButton->setToolTip("Check the Library for Newer Versions of the Measures in Your Project and Provides Sync Option");
+  layout->addStretch();
+  layout->addWidget(m_updateMeasuresButton);
+
+  bool isConnected = false;
+  isConnected = connect(m_updateMeasuresButton,SIGNAL(clicked()), this,SLOT(openUpdateMeasuresDlg()));
+  OS_ASSERT(isConnected);
 }
 
+//*****SLOTS*****
+
+void MeasuresTabView::openUpdateMeasuresDlg()
+{
+  PatApp * app = PatApp::instance();
+
+  boost::optional<analysisdriver::SimpleProject> project = app->project();
+  OS_ASSERT(project);
+
+  m_syncMeasuresDialog = boost::shared_ptr<SyncMeasuresDialog>(new SyncMeasuresDialog(&(project.get()),&(app->measureManager())));
+  m_syncMeasuresDialog->setGeometry(app->mainWindow->geometry());
+  m_syncMeasuresDialog->exec();
+}
 
 } // pat
 

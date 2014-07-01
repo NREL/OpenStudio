@@ -1,12 +1,12 @@
 <measure>
   <name>Replace OpenStudio Model</name>
   <uid>d234ecee-c118-44e7-a381-db0a8917d751</uid>
-  <version_id>d6d99669-d14f-4d94-9a7a-4ed26c7e2ba9</version_id>
+  <version_id>9eedad4e-c2fa-438a-a40e-bd7706cbabe2</version_id>
   <description></description>
   <modeler_description></modeler_description>
   <provenances/>
   <tags>
-    <tag>WholeBuilding</tag>
+    <tag>Whole Building.Space Types</tag>
   </tags>
   <attributes>
     <attribute>
@@ -25,7 +25,7 @@
       <filename>EnvelopeAndLoadTestModel_01.osm</filename>
       <filetype>osm</filetype>
       <usage_type>test</usage_type>
-      <checksum>15D4B9DC</checksum>
+      <checksum>6616E1BE</checksum>
     </file>
     <file>
       <version>
@@ -35,13 +35,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>AA467D68</checksum>
+      <checksum>4410816F</checksum>
     </file>
     <file>
       <filename>ReplaceModel_Test.rb</filename>
       <filetype>rb</filetype>
       <usage_type>test</usage_type>
-      <checksum>ACC46FE8</checksum>
+      <checksum>AAE6C44F</checksum>
     </file>
   </files>
 </measure>

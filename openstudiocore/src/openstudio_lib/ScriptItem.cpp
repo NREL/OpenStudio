@@ -42,7 +42,7 @@ OSItemId scriptToItemId(const openstudio::path &t_path)
 }
 
 ScriptItem::ScriptItem(const openstudio::path& path,
-                       OSItem::Type type,
+                       OSItemType type,
                        QWidget * parent)
   : OSItem(scriptToItemId(path), type, parent),
     m_removed(false),

@@ -34,7 +34,7 @@ class BCLComponentItem : public OSItem
 public:
 
   BCLComponentItem( const BCLComponent & component,
-                    OSItem::Type type,
+                    OSItemType type,
                     QWidget * parent = 0 );
   virtual ~BCLComponentItem() {}
 

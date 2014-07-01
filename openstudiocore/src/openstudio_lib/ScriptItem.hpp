@@ -45,7 +45,7 @@ class ScriptItem : public OSItem {
  public:
 
   ScriptItem(const openstudio::path &t_path,
-             OSItem::Type type,
+             OSItemType type,
              QWidget * parent = 0);
 
   virtual ~ScriptItem() {}

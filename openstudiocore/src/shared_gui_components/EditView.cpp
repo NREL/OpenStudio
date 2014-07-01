@@ -37,7 +37,7 @@
 
 namespace openstudio{
   
-EditRubyMeasureView::EditRubyMeasureView()
+EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   : QWidget()
 {
   auto layout = new QVBoxLayout();
@@ -103,6 +103,13 @@ EditRubyMeasureView::EditRubyMeasureView()
   m_mainVLayout->addLayout(m_inputsVLayout);
 
   m_mainVLayout->addStretch();
+
+  if(applyMeasureNow){
+    nameLineEdit->setReadOnly(true);
+    descriptionTextEdit->setReadOnly(true);
+    nameLineEdit->setDisabled(true);
+    descriptionTextEdit->setDisabled(true);
+  }
 }
 
 void EditRubyMeasureView::paintEvent(QPaintEvent *)
@@ -134,7 +141,7 @@ void EditRubyMeasureView::clear()
  }
 }
 
-EditNullView::EditNullView() 
+EditNullView::EditNullView(const QString & text) 
   : QWidget()
 {
   auto mainVLayout = new QVBoxLayout();
@@ -143,7 +150,7 @@ EditNullView::EditNullView()
   setLayout(mainVLayout);
   
   auto label = new QLabel();
-  label->setText("Select a Measure to Edit");
+  label->setText(text);
   label->setWordWrap(true);
   label->setAlignment(Qt::AlignCenter);
   mainVLayout->addWidget(label);

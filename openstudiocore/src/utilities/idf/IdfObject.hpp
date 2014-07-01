@@ -83,11 +83,13 @@ class UTILITIES_API IdfObject {
 
   /** Constructor from type. Equivalent to IdfObject(IddFactory::instance.iddObject(type)),
    *  unless type == IddObjectType::UserCustom, in which case, the constructed object is equivalent
-   *  to IdfObject(IddObjectType::Catchall). */
-  explicit IdfObject(IddObjectType type);
+   *  to IdfObject(IddObjectType::Catchall). If fastName is true a UUID is assigned as the name, 
+   *  otherwise no name is assigned.*/
+  explicit IdfObject(IddObjectType type, bool fastName=false);
 
-  /** Constructor from iddObject. */
-  explicit IdfObject(const IddObject& iddObject);
+  /** Constructor from iddObject. If fastName is true a UUID is assigned as the name, 
+   *  otherwise no name is assigned.*/
+  explicit IdfObject(const IddObject&, bool fastName=false);
   
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */

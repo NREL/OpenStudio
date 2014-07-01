@@ -154,12 +154,12 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << measureString;
       file.close();
-    }
 
-    BCLFileReference measureScriptFileReference(measureScriptPath, true);
-    measureScriptFileReference.setUsageType("script");
-    measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
-    m_bclXML.addFile(measureScriptFileReference);
+      BCLFileReference measureScriptFileReference(measureScriptPath, true);
+      measureScriptFileReference.setUsageType("script");
+      measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
+      m_bclXML.addFile(measureScriptFileReference);
+    }
 
     // write test
     {
@@ -171,11 +171,11 @@ namespace openstudio{
       QTextStream textStream(&file);
       textStream << testString;
       file.close();
-    }
 
-    BCLFileReference measureTestFileReference(measureTestPath, true);
-    measureTestFileReference.setUsageType("test");
-    m_bclXML.addFile(measureTestFileReference);
+      BCLFileReference measureTestFileReference(measureTestPath, true);
+      measureTestFileReference.setUsageType("test");
+      m_bclXML.addFile(measureTestFileReference);
+    }
 
     // write test osm
     { 

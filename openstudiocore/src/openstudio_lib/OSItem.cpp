@@ -19,14 +19,16 @@
 
 #include "OSItem.hpp"
 
+#include "BCLComponentItem.hpp"
 #include "IconLibrary.hpp"
 #include "ModelObjectItem.hpp"
-#include "BCLComponentItem.hpp"
-#include "ScriptItem.hpp"
 #include "OSAppBase.hpp"
 #include "OSDocument.hpp"
-#include "../utilities/bcl/LocalBCL.hpp"
+#include "ScriptItem.hpp"
 
+#include "../shared_gui_components/MeasureBadge.hpp"
+
+#include "../utilities/bcl/LocalBCL.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
@@ -122,7 +124,7 @@ bool OSItemId::operator==(const OSItemId& other) const
   return result;
 }
 
-OSItem::OSItem(const OSItemId& itemId, Type type, QWidget * parent)
+OSItem::OSItem(const OSItemId& itemId, OSItemType osItemType, QWidget * parent)
                : QWidget(parent),
                m_itemId(itemId),
                m_selectionWidget(NULL),
@@ -137,7 +139,7 @@ OSItem::OSItem(const OSItemId& itemId, Type type, QWidget * parent)
                m_inspectable(false),
                m_acceptsDrops(false),
                m_size(QSize()),
-               m_type(type),
+               m_osItemType(osItemType),
                m_borderColor(QColor(Qt::black)),
                m_useLargeIcon(false)
 {
@@ -145,10 +147,10 @@ OSItem::OSItem(const OSItemId& itemId, Type type, QWidget * parent)
 
   createLayout();
 
-  setAttributes(type);
+  setAttributes(osItemType);
 }
 
-OSItem* OSItem::makeItem(const OSItemId& itemId, Type type)
+OSItem* OSItem::makeItem(const OSItemId& itemId, OSItemType osItemType)
 {
   OSItem* result = NULL;
 
@@ -159,19 +161,19 @@ OSItem* OSItem::makeItem(const OSItemId& itemId, Type type)
     boost::optional<BCLComponent> comp = LocalBCL::instance().getComponent(itemId.itemId().toStdString());
     if( comp )
     {
-      result = new BCLComponentItem(comp.get(),type);
+      result = new BCLComponentItem(comp.get(),osItemType);
     }
   }
   else
   {
     boost::optional<model::ModelObject> modelObject = app->currentDocument()->getModelObject(itemId);
     if (modelObject){
-      result = new ModelObjectItem(*modelObject,itemId.isDefaulted(),type);
+      result = new ModelObjectItem(*modelObject,itemId.isDefaulted(),osItemType);
     } else {
       openstudio::path p = openstudio::toPath(itemId.itemId());
       if (boost::filesystem::exists(p))
       {
-        result = new ScriptItem(p, type);
+        result = new ScriptItem(p, osItemType);
       }
     }
   }
@@ -190,10 +192,10 @@ void OSItem::createLayout()
   m_imageLeftLbl = new QLabel(this);
   leftVBoxLayout->addWidget(m_imageLeftLbl);
 
-  m_bclBadge = new QLabel("BCL",this);
-  m_bclBadge->setStyleSheet("QLabel { color: #4B7DB0; font-size: 10pt; }");
-  m_bclBadge->setVisible(false);
-  leftVBoxLayout->addWidget(m_bclBadge);
+  m_measureBadge = new MeasureBadge();
+  //m_measureBadge->setFixedWidth(25); NOTE mirror other instance?
+
+  leftVBoxLayout->addWidget(m_measureBadge);
 
   mainHLayout->addLayout(leftVBoxLayout);
 
@@ -252,24 +254,22 @@ void OSItem::createLayout()
   OS_ASSERT(isConnected);
 }
 
-void OSItem::setAttributes(Type type)
+void OSItem::setAttributes(OSItemType osItemType)
 {
-  switch(type){
-    case LIST_ITEM:
-      setMinimumSize(QSize(ITEM_WIDTH,ITEM_HEIGHT));
-      break;
-    case DROPZONE_SQUARE:
-      setFixedSize(QSize(ITEM_SIDE,ITEM_SIDE));
-      m_textLbl->hide();
-      break;
-    case DROPZONE_RECTANGLE:
-      setMinimumSize(QSize(ITEM_WIDTH,ITEM_HEIGHT));
-      setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
-      break;
-    default:
-      ///! should never get here
-      OS_ASSERT(false);
-      break;
+  if(osItemType == OSItemType::ListItem){
+    setMinimumSize(QSize(ITEM_WIDTH,ITEM_HEIGHT));
+  }
+  else if(osItemType == OSItemType::DropzoneSquare){
+    setFixedSize(QSize(ITEM_SIDE,ITEM_SIDE));
+    m_textLbl->hide();
+  }
+  else if(osItemType == OSItemType::DropzoneRectangle){
+    setMinimumSize(QSize(ITEM_WIDTH,ITEM_HEIGHT));
+    setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored);
+  }
+  else{
+    ///! should never get here
+    OS_ASSERT(false);
   }
 }
 
@@ -426,11 +426,11 @@ void OSItem::setFixedSize(const QSize & size)
   QWidget::setFixedSize(m_size);
 }
 
-void OSItem::setAspectRatio(OSItem::AspectRatio aspectRatio)
+void OSItem::setAspectRatio(AspectRatio aspectRatio)
 {
-  if(aspectRatio == RECTANGLE){
+  if(aspectRatio == AspectRatio::Rectangle){
     m_size = QSize(ITEM_WIDTH,ITEM_HEIGHT);
-  }else if(aspectRatio == SQUARE){
+  }else if(aspectRatio == AspectRatio::Square){
     m_size = QSize(ITEM_SIDE,ITEM_SIDE);
   }
   QWidget::setFixedSize(m_size);
@@ -459,14 +459,14 @@ void OSItem::setRemoveable(bool removeable)
   m_removeButton->setVisible(removeable);
 }
 
-OSItem::Type OSItem::type() const
+OSItemType OSItem::osItemType() const
 {
-  return m_type;
+  return m_osItemType;
 }
 
-void OSItem::setType(Type type)
+void OSItem::setOSItemType(OSItemType osItemType)
 {
-  m_type = type;
+  m_osItemType = osItemType;
 
   update();
 }
@@ -475,7 +475,7 @@ void OSItem::paintEvent(QPaintEvent * event)
 {
   QPainter p(this);
 
-  if( m_type == LIST_ITEM )
+  if( m_osItemType == OSItemType::ListItem )
   {
     if( m_selected )
     {
@@ -495,7 +495,7 @@ void OSItem::paintEvent(QPaintEvent * event)
     p.setPen(QPen(Qt::black));
     p.drawLine(0,rect().height() - 1,rect().width(),rect().height() - 1);
   }
-  else if( m_type == LIBRARY_ITEM )
+  else if( m_osItemType == OSItemType::LibraryItem )
   {
     QPen pen(QColor(128,128,128));
     pen.setStyle(Qt::SolidLine);
@@ -504,7 +504,7 @@ void OSItem::paintEvent(QPaintEvent * event)
     p.setBrush(QColor(206,206,206));
     p.drawRoundedRect(5,4,rect().width() - 10,rect().height() - 10,10,10);
   }
-  else if( m_type == DROPZONE_SQUARE || m_type == DROPZONE_RECTANGLE )
+  else if( m_osItemType == OSItemType::DropzoneSquare || m_osItemType == OSItemType::DropzoneRectangle )
   {
     QPen pen(QColor(128,128,128));
     pen.setStyle(Qt::SolidLine);

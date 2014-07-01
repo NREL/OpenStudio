@@ -41,8 +41,18 @@ using std::endl;
 TEST(Checksum, Strings)
 {
   EXPECT_EQ("00000000", checksum(string("")));
+
   EXPECT_EQ("1AD514BA", checksum(string("Hi there")));
+
   EXPECT_EQ("D5682D26", checksum(string("HI there")));
+
+  EXPECT_EQ("597EA479", checksum(string("Hithere")));
+
+  EXPECT_EQ("17B88D3A", checksum(string("Hi there\r\nGoodbye")));
+  EXPECT_EQ("17B88D3A", checksum(string("Hi there\nGoodbye")));
+
+  EXPECT_EQ("F4CC67AC", checksum(string("Hi there\r\nGoodbye\r\n")));
+  EXPECT_EQ("F4CC67AC", checksum(string("Hi there\nGoodbye\n")));
 }
 
 TEST(Checksum, Streams)
@@ -79,6 +89,10 @@ TEST(Checksum, Paths)
   // read a file, contents are "Hi there"
   path p = resourcesPath() / toPath("utilities/Checksum/Checksum.txt");
   EXPECT_EQ("1AD514BA", checksum(p));
+
+  // read a file, contents are "Hi there\r\nGoodbye" on Windows and "Hi there\nGoodbye" otherwise
+  p = resourcesPath() / toPath("utilities/Checksum/Checksum2.txt");
+  EXPECT_EQ("17B88D3A", checksum(p));
 
   // checksum of a directory is "00000000"
   p = resourcesPath() / toPath("utilities/Checksum/");

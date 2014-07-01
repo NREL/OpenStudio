@@ -173,12 +173,10 @@ VariableListController::VariableListController(MeasureType measureType, bool fil
 {
 }
 
-
 MeasureType VariableListController::measureType() const
 {
   return m_measureType;
 }
-
 
 QSharedPointer<OSListItem> VariableListController::itemAt(int i)
 {
@@ -334,8 +332,6 @@ void VariableListController::addFixedItemForDroppedMeasure(QDropEvent *event)
 {
   addItemForDroppedMeasureImpl(event, true);
 }
-
-
 
 void VariableListController::addItemForDroppedMeasureImpl(QDropEvent * event, bool t_fixed)
 {
@@ -843,6 +839,7 @@ MeasureItem::MeasureItem(const analysis::RubyMeasure & measure, openstudio::Base
     m_app(t_app),
     m_measure(measure)
 {
+  OS_ASSERT(m_measure.usesBCLMeasure());
 }
 
 analysis::RubyMeasure MeasureItem::measure() const
@@ -871,20 +868,29 @@ QString MeasureItem::description() const
 
 QString MeasureItem::modelerDescription() const
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
+  QString result;
 
-  return QString::fromStdString(m_measure.measure()->modelerDescription());
+  boost::optional<BCLMeasure> bclMeasure = m_measure.bclMeasure();
+  if (bclMeasure){
+    result = QString::fromStdString(bclMeasure->modelerDescription());
+  }else{
+    LOG(Error, "Cannot load BCLMeasure '" << toString(m_measure.bclMeasureUUID()) << "' from '" << toString(m_measure.bclMeasureDirectory()) << "'");
+  }
+  return result; 
 }
 
 QString MeasureItem::scriptFileName() const
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
-
   QString scriptName;
 
-  if( boost::optional<openstudio::path> path = m_measure.measure()->primaryRubyScriptPath() )
-  {
-    scriptName = toQString(path->leaf());
+  boost::optional<BCLMeasure> bclMeasure = m_measure.bclMeasure();
+  if (bclMeasure){
+    if( boost::optional<openstudio::path> path = m_measure.measure()->primaryRubyScriptPath() )
+    {
+      scriptName = toQString(path->leaf());
+    }
+  }else{
+    LOG(Error, "Cannot load BCLMeasure '" << toString(m_measure.bclMeasureUUID()) << "' from '" << toString(m_measure.bclMeasureDirectory()) << "'");
   }
 
   return scriptName;
@@ -892,8 +898,6 @@ QString MeasureItem::scriptFileName() const
 
 void MeasureItem::setDescription(const QString & description)
 {
-  OS_ASSERT(m_measure.usesBCLMeasure());
-
   // ETH: Was setting description on the measure itself (m_measure.measure()), however, this
   // description should be attached to the instantiated measure, not the global measure.
   m_measure.setDescription(description.toStdString());
@@ -989,6 +993,8 @@ void MeasureItem::setSelected(bool isSelected)
       m_app->editController()->reset();
     }
   }
+
+  //TODO
 }
 
 QWidget * MeasureItemDelegate::view(QSharedPointer<OSListItem> dataSource)

@@ -20,6 +20,13 @@ set(${target_name}_SRC
   StartupView.cpp
   StartupMenu.hpp
   StartupMenu.cpp
+
+  ../shared_gui_components/BusyWidget.cpp
+  ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/OSDialog.cpp
+  ../shared_gui_components/OSDialog.hpp
+  ../shared_gui_components/WaitDialog.cpp
+  ../shared_gui_components/WaitDialog.hpp
 )
 
 # moc files
@@ -27,6 +34,10 @@ set(${target_name}_moc
   OpenStudioApp.hpp
   StartupView.hpp
   StartupMenu.hpp
+
+  ../shared_gui_components/BusyWidget.hpp
+  ../shared_gui_components/OSDialog.hpp
+  ../shared_gui_components/WaitDialog.hpp
 )
 
 ## Qt UI generation
@@ -78,6 +89,7 @@ set(depends
   openstudio_energyplus
   openstudio_modeleditor
   openstudio_sdd
+  openstudio_gbxml
   ${QT_LIBS}
   ${RUBY_LIBRARY}
 )

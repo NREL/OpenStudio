@@ -503,6 +503,11 @@ namespace gbxml {
 
       result = shadingSurface;
 
+    }else if (surfaceType.contains("FreestandingColumn") || surfaceType.contains("EmbeddedColumn")){
+  
+      // do not handle these
+      return boost::none;
+
     }else{
 
       openstudio::model::Surface surface(vertices, model);
@@ -512,20 +517,38 @@ namespace gbxml {
 
       QString exposedToSun = element.attribute("exposedToSun");
 
+      // set surface type
+      // wall types
       if (surfaceType.contains("ExteriorWall")){
         surface.setSurfaceType("Wall"); 
       }else if (surfaceType.contains("InteriorWall")){
         surface.setSurfaceType("Wall"); 
+      }else if (surfaceType.contains("UndergroundWall")){
+        surface.setSurfaceType("Wall"); 
+      // roof types
       }else if (surfaceType.contains("Roof")){
         surface.setSurfaceType("RoofCeiling"); 
+      }else if (surfaceType.contains("Ceiling")){
+        surface.setSurfaceType("RoofCeiling");
+      }else if (surfaceType.contains("UndergroundCeiling")){
+        surface.setSurfaceType("RoofCeiling");
+      // floor types
+      }else if (surfaceType.contains("UndergroundSlab")){
+        surface.setSurfaceType("Floor"); 
       }else if (surfaceType.contains("SlabOnGrade")){
+        surface.setSurfaceType("Floor"); 
+      }else if (surfaceType.contains("InteriorFloor")){
+        surface.setSurfaceType("Floor"); 
+      }else if (surfaceType.contains("RaisedFloor")){
         surface.setSurfaceType("Floor"); 
       }
 
+      // this type can be wall, roof, or floor.  just use default surface type.
       if (surfaceType.contains("Air")){
         // TODO: set air wall construction
       }
 
+      // set boundary conditions
       if (exposedToSun.contains("true")){
         surface.setOutsideBoundaryCondition("Outdoors");
         surface.setSunExposure("SunExposed");
@@ -572,7 +595,16 @@ namespace gbxml {
 
         boost::optional<openstudio::WorkspaceObject> workspaceObject = model.getObjectByTypeAndName(IddObjectType::OS_Space, spaceName);
         if (workspaceObject && workspaceObject->optionalCast<openstudio::model::Space>()){
-        // clone the surface and sub surfaces and reverse vertices
+
+          // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces 
+          // http://code.google.com/p/cbecc/issues/detail?id=471
+          std::string currentSurfaceType = surface.surfaceType();
+          surface.assignDefaultSurfaceType();
+          if (currentSurfaceType != surface.surfaceType()){
+            LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << escapeName(surfaceName) << "'");
+          }
+
+          // clone the surface and sub surfaces and reverse vertices
           model::Space adjacentSpace = workspaceObject->cast<openstudio::model::Space>();
           boost::optional<openstudio::model::Surface> otherSurface = surface.createAdjacentSurface(adjacentSpace);
           if(!otherSurface){

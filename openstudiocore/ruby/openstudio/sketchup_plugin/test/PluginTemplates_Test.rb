@@ -33,6 +33,8 @@ class PluginTemplates_Test < MiniTest::Unit::TestCase
       path = OpenStudio::Path.new(template)
       
       vt = OpenStudio::OSVersion::VersionTranslator.new
+      vt.setAllowNewerVersions(false)
+      
       model = vt.loadModel(path)
       assert((not model.empty?))
       model = model.get

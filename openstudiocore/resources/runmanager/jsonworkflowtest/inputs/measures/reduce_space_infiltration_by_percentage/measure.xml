@@ -1,7 +1,7 @@
 <measure>
   <name>ReduceSpaceInfiltrationByPercentage</name>
   <uid>d8161857-8b77-4e1a-a76c-ae5deab7c1e0</uid>
-  <version_id>93341ec9-6d68-40fa-ac6d-538ac5391d25</version_id>
+  <version_id>05e57133-10ea-45a7-98fb-20b196f411f3</version_id>
   <description>This measure will reduce space infiltration rates by the requested percentage. A cost per square foot of building area can be added to the model.</description>
   <modeler_description>This can be run across a space type or the entire building. Costs will be associated with the building. If infiltration objects are removed at a later date, the costs will remain.</modeler_description>
   <provenances/>
@@ -22,24 +22,6 @@
   </attributes>
   <files>
     <file>
-      <filename>ReduceSpaceInfiltrationByPercentage_Test.rb</filename>
-      <filetype>rb</filetype>
-      <usage_type>test</usage_type>
-      <checksum>8521935B</checksum>
-    </file>
-    <file>
-      <filename>EnvelopeAndLoadTestModel_01_FullyCosted.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>EDF0AAE3</checksum>
-    </file>
-    <file>
-      <filename>EnvelopeAndLoadTestModel_01.osm</filename>
-      <filetype>osm</filetype>
-      <usage_type>test</usage_type>
-      <checksum>2DD4CFB8</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.0.5</identifier>
@@ -47,7 +29,7 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>86CFFF3B</checksum>
+      <checksum>84061549</checksum>
     </file>
   </files>
 </measure>

@@ -39,7 +39,7 @@ ScriptFolderListView::ScriptFolderListView(const openstudio::path &folder,
                                            bool addScrollArea,
                                            bool draggable,
                                            bool removeable,
-                                           OSItem::Type headerType,
+                                           OSItemType headerType,
                                            QWidget * parent)
   : OSCollapsibleItemList(addScrollArea, parent), m_rootPath(folder), m_headerType(headerType),
     m_draggable(draggable),

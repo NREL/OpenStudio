@@ -342,7 +342,7 @@ module OpenStudio
     end    
         
     def platform
-      if (RUBY_PLATFORM =~ /mswin/)  # Windows
+      if (RUBY_PLATFORM =~ /mswin/ or RUBY_PLATFORM =~ /mingw/)  # Windows
         return(Platform_Windows)
       elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
         return(Platform_Mac)
@@ -352,7 +352,7 @@ module OpenStudio
     end
 
     def platform_select(win = nil, mac = win)
-      if (RUBY_PLATFORM =~ /mswin/)  # Windows
+      if (RUBY_PLATFORM =~ /mswin/ or RUBY_PLATFORM =~ /mingw/)  # Windows
         return(win)
       elsif (RUBY_PLATFORM =~ /darwin/)  # Mac OS X
         return(mac)

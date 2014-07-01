@@ -40,13 +40,13 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
   public:
     UtilityBillAllFuelTypesListView(const model::Model& model, 
                             bool addScrollArea, 
-                            OSItem::Type headerType,
+                            OSItemType headerType,
                             QWidget * parent = 0);
 
     UtilityBillAllFuelTypesListView(const std::vector<std::pair<FuelType, std::string> >& utilityBillFuelTypesAndNames,
                             const model::Model& model,
                             bool addScrollArea,
-                            OSItem::Type headerType,
+                            OSItemType headerType,
                             QWidget * parent = 0);
 
     virtual ~UtilityBillAllFuelTypesListView() {}
@@ -66,7 +66,7 @@ class UtilityBillAllFuelTypesListView : public OSCollapsibleItemList
     std::vector<std::pair<FuelType, std::string> > m_utilityBillFuelTypesAndNames;
 
     model::Model m_model;
-    OSItem::Type m_headerType;
+    OSItemType m_headerType;
     bool m_showLocalBCL;
 };
 

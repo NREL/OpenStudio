@@ -18,16 +18,24 @@
  **********************************************************************/
 
 #include "OSAppBase.hpp"
-#include "../analysisdriver/SimpleProject.hpp"
+
+#include "ApplyMeasureNowDialog.hpp"
 #include "MainRightColumnController.hpp"
+#include "MainWindow.hpp"
+#include "OSDocument.hpp"
+
+#include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/LocalLibraryView.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
-#include "OSDocument.hpp"
-#include "MainWindow.hpp"
+#include "../shared_gui_components/WaitDialog.hpp"
+
+#include "../analysisdriver/SimpleProject.hpp"
+
 #include "../utilities/bcl/LocalBCL.hpp"
-#include <QMessageBox>
+
 #include <QDir>
+#include <QMessageBox>
 
 namespace openstudio {
 
@@ -40,6 +48,8 @@ OSAppBase::OSAppBase( int & argc, char ** argv, const QSharedPointer<MeasureMana
   }
 
   m_measureManager->updateMeasuresLists();
+
+  m_waitDialog = boost::shared_ptr<WaitDialog>(new WaitDialog("Loading Model","Loading Model"));
 }
 
 OSAppBase::~OSAppBase()
@@ -107,6 +117,10 @@ void OSAppBase::updateSelectedMeasureState()
       }else{
         mainRightColumnController->measuresLibraryController()->localLibraryView->duplicateMeasureButton->setEnabled(false);
       }
+
+      if( document->m_applyMeasureNowDialog && document->m_applyMeasureNowDialog->isVisible()) {
+        document->m_applyMeasureNowDialog->displayMeasure();
+      }
     }
   }
 }
@@ -172,7 +186,6 @@ void OSAppBase::openBclDlg()
     document->openMeasuresBclDlg();
   }
 }
-
 
 void OSAppBase::chooseHorizontalEditTab()
 {

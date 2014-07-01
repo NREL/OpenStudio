@@ -35,8 +35,8 @@ BuildingStoriesTabController::BuildingStoriesTabController(const model::Model& m
 
   bool isConnected = false;
 
-  isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openBclDlgClicked()),
-                                 this, SIGNAL(openBclDlgClicked()));
+  isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(downloadComponentsClicked()),
+                                 this, SIGNAL(downloadComponentsClicked()));
   OS_ASSERT(isConnected);
 
   isConnected = QObject::connect(m_buildingStoriesController.get(), SIGNAL(openLibDlgClicked()),

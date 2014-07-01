@@ -89,7 +89,7 @@ class OSItemSelectorButtons : public QWidget
 
     void purgeClicked();
 
-    void openBclDlgClicked();
+    void downloadComponentsClicked();
 
   protected:
 

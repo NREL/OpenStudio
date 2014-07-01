@@ -30,7 +30,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QSharedPointer>
 
 #include <boost/smart_ptr.hpp>
 
@@ -86,6 +85,8 @@ class OSItemId;
 
 class BuildingComponentDialog;
 
+class ApplyMeasureNowDialog;
+
 class OPENSTUDIO_API OSDocument : public OSQObjectController {
   Q_OBJECT
 
@@ -104,6 +105,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Returns the model associated with this document.
   model::Model model();
+
+  // Sets the model associated with this document.
+  // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
+  void setModel(const model::Model& model, bool modified);
 
   // Returns the RunManager for this document.
   runmanager::RunManager runManager();
@@ -160,7 +165,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 //  const ScriptFolderListView* scriptFolderListView() const;
 
 //  ScriptFolderListView* scriptFolderListView();
-  void openMeasuresBclDlg();
+
+  int verticalTabIndex();
 
   enum VerticalTabID
   {
@@ -190,11 +196,15 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
+  boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
+
  signals:
 
   void closeClicked();
 
   void importClicked();
+
+  void importgbXMLClicked();
 
   void importSDDClicked();
 
@@ -214,7 +224,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void modelSaving(const openstudio::path &t_path);
 
-  void openBclDlgClicked();
+  void downloadComponentsClicked();
 
   void openLibDlgClicked();
 
@@ -224,6 +234,8 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void treeChanged(const openstudio::UUID &t_uuid);
 
+  void enableRevertToSaved(bool enable);
+
  public slots:
 
   void markAsModified();
@@ -232,11 +244,17 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void runComplete();
 
-  void exportIdf(); 
+  void exportIdf();
 
-  void save();
+  void exportgbXML();
 
-  void saveAs();
+  void exportSDD();
+
+  // returns if a file was saved
+  bool save();
+
+  // returns if a file was saved
+  bool saveAs();
 
   void showRunManagerPreferences();
 
@@ -248,6 +266,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void openBclDlg();
 
+  void openMeasuresBclDlg();
+
+  void openMeasuresDlg();
+
+  void openChangeMeasuresDirDlg();
+
  private slots:
 
   void onVerticalTabSelected(int id); 
@@ -255,6 +279,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
   void showFirstTab();
+
+  void showTab(int tabIndex);
+ 
+  void initializeModel();
 
   void toggleUnits(bool displayIP);
 
@@ -264,7 +292,19 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void on_closeMeasuresBclDlg();
 
+  void changeBclLogin();
+
+  void updateWindowFilePath();
+
  private:
+
+  enum fileType{
+    SDD,
+    GBXML
+  };
+
+  void exportFile(fileType type);
+
   friend class OpenStudioApp;
 
   REGISTER_LOGGER("openstudio.OSDocument");

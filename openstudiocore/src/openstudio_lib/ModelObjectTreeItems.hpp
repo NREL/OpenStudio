@@ -51,7 +51,7 @@ class ModelObjectTreeItem : public QObject, public QTreeWidgetItem
   public:
 
     /// Constructed with a modelObject this tree item represents that object
-    ModelObjectTreeItem(const openstudio::model::ModelObject& modelObject, bool isDefaulted, OSItem::Type type, QTreeWidgetItem* parent = 0 );
+    ModelObjectTreeItem(const openstudio::model::ModelObject& modelObject, bool isDefaulted, OSItemType type, QTreeWidgetItem* parent = 0 );
 
     /// Constructed with no modelObject this tree item represents a container
     ModelObjectTreeItem(const std::string& name, const openstudio::model::Model& model, QTreeWidgetItem* parent = 0 );
@@ -111,7 +111,9 @@ class ModelObjectTreeItem : public QObject, public QTreeWidgetItem
     // called after makeChildren or refresh
     virtual void finalize();
 
-    static const OSItem::Type m_type = OSItem::LIST_ITEM;
+    static const OSItemType m_type;
+
+    static OSItemType initializeOSItemType();
 
   private slots:
 

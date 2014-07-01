@@ -18,14 +18,13 @@
 **********************************************************************/
 
 #include "ScriptsTabController.hpp"
-#include "ScriptsTabView.hpp"
-#include "ScriptsController.hpp"
+
+#include "OSAppBase.hpp"
 #include "ScriptFolderListView.hpp"
+#include "ScriptsTabView.hpp"
 
 #include "../shared_gui_components/VariableList.hpp"
 #include "../shared_gui_components/VariableView.hpp"
-
-#include "OSAppBase.hpp"
 
 #include "../model/Model.hpp"
 
@@ -52,7 +51,6 @@ ScriptsTabController::ScriptsTabController()
 
   scriptsTabView->variableGroupListView->setListController(m_variableGroupListController);
   scriptsTabView->variableGroupListView->setDelegate(m_variableGroupItemDelegate);
-
 
 }
 

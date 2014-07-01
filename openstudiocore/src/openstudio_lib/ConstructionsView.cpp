@@ -37,7 +37,7 @@ namespace openstudio {
 ConstructionsView::ConstructionsView(bool isIP,
                                      const openstudio::model::Model& model,
                                      QWidget * parent)
-: ModelSubTabView(new ModelObjectTypeListView(ConstructionsView::modelObjectTypesAndNames(), model, true, OSItem::LIST_ITEM, parent),
+: ModelSubTabView(new ModelObjectTypeListView(ConstructionsView::modelObjectTypesAndNames(), model, true, OSItemType::ListItem, parent),
                   new ConstructionsInspectorView(isIP, model, parent),
                   parent)
 {

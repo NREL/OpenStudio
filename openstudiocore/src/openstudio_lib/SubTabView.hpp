@@ -85,7 +85,7 @@ class SubTabView : public QSplitter
     
     void dropZoneItemClicked(OSItem* item);
 
-    void openBclDlgClicked();
+    void downloadComponentsClicked();
 
     void openLibDlgClicked();
 
