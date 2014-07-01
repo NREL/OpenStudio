@@ -1,4 +1,4 @@
 compilers:
   - name: clang
-    cmake_extra_flags: -DBUILD_TESTING:BOOL=ON
+    cmake_extra_flags: -DBUILD_TESTING:BOOL=ON -DCMAKE_OSX_DEPLOYMENT_TARGET=10.9
     num_parallel_builds: 4
