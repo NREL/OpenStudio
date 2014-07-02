@@ -208,6 +208,7 @@
 #include <model/SetpointManagerMixedAir.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
 #include <model/SetpointManagerScheduled.hpp>
+#include <model/SetpointManagerScheduledDualSetpoint.hpp>
 #include <model/SetpointManagerSingleZoneReheat.hpp>
 #include <model/SetpointManagerWarmest.hpp>
 #include <model/Shade.hpp>

@@ -14567,6 +14567,34 @@ OS:SetpointManager:Scheduled,
        \required-field
        \object-list Node
 
+OS:SetpointManager:Scheduled:DualSetpoint,
+     \memo This setpoint manager places a high and low schedule value
+     \memo on one or more nodes.
+     \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference SetpointManagers
+  A3,  \field Control Variable
+       \type choice
+       \key Temperature
+       \default Temperature
+  A4,  \field High Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A5,  \field Low Setpoint Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A6;  \field Setpoint Node or NodeList Name
+       \note Node(s) at which temperature will be set
+       \required-field
+       \type object-list
+       \object-list Node
+
 OS:SetpointManager:Warmest,
        \min-fields 1
   A1, \field Handle

@@ -655,6 +655,9 @@ SET( ${target_name}_src
   SetpointManagerScheduled.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerScheduled.cpp
+  SetpointManagerScheduledDualSetpoint.hpp
+  SetpointManagerScheduledDualSetpoint_Impl.hpp
+  SetpointManagerScheduledDualSetpoint.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -1264,6 +1267,7 @@ SET( ${target_name}_test_src
   test/SetpointManagerMixedAir_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
   test/SetpointManagerScheduled_GTest.cpp
+  test/SetpointManagerScheduledDualSetpoint_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
