@@ -60,7 +60,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
 
   // Control Type
   //unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,"Load");
-  s = modelObject.controlType();
+  s = modelObject.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->controlType();
   if (s) {
     unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::ControlType,s.get());
   }
