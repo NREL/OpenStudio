@@ -127,7 +127,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
        ++it )
   {
     std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-    if( ! _setpointManagers.empty() ) {
+    if( _setpointManagers.empty() ) {
       SetpointManagerMixedAir spm(t_model);
       spm.addToNode(*it);
     }
@@ -141,7 +141,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
          ++it )
     {
       std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-      if( ! _setpointManagers.empty() ) {
+      if( _setpointManagers.empty() ) {
         for( std::vector<SetpointManager>::iterator _setpointManager = _supplyOutletSetpointManagers.begin();
              _setpointManager != _supplyOutletSetpointManagers.end();
              ++_setpointManager )
@@ -166,7 +166,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
         if( *it != outboardOANode.get() )
         {
           std::vector<SetpointManager> _setpointManagers = it->setpointManagers();
-          if( ! _setpointManagers.empty() ) {
+          if( _setpointManagers.empty() ) {
             SetpointManagerMixedAir spm(t_model);
             spm.addToNode(*it);
           }
