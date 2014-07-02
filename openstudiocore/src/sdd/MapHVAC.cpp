@@ -915,6 +915,54 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         }
       }
     }
+    else if(istringEqual(airSegmentTypeElement.text().toStdString(),"Return"))
+    {
+      QDomElement fanElement = airSegmentElement.firstChildElement("Fan");
+      if( ! fanElement.isNull() )
+      {
+        if( boost::optional<model::ModelObject> mo = translateFan(fanElement,doc,model) )
+        {
+          boost::optional<model::HVACComponent> fan = mo->optionalCast<model::HVACComponent>();
+          OS_ASSERT(fan);
+          fan->addToNode(supplyInletNode);
+        }
+      }
+    }
+    //else if(istringEqual(airSegmentTypeElement.text().toStdString(),"Relief"))
+    //{
+    //  QDomElement fanElement = airSegmentElement.firstChildElement("Fan");
+    //  if( ! fanElement.isNull() )
+    //  {
+    //    model::FanZoneExhaust fan(model);
+    //    if( availabilitySchedule )
+    //    {
+    //      fan.setAvailabilitySchedule(availabilitySchedule.get());
+
+    //      QDomElement totEffSimElement = fanElement.firstChildElement("TotEffSim");
+    //      value = totEffSimElement.text().toDouble(&ok);
+    //      if( ok )
+    //      {
+    //        fan.setFanEfficiency(value);
+    //      }
+    //    }
+
+    //    QDomElement flowCapElement = fanElement.firstChildElement("FlowCapSim");
+    //    value = flowCapElement.text().toDouble(&ok);
+    //    if( ok )
+    //    {
+    //      value = unitToUnit(value,"cfm","m^3/s").get();
+    //      fan.setMaximumFlowRate(value);
+    //    }
+
+    //    QDomElement totStaticPressElement = fanElement.firstChildElement("TotStaticPress"); 
+    //    value = totStaticPressElement.text().toDouble(&ok);
+    //    if( ok )
+    //    {
+    //      // Convert in WC to Pa
+    //      fan.setPressureRise(value * 249.0889 );
+    //    }
+    //  }
+    //}
   }
 
   // OACtrl
