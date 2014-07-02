@@ -22,6 +22,8 @@
 
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACUnitarySystem.hpp>
+#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
 #include <model/ControllerMechanicalVentilation.hpp>
 #include <model/ControllerMechanicalVentilation_Impl.hpp>
 #include <model/AirLoopHVACZoneSplitter.hpp>
@@ -1510,7 +1512,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     if(cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0)
     {
       model::CoilHeatingWaterToAirHeatPumpEquationFit coil(model);
-      result = coil;
+      model::AirLoopHVACUnitarySystem unitary(model);
+      unitary.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("SetPoint");
+      unitary.setHeatingCoil(coil);
+      result = unitary;
       coil.setName(nameElement.text().toStdString());
 
       // Plant
@@ -1540,6 +1545,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           value = unitToUnit(value,"cfm","m^3/s").get();
           coil.setRatedAirFlowRate(value);
+          unitary.setSupplyAirFlowRateDuringHeatingOperation(value);
         }
       }
 
@@ -2293,7 +2299,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     if( cndsrTypeElement.text().compare("Fluid",Qt::CaseInsensitive) == 0 )
     {
       model::CoilCoolingWaterToAirHeatPumpEquationFit coil(model);
-      result = coil;
+      model::AirLoopHVACUnitarySystem unitary(model);
+      unitary.getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("SetPoint");
+      unitary.setCoolingCoil(coil);
+      result = unitary;
 
       coil.setName(nameElement.text().toStdString());
 
@@ -2312,6 +2321,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         {
           value = unitToUnit(value,"cfm","m^3/s").get();
           coil.setRatedAirFlowRate(value);
+          unitary.setSupplyAirFlowRateDuringCoolingOperation(value);
         }
       }
 
