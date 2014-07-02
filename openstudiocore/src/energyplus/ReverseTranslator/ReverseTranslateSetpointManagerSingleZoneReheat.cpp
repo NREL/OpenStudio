@@ -108,7 +108,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerSingleZoneReheat(
   {
     if( boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get()) )
     {
-      mo.setSetpointNode(node.get());
+      mo.addToNode(node.get());
     }
   }
 

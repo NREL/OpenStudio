@@ -107,7 +107,6 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             const boost::optional<FileReference>& osmInputData,
             const boost::optional<FileReference>& idfInputData,
             const boost::optional<FileReference>& sqlOutputData,
-            const std::vector<FileReference>& xmlOutputData,
             const boost::optional<runmanager::Job>& topLevelJob,
             const std::vector<openstudio::path>& dakotaParametersFiles,
             const std::vector<Tag>& tags,
@@ -131,7 +130,6 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
             const boost::optional<FileReference>& osmInputData,
             const boost::optional<FileReference>& idfInputData,
             const boost::optional<FileReference>& sqlOutputData,
-            const std::vector<FileReference>& xmlOutputData,
             const boost::optional<runmanager::Job>& topLevelJob,
             const std::vector<openstudio::path>& dakotaParametersFiles,
             const std::vector<Tag>& tags,
@@ -195,9 +193,9 @@ class ANALYSIS_API DataPoint : public AnalysisObject {
    *  and said file was located by problem(). */
   boost::optional<FileReference> sqlOutputData() const;
 
-  /** Returns the openstudio::Attribute XML files created by any reporting measures, if
-   *  complete() and not failed(), and problem() located such files during the update process.
-   *  Otherwise, the return value is .empty(). */
+  /** Returns the openstudio::Attribute and openstudio::result::OSResult XML files created 
+   *  associated with this DataPoint, if complete() and not failed(). Otherwise, the return value 
+   *  is .empty(). */
   std::vector<FileReference> xmlOutputData() const;
 
   /** If osmInputData() exists, returns the corresponding model::Model. Also caches the Model
