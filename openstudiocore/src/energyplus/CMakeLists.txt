@@ -153,6 +153,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleYear.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerFollowOutdoorAirTemperature.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerMixedAir.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirPretreat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
