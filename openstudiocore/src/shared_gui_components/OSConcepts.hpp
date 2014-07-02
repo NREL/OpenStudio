@@ -99,7 +99,7 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   private:
 
   boost::function<bool (DataSourceType *)>  m_getter;
-  boost::function<bool (DataSourceType *, bool)> m_setter;
+  boost::function<void (DataSourceType *, bool)> m_setter;
 };
 
 
