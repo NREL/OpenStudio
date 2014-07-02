@@ -69,6 +69,14 @@ macro( CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES )
     ENDIF()
 
     AddPCH( ${BASE_NAME}_tests )
+
+    ## suppress deprecated warnings in unit tests
+    IF(UNIX)
+      SET_TARGET_PROPERTIES( ${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ELSEIF(MSVC)
+      SET_TARGET_PROPERTIES( ${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "/wd4996" )
+    ENDIF()
+
   ENDIF()
 endmacro()
 
@@ -291,18 +299,21 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     #      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
   ENDIF()
-  
 
   IF(MSVC)
     # if visual studio 2010
     IF (${MSVC_VERSION} EQUAL 1600)
       # trouble with macro redefinition in win32.h of Ruby
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005" )
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4005 /wd4996" ) ## /wd4996 suppresses deprecated warning
     ELSE()
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )  
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996" ) ## /wd4996 suppresses deprecated warning
     ENDIF()
-  ELSEIF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess" )
+  ELSEIF(UNIX)
+    IF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations" )
+    ELSE()
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+    ENDIF()
   ENDIF()
 
   IF (CMAKE_COMPILER_IS_GNUCXX)
@@ -447,11 +458,16 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/" )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/python/" )
     IF(MSVC)
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996" ) ## /wd4996 suppresses deprecated warning
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".pyd" )
-    ELSEIF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess" )
+    ELSEIF(UNIX)
+      IF(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+        SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations" )
+      ELSE()
+        SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
+      ENDIF()
     ENDIF()
+
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${PYTHON_LIBRARY} )
 
     ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
@@ -560,7 +576,7 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/" )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/csharp/" )
     IF(MSVC)
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996" )  ## /wd4996 suppresses deprecated warnings
     ENDIF()
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} )
 
@@ -647,9 +663,12 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java/" )
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/java/" )
     IF(MSVC)
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996" ) ## /wd4996 suppresses deprecated warnings
       SET(final_name "${JAVA_OUTPUT_NAME}.dll")
+    ELSEIF(UNIX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
     ENDIF()
+
     TARGET_LINK_LIBRARIES( ${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
     IF(APPLE)
       SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES SUFFIX ".dylib" )
@@ -763,7 +782,9 @@ MACRO( MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_
     SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/v8/" )
 
     IF(MSVC)
-      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj" )
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996" )  ## /wd4996 suppresses deprecated warnings
+    ELSEIF(UNIX)
+      SET_TARGET_PROPERTIES( ${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations" )
     ENDIF()
 
     IF(APPLE)      

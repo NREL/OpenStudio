@@ -64,6 +64,7 @@
 #include <model/CoilCoolingLowTempRadiantVarFlow_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
 #include <model/ZoneHVACComponent_Impl.hpp>
+#include <model/SetpointManager.hpp>
 #include <model/LifeCycleCost.hpp>
 #include <utilities/idf/IdfExtensibleGroup.hpp>
 #include <utilities/idd/IddEnums.hxx>
@@ -127,7 +128,8 @@ boost::optional<Node> isSetpointComponent(PlantLoop & plantLoop,const ModelObjec
   Node componentOutletNode = nodes.front();
   if( componentOutletNode != supplyOutletNode )
   {
-    if( componentOutletNode.getImpl<model::detail::Node_Impl>()->setpointManager() )
+    std::vector<SetpointManager> _setpointManagers = componentOutletNode.setpointManagers();
+    if( ! _setpointManagers.empty() )
     {
       result = componentOutletNode;
     }
