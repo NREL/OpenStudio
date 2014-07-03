@@ -1235,63 +1235,44 @@ namespace detail {
 
       static openstudio::path fixupPathImpl(const openstudio::path &t_path, const openstudio::path &t_basePath)
       {
-        // only attempt this for things that look like ruby scripts
-//        if (t_path.extension() == openstudio::toPath(".rb"))
-//        {
+        openstudio::path head = t_path;
+        openstudio::path tail;
+
+        while (head.has_parent_path())
+        {
+          // LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
+
+          if (!tail.empty())
+          {
+            tail = head.filename() / tail;
+          } else {
+            tail = head.filename();
+          }
+
+          head = head.parent_path();
+
           try {
-            if (boost::filesystem::exists(t_path)) {
-              return t_path;
+            openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
+            // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+            if (boost::filesystem::exists(potentialNewPath))
+            {
+              return potentialNewPath;
+            }
+          }  catch (const std::exception &) {
+            // couldn't check if path exists, so returning original
+            // return t_path;
+          }
+
+          try {
+            openstudio::path potentialNewPath = t_basePath / tail;
+            LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
+            if (boost::filesystem::exists(potentialNewPath))
+            {
+              return tail;
             }
           } catch (const std::exception &) {
-            // keep moving
-          }*/
-
-         
-
-          openstudio::path head = t_path;
-          openstudio::path tail;
-
-          while (head.has_parent_path())
-          {
-            // LOG(Debug, "Examining path: head: " <<  openstudio::toString(head) << " tail: " << openstudio::toString(tail));
-
-            if (!tail.empty())
-            {
-              tail = head.filename() / tail;
-            } else {
-              tail = head.filename();
-            }
-
-            head = head.parent_path();
-
-//            if (*tail.begin() == openstudio::toPath("openstudio")
-//                && (head.filename() == openstudio::toPath("ruby")
-//                  || head.filename() == openstudio::toPath("Ruby")))
-//            {
-              try {
-                openstudio::path potentialNewPath = openstudio::getOpenStudioRubyScriptsPath() / tail;
-                // LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
-                if (boost::filesystem::exists(potentialNewPath))
-                {
-                  return potentialNewPath;
-                }
-              }  catch (const std::exception &) {
-                // couldn't check if path exists, so returning original
-                // return t_path;
-              }
-//            }
-
-              try {
-                openstudio::path potentialNewPath = t_basePath / tail;
-                LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
-                if (boost::filesystem::exists(potentialNewPath))
-                {
-                  return tail;
-                }
-              } catch (const std::exception &) {
-              }
           }
-//        }
+        }
 
         // all other options failed, return original 
         return t_path;
