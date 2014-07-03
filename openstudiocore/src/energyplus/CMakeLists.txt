@@ -155,6 +155,7 @@ SET( ${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerMixedAir.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerOutdoorAirReset.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerScheduled.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerScheduledDualSetpoint.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateShade.cpp

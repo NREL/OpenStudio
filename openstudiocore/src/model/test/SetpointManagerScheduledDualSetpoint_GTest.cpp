@@ -37,9 +37,7 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_DefaultConstructor)
   ASSERT_EXIT ( 
   {  
     Model m;
-    ScheduleConstant tempSch(m);
-    tempSch.setValue(50);
-    SetpointManagerScheduledDualSetpoint testObject(m,tempSch);
+    SetpointManagerScheduledDualSetpoint testObject(m);
 
     exit(0); 
   } ,
@@ -55,42 +53,39 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode)
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduledDualSetpoint spm_1(m,tempSch);
-  spm_1.setControlVariable("MaximumTemperature");
+  SetpointManagerScheduledDualSetpoint spm_1(m);
+  spm_1.setControlVariable("Temperature");
+  spm_1.setHighSetpointSchedule(tempSch);
+  spm_1.setLowSetpointSchedule(tempSch);
 
-  SetpointManagerScheduledDualSetpoint spm_2(m,tempSch);
-  spm_2.setControlVariable("MinimumTemperature");
+  SetpointManagerScheduledDualSetpoint spm_2(m);
+  spm_2.setControlVariable("Temperature");
+  spm_2.setHighSetpointSchedule(tempSch);
+  spm_2.setLowSetpointSchedule(tempSch);
 
-  SetpointManagerScheduledDualSetpoint spm_3(m,tempSch);
+  SetpointManagerScheduledDualSetpoint spm_3(m);
   spm_3.setControlVariable("Temperature");
-
-  SetpointManagerScheduledDualSetpoint spm_4(m,tempSch);
-  spm_4.setControlVariable("Temperature");
-
-  SetpointManagerScheduledDualSetpoint spm_5(m,tempSch);
-  spm_5.setControlVariable("Temperature");
+  spm_3.setHighSetpointSchedule(tempSch);
+  spm_3.setLowSetpointSchedule(tempSch);
 
   EXPECT_TRUE(spm_1.addToNode(testObject));
-  EXPECT_TRUE(spm_2.addToNode(testObject));
-  EXPECT_TRUE(spm_3.addToNode(testObject));
 
   Node plantNode = plantLoop.supplyOutletNode();
-  EXPECT_TRUE(spm_5.addToNode(plantNode));
+  EXPECT_TRUE(spm_3.addToNode(plantNode));
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
-  EXPECT_EQ(3, _setpointManagers.size());
+  EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
-  EXPECT_EQ(5, setpointManagerScheduledDualSetpoints.size());
+  EXPECT_EQ(3, setpointManagerScheduledDualSetpoints.size());
 
-  EXPECT_EQ(testObject, spm_3.setpointNode());
-  EXPECT_TRUE(spm_4.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_4.setpointNode());
+  EXPECT_EQ(testObject, spm_1.setpointNode());
+  EXPECT_TRUE(spm_2.addToNode(testObject));
+  EXPECT_EQ(testObject, spm_2.setpointNode());
 
   _setpointManagers = testObject.setpointManagers();
-  EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
-  EXPECT_EQ(3, _setpointManagers.size());
+  EXPECT_EQ(1, _setpointManagers.size());
   setpointManagerScheduledDualSetpoints = m.getModelObjects<SetpointManagerScheduledDualSetpoint>();
-  EXPECT_EQ(4, setpointManagerScheduledDualSetpoints.size());
+  EXPECT_EQ(2, setpointManagerScheduledDualSetpoints.size());
 }
 
 TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove)
@@ -101,8 +96,10 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove)
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduledDualSetpoint spm(m,tempSch);
+  SetpointManagerScheduledDualSetpoint spm(m);
   spm.setControlVariable("Temperature");
+  spm.setHighSetpointSchedule(tempSch);
+  spm.setLowSetpointSchedule(tempSch);
 
   EXPECT_TRUE(spm.addToNode(testObject));
 
@@ -127,45 +124,26 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_clone)
   ScheduleConstant tempSch(m);
   tempSch.setValue(50);
 
-  SetpointManagerScheduledDualSetpoint testObject(m,tempSch);
+  SetpointManagerScheduledDualSetpoint testObject(m);
   testObject.setControlVariable("Temperature");
+  testObject.setHighSetpointSchedule(tempSch);
+  testObject.setLowSetpointSchedule(tempSch);
   testObject.addToNode(outletNode);
   ASSERT_TRUE(testObject.setpointNode());
+  ASSERT_TRUE(testObject.highSetpointSchedule());
+  ASSERT_TRUE(testObject.lowSetpointSchedule());
   EXPECT_EQ(outletNode, testObject.setpointNode().get());
 
   SetpointManagerScheduledDualSetpoint testObjectClone = testObject.clone(m).cast<SetpointManagerScheduledDualSetpoint>();
   EXPECT_FALSE(testObjectClone.setpointNode());
+  ASSERT_TRUE(testObjectClone.highSetpointSchedule());
+  ASSERT_TRUE(testObjectClone.lowSetpointSchedule());
 
   EXPECT_NE(testObject, testObjectClone);
   EXPECT_EQ(testObject.controlVariable(), testObjectClone.controlVariable());
-  EXPECT_EQ(testObject.schedule(), testObjectClone.schedule());
-}
-
-TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_controlVariables)
-{
-  Model m;
-  ScheduleConstant tempSch(m);
-  tempSch.setValue(50);
-  SetpointManagerScheduledDualSetpoint spm(m,tempSch);
-
-  EXPECT_TRUE(spm.setControlVariable("Temperature"));
-  EXPECT_EQ("Temperature", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MaximumTemperature"));
-  EXPECT_EQ("MaximumTemperature", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MinimumTemperature"));
-  EXPECT_EQ("MinimumTemperature", spm.controlVariable());
-
-  EXPECT_TRUE(spm.setControlVariable("HumidityRatio"));
-  EXPECT_EQ("HumidityRatio", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MaximumHumidityRatio"));
-  EXPECT_EQ("MaximumHumidityRatio", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MinimumHumidityRatio"));
-  EXPECT_EQ("MinimumHumidityRatio", spm.controlVariable());
-
-  EXPECT_TRUE(spm.setControlVariable("MassFlowRate"));
-  EXPECT_EQ("MassFlowRate", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MaximumMassFlowRate"));
-  EXPECT_EQ("MaximumMassFlowRate", spm.controlVariable());
-  EXPECT_TRUE(spm.setControlVariable("MinimumMassFlowRate"));
-  EXPECT_EQ("MinimumMassFlowRate", spm.controlVariable());
+  EXPECT_EQ(testObject.highSetpointSchedule().get(), testObjectClone.highSetpointSchedule().get());
+  EXPECT_EQ(tempSch, testObject.highSetpointSchedule().get());
+  EXPECT_EQ(tempSch, testObject.lowSetpointSchedule().get());
+  EXPECT_EQ(tempSch, testObjectClone.highSetpointSchedule().get());
+  EXPECT_EQ(tempSch, testObjectClone.lowSetpointSchedule().get());
 }

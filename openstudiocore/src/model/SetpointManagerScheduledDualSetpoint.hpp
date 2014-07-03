@@ -56,8 +56,6 @@ class MODEL_API SetpointManagerScheduledDualSetpoint : public SetpointManager {
 
   std::string controlVariable() const;
 
-  // bool isControlVariableDefaulted() const;
-
   boost::optional<Schedule> highSetpointSchedule() const;
 
   boost::optional<Schedule> lowSetpointSchedule() const;
@@ -68,17 +66,15 @@ class MODEL_API SetpointManagerScheduledDualSetpoint : public SetpointManager {
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
-
-  // void resetControlVariable();
+  bool setControlVariable(const std::string& controlVariable);
 
   bool setHighSetpointSchedule(Schedule& schedule);
 
-  // void resetHighSetpointSchedule();
+  void resetHighSetpointSchedule();
 
   bool setLowSetpointSchedule(Schedule& schedule);
 
-  // void resetLowSetpointSchedule();
+  void resetLowSetpointSchedule();
 
   //@}
   /** @name Other */

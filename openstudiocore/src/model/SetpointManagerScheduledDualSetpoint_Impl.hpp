@@ -69,8 +69,6 @@ namespace detail {
 
     virtual std::string controlVariable() const;
 
-    // bool isControlVariableDefaulted() const;
-
     boost::optional<Schedule> highSetpointSchedule() const;
 
     boost::optional<Schedule> lowSetpointSchedule() const;
@@ -81,17 +79,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    virtual bool setControlVariable(std::string controlVariable);
-
-    // void resetControlVariable();
+    virtual bool setControlVariable(const std::string& controlVariable);
 
     bool setHighSetpointSchedule(Schedule& schedule);
 
-    // void resetHighSetpointSchedule();
+    void resetHighSetpointSchedule();
 
     bool setLowSetpointSchedule(Schedule& schedule);
 
-    // void resetLowSetpointSchedule();
+    void resetLowSetpointSchedule();
 
     //@}
     /** @name Other */
@@ -105,14 +101,6 @@ namespace detail {
     virtual void resetSetpointNode();
 
     REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
-
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    // boost::optional<Schedule> optionalHighSetpointSchedule() const;
-    // boost::optional<Schedule> optionalLowSetpointSchedule() const;
-    // boost::optional<Node> optionalSetpointNodeorNodeList() const;
   };
 
 } // detail
