@@ -1268,7 +1268,8 @@ namespace detail {
             LOG(Debug, "Looking at path: " << openstudio::toString(potentialNewPath));
             if (boost::filesystem::exists(potentialNewPath))
             {
-              return tail;
+//              return tail;
+              return potentialNewPath;
             }
           } catch (const std::exception &) {
           }
