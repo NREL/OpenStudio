@@ -54,7 +54,7 @@ class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
   /** @name Getters */
   //@{
 
-  boost::optional<std::string> controlVariable() const;
+  std::string controlVariable() const;
 
   double minimumSetpointTemperature() const;
 
@@ -86,7 +86,7 @@ class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
   /** @name Setters */
   //@{
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   void resetControlVariable();
 

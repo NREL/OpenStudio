@@ -14525,6 +14525,7 @@ OS:SetpointManager:OutdoorAirPretreat,
        \key HumidityRatio
        \key MaximumHumidityRatio
        \key MinimumHumidityRatio
+       \default Temperature
   N1,  \field Minimum Setpoint Temperature
        \units C
        \default -99

@@ -20,7 +20,6 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/SetpointManagerOutdoorAirPretreat.hpp>
 #include <model/Node.hpp>
-// #include <model/Schedule.hpp>
 #include <utilities/idd/SetpointManager_OutdoorAirPretreat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -36,11 +35,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
   boost::optional<std::string> s;
   boost::optional<double> d;
 
-  IdfObject idfObject(IddObjectType::SetpointManager_OutdoorAirPretreat);
-
   // Name
-  s = modelObject.name();
-  idfObject.setString(SetpointManager_OutdoorAirPretreatFields::Name,s.get());
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_OutdoorAirPretreat, modelObject);
 
   // ControlVariable
   s = modelObject.controlVariable();
@@ -49,80 +45,68 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
     idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ControlVariable,s.get());
   }
 
-  // SetpointatOutdoorLowTemperature
-  d = modelObject.setpointatOutdoorLowTemperature();
+  // Minimum Setpoint Temperature
+  d = modelObject.minimumSetpointTemperature();
   if( d )
   {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::SetpointatOutdoorLowTemperature,d.get());
+    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::MinimumSetpointTemperature,d.get());
   }
 
-  // OutdoorLowTemperature
-  d = modelObject.outdoorLowTemperature();
+  // Maximum Setpoint Temperature
+  d = modelObject.maximumSetpointTemperature();
   if( d )
   {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::OutdoorLowTemperature,d.get());
-  } 
-
-  // SetpointatOutdoorHighTemperature
-  d = modelObject.setpointatOutdoorHighTemperature();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::SetpointatOutdoorHighTemperature,d.get());
+    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::MaximumSetpointTemperature,d.get());
   }
 
-  // OutdoorHighTemperature
-  d = modelObject.outdoorHighTemperature();
+  // Minimum Setpoint Humidity Ratio
+  d = modelObject.minimumSetpointHumidityRatio();
   if( d )
   {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::OutdoorHighTemperature,d.get());
-  } 
+    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::MinimumSetpointHumidityRatio,d.get());
+  }
 
-  // SetpointNodeorNodeListName
+  // Maximum Setpoint Humidity Ratio
+  d = modelObject.maximumSetpointHumidityRatio();
+  if( d )
+  {
+    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::MaximumSetpointHumidityRatio,d.get());
+  }
+
+  // Reference Setpoint Node Name
+  node = modelObject.referenceSetpointNode();
+  if( node )
+  {
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReferenceSetpointNodeName,node->name().get());
+  }
+
+  // Mixed Air Stream Node Name
+  node = modelObject.mixedAirStreamNode();
+  if( node )
+  {
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName,node->name().get());
+  }
+
+  // Outdoor Air Stream Node Name
+  node = modelObject.outdoorAirStreamNode();
+  if( node )
+  {
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName,node->name().get());
+  }
+
+  // Return Air Stream Node Name
+  node = modelObject.returnAirStreamNode();
+  if( node )
+  {
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName,node->name().get());
+  }
+
+  // Setpoint Node or NodeList Name
   node = modelObject.setpointNode();
   if( node )
   {
     idfObject.setString(SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName,node->name().get());
   }
-
-  // Schedule
-  boost::optional<model::Schedule> schedule = modelObject.schedule();
-  if( schedule )
-  {
-    boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get());
-    if( _schedule && _schedule->name() ){
-      idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ScheduleName,_schedule->name().get());
-    }
-  }
-
-  // SetpointatOutdoorLowTemperature2
-  d = modelObject.setpointatOutdoorLowTemperature2();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::SetpointatOutdoorLowTemperature2,d.get());
-  }
-
-  // OutdoorLowTemperature2
-  d = modelObject.outdoorLowTemperature2();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::OutdoorLowTemperature2,d.get());
-  }
-
-  // SetpointatOutdoorHighTemperature2
-  d = modelObject.setpointatOutdoorHighTemperature2();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::SetpointatOutdoorHighTemperature2,d.get());
-  }
-
-  // OutdoorHighTemperature2
-  d = modelObject.outdoorHighTemperature2();
-  if( d )
-  {
-    idfObject.setDouble(SetpointManager_OutdoorAirPretreatFields::OutdoorHighTemperature2,d.get());
-  }
-
-  m_idfObjects.push_back(idfObject);
 
   return idfObject;
 }

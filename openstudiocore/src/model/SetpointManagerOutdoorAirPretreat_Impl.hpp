@@ -62,7 +62,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> controlVariable() const;
+    std::string controlVariable() const;
 
     double minimumSetpointTemperature() const;
 
@@ -94,7 +94,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(boost::optional<std::string> controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 

@@ -21,7 +21,7 @@
 #include <model/SetpointManagerOutdoorAirPretreat_Impl.hpp>
 
 #include <model/Node.hpp>
-// #include <model/Node_Impl.hpp>
+#include <model/Node_Impl.hpp>
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_OutdoorAirPretreat_FieldEnums.hxx>
@@ -67,8 +67,10 @@ namespace detail {
     return SetpointManagerOutdoorAirPretreat::iddObjectType();
   }
 
-  boost::optional<std::string> SetpointManagerOutdoorAirPretreat_Impl::controlVariable() const {
-    return getString(OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable,true);
+  std::string SetpointManagerOutdoorAirPretreat_Impl::controlVariable() const {
+    boost::optional<std::string> value = getString(OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double SetpointManagerOutdoorAirPretreat_Impl::minimumSetpointTemperature() const {
@@ -131,47 +133,8 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName);
   }
 
-  // Node SetpointManagerOutdoorAirPretreat_Impl::mixedAirStreamNode() const {
-  //   boost::optional<Node> value = optionalMixedAirStreamNode();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Mixed Air Stream Node attached.");
-  //   }
-  //   return value.get();
-  // }
-
-  // Node SetpointManagerOutdoorAirPretreat_Impl::outdoorAirStreamNode() const {
-  //   boost::optional<Node> value = optionalOutdoorAirStreamNode();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Outdoor Air Stream Node attached.");
-  //   }
-  //   return value.get();
-  // }
-
-  // Node SetpointManagerOutdoorAirPretreat_Impl::returnAirStreamNode() const {
-  //   boost::optional<Node> value = optionalReturnAirStreamNode();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Return Air Stream Node attached.");
-  //   }
-  //   return value.get();
-  // }
-
-  // Node SetpointManagerOutdoorAirPretreat_Impl::setpointNodeorNodeList() const {
-  //   boost::optional<Node> value = optionalSetpointNodeorNodeList();
-  //   if (!value) {
-  //     LOG_AND_THROW(briefDescription() << " does not have an Setpoint Nodeor Node List attached.");
-  //   }
-  //   return value.get();
-  // }
-
-  bool SetpointManagerOutdoorAirPretreat_Impl::setControlVariable(boost::optional<std::string> controlVariable) {
-    bool result(false);
-    if (controlVariable) {
-      result = setString(OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable, controlVariable.get());
-    }
-    else {
-      resetControlVariable();
-      result = true;
-    }
+  bool SetpointManagerOutdoorAirPretreat_Impl::setControlVariable(const std::string& controlVariable) {
+    bool result = setString(OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable, controlVariable);
     return result;
   }
 
@@ -252,26 +215,15 @@ namespace detail {
     return result;
   }
 
-  bool SetpointManagerOutdoorAirPretreat_Impl::setSetpointNodeorNodeList(const Node& node) {
+  bool SetpointManagerOutdoorAirPretreat_Impl::setSetpointNode(const Node& node) {
     bool result = setPointer(OS_SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName, node.handle());
     return result;
   }
 
-  // boost::optional<Node> SetpointManagerOutdoorAirPretreat_Impl::optionalMixedAirStreamNode() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName);
-  // }
-
-  // boost::optional<Node> SetpointManagerOutdoorAirPretreat_Impl::optionalOutdoorAirStreamNode() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName);
-  // }
-
-  // boost::optional<Node> SetpointManagerOutdoorAirPretreat_Impl::optionalReturnAirStreamNode() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName);
-  // }
-
-  // boost::optional<Node> SetpointManagerOutdoorAirPretreat_Impl::optionalSetpointNodeorNodeList() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName);
-  // }
+  void SetpointManagerOutdoorAirPretreat_Impl::resetSetpointNode() {
+    bool result = setString(OS_SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
@@ -279,23 +231,6 @@ SetpointManagerOutdoorAirPretreat::SetpointManagerOutdoorAirPretreat(const Model
   : SetpointManager(SetpointManagerOutdoorAirPretreat::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>());
-
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName
-  //     OS_SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName
-  //     OS_SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName
-  //     OS_SetpointManager_OutdoorAirPretreatFields::SetpointNodeorNodeListName
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-  // ok = setMixedAirStreamNode();
-  OS_ASSERT(ok);
-  // ok = setOutdoorAirStreamNode();
-  OS_ASSERT(ok);
-  // ok = setReturnAirStreamNode();
-  OS_ASSERT(ok);
-  // ok = setSetpointNodeorNodeList();
-  OS_ASSERT(ok);
 }
 
 IddObjectType SetpointManagerOutdoorAirPretreat::iddObjectType() {
@@ -307,7 +242,7 @@ std::vector<std::string> SetpointManagerOutdoorAirPretreat::controlVariableValue
                         OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable);
 }
 
-boost::optional<std::string> SetpointManagerOutdoorAirPretreat::controlVariable() const {
+std::string SetpointManagerOutdoorAirPretreat::controlVariable() const {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->controlVariable();
 }
 
@@ -363,7 +298,7 @@ boost::optional<Node> SetpointManagerOutdoorAirPretreat::setpointNode() const {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setpointNode();
 }
 
-bool SetpointManagerOutdoorAirPretreat::setControlVariable(std::string controlVariable) {
+bool SetpointManagerOutdoorAirPretreat::setControlVariable(const std::string& controlVariable) {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setControlVariable(controlVariable);
 }
 
@@ -421,10 +356,6 @@ bool SetpointManagerOutdoorAirPretreat::setOutdoorAirStreamNode(const Node& node
 
 bool SetpointManagerOutdoorAirPretreat::setReturnAirStreamNode(const Node& node) {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setReturnAirStreamNode(node);
-}
-
-bool SetpointManagerOutdoorAirPretreat::setSetpointNodeorNodeList(const Node& node) {
-  return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setSetpointNodeorNodeList(node);
 }
 
 /// @cond
