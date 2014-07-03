@@ -26,8 +26,32 @@
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/any.hpp>
 
 namespace openstudio {
+
+class ConceptProxy
+{
+  public:
+    template<typename T>
+      ConceptProxy(const T &t_obj)
+        : m_any(t_obj)
+      {
+      }
+
+    template<typename T>
+      T cast() const
+      {
+        try {
+          return boost::any_cast<T>(m_any);
+        } catch (const boost::bad_any_cast &) {
+          return boost::any_cast<model::ModelObject>(m_any).cast<T>();
+        }
+      }
+
+  private:
+    boost::any m_any;
+};
 
 class BaseConcept
 {
@@ -63,8 +87,8 @@ class CheckBoxConcept : public BaseConcept
 
   virtual ~CheckBoxConcept() {}
 
-  virtual bool get(const model::ModelObject & obj) = 0;
-  virtual void set(const model::ModelObject & obj, bool) = 0;
+  virtual bool get(const ConceptProxy & obj) = 0;
+  virtual void set(const ConceptProxy & obj, bool) = 0;
 };
 
 template<typename DataSourceType>
@@ -84,13 +108,13 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   virtual ~CheckBoxConceptImpl() {}
 
 
-  virtual bool get(const model::ModelObject & t_obj)
+  virtual bool get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, bool value)
+  virtual void set(const ConceptProxy & t_obj, bool value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj, value);
@@ -329,7 +353,7 @@ class ComboBoxConcept : public BaseConcept
 
   virtual ~ComboBoxConcept() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) = 0;
+  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) = 0;
 };
 
 template<typename ChoiceType, typename DataSourceType>
@@ -353,7 +377,7 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
 
   virtual ~ComboBoxRequiredChoiceImpl() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
+  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) {
     boost::shared_ptr<DataSourceType> dataSource = boost::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
     return boost::shared_ptr<ChoiceConcept>(
@@ -394,7 +418,7 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
 
   virtual ~ComboBoxOptionalChoiceImpl() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
+  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const ConceptProxy& obj) {
     boost::shared_ptr<DataSourceType> dataSource = boost::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
     boost::shared_ptr<ChoiceConcept> result;
@@ -443,8 +467,8 @@ class ValueEditConcept : public BaseConcept
 
   virtual ~ValueEditConcept() {}
 
-  virtual ValueType get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, ValueType) = 0;
+  virtual ValueType get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, ValueType) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -463,13 +487,13 @@ class ValueEditConceptImpl : public ValueEditConcept<ValueType>
 
   virtual ~ValueEditConceptImpl() {}
 
-  virtual ValueType get(const model::ModelObject & t_obj)
+  virtual ValueType get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, ValueType value)
+  virtual bool set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -496,8 +520,8 @@ class OptionalValueEditConcept : public BaseConcept
 
    virtual ~OptionalValueEditConcept() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, ValueType) = 0;
+  virtual boost::optional<ValueType> get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, ValueType) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -516,13 +540,13 @@ class OptionalValueEditConceptImpl : public OptionalValueEditConcept<ValueType>
 
   virtual ~OptionalValueEditConceptImpl() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & t_obj)
+  virtual boost::optional<ValueType> get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, ValueType value)
+  virtual bool set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -550,8 +574,8 @@ class ValueEditVoidReturnConcept : public BaseConcept
 
   virtual ~ValueEditVoidReturnConcept() {}
 
-  virtual ValueType get(const model::ModelObject & obj) = 0;
-  virtual void set(const model::ModelObject & obj, ValueType) = 0;
+  virtual ValueType get(const ConceptProxy & obj) = 0;
+  virtual void set(const ConceptProxy & obj, ValueType) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -570,13 +594,13 @@ class ValueEditVoidReturnConceptImpl : public ValueEditVoidReturnConcept<ValueTy
 
   virtual ~ValueEditVoidReturnConceptImpl() {}
 
-  virtual ValueType get(const model::ModelObject & t_obj)
+  virtual ValueType get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, ValueType value)
+  virtual void set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -604,8 +628,8 @@ class OptionalValueEditVoidReturnConcept : public BaseConcept
 
   virtual ~OptionalValueEditVoidReturnConcept() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
-  virtual void set(const model::ModelObject & obj, ValueType) = 0;
+  virtual boost::optional<ValueType> get(const ConceptProxy & obj) = 0;
+  virtual void set(const ConceptProxy & obj, ValueType) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -624,13 +648,13 @@ class OptionalValueEditVoidReturnConceptImpl : public OptionalValueEditVoidRetur
 
   virtual ~OptionalValueEditVoidReturnConceptImpl() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & t_obj)
+  virtual boost::optional<ValueType> get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, ValueType value)
+  virtual void set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -657,8 +681,8 @@ class NameLineEditConcept : public BaseConcept
 
   virtual ~NameLineEditConcept() {}
 
-  virtual boost::optional<std::string> get(const model::ModelObject & obj, bool) = 0;
-  virtual boost::optional<std::string> set(const model::ModelObject & obj, const std::string &) = 0;
+  virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
+  virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
 };
 
 template<typename DataSourceType>
@@ -677,13 +701,13 @@ class NameLineEditConceptImpl : public NameLineEditConcept
 
   virtual ~NameLineEditConceptImpl() {}
 
-  virtual boost::optional<std::string> get(const model::ModelObject & t_obj, bool value)
+  virtual boost::optional<std::string> get(const ConceptProxy & t_obj, bool value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj,value);
   }
 
-  virtual boost::optional<std::string> set(const model::ModelObject & t_obj, const std::string & value)
+  virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -715,8 +739,8 @@ class QuantityEditConcept : public BaseConcept
 
   virtual ~QuantityEditConcept() {}
 
-  virtual ValueType get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, ValueType) = 0;
+  virtual ValueType get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, ValueType) = 0;
 
   QString modelUnits() const { return m_modelUnits; }
   QString siUnits() const { return m_siUnits; }
@@ -755,13 +779,13 @@ class QuantityEditConceptImpl : public QuantityEditConcept<ValueType>
 
   virtual ~QuantityEditConceptImpl() {}
 
-  virtual ValueType get(const model::ModelObject & t_obj)
+  virtual ValueType get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, ValueType value)
+  virtual bool set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -793,8 +817,8 @@ class OptionalQuantityEditConcept : public BaseConcept
 
   virtual ~OptionalQuantityEditConcept() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, ValueType) = 0;
+  virtual boost::optional<ValueType> get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, ValueType) = 0;
 
   QString modelUnits() const { return m_modelUnits; }
   QString siUnits() const { return m_siUnits; }
@@ -833,13 +857,13 @@ class OptionalQuantityEditConceptImpl : public OptionalQuantityEditConcept<Value
 
   virtual ~OptionalQuantityEditConceptImpl() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & t_obj)
+  virtual boost::optional<ValueType> get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual bool set(const model::ModelObject & t_obj, ValueType value)
+  virtual bool set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -871,8 +895,8 @@ class QuantityEditVoidReturnConcept : public BaseConcept
 
   virtual ~QuantityEditVoidReturnConcept() {}
 
-  virtual ValueType get(const model::ModelObject & obj) = 0;
-  virtual void set(const model::ModelObject & obj, ValueType) = 0;
+  virtual ValueType get(const ConceptProxy & obj) = 0;
+  virtual void set(const ConceptProxy & obj, ValueType) = 0;
 
   QString modelUnits() const { return m_modelUnits; }
   QString siUnits() const { return m_siUnits; }
@@ -911,13 +935,13 @@ class QuantityEditVoidReturnConceptImpl : public QuantityEditVoidReturnConcept<V
 
   virtual ~QuantityEditVoidReturnConceptImpl() {}
 
-  virtual ValueType get(const model::ModelObject & t_obj)
+  virtual ValueType get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, ValueType value)
+  virtual void set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -949,8 +973,8 @@ class OptionalQuantityEditVoidReturnConcept : public BaseConcept
 
   virtual ~OptionalQuantityEditVoidReturnConcept() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & obj) = 0;
-  virtual void set(const model::ModelObject & obj, ValueType) = 0;
+  virtual boost::optional<ValueType> get(const ConceptProxy & obj) = 0;
+  virtual void set(const ConceptProxy & obj, ValueType) = 0;
 
   QString modelUnits() const { return m_modelUnits; }
   QString siUnits() const { return m_siUnits; }
@@ -989,13 +1013,13 @@ class OptionalQuantityEditVoidReturnConceptImpl : public OptionalQuantityEditVoi
 
   virtual ~OptionalQuantityEditVoidReturnConceptImpl() {}
 
-  virtual boost::optional<ValueType> get(const model::ModelObject & t_obj)
+  virtual boost::optional<ValueType> get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_getter(&obj);
   }
 
-  virtual void set(const model::ModelObject & t_obj, ValueType value)
+  virtual void set(const ConceptProxy & t_obj, ValueType value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,value);
@@ -1022,8 +1046,8 @@ class DropZoneConcept : public BaseConcept
 
   virtual ~DropZoneConcept() {}
 
-  virtual boost::optional<model::ModelObject> get(const model::ModelObject & obj) = 0;
-  virtual bool set(const model::ModelObject & obj, const model::ModelObject &) = 0;
+  virtual boost::optional<ConceptProxy> get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, const ConceptProxy &) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
@@ -1042,14 +1066,14 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual ~DropZoneConceptImpl() {}
 
-  virtual boost::optional<model::ModelObject> get(const model::ModelObject & t_obj)
+  virtual boost::optional<ConceptProxy> get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
 
-    return boost::optional<model::ModelObject>(m_getter(&obj));
+    return boost::optional<ConceptProxy>(m_getter(&obj));
   }
 
-  virtual bool set(const model::ModelObject & t_obj, const model::ModelObject & t_value)
+  virtual bool set(const ConceptProxy & t_obj, const ConceptProxy & t_value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     ValueType value = t_value.cast<ValueType>();
