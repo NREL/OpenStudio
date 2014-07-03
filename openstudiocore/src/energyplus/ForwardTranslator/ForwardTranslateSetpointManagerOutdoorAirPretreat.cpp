@@ -20,6 +20,8 @@
 #include <energyplus/ForwardTranslator.hpp>
 #include <model/SetpointManagerOutdoorAirPretreat.hpp>
 #include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
 #include <utilities/idd/SetpointManager_OutdoorAirPretreat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -32,8 +34,16 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAirPretreat( SetpointManagerOutdoorAirPretreat & modelObject )
 {
   boost::optional<Node> node;
+  boost::optional<ModelObject> mo;
   boost::optional<std::string> s;
   boost::optional<double> d;
+
+  boost::optional<Node> referenceNode;
+  boost::optional<Node> mixedAirNode;
+  boost::optional<Node> outdoorAirNode;
+  boost::optional<Node> returnAirNode;
+
+  boost::optional<AirLoopHVACOutdoorAirSystem> outdoorAirSystem = modelObject.airLoopHVACOutdoorAirSystem();
 
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_OutdoorAirPretreat, modelObject);
@@ -74,31 +84,50 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
   }
 
   // Reference Setpoint Node Name
-  node = modelObject.referenceSetpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReferenceSetpointNodeName,node->name().get());
+  // Mixed Air Stream Node Name
+  mixedAirNode = modelObject.mixedAirStreamNode();
+  if( !mixedAirNode ) {
+    if( outdoorAirSystem && (mo = outdoorAirSystem->mixedAirModelObject()) ) {
+      mixedAirNode = mo->optionalCast<Node>();
+    }
   }
 
-  // Mixed Air Stream Node Name
-  node = modelObject.mixedAirStreamNode();
-  if( node )
+  referenceNode = modelObject.referenceSetpointNode();
+  if( !referenceNode ) {
+    referenceNode = mixedAirNode;
+  }
+  if( referenceNode )
   {
-    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName,node->name().get());
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReferenceSetpointNodeName,referenceNode->name().get());
+  }
+
+  if( mixedAirNode )
+  {
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName,mixedAirNode->name().get());
   }
 
   // Outdoor Air Stream Node Name
-  node = modelObject.outdoorAirStreamNode();
-  if( node )
+  outdoorAirNode = modelObject.outdoorAirStreamNode();
+  if( !outdoorAirNode ) {
+    if( outdoorAirSystem && (mo = outdoorAirSystem->outdoorAirModelObject()) ) {
+      outdoorAirNode = mo->optionalCast<Node>();
+    }
+  }
+  if( outdoorAirNode )
   {
-    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName,node->name().get());
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName,outdoorAirNode->name().get());
   }
 
   // Return Air Stream Node Name
-  node = modelObject.returnAirStreamNode();
-  if( node )
+  returnAirNode = modelObject.returnAirStreamNode();
+  if( !returnAirNode ) {
+    if( outdoorAirSystem && (mo = outdoorAirSystem->returnAirModelObject()) ) {
+      returnAirNode = mo->optionalCast<Node>();
+    }
+  }
+  if( returnAirNode )
   {
-    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName,node->name().get());
+    idfObject.setString(SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName,returnAirNode->name().get());
   }
 
   // Setpoint Node or NodeList Name

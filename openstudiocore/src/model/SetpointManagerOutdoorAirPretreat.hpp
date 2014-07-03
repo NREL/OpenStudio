@@ -90,11 +90,11 @@ class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
 
   void resetControlVariable();
 
-  void setMinimumSetpointTemperature(double minimumSetpointTemperature);
+  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
   void resetMinimumSetpointTemperature();
 
-  void setMaximumSetpointTemperature(double maximumSetpointTemperature);
+  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
   void resetMaximumSetpointTemperature();
 
@@ -112,9 +112,15 @@ class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
 
   bool setMixedAirStreamNode(const Node& node);
 
+  void resetMixedAirStreamNode();
+
   bool setOutdoorAirStreamNode(const Node& node);
 
+  void resetOutdoorAirStreamNode();
+
   bool setReturnAirStreamNode(const Node& node);
+
+  void resetReturnAirStreamNode();
 
   //@}
   /** @name Other */

@@ -62,7 +62,7 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
+    virtual std::string controlVariable() const;
 
     double minimumSetpointTemperature() const;
 
@@ -94,15 +94,15 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string& controlVariable);
+    virtual bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 
-    void setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
     void resetMinimumSetpointTemperature();
 
-    void setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
     void resetMaximumSetpointTemperature();
 
@@ -114,15 +114,21 @@ namespace detail {
 
     void resetMaximumSetpointHumidityRatio();
 
-    bool setReferenceSetpointNode(const boost::optional<Node>& node);
+    bool setReferenceSetpointNode(const Node& node);
 
     void resetReferenceSetpointNode();
 
     bool setMixedAirStreamNode(const Node& node);
 
+    void resetMixedAirStreamNode();
+
     bool setOutdoorAirStreamNode(const Node& node);
 
+    void resetOutdoorAirStreamNode();
+
     bool setReturnAirStreamNode(const Node& node);
+
+    void resetReturnAirStreamNode();
 
     //@}
     /** @name Other */

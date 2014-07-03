@@ -143,9 +143,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirPretreat_Impl::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
+  bool SetpointManagerOutdoorAirPretreat_Impl::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirPretreatFields::MinimumSetpointTemperature, minimumSetpointTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SetpointManagerOutdoorAirPretreat_Impl::resetMinimumSetpointTemperature() {
@@ -153,9 +153,9 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void SetpointManagerOutdoorAirPretreat_Impl::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
+  bool SetpointManagerOutdoorAirPretreat_Impl::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
     bool result = setDouble(OS_SetpointManager_OutdoorAirPretreatFields::MaximumSetpointTemperature, maximumSetpointTemperature);
-    OS_ASSERT(result);
+    return result;
   }
 
   void SetpointManagerOutdoorAirPretreat_Impl::resetMaximumSetpointTemperature() {
@@ -183,15 +183,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SetpointManagerOutdoorAirPretreat_Impl::setReferenceSetpointNode(const boost::optional<Node>& node) {
-    bool result(false);
-    if (node) {
-      result = setPointer(OS_SetpointManager_OutdoorAirPretreatFields::ReferenceSetpointNodeName, node.get().handle());
-    }
-    else {
-      resetReferenceSetpointNode();
-      result = true;
-    }
+  bool SetpointManagerOutdoorAirPretreat_Impl::setReferenceSetpointNode(const Node& node) {
+    bool result = setPointer(OS_SetpointManager_OutdoorAirPretreatFields::ReferenceSetpointNodeName, node.handle());
     return result;
   }
 
@@ -205,14 +198,29 @@ namespace detail {
     return result;
   }
 
+  void SetpointManagerOutdoorAirPretreat_Impl::resetMixedAirStreamNode() {
+    bool result = setString(OS_SetpointManager_OutdoorAirPretreatFields::MixedAirStreamNodeName, "");
+    OS_ASSERT(result);
+  }
+
   bool SetpointManagerOutdoorAirPretreat_Impl::setOutdoorAirStreamNode(const Node& node) {
     bool result = setPointer(OS_SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName, node.handle());
     return result;
   }
 
+  void SetpointManagerOutdoorAirPretreat_Impl::resetOutdoorAirStreamNode() {
+    bool result = setString(OS_SetpointManager_OutdoorAirPretreatFields::OutdoorAirStreamNodeName, "");
+    OS_ASSERT(result);
+  }
+
   bool SetpointManagerOutdoorAirPretreat_Impl::setReturnAirStreamNode(const Node& node) {
     bool result = setPointer(OS_SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName, node.handle());
     return result;
+  }
+
+  void SetpointManagerOutdoorAirPretreat_Impl::resetReturnAirStreamNode() {
+    bool result = setString(OS_SetpointManager_OutdoorAirPretreatFields::ReturnAirStreamNodeName, "");
+    OS_ASSERT(result);
   }
 
   bool SetpointManagerOutdoorAirPretreat_Impl::setSetpointNode(const Node& node) {
@@ -306,16 +314,16 @@ void SetpointManagerOutdoorAirPretreat::resetControlVariable() {
   getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->resetControlVariable();
 }
 
-void SetpointManagerOutdoorAirPretreat::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setMinimumSetpointTemperature(minimumSetpointTemperature);
+bool SetpointManagerOutdoorAirPretreat::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setMinimumSetpointTemperature(minimumSetpointTemperature);
 }
 
 void SetpointManagerOutdoorAirPretreat::resetMinimumSetpointTemperature() {
   getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->resetMinimumSetpointTemperature();
 }
 
-void SetpointManagerOutdoorAirPretreat::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
-  getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
+bool SetpointManagerOutdoorAirPretreat::setMaximumSetpointTemperature(double maximumSetpointTemperature) {
+  return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setMaximumSetpointTemperature(maximumSetpointTemperature);
 }
 
 void SetpointManagerOutdoorAirPretreat::resetMaximumSetpointTemperature() {
@@ -350,12 +358,24 @@ bool SetpointManagerOutdoorAirPretreat::setMixedAirStreamNode(const Node& node) 
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setMixedAirStreamNode(node);
 }
 
+void SetpointManagerOutdoorAirPretreat::resetMixedAirStreamNode() {
+  getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->resetMixedAirStreamNode();
+}
+
 bool SetpointManagerOutdoorAirPretreat::setOutdoorAirStreamNode(const Node& node) {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setOutdoorAirStreamNode(node);
 }
 
+void SetpointManagerOutdoorAirPretreat::resetOutdoorAirStreamNode() {
+  getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->resetOutdoorAirStreamNode();
+}
+
 bool SetpointManagerOutdoorAirPretreat::setReturnAirStreamNode(const Node& node) {
   return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setReturnAirStreamNode(node);
+}
+
+void SetpointManagerOutdoorAirPretreat::resetReturnAirStreamNode() {
+  getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->resetReturnAirStreamNode();
 }
 
 /// @cond
