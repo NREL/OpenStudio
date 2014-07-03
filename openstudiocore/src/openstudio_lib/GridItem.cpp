@@ -1776,12 +1776,23 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::reverse_iterator it2 = reliefModelObjects.rbegin();
+  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
+  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
 
-  for( std::vector<model::ModelObject>::iterator it = supplyModelObjects.begin();
-       it < supplyModelObjects.end(); ++it )
+  while(supplyIt < supplyModelObjects.end())
   {
-    if(model::OptionalNode comp = it->optionalCast<model::Node>())
+    if(boost::optional<model::AirToAirComponent> comp = supplyIt->optionalCast<model::AirToAirComponent>())
+    {
+      while( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        GridItem * gridItem = new OASupplyStraightItem(this); 
+        m_gridItems.push_back(gridItem);
+        ++reliefIt;
+      }
+      ++reliefIt;
+      m_gridItems.push_back(NULL);
+    }
+    else if(boost::optional<model::Node> comp = supplyIt->optionalCast<model::Node>())
     {
       GridItem * gridItem = new OAStraightNodeItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1790,46 +1801,35 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
+
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
     }
-    else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>())
+    else if(boost::optional<model::StraightComponent> comp = supplyIt->optionalCast<model::StraightComponent>())
     {
-      GridItem * gridItem = new OASupplyStraightItem(this); 
+      GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
       if( comp->isRemovable() )
       {
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::AirToAirComponent> comp = it->optionalCast<model::AirToAirComponent>())
-    {
-      while( it2 != reliefModelObjects.rend() )
-      {
-        if( boost::optional<model::AirToAirComponent> comp2 = it2->optionalCast<model::AirToAirComponent>() )
-        {
-          break;
-        }
-        else
-        {
-          GridItem * gridItem = new OASupplyStraightItem(this); 
-          m_gridItems.push_back(gridItem);
-          ++it2;
-        }
-      }
-      m_gridItems.push_back(NULL);
-    }
 
-    if( it2 != reliefModelObjects.rend() )
-    {
-      ++it2;
+      if( (reliefIt < reliefModelObjects.end()) && (! reliefIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++reliefIt;
+      }
     }
+    ++supplyIt;
   }
 
-  while( it2 != reliefModelObjects.rend() )
+  while(reliefIt < reliefModelObjects.end())
   {
     GridItem * gridItem = new OASupplyStraightItem(this); 
-    m_gridItems.insert(m_gridItems.begin(),gridItem);
-    ++it2;
+    m_gridItems.push_back(gridItem);
+    ++reliefIt;
   }
 
   layout();
@@ -1838,8 +1838,8 @@ OASupplyBranchItem::OASupplyBranchItem( std::vector<model::ModelObject> supplyMo
 void OASupplyBranchItem::layout()
 {
   int j = 0;
-  for( std::vector<GridItem *>::iterator it = m_gridItems.begin();
-       it < m_gridItems.end(); ++it )
+  for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
+       it < m_gridItems.rend(); ++it )
   {
     if( *it )
     {
@@ -1865,12 +1865,25 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
 {
   setAcceptHoverEvents(false);
 
-  std::vector<model::ModelObject>::reverse_iterator it2 = supplyModelObjects.rbegin();
+  std::vector<model::ModelObject>::iterator reliefIt = reliefModelObjects.begin();
+  std::vector<model::ModelObject>::iterator supplyIt = supplyModelObjects.begin();
 
-  for( std::vector<model::ModelObject>::iterator it = reliefModelObjects.begin();
-       it < reliefModelObjects.end(); ++it )
+  while(reliefIt < reliefModelObjects.end())
   {
-    if(model::OptionalNode comp = it->optionalCast<model::Node>())
+    if(boost::optional<model::AirToAirComponent> comp = reliefIt->optionalCast<model::AirToAirComponent>())
+    {
+      while( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        GridItem * gridItem = new OAReliefStraightItem(this); 
+        m_gridItems.push_back(gridItem);
+        ++supplyIt;
+      }
+      GridItem * gridItem = new OAAirToAirItem(this);
+      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
+      m_gridItems.push_back(gridItem);
+      ++supplyIt;
+    }
+    else if(boost::optional<model::Node> comp = reliefIt->optionalCast<model::Node>())
     {
       GridItem * gridItem = new OAStraightNodeItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1879,8 +1892,12 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
+      {
+        ++supplyIt;
+      }
     }
-    else if(model::OptionalStraightComponent comp = it->optionalCast<model::StraightComponent>())
+    else if(boost::optional<model::StraightComponent> comp = reliefIt->optionalCast<model::StraightComponent>())
     {
       GridItem * gridItem = new OAReliefStraightItem(this); 
       gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
@@ -1889,42 +1906,20 @@ OAReliefBranchItem::OAReliefBranchItem( std::vector<model::ModelObject> reliefMo
         gridItem->setDeletable(true);
       }
       m_gridItems.push_back(gridItem);
-    }
-    else if(boost::optional<model::AirToAirComponent> comp = it->optionalCast<model::AirToAirComponent>())
-    {
-      while( it2 != supplyModelObjects.rend() )
+      if( (supplyIt < supplyModelObjects.end()) && (! supplyIt->optionalCast<model::AirToAirComponent>()) )
       {
-        if( boost::optional<model::AirToAirComponent> comp2 = it2->optionalCast<model::AirToAirComponent>() )
-        {
-          break;
-        }
-        else
-        {
-          GridItem * gridItem = new OAReliefStraightItem(this); 
-          m_gridItems.push_back(gridItem);
-          ++it2;
-        }
+        ++supplyIt;
       }
-      GridItem * gridItem = new OAAirToAirItem(this); 
-      gridItem->setModelObject( comp->optionalCast<model::ModelObject>() );
-      if( comp->isRemovable() )
-      {
-        gridItem->setDeletable(true);
-      }
-      m_gridItems.push_back(gridItem);
     }
 
-    if( it2 != supplyModelObjects.rend() )
-    {
-      ++it2;
-    }
+    ++reliefIt;
   }
 
-  while( it2 != supplyModelObjects.rend() )
+  while(supplyIt < supplyModelObjects.end())
   {
     GridItem * gridItem = new OAReliefStraightItem(this); 
     m_gridItems.push_back(gridItem);
-    ++it2;
+    ++supplyIt;
   }
 
   layout();
@@ -1936,8 +1931,15 @@ void OAReliefBranchItem::layout()
   for( std::vector<GridItem *>::reverse_iterator it = m_gridItems.rbegin();
        it < m_gridItems.rend(); ++it )
   {
-    (*it)->setGridPos( 0, j );
-    j = j + (*it)->getVGridLength();
+    if( *it )
+    {
+      (*it)->setGridPos( 0, j );
+      j = j + (*it)->getVGridLength();
+    }
+    else
+    {
+      j = j + 1;
+    }
   }
   setVGridLength( j );
 }
@@ -2376,6 +2378,7 @@ OASystemItem::OASystemItem( model::AirLoopHVACOutdoorAirSystem & oaSystem,
 
   std::vector<model::ModelObject> oaComponents = oaSystem.oaComponents();
   std::vector<model::ModelObject> oaBranchComponents( oaComponents.begin() + 1, oaComponents.end() );
+  std::reverse(oaBranchComponents.begin(),oaBranchComponents.end());
 
   std::vector<model::ModelObject> reliefComponents = oaSystem.reliefComponents();
   std::vector<model::ModelObject> reliefBranchComponents( reliefComponents.begin(), reliefComponents.end() - 1 );
