@@ -148,6 +148,14 @@ class OpenStudioApp : public OSAppBase
   void versionUpdateMessageBox(const osversion::VersionTranslator& translator, bool successful, const QString& fileName, 
       const openstudio::path &tempModelDir);
 
+  void readSettings();
+
+  void writeSettings();
+
+  QString lastPath() const;
+
+  void setLastPath(const QString& t_lastPath);
+
   QSharedPointer<ruleset::RubyUserScriptArgumentGetter> m_argumentGetter;
 
   openstudio::model::Model m_compLibrary;
@@ -159,6 +167,8 @@ class OpenStudioApp : public OSAppBase
   boost::shared_ptr<OSDocument> m_osDocument;
 
   boost::shared_ptr<StartupMenu> m_startupMenu;
+
+  QString m_lastPath;
 };
 
 } // openstudio

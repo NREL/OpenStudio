@@ -272,6 +272,8 @@ namespace detail {
         OS_ASSERT(owo);
         result.push_back(*owo);
       }
+      std::sort(result.begin(), result.end());
+      result.erase(std::unique(result.begin(), result.end()), result.end());
     }
     return result;
   }
@@ -286,6 +288,8 @@ namespace detail {
         OS_ASSERT(owo);
         if (owo->iddObject().type() == type) { result.push_back(*owo); }
       }
+      std::sort(result.begin(), result.end());
+      result.erase(std::unique(result.begin(), result.end()), result.end());
     }
     return result;
   }
@@ -1260,6 +1264,11 @@ namespace detail {
   static WorkspaceObjectMetaTypeInitializer __workspaceObjectMetaTypeInitializer__;
 
 } // detail
+
+bool WorkspaceObject::operator < (const WorkspaceObject& right) const
+{
+  return (getImpl<detail::WorkspaceObject_Impl>()) < (right.getImpl<detail::WorkspaceObject_Impl>()) ;
+}
 
 std::vector<IdfObject> WorkspaceObject::remove()
 {

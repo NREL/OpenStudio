@@ -1524,12 +1524,18 @@ namespace detail {
 
     try {
       FileReferenceVector xmlOutputData;
+      Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("ossr").files()) {
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
       Q_FOREACH(const runmanager::FileInfo& file, allFiles.getAllByExtension("xml").files()) {
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       dataPoint.setXmlOutputData(xmlOutputData);
     }
     catch (...) {}
+
+    // load output attributes from file (so don't pay this cost at an inconvenient time)
+    dataPoint.outputAttributes();
 
     // Determine response function values
     try {

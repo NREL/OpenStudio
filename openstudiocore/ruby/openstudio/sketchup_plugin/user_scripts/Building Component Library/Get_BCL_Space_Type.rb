@@ -94,7 +94,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
     
     choices = OpenStudio::StringVector.new
     vintageArgument.valueRestrictions.each do |valueRestriction|
-      choices << valueRestriction.name
+      choices << valueRestriction.name + '        '
     end
 
     arguments = OpenStudio::Ruleset::OSArgumentVector.new
@@ -111,7 +111,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    generator.setArgumentValue("NREL_reference_building_vintage", nrel_reference_building_vintage.valueAsString)
+    generator.setArgumentValue("NREL_reference_building_vintage", nrel_reference_building_vintage.valueAsString.rstrip)
     
     ###########################################################################
     # Get the climate zone
@@ -125,7 +125,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
     
     choices = OpenStudio::StringVector.new
     climateArgument.valueRestrictions.each do |valueRestriction|
-      choices << valueRestriction.name
+      choices << valueRestriction.name + '        '
     end
 
     arguments = OpenStudio::Ruleset::OSArgumentVector.new
@@ -142,7 +142,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    generator.setArgumentValue("Climate_zone", climate_zone.valueAsString)
+    generator.setArgumentValue("Climate_zone", climate_zone.valueAsString.rstrip)
     
     ###########################################################################
     # Get the primary space type
@@ -156,7 +156,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
     
     choices = OpenStudio::StringVector.new
     primarySpaceTypeArgument.valueRestrictions.each do |valueRestriction|
-      choices << valueRestriction.name
+      choices << valueRestriction.name + '        '
     end
 
     arguments = OpenStudio::Ruleset::OSArgumentVector.new
@@ -173,7 +173,7 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
       return false
     end
     
-    generator.setArgumentValue("NREL_reference_building_primary_space_type", nrel_reference_building_primary_space_type.valueAsString)
+    generator.setArgumentValue("NREL_reference_building_primary_space_type", nrel_reference_building_primary_space_type.valueAsString.rstrip)
     
     ###########################################################################
     # Loop over all the secondary space types
@@ -209,22 +209,27 @@ class GetBCLSpaceType < OpenStudio::Ruleset::ModelUserScript
       end
       
       # check local library
-      component = OpenStudio::LocalBCL::instance().getOnDemandComponent(generator)
-      
-      # not in local library, download it
-      if component.empty?
+      vintage = nrel_reference_building_vintage.valueAsString.rstrip.gsub('_',' ')
+      climate = climate_zone.valueAsString.rstrip.gsub('_',' ')
+      primary_space_type = nrel_reference_building_primary_space_type.valueAsString.rstrip.gsub('_',' ')
+      secondary_space_type = valueRestriction.name.gsub('_',' ')
+      query = "#{vintage} #{climate} #{primary_space_type} #{secondary_space_type}";
+      matches = OpenStudio::LocalBCL::instance().searchComponents(query, "");
+      if matches.length > 0
+        puts "Space type found locally, skipping"
+        component = matches[0]
+      else
         puts "Space type not found locally, downloading"
       
         component = remoteBCL.getOnDemandComponent(generator)
+        if component.empty?
+          puts "Could not download space type for secondary space type '#{valueRestriction.name}'"
+          
+          success = false
+          next
+        end
+        component = component.get
       end
-      
-      if component.empty?
-        puts "Could not download space type for secondary space type '#{valueRestriction.name}'"
-        
-        success = false
-        next
-      end
-      component = component.get
       
       oscFiles = component.files("osc")
       if oscFiles.empty?
