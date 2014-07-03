@@ -19,6 +19,8 @@
 
 #include <model/FanConstantVolume.hpp>
 #include <model/FanConstantVolume_Impl.hpp>
+#include <model/FanVariableVolume.hpp>
+#include <model/FanVariableVolume_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
 #include <model/ZoneHVACComponent.hpp>
@@ -192,15 +194,19 @@ namespace detail {
   {
     if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
     {
-      if( airLoop->supplyComponent(node.handle()) )
+      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
+      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
       {
-        std::vector<ModelObject> allFans;
-        std::vector<ModelObject> constantFans = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume);
-        std::vector<ModelObject> variableFans = airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume);
-        allFans = constantFans;
-        allFans.insert(allFans.begin(),variableFans.begin(),variableFans.end());
+        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
+        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
 
-        if( allFans.size() > 1 )
+        if( oaSystem )
+        {
+          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
+          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
+        }
+
+        if( fanCount > 1 )
         {
           return false;
         }

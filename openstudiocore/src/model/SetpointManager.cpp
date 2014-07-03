@@ -111,15 +111,7 @@ namespace detail{
       }
       if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
       {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          return this->setSetpointNode(node);
-        }
+        return this->setSetpointNode(node);
       }
     }
     return false;
