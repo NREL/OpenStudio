@@ -90,7 +90,9 @@
 #include <model/AirTerminalSingleDuctUncontrolled.hpp>
 #include <model/AirTerminalSingleDuctVAVReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
 #include <model/AirTerminalSingleDuctSeriesPIUReheat.hpp>
+#include <model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp>
 #include <model/ThermostatSetpointDualSetpoint.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
@@ -3581,6 +3583,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   // Connect to plenum(s) if required
   if( airLoopHVAC )
   {
+    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RetPlenumZnRef");
+    boost::optional<model::ThermalZone> returnPlenumZone;
+    returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().toStdString()); 
+    if( returnPlenumZone )
+    {
+      thermalZone.setReturnPlenum(returnPlenumZone.get());  
+    }
+
+    QDomElement supPlenumZnRefElement = thermalZoneElement.firstChildElement("SupPlenumZnRef");
+    boost::optional<model::ThermalZone> supplyPlenumZone;
+    supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().toStdString());
+    if( supplyPlenumZone )
+    {
+      thermalZone.setSupplyPlenum(supplyPlenumZone.get());
+    }
+
     bool terminalFound = false;
 
     QDomElement buildingElement = thermalZoneElement.parentNode().toElement();
@@ -3630,6 +3648,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
                  terminalHVACComponent->addToNode(airInletNode);
 
+                 QDomElement inducedAirZnRefElement = terminalElement.firstChildElement("InducedAirZnRef");
+                 if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
+                 {
+                    if( tz->isPlenum() )
+                    {
+                      if( boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu = terminalHVACComponent->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>() )
+                      {
+                        piu->getImpl<model::detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+                      }
+                      else if( boost::optional<model::AirTerminalSingleDuctParallelPIUReheat> piu = terminalHVACComponent->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>() )
+                      {
+                        piu->getImpl<model::detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+                      }
+                    }
+                 }
+
                  //if( boost::optional<model::AirTerminalSingleDuctVAVReheat> terminalVAV = 
                  //      terminalModelObject->optionalCast<model::AirTerminalSingleDuctVAVReheat>() )
                  //{
@@ -3648,24 +3682,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           }
         }
       }
-
       if( terminalFound ) { break; }
-    }
-
-    QDomElement rtnPlenumZnRefElement = thermalZoneElement.firstChildElement("RetPlenumZnRef");
-    boost::optional<model::ThermalZone> returnPlenumZone;
-    returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().toStdString()); 
-    if( returnPlenumZone )
-    {
-      thermalZone.setReturnPlenum(returnPlenumZone.get());  
-    }
-
-    QDomElement supPlenumZnRefElement = thermalZoneElement.firstChildElement("SupPlenumZnRef");
-    boost::optional<model::ThermalZone> supplyPlenumZone;
-    supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().toStdString());
-    if( supplyPlenumZone )
-    {
-      thermalZone.setSupplyPlenum(supplyPlenumZone.get());
     }
   }
 

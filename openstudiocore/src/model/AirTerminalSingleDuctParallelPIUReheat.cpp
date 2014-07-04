@@ -19,6 +19,8 @@
 
 #include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
 #include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
+#include <model/AirLoopHVACReturnPlenum.hpp>
+#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
 #include <model/Node.hpp>
@@ -588,6 +590,44 @@ namespace detail {
       }
     }
     return false;
+  }
+
+  bool AirTerminalSingleDuctParallelPIUReheat_Impl::setInducedAirPlenumZone(ThermalZone & plenumZone)
+  {
+    bool result = true;
+
+    if( ! plenumZone.isPlenum() )
+    {
+      result = false;
+    }
+
+    boost::optional<Node> t_secondaryAirInletNode;
+    if( result )
+    {
+      t_secondaryAirInletNode = secondaryAirInletNode();
+      if( ! t_secondaryAirInletNode )
+      {
+        result = false;
+      }
+    }
+
+    boost::optional<AirLoopHVACReturnPlenum> plenum;
+    if( result )
+    {
+      plenum = plenumZone.getImpl<detail::ThermalZone_Impl>()->airLoopHVACReturnPlenum();
+      if( ! plenum )
+      {
+        result = false;
+      }
+    }
+
+    if( result )
+    {
+      Model t_model = model();
+      t_model.connect(plenum.get(),plenum->getImpl<detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPort(),t_secondaryAirInletNode.get(),t_secondaryAirInletNode->inletPort());
+    }
+
+    return result;
   }
 
 } // detail

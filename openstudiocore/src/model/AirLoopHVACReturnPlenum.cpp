@@ -108,6 +108,11 @@ namespace detail {
     return OS_AirLoopHVAC_ReturnPlenumFields::OutletNode;
   }
 
+  unsigned AirLoopHVACReturnPlenum_Impl::inducedAirOutletPort()
+  {
+    return OS_AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNode;
+  }
+
   unsigned AirLoopHVACReturnPlenum_Impl::inletPort(unsigned branchIndex)
   {
     unsigned result;

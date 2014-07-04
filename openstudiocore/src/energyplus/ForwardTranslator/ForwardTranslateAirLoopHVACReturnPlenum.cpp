@@ -52,7 +52,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACReturnPlenum( 
 
   //((ZoneName)(Zone Name))
   //((ZoneNodeName)(Zone Node Name))
-  //((InducedAirOutletNodeorNodeListName)(Induced Air Outlet Node or NodeList Name))
+  
+  //  InducedAirOutletNodeorNodeListName
+  boost::optional<ModelObject> mo = modelObject.connectedObject(modelObject.getImpl<model::detail::AirLoopHVACReturnPlenum_Impl>()->inducedAirOutletPort());
+  if( mo )
+  {
+    idfObject.setString(AirLoopHVAC_ReturnPlenumFields::InducedAirOutletNodeorNodeListName,mo->name().get());
+  }
 
   // OutletNodeName
 

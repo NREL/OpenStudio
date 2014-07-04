@@ -61,6 +61,8 @@ namespace detail {
 
     unsigned outletPort();
 
+    unsigned inducedAirOutletPort();
+
     unsigned inletPort(unsigned branchIndex);
 
     unsigned nextInletPort();

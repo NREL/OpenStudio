@@ -170,6 +170,10 @@ namespace detail {
 
     void resetConvergenceTolerance();
 
+    // This is a non publlic method to draw recirculation air from a plenum
+    // Use carefully.  Removing (or moving) plenum will leave model in invalid state
+    bool setInducedAirPlenumZone(ThermalZone & thermalZone);
+
     //@}
    protected:
    private:
