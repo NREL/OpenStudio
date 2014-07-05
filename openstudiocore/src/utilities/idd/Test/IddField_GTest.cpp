@@ -98,5 +98,6 @@ TEST_F(IddFixture, IddField) {
   fields[3].print(ss,false);
   OptionalIddField fieldClone = IddField::load(fields[3].name(),ss.str(),"Lights");
   ASSERT_TRUE(fieldClone);
+  // cppcheck-suppress arrayIndexOutOfBounds
   EXPECT_EQ(fields[3],*fieldClone);
 }
