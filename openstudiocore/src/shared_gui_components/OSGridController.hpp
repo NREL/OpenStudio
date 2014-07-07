@@ -197,7 +197,7 @@ public:
                          ValueType (DataSourceType::* getter)(void) ,
                          void (DataSourceType::* setter)(const ValueType &))
   {
-    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
+    m_baseConcepts.push_back(QSharedPointer<DropZoneConcept<ValueType> >(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
 
   std::vector<QString> categories();

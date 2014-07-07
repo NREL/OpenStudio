@@ -1034,7 +1034,7 @@ class OptionalQuantityEditVoidReturnConceptImpl : public OptionalQuantityEditVoi
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-
+template<typename ValueType>
 class DropZoneConcept : public BaseConcept
 {
   public:
@@ -1046,19 +1046,19 @@ class DropZoneConcept : public BaseConcept
 
   virtual ~DropZoneConcept() {}
 
-  virtual ConceptProxy get(const ConceptProxy & obj) = 0;
-  virtual bool set(const ConceptProxy & obj, const ConceptProxy &) = 0;
+  virtual ValueType get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, const ValueType &) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
-class DropZoneConceptImpl : public DropZoneConcept
+class DropZoneConceptImpl : public DropZoneConcept<ValueType>
 {
   public:
 
   DropZoneConceptImpl(QString t_headingLabel,
     boost::function<ValueType (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, const ValueType &)> t_setter)
-    : DropZoneConcept(t_headingLabel),
+    : DropZoneConcept<ValueType>(t_headingLabel),
       m_getter(t_getter),
       m_setter(t_setter)
   {
@@ -1066,18 +1066,17 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual ~DropZoneConceptImpl() {}
 
-  virtual ConceptProxy get(const ConceptProxy & t_obj)
+  virtual ValueType get(const ConceptProxy & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
 
-    return ConceptProxy(m_getter(&obj));
+    return ValueType(m_getter(&obj));
   }
 
-  virtual bool set(const ConceptProxy & t_obj, const ConceptProxy & t_value)
+  virtual bool set(const ConceptProxy & t_obj, const ValueType & t_value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
-    ValueType value = t_value.cast<ValueType>();
-    return m_setter(&obj,value);
+    return m_setter(&obj,t_value);
   }
 
   private:
