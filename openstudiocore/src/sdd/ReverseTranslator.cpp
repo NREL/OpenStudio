@@ -697,6 +697,13 @@ namespace sdd {
                 reliefNode->setName(comp->name().get() + " Relief Node");
               }
             }
+            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+            {
+              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
+              {
+                mixerOutlet->setName(comp->name().get() + " Outlet Node");
+              }
+            }
           }
         }
       }
