@@ -162,8 +162,6 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
   scrollArea->setBackgroundRole(QPalette::NoRole);
   layout->addWidget(scrollArea);
 
-  model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
   std::vector<model::RefrigerationCase> refrigerationCases = model.getModelObjects<model::RefrigerationCase>();
   std::vector<model::ModelObject> caseModelObjects = subsetCastVector<model::ModelObject>(refrigerationCases);
 
@@ -282,6 +280,7 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
   OSGridController::setCategoriesAndFields();
 
 }
+
 void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
 {
   // always show name column
