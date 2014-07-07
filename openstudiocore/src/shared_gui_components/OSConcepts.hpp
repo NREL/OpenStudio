@@ -1022,7 +1022,7 @@ class DropZoneConcept : public BaseConcept
 
   virtual ~DropZoneConcept() {}
 
-  virtual boost::optional<model::ModelObject> get(const model::ModelObject & obj) = 0;
+  virtual model::ModelObject get(const model::ModelObject & obj) = 0;
   virtual bool set(const model::ModelObject & obj, const model::ModelObject &) = 0;
 };
 
@@ -1032,7 +1032,7 @@ class DropZoneConceptImpl : public DropZoneConcept
   public:
 
   DropZoneConceptImpl(QString t_headingLabel,
-    boost::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
+    boost::function<ValueType (DataSourceType *)>  t_getter,
     boost::function<bool (DataSourceType *, const ValueType &)> t_setter)
     : DropZoneConcept(t_headingLabel),
       m_getter(t_getter),
@@ -1042,11 +1042,11 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   virtual ~DropZoneConceptImpl() {}
 
-  virtual boost::optional<model::ModelObject> get(const model::ModelObject & t_obj)
+  virtual model::ModelObject get(const model::ModelObject & t_obj)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
 
-    return boost::optional<model::ModelObject>(m_getter(&obj));
+    return model::ModelObject(m_getter(&obj));
   }
 
   virtual bool set(const model::ModelObject & t_obj, const model::ModelObject & t_value)
@@ -1058,7 +1058,7 @@ class DropZoneConceptImpl : public DropZoneConcept
 
   private:
 
-  boost::function<boost::optional<ValueType> (DataSourceType *)>  m_getter;
+  boost::function<ValueType (DataSourceType *)>  m_getter;
   boost::function<bool (DataSourceType *, const ValueType &)> m_setter;
 };
 

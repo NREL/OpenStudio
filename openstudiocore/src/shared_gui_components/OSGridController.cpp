@@ -184,7 +184,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   bool isConnected = false;
 
-  QString cellColor("#FFFFFF"); // white
+  QString cellColor("#FFFFFF"); // white // TODO add alternate row colors here
 
   if(m_hasHorizontalHeader && row == 0){
     if(column == 0){
@@ -206,7 +206,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       OSCheckBox2 * checkBox = new OSCheckBox2();
 
       checkBox->bind(mo,
-                     boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
+                     BoolGetter(boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo)),
                      boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)));
 
       widget = checkBox;
@@ -381,18 +381,16 @@ QWidget * OSGridController::widgetAt(int row, int column)
         widget = unsignedEdit;
 
     } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept>()) {
-        // Note: OSDropZone2 bind not fully implemented
-        OS_ASSERT(false);
-        //GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-        //OSDropZone2 * dropZone = new OSDropZone2(vectorController);
+        GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
+        OSDropZone2 * dropZone = new OSDropZone2(vectorController);
 
-        //dropZone->bind(mo,
-        //          boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
-        //          boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
-        //          boost::none,
-        //          boost::none);
+        dropZone->bind(mo,
+                       ModelObjectGetter(boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo)),
+                       boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
+                       boost::none,
+                       boost::none);
 
-        //widget = dropZone;
+        widget = dropZone;
     } else {
       // Unknown type
       OS_ASSERT(false);
@@ -438,11 +436,14 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
 void OSGridController::checkSelectedFields()
 {
+  // If there is a header row, investigate which columns were previously checked 
+  // (and loaded into m_customFields by QSettings) and check the respective
+  // header widgets
   if(!this->m_hasHorizontalHeader) return;
 
   std::vector<QString>::iterator it;
   for(unsigned j = 0; j < m_customFields.size(); j++){
-    it = std::find(m_currentFields.begin(), m_currentFields.end() ,m_customFields.at(j));
+    it = std::find(m_currentFields.begin(), m_currentFields.end(), m_customFields.at(j));
     if( it != m_currentFields.end() ){
       int index = std::distance(m_currentFields.begin(), it);
       HorizontalHeaderWidget * horizontalHeaderWidget = qobject_cast<HorizontalHeaderWidget *>(m_horizontalHeader.at(index));
@@ -457,6 +458,7 @@ void OSGridController::checkSelectedFields()
 
 void OSGridController::setCustomCategoryAndFields()
 {
+  // First, find and erase the old fields for custom
   std::vector<QString> categories = this->categories();
   std::vector<QString>::iterator it;
   it = std::find(categories.begin(), categories.end() , QString("Custom"));
@@ -465,6 +467,7 @@ void OSGridController::setCustomCategoryAndFields()
     m_categoriesAndFields.erase(m_categoriesAndFields.begin() + index);
   }
 
+  // Make a new set of fields for custom
   std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Custom"),m_customFields);
   m_categoriesAndFields.push_back(categoryAndFields);
 }
@@ -490,6 +493,7 @@ std::vector<QWidget *> OSGridController::row(int i)
 
 void OSGridController::horizontalHeaderChecked(int index)
 {
+  // Push_back or erase the field from the user-selected fields
   QCheckBox * checkBox = qobject_cast<QCheckBox *>(m_horizontalHeaderBtnGrp->button(index));
   OS_ASSERT(checkBox);
   if(checkBox->isChecked()){
@@ -501,6 +505,8 @@ void OSGridController::horizontalHeaderChecked(int index)
       m_customFields.erase(it);
     }
   }
+
+  // Update the user-selected fields
   setCustomCategoryAndFields();
 }
 

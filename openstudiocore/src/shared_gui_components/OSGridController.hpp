@@ -194,8 +194,8 @@ public:
 
   template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel,
-                         boost::optional<ValueType> (DataSourceType::* getter)(void) const,
-                         bool (DataSourceType::* setter)(const ValueType &))
+                         ValueType (DataSourceType::* getter)(void) ,
+                         void (DataSourceType::* setter)(const ValueType &))
   {
     m_baseConcepts.push_back(QSharedPointer<DropZoneConcept>(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)));
   }
@@ -226,7 +226,7 @@ protected:
 
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
-  // This provides a mechinism to easily manage
+  // This provides a mechanism to easily manage
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
@@ -334,6 +334,7 @@ public:
 
 };
 
+// TODO Currently, this is a dead class
 class BulkSelectionWidget : public QWidget
 {
   Q_OBJECT
