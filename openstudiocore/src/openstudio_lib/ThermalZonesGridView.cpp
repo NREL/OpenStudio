@@ -29,6 +29,11 @@
 #include <model/Model_Impl.hpp>
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
+
+#include <model/SizingSystem.hpp>
+#include <model/SizingSystem_Impl.hpp>
+#include <model/SizingZone.hpp>
+#include <model/SizingZone_Impl.hpp>
 #include <model/ThermalZone.hpp>
 #include <model/ThermalZone_Impl.hpp>
 
@@ -52,6 +57,7 @@
 #define ZONEEQUIPMENT "Zone Equipment"
 #define COOLINGTHERMOSTATSCHEDULE "Cooling Thermostat Schedule"
 #define HEATINGTHERMOSTATSCHEDULE "Heating Thermostat Schedule"
+#define HUMIDISTAT "Humidistat"
 
 //COOLING SIZING PARAMETERS
 #define ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE "Zone Cooling Design Supply Air Temperature"
@@ -112,7 +118,7 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
                         thermalZonesGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
-  std::vector<model::ThermalZone> refrigerationSystems = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system list
+  std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists
 
 }
 
@@ -131,42 +137,42 @@ void ThermalZonesGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(IDEALAIRLOADS);
-    fields.push_back(AIRLOOPNAME);
-    fields.push_back(ZONEEQUIPMENT);
-    fields.push_back(COOLINGTHERMOSTATSCHEDULE);
-    fields.push_back(HEATINGTHERMOSTATSCHEDULE);
+    //fields.push_back(AIRLOOPNAME);
+    //fields.push_back(ZONEEQUIPMENT);
+    //fields.push_back(COOLINGTHERMOSTATSCHEDULE);
+    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONECOOLINGSIZINGFACTOR);
-    fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
-    fields.push_back(COOLINGDESIGNAIRFLOWRATE);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
+    //fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
+    //fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+    //fields.push_back(ZONECOOLINGSIZINGFACTOR);
+    //fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
+    //fields.push_back(COOLINGDESIGNAIRFLOWRATE);
+    //fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling Sizing Parameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONEHEATINGSIZINGFACTOR);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
+    //fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
+    //fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+    //fields.push_back(ZONEHEATINGSIZINGFACTOR);
+    //fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
+    //fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
+    //fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating  Sizing Parameters"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
   {
     std::vector<QString> fields;
-    fields.push_back(STANDARDSBUILDINGTYPE);
-    fields.push_back(STANDARDSSPACETYPE);
+    //fields.push_back(STANDARDSBUILDINGTYPE);
+    //fields.push_back(STANDARDSSPACETYPE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure Tags"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -183,273 +189,129 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
   Q_FOREACH(QString field, fields){
     if(field == IDEALAIRLOADS){
-      //addCheckBoxColumn(QString(IDEALAIRLOADS),
-      //                  &model::ThermalZone::useIdealAirLoads,
-      //                  &model::ThermalZone::setUseIdealAirLoads);
-      //addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
-      //                      QString("C"),
-      //                      QString("C"),
-      //                      QString("F"),
-      //                      m_isIP,
-      //                      &model::ThermalZone::ratedAmbientTemperature,
-      //                      &model::ThermalZone::setRatedAmbientTemperature);
-    //}else if(field == RATEDAMBIENTRELATIVEHUMIDITY){
-    //  addValueEditColumn(QString(RATEDAMBIENTRELATIVEHUMIDITY),
-    //                     &model::ThermalZone::ratedAmbientRelativeHumidity,
-    //                     &model::ThermalZone::setRatedAmbientRelativeHumidity);
-    //}else if(field == RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(RATEDTOTALCOOLINGCAPACITYPERUNITLENGTH),
+      addCheckBoxColumn(QString(IDEALAIRLOADS),
+                        &model::ThermalZone::useIdealAirLoads,
+                        &model::ThermalZone::setUseIdealAirLoads);
+
+    //}else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
+    //  addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
+    //                        QString("C"),
+    //                        QString("C"),
+    //                        QString("F"),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneCoolingDesignSupplyAirTemperature,
+    //                        &SizingZoneProxy::setZoneCoolingDesignSupplyAirTemperature);
+    //}else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
+    //  addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE),
+    //                        QString("C"),
+    //                        QString("C"),
+    //                        QString("F"),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneHeatingDesignSupplyAirTemperature,
+    //                        &SizingZoneProxy::setZoneHeatingDesignSupplyAirTemperature);
+    //}else if(field == ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO){
+    //  addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO),
+    //                        QString(""),
+    //                        QString(""),
+    //                        QString(""),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneCoolingDesignSupplyAirHumidityRatio,
+    //                        &SizingZoneProxy::setZoneCoolingDesignSupplyAirHumidityRatio);
+    //}else if(field == ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO){
+    //  addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO),
+    //                        QString(""),
+    //                        QString(""),
+    //                        QString(""),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneHeatingDesignSupplyAirHumidityRatio,
+    //                        &SizingZoneProxy::setZoneHeatingDesignSupplyAirHumidityRatio);
+    //}else if(field == ZONEHEATINGSIZINGFACTOR){
+    //  addQuantityEditColumn(QString(ZONEHEATINGSIZINGFACTOR),
+    //                        QString(""),
+    //                        QString(""),
+    //                        QString(""),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneHeatingSizingFactor,
+    //                        &SizingZoneProxy::setZoneHeatingSizingFactor);
+    //}else if(field == ZONECOOLINGSIZINGFACTOR){
+    //  addQuantityEditColumn(QString(),
+    //                        QString(""),
+    //                        QString(""),
+    //                        QString(""),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::zoneCoolingSizingFactor,
+    //                        &SizingZoneProxy::setZoneCoolingSizingFactor);
+    //}else if(field == COOLINGDESIGNAIRFLOWRATE){
+    //  addQuantityEditColumn(QString(COOLINGDESIGNAIRFLOWRATE),
+    //                        QString("m^3/s"),
+    //                        QString("m^3/s"),
+    //                        QString("ft^3/s"),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::coolingDesignAirFlowRate,
+    //                        &SizingZoneProxy::setCoolingDesignAirFlowRate);
+    //}else if(field == HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA){
+    //  addQuantityEditColumn(QString(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA),
+    //                        QString("m/s"),
+    //                        QString("m/s"),
+    //                        QString("ft/min"),
+    //                        m_isIP,
+    //                        &SizingZoneProxy::heatingMaximumAirFlowperZoneFloorArea,
+    //                        &SizingZoneProxy::setHeatingMaximumAirFlowperZoneFloorArea);
+    //}else if(field == HEATINGMAXIMUMAIRFLOWFRACTION){
+    //  addQuantityEditColumn(QString(HEATINGMAXIMUMAIRFLOWFRACTION),
     //                        QString("W/m"),
     //                        QString("W/m"),
     //                        QString("Btu/hr*ft"),
     //                        m_isIP,
-    //                        &model::ThermalZone::ratedTotalCoolingCapacityperUnitLength,
-    //                        &model::ThermalZone::setRatedTotalCoolingCapacityperUnitLength);
-    //}else if(field == RATEDLATENTHEATRATIO){
-    //  addValueEditColumn(QString(RATEDLATENTHEATRATIO),
-    //                     &model::ThermalZone::ratedLatentHeatRatio,
-    //                     &model::ThermalZone::setRatedLatentHeatRatio);
-    //}else if(field == RATEDRUNTIMEFRACTION){
-    //  addValueEditColumn(QString(RATEDRUNTIMEFRACTION),
-    //                     &model::ThermalZone::ratedRuntimeFraction,
-    //                     &model::ThermalZone::setRatedRuntimeFraction);
-    //}else if(field == CASELENGTH){
-    //  addQuantityEditColumn(QString(CASELENGTH),
-    //                        QString("m"),
-    //                        QString("m"),
-    //                        QString("ft"),
+    //                        &SizingZoneProxy::heatingMaximumAirFlowFraction,
+    //                        &SizingZoneProxy::setHeatingMaximumAirFlowFraction);
+    //}else if(field == DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE){
+    //  addQuantityEditColumn(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE),
+    //                        QString("W/m"),
+    //                        QString("W/m"),
+    //                        QString("Btu/hr*ft"),
     //                        m_isIP,
-    //                        &model::ThermalZone::caseLength,
-    //                        &model::ThermalZone::setCaseLength);
-    //}else if(field == CASEOPERATINGTEMPERATURE){
-    //  addQuantityEditColumn(QString(CASEOPERATINGTEMPERATURE),
-    //                        QString("C"),
-    //                        QString("C"),
-    //                        QString("F"),
+    //                        &SizingZoneProxy::designZoneAirDistributionEffectivenessinCoolingMode,
+    //                        &SizingZoneProxy::setDesignZoneAirDistributionEffectivenessinCoolingMode);
+    //}else if(field == DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE){
+    //  addQuantityEditColumn(QString(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE),
+    //                        QString("W/m"),
+    //                        QString("W/m"),
+    //                        QString("Btu/hr*ft"),
     //                        m_isIP,
-    //                        &model::ThermalZone::caseOperatingTemperature,
-    //                        &model::ThermalZone::setCaseOperatingTemperature);
-    //}else if(field == STANDARDCASEFANPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(STANDARDCASEFANPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::standardCaseFanPowerperUnitLength,
-    //                        &model::ThermalZone::setStandardCaseFanPowerperUnitLength);
-    //}else if(field == OPERATINGCASEFANPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(OPERATINGCASEFANPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::operatingCaseFanPowerperUnitLength,
-    //                        &model::ThermalZone::setOperatingCaseFanPowerperUnitLength);
-    //}else if(field == FRACTIONOFLIGHTINGENERGYTOCASE){
-    //  addValueEditColumn(QString(FRACTIONOFLIGHTINGENERGYTOCASE),
-    //                     &model::ThermalZone::fractionofLightingEnergytoCase,
-    //                     &model::ThermalZone::setFractionofLightingEnergytoCase);
-    //}else if(field == CASEANTISWEATHEATERPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(CASEANTISWEATHEATERPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::caseAntiSweatHeaterPowerperUnitLength,
-    //                        &model::ThermalZone::setCaseAntiSweatHeaterPowerperUnitLength);
-    //}else if(field == MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(MINIMUMANTISWEATHEATERPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::minimumAntiSweatHeaterPowerperUnitLength,
-    //                        &model::ThermalZone::setMinimumAntiSweatHeaterPowerperUnitLength);
-    //}else if(field == CASEHEIGHT){
-    //  addQuantityEditColumn(QString(CASEHEIGHT),
-    //                        QString("m"),
-    //                        QString("m"),
-    //                        QString("ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::caseHeight,
-    //                        &model::ThermalZone::setCaseHeight);
-    //}else if(field == FRACTIONOFANTISWEATHEATERENERGYTOCASE){
-    //  addValueEditColumn(QString(FRACTIONOFANTISWEATHEATERENERGYTOCASE),
-    //                     &model::ThermalZone::fractionofAntiSweatHeaterEnergytoCase,
-    //                     &model::ThermalZone::setFractionofAntiSweatHeaterEnergytoCase);
-    //}else if(field == CASEDEFROSTPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(CASEDEFROSTPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::caseDefrostPowerperUnitLength,
-    //                        &model::ThermalZone::setCaseDefrostPowerperUnitLength);
-    //}else if(field == UNDERCASEHVACRETURNAIRFRACTION){
-    //  addValueEditColumn(QString(UNDERCASEHVACRETURNAIRFRACTION),
-    //                     &model::ThermalZone::underCaseHVACReturnAirFraction,
-    //                     &model::ThermalZone::setUnderCaseHVACReturnAirFraction);
-    //}else if(field == STANDARDCASELIGHTINGPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(STANDARDCASELIGHTINGPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::standardCaseLightingPowerperUnitLength,
-    //                        &model::ThermalZone::setStandardCaseLightingPowerperUnitLength);
-    //}else if(field == HUMIDITYATZEROANTISWEATHEATERENERGY){
-    //  addValueEditColumn(QString(HUMIDITYATZEROANTISWEATHEATERENERGY),
-    //                     &model::ThermalZone::humidityatZeroAntiSweatHeaterEnergy,
-    //                     &model::ThermalZone::setHumidityatZeroAntiSweatHeaterEnergy);
-    //}else if(field == AVERAGEREFRIGERANTCHARGEINVENTORY){
-    //  addQuantityEditColumn(QString(AVERAGEREFRIGERANTCHARGEINVENTORY),
-    //                        QString("kg/m"),
-    //                        QString("kg/m"),
-    //                        QString("lb/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::averageRefrigerantChargeInventory,
-    //                        &model::ThermalZone::setAverageRefrigerantChargeInventory);
-    //}else if(field == LATENTCASECREDITCURVETYPE){
-    //  addComboBoxColumn<std::string,model::ThermalZone>(
-    //        QString(LATENTCASECREDITCURVETYPE),
+    //                        &SizingZoneProxy::designZoneAirDistributionEffectivenessinHeatingMode,
+    //                        &SizingZoneProxy::setDesignZoneAirDistributionEffectivenessinHeatingMode);
+            
+    //}else if(field == COOLINGDESIGNAIRFLOWMETHOD){
+    //  addComboBoxColumn<std::string,SizingZoneProxy>(
+    //        QString(COOLINGDESIGNAIRFLOWMETHOD),
     //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-    //        &model::ThermalZone::latentCaseCreditCurveTypeValues,
-    //        boost::function<std::string (model::ThermalZone*)>(&model::ThermalZone::latentCaseCreditCurveType),
-    //        &model::ThermalZone::setLatentCaseCreditCurveType);
-    //}else if(field == ANTISWEATHEATERCONTROLTYPE){
-    //  addComboBoxColumn<std::string,model::ThermalZone>(
-    //        QString(ANTISWEATHEATERCONTROLTYPE),
+    //        &SizingZoneProxy::coolingDesignAirFlowMethodValues,
+    //        boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingDesignAirFlowMethod),
+    //        &SizingZoneProxy::setCoolingDesignAirFlowMethod);
+
+    //}else if(field == COOLINGTHERMOSTATSCHEDULE){
+    //  addDropZoneColumn<std::string,SizingZoneProxy>(
+    //        QString(COOLINGTHERMOSTATSCHEDULE),
     //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-    //        &model::ThermalZone::antiSweatHeaterControlTypeValues,
-    //        boost::function<std::string (model::ThermalZone*)>(&model::ThermalZone::antiSweatHeaterControlType),
-    //        &model::ThermalZone::setAntiSweatHeaterControlType);
-    //}else if(field == CASEDEFROSTTYPE){
-    //  addComboBoxColumn<std::string,model::ThermalZone>(
-    //        QString(CASEDEFROSTTYPE),
-    //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-    //        &model::ThermalZone::caseDefrostTypeValues,
-    //        boost::function<std::string (model::ThermalZone*)>(&model::ThermalZone::caseDefrostType),
-    //        &model::ThermalZone::setCaseDefrostType);
-    //}else if(field == DEFROSTENERGYCORRECTIONCURVETYPE){
-    //  addComboBoxColumn<std::string,model::ThermalZone>(
-    //        QString(DEFROSTENERGYCORRECTIONCURVETYPE),
-    //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-    //        &model::ThermalZone::defrostEnergyCorrectionCurveTypeValues,
-    //        boost::function<std::string (model::ThermalZone*)>(&model::ThermalZone::defrostEnergyCorrectionCurveType),
-    //        &model::ThermalZone::setDefrostEnergyCorrectionCurveType);
-    //}else if(field == INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH){
-    //  addQuantityEditColumn(QString(INSTALLEDCASELIGHTINGPOWERPERUNITLENGTH),
-    //                        QString("W/m"),
-    //                        QString("W/m"),
-    //                        QString("W/ft"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::installedCaseLightingPowerperUnitLength,
-    //                        &model::ThermalZone::setInstalledCaseLightingPowerperUnitLength);
-    //}else if(field == DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE){
-    //  addQuantityEditColumn(QString(DESIGNEVAPORATORTEMPERATUREORBRINEINLETTEMPERATURE),
-    //                        QString("C"),
-    //                        QString("C"),
-    //                        QString("F"),
-    //                        m_isIP,
-    //                        &model::ThermalZone::designEvaporatorTemperatureorBrineInletTemperature,
-    //                        &model::ThermalZone::setDesignEvaporatorTemperatureorBrineInletTemperature);
-    //}else if(field == CASELIGHTINGSCHEDULE){
-    //  addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(CASELIGHTINGSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Case Lighting")), // NOTE these strings found in ScheduleTypeRegistry.cpp
-    //      &model::ThermalZone::caseLightingSchedule,
-    //      &model::ThermalZone::setCaseLightingSchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetCaseLightingSchedule));
-    //}else if(field == CASEDEFROSTSCHEDULE){
-    //  addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(CASEDEFROSTSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Case Defrost")),
-    //      &model::ThermalZone::caseDefrostSchedule,
-    //      &model::ThermalZone::setCaseDefrostSchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetCaseDefrostSchedule));
-    //}else if(field == CASEDEFROSTDRIPDOWNSCHEDULE){
-    //  addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(CASEDEFROSTDRIPDOWNSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Case Defrost Drip-Down")),
-    //      &model::ThermalZone::caseDefrostDripDownSchedule,
-    //      &model::ThermalZone::setCaseDefrostDripDownSchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetCaseDefrostDripDownSchedule));
-    //}else if(field == REFRIGERATEDCASERESTOCKINGSCHEDULE){
-    //  addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(REFRIGERATEDCASERESTOCKINGSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Refrigerated Case Restocking")),
-    //      &model::ThermalZone::refrigeratedCaseRestockingSchedule,
-    //      &model::ThermalZone::setRefrigeratedCaseRestockingSchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetRefrigeratedCaseRestockingSchedule));
-    //}else if(field == CASECREDITFRACTIONSCHEDULE){
-    //  addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(CASECREDITFRACTIONSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Case Credit Fraction")),
-    //      &model::ThermalZone::caseCreditFractionSchedule,
-    //      &model::ThermalZone::setCaseCreditFractionSchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetCaseCreditFractionSchedule));
-    //}else if(field == AVAILABILITYSCHEDULE){
-    //    addComboBoxColumn<model::Schedule,model::ThermalZone>(
-    //      QString(AVAILABILITYSCHEDULE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::Schedule>,
-    //                  boost::bind(&openstudio::model::getCompatibleSchedules,
-    //                              m_model,
-    //                              "RefrigerationCase",
-    //                              "Availability")),
-    //      &model::ThermalZone::availabilitySchedule,
-    //      &model::ThermalZone::setAvailabilitySchedule,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetAvailabilitySchedule));
-    //}else if(field == THERMALZONE){
-    //  addComboBoxColumn<model::ThermalZone,model::ThermalZone>(
-    //      QString(THERMALZONE),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-    //                  boost::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),
-    //      &model::ThermalZone::thermalZone,
-    //      &model::ThermalZone::setThermalZone,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::resetThermalZone));
-    //}else if(field == RACK){
-    //  addComboBoxColumn<model::RefrigerationSystem,model::ThermalZone>(
-    //      QString(RACK),
-    //      &openstudio::objectName,
-    //      boost::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
-    //                  boost::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
-    //      &model::ThermalZone::system,
-    //      &model::ThermalZone::addToSystem,
-    //      boost::optional<boost::function<void (model::ThermalZone*)> >(&model::ThermalZone::removeFromSystem));
-    //}else if(field == DEFROSTENERGYCORRECTIONCURVE){
-    //  //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
+    //        &SizingZoneProxy::coolingDesignAirFlowMethodValues,
+    //        boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingDesignAirFlowMethod),
+    //        &SizingZoneProxy::setCoolingDesignAirFlowMethod);
+
+    }else if(field == NAME){
+      addNameLineEditColumn(QString(NAME),
+                            &model::ThermalZone::name,
+                            &model::ThermalZone::setName);
+
     //}else if(field == NAME){
     //  addNameLineEditColumn(QString(NAME),
-    //                        &model::ThermalZone::name,
-    //                        &model::ThermalZone::setName);
+    //                        &SizingSystemProxy::name,
+    //                        &SizingSystemProxy::setName);
 
+    //}else if(field == AIRLOOPNAME){
+    //  addNameLineEditColumn(QString(NAME),
+    //                        &SizingSystemProxy::airLoopHVAC,
+    //                        &SizingSystemProxy::setAirLoopHVAC);
 
     }else{
       // unhandled
