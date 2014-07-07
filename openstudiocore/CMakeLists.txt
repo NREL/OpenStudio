@@ -547,7 +547,7 @@ elseif(WIN32)
 
   # uncomment all of this if we want to force dynamic libs on windows
   #set(Boost_USE_STATIC_LIBS OFF)
-  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
+  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_DATE_TIME_DYN_LINK)
   #link_directories(${Boost_LIBRARY_DIRS})
   #if(MSVC)
     ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
@@ -560,7 +560,7 @@ mark_as_advanced(
   BOOST_THREAD_LIBRARY
 )
 
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 # require these run time checks
