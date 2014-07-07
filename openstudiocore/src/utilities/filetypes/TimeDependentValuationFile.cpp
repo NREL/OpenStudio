@@ -39,38 +39,39 @@ openstudio::path TimeDependentValuationFile::path() const {
 }
 
 std::string TimeDependentValuationFile::name() const {
-  return m_table[0][0].toString();
+	return "";
+  //return m_table[0][0].toString();
 }
 
 std::string TimeDependentValuationFile::description() const {
   std::string result;
-  if (m_table.nCols() > 1) {
-    result = m_table[0][1].toString();
-  }
+  //if (m_table.nCols() > 1) {
+  //  result = m_table[0][1].toString();
+  //}
   return result;
 }
 
 boost::optional<double> TimeDependentValuationFile::nominalCommercialCostOfEnergy() const {
   LOG(Debug,"Extracting nominalCommercialCostOfEnergy.");
-  if (m_table.nCols() > 2) {
-    std::string cell = m_table[0][2].toString();
-    boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
-    if (oq) { 
-      return oq->value(); 
-    }
-  }
+  //if (m_table.nCols() > 2) {
+  //  std::string cell = m_table[0][2].toString();
+  //  boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
+  //  if (oq) { 
+  //    return oq->value(); 
+  //  }
+  //}
   return boost::none;
 }
 
 boost::optional<double> TimeDependentValuationFile::nominalResidentialCostOfEnergy() const {
   LOG(Debug,"Extracting nominalResidentialCostOfEnergy.");
-  if (m_table.nCols() > 2) {
-    std::string cell = m_table[0][3].toString();
-    boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
-    if (oq) { 
-      return oq->value(); 
-    }
-  }
+  //if (m_table.nCols() > 2) {
+  //  std::string cell = m_table[0][3].toString();
+  //  boost::optional<Quantity> oq = mf_extractAndConvertNominalCostOfEnergy(cell);
+  //  if (oq) { 
+  //    return oq->value(); 
+  //  }
+  //}
   return boost::none;
 }
 
@@ -80,6 +81,7 @@ std::string TimeDependentValuationFile::checksum() const {
 
 FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
   OptionalFuelType oft;
+  /*
   if (columnIndex >= numColumns()) {
     LOG_AND_THROW("Cannot return fuelType for column " << columnIndex 
         << ", because the time dependent valuation file at '" << toString(m_path) 
@@ -107,11 +109,13 @@ FuelType TimeDependentValuationFile::fuelType(unsigned columnIndex) const {
         << "'. Could not determine FuelType for column " << columnIndex << " from cell contents '"
         << cell << "'.");
   }
+  */
   return *oft;
 }
 
 BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) const {
   OptionalBuildingSector obs;
+  /*
   if (columnIndex >= numColumns()) {
     LOG_AND_THROW("Cannot return buildingSector for column " << columnIndex 
         << ", because the time dependent valuation file at '" << toString(m_path) 
@@ -138,14 +142,18 @@ BuildingSector TimeDependentValuationFile::buildingSector(unsigned columnIndex) 
         << "'. Could not determine BuildingSector for column " << columnIndex << " from cell contents '"
         << cell << "'.");
   }
+  */
   return *obs;
 }
 
 std::string TimeDependentValuationFile::units(unsigned columnIndex) const {
-  return m_table.units(columnIndex,Table::HEAD,3);
+	return "";
+  //return m_table.units(columnIndex,Table::HEAD,3);
 }
 
 std::vector<double> TimeDependentValuationFile::values(unsigned columnIndex) const {
+	return std::vector<double>();
+	/* 
   if (columnIndex >= numColumns()) {
     LOG_AND_THROW("Cannot return values for column " << columnIndex << ", because the time "
         << "dependent valuation file at '" << toString(m_path) << "' only has " << numColumns() 
@@ -168,9 +176,12 @@ std::vector<double> TimeDependentValuationFile::values(unsigned columnIndex) con
   }
   OS_ASSERT(result.size() == 8760u);
   return result;
+  */
 }
 
 std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnIndex) const {
+    return std::vector<Quantity>();
+    /*
   std::string unitString = units(columnIndex);
   DoubleVector vals = values(columnIndex);
   QuantityVector result;
@@ -185,12 +196,14 @@ std::vector<Quantity> TimeDependentValuationFile::quantities(unsigned columnInde
   }
   OS_ASSERT(result.size() == 8760u);
   return result;
+  */
 }
 
 boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::convertUnits(
     UnitSystem targetSystem) const
 {
-  if (system() == targetSystem) { return *this; }
+    return boost::none;
+    /*  if (system() == targetSystem) { return *this; }
   Table result = m_table; // copy table to return if successful
 
   // try to convert nominal cost of energy
@@ -243,16 +256,18 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::convertU
   }
 
   return TimeDependentValuationFile(result);
+  */
 }
 
 unsigned TimeDependentValuationFile::numColumns() const {
-  return m_table.nCols();
+    return 0;// m_table.nCols();
 }
 
 UnitSystem TimeDependentValuationFile::system() const {
   bool foundASystem(false);
   UnitSystem result;
-  
+  return result;
+  /* 
   // energy costs
   if (m_table.nCols() > 2) {
     std::string cell = print(m_table[0][2]); // commercial cost of energy
@@ -295,13 +310,15 @@ UnitSystem TimeDependentValuationFile::system() const {
   }
 
   return result;
+  */
 }
 
 boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
     const openstudio::path& p)
 {
   LOG(Debug,"Loading TimeDependentValuationFile from '" << toString(p) << "'.");
-
+  return boost::none;
+  /* 
   // load table
   TableLoadOptions options(false,false);
   Table candidateTable = Table::load(p,options);
@@ -322,9 +339,9 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
     // must be able to determine FuelType, BuildingSector, and energy/energy units.
     std::string unitString;
     try {
-      /* FuelType ft = */ candidateFile.fuelType(i);
-      /* BuildingSector bs = */ candidateFile.buildingSector(i);
-      /* unitString = */ candidateFile.units(i);
+       candidateFile.fuelType(i); //FuelType ft =
+       candidateFile.buildingSector(i); //BuildingSector bs = 
+       candidateFile.units(i); //unitString = 
     }
     catch (...) {
       LOG(Error,"Unexpected format in candidate time dependent valuation file '" << toString(p) 
@@ -351,17 +368,21 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
   }
 
   return candidateFile;
+  */
 }
 
 bool TimeDependentValuationFile::save(const openstudio::path& p, bool overwrite) {
+    return false;
+    /* 
   bool ok = m_table.save(p,overwrite);
   if (ok) {
     m_path = p;
     m_checksum = openstudio::checksum(p);
   }
   return ok;
+  */
 }
-
+/*
 TimeDependentValuationFile::TimeDependentValuationFile(const Table& table,
                                                        const openstudio::path& p) 
   : m_table(table), m_path(p)
@@ -370,11 +391,13 @@ TimeDependentValuationFile::TimeDependentValuationFile(const Table& table,
     m_checksum = openstudio::checksum(m_path);
   }
 }
-
+*/
 boost::optional<Quantity> TimeDependentValuationFile::mf_extractNominalCostOfEnergy(
     const std::string& cellContents) const
 {
   OptionalQuantity result;
+  return result;
+  /* 
   std::stringstream ss;
   ss << "[^\\$]*\\$(" << regexQuantity().str() << ")";
   boost::regex re(ss.str());
@@ -387,12 +410,15 @@ boost::optional<Quantity> TimeDependentValuationFile::mf_extractNominalCostOfEne
     }
   } 
   return result;
+  */
 }
 
 boost::optional<Quantity> TimeDependentValuationFile::mf_extractAndConvertNominalCostOfEnergy(
     const std::string& cellContents,UnitSystem targetSystem) const
 {
   OptionalQuantity result;
+  return result;
+  /* 
   OptionalQuantity intermediate = mf_extractNominalCostOfEnergy(cellContents);
   if (intermediate) {
     try {
@@ -415,12 +441,15 @@ boost::optional<Quantity> TimeDependentValuationFile::mf_extractAndConvertNomina
     }
   }
   return result;
+  */
 }
 
 std::string TimeDependentValuationFile::mf_convertNominalCostOfEnergyInPlace(
     const std::string& cellContents,UnitSystem targetSystem) const
 {
   std::string result;
+  return result;
+  /* 
   std::stringstream ss;
   ss << "[^\\$]*\\$(" << regexQuantity().str() << ")";
   boost::regex re(ss.str());
@@ -451,6 +480,7 @@ std::string TimeDependentValuationFile::mf_convertNominalCostOfEnergyInPlace(
     }
   } 
   return result;
+  */
 }
 
 } // openstudio 
