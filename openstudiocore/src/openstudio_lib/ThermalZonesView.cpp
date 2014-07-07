@@ -17,51 +17,54 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ThermalZonesView.hpp>
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "../openstudio_lib/ThermalZonesView.hpp"
+
+#include "../openstudio_lib/IconLibrary.hpp"
+#include "../openstudio_lib/MainTabView.hpp"
+#include "../openstudio_lib/ModelObjectItem.hpp"
+#include "../openstudio_lib/ModelObjectListView.hpp"
+#include "../openstudio_lib/OSAppBase.hpp"
+#include "../openstudio_lib/OSDocument.hpp"
+#include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/ThermalZonesGridView.hpp"
+
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <openstudio_lib/IconLibrary.hpp>
 #include "../shared_gui_components/OSIntegerEdit.hpp"
-#include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include "../shared_gui_components/OSSwitch.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "../shared_gui_components/OSQuantityEdit.hpp"
+#include "../shared_gui_components/OSSwitch.hpp"
 
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/ZoneControlHumidistat.hpp>
-#include <model/ZoneControlHumidistat_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/PortList.hpp>
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/PortList.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/SizingZone.hpp"
+#include "../model/SizingZone_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/ZoneControlHumidistat.hpp"
+#include "../model/ZoneControlHumidistat_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/ZoneHVACEquipmentList.hpp"
+#include "../model/ZoneHVACEquipmentList_Impl.hpp"
 
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
-#include <utilities/idd/OS_ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
-#include <utilities/idd/OS_ZoneControl_Humidistat_FieldEnums.hxx>
+#include "../utilities/idd/OS_Space_FieldEnums.hxx"
+#include "../utilities/idd/OS_ThermostatSetpoint_DualSetpoint_FieldEnums.hxx"
+#include "../utilities/idd/OS_ZoneControl_Humidistat_FieldEnums.hxx"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
 #include <QStyleOption>
 #include <QTimer>
@@ -126,6 +129,9 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   vLayout->setContentsMargins(7,7,7,7);
   vLayout->setSpacing(7);
   mainVLayout->addLayout(vLayout);
+
+  ThermalZonesGridView * thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
+  vLayout->addWidget(thermalZonesGridView);
 
   // Name
 
@@ -320,7 +326,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   humidifyingLabel->setPixmap(QPixmap(":images/humidify_schedule_icon.png"));
   humidistatLayout->addWidget(humidifyingLabel,0,0,Qt::AlignLeft);
 
-  QLabel * humidifyingTextLabel = new QLabel("Humdifying Setpoint Schedule");
+  QLabel * humidifyingTextLabel = new QLabel("Humidifying Setpoint Schedule");
   humidifyingTextLabel->setObjectName("H2");
   humidistatLayout->addWidget(humidifyingTextLabel,0,1);
   
@@ -336,7 +342,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   dehumidifyingLabel->setFixedSize(24,24);
   humidistatLayout->addWidget(dehumidifyingLabel,0,2,Qt::AlignLeft);
 
-  QLabel * dehumidifyingTextLabel = new QLabel("Dehumdifying Setpoint Schedule");
+  QLabel * dehumidifyingTextLabel = new QLabel("Dehumidifying Setpoint Schedule");
   dehumidifyingTextLabel->setObjectName("H2");
   humidistatLayout->addWidget(dehumidifyingTextLabel,0,3);
   
@@ -356,7 +362,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   hvacLine3->setFrameShadow(QFrame::Sunken);
   vLayout->addWidget(hvacLine3);
 
-  // Sizing Paramaters
+  // Sizing Parameters
 
   QWidget * sizingHeader = new QWidget();
   QHBoxLayout * sizingHeaderLayout = new QHBoxLayout();
