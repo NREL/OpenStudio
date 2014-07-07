@@ -465,10 +465,11 @@ void PatApp::open()
 
   QString fileName = QFileDialog::getOpenFileName( mainWindow,
                                                    tr("Open Project"),
-                                                   QDir::homePath(),
+                                                   mainWindow->lastPath(),
                                                    tr("(project.osp)") );
   if (!fileName.length()) return;
 
+  mainWindow->setLastPath(QFileInfo(fileName).path());
   userInteractiveOpenProject(fileName);
 }
 

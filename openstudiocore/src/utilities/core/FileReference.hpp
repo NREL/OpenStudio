@@ -59,7 +59,8 @@ OPENSTUDIO_ENUM( FileReferenceType,
     ((OSM)(osm))
     ((RB)(rb))
     ((SQL)(sql))
-    ((XML)(xml)) );
+    ((XML)(xml))
+    ((OSSR)(ossr)) );
 
 class UTILITIES_API FileReference {
  public:

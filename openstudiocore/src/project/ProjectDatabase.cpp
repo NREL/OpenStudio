@@ -754,6 +754,10 @@ namespace detail {
       update_1_0_6_to_1_0_7(dbv);
     }
 
+    if (dbv < VersionString("1.4.1")) {
+      update_1_4_0_to_1_4_1(dbv);
+    }
+    
     if (dbv < osv) {
       LOG(Info,"Updating database version to " << osv << ".");
       bool didStartTransaction = startTransaction();
@@ -1208,6 +1212,23 @@ namespace detail {
     query.prepare(QString::fromStdString("ALTER TABLE AttributeRecords ADD COLUMN " +
                                          variableRecordIdColumn.valueName() + " " +
                                          variableRecordIdColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    // Code from update_1_3_5_to_1_3_6 needed to make AttributeRecord constructor work.
+    LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+        << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+    AttributeRecordColumns sourceColumn("source");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+    assertExec(query);
+    query.clear();
+
+    AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+    query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                      " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                      dataPointRecordIdColumn.valueDescription()));
     assertExec(query);
     query.clear();
 
@@ -2368,7 +2389,7 @@ namespace detail {
 
       // Set all VagrantSettings to have terminationDelayEnabled==false and terminationDelay==0.
       query.prepare(QString::fromStdString("UPDATE " + CloudSettingsRecord::databaseTableName() +
-                                           " SET terminationDelayEnabled=:terminationDelayEnabled AND " +
+                                           " SET terminationDelayEnabled=:terminationDelayEnabled, " +
                                            "terminationDelay=:terminationDelay"));
       query.bindValue(":terminationDelayEnabled",false);
       query.bindValue(":terminationDelay",0);
@@ -2441,6 +2462,124 @@ namespace detail {
 
     // Otherwise, the tables affected by this code (CloudSessionRecord and CloudSettingsRecord) will have already
     // been created correctly by the 1.0.4 to 1.0.5 update method.
+  }
+
+  void ProjectDatabase_Impl::update_1_4_0_to_1_4_1(const VersionString& startVersion) {
+
+    bool didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    ProjectDatabase database(this->shared_from_this());
+    QSqlQuery query(*(database.qSqlDatabase()));
+    bool test(false);
+
+    if (startVersion > VersionString("0.8.0")) {
+      // this change has not been made yet
+
+      // add source and dataPointRecordId columns to AttributeRecords
+      LOG(Info,"Adding columns to " << AttributeRecord::databaseTableName()
+          << " to record (data) source and have DataPoint parent directly (instead of via a FileReferenceRecord).");
+
+      AttributeRecordColumns sourceColumn("source");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + sourceColumn.valueName() + " " + sourceColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+
+      AttributeRecordColumns dataPointRecordIdColumn("dataPointRecordId");
+      query.prepare(QString::fromStdString("ALTER TABLE " + AttributeRecord::databaseTableName() + 
+                        " ADD COLUMN " + dataPointRecordIdColumn.valueName() + " " + 
+                        dataPointRecordIdColumn.valueDescription()));
+      assertExec(query);
+      query.clear();
+    
+      save();
+      test = this->commitTransaction();
+      OS_ASSERT(test);
+
+      didStartTransaction = startTransaction();
+      OS_ASSERT(didStartTransaction);
+    }
+
+    // set default value of source to ""
+    query.prepare(QString::fromStdString("UPDATE AttributeRecords SET source=:source"));
+    query.bindValue(":source",QString(""));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+    
+    // add index by dataPointRecordId
+    query.prepare(toQString("CREATE INDEX " + AttributeRecord::databaseTableName() + 
+                      "dataPointRecordIdIndex ON " + AttributeRecord::databaseTableName() + 
+                      " (dataPointRecordId)"));
+    assertExec(query);
+    query.clear();
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+
+    // for each FileReference that is of type XML and has a DataPoint as a parent
+    query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() +
+                            " WHERE parentDatabaseTableName=:parentDatabaseTableName AND " +
+                            "fileReferenceType=:fileReferenceType"));
+    query.bindValue(":parentDatabaseTableName",toQString(DataPointRecord::databaseTableName()));
+    query.bindValue(":fileReferenceType",int(FileReferenceType::XML));
+    assertExec(query);
+    std::vector<std::pair<int,int> > fileReferenceDataPointIdPairs;
+    while (query.next()) {
+      // save (fileReferenceRecordId, dataPointRecordId) pairs so can 
+      // 1. repoint child Attributes to the parent DataPoint
+      // 2. delete the fileReferenceRecord
+      int frrId = query.value(0).toInt();
+      int dprId = query.value(9).toInt();
+      fileReferenceDataPointIdPairs.push_back(std::pair<int,int>(frrId,dprId));
+    }
+    query.clear();
+
+    // repoint child Attributes to parent DataPoint
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(toQString(
+          std::string("UPDATE AttributeRecords SET fileReferenceRecordId=NULL, ") + 
+          std::string("dataPointRecordId=:dataPointRecordId WHERE ") + 
+          std::string("fileReferenceRecordId=:fileReferenceRecordId")));
+      query.bindValue(":dataPointRecordId",it->second);
+      query.bindValue(":fileReferenceRecordId",it->first);
+      assertExec(query);
+      query.clear();
+    }
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
+
+    didStartTransaction = startTransaction();
+    OS_ASSERT(didStartTransaction);
+    
+    // delete the fileReferenceRecords
+    for (std::vector<std::pair<int,int> >::const_iterator it = fileReferenceDataPointIdPairs.begin(),
+         itEnd = fileReferenceDataPointIdPairs.end(); it != itEnd; ++it) 
+    {
+      query.prepare(QString("DELETE FROM FileReferenceRecords WHERE id=:fileReferenceRecordId"));
+      query.bindValue(":fileReferenceRecordId",it->first);
+      assertExec(query);
+      query.clear();
+    }
+
+    save();
+    test = this->commitTransaction();
+    OS_ASSERT(test);
   }
 
   void ProjectDatabase_Impl::setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord)

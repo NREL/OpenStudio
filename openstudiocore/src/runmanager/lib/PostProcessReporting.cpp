@@ -21,21 +21,23 @@
 #include <utilities/data/Attribute.hpp>
 #include <utilities/sql/SqlFile.hpp>
 
+#include <boost/foreach.hpp>
+
 #include "PostProcessReporting.hpp"
 
 namespace openstudio {
 namespace runmanager {
 namespace detail {
-
-
-  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile)
+ 
+  std::vector<Attribute> PostProcessReporting::go(const SqlFile &t_sqlFile, 
+                                                  const std::string& jobType)
   {
     std::vector<Attribute> attributes;
     boost::optional<double> val;
     std::string query;
 
-   //Total Site Energy (GJ)
-   val = t_sqlFile.totalSiteEnergy();
+    //Total Site Energy (GJ)
+    val = t_sqlFile.totalSiteEnergy();
     if (val){
       attributes.push_back(Attribute("Total Site Energy", *val, "GJ"));
     }
@@ -232,6 +234,10 @@ namespace detail {
     {
       LOG(Warn, "No attributes loaded for report");
     }
+
+	  BOOST_FOREACH(Attribute& attribute,attributes) {
+      attribute.setSource(jobType);
+	  }
 
     return attributes;
   }

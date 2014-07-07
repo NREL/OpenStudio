@@ -75,6 +75,8 @@ class MainWindow : public QMainWindow
 
   void enableRevertToSavedAction(bool enable);
 
+  QString lastPath() const;
+
   signals:
 
   void closeClicked();
@@ -160,6 +162,8 @@ class MainWindow : public QMainWindow
   QSplitter * m_mainSplitter;
 
   bool m_displayIP;
+
+  QString m_lastPath;
 
   private slots:
 
