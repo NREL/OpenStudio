@@ -27,6 +27,8 @@
 #include <model/Node_Impl.hpp>
 #include <model/AirLoopHVAC.hpp>
 #include <model/AirLoopHVAC_Impl.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem.hpp>
+#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
 #include <model/Facility.hpp>
 #include <model/Facility_Impl.hpp>
 #include <model/Building.hpp>
@@ -70,6 +72,16 @@
 #include <model/SiteWaterMainsTemperature_Impl.hpp>
 #include <model/Schedule.hpp>
 #include <model/Schedule_Impl.hpp>
+#include <model/Splitter.hpp>
+#include <model/Splitter_Impl.hpp>
+#include <model/Mixer.hpp>
+#include <model/Mixer_Impl.hpp>
+#include <model/WaterToWaterComponent.hpp>
+#include <model/WaterToWaterComponent_Impl.hpp>
+#include <model/WaterToAirComponent.hpp>
+#include <model/WaterToAirComponent_Impl.hpp>
+#include <model/ZoneHVACComponent.hpp>
+#include <model/ZoneHVACComponent_Impl.hpp>
 
 #include <energyplus/ReverseTranslator.hpp>
 
@@ -531,6 +543,176 @@ namespace sdd {
 
         if (m_progressBar){
           m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+
+      // Give the nodes better names
+      // We do this here because the loops need to be completely assembled 
+      // with their supply AND demand sides.  ie. After zones are attached.
+      std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+
+      for( std::vector<model::PlantLoop>::iterator plantLoop = plantLoops.begin();
+           plantLoop != plantLoops.end();
+           ++plantLoop )
+      {
+        std::string plantName = plantLoop->name().get();
+        plantLoop->supplyInletNode().setName(plantName + " Supply Inlet Node");
+        plantLoop->demandInletNode().setName(plantName + " Demand Inlet Node");
+        plantLoop->demandSplitter().setName(plantName + " Demand Splitter"); 
+        plantLoop->demandMixer().setName(plantName + " Demand Mixer"); 
+        plantLoop->supplySplitter().setName(plantName + " Supply Splitter"); 
+        plantLoop->supplyMixer().setName(plantName + " Supply Mixer"); 
+
+        std::vector<model::ModelObject> comps = plantLoop->components();
+        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+             it != comps.end();
+             ++it )
+        {
+          if( ! it->optionalCast<model::Node>() )
+          {
+            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->waterOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Water Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->supplyOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Supply Outlet Node");
+              }
+              if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Demand Outlet Node");
+              }
+            }
+            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+            {
+              int branchI = 1;
+              std::vector<model::ModelObject> splitterOutletObjects = 
+                comp->outletModelObjects();
+              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+                   it != splitterOutletObjects.end();
+                   ++it )
+              {
+                if( it->optionalCast<model::Node>() )
+                {
+                  std::string branchOutuletName = 
+                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                  it->setName(branchOutuletName);
+                  ++branchI;
+                }
+              } 
+            }
+            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+            {
+              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
+              {
+                mixerOutlet->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+          }
+        }
+      }
+
+      std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
+
+      for( std::vector<model::AirLoopHVAC>::iterator airSystem = airSystems.begin();
+           airSystem != airSystems.end();
+           ++airSystem )
+      {
+        std::string systemName = airSystem->name().get();
+        airSystem->supplyInletNode().setName(systemName + " Supply Inlet Node");
+        airSystem->demandInletNode().setName(systemName + " Demand Inlet Node");
+        airSystem->demandSplitter().setName(systemName + " Zone Splitter"); 
+        airSystem->demandMixer().setName(systemName + " Zone Mixer"); 
+
+        std::vector<model::ModelObject> comps = airSystem->components();
+        for( std::vector<model::ModelObject>::iterator it = comps.begin();
+             it != comps.end();
+             ++it )
+        {
+          if( ! it->optionalCast<model::Node>() )
+          {
+            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Outlet Node");
+              }
+            }
+            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+            {
+              if( boost::optional<model::ModelObject> mo = comp->airOutletModelObject() )
+              {
+                mo->setName(comp->name().get() + " Air Outlet Node");
+              }
+            }
+            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+            {
+              int branchI = 1;
+              std::vector<model::ModelObject> splitterOutletObjects = 
+                comp->outletModelObjects();
+              for( std::vector<model::ModelObject>::iterator it = splitterOutletObjects.begin();
+                   it != splitterOutletObjects.end();
+                   ++it )
+              {
+                if( it->optionalCast<model::Node>() )
+                {
+                  std::string branchOutuletName = 
+                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                  it->setName(branchOutuletName);
+                  ++branchI;
+                }
+              } 
+            }
+            else if( boost::optional<model::ThermalZone> comp = it->optionalCast<model::ThermalZone>() )
+            {
+              if( boost::optional<model::ModelObject> returnAir = comp->returnAirModelObject() )
+              {
+                returnAir->setName(comp->name().get() + " Return Air Node");
+              }
+            }
+            else if( boost::optional<model::AirLoopHVACOutdoorAirSystem> comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>() )
+            {
+              if( boost::optional<model::ModelObject> mixedAir = comp->mixedAirModelObject() )
+              {
+                mixedAir->setName(comp->name().get() + " Mixed Air Node");
+              }
+              if( boost::optional<model::Node> oaNode = comp->outboardOANode() )
+              {
+                oaNode->setName(comp->name().get() + " OA Node");
+              }
+              if( boost::optional<model::Node> reliefNode = comp->outboardReliefNode() )
+              {
+                reliefNode->setName(comp->name().get() + " Relief Node");
+              }
+            }
+          }
+        }
+      }
+
+      std::vector<model::ZoneHVACComponent> zoneEquipment = result->getModelObjects<model::ZoneHVACComponent>();
+      for( std::vector<model::ZoneHVACComponent>::iterator zoneComp = zoneEquipment.begin();
+           zoneComp != zoneEquipment.end();
+           ++zoneComp )
+      {
+        if( boost::optional<model::Node> inlet = zoneComp->inletNode() )
+        {
+          inlet->setName(zoneComp->name().get() + " Inlet Node");
+        }
+        if( boost::optional<model::Node> outlet = zoneComp->outletNode() )
+        {
+          outlet->setName(zoneComp->name().get() + " Outlet Node");
         }
       }
 

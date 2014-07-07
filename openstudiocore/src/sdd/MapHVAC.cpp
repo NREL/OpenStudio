@@ -1346,6 +1346,66 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   }
 
+  //// Give the nodes better names
+  //std::vector<model::ModelObject> comps = airLoopHVAC.supplyComponents();
+  //for( std::vector<model::ModelObject>::iterator it = comps.begin();
+  //     it != comps.end();
+  //     ++it )
+  //{
+  //  boost::optional<model::Node> node = it->optionalCast<model::Node>();
+  //  if( node && 
+  //      (it->handle() != supplyInletNode.handle()) )
+  //  {
+  //    model::ModelObject last = *(--it);
+  //    it->setName(last.name().get() + " Outlet Node");
+  //  }
+  //}
+
+  //supplyInletNode.setName(airLoopHVAC.name().get() + " Supply Inlet Node");
+  //airLoopHVAC.demandInletNode().setName(airLoopHVAC.name().get() + " Demand Inlet Node");
+  //airLoopHVAC.demandOutletNode().setName(airLoopHVAC.name().get() + " Demand Outlet Node");
+
+  //std::vector<model::ThermalZone> zones = subsetCastVector<model::ThermalZone>(airLoopHVAC.demandComponents());
+  //for(std::vector<model::ThermalZone>::iterator it = zones.begin();
+  //    it != zones.end();
+  //    ++it)
+  //{
+  //  std::string baseName = it->name().get();
+  //  if( boost::optional<model::ModelObject> mo = it->returnAirModelObject() )
+  //  {
+  //    mo->setName(baseName + " Outlet Node");
+  //  }
+
+  //  int i = 1;
+  //  std::vector<model::ModelObject> inletModelObjects = it->inletPortList().modelObjects();
+  //  for(std::vector<model::ModelObject>::iterator inletIt = inletModelObjects.begin();
+  //      inletIt != inletModelObjects.end();
+  //      ++inletIt)
+  //  {
+  //    inletIt->setName(it->name().get() + " Inlet Node " + boost::lexical_cast<std::string>(i));
+  //  }
+
+  //  i = 1;
+  //  std::vector<model::ModelObject> exhaustModelObjects = it->exhaustPortList().modelObjects();
+  //  for(std::vector<model::ModelObject>::iterator exhaustIt = exhaustModelObjects.begin();
+  //      exhaustIt != exhaustModelObjects.end();
+  //      ++exhaustIt)
+  //  {
+  //    exhaustIt->setName(it->name().get() + " Exhaust Node " + boost::lexical_cast<std::string>(i));
+  //  }
+  //}
+  
+  //model::Splitter splitter = airLoopHVAC.demandSplitter();
+  //std::vector<model::ModelObject> branchOutletObjects = splitter.outletModelObjects();
+  //int i = 1;
+  //for( std::vector<model::ModelObject>::iterator it = branchOutletObjects.begin();
+  //     it != branchOutletObjects.end();
+  //     ++it )
+  //{
+  //  it->setName(splitter.name().get() + " " + boost::lexical_cast<std::string>(i));
+  //  ++i;
+  //}
+
   return result;
 }
 
@@ -4903,6 +4963,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   {
     LOG(Error,plantLoop.name().get() << " does not have a setpoint.");
   }
+  
 
   return plantLoop;
 }
