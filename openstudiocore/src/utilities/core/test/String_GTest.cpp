@@ -23,7 +23,6 @@
 #include "../String.hpp"
 #include "../StringHelpers.hpp"
 #include "../Path.hpp"
-#include "../Serialization.hpp"
 
 #include <boost/regex.hpp>
 
@@ -33,7 +32,6 @@
 
 using std::string;
 using namespace openstudio;
-using boost::serialization::make_nvp;
 using std::ios;
 using boost::regex;
 using boost::regex_match;

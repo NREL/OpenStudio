@@ -26,7 +26,6 @@
 #include "../../core/Optional.hpp"
 #include "../../data/DataEnums.hpp"
 #include "../../data/TimeSeries.hpp"
-#include "../../document/Table.hpp"
 #include "../../filetypes/EpwFile.hpp"
 #include "../../plot/AnnotatedTimeline.hpp"
 #include "../../plot/FloodPlot.hpp"
@@ -331,34 +330,4 @@ TEST_F(SqlFileFixture, CreateSqlFile)
     EXPECT_EQ(openstudio::toStandardVector(ts->daysFromFirstReport()), openstudio::toStandardVector(timeSeries.daysFromFirstReport()));
   }
 
-}
-
-TEST_F(SqlFileFixture,MonthlyEndUsesTable) {
-  Table electricity = monthlyEndUsesTable(sqlFile,EndUseFuelType::Electricity,createUnit("kWh").get());
-  EXPECT_TRUE(electricity.nRows() > 2u);
-  EXPECT_EQ("kWh",electricity.units(1));
-  LOG(Info,"Electricity End Uses Table: " << std::endl
-      << electricity.print(TableFormat::CSV) << std::endl
-      << electricity.print(TableFormat::JSON));
-
-  Table naturalGas = monthlyEndUsesTable(sqlFile,EndUseFuelType::Gas,createUnit("MBtu").get());
-  EXPECT_TRUE(naturalGas.nRows() > 2u);
-  EXPECT_EQ("MBtu",naturalGas.units(1));
-  LOG(Info,"Natural Gas End Uses Table: " << std::endl
-      << naturalGas.print(TableFormat::CSV) << std::endl
-      << naturalGas.print(TableFormat::JSON));
-
-  Table districtHeating = monthlyEndUsesTable(sqlFile,EndUseFuelType::DistrictHeating,createUnit("MBtu").get());
-  EXPECT_TRUE(districtHeating.nRows() > 2u);
-  EXPECT_EQ("MBtu",districtHeating.units(1));
-  LOG(Info,"Natural Gas End Uses Table: " << std::endl
-      << districtHeating.print(TableFormat::CSV) << std::endl
-      << districtHeating.print(TableFormat::JSON));
-
-  Table districtCooling = monthlyEndUsesTable(sqlFile,EndUseFuelType::DistrictCooling,createUnit("MBtu").get());
-  EXPECT_TRUE(districtCooling.nRows() > 2u);
-  EXPECT_EQ("MBtu",districtCooling.units(1));
-  LOG(Info,"Natural Gas End Uses Table: " << std::endl
-      << districtCooling.print(TableFormat::CSV) << std::endl
-      << districtCooling.print(TableFormat::JSON));
 }
