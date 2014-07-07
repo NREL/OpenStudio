@@ -25,8 +25,6 @@
 
 namespace openstudio {
 
-class Table;
-
 namespace analysis {
 
 class SequentialSearch;
@@ -92,8 +90,6 @@ namespace detail {
     /** Get the Pareto front (set of non-dominated points). Throws an openstudio::Exception if
      *  analysis.algorithm() != *this. */
     std::vector<OptimizationDataPoint> getParetoFront(Analysis& analysis) const;
-
-    Table getSummaryTable(Analysis& analysis) const;
 
     std::vector< std::vector<QVariant> > getCandidateCombinations(const DataPoint& dataPoint) const;
 

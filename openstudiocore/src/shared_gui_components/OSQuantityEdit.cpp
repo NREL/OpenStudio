@@ -24,7 +24,6 @@
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/data/Attribute.hpp"
-#include "../utilities/document/DocumentRegex.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/Quantity.hpp"
 

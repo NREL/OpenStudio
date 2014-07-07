@@ -24,8 +24,6 @@
 
 #include "JoinRecord.hpp"
 
-#include "../utilities/document/Table.hpp"
-
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -555,24 +553,28 @@ namespace detail {
 
   std::string OSArgumentRecord_Impl::stringVectorToString(const std::vector<std::string>& strs) const
   {
-    TableLoadOptions loadOptions(false,false,false); // choices are all strings
-    Table table;
-    table.appendRow(strs,loadOptions);
-    return table.print(TableFormat::CSV);
+    // DLM: was previously using functionality of Table class and CSV serialization
+
+    std::string result;
+    for (const std::string& str: strs) {
+      // DLM: TODO, escape ','
+      result += str + ",";
+    }
+    return result;
   }
 
   std::vector<std::string> OSArgumentRecord_Impl::stringToStringVector(const std::string& str) const
   {
+    // DLM: was previously using functionality of Table class and CSV serialization
+
     StringVector result;
-    TableLoadOptions loadOptions(false,false,false); // choices are all strings
-    Table table = Table::load(str,loadOptions);
-    OS_ASSERT(table.nRows() < 2);
-    if (table.nRows() == 1) {
-      TableRow row = table[0];
-      for (const TableElement& e : row) {
-        result.push_back(e.toString());
-      }
+    QString qStr = toQString(str);
+    QStringList qStringList = qStr.split(",");
+    for (const QString& q : qStringList) {
+      // DLM: TODO, unescape ','
+      result.push_back(toString(q));
     }
+
     return result;
   }
 

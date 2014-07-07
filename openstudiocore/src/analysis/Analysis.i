@@ -40,7 +40,6 @@
   #include <utilities/core/UpdateManager.hpp>
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
-  #include <utilities/document/Table.hpp>
   #include <utilities/idf/WorkspaceWatcher.hpp>
   #include <utilities/idf/WorkspaceObjectWatcher.hpp>
   

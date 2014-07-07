@@ -36,7 +36,6 @@
 
 #include "../../runmanager/lib/Workflow.hpp"
 
-#include "../../utilities/document/Table.hpp"
 #include "../../utilities/core/Containers.hpp"
 #include "../../utilities/core/Assert.hpp"
 
