@@ -58,6 +58,7 @@
 #define COOLINGTHERMOSTATSCHEDULE "Cooling Thermostat Schedule"
 #define HEATINGTHERMOSTATSCHEDULE "Heating Thermostat Schedule"
 #define HUMIDISTAT "Humidistat"
+#define MULTIPLIER "Multiplier"
 
 //COOLING SIZING PARAMETERS
 #define ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE "Zone Cooling Design Supply Air Temperature"
@@ -141,6 +142,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     //fields.push_back(ZONEEQUIPMENT);
     //fields.push_back(COOLINGTHERMOSTATSCHEDULE);
     //fields.push_back(HEATINGTHERMOSTATSCHEDULE);
+    fields.push_back(MULTIPLIER);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
@@ -312,6 +314,11 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
     //  addNameLineEditColumn(QString(NAME),
     //                        &SizingSystemProxy::airLoopHVAC,
     //                        &SizingSystemProxy::setAirLoopHVAC);
+
+    }else if(field == MULTIPLIER){
+      addValueEditColumn(QString(MULTIPLIER),
+                         &model::ThermalZone::multiplier,
+                         &model::ThermalZone::setMultiplier);
 
     }else{
       // unhandled
