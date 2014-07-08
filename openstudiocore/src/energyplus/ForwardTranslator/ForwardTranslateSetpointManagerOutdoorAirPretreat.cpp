@@ -43,7 +43,11 @@ boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerOutdoorAir
   boost::optional<Node> outdoorAirNode;
   boost::optional<Node> returnAirNode;
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> outdoorAirSystem = modelObject.airLoopHVACOutdoorAirSystem();
+  boost::optional<AirLoopHVAC> airloop = modelObject.airLoopHVAC();
+  boost::optional<AirLoopHVACOutdoorAirSystem> outdoorAirSystem;
+  if( airloop ) {
+    outdoorAirSystem = airloop->airLoopHVACOutdoorAirSystem();
+  }
 
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_OutdoorAirPretreat, modelObject);

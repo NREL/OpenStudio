@@ -130,6 +130,11 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_addToNode)
   EXPECT_TRUE(spm_2.addToNode(testObject));
   EXPECT_TRUE(spm_3.addToNode(testObject));
 
+  EXPECT_TRUE(spm_3.loop());
+  EXPECT_TRUE(spm_3.airLoopHVAC());
+  EXPECT_FALSE(spm_3.airLoopHVACOutdoorAirSystem());
+  EXPECT_FALSE(spm_3.plantLoop());
+
   Node plantNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(spm_5.addToNode(plantNode));
 

@@ -61,6 +61,14 @@ namespace detail {
 
     virtual boost::optional<Node> setpointNode() const = 0;
 
+    virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
+
+    virtual boost::optional<PlantLoop> plantLoop() const;
+
+    virtual boost::optional<Loop> loop() const;
+
+    virtual boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+
    private:
 
     /** This is used to set the field SetpointNodeName.
