@@ -30,6 +30,24 @@
 
 namespace openstudio {
 
+template<typename RetType, typename DataType>
+boost::function<RetType (DataType *)> NullAdapter(RetType (DataType::*t_func)() const)
+{
+  return boost::function<RetType (DataType *)>(t_func);
+}
+
+template<typename RetType, typename DataType, typename Param1>
+boost::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) )
+{
+  return boost::function<RetType (DataType *, Param1)>(t_func);
+}
+
+template<typename RetType, typename DataType, typename Param1>
+boost::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) const)
+{
+  return boost::function<RetType (DataType *, Param1)>(t_func);
+}
+
 class ConceptProxy
 {
   public:
@@ -97,7 +115,7 @@ class CheckBoxConceptImpl : public CheckBoxConcept
   public:
 
   CheckBoxConceptImpl(QString t_headingLabel,
-    boost::function<bool (DataSourceType *)>  t_getter,
+    boost::function<bool (DataSourceType *)> t_getter,
     boost::function<void (DataSourceType *, bool)> t_setter)
     : CheckBoxConcept(t_headingLabel),
       m_getter(t_getter),

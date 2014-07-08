@@ -182,6 +182,8 @@ void ThermalZonesGridController::setCategoriesAndFields()
   OSGridController::setCategoriesAndFields();
 
 }
+
+
 void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 {
   // always show name column
@@ -192,18 +194,18 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
   Q_FOREACH(QString field, fields){
     if(field == IDEALAIRLOADS){
       addCheckBoxColumn(QString(IDEALAIRLOADS),
-                        &model::ThermalZone::useIdealAirLoads,
-                        &model::ThermalZone::setUseIdealAirLoads);
+                        NullAdapter(&model::ThermalZone::useIdealAirLoads),
+                        NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
 
-    //}else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
-    //  addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
+//    }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
+  //    addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
     //                        QString("C"),
-    //                        QString("C"),
-    //                        QString("F"),
-    //                        m_isIP,
-    //                        &SizingZoneProxy::zoneCoolingDesignSupplyAirTemperature,
-    //                        &SizingZoneProxy::setZoneCoolingDesignSupplyAirTemperature);
-    //}else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
+      //                      QString("C"),
+        //                    QString("F"),
+          //                  m_isIP,
+           //                 &SizingZoneProxy::zoneCoolingDesignSupplyAirTemperature,
+            //                &SizingZoneProxy::setZoneCoolingDesignSupplyAirTemperature);
+//    } //else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
     //  addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE),
     //                        QString("C"),
     //                        QString("C"),
@@ -302,8 +304,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
-                            &model::ThermalZone::name,
-                            &model::ThermalZone::setName);
+                            NullAdapter(&model::ThermalZone::name),
+                            NullAdapter(&model::ThermalZone::setName));
 
     //}else if(field == NAME){
     //  addNameLineEditColumn(QString(NAME),
