@@ -45,6 +45,10 @@
 #include <model/LightsDefinition.hpp>
 #include <model/Lights.hpp>
 #include <model/ZoneControlHumidistat.hpp>
+#include <model/SetpointManagerSingleZoneReheat.hpp>
+#include <model/AirLoopHVACZoneSplitter.hpp>
+#include <model/Node.hpp>
+#include <model/Node_Impl.hpp>
 
 #include <utilities/data/Attribute.hpp>
 #include <utilities/geometry/Point3d.hpp>
@@ -104,6 +108,34 @@ TEST_F(ModelFixture,ThermalZone_Remove)
 
   modelObjects = airLoopHVAC.demandComponents();
   EXPECT_EQ(5u,modelObjects.size());
+}
+
+TEST_F(ModelFixture,ThermalZone_AddToNode_SPM)
+{
+  Model m;
+  AirLoopHVAC airLoopHVAC(m);
+  ThermalZone thermalZone(m);
+  ThermalZone thermalZone2(m);
+  ScheduleCompact s(m);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal(m,s);
+  SetpointManagerSingleZoneReheat spm(m);
+
+  Node outletNode = airLoopHVAC.supplyOutletNode();
+  spm.addToNode(outletNode);
+  EXPECT_FALSE(spm.controlZone());
+
+  Node inletNode = airLoopHVAC.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_TRUE(thermalZone.addToNode(inletNode));
+
+  EXPECT_TRUE(spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone());
+
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal));
+
+  EXPECT_TRUE(spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone());
+  EXPECT_NE(thermalZone2, spm.controlZone());
 }
 
 TEST_F(ModelFixture,ThermalZone_sizingZone)
