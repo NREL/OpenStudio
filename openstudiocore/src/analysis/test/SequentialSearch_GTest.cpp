@@ -243,10 +243,6 @@ TEST_F(AnalysisFixture, SequentialSearch) {
     nextIteration = castVector<OptimizationDataPoint>(analysis.dataPointsToQueue());
   }
 
-  Table summaryTable = algorithm.getSummaryTable(analysis);
-  bool ok = summaryTable.save(toPath("./By-Hand Problem Summary.csv"),true);
-  EXPECT_TRUE(ok);
-
   EXPECT_EQ(23u,analysis.successfulDataPoints().size());
   OptimizationDataPointVector minimumCurve = algorithm.getMinimumCurve(0,analysis);
   ASSERT_EQ(6u,minimumCurve.size());

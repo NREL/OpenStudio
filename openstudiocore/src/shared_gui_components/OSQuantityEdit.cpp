@@ -28,9 +28,12 @@
 #include "../utilities/units/Quantity.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+
+#include <iomanip>
 
 using openstudio::model::ModelObject;
 
