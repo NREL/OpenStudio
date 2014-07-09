@@ -68,8 +68,6 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/URLHelpers.hpp"
 
-#include <boost/bind.hpp>
-
 #include <sstream>
 #include <limits>
 
@@ -1941,7 +1939,7 @@ namespace detail {
         InputVariableVector vars = deserializeOrderedVector(
               stepMap["variables"].toList(),
               "variable_index",
-              std::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
+              std::function<InputVariable(const QVariant&)>(std::bind(static_cast<InputVariable(*)(const QVariant&, const Measure&, const VersionString&)>(&detail::InputVariable_Impl::factoryFromVariant), std::placeholders::_1, measure, version)));
         for (const InputVariable& var : vars) {
           workflowIntermediate.push_back(std::make_pair(index,WorkflowStep(var,boost::optional<runmanager::WorkItem>())));
           ++index;
