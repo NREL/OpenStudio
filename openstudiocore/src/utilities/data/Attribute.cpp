@@ -64,11 +64,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  bool value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Boolean),
       m_value(value),
       m_units(units)
@@ -92,11 +94,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  double value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Double),
       m_value(value),
       m_units(units)
@@ -131,11 +135,13 @@ namespace detail{
                                  const openstudio::UUID& versionUUID,
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
-                                 const Quantity& value)
+                                 const Quantity& value,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Quantity),
       m_value(QVariant::fromValue(value))
   {
@@ -154,11 +160,13 @@ namespace detail{
                                  const openstudio::UUID& versionUUID,
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
-                                 const Unit& value)
+                                 const Unit& value,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Unit),
       m_value(QVariant::fromValue(OSOptionalQuantity(value)))
   {
@@ -181,11 +189,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  int value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Integer),
       m_value(value),
       m_units(units)
@@ -209,11 +219,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  unsigned value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::Unsigned),
       m_value(value),
       m_units(units)
@@ -238,11 +250,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  const char* value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::String),
       m_value(),
       m_units(units)
@@ -268,11 +282,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  const std::string& value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::String),
       m_value(),
       m_units(units)
@@ -298,11 +314,13 @@ namespace detail{
                                  const std::string& name,
                                  const boost::optional<std::string>& displayName,
                                  const std::vector<openstudio::Attribute>& value,
-                                 const boost::optional<std::string>& units)
+                                 const boost::optional<std::string>& units,
+                                 const std::string& source)
     : m_uuid(uuid),
       m_versionUUID(versionUUID),
       m_name(name),
       m_displayName(displayName),
+      m_source(source),
       m_valueType(AttributeValueType::AttributeVector),
       m_value(),
       m_units(units)
@@ -320,6 +338,7 @@ namespace detail{
     QDomElement versionUUIDElement = element.firstChildElement(QString::fromStdString("VersionUUID"));
     QDomElement nameElement = element.firstChildElement(QString::fromStdString("Name"));
     QDomElement displayNameElement = element.firstChildElement(QString::fromStdString("DisplayName"));
+    QDomElement sourceElement = element.firstChildElement(QString::fromStdString("Source"));
     QDomElement valueTypeElement = element.firstChildElement(QString::fromStdString("ValueType"));
     QDomElement valueElement = element.firstChildElement(QString::fromStdString("Value"));
     QDomElement unitsElement = element.firstChildElement(QString::fromStdString("Units"));
@@ -349,6 +368,10 @@ namespace detail{
 
     if (!displayNameElement.isNull()){
       m_displayName = displayNameElement.firstChild().nodeValue().toStdString();
+    }
+
+    if (!sourceElement.isNull()) {
+      m_source = sourceElement.firstChild().nodeValue().toStdString();
     }
 
     m_valueType = AttributeValueType(valueTypeElement.firstChild().nodeValue().toStdString());
@@ -415,6 +438,7 @@ namespace detail{
       m_versionUUID(createUUID()),
       m_name(other.name()),
       m_displayName(other.displayName()),
+      m_source(other.source()),
       m_valueType(other.valueType()),
       m_value(other.valueAsQVariant()),
       m_units(other.units())
@@ -433,9 +457,13 @@ namespace detail{
     return m_name;
   }
 
-  boost::optional<std::string> Attribute_Impl::displayName() const
+  boost::optional<std::string> Attribute_Impl::displayName(bool returnName) const
   {
-    return m_displayName;
+    OptionalString result = m_displayName;
+    if (!result && returnName) {
+      result = name();
+    }
+    return result;
   }
 
   bool Attribute_Impl::setDisplayName(const std::string& displayName)
@@ -443,6 +471,29 @@ namespace detail{
     m_displayName = displayName;
     m_versionUUID = createUUID();
     return true;
+  }
+
+  void Attribute_Impl::clearDisplayName() {
+    if (m_displayName) {
+      m_displayName.reset();
+      m_versionUUID = createUUID();
+    }
+  }
+
+  std::string Attribute_Impl::source() const {
+    return m_source;
+  }
+
+  void Attribute_Impl::setSource(const std::string& source) {
+    m_source = source;
+    m_versionUUID = createUUID();
+  }
+
+  void Attribute_Impl::clearSource() {
+    if (!m_source.empty()) {
+      m_source.clear();
+      m_versionUUID = createUUID();
+    }
   }
 
   AttributeValueType Attribute_Impl::valueType() const
@@ -780,6 +831,13 @@ namespace detail{
       element.appendChild(childElement);
     }
 
+    if (!m_source.empty()) {
+      childElement = doc.createElement(QString::fromStdString("Source"));
+      text = doc.createTextNode(toQString(m_source));
+      childElement.appendChild(text);
+      element.appendChild(childElement);
+    }
+
     childElement = doc.createElement(QString::fromStdString("ValueType"));
     text = doc.createTextNode(toQString(m_valueType.valueName()));
     childElement.appendChild(text);
@@ -958,9 +1016,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      bool value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units, 
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -988,9 +1053,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      double value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1012,9 +1084,15 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
-                     const Quantity& value)
+                     const Quantity& value,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1029,9 +1107,15 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const openstudio::UUID& versionUUID,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
-                     const Unit& value)
+                     const Unit& value,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1059,9 +1143,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      int value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1089,9 +1180,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      unsigned value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1119,9 +1217,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const char* value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1149,9 +1254,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const std::string& value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1178,9 +1290,16 @@ Attribute::Attribute(const openstudio::UUID& uuid,
                      const std::string& name,
                      const boost::optional<std::string>& displayName,
                      const std::vector<openstudio::Attribute>& value,
-                     const boost::optional<std::string>& units)
+                     const boost::optional<std::string>& units,
+                     const std::string& source)
   : m_impl(std::shared_ptr<detail::Attribute_Impl>(
-             new detail::Attribute_Impl(uuid, versionUUID, name, displayName, value, units)))
+             new detail::Attribute_Impl(uuid, 
+                                        versionUUID, 
+                                        name, 
+                                        displayName, 
+                                        value, 
+                                        units,
+                                        source)))
 {
   OS_ASSERT(m_impl);
 }
@@ -1295,6 +1414,16 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& path)
   return result;
 }
 
+boost::optional<Attribute> Attribute::loadFromXml(const QDomDocument& doc) {
+  boost::optional<Attribute> result;
+  try {
+    result = Attribute(doc.documentElement());
+  }
+  catch (...) {
+  }
+  return result;
+}
+
 openstudio::UUID Attribute::uuid() const
 {
   return m_impl->uuid();
@@ -1310,14 +1439,30 @@ std::string Attribute::name() const
   return m_impl->name();
 }
 
-boost::optional<std::string> Attribute::displayName() const
+boost::optional<std::string> Attribute::displayName(bool returnName) const
 {
-  return m_impl->displayName();
+  return m_impl->displayName(returnName);
 }
 
 bool Attribute::setDisplayName(const std::string& displayName)
 {
   return m_impl->setDisplayName(displayName);
+}
+
+void Attribute::clearDisplayName() {
+  m_impl->clearDisplayName();
+}
+
+std::string Attribute::source() const {
+  return m_impl->source();
+}
+
+void Attribute::setSource(const std::string& source) {
+  m_impl->setSource(source);
+}
+
+void Attribute::clearSource() {
+  m_impl->clearSource();
 }
 
 AttributeValueType Attribute::valueType() const
@@ -1573,6 +1718,9 @@ namespace detail {
     if (attribute.displayName()) {
       attributeData["display_name"] = toQString(attribute.displayName().get());
     }
+    if (!attribute.source().empty()) {
+      attributeData["source"] = toQString(attribute.source());
+    }
     AttributeValueType valueType = attribute.valueType();
     attributeData["value_type"] = toQString(valueType.valueName());
     if (valueType == AttributeValueType::Quantity) {
@@ -1620,6 +1768,10 @@ namespace detail {
     if (map.contains("display_name")) {
       displayName = map["display_name"].toString().toStdString();
     }
+    std::string source;
+    if (map.contains("source")) {
+      source = map["source"].toString().toStdString();
+    }
 
     OptionalUnit ou;
     OptionalQuantity oq;
@@ -1632,14 +1784,16 @@ namespace detail {
                          name,
                          displayName,
                          map["value"].toBool(),
-                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString(),
+                         source);
       case AttributeValueType::Double :
         return Attribute(uuid,
                          versionUUID,
                          name,
                          displayName,
                          map["value"].toDouble(),
-                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString(),
+                         source);
       case AttributeValueType::Quantity :
         oq = createQuantity(map["value"].toDouble(),map["units"].toString().toStdString());
         OS_ASSERT(oq);
@@ -1647,7 +1801,8 @@ namespace detail {
                          versionUUID,
                          name,
                          displayName,
-                         oq.get());
+                         oq.get(),
+                         source);
       case AttributeValueType::Unit :
         ou = createUnit(map["units"].toString().toStdString());
         OS_ASSERT(ou);
@@ -1655,28 +1810,32 @@ namespace detail {
                          versionUUID,
                          name,
                          displayName,
-                         ou.get());
+                         ou.get(),
+                         source);
       case AttributeValueType::Integer :
         return Attribute(uuid,
                          versionUUID,
                          name,
                          displayName,
                          map["value"].toInt(),
-                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() : OptionalString(),
+                         source);
       case AttributeValueType::Unsigned :
         return Attribute(uuid,
                          versionUUID,
                          name,
                          displayName,
                          map["value"].toUInt(),
-                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString(),
+                         source);
       case AttributeValueType::String :
         return Attribute(uuid,
                          versionUUID,
                          name,
                          displayName,
                          map["value"].toString().toStdString(),
-                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString(),
+                         source);
       case AttributeValueType::AttributeVector :
         children = deserializeUnorderedVector<Attribute>(
               map["value"].toList(),
@@ -1686,7 +1845,8 @@ namespace detail {
                          name,
                          displayName,
                          children,
-                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString());
+                         map.contains("units") ? map["units"].toString().toStdString() :  OptionalString(),
+                         source);
       default :
         LOG_FREE_AND_THROW("openstudio.Attribute","Unknown AttributeValueType " << valueType.valueName() << ".");
     }    
@@ -1695,12 +1855,17 @@ namespace detail {
   QVariant toVariant(const std::vector<Attribute>& attributes) {
     QVariantMap map;
     std::set<std::string> attributeNames;
+    // keep up with sources separately--if there is a single, non-empty source 
+    // for the whole vector, just record it once
+    QVariantMap sourceMap;
+    std::string lastSource;
+    bool sameSource(true);
 
     for (const Attribute& attribute : attributes) {
       std::pair<std::set<std::string>::iterator,bool> insertResult = attributeNames.insert(attribute.name());
       if (!insertResult.second) {
         LOG_FREE_AND_THROW("openstudio.Attribute","Asked to create a flat json serialization "
-                           << "of a vector of attributes with non-unique names.");
+                           << "of a vector of attributes with non-unique names including '" << attribute.name() << "'.");
       }
       QString qName = toQString(attribute.name());
 
@@ -1742,9 +1907,33 @@ namespace detail {
       if (attribute.displayName()) {
         map[toQString(attribute.name() + std::string("_display_name"))] = toQString(attribute.displayName().get());
       }
+      if (!attribute.source().empty()) {
+        sourceMap[toQString(attribute.name() + std::string("_source"))] = toQString(attribute.source());
+        if (sameSource) {
+          if (lastSource.empty()) {
+            lastSource = attribute.source();
+          }
+          else {
+            if (attribute.source() != lastSource) {
+              sameSource = false;
+            }
+          }
+        }
+      }
+      else {
+        sameSource = false;
+      }
       if (attribute.units()) {
         map[toQString(attribute.name() + std::string("_units"))] = toQString(attribute.units().get());
       }
+    }
+
+    if (sameSource && !lastSource.empty()) {
+      map[QString("source")] = toQString(lastSource);
+    }
+    else {
+      // keep all sources separate if these attributes don't share a source
+      map.unite(sourceMap);
     }
 
     return QVariant(map);
@@ -1754,12 +1943,24 @@ namespace detail {
     AttributeVector result;
     QVariantMap map = variant.toMap();
     boost::regex displayNameRegex("(.*)_display_name");
+    boost::regex sourceRegex("(.*)_source");
     boost::regex unitsRegex("(.*)_units");
     boost::smatch matches;
     std::set<std::string> processedAttributeNames; // serialization ensures uniqueness of names
 
+    // determine if there is a shared source
+    std::string source;
+    if (map.contains(QString("source"))) {
+      source = map["source"].toString().toStdString();
+    }
+
     int itemCount(0);
     for (const QString& key : map.keys()) {
+      if (key == QString("source")) {
+        ++itemCount;
+        continue;
+      }
+
       // determine attribute name
       std::string attributeName;
       std::string keyString = toString(key);
@@ -1769,6 +1970,15 @@ namespace detail {
         attributeName = std::string(matches[1].first,matches[1].second);
         if (!map.contains(toQString(attributeName))) {
           // if it is not, attribute name actually ends in '_display_name'.
+          attributeName = toString(key);
+        }
+      }
+      else if (boost::regex_match(keyString,matches,sourceRegex)) {
+        // ends in '_source'.
+        // pull attribute name off and make sure is in map.
+        attributeName = std::string(matches[1].first,matches[1].second);
+        if (!map.contains(toQString(attributeName))) {
+          // if it is not, attribute name actually ends in '_source'.
           attributeName = toString(key);
         }
       }
@@ -1819,6 +2029,15 @@ namespace detail {
         if (map.contains(key)) {
           result.back().setDisplayName(map[key].toString().toStdString());
           ++itemCount;
+        }
+        // set source
+        key = toQString(attributeName + std::string("_source"));
+        if (map.contains(key)) {
+          result.back().setSource(map[key].toString().toStdString());
+          ++itemCount;
+        }
+        else {
+          result.back().setSource(source); // may be empty
         }
         // set units
         key = toQString(attributeName + std::string("_units"));

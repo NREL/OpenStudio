@@ -23,6 +23,7 @@ set(core_src
   core/Compare.cpp
   core/Containers.hpp
   core/Containers.cpp
+  core/Deprecated.hpp
   core/Enum.hpp
   core/EnumHelpers.hpp
   core/Exception.hpp

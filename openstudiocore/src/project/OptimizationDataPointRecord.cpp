@@ -142,7 +142,6 @@ namespace detail {
                                            prelim.osmInputData(),
                                            prelim.idfInputData(),
                                            prelim.sqlOutputData(),
-                                           prelim.xmlOutputData(),
                                            prelim.topLevelJob(),
                                            prelim.dakotaParametersFiles(),
                                            prelim.tags(),

@@ -519,11 +519,12 @@ namespace detail {
       }
     }
 
-    if( boost::optional<SetpointManagerSingleZoneReheat> spm = t_airLoopHVAC->supplyOutletNode().getSetpointManagerSingleZoneReheat() )
-    {
-      if( spm->controlZone() == thermalZone )
+    std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(t_airLoopHVAC->supplyOutletNode().setpointManagers());
+    if( ! setpointManagers.empty() ) {
+      SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+      if( spm.controlZone() == thermalZone )
       {
-        spm->resetControlZone();
+        spm.resetControlZone();
       }
     }
 

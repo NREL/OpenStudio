@@ -119,6 +119,8 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudio");
 
+  readSettings();
+
   QFile f(":/library/OpenStudioPolicy.xml");
 
   openstudio::model::AccessPolicyStore::Instance().loadFile(f);
@@ -238,12 +240,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv, const QSharedPointer<rul
   //*************************************************************************************
 }
 
-bool OpenStudioApp::openFile(const QString& fileName)
+bool OpenStudioApp::openFile(const QString& fileName, bool restoreTabs)
 {
   if(fileName.length() > 0)
   { 
-    waitDialog()->setVisible(true);
-
     osversion::VersionTranslator versionTranslator;
     versionTranslator.setAllowNewerVersions(false);
 
@@ -255,7 +255,15 @@ bool OpenStudioApp::openFile(const QString& fileName)
       bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
       this->setQuitOnLastWindowClosed(false);
 
+      int startTabIndex = 0;
+      int startSubTabIndex = 0;
       if( m_osDocument ){
+        
+        if (restoreTabs){
+          startTabIndex = m_osDocument->verticalTabIndex();
+          startSubTabIndex = m_osDocument->subTabIndex();
+        }
+
         if( !closeDocument() ) { 
           this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
           return false;
@@ -263,11 +271,17 @@ bool OpenStudioApp::openFile(const QString& fileName)
         processEvents();
       }
 
-      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(), 
+      waitDialog()->setVisible(true);
+      processEvents();
+
+      m_osDocument = std::shared_ptr<OSDocument>( new OSDocument(componentLibrary(),
                                                                    hvacComponentLibrary(), 
                                                                    resourcesPath(), 
                                                                    model, 
-                                                                   fileName) );
+                                                                   fileName, 
+                                                                   false, 
+                                                                   startTabIndex, 
+                                                                   startSubTabIndex) );
 
       connect( m_osDocument.get(), SIGNAL(closeClicked()), this, SLOT(onCloseClicked()) );
       connect( m_osDocument.get(), SIGNAL(exitClicked()), this,SLOT(quit()) );
@@ -281,6 +295,8 @@ bool OpenStudioApp::openFile(const QString& fileName)
       connect( m_osDocument.get(), SIGNAL(helpClicked()), this,SLOT(showHelp()) );
       connect( m_osDocument.get(), SIGNAL(aboutClicked()), this,SLOT(showAbout()) );
 
+      waitDialog()->setVisible(false);
+
       m_startupView->hide();
 
       versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
@@ -293,7 +309,6 @@ bool OpenStudioApp::openFile(const QString& fileName)
 
       versionUpdateMessageBox(versionTranslator, false, fileName, openstudio::path());
     }
-    waitDialog()->setVisible(false);
   }
   return false;
 }
@@ -381,11 +396,13 @@ void OpenStudioApp::importIdf()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Import Idf"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.idf)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<IdfFile> idfFile;
 
     idfFile = openstudio::IdfFile::load(toPath(fileName),IddFileType::EnergyPlus);
@@ -513,11 +530,13 @@ void OpenStudioApp::import(OpenStudioApp::fileType type)
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr(text.toStdString().c_str()),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.xml)") );
 
   if( ! (fileName == "") )
   {
+    setLastPath(QFileInfo(fileName).path());
+
     boost::optional<model::Model> model;
 
     if(type == SDD){
@@ -704,11 +723,13 @@ void OpenStudioApp::open()
 
   QString fileName = QFileDialog::getOpenFileName( parent,
                                                    tr("Open"),
-                                                   QDir::homePath(),
+                                                   lastPath(),
                                                    tr("(*.osm)") );
 
   if (!fileName.length()) return;
 
+  setLastPath(QFileInfo(fileName).path());
+  
   openFile(fileName);
 }
 
@@ -784,7 +805,7 @@ void  OpenStudioApp::showAbout()
   about.exec();
 }
 
-void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int startTabIndex)
+void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs)
 {
   OS_ASSERT(m_osDocument);
 
@@ -797,23 +818,17 @@ void OpenStudioApp::reloadFile(const QString& fileToLoad, bool modified, int sta
     bool wasQuitOnLastWindowClosed = this->quitOnLastWindowClosed();
     this->setQuitOnLastWindowClosed(false);
     
-    m_osDocument->setModel(*model, modified);
+    m_osDocument->setModel(*model, modified, saveCurrentTabs);
 
     versionUpdateMessageBox(versionTranslator, true, fileName, openstudio::toPath(m_osDocument->modelTempDir()));
 
     this->setQuitOnLastWindowClosed(wasQuitOnLastWindowClosed);
 
   }else{
-    // todo: show error message
+    QMessageBox::warning (m_osDocument->mainWindow(), QString("Failed to load model"), QString("Failed to load model"));
   }
 
   processEvents();
-
-  OS_ASSERT(startTabIndex >= 0);
-  OS_ASSERT(startTabIndex <= OSDocument::RESULTS_SUMMARY);
-  if(startTabIndex){
-    m_osDocument->showTab(startTabIndex);
-  }
 }
 
 openstudio::path OpenStudioApp::resourcesPath() const
@@ -930,6 +945,33 @@ void OpenStudioApp::versionUpdateMessageBox(const osversion::VersionTranslator& 
   }
 }
 
+void OpenStudioApp::readSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  setLastPath(settings.value("lastPath", QDir::homePath()).toString());
+}
+
+void OpenStudioApp::writeSettings()
+{
+  QString organizationName = QCoreApplication::organizationName();
+  QString applicationName = QCoreApplication::applicationName();
+  QSettings settings(organizationName, applicationName);
+  settings.setValue("lastPath", lastPath());
+}
+
+QString OpenStudioApp::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
+}
+
+void OpenStudioApp::setLastPath(const QString& t_lastPath)
+{
+  m_lastPath = t_lastPath;
+  writeSettings();
+}
+
 void OpenStudioApp::revertToSaved()
 {
   QString fileName = this->currentDocument()->mainWindow()->windowFilePath();
@@ -944,7 +986,7 @@ void OpenStudioApp::revertToSaved()
     // DLM: quick hack so we do not trigger prompt to save in call to closeDocument during openFile
     this->currentDocument()->markAsUnmodified();
 
-    openFile(fileName);
+    openFile(fileName, true);
   }
 
 }

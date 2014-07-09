@@ -103,7 +103,7 @@ OptionalModelObject ReverseTranslator::translateSetpointManagerMixedAir( const W
   
     if( node )
     {
-      mo.setSetpointNode(node.get());
+      mo.addToNode(node.get());
     }
   }
 

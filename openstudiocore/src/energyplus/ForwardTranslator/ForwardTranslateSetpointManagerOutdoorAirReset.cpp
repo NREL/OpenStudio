@@ -20,9 +20,7 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/SetpointManagerOutdoorAirReset.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/SetpointManager_OutdoorAirReset_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

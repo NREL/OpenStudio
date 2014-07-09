@@ -20,11 +20,9 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/SetpointManagerSingleZoneReheat.hpp"
 #include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/PortList.hpp"
-#include "../../model/PortList_Impl.hpp"
 #include <utilities/idd/SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

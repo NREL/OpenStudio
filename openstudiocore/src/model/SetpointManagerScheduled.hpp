@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERSCHEDULED_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -41,7 +41,7 @@ class SetpointManagerScheduled_Impl;
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManager:Scheduled object.
  */
-class MODEL_API SetpointManagerScheduled : public HVACComponent {
+class MODEL_API SetpointManagerScheduled : public SetpointManager {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -85,7 +85,7 @@ class MODEL_API SetpointManagerScheduled : public HVACComponent {
   //@{
 
   /** Sets the Control Variable **/
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   /** Sets the Schedule **/
   bool setSchedule(Schedule& schedule);

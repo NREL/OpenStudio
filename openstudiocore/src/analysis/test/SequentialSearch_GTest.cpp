@@ -221,7 +221,6 @@ TEST_F(AnalysisFixture, SequentialSearch) {
                                                          boost::none,
                                                          boost::none,
                                                          boost::none,
-                                                         FileReferenceVector(),
                                                          boost::none,
                                                          std::vector<openstudio::path>(),
                                                          point.tags(),

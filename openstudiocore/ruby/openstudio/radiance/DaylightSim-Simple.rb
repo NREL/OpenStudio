@@ -586,6 +586,22 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
   perlExtension = ""
   osQuote = "\'"
 
+  # i can haz gendaymtx vintage? - 2014.07.02 RPG
+  # gendaymtx >= v4.2.b adds header and -h option to suppress
+  genDaymtxHdr = "-h "
+ 
+  puts "Determining gendaymtx vintage..."   
+  exec_statement("gendaymtx -h -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}\" ")
+  puts "ok."
+
+  if File.zero?("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
+    genDaymtxHdr = ""
+  else 
+    puts "Suppressing sky matrix header with 'gendaymtx -h'"
+  end
+
+  File.delete("#{t_outPath / OpenStudio::Path.new("daymtx_out.tmp")}")
+  # we now haz =)
 
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
     perlPrefix = "perl \"C:/Program Files (x86)/Radiance/bin/"
@@ -605,13 +621,12 @@ def runSimulation(t_space_names_to_calculate, t_sqlFile, t_options, t_simCores, 
 
   # Run the simulation 
   puts "Running annual simulation"
-  
 
   simulations = []
   windowMapping = nil
 
   # exec_statement("gendaymtx -m #{t_options.skyvecDensity} -of \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
-  exec_statement("gendaymtx -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
+  exec_statement("gendaymtx #{genDaymtxHdr} -m #{t_options.skyvecDensity} \"#{t_outPath / OpenStudio::Path.new("in.wea")}\" > \"#{t_outPath / OpenStudio::Path.new("daymtx.out")}\" ")
 
   if t_options.z == true
     # 3-phase

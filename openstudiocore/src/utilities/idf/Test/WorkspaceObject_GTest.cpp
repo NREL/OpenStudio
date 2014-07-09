@@ -24,6 +24,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
+#include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
 
 #include "../WorkspaceExtensibleGroup.hpp"
 #include "../IdfFile.hpp"
@@ -452,4 +453,23 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   Handle h2(toQString(*h2String));
   EXPECT_FALSE(h2.isNull());
   EXPECT_EQ(h2, w2.handle());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
+{
+  Workspace ws;
+  OptionalWorkspaceObject node = ws.addObject(IdfObject(IddObjectType::OS_Node));
+  OptionalWorkspaceObject node2 = ws.addObject(IdfObject(IddObjectType::OS_Node));
+  OptionalWorkspaceObject node3 = ws.addObject(IdfObject(IddObjectType::OS_Node));
+  OptionalWorkspaceObject spm = ws.addObject(IdfObject(IddObjectType::OS_SetpointManager_MixedAir));
+
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName, node->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName,node->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName,node2->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,node3->handle()));
+
+  WorkspaceObjectVector sourcesVector = node->sources();
+  EXPECT_EQ(1, sourcesVector.size());
+  sourcesVector = node->getSources(IddObjectType::OS_SetpointManager_MixedAir);
+  EXPECT_EQ(1, sourcesVector.size());
 }

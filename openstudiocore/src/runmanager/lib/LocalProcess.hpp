@@ -32,7 +32,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QTimer>
-
+#include <QMutex>
 
 namespace openstudio {
 namespace runmanager {
@@ -109,48 +109,33 @@ namespace detail {
       /// used to determine when files have changed
       FileSet dirFiles(const QString &dir) const;
 
-      /// Add a set of files to monitor to the QFileSystemWatcher in use
-      /// \sa http://doc.qt.nokia.com/qfilesystemwatcher.html
-      template<typename InItr>
-      void monitorFiles(InItr itr, const InItr &end)
-      {
-        QStringList watchedpaths = m_fswatcher->directories();
-        watchedpaths << m_fswatcher->files();
-
-        while (itr != end)
-        {
-          QString path = toQString(itr->fullPath);
-          if (!watchedpaths.contains(path) && QFile::exists(path))
-          {
-            m_fswatcher->addPath(toQString(itr->fullPath));
-          }
-          ++itr;
-        }
-      }
-
       static void kill(QProcess &t_process, bool t_force); //< Does an appropriate process tree kill on Windows
 
-      QTimer m_fileCheckTimer;
+      static std::set<openstudio::path> copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
+          const openstudio::path &t_basePath);
 
-      openstudio::runmanager::ToolInfo m_tool; //< Tool that is executing
-      std::vector<std::pair<openstudio::path, openstudio::path> > m_requiredFiles; //< Files requried to execute tool
-      std::vector<std::string> m_parameters; //< parameters to pass to tool
-      openstudio::path m_outdir;  //< Tool's output directory
-      std::vector<openstudio::path> m_expectedOutputFiles; //< List of expected output files
-      std::string m_stdin; //< Stdin to send after process has tarted
+      /// Immutable members, do not need thread mutex protection
+      const openstudio::runmanager::ToolInfo m_tool; //< Tool that is executing
+      const std::vector<std::pair<openstudio::path, openstudio::path> > m_requiredFiles; //< Files requried to execute tool
+      const std::vector<std::string> m_parameters; //< parameters to pass to tool
+      const openstudio::path m_outdir;  //< Tool's output directory
+      const std::vector<openstudio::path> m_expectedOutputFiles; //< List of expected output files
+      const std::string m_stdin; //< Stdin to send after process has tarted
 
+      /// Set of files that have been copied into place because they were required and can be deleted after the process has completed
+      const std::set<openstudio::path> m_copiedRequiredFiles;
 
-      /// Used to watch the local filesystem for updates
-      std::shared_ptr<QFileSystemWatcher> m_fswatcher;
-
-      /// List of files that are known about
+      /// List of files that are known about.
       FileSet m_outfiles;
 
       /// QProcess used to monitor the execution of the process.
       MyQProcess m_process;
 
-      /// Set of files that have been copied into place because they were required and can be deleted after the process has completed
-      std::set<openstudio::path> m_copiedRequiredFiles; 
+
+      QTimer m_fileCheckTimer;
+
+      mutable QMutex m_mutex;
+
 
     private slots:
       /// connected to QProcess::error

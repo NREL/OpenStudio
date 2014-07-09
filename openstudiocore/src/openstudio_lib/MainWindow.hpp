@@ -30,6 +30,8 @@ namespace openstudio {
 
 class HorizontalTabWidget;
 
+class MainTabView;
+
 class VerticalTabWidget;
 
 class MainWindow : public QMainWindow
@@ -59,6 +61,8 @@ class MainWindow : public QMainWindow
 
   void selectVerticalTabByIndex(int index);
 
+  MainTabView* verticalTabByIndex(int index);
+
   int verticalTabIndex();
 
   //void selectHorizontalTab(int id);
@@ -70,6 +74,8 @@ class MainWindow : public QMainWindow
   bool displayIP();
 
   void enableRevertToSavedAction(bool enable);
+
+  QString lastPath() const;
 
   signals:
 
@@ -156,6 +162,8 @@ class MainWindow : public QMainWindow
   QSplitter * m_mainSplitter;
 
   bool m_displayIP;
+
+  QString m_lastPath;
 
   private slots:
 

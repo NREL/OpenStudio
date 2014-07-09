@@ -305,6 +305,9 @@ set(osversion_resources_src
   osversion/1_3_5/OpenStudio.idd
   osversion/1_3_5/example.osm
   osversion/1_3_5/example.osc
+  osversion/1_4_0/OpenStudio.idd
+  osversion/1_4_0/example.osm
+  osversion/1_4_0/example.osc
   osversion/unknown.osc
 )
 
@@ -413,6 +416,8 @@ set(project_resources_src
   project/version/project_1_0_4.db  
   project/version/project_1_0_6.osp
   project/version/project_1_0_6.db  
+  project/version/project_1_3_3.osp
+  project/version/project_1_3_3.db
 )
 
 # update the resources

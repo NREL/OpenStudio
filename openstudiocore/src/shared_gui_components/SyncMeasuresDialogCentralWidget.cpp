@@ -98,7 +98,7 @@ void SyncMeasuresDialogCentralWidget::createLayout()
 
   //*******************************************************************
 
-  QPushButton * lowerPushButton = new QPushButton("Update");
+  lowerPushButton = new QPushButton("Update");
   isConnected = connect(lowerPushButton, SIGNAL(clicked()), this, SLOT(lowerPushButtonClicked()));
   OS_ASSERT(isConnected);
 
@@ -189,7 +189,7 @@ Component * SyncMeasuresDialogCentralWidget::checkedComponent() const
 
 void SyncMeasuresDialogCentralWidget::upperPushButtonClicked()
 {
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isEnabled()){
       component->checkBox()->setChecked(true);
     }
@@ -202,20 +202,20 @@ void SyncMeasuresDialogCentralWidget::lowerPushButtonClicked()
 
   // Must convert from the checked component to the appropriate measure for updating
   unsigned index = 0;
-  Q_FOREACH(Component* component, m_collapsibleComponentList->components()){
+  for (Component* component : m_collapsibleComponentList->components()){
     if (component->checkBox()->isChecked() && component->checkBox()->isEnabled()){
       newMeasures.push_back(m_measures.at(m_pageIdx * NUM_COMPONENTS_DISPLAYED + index));
     }
     ++index;
   }
 
-  if(newMeasures.empty()) return;
+  if(!newMeasures.empty()){
+    bool showMessage = true;
+    m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
+  }
 
-  bool showMessage = true;
+  emit closeDlg();
 
-  m_measureManager->updateMeasures(*m_project,newMeasures,showMessage);
-
-  // DLM: close the dialog?
 }
 
 void SyncMeasuresDialogCentralWidget::on_getComponentsByPage(int pageIdx)
