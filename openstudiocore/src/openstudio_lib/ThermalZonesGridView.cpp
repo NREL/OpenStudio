@@ -30,8 +30,8 @@
 #include <model/ModelObject.hpp>
 #include <model/ModelObject_Impl.hpp>
 
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
 #include <model/SizingZone.hpp>
 #include <model/SizingZone_Impl.hpp>
 #include <model/ThermalZone.hpp>
@@ -139,12 +139,12 @@ void ThermalZonesGridController::setCategoriesAndFields()
   {
     std::vector<QString> fields;
     fields.push_back(IDEALAIRLOADS);
-    //fields.push_back(AIRLOOPNAME);                   // LineEdit, but needs a SizingSystem
-    //fields.push_back(ZONEEQUIPMENT);                 // Extensible DropZone
-    //fields.push_back(COOLINGTHERMOSTATSCHEDULE);     // DropZone
-    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // DropZone
-    //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // DropZone
-    //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // DropZone
+    //fields.push_back(AIRLOOPNAME);                   // TODO LineEdit, but needs an optional AirLoopHVAC 
+    //fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
+    //fields.push_back(COOLINGTHERMOSTATSCHEDULE);     // TODO DropZone
+    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
+    //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
+    //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
     fields.push_back(MULTIPLIER);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("HVAC Systems"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -326,9 +326,9 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     //}else if(field == AIRLOOPNAME){
     //  addNameLineEditColumn(QString(AIRLOOPNAME),
-    //                        ProxyAdapter(&model::SizingSystem::airLoopHVAC, &model::ThermalZone::sizingSystem),
-    //                        ProxyAdapter(static_cast<void (model::SizingSystem::*)(double)>(&model::SizingSystem::setAirLoopHVAC), 
-    //                        &model::ThermalZone::sizingSystem));
+    //                        ProxyAdapter(&model::AirLoopHVAC::name, &model::ThermalZone::airLoopHVAC),
+    //                        ProxyAdapter(static_cast<void (model::AirLoopHVAC::*)(std::string)>(&model::AirLoopHVAC::setName), 
+    //                        &model::ThermalZone::airLoopHVAC));
 
     }else if(field == MULTIPLIER){
       addValueEditColumn(QString(MULTIPLIER),
