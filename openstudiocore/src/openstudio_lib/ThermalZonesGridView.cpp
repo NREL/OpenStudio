@@ -197,15 +197,16 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                         NullAdapter(&model::ThermalZone::useIdealAirLoads),
                         NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
 
-//    }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
-  //    addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
-    //                        QString("C"),
-      //                      QString("C"),
-        //                    QString("F"),
-          //                  m_isIP,
-           //                 &SizingZoneProxy::zoneCoolingDesignSupplyAirTemperature,
-            //                &SizingZoneProxy::setZoneCoolingDesignSupplyAirTemperature);
-//    } //else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
+    }else if(field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
+      addQuantityEditColumn(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE),
+                            QString("C"),
+                            QString("C"),
+                            QString("F"),
+                            m_isIP,
+                            ProxyAdapter(&model::SizingZone::zoneCoolingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
+                            ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature), 
+                              &model::ThermalZone::sizingZone));
+    //} else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
     //  addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE),
     //                        QString("C"),
     //                        QString("C"),

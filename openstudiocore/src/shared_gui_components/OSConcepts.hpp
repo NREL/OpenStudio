@@ -30,6 +30,37 @@
 
 namespace openstudio {
 
+template<typename T>
+T* deref(const T &t)
+{
+  return const_cast<T*>(&t);
+}
+
+template<typename RetType, typename FromDataType, typename ToDataType>
+boost::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  boost::function<RetType (ToDataType *)> outter(t_func);
+  boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  return boost::bind(outter, boost::bind(&deref<ToDataType>, boost::bind(inner, _1)));
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  boost::function<RetType (ToDataType *, Param1)> outter(t_func);
+  boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  return boost::bind(outter, boost::bind(&deref<ToDataType>, boost::bind(inner, _1)), _2);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  boost::function<RetType (ToDataType *, Param1)> outter(t_func);
+  boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  return boost::bind(outter, boost::bind(&deref<ToDataType>, boost::bind(inner, _1)), _2);
+}
+
+
 template<typename RetType, typename DataType>
 boost::function<RetType (DataType *)> NullAdapter(RetType (DataType::*t_func)() const)
 {
