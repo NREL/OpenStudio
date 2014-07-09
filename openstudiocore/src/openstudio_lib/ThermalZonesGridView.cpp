@@ -149,7 +149,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    //fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
+    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
     //fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
     //fields.push_back(ZONECOOLINGSIZINGFACTOR);
     //fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
@@ -183,7 +183,6 @@ void ThermalZonesGridController::setCategoriesAndFields()
 
 }
 
-
 void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 {
   // always show name column
@@ -206,7 +205,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             ProxyAdapter(&model::SizingZone::zoneCoolingDesignSupplyAirTemperature, &model::ThermalZone::sizingZone),
                             ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::setZoneCoolingDesignSupplyAirTemperature), 
                               &model::ThermalZone::sizingZone));
-    //} else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
+    //}else if(field == ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE){
     //  addQuantityEditColumn(QString(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE),
     //                        QString("C"),
     //                        QString("C"),
@@ -300,8 +299,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
     //        QString(COOLINGTHERMOSTATSCHEDULE),
     //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
     //        &SizingZoneProxy::coolingDesignAirFlowMethodValues,
-    //        boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingDesignAirFlowMethod),
-    //        &SizingZoneProxy::setCoolingDesignAirFlowMethod);
+    //        boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
+    //        &SizingZoneProxy::setCoolingThermostatSchedule);
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
@@ -320,8 +319,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == MULTIPLIER){
       addValueEditColumn(QString(MULTIPLIER),
-                         &model::ThermalZone::multiplier,
-                         &model::ThermalZone::setMultiplier);
+                         NullAdapter(&model::ThermalZone::multiplier),
+                         NullAdapter(&model::ThermalZone::setMultiplier));
 
     }else{
       // unhandled
