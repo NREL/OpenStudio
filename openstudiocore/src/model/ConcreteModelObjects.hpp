@@ -206,6 +206,7 @@
 #include <model/Screen.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerMixedAir.hpp>
+#include <model/SetpointManagerOutdoorAirPretreat.hpp>
 #include <model/SetpointManagerOutdoorAirReset.hpp>
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerScheduledDualSetpoint.hpp>
@@ -465,6 +466,7 @@
 #include <model/Screen_Impl.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
 #include <model/SetpointManagerMixedAir_Impl.hpp>
+#include <model/SetpointManagerOutdoorAirPretreat_Impl.hpp>
 #include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
 #include <model/SetpointManagerScheduled_Impl.hpp>
 #include <model/SetpointManagerScheduledDualSetpoint_Impl.hpp>
