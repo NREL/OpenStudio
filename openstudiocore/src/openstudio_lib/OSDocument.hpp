@@ -96,7 +96,10 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
               openstudio::model::Model hvacLibrary,
               const openstudio::path &resourcesPath,
               openstudio::model::OptionalModel model = boost::none,
-              QString filePath = QString(), bool isPlugin = false);
+              QString filePath = QString(), 
+              bool isPlugin = false, 
+              int startTabIndex = 0, 
+              int startSubTabIndex = 0);
 
   virtual ~OSDocument();
 
@@ -108,7 +111,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   // Sets the model associated with this document.
   // This will close all current windows, make sure to call app->setQuitOnLastWindowClosed(false) before calling this
-  void setModel(const model::Model& model, bool modified);
+  void setModel(const model::Model& model, bool modified, bool saveCurrentTabs);
 
   // Returns the RunManager for this document.
   runmanager::RunManager runManager();
@@ -166,7 +169,12 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
 //  ScriptFolderListView* scriptFolderListView();
 
+  // Returns the index of the current tab.
   int verticalTabIndex();
+
+  // Returns the index of the current sub tab.
+  // Returns -1 if there are no sub tabs.
+  int subTabIndex();
 
   enum VerticalTabID
   {
@@ -196,6 +204,7 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   std::shared_ptr<MainRightColumnController> mainRightColumnController() const;
 
+  // DLM: would like for this to not be a member variable since it is only used as a modal dialog with a well defined lifetime
   boost::shared_ptr<ApplyMeasureNowDialog> m_applyMeasureNowDialog;
 
  signals:
@@ -278,9 +287,11 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
 
   void inspectModelObject(model::OptionalModelObject &, bool readOnly);
 
-  void showFirstTab();
+  //void showFirstTab();
 
-  void showTab(int tabIndex);
+  void showStartTabAndStartSubTab();
+
+  //void showTab(int tabIndex);
  
   void initializeModel();
 
@@ -380,6 +391,9 @@ class OPENSTUDIO_API OSDocument : public OSQObjectController {
   int m_mainTabId;
   int m_subTabId;
   bool m_isPlugin;
+
+  int m_startTabIndex;
+  int m_startSubTabIndex;
 };
 
 } // openstudio

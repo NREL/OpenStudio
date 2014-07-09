@@ -41,6 +41,7 @@ namespace project {
 class FileReferenceRecord;
 class AlgorithmRecord;
 class VariableRecord;
+class DataPointRecord;
 
 namespace detail {
   class AttributeRecord_Impl;
@@ -68,6 +69,8 @@ OPENSTUDIO_ENUM( AttributeRecordColumns,
   ((attributeVectorIndex)(INTEGER)(14))
   ((algorithmRecordId)(INTEGER)(15))
   ((variableRecordId)(INTEGER)(16))
+  ((source)(TEXT)(17))
+  ((dataPointRecordId)(INTEGER)(18))
 );
 
 /** AttributeRecord is an ObjectRecord that serializes an Attribute. An Attribute is a name-value 
@@ -96,6 +99,9 @@ class PROJECT_API AttributeRecord : public ObjectRecord {
 
   AttributeRecord(const Attribute& attribute,
                   const VariableRecord& variableRecord);
+
+  AttributeRecord(const Attribute& attribute,
+                  const DataPointRecord& dataPointRecord);
 
   /// constructor from query, throws if bad query
   AttributeRecord(const QSqlQuery& query, ProjectDatabase& database);
@@ -136,6 +142,9 @@ class PROJECT_API AttributeRecord : public ObjectRecord {
 
   /** Returns the VariableRecord that parents this AttributeRecord. */
   boost::optional<VariableRecord> variableRecord() const;
+  
+  /** Returns the DataPointRecord that parents this AttributeRecord. */
+  boost::optional<DataPointRecord> dataPointRecord() const;
 
   // for verifying after construction
   boost::optional<int> parentAttributeRecordId() const;

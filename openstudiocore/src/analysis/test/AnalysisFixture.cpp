@@ -423,7 +423,6 @@ openstudio::analysis::Analysis AnalysisFixture::analysis1(AnalysisState state) {
                         FileReference(toPath("myProject/fakeDataPoint/71-Ruby-0/out.osm")),
                         FileReference(toPath("myProject/fakeDataPoint/72-ModelToIdf-0/out.idf")),
                         FileReference(toPath("myProject/fakeDataPoint/74-EnergyPlus-0/eplusout.sql")),
-                        FileReferenceVector(1u,FileReference(toPath("myProject/fakeDataPoint/75-OpenStudioPostProcess-0/report.xml"))),
                         job,
                         std::vector<openstudio::path>(),
                         tags,

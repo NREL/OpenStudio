@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -39,8 +39,8 @@ namespace detail {
 
 } // detail
 
-/** SetpointManagerOutdoorAirReset is a HVACComponent that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirReset'. */
-class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
+/** SetpointManagerOutdoorAirReset is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:OutdoorAirReset'. */
+class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
   public:
 
   explicit SetpointManagerOutdoorAirReset(const Model& model);
@@ -59,7 +59,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public HVACComponent {
 
   bool isControlVariableDefaulted() const;
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   void resetControlVariable();
 

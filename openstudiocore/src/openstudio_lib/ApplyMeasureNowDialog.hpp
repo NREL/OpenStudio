@@ -68,9 +68,11 @@ public:
 
   QSize sizeHint() const;
 
-  void displayMeasure();  
-  
+  void displayMeasure();
+
   QSharedPointer<EditController> m_editController;
+
+  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
 protected slots:
 
@@ -83,22 +85,20 @@ protected slots:
 protected:
 
   void closeEvent(QCloseEvent * event);
-  
+
 private slots:
 
   void disableOkButton(bool disable);
 
-  void runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus);
-
   void requestReload();
 
-  void showStdError();
+  void showAdvancedOutput();
 
-  void showStdOut();
+  void displayResults();
 
 signals:
 
-  void reloadFile(const QString& fileToLoad, bool modified, int startTabIndex = 0);
+  void reloadFile(const QString& fileToLoad, bool modified, bool saveCurrentTabs);
 
   void toolsUpdated();
 
@@ -108,9 +108,9 @@ private:
 
   void runMeasure();
 
-  void displayResults();
-
   void searchForExistingResults(const openstudio::path &t_runDir);
+
+  void removeWorkingDir();
 
   boost::optional<BCLMeasure> m_bclMeasure;
 
@@ -121,8 +121,6 @@ private:
   boost::optional<model::Model> m_model;
 
   boost::optional<openstudio::path> m_reloadPath;
-
-  QSharedPointer<LocalLibraryController> m_localLibraryController;
 
   QStackedWidget * m_mainPaneStackedWidget;
 
@@ -146,15 +144,11 @@ private:
 
   QLabel * m_jobPath;
 
-  bool m_stopRequested;
+  QPushButton * m_showAdvancedOutput;
 
-  QPushButton * m_showStdError;
+  QString m_advancedOutput;
 
-  QPushButton * m_showStdOut;
-
-  QString m_stdError;
-
-  QString m_stdOut;
+  openstudio::path m_workingDir;
 
 };
 

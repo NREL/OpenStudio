@@ -62,6 +62,9 @@ namespace detail {
     AttributeRecord_Impl(const Attribute& attribute,
                          const VariableRecord& variableRecord);
 
+    AttributeRecord_Impl(const Attribute& attribute,
+                         const DataPointRecord& dataPointRecord);
+
     /// constructor from sql query, throws if bad query
     AttributeRecord_Impl(const QSqlQuery& query, const ProjectDatabase& database);
 
@@ -107,6 +110,9 @@ namespace detail {
 
     /** Returns the VariableRecord that parents this AttributeRecord. */
     boost::optional<VariableRecord> variableRecord() const;
+    
+    /** Returns the DataPointRecord that parents this AttributeRecord. */
+    boost::optional<DataPointRecord> dataPointRecord() const;
 
     // for verifying after construction
     boost::optional<int> parentAttributeRecordId() const;
@@ -180,6 +186,8 @@ namespace detail {
     boost::optional<int> m_attributeVectorIndex;
     boost::optional<int> m_algorithmRecordId;
     boost::optional<int> m_variableRecordId;
+    std::string m_source;
+    boost::optional<int> m_dataPointRecordId;
 
     boost::optional<int> m_lastFileReferenceRecordId;
     boost::optional<int> m_lastParentAttributeRecordId;
@@ -190,6 +198,8 @@ namespace detail {
     boost::optional<int> m_lastAttributeVectorIndex;
     boost::optional<int> m_lastAlgorithmRecordId;
     boost::optional<int> m_lastVariableRecordId;
+    std::string m_lastSource;
+    boost::optional<int> m_lastDataPointRecordId;
 
     void storeAttribute(const Attribute& attribute);
   };

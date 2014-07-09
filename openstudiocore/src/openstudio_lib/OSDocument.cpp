@@ -126,7 +126,8 @@ OSDocument::OSDocument( openstudio::model::Model library,
                         openstudio::model::Model hvacLibrary,
                         const openstudio::path &resourcesPath,
                         openstudio::model::OptionalModel model,
-                        QString filePath, bool isPlugin )
+                        QString filePath, bool isPlugin, 
+                        int startTabIndex, int startSubTabIndex)
   : OSQObjectController(),
     m_compLibrary(library),
     m_hvacCompLibrary(hvacLibrary),
@@ -135,7 +136,9 @@ OSDocument::OSDocument( openstudio::model::Model library,
     m_onlineBclDialog(NULL),
     m_localLibraryDialog(NULL),
     m_savePath(filePath),
-    m_isPlugin(isPlugin)
+    m_isPlugin(isPlugin),
+    m_startTabIndex(startTabIndex),
+    m_startSubTabIndex(startSubTabIndex)
 {
   bool isConnected = false;
 
@@ -314,7 +317,7 @@ OSDocument::OSDocument( openstudio::model::Model library,
   OS_ASSERT(isConnected);
 
   // set the model, this will create widgets
-  setModel(*model, modifiedOnLoad);
+  setModel(*model, modifiedOnLoad, false);
 
   // connect signals to main window
   isConnected = connect(m_mainWindow, SIGNAL(downloadComponentsClicked()), this, SLOT(openBclDlg()));
@@ -379,9 +382,11 @@ OSDocument::OSDocument( openstudio::model::Model library,
   isConnected = QObject::connect(this, SIGNAL(openLibDlgClicked()), this, SLOT(openLibDlg()));
   OS_ASSERT(isConnected);
 
-  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
+  // call to setModel will register this
+  //QTimer::singleShot(0, this, SLOT(showStartTabAndStartSubTab())); 
 
-  QTimer::singleShot(0, this, SLOT(showFirstTab())); 
+  // update window path after the dialog is shown
+  QTimer::singleShot(0, this, SLOT(updateWindowFilePath())); 
 }
 
 //void OSDocument::showRubyConsole()
@@ -404,18 +409,39 @@ OSDocument::~OSDocument()
   removeDir(m_modelTempDir);
 }
   
-void OSDocument::showFirstTab()
+//void OSDocument::showFirstTab()
+//{
+//  m_mainWindow->selectVerticalTab(SITE);
+//
+//  m_mainWindow->show();
+//}
+
+void OSDocument::showStartTabAndStartSubTab()
 {
-  m_mainWindow->selectVerticalTab(SITE);
+  m_mainWindow->selectVerticalTabByIndex(m_startTabIndex);
+
+  MainTabView* mainTabView = m_mainWindow->verticalTabByIndex(m_startTabIndex);
+  if (mainTabView){
+    mainTabView->selectSubTabByIndex(m_startSubTabIndex);
+  }
 
   m_mainWindow->show();
 }
-  
-void OSDocument::showTab(int tabIndex)
-{
-  m_mainWindow->selectVerticalTabByIndex(tabIndex);
 
-  m_mainWindow->show();
+//void OSDocument::showTab(int tabIndex)
+//{
+//  m_mainWindow->selectVerticalTabByIndex(tabIndex);
+//}
+
+int OSDocument::subTabIndex()
+{
+  int tabIndex = verticalTabIndex();
+  MainTabView* mainTabView = m_mainWindow->verticalTabByIndex(tabIndex);
+  if(mainTabView){
+    return mainTabView->subTabIndex();
+  } else {
+    return -1;
+  }
 }
 
 void OSDocument::initializeModel()
@@ -448,7 +474,7 @@ model::Model OSDocument::model()
   return m_model;
 }
 
-void OSDocument::setModel(const model::Model& model, bool modified)
+void OSDocument::setModel(const model::Model& model, bool modified, bool saveCurrentTabs)
 {
   bool isConnected = false;
 
@@ -456,15 +482,16 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   m_mainWindow->setVisible(false);
   openstudio::OSAppBase * app = OSAppBase::instance();
   app->waitDialog()->setVisible(true);
+  app->processEvents();
 
   bool isIP = m_mainWindow->displayIP();
 
   m_model = model;
 
-  int startTabIndex = 0;
   std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
-  if(currentDocument){
-    startTabIndex = app->currentDocument()->verticalTabIndex();
+  if(currentDocument && saveCurrentTabs){
+    m_startTabIndex = app->currentDocument()->verticalTabIndex();
+    m_startSubTabIndex = app->currentDocument()->subTabIndex();
   }
 
   // Main Right Column
@@ -821,12 +848,7 @@ void OSDocument::setModel(const model::Model& model, bool modified)
   app->waitDialog()->setVisible(false);
   m_mainWindow->setVisible(wasVisible);
 
-  if(currentDocument){
-    app->currentDocument()->showTab(startTabIndex);
-  } else {
-    QTimer::singleShot(0, this, SLOT(showFirstTab())); 
-  }
-
+  QTimer::singleShot(0, this, SLOT(showStartTabAndStartSubTab())); 
 }
 
 runmanager::RunManager OSDocument::runManager() {
@@ -930,66 +952,66 @@ void OSDocument::onVerticalTabSelected(int verticalId)
   switch( m_mainTabId )
   {
     case SITE:
-      m_subTabId = m_locationTabController->mainContentWidget()->currentId();
+      m_subTabId = m_locationTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForSiteSubTab(m_subTabId);
       break;
     case SCHEDULES:
-      m_subTabId = m_schedulesTabController->mainContentWidget()->currentId();
+      m_subTabId = m_schedulesTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForSchedulesSubTab(m_subTabId);
       break;
     case CONSTRUCTIONS:
-      m_subTabId = m_constructionsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_constructionsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForConstructionsSubTab(m_subTabId);
       break;
     case LOADS:
-      m_subTabId = m_loadsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_loadsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForLoadsSubTab(m_subTabId);
       break;
     case SPACE_TYPES:
-      m_subTabId = m_spaceTypesTabController->mainContentWidget()->currentId();
+      m_subTabId = m_spaceTypesTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForSpaceTypesSubTab(m_subTabId);
       break;
     case BUILDING_STORIES:
-      m_subTabId = m_buildingStoriesTabController->mainContentWidget()->currentId();
+      m_subTabId = m_buildingStoriesTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForBuildingStoriesSubTab(m_subTabId);
       break;
     case FACILITY:
-      m_subTabId = m_facilityTabController->mainContentWidget()->currentId();
+      m_subTabId = m_facilityTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForFacilitySubTab(m_subTabId);
       break;
     case THERMAL_ZONES:
-      m_subTabId = m_thermalZonesTabController->mainContentWidget()->currentId();
+      m_subTabId = m_thermalZonesTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForThermalZonesSubTab(m_subTabId);
       break;
     case HVAC_SYSTEMS:
-      m_subTabId = m_hvacSystemsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_hvacSystemsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForHVACSystemsSubTab(m_subTabId);
       m_hvacSystemsTabController->clearSceneSelection();
       break;
     case BUILDING_SUMMARY:
-      m_subTabId = m_summaryTabController->mainContentWidget()->currentId();
+      m_subTabId = m_summaryTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForBuildingSummarySubTab(m_subTabId);
       break;
     case OUTPUT_VARIABLES:
-      m_subTabId = m_variablesTabController->mainContentWidget()->currentId();
+      m_subTabId = m_variablesTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForOutputVariablesSubTab(m_subTabId);
       break;
     case SIMULATION_SETTINGS:
-      m_subTabId = m_simSettingsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_simSettingsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForSimulationSettingsSubTab(m_subTabId);
       break;
     case RUBY_SCRIPTS:
       // Do special stuff here to hide "My Model" tab
       m_mainRightColumnController->hideMyModelTab(true);
-      m_subTabId = m_scriptsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_scriptsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForScriptsSubTab(m_subTabId);
       break;
     case RUN_SIMULATION:
-      m_subTabId = m_runTabController->mainContentWidget()->currentId();
+      m_subTabId = m_runTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForRunSimulationSubTab(m_subTabId);
       break;
     case RESULTS_SUMMARY:
-      m_subTabId = m_resultsTabController->mainContentWidget()->currentId();
+      m_subTabId = m_resultsTabController->mainContentWidget()->subTabId();
       m_mainRightColumnController->configureForResultsSummarySubTab(m_subTabId);
       break;
     default:
@@ -1016,9 +1038,11 @@ void OSDocument::openSidebar()
 void OSDocument::exportIdf()
 {
 
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
+  
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr("Export Idf"),
-                                                  QDir::homePath(),
+                                                  defaultDir,
                                                   tr("(*.idf)") );
 
   if( ! fileName.isEmpty() )
@@ -1058,9 +1082,11 @@ void OSDocument::exportFile(fileType type)
     OS_ASSERT(false);
   }
 
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
+  
   QString fileName = QFileDialog::getSaveFileName( this->mainWindow(),
                                                   tr(text.toStdString().c_str()),
-                                                  QDir::homePath(),
+                                                  defaultDir,
                                                   tr("(*.xml)") );
 
   if( ! fileName.isEmpty() )
@@ -1192,18 +1218,12 @@ bool OSDocument::saveAs()
 {
   bool fileSaved = false;
 
-  QString filePath, defaultDir;
+  QString defaultDir = savePath().isEmpty() ? mainWindow()->lastPath() : QFileInfo(savePath()).path();
 
-  if (!this->savePath().length()){
-    defaultDir = QDir::homePath();
-  }else{
-    defaultDir = toQString(openstudio::toPath(this->savePath()).parent_path());
-  }
-
-  filePath = QFileDialog::getSaveFileName( this->mainWindow(),
-                                           tr("Save"),
-                                           defaultDir,
-                                           tr("(*.osm)") );
+  QString filePath = QFileDialog::getSaveFileName( this->mainWindow(),
+                                                  tr("Save"),
+                                                  defaultDir,
+                                                  tr("(*.osm)") );
 
   if( ! filePath.isEmpty() )
   {
@@ -1390,8 +1410,8 @@ void OSDocument::openMeasuresDlg()
   if(this->modified()){
 
     QMessageBox * messageBox = new QMessageBox(this->mainWindow());
-    messageBox->setText("Save model?");
-    messageBox->setInformativeText("You must save model before you apply a measure!");
+    messageBox->setText("You must save your model before applying a measure.");
+    messageBox->setInformativeText("Do you want to save your model now?");
     messageBox->setStandardButtons(QMessageBox::Save | QMessageBox::Cancel);
     messageBox->setDefaultButton(QMessageBox::Save);
     messageBox->button(QMessageBox::Save)->setShortcut(QKeySequence(Qt::Key_S));
@@ -1418,11 +1438,17 @@ void OSDocument::openMeasuresDlg()
 
   // open modal dialog
   m_applyMeasureNowDialog = boost::shared_ptr<ApplyMeasureNowDialog>(new ApplyMeasureNowDialog());
-  m_applyMeasureNowDialog->exec();
   
+  // connect signal before exec dialog
   bool isConnected = false;
   isConnected = connect(m_applyMeasureNowDialog.get(), SIGNAL(toolsUpdated()), this, SIGNAL(toolsUpdated()));
   OS_ASSERT(isConnected);
+
+  m_applyMeasureNowDialog->exec();
+
+  // DLM: kill the dialog here as there is logic in the destructor that resets application state
+  // DLM: this seems overly complicated
+  m_applyMeasureNowDialog.reset();
 }
 
 void OSDocument::openChangeMeasuresDirDlg()

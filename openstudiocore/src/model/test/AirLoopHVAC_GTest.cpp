@@ -43,6 +43,7 @@
 #include "../SizingSystem.hpp"
 #include "../SizingSystem_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
 #include "../HVACComponent.hpp"
 #include "../HVACComponent_Impl.hpp"
 #include "../HVACTemplates.hpp"
@@ -194,18 +195,23 @@ TEST_F(ModelFixture,AirLoopHVAC_demandComponents2)
 TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
 {
   Model model = Model();
-  OptionalModelObject modelObject;
 
   AirLoopHVAC airLoopHVAC = AirLoopHVAC(model);
   ThermalZone thermalZone = ThermalZone(model);
   ThermalZone thermalZone2 = ThermalZone(model);
   ScheduleCompact scheduleCompact = ScheduleCompact(model);
-  AirTerminalSingleDuctUncontrolled singleDuctTerminal = 
-                                                         AirTerminalSingleDuctUncontrolled(model,scheduleCompact);
+  AirTerminalSingleDuctUncontrolled singleDuctTerminal(model,scheduleCompact);
+  SetpointManagerSingleZoneReheat spm(model);
+
+  Node outletNode = airLoopHVAC.supplyOutletNode();
 
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal));
+
+  spm.addToNode(outletNode);
+
+  EXPECT_EQ(thermalZone, spm.controlZone());
 
   EXPECT_EQ( unsigned(8),airLoopHVAC.demandComponents().size() );
 
@@ -220,6 +226,9 @@ TEST_F(ModelFixture,AirLoopHVAC_removeBranchForZone)
   EXPECT_TRUE(airLoopHVAC.removeBranchForZone(thermalZone));
 
   EXPECT_EQ( unsigned(5),airLoopHVAC.demandComponents().size() );
+
+  EXPECT_NE(thermalZone, spm.controlZone());
+  EXPECT_FALSE(spm.controlZone());
 }
 
 TEST_F(ModelFixture,ThermalZone_remove)

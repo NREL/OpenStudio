@@ -33,6 +33,7 @@
 
 #include <QDir>
 #include <QDateTime>
+#include <QMutexLocker>
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
@@ -86,11 +87,11 @@ namespace detail {
     : m_tool(t_tool), m_requiredFiles(t_requiredFiles),
       m_parameters(t_parameters), m_outdir(t_outdir),
       m_expectedOutputFiles(t_expectedOutputFiles),
-      m_stdin(t_stdin)
+      m_stdin(t_stdin),
+      m_copiedRequiredFiles(copyRequiredFiles(t_tool, t_requiredFiles, t_basePath))
   {
     LOG(Info, "Creating LocalProcess");
 
-    using namespace boost::filesystem;
 
     QFileInfo qfi(openstudio::toQString(t_tool.localBinPath));
     if (!qfi.isFile() || !qfi.isExecutable())
@@ -98,68 +99,6 @@ namespace detail {
       throw std::runtime_error("Unable to find valid executable while creating local process: " + toString(t_tool.localBinPath.native()));
     }
 
-    for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = m_requiredFiles.begin();
-         itr != m_requiredFiles.end();
-         ++itr)
-    {
-      openstudio::path frompath = itr->first;
-      if (!frompath.has_root_path())
-      {
-        // we are dealing with a relative dir, relative dirs are
-        // first evaluated with respect to the basePath, and if they are not found
-        // there, then with respect to the tool path
-        openstudio::path baserelative = t_basePath / frompath;
-
-        if (boost::filesystem::exists(baserelative))
-        {
-          frompath = baserelative;
-        } else {
-          frompath = m_tool.localBinPath.parent_path() / frompath;
-        }
-      }
-
-      if (exists(frompath) && !is_directory(frompath))
-      {
-        create_directories(itr->second.parent_path());
-        if (frompath != itr->second) {
-          remove(itr->second);
-          LOG(Debug, "Copying required file from " << openstudio::toString(frompath) << " to " << openstudio::toString(itr->second));
-          copy_file(frompath, itr->second, copy_option::overwrite_if_exists);
-          m_copiedRequiredFiles.insert(itr->second);
-        }
-      } else if (exists(frompath) && is_directory(frompath)) {
-        typedef boost::filesystem::directory_iterator diritr;
-
-        diritr begin(frompath);
-        diritr end;
-
-        create_directories(itr->second);
-        m_copiedRequiredFiles.insert(itr->second);
-
-        while (begin != end)
-        {
-          if (!is_directory(*begin))
-          {
-            openstudio::path p = *begin;
-            openstudio::path::const_iterator fileitr = p.end();
-            if (fileitr != p.begin())
-            {
-              --fileitr;
-              openstudio::path f = itr->second / *fileitr;
-              remove(f);
-              LOG(Debug, "Copying required file from " << openstudio::toString(*begin) << " to " << openstudio::toString(f));
-
-              copy_file(openstudio::path(*begin), f, copy_option::overwrite_if_exists);
-              m_copiedRequiredFiles.insert(f);
-            }
-          }
-          ++begin;
-        }
-
-      } else {
-        throw std::runtime_error("Unable to find required file while creating LocalProcess: " + toString(itr->first) + ": " + toString(itr->second) + " basepath: " + toString(t_basePath));
-      }
-    }
 
     connect(&m_process, SIGNAL(error(QProcess::ProcessError)), 
         this, SLOT(processError(QProcess::ProcessError)));
@@ -189,6 +128,79 @@ namespace detail {
     directoryChanged(openstudio::toQString(m_outdir));
   }
 
+  std::set<openstudio::path> LocalProcess::copyRequiredFiles(const ToolInfo &t_tool, const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles, 
+      const openstudio::path &t_basePath)
+  {
+    using namespace boost::filesystem;
+    std::set<openstudio::path> retval;
+
+    for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = t_requiredFiles.begin();
+         itr != t_requiredFiles.end();
+         ++itr)
+    {
+      openstudio::path frompath = itr->first;
+      if (!frompath.has_root_path())
+      {
+        // we are dealing with a relative dir, relative dirs are
+        // first evaluated with respect to the basePath, and if they are not found
+        // there, then with respect to the tool path
+        openstudio::path baserelative = t_basePath / frompath;
+
+        if (boost::filesystem::exists(baserelative))
+        {
+          frompath = baserelative;
+        } else {
+          frompath = t_tool.localBinPath.parent_path() / frompath;
+        }
+      }
+
+      if (exists(frompath) && !is_directory(frompath))
+      {
+        create_directories(itr->second.parent_path());
+        if (frompath != itr->second) {
+          remove(itr->second);
+          LOG(Debug, "Copying required file from " << openstudio::toString(frompath) << " to " << openstudio::toString(itr->second));
+          copy_file(frompath, itr->second, copy_option::overwrite_if_exists);
+          retval.insert(itr->second);
+        }
+      } else if (exists(frompath) && is_directory(frompath)) {
+        typedef boost::filesystem::directory_iterator diritr;
+
+        diritr begin(frompath);
+        diritr end;
+
+        create_directories(itr->second);
+        retval.insert(itr->second);
+
+        while (begin != end)
+        {
+          if (!is_directory(*begin))
+          {
+            openstudio::path p = *begin;
+            openstudio::path::const_iterator fileitr = p.end();
+            if (fileitr != p.begin())
+            {
+              --fileitr;
+              openstudio::path f = itr->second / *fileitr;
+              remove(f);
+              LOG(Debug, "Copying required file from " << openstudio::toString(*begin) << " to " << openstudio::toString(f));
+
+              copy_file(openstudio::path(*begin), f, copy_option::overwrite_if_exists);
+              retval.insert(f);
+            }
+          }
+          ++begin;
+        }
+
+      } else {
+        throw std::runtime_error("Unable to find required file while creating LocalProcess: " + toString(itr->first) + ": " + toString(itr->second) + " basepath: " + toString(t_basePath));
+      }
+    }
+
+    return retval;
+  }
+
+
   void LocalProcess::directoryChanged()
   {
     directoryChanged(openstudio::toQString(m_outdir));
@@ -197,20 +209,10 @@ namespace detail {
   void LocalProcess::start()
   {
     directoryChanged(openstudio::toQString(m_outdir));
+
     m_fileCheckTimer.start(2000); // check for updated files every 2 seconds.
     connect(&m_fileCheckTimer, SIGNAL(timeout()), this, SLOT(directoryChanged()));
-//    m_outfiles = dirFiles(openstudio::toQString(m_outdir));
 
-//    m_fswatcher = std::shared_ptr<QFileSystemWatcher>(new QFileSystemWatcher());
-
-//    connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)),
-//         this, SLOT(directoryChanged(const QString &)));
-//    connect(m_fswatcher.get(), SIGNAL(fileChanged(const QString &)),
-//         this, SLOT(fileChanged(const QString &)));
-
-//    m_fswatcher->addPath(openstudio::toQString(m_outdir));
-
- //   monitorFiles(m_outfiles.begin(), m_outfiles.end());
 
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Starting));
 
@@ -317,7 +319,7 @@ namespace detail {
 
   std::vector<FileInfo> LocalProcess::outputFiles() const
   {
-
+    QMutexLocker l(&m_mutex);
     return std::vector<FileInfo>(m_outfiles.begin(), m_outfiles.end());
   }
 
@@ -355,13 +357,14 @@ namespace detail {
 
     std::vector<FileSet::value_type> diff;
 
-    std::set_symmetric_difference(fs.begin(), fs.end(), 
-                        m_outfiles.begin(), m_outfiles.end(),
-                        std::back_inserter(diff));
+    {
+      QMutexLocker l(&m_mutex);
+      std::set_symmetric_difference(fs.begin(), fs.end(), 
+          m_outfiles.begin(), m_outfiles.end(),
+          std::back_inserter(diff));
 
-    m_outfiles = fs;
-
-//    monitorFiles(diff.begin(), diff.end());
+      m_outfiles = fs;
+    }
 
     std::for_each(diff.begin(), diff.end(), std::bind(&LocalProcess::emitUpdatedFileInfo, this, std::placeholders::_1));
 
@@ -458,6 +461,7 @@ namespace detail {
   void LocalProcess::processZombied(QProcess::ProcessError /*t_e*/)
   {
     m_fileCheckTimer.stop();
+
     LOG(Info, "Process appears to be zombied"); 
 
     // but this isn't necessarily an error because it's probably due to miscaught signals.
@@ -485,9 +489,12 @@ namespace detail {
         << " outdirexists: " << outdirfi.isFile()
         << " outdirisdirectory: " << outdirfi.isDir());
 
+    QCoreApplication::processEvents();
+    directoryChanged(openstudio::toQString(m_outdir));
 
+    QProcess::ProcessState state = m_process.state();
 
-    if (m_process.state() != QProcess::Running
+    if (state != QProcess::Running
         && t_e == QProcess::WriteError)
     {
       LOG(Info, "WriteError occurred when process was not running, ignoring it");
@@ -496,9 +503,7 @@ namespace detail {
       emit error(t_e);
     }
 
-    QCoreApplication::processEvents();
-    directoryChanged(openstudio::toQString(m_outdir));
-  }
+ }
 
   void LocalProcess::handleOutput(const QByteArray &qba, bool stderror)
   {
@@ -516,10 +521,9 @@ namespace detail {
   void LocalProcess::processFinished(int t_exitCode, QProcess::ExitStatus t_exitStatus)
   {
     m_fileCheckTimer.stop();
+
     directoryChanged(openstudio::toQString(m_outdir));
     emitStatusChanged(AdvancedStatus(AdvancedStatusEnum::Finishing));
-
-    m_fswatcher.reset();
 
     if (!stopped())
     {

@@ -1760,11 +1760,12 @@ namespace detail {
 
           for( const auto & supplyNode : supplyNodes )
           {
-            if( boost::optional<SetpointManagerSingleZoneReheat> spm = supplyNode.cast<Node>().getSetpointManagerSingleZoneReheat() )
-            {
-              if( ! spm->controlZone() )
+            std::vector<SetpointManagerSingleZoneReheat> setpointManagers = subsetCastVector<SetpointManagerSingleZoneReheat>(supplyNode.cast<Node>().setpointManagers());
+            if( ! setpointManagers.empty() ) {
+              SetpointManagerSingleZoneReheat spm = setpointManagers.front();
+              if( ! spm.controlZone() )
               {
-                spm->setControlZone(thisobj);
+                spm.setControlZone(thisobj);
               }
             }
           }

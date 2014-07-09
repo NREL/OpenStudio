@@ -64,6 +64,10 @@ class PatMainWindow : public QMainWindow
 
   void hideRightColumn();
 
+  QString lastPath() const;
+
+  void setLastPath(const QString& t_lastPath);
+
   signals:
 
   void newClicked();
@@ -119,6 +123,8 @@ class PatMainWindow : public QMainWindow
   QStackedWidget * m_mainRightColumnContainer;
 
   QSplitter * m_mainSplitter;
+
+  QString m_lastPath;
 
   private slots:
   

@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERFOLLOWOUTDOORAIRTEMPERATURE_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -35,13 +35,13 @@ class SetpointManagerFollowOutdoorAirTemperature_Impl;
 
 }
 
-/** SetpointManagerFollowOutdoorAirTemperature is an HVACComponent that wraps the IDD object
+/** SetpointManagerFollowOutdoorAirTemperature is an SetpointManager that wraps the IDD object
  *  named "OS:SetpointManager:FollowOutdoorAirTemperature"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManagerFollowOutdoorAirTemperature object.
  */
-class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public HVACComponent {
+class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public SetpointManager {
  public:
   /** @name Constructors and Destructors */
   //@{  
@@ -66,7 +66,7 @@ class MODEL_API SetpointManagerFollowOutdoorAirTemperature : public HVACComponen
   std::string controlVariable() const;
 
   /** Sets the Control Variable **/
-  void setControlVariable(const std::string & value);
+  bool setControlVariable(const std::string & value);
 
   std::string referenceTemperatureType() const;
 

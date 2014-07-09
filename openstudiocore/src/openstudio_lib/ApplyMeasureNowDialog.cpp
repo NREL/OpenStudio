@@ -76,23 +76,27 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_argumentsFailedTextEdit(0),
   m_jobItemView(0),
   m_timer(0),
-  m_stopRequested(false),
-  m_showStdError(0),
-  m_showStdOut(0),
-  m_stdError(QString()),
-  m_stdOut(QString())
+  m_showAdvancedOutput(0),
+  m_advancedOutput(QString()),
+  m_workingDir(openstudio::path())
 {
   setWindowTitle("Apply Measure Now");
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   createWidgets();
 
   openstudio::OSAppBase * app = OSAppBase::instance();
-  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, bool, int)), app, SLOT(reloadFile(const QString&, bool, int)), Qt::QueuedConnection);
+  bool isConnected = connect(this, SIGNAL(reloadFile(const QString&, bool, bool)), app, SLOT(reloadFile(const QString&, bool, bool)), Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 }
 
 ApplyMeasureNowDialog::~ApplyMeasureNowDialog()
 {
+  // DLM: would be nice if this was not needed..
+  // restore app state, the app's library controller was swapped out in createWidgets
+  openstudio::OSAppBase * app = OSAppBase::instance();
+  if (app){
+    app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+  }
 }
 
 QSize ApplyMeasureNowDialog::sizeHint() const
@@ -123,6 +127,8 @@ void ApplyMeasureNowDialog::createWidgets()
   bool onlyShowModelMeasures = true;
   m_localLibraryController = QSharedPointer<LocalLibraryController>( new LocalLibraryController(app,onlyShowModelMeasures) );
   m_localLibraryController->localLibraryView->setStyleSheet("QStackedWidget { border-top: 0px; }");
+
+  // DLM: this is changing application state, needs to be undone in the destructor
   app->measureManager().setLibraryController(m_localLibraryController); 
   app->measureManager().updateMeasuresLists();
 
@@ -179,21 +185,16 @@ void ApplyMeasureNowDialog::createWidgets()
   layout->addWidget(m_jobPath);
   layout->addWidget(m_jobItemView,0,Qt::AlignTop);
 
-  m_showStdError = new QPushButton("Show StdError Messages"); 
-  isConnected = connect(m_showStdError,SIGNAL(clicked(bool)),this,SLOT(showStdError()));
+  layout->addStretch(); 
+
+  m_showAdvancedOutput = new QPushButton("Advanced Output"); 
+  isConnected = connect(m_showAdvancedOutput,SIGNAL(clicked(bool)),this,SLOT(showAdvancedOutput()));
   OS_ASSERT(isConnected);
 
-  m_showStdOut = new QPushButton("Show StdOut Messages");
-  isConnected = connect(m_showStdOut,SIGNAL(clicked(bool)),this,SLOT(showStdOut()));
-  OS_ASSERT(isConnected);
-
-  layout->addStretch();
+  //layout->addStretch();
 
   QHBoxLayout * hLayout = new QHBoxLayout();
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdError);
-  //hLayout->addStretch();
-  hLayout->addWidget(m_showStdOut);
+  hLayout->addWidget(m_showAdvancedOutput);
   hLayout->addStretch();
   layout->addLayout(hLayout);
 
@@ -356,20 +357,18 @@ void ApplyMeasureNowDialog::runMeasure()
   OS_ASSERT(m_model);
 
   openstudio::OSAppBase * app = OSAppBase::instance();
-  openstudio::path outDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
-  openstudio::path modelPath = outDir / openstudio::toPath("modelClone.osm");
+  m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
+  openstudio::path modelPath = m_workingDir / openstudio::toPath("modelClone.osm");
   openstudio::path epwPath; // DLM: todo look at how this is done in the run tab
 
-  bool success = false;
-  success = removeDirectory(outDir);
-  OS_ASSERT(success);
+  removeWorkingDir();
   
   // save cloned model to temp directory
   m_model->save(modelPath,true); 
 
   // remove? this is shown only in debug (EW)
   QString path("Measure Output Location: ");
-  path.append(toQString(outDir));
+  path.append(toQString(m_workingDir));
   m_jobPath->setText(path);
 
   analysis::RubyMeasure rubyMeasure = m_currentMeasureItem->measure();
@@ -380,13 +379,8 @@ void ApplyMeasureNowDialog::runMeasure()
 
   runmanager::RubyJobBuilder rjb(*m_bclMeasure, rubyMeasure.arguments());
 
-  openstudio::path p = getApplicationRunDirectory();
-  QString arg("-I");
-  arg.append(toQString(p));
-  rjb.addToolArgument(arg.toStdString());
-
-  p = getOpenStudioRubyIncludePath();
-  arg = "-I";
+  openstudio::path p = getOpenStudioRubyIncludePath();
+  QString arg = "-I";
   arg.append(toQString(p));
   rjb.addToolArgument(arg.toStdString());
 
@@ -395,11 +389,7 @@ void ApplyMeasureNowDialog::runMeasure()
   wf.add(co.getTools());
   wf.setInputFiles(modelPath, openstudio::path());
 
-  m_job = wf.create(outDir, modelPath);
-
-  bool isConnected = false;
-  isConnected = m_job->connect(SIGNAL(statusChanged(const openstudio::runmanager::AdvancedStatus&)), this, SLOT(runManagerStatusChange(const openstudio::runmanager::AdvancedStatus&)));
-  OS_ASSERT(isConnected);
+  m_job = wf.create(m_workingDir, modelPath);
 
   // DLM: you could make rm a class member then you would not have to call waitForFinished here
   runmanager::RunManager rm;
@@ -408,18 +398,8 @@ void ApplyMeasureNowDialog::runMeasure()
   std::vector<runmanager::Job> jobs = rm.getJobs();
   OS_ASSERT(jobs.size() == 1);
   rm.waitForFinished ();
-}
 
-void ApplyMeasureNowDialog::runManagerStatusChange(const openstudio::runmanager::AdvancedStatus& advancedStatus)
-{
-  if(advancedStatus.value() == runmanager::AdvancedStatusEnum::Idle){
-    if(m_stopRequested == true){
-      m_stopRequested = false;
-      this->okButton()->setDisabled(true);
-    }
-    this->backButton()->setEnabled(true);
-    displayResults();
-  }
+  QTimer::singleShot(0, this, SLOT(displayResults()));
 }
 
 void ApplyMeasureNowDialog::displayResults()
@@ -433,6 +413,7 @@ void ApplyMeasureNowDialog::displayResults()
 
   m_mainPaneStackedWidget->setCurrentIndex(m_outputPageIdx);
   m_timer->stop();
+
   this->okButton()->setText(ACCEPT_CHANGES);
   this->okButton()->show();
   if (m_reloadPath){
@@ -442,8 +423,7 @@ void ApplyMeasureNowDialog::displayResults()
   }
   this->backButton()->show();
   this->backButton()->setEnabled(true);
-  m_showStdError->setEnabled(false);
-  m_showStdOut->setEnabled(false);
+  this->cancelButton()->setEnabled(true);
 
   runmanager::JobErrors jobErrors = m_job->errors();
   OS_ASSERT(m_jobItemView);
@@ -454,7 +434,7 @@ void ApplyMeasureNowDialog::displayResults()
     this->okButton()->setDisabled(true);
   }
 
-  m_stdError.clear();
+  m_advancedOutput.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -463,19 +443,12 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdErrPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdError = toQString(stdMessage);
+      m_advancedOutput = toQString(stdMessage);
+      m_advancedOutput += QString("\n");
     }catch(std::exception&){
-    }
-
-    if (m_stdError.isEmpty()){
-      m_showStdError->setEnabled(false);
-    }else{
-      m_showStdError->setEnabled(true);
-      
     }
   //}
 
-  m_stdOut.clear();
   // DLM: always show these files if they exist?
   //if(!jobErrors.succeeded()){
     try{
@@ -484,17 +457,16 @@ void ApplyMeasureNowDialog::displayResults()
       std::ifstream ifs(toString(stdOutPath).c_str());
       std::string stdMessage((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
       ifs.close();
-      m_stdOut = toQString(stdMessage);
+      m_advancedOutput += toQString(stdMessage);
     }catch(std::exception&){
     }
-
-    if (m_stdOut.isEmpty()){
-      m_showStdOut->setEnabled(false);
-    }else{
-      m_showStdOut->setEnabled(true);
-    }
   //}
-  
+ 
+}
+
+void ApplyMeasureNowDialog::removeWorkingDir()
+{
+  removeDirectory(m_workingDir);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -707,18 +679,18 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
   m_dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  Q_FOREACH(const std::string& initialCondition, initialConditions){
+  for (const std::string& initialCondition : initialConditions){
     m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  Q_FOREACH(const std::string& finalCondition, finalConditions){
+  for (const std::string& finalCondition : finalConditions){
     m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   m_dataPointJobHeaderView->setNumErrors(errors.size());
-  Q_FOREACH(const std::string& errorMessage, errors){
+  for (const std::string& errorMessage : errors){
     m_dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -741,12 +713,12 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
 
   std::vector<std::string> warnings = jobErrors.warnings();
   m_dataPointJobHeaderView->setNumWarnings(warnings.size());
-  Q_FOREACH(const std::string& warningMessage, warnings){
+  for (const std::string& warningMessage : warnings){
     m_dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  Q_FOREACH(const std::string& infoMessage, infos){
+  for (const std::string& infoMessage : infos){
     m_dataPointJobContentView->addInfoMessage(infoMessage);
   }
 
@@ -766,7 +738,7 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
   } else if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx) {
     if(m_job){
       m_job->requestStop();
-      m_stopRequested = true;
+      this->cancelButton()->setDisabled(true);
       this->okButton()->setDisabled(true);
       return;
     }
@@ -779,8 +751,8 @@ void ApplyMeasureNowDialog::on_cancelButton(bool checked)
     m_mainPaneStackedWidget->setCurrentIndex(m_inputPageIdx);
   }
 
-  openstudio::OSAppBase * app = OSAppBase::instance();
-  app->measureManager().setLibraryController(app->currentDocument()->mainRightColumnController()->measureLibraryController()); 
+  // DLM: m_job->requestStop() might still be working, don't try to delete this here
+  //removeWorkingDir();
 
   OSDialog::on_cancelButton(checked);
 }
@@ -807,13 +779,8 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
     // N/A
     OS_ASSERT(false);
   } else if(m_mainPaneStackedWidget->currentIndex() == m_outputPageIdx) {
-    
-    // hide this widget to prevent any more mouse events
-    // DLM: any way to clear mouse event queue?
-    this->hide();
-
     // reload the model
-    QTimer::singleShot(0, this, SLOT(requestReload()));
+    requestReload();
   }
 }
 
@@ -822,13 +789,24 @@ void ApplyMeasureNowDialog::requestReload()
   // todo: do this in memory without reloading from disk
   OS_ASSERT(m_reloadPath);
   QString fileToLoad = toQString(*m_reloadPath);
-  int startTabIndex = OSAppBase::instance()->currentDocument()->verticalTabIndex();
-  emit reloadFile(fileToLoad, true, startTabIndex);
+  emit reloadFile(fileToLoad, true, true);
+
+  // close the dialog
+  close();
 }
 
 void ApplyMeasureNowDialog::closeEvent(QCloseEvent *e)
 {
-  e->accept(); // TODO
+  //DLM: don't do this here in case we are going to load the model
+  //removeWorkingDir();
+
+  // DLM: do not allow closing window while running
+  if(m_mainPaneStackedWidget->currentIndex() == m_runningPageIdx){
+    e->ignore();
+    return;
+  } 
+
+  e->accept();
 }
 
 void ApplyMeasureNowDialog::disableOkButton(bool disable)
@@ -836,21 +814,12 @@ void ApplyMeasureNowDialog::disableOkButton(bool disable)
   this->okButton()->setDisabled(disable);
 }
 
-void ApplyMeasureNowDialog::showStdError()
+void ApplyMeasureNowDialog::showAdvancedOutput()
 {
-  if(m_stdError.isEmpty()){
-    QMessageBox::information(this, QString("StdError Messages"), QString("No StdError messages."));
+  if(m_advancedOutput.isEmpty()){
+    QMessageBox::information(this, QString("Advanced Output"), QString("No advanced output."));
   }else{
-    QMessageBox::information(this, QString("StdError Messages"), m_stdError);
-  }
-}
-
-void ApplyMeasureNowDialog::showStdOut()
-{
-  if(m_stdOut.isEmpty()){
-    QMessageBox::information(this, QString("StdOut Messages"), QString("No StdOut messages."));
-  }else{
-    QMessageBox::information(this, QString("StdOut Messages"), m_stdOut);
+    QMessageBox::information(this, QString("Advanced Output"), QString("Advanced output:\n") + m_advancedOutput);
   }
 }
 

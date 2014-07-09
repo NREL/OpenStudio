@@ -174,3 +174,66 @@ TEST_F(RunManagerTestFixture, EnergyPlusPostProcessJobRerun)
   EXPECT_GT(secondtime, firsttime);
 }
 
+TEST_F(RunManagerTestFixture, EnergyPlusPreAndPostProcessJob)
+{
+  openstudio::path outdir = openstudio::toPath(QDir::tempPath()) / openstudio::toPath("EnergyPlusPreAndPostProcessJobRunTest");
+  boost::filesystem::create_directories(outdir);
+  openstudio::path db = outdir / openstudio::toPath("EnergyPlusPreAndPostProcessJobRunDB");
+  openstudio::runmanager::RunManager kit(db, true);
+
+  openstudio::path originalfile = outdir / openstudio::toPath("in.osm");
+  openstudio::path infile = outdir / openstudio::toPath("in_short_run.osm");
+  openstudio::path weatherdir = resourcesPath() / openstudio::toPath("runmanager") / openstudio::toPath("USA_CO_Golden-NREL.724666_TMY3.epw");
+
+  openstudio::model::Model m = openstudio::model::exampleModel();
+  m.save(originalfile, true);
+
+
+  boost::optional<IdfFile> idfFile = IdfFile::load(originalfile);
+  ASSERT_TRUE(idfFile);
+  for (IdfObject idfObject : idfFile->getObjectsByType(IddObjectType::RunPeriod)){
+    idfObject.setInt(1, 1);
+    idfObject.setInt(2, 1);
+    idfObject.setInt(3, 1);
+    idfObject.setInt(4, 2);
+  }
+  idfFile->save(infile, true);
+  
+  openstudio::runmanager::Workflow workflow("modeltoidf->energypluspreprocess->energyplus->energypluspostprocess");
+
+  workflow.setInputFiles(infile, weatherdir);
+  
+  // Build list of tools
+  openstudio::runmanager::Tools tools 
+    = openstudio::runmanager::ConfigOptions::makeTools(
+          energyPlusExePath().parent_path(), 
+          openstudio::path(), 
+          openstudio::path(), 
+          openstudio::path(),
+          openstudio::path());
+  workflow.add(tools);
+
+  openstudio::runmanager::Job job = workflow.create(outdir);
+
+  kit.enqueue(job, true);
+
+  kit.waitForFinished();
+
+  openstudio::runmanager::FileInfo file;
+ 
+  ASSERT_NO_THROW(file = job.treeOutputFiles().getLastByFilename("report.xml"));
+
+  boost::optional<Attribute> report = Attribute::loadFromXml(file.fullPath);
+  ASSERT_TRUE(report);
+
+  boost::optional<Attribute> attribute = report->findChildByName("Net Site Energy");
+  ASSERT_TRUE(attribute);
+
+  attribute = report->findChildByName("EndUses.Electricity.Cooling.General");
+  ASSERT_TRUE(attribute);
+
+  file = job.treeOutputFiles().getLastByFilename("eplusout.sql");
+
+  SqlFile sqlFile(file.fullPath);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+}

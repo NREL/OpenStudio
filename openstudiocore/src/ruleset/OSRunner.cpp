@@ -116,8 +116,9 @@ std::map<std::string, OSArgument> OSRunner::getUserInput(std::vector<OSArgument>
 
 void OSRunner::prepareForUserScriptRun(const UserScript& userScript) {
   m_result = OSResult();
+  m_measureName = userScript.name();
   std::stringstream ss;
-  ss << "openstudio.ruleset." << userScript.name();
+  ss << "openstudio.ruleset." << m_measureName;
   m_channel = ss.str();
 }
 
@@ -149,36 +150,40 @@ void OSRunner::registerFinalCondition(const std::string& message) {
   m_result.setFinalCondition(m_channel, message);
 }
 
-void OSRunner::registerAttribute(const Attribute& attribute) {
+void OSRunner::registerAttribute(Attribute& attribute) {
+  attribute.setSource(m_measureName);
   m_result.appendAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, bool value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              bool value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, double value, const std::string& units) {
-  registerAttribute(Attribute(name,value,units));
+  Attribute attribute(name,value,units);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              double value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -188,24 +193,26 @@ void OSRunner::registerValue(const std::string& name,
                              double value,
                              const std::string& units)
 {
-  Attribute attribute = Attribute(name,value,units);
+  Attribute attribute(name,value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, int value, const std::string& units) {
-  registerAttribute(Attribute(name,value,units));
+  Attribute attribute(name,value,units);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              int value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -215,20 +222,21 @@ void OSRunner::registerValue(const std::string& name,
                              int value,
                              const std::string& units)
 {
-  Attribute attribute = Attribute(name,value,units);
+  Attribute attribute(name,value,units);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name, const std::string& value) {
-  registerAttribute(Attribute(name,value));
+  Attribute attribute(name,value);
+  registerAttribute(attribute);
 }
 
 void OSRunner::registerValue(const std::string& name,
                              const std::string& displayName,
                              const std::string& value)
 {
-  Attribute attribute = Attribute(name,value);
+  Attribute attribute(name,value);
   attribute.setDisplayName(displayName);
   registerAttribute(attribute);
 }
@@ -384,7 +392,7 @@ bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_argum
   }
 
   if (result) {
-    for (const Attribute& attribute : argumentValueAttributes) {
+    for (Attribute& attribute : argumentValueAttributes) {
       registerAttribute(attribute);
     }
   }

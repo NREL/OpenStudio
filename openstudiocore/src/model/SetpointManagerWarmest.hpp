@@ -21,7 +21,7 @@
 #define MODEL_SETPOINTMANAGERWARMEST_HPP
 
 #include "ModelAPI.hpp"
-#include "HVACComponent.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -35,8 +35,8 @@ namespace detail {
 
 } // detail
 
-/** SetpointManagerWarmest is a HVACComponent that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
-class MODEL_API SetpointManagerWarmest : public HVACComponent {
+/** SetpointManagerWarmest is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Warmest'. */
+class MODEL_API SetpointManagerWarmest : public SetpointManager {
  public:
 
   explicit SetpointManagerWarmest(const Model& model);
@@ -51,7 +51,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
 
   std::string controlVariable() const;
 
-  bool setControlVariable(std::string controlVariable);
+  bool setControlVariable(const std::string& controlVariable);
 
   double minimumSetpointTemperature() const;
 
@@ -63,7 +63,7 @@ class MODEL_API SetpointManagerWarmest : public HVACComponent {
 
   std::string strategy() const;
 
-  bool setStrategy(std::string strategy);
+  bool setStrategy(const std::string& strategy);
 
   boost::optional<Node> setpointNode() const;
 

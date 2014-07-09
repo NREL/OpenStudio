@@ -240,21 +240,14 @@ baselineTotalSiteEnergy = nil
 baselineAnnualTotalUtilityCost = nil
 baselineCostEstimate = nil
 if run_energyplus
-  xmlOutputDataRecord = testDataPoints[0].xmlOutputDataRecord.get
-  baselineTotalSiteEnergy = xmlOutputDataRecord.getAttributeRecord("totalSiteEnergy").get.attributeValueAsDouble
-  baselineTotalSourceEnergy = xmlOutputDataRecord.getAttributeRecord("totalSourceEnergy").get.attributeValueAsDouble
-  
-  # ETH@20110926 Utility Rates not supported in ReverseTranslator 0.5.0
-  # baselineAnnualTotalUtilityCost = xmlOutputDataRecord.getAttributeRecord("annualTotalUtilityCost").get.attributeValueAsDouble
-  # baselineCostEstimate = xmlOutputDataRecord.getAttributeRecord("costEstimate").get.attributeValueAsDouble
+  dataPoint = testDataPoints[0].dataPoint
+  baselineTotalSiteEnergy = dataPoint.getOutputAttribute("totalSiteEnergy").get.valueAsDouble
+  baselineTotalSourceEnergy = dataPoint.getOutputAttribute("totalSourceEnergy").get.valueAsDouble
   
   row.concat(["windowUValue", "totalSiteEnergy (GJ)", "totalSourceEnergy (GJ)"])
-  # row.concat(["annualTotalUtilityCost ($)", "deltaAnnualTotalUtilityCost ($)"]
-  # row.concat(["costEstimate ($)", "deltaCostEstimate ($)"])
   row.concat(["percentSavings (%)"])
-  # row.concat(["simplePayback (yr)", "5 Year TLCC ($)"])
    
-  attribute = xmlOutputDataRecord.getAttributeRecord("EndUses").get.attribute
+  attribute = dataPoint.getOutputAttribute("EndUses").get
   endUses = OpenStudio::EndUses::fromAttribute(attribute).get
   OpenStudio::EndUses::fuelTypes.each do |fuelType|
     use = endUses.getEndUseByFuelType(fuelType)
@@ -270,34 +263,22 @@ analysisRecord.dataPointRecords.each do |dataPointRecord|
 
   row = []
   
-  xmlOutputDataRecord = dataPointRecord.xmlOutputDataRecords[0]
+  dataPoint = dataPointRecord.dataPoint
 
-  wallInsulationThickness = xmlOutputDataRecord.getAttributeRecord("wallInsulationThickness").get.attributeValueAsDouble
+  wallInsulationThickness = dataPoint.getOutputAttribute("wallInsulationThickness").get.valueAsDouble
   row << wallInsulationThickness.to_s
   
   if run_energyplus
   
     # SqlFile needed to retrieve baseline u-value
-    windowUValue = xmlOutputDataRecord.getAttributeRecord("windowUValue").get.attributeValueAsDouble
+    windowUValue = dataPoint.getOutputAttribute("windowUValue").get.valueAsDouble
     row << windowUValue.to_s
   
-    totalSiteEnergy = xmlOutputDataRecord.getAttributeRecord("totalSiteEnergy").get.attributeValueAsDouble
+    totalSiteEnergy = dataPoint.getOutputAttribute("totalSiteEnergy").get.valueAsDouble
     row << totalSiteEnergy.to_s 
 
-    totalSourceEnergy = xmlOutputDataRecord.getAttributeRecord("totalSourceEnergy").get.attributeValueAsDouble
+    totalSourceEnergy = dataPoint.getOutputAttribute("totalSourceEnergy").get.valueAsDouble
     row << totalSourceEnergy.to_s
-
-    # annualTotalUtilityCost = xmlOutputDataRecord.getAttributeRecord("annualTotalUtilityCost").get.attributeValueAsDouble
-    # row << annualTotalUtilityCost.to_s
-
-    # deltaAnnualTotalUtilityCost = annualTotalUtilityCost - baselineAnnualTotalUtilityCost
-    # row << deltaAnnualTotalUtilityCost.to_s
-
-    # costEstimate = xmlOutputDataRecord.getAttributeRecord("costEstimate").get.attributeValueAsDouble
-    # row << costEstimate.to_s
-
-    # deltaCostEstimate = costEstimate - baselineCostEstimate
-    # row << deltaCostEstimate.to_s
 
     percentSavings = 100.0 * (baselineTotalSiteEnergy - totalSiteEnergy) / baselineTotalSiteEnergy
     row << percentSavings.to_s
