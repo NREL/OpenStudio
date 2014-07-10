@@ -235,7 +235,9 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature).value()] = new QPixmap(":images/mini_icons/setpoint_follow_outdoorair.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_MixedAir).value()] = new QPixmap(":images/mini_icons/setpoint_mixed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_OutdoorAirReset).value()] = new QPixmap(":images/mini_icons/setpoint_outdoorair.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat).value()] = new QPixmap(":images/mini_icons/setpoint_outdoorair.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Scheduled).value()] = new QPixmap(":images/mini_icons/setpoint_scheduled.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint).value()] = new QPixmap(":images/mini_icons/setpoint_scheduled.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_SetpointManager_SingleZone_Reheat).value()] = new QPixmap(":images/mini_icons/setpoint_singlezone.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_unit.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric).value()] = new QPixmap(":images/mini_icons/baseboard_electric.png");
