@@ -64,6 +64,8 @@
 #include <model/SetpointManagerScheduled.hpp>
 #include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
 #include <model/SetpointManagerWarmest.hpp>
+#include <model/SetpointManagerScheduledDualSetpoint.hpp>
+#include <model/SetpointManagerOutdoorAirPretreat.hpp>
 #include <model/RenderingColor.hpp>
 #include <model/RenderingColor_Impl.hpp>
 #include <model/Node.hpp>
@@ -2094,6 +2096,14 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
           break;
         }
       }
@@ -2241,6 +2251,14 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
           break;
         }
       }
@@ -2336,6 +2354,14 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
           }
           break;
         }

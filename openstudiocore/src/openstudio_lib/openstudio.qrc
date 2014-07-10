@@ -163,6 +163,8 @@
     <file>images/setpoint_singlezone_right.png</file>
     <file>images/setpoint_warmest.png</file>
     <file>images/setpoint_warmest_right.png</file>
+    <file>images/setpoint_dual.png</file>
+    <file>images/setpoint_pretreat.png</file>
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
@@ -333,6 +335,8 @@
     <file>images/mini_icons/setpoint_outdoorair.png</file>
     <file>images/mini_icons/setpoint_scheduled.png</file>
     <file>images/mini_icons/setpoint_singlezone.png</file>
+    <file>images/mini_icons/setpoint_dual.png</file>
+    <file>images/mini_icons/setpoint_pretreat.png</file>
     <file>images/mini_icons/schedule.png</file>
     <file>images/mini_icons/shading_surface.png</file>
     <file>images/mini_icons/shading_surface_group.png</file>
