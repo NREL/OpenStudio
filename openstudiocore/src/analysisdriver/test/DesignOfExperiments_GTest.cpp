@@ -45,7 +45,6 @@
 #include "../../runmanager/lib/RunManager.hpp"
 #include "../../runmanager/lib/Workflow.hpp"
 
-#include "../../utilities/document/Table.hpp"
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Path.hpp"

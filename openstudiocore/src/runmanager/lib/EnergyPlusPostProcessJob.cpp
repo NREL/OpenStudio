@@ -152,7 +152,7 @@ namespace detail {
     try {
       boost::filesystem::create_directories(outpath);
 
-      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile);
+      std::vector<Attribute> attributes = PostProcessReporting::go(sqlFile,"EnergyPlusPostProcess");
 
       if (attributes.empty())
       {

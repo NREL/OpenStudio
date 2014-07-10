@@ -23,24 +23,12 @@
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
-#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_SingleZone_Reheat_FieldEnums.hxx>
-
-using openstudio::Handle;
-using openstudio::OptionalHandle;
-using openstudio::HandleVector;
-using openstudio::IdfObject;
-using openstudio::WorkspaceObject;
-using openstudio::OptionalWorkspaceObject;
-using openstudio::WorkspaceObjectVector;
-using openstudio::Workspace;
-using openstudio::istringEqual;
 
 namespace openstudio {
 
@@ -50,14 +38,14 @@ namespace detail{
 
   SetpointManagerSingleZoneReheat_Impl::SetpointManagerSingleZoneReheat_Impl(
       const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(idfObject, model, keepHandle)
+    : SetpointManager_Impl(idfObject, model, keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == SetpointManagerSingleZoneReheat::iddObjectType());
   }
 
   SetpointManagerSingleZoneReheat_Impl::SetpointManagerSingleZoneReheat_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
+    : SetpointManager_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == SetpointManagerSingleZoneReheat::iddObjectType());
   }
@@ -66,7 +54,7 @@ namespace detail{
       const SetpointManagerSingleZoneReheat_Impl& other, 
       Model_Impl* model,
       bool keepHandles)
-    : HVACComponent_Impl(other,model,keepHandles)
+    : SetpointManager_Impl(other,model,keepHandles)
   {
   }
 
@@ -84,58 +72,34 @@ namespace detail{
     return SetpointManagerSingleZoneReheat::iddObjectType();
   }
 
-  boost::optional<ParentObject> SetpointManagerSingleZoneReheat_Impl::parent() const
-  {
-    NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
-    if (nodes.size() == 1u) {
-      return nodes[0];
-    }
-    return boost::none;
-  }
-
-  std::vector<ModelObject> SetpointManagerSingleZoneReheat_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
-
   bool SetpointManagerSingleZoneReheat_Impl::addToNode(Node & node)
   {
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        node.addSetpointManager(this->getObject<SetpointManagerSingleZoneReheat>());
-
+    bool added = SetpointManager_Impl::addToNode( node );
+    if( added ) {
+      if( boost::optional<AirLoopHVAC> _airLoop = node.airLoopHVAC() ) {
+        ModelObjectVector modelObjectVector = _airLoop->demandComponents(openstudio::IddObjectType::OS_ThermalZone);
+        if( !modelObjectVector.empty() ) {
+          ModelObject mo = modelObjectVector.front();
+          ThermalZone thermalZone = mo.cast<ThermalZone>();
+          this->setControlZone(thermalZone);
+        }
         return true;
       }
-      if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop->airLoopHVACOutdoorAirSystem())
-      {
-        if(node == oaSystem->outboardOANode().get())
-        {
-          return false;
-        }
-
-        if(oaSystem->oaComponent(node.handle()))
-        {
-          node.addSetpointManager(this->getObject<SetpointManagerSingleZoneReheat>());
-        
-          return true;
-        }
-      }
     }
-
     return false;
   }
 
-  std::vector<openstudio::IdfObject> SetpointManagerSingleZoneReheat_Impl::remove()
+  ModelObject SetpointManagerSingleZoneReheat_Impl::clone(Model model) const
   {
-    return HVACComponent_Impl::remove();
+    SetpointManagerSingleZoneReheat clonedObject = SetpointManager_Impl::clone( model ).cast<SetpointManagerSingleZoneReheat>();
+    clonedObject.resetControlZone();
+    return clonedObject;
   }
 
-  ModelObject SetpointManagerSingleZoneReheat_Impl::clone(Model model)
-  {
-    return HVACComponent_Impl::clone( model );
+  std::string SetpointManagerSingleZoneReheat_Impl::controlVariable() const {
+    boost::optional<std::string> value = getString(OS_SetpointManager_SingleZone_ReheatFields::ControlVariable,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double SetpointManagerSingleZoneReheat_Impl::minimumSupplyAirTemperature()
@@ -158,18 +122,20 @@ namespace detail{
     setDouble(OS_SetpointManager_SingleZone_ReheatFields::MaximumSupplyAirTemperature,value);
   }
 
-  boost::optional<Node> SetpointManagerSingleZoneReheat_Impl::setpointNode()
+  boost::optional<Node> SetpointManagerSingleZoneReheat_Impl::setpointNode() const
   {
-    SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
-
-    return thisModelObject.getModelObjectTarget<Node>(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName);
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName);
   }
 
-  void SetpointManagerSingleZoneReheat_Impl::setSetpointNode( Node & node )
+  bool SetpointManagerSingleZoneReheat_Impl::setSetpointNode( const Node & node )
   {
-    SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
+   return setPointer(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName, node.handle());
+  }
 
-    thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName,node.handle());
+  void SetpointManagerSingleZoneReheat_Impl::resetSetpointNode()
+  {
+    bool result = setString(OS_SetpointManager_SingleZone_ReheatFields::SetpointNodeorNodeListName,"");
+    OS_ASSERT(result);
   }
 
   boost::optional<ThermalZone> SetpointManagerSingleZoneReheat_Impl::controlZone()
@@ -184,6 +150,10 @@ namespace detail{
     SetpointManagerSingleZoneReheat thisModelObject = this->getObject<SetpointManagerSingleZoneReheat>();
 
     thisModelObject.setPointer(OS_SetpointManager_SingleZone_ReheatFields::ControlZoneName,thermalZone.handle());
+  }
+
+  bool SetpointManagerSingleZoneReheat_Impl::setControlVariable(const std::string& controlVariable) {
+    return setString(OS_SetpointManager_SingleZone_ReheatFields::ControlVariable, controlVariable);
   }
 
   boost::optional<ModelObject> SetpointManagerSingleZoneReheat_Impl::controlZoneAsModelObject() {
@@ -214,7 +184,7 @@ namespace detail{
 } // detail
   
 SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& model)
-  : HVACComponent(SetpointManagerSingleZoneReheat::iddObjectType(),model) 
+  : SetpointManager(SetpointManagerSingleZoneReheat::iddObjectType(),model) 
 {
   OS_ASSERT(getImpl<detail::SetpointManagerSingleZoneReheat_Impl>());
 
@@ -224,23 +194,13 @@ SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(const Model& mo
 }
 
 SetpointManagerSingleZoneReheat::SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> p)
-  : HVACComponent(p)
+  : SetpointManager(p)
 {
 }
 
-bool SetpointManagerSingleZoneReheat::addToNode(Node & node)
-{
-  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->addToNode( node );
-}
-
-std::vector<openstudio::IdfObject> SetpointManagerSingleZoneReheat::remove()
-{
-  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->remove();
-}
-
-ModelObject SetpointManagerSingleZoneReheat::clone(Model model) const
-{
-  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->clone( model );
+std::vector<std::string> SetpointManagerSingleZoneReheat::controlVariableValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_SetpointManager_SingleZone_ReheatFields::ControlVariable);
 }
 
 IddObjectType SetpointManagerSingleZoneReheat::iddObjectType() {
@@ -268,14 +228,9 @@ void SetpointManagerSingleZoneReheat::setMaximumSupplyAirTemperature( double val
   getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setMaximumSupplyAirTemperature(value);
 }
 
-boost::optional<Node> SetpointManagerSingleZoneReheat::setpointNode()
+boost::optional<Node> SetpointManagerSingleZoneReheat::setpointNode() const
 {
   return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setpointNode();
-}
-
-void SetpointManagerSingleZoneReheat::setSetpointNode( Node & node )
-{
-  getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setSetpointNode(node);
 }
 
 boost::optional<ThermalZone> SetpointManagerSingleZoneReheat::controlZone()
@@ -291,6 +246,16 @@ void SetpointManagerSingleZoneReheat::setControlZone(ThermalZone & thermalZone)
 void SetpointManagerSingleZoneReheat::resetControlZone()
 {
   getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->resetControlZone();
+}
+
+std::string SetpointManagerSingleZoneReheat::controlVariable() const
+{
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->controlVariable();
+}
+
+bool SetpointManagerSingleZoneReheat::setControlVariable( const std::string& controlVariable )
+{
+  return getImpl<detail::SetpointManagerSingleZoneReheat_Impl>()->setControlVariable(controlVariable);
 }
 
 } // model

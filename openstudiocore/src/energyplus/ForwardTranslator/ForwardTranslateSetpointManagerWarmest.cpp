@@ -20,9 +20,7 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/SetpointManagerWarmest.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include "../../model/AirLoopHVAC.hpp"
-#include "../../model/AirLoopHVAC_Impl.hpp"
 #include <utilities/idd/SetpointManager_Warmest_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

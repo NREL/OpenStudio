@@ -68,8 +68,6 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/URLHelpers.hpp"
 
-#include <boost/bind.hpp>
-
 #include <sstream>
 #include <limits>
 
@@ -1523,12 +1521,18 @@ namespace detail {
 
     try {
       FileReferenceVector xmlOutputData;
+      for (const runmanager::FileInfo& file : allFiles.getAllByExtension("ossr").files()) {
+        xmlOutputData.push_back(FileReference(file.fullPath));
+      }
       for (const runmanager::FileInfo& file : allFiles.getAllByExtension("xml").files()) {
         xmlOutputData.push_back(FileReference(file.fullPath));
       }
       dataPoint.setXmlOutputData(xmlOutputData);
     }
     catch (...) {}
+
+    // load output attributes from file (so don't pay this cost at an inconvenient time)
+    dataPoint.outputAttributes();
 
     // Determine response function values
     try {
@@ -1935,7 +1939,7 @@ namespace detail {
         InputVariableVector vars = deserializeOrderedVector(
               stepMap["variables"].toList(),
               "variable_index",
-              std::function<InputVariable (const QVariant&)>(boost::bind(detail::InputVariable_Impl::factoryFromVariant,_1,measure,version)));
+              std::function<InputVariable(const QVariant&)>(std::bind(static_cast<InputVariable(*)(const QVariant&, const Measure&, const VersionString&)>(&detail::InputVariable_Impl::factoryFromVariant), std::placeholders::_1, measure, version)));
         for (const InputVariable& var : vars) {
           workflowIntermediate.push_back(std::make_pair(index,WorkflowStep(var,boost::optional<runmanager::WorkItem>())));
           ++index;

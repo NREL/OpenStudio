@@ -32,7 +32,6 @@ namespace openstudio {
 
 class FileReference;
 class FileReferenceType;
-class Table;
 
 namespace runmanager {
   class Job;
@@ -277,8 +276,6 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  completes. */
   void updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob);
 
-  /** Returns a csv summary of all the data points in this analysis. */
-  Table summaryTable() const;
 
   /** Relocate input path data from originalBase to newBase. Only updates file paths used to set
    *  up an analysis; paths that point to analysis results should be fixed up by a separate import

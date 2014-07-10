@@ -600,32 +600,25 @@ void LibraryListController::createItems()
 {
   m_items.clear();
 
-  std::vector<BCLMeasure> myMeasures;
-  std::vector<BCLMeasure> bclMeasures;
+  std::vector<BCLMeasure> measures;
 
   if( m_source == LocalLibrary::USER )
   {
-    myMeasures = m_app->measureManager().myMeasures();
+    measures = m_app->measureManager().myMeasures();
   }
   else if( m_source == LocalLibrary::BCL )
   {
-    bclMeasures = m_app->measureManager().bclMeasures();
+    measures = m_app->measureManager().bclMeasures();
   }
   else if( m_source == LocalLibrary::COMBINED )
   {
-    myMeasures = m_app->measureManager().myMeasures();
-    bclMeasures = m_app->measureManager().bclMeasures();
+    measures = m_app->measureManager().combinedMeasures();
   }
   else
   {
     // should never get here
     OS_ASSERT(false);
   }
-
-  // combine measures
-  std::vector<BCLMeasure> measures;
-  measures.insert(measures.end(), myMeasures.begin(), myMeasures.end());
-  measures.insert(measures.end(), bclMeasures.begin(), bclMeasures.end());
 
   // filter measures
   if(m_onlyShowModelMeasures){
@@ -636,7 +629,8 @@ void LibraryListController::createItems()
   std::sort(measures.begin(), measures.end(), MeasureSorter());
 
   // create items
-  for( const auto & measure : measures)
+  openstudio::path userMeasuresDir = BCLMeasure::userMeasuresDir();
+  for( const auto & measure : measures )
   {
     if( m_taxonomyTag.compare(QString::fromStdString(measure.taxonomyTag()),Qt::CaseInsensitive) == 0 )
     {
@@ -647,7 +641,8 @@ void LibraryListController::createItems()
 
       LocalLibrary::LibrarySource source = m_source;
       if (source == LocalLibrary::COMBINED){
-        if (std::find(myMeasures.begin(), myMeasures.end(), measure) != myMeasures.end()){
+        // check if this measure is in the my measures directory
+        if (userMeasuresDir == measure.directory().parent_path()){
           source = LocalLibrary::USER;
         }else{
           source = LocalLibrary::BCL;

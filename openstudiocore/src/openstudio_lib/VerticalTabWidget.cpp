@@ -101,7 +101,7 @@ void VerticalTabWidget::addTab( QWidget * widget,
 
 void VerticalTabWidget::deleteAllTabs()
 {
-  Q_FOREACH(QPushButton * button, m_tabButtons){
+  for (QPushButton * button : m_tabButtons){
     delete button;
     button = 0;
   }
@@ -209,6 +209,11 @@ void VerticalTabWidget::setCurrentIndex(int index)
 int VerticalTabWidget::verticalTabIndex()
 {
   return m_pageStack->currentIndex();
+}
+
+QWidget* VerticalTabWidget::verticalTabWidgetByIndex(int index)
+{
+  return m_pageStack->widget(index);
 }
 
 void VerticalTabWidget::setCurrentWidget(QWidget * widget)

@@ -74,6 +74,9 @@ void SyncMeasuresDialog::createLayout()
   isConnected = connect(m_centralWidget, SIGNAL(noComponents()), this, SLOT(on_noComponents()));
   OS_ASSERT(isConnected);
 
+  isConnected = connect(m_centralWidget, SIGNAL(closeDlg()), this, SLOT(closeDlg()));
+  OS_ASSERT(isConnected);
+
   QScrollArea * centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);
   centralScrollArea->setObjectName("GrayWidget");
@@ -96,6 +99,9 @@ void SyncMeasuresDialog::createLayout()
   mainLayout->addWidget(splitter);
 
   setLayout(mainLayout);
+
+  m_centralWidget->lowerPushButton->setFocus();
+
 }
 
 void SyncMeasuresDialog::findUpdates()
@@ -160,6 +166,11 @@ void SyncMeasuresDialog::on_noComponents()
   m_expandedComponent = new Component();
   m_expandedComponent->setCheckable(false);
   m_rightScrollArea->setWidget(m_expandedComponent);
+}
+
+void SyncMeasuresDialog::closeDlg()
+{
+  QDialog::close();
 }
 
 } // namespace openstudio

@@ -139,7 +139,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             bool value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, double value);
   Attribute(const std::string& name, double value, const std::string& units);
@@ -149,7 +150,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             double value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   /** Upon construction, will be of type Quantity or Unit, as appropriate. */
   Attribute(const std::string& name, const OSOptionalQuantity& value);
@@ -159,14 +161,16 @@ class UTILITIES_API Attribute {
             const openstudio::UUID& versionUUID,
             const std::string& name,
             const boost::optional<std::string>& displayName,
-            const Quantity& value);
+            const Quantity& value,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const Unit& value);
   Attribute(const openstudio::UUID& uuid,
             const openstudio::UUID& versionUUID,
             const std::string& name,
             const boost::optional<std::string>& displayName,
-            const Unit& value);
+            const Unit& value,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, int value);
   Attribute(const std::string& name, int value, const std::string& units);
@@ -176,7 +180,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             int value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, unsigned value);
   Attribute(const std::string& name, unsigned value, const std::string& units);
@@ -186,7 +191,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             unsigned value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const char* value);
   Attribute(const std::string& name, const char* value, const std::string& units);
@@ -196,7 +202,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const char* value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::string& value);
   Attribute(const std::string& name, const std::string& value, const std::string& units);
@@ -206,7 +213,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const std::string& value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value);
   Attribute(const std::string& name, const std::vector<openstudio::Attribute>& value, const std::string& units);
@@ -216,7 +224,8 @@ class UTILITIES_API Attribute {
             const std::string& name,
             const boost::optional<std::string>& displayName,
             const std::vector<openstudio::Attribute>& value,
-            const boost::optional<std::string>& units);
+            const boost::optional<std::string>& units,
+            const std::string& source = std::string());
 
   explicit Attribute(const QDomElement& element);
 
@@ -230,6 +239,9 @@ class UTILITIES_API Attribute {
   /// static constructor from xml
   static boost::optional<Attribute> loadFromXml(const openstudio::path& path);
 
+  /// static constructor from loaded xml
+  static boost::optional<Attribute> loadFromXml(const QDomDocument& doc);
+
   openstudio::UUID uuid() const;
 
   openstudio::UUID versionUUID() const;
@@ -237,11 +249,24 @@ class UTILITIES_API Attribute {
   /// get the name
   std::string name() const;
 
-  /// get the display name
-  boost::optional<std::string> displayName() const;
+  /// get the display name. if returnName and the display name is empty, will return 
+  /// name() instead.
+  boost::optional<std::string> displayName(bool returnName=false) const;
 
   /// set the display name
   bool setDisplayName(const std::string& displayName);
+
+  /// clear the display name
+  void clearDisplayName();
+
+  /// get the (optional) data source
+  std::string source() const;
+
+  /// set the data source
+  void setSource(const std::string& source);
+
+  /// clear the data source
+  void clearSource();
 
   /// get the attribute value type
   AttributeValueType valueType() const;

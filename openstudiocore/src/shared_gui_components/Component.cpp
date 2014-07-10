@@ -551,7 +551,7 @@ void Component::createCompleteLayout()
     //label = new QLabel(file.identifier().c_str());
     //mainLayout->addWidget(label);
   }
-  Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
+  for (const BCLFileReference & fileReference : m_fileReferences){
     label = new QLabel(fileReference.fileName().c_str());
     mainLayout->addWidget(label);
 

@@ -23,6 +23,7 @@ set(core_src
   core/Compare.cpp
   core/Containers.hpp
   core/Containers.cpp
+  core/Deprecated.hpp
   core/Enum.hpp
   core/EnumHelpers.hpp
   core/Exception.hpp
@@ -51,7 +52,6 @@ set(core_src
   core/PathWatcher.hpp
   core/PathWatcher.cpp
   core/Queue.hpp
-  core/Serialization.hpp
   core/Singleton.hpp
   core/StaticInitializer.hpp
   core/String.hpp
@@ -95,37 +95,6 @@ set(data_src
   data/TimeSeries.cpp
   data/Vector.hpp
   data/Vector.cpp
-)
-
-set(document_src
-  document/Document.hpp
-  document/Document.cpp
-  document/DocumentEnums.hpp
-  document/DocumentRegex.hpp
-  document/DocumentRegex.cpp
-  document/HeadersAndFooters.hpp
-  document/HeadersAndFooters.cpp
-  document/DocumentElement.hpp
-  document/DocumentElement_Impl.hpp
-  document/DocumentElement.cpp
-  document/SectionHeading.hpp
-  document/SectionHeading_Impl.hpp
-  document/SectionHeading.cpp
-  document/SectionElement.hpp
-  document/SectionElement_Impl.hpp
-  document/SectionElement.cpp
-  document/Section.hpp
-  document/Section_Impl.hpp
-  document/Section.cpp
-  document/Text.hpp
-  document/Text_Impl.hpp
-  document/Text.cpp
-  document/Table.hpp
-  document/Table_Impl.hpp
-  document/Table.cpp
-  document/TableElement.hpp
-  document/TableElement_Impl.hpp
-  document/TableElement.cpp
 )
 
 set(filetypes_src
@@ -333,7 +302,6 @@ source_group(bcl FILES ${bcl_src})
 source_group(cloud FILES ${cloud_src})
 source_group(core FILES ${core_src})
 source_group(data FILES ${data_src})
-source_group(document FILES ${document_src})
 source_group(filetypes FILES ${filetypes_src})
 source_group(idd FILES ${idd_src})
 source_group(idf FILES ${idf_src})
@@ -367,7 +335,6 @@ set(${target_name}_src
   ${core_moc_src}
   ${data_src}
   ${data_moc_src}
-  ${document_src}
   ${documentation_src}
   ${economics_src}
   ${filetypes_src}
@@ -418,14 +385,6 @@ set(${target_name}_test_src
   data/Test/Matrix_GTest.cpp
   data/Test/TimeSeries_GTest.cpp
   data/Test/Vector_GTest.cpp
-  document/test/DocumentFixture.hpp
-  document/test/DocumentFixture.cpp
-  document/test/Document_GTest.cpp
-  document/test/DocumentRegex_GTest.cpp
-  document/test/SectionHeading_GTest.cpp
-  document/test/Table_GTest.cpp
-  document/test/TableElement_GTest.cpp
-  document/test/Text_GTest.cpp
   economics/test/Economics_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/TimeDependentValuationFile_GTest.cpp
@@ -495,7 +454,6 @@ set(${target_name}_swig_src
   core/Path.i
   core/PathWatcher.i
   core/Qt.i
-  core/Serialization.i
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
@@ -510,7 +468,6 @@ set(${target_name}_swig_src
   economics/Economics.i
   filetypes/Filetypes.i
   geometry/Geometry.i
-  document/Document.i
   time/Time.i
   time/TimeImpl.i
   time/Date.i
@@ -563,7 +520,7 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 if(BUILD_TESTING)
-  add_dependencies("${target_name}_tests" openstudio_energyplus_resources openstudio_standardsinterface_resources)
+  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
@@ -577,8 +534,7 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesIdf utilitiesidf "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesBCL utilitiesbcl "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesBCL.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesIdf)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesCloud utilitiescloud "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCloud.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesData utilitiesdata "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesData.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesBCL)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesDocument utilitiesdocument "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesDocument.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesData)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesDocument)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesEconomics utilitieseconomics "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesEconomics.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesCore)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesGeometry utilitiesgeometry "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesGeometry.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesEconomics)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesPlot utilitiesplot "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesPlot.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesGeometry)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesSql.i" "${${target_name}_swig_src}" ${target_name} OpenStudioUtilitiesPlot)

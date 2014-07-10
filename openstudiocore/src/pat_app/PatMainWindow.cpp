@@ -164,6 +164,16 @@ void PatMainWindow::hideRightColumn()
   m_mainRightColumnContainer->hide();
 }
 
+QString PatMainWindow::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
+}
+
+void PatMainWindow::setLastPath(const QString& t_lastPath)
+{
+  m_lastPath = t_lastPath;
+}
+
 QSize PatMainWindow::sizeHint() const
 {
   return QSize(1024,700);
@@ -331,6 +341,7 @@ void PatMainWindow::readSettings()
   QSettings settings(organizationName, applicationName);
   QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
   QSize size = settings.value("size", QSize(600, 400)).toSize();
+  setLastPath(settings.value("lastPath", QDir::homePath()).toString());
   resize(size);
   move(pos);
   restoreGeometry(settings.value("geometry").toByteArray());
@@ -344,6 +355,7 @@ void PatMainWindow::writeSettings()
   QSettings settings(organizationName, applicationName);
   settings.setValue("pos", pos());
   settings.setValue("size", size());
+  settings.setValue("lastPath", lastPath());
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState());
 }

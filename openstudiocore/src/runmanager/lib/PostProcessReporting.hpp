@@ -33,7 +33,7 @@ namespace detail {
   class PostProcessReporting
   {
     public:
-      static std::vector<Attribute> go(const SqlFile &t_sqlFile);
+      static std::vector<Attribute> go(const SqlFile &t_sqlFile, const std::string& jobType);
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.PostProcessReporting");

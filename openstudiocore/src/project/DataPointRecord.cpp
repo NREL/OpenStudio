@@ -185,8 +185,8 @@ namespace detail {
     if (ofrr) {
       result.push_back(*ofrr);
     }
-    FileReferenceRecordVector frrs = xmlOutputDataRecords();
-    result.insert(result.end(),frrs.begin(),frrs.end());
+    AttributeRecordVector ars = attributeRecords();
+    result.insert(result.end(),ars.begin(),ars.end());
     DataPointValueRecordVector rvrs = responseValueRecords();
     result.insert(result.end(),rvrs.begin(),rvrs.end());
     return result;
@@ -456,20 +456,6 @@ namespace detail {
 
   std::vector<FileReferenceRecord> DataPointRecord_Impl::xmlOutputDataRecords() const {
     FileReferenceRecordVector result;
-
-    ProjectDatabase database = projectDatabase();
-    QSqlQuery query(*(database.qSqlDatabase()));
-    query.prepare(toQString("SELECT * FROM " + FileReferenceRecord::databaseTableName() +
-                            " WHERE parentDatabaseTableName=:parentDatabaseTableName AND " +
-                            "parentRecordId=:parentRecordId AND " +
-                            "fileReferenceType=:fileReferenceType"));
-    query.bindValue(":parentDatabaseTableName",toQString(databaseTableName()));
-    query.bindValue(":parentRecordId",id());
-    query.bindValue(":fileReferenceType",int(FileReferenceType::XML));
-    assertExec(query);
-    while (query.next()) {
-      result.push_back(FileReferenceRecord(query, database));
-    }
     return result;
   }
 
@@ -495,10 +481,17 @@ namespace detail {
 
   std::vector<AttributeRecord> DataPointRecord_Impl::attributeRecords() const {
     AttributeRecordVector result;
-    for (const FileReferenceRecord& fr : xmlOutputDataRecords()) {
-      AttributeRecordVector additions = fr.attributeRecords();
-      result.insert(result.end(),additions.begin(),additions.end());
+    
+    ProjectDatabase database = projectDatabase();
+    QSqlQuery query(*(database.qSqlDatabase()));
+    query.prepare(toQString("SELECT * FROM " + AttributeRecord::databaseTableName() +
+        " WHERE dataPointRecordId=:dataPointRecordId"));
+    query.bindValue(":dataPointRecordId",id());
+    assertExec(query);
+    while (query.next()) {
+      result.push_back(AttributeRecord(query, database));
     }
+
     return result;
   }
 
@@ -525,12 +518,6 @@ namespace detail {
     ofrr = sqlOutputDataRecord();
     if (ofrr) {
       oSqlOutputData = ofrr->fileReference();
-    }
-    FileReferenceRecordVector frrs = xmlOutputDataRecords();
-    for (const FileReferenceRecord& frr : frrs) {
-      if (frr.name() != "fake.xml") {
-        xmlOutputData.push_back(frr.fileReference());
-      }
     }
     AttributeRecordVector ars = attributeRecords();
     for (const AttributeRecord& ar : ars) {
@@ -571,7 +558,6 @@ namespace detail {
                                oOsmInputData,
                                oIdfInputData,
                                oSqlOutputData,
-                               xmlOutputData,
                                topLevelJob,
                                m_dakotaParametersFiles,
                                tags,
@@ -600,9 +586,9 @@ namespace detail {
     if (ofrr) {
       database.removeRecord(*ofrr);
     }
-    FileReferenceRecordVector frrs = xmlOutputDataRecords();
-    for (FileReferenceRecord& frr : frrs) {
-      database.removeRecord(frr);
+    AttributeRecordVector ars = attributeRecords();
+    for (AttributeRecord& ar : ars) {
+      database.removeRecord(ar);
     }
     DataPointValueRecordVector rvrs = responseValueRecords();
     for (DataPointValueRecord& rvr : rvrs) {
@@ -1291,13 +1277,27 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     OS_ASSERT(!newSqlOutputDataRecord);
     getImpl<detail::DataPointRecord_Impl>()->clearSqlOutputDataRecordId();
   }
-  FileReferenceVector xmlOutputData = dataPoint.xmlOutputData();
-  saveChildXmlFileReferences(xmlOutputData,
-                             xmlOutputDataRecords(),
-                             dataPoint.outputAttributes(),
-                             copyOfThis,
-                             database,
-                             isNew);
+  
+  // Save attributes
+  AttributeVector outputAttributes = dataPoint.outputAttributes();
+  AttributeRecordVector oldAttributeRecords = attributeRecords();
+  for (const Attribute& outputAttribute : outputAttributes) {
+    std::vector<AttributeRecord>::iterator oldIt = std::find_if(oldAttributeRecords.begin(),
+                                                                oldAttributeRecords.end(),
+                                                                std::bind(handleEquals<AttributeRecord,openstudio::UUID>,std::placeholders::_1,outputAttribute.uuid()));
+
+    if ((oldIt == oldAttributeRecords.end()) || (outputAttribute.versionUUID() != oldIt->uuidLast())) {
+      AttributeRecord outputAttributeRecord(outputAttribute,copyOfThis);
+    }
+
+    if (oldIt != oldAttributeRecords.end()) {
+      oldAttributeRecords.erase(oldIt);
+    }
+  }
+
+  for (AttributeRecord& oldAttributeRecord : oldAttributeRecords) {
+    database.removeRecord(oldAttributeRecord);
+  }
 
   // Remove old response function values
   if (!isNew) {
@@ -1365,96 +1365,6 @@ boost::optional<FileReferenceRecord> DataPointRecord::saveChildFileReference(
     LOG(Debug,"DataPoint " << id() << ", directory " << toString(directory()) << ", child FileReference "
       << toString(childFileReference->path()) << ".");
   }
-  return result;
-}
-
-std::vector<FileReferenceRecord> DataPointRecord::saveChildXmlFileReferences(
-    std::vector<FileReference> childFileReferences,
-    std::vector<FileReferenceRecord> oldFileReferenceRecords,
-    std::vector<Attribute> outputAttributes,
-    DataPointRecord& copyOfThis,
-    ProjectDatabase& database,
-    bool isNew)
-{
-  if (childFileReferences.empty() && !outputAttributes.empty()) {
-    // CloudSlim DataPoint. Make or re-use fake FileReference for attribute storage.
-    NameFinder<FileReferenceRecord> finder("fake.xml",true);
-    auto it = std::find_if(
-        oldFileReferenceRecords.begin(),
-        oldFileReferenceRecords.end(),
-        finder);
-    if (it != oldFileReferenceRecords.end()) {
-      childFileReferences.push_back(FileReference(it->handle(),
-                                                  createUUID(),
-                                                  it->name(),
-                                                  it->displayName(),
-                                                  it->description(),
-                                                  it->path(),
-                                                  it->fileType(),
-                                                  it->timestampCreate(),
-                                                  it->timestampLast(),
-                                                  it->checksumCreate(),
-                                                  it->checksumLast()));
-    }
-    else {
-      childFileReferences.push_back(FileReference(toPath("fake.xml")));
-    }
-  }
-
-  FileReferenceRecordVector result;
-  for (const FileReference& childFileReference : childFileReferences) {
-    bool save(true);
-    if (!isNew) {
-      // see if there is already a record
-      auto it = std::find_if(
-            oldFileReferenceRecords.begin(),
-            oldFileReferenceRecords.end(),
-            std::bind(handleEquals<ObjectRecord,UUID>,std::placeholders::_1,childFileReference.uuid()));
-      if (it != oldFileReferenceRecords.end()) {
-        // found, see if has changed
-        if (it->uuidLast() == childFileReference.versionUUID()) {
-          save = false;
-        }
-        else {
-          // will save. clear out AttributeRecords associated with the old one.
-          AttributeRecordVector oldAttributes = it->attributeRecords();
-          for (AttributeRecord& oldAttribute : oldAttributes) {
-            database.removeRecord(oldAttribute);
-          }
-        }
-        oldFileReferenceRecords.erase(it); // do not remove this existing record
-      }
-      database.unloadUnusedCleanRecords();
-    }
-    if (save || isNew) {
-      result.push_back(FileReferenceRecord(childFileReference,copyOfThis));
-      // save attributes
-      AttributeVector attsToSave;
-      if (childFileReference.name() == "fake.xml") {
-        attsToSave = outputAttributes;
-      }
-      else {
-        OptionalAttribute wrapperAttribute = Attribute::loadFromXml(childFileReference.path());
-        if (wrapperAttribute &&
-            (wrapperAttribute->valueType() == AttributeValueType::AttributeVector))
-        {
-          attsToSave = wrapperAttribute->valueAsAttributeVector();
-        }
-      }
-      for (const Attribute& attribute : attsToSave) {
-        AttributeRecord attributeRecord(attribute,result.back());
-        Q_UNUSED(attributeRecord);
-      }
-    }
-  }
-
-  // remove remaining oldFileReferenceRecords
-  if (!isNew) {
-    for (FileReferenceRecord& oldFileReferenceRecord : oldFileReferenceRecords) {
-      database.removeRecord(oldFileReferenceRecord);
-    }
-  }
-
   return result;
 }
 

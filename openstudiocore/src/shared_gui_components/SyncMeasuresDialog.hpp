@@ -67,6 +67,7 @@ private:
 private slots:
   void on_componentClicked(bool checked);
   void on_noComponents();
+  void closeDlg();
 
 };
 

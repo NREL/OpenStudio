@@ -22,6 +22,7 @@
 #include "LibraryTabWidget.hpp"
 #include "LoopLibraryDialog.hpp"
 #include "MainMenu.hpp"
+#include "MainTabView.hpp"
 #include "VerticalTabWidget.hpp"
 
 #include "../utilities/core/Assert.hpp"
@@ -234,6 +235,12 @@ void MainWindow::selectVerticalTabByIndex(int index)
   m_verticalTabWidget->setCurrentIndex(index);
 }
 
+MainTabView* MainWindow::verticalTabByIndex(int index)
+{
+  MainTabView* mainTabView = qobject_cast<MainTabView *>(m_verticalTabWidget->verticalTabWidgetByIndex(index));
+  return mainTabView;
+}
+
 int MainWindow::verticalTabIndex()
 {
   return m_verticalTabWidget->verticalTabIndex();
@@ -283,6 +290,7 @@ void MainWindow::readSettings()
   QSettings settings(organizationName, applicationName);
   QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
   QSize size = settings.value("size", QSize(600, 400)).toSize();
+  m_lastPath = settings.value("lastPath", QDir::homePath()).toString();
   resize(size);
   move(pos);
   restoreGeometry(settings.value("geometry").toByteArray());
@@ -300,6 +308,11 @@ void MainWindow::writeSettings()
   settings.setValue("geometry", saveGeometry());
   settings.setValue("state", saveState());
   settings.setValue("displayIP", m_displayIP);
+}
+
+QString MainWindow::lastPath() const
+{
+  return QDir().exists(m_lastPath) ? m_lastPath : QDir::homePath();
 }
 
 void MainWindow::toggleUnits(bool displayIP)

@@ -254,7 +254,6 @@ void ProjectVersioningFixture::addAnalysis(ProjectDatabase& database) {
                                   OptionalFileReference(),
                                   OptionalFileReference(),
                                   OptionalFileReference(),
-                                  FileReferenceVector(),
                                   boost::none,
                                   std::vector<openstudio::path>(),
                                   TagVector(1u,Tag("alg1")),

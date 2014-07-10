@@ -26,6 +26,15 @@ else
   require 'pathname'
 end
 
+if RUBY_PLATFORM =~ /darwin/
+  mac_version = `/usr/bin/sw_vers -productVersion | tr -d "\n"`.split('.')
+  if mac_version[0].to_i <= 10
+    if mac_version[1].to_i < 8
+      raise LoadError, "OpenStudio is only compatible with OS 10.8 and later"
+    end
+  end
+end
+
 # follow symlinks so that we find the original path to the so's 
 $OpenStudio_Dir = "#{File.expand_path(File.dirname(Pathname.new(__FILE__).realpath()))}/"
 
@@ -54,7 +63,6 @@ require 'openstudioutilitiessql'
 require 'openstudioutilitiesbcl'
 require 'openstudioutilitiescloud'
 require 'openstudioutilitiesunits'
-require 'openstudioutilitiesdocument'
 require 'openstudioutilitiesidd'
 require 'openstudioutilitiesidf'
 require 'openstudioutilitiesfiletypes'

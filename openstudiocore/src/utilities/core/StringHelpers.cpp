@@ -197,4 +197,69 @@ double toNumSigFigs(double value, unsigned numSigFigs) {
   return result;
 }
 
+boost::regex superscript() {
+  //static boost::regex rgx("([\\d\\l\\u])(\\^(?:([\\d\\l\\u]+)|\\{(-?[\\d\\l\\u\\*\\+\\\\\\- ]+)\\}))");
+  //return rgx;
+  return boost::regex("([\\d\\l\\u])(\\^(?:([\\d\\l\\u]+)|\\{(-?[\\d\\l\\u\\*\\+\\\\\\- ]+)\\}))");
+}
+
+boost::regex subscript() {
+  //static boost::regex rgx("([\\d\\l\\u])(_(?:([\\d\\l\\u]+)|\\{(-?[\\d\\l\\u\\*\\+\\\\\\- ]+)\\}))");
+  //return rgx;
+  return boost::regex("([\\d\\l\\u])(_(?:([\\d\\l\\u]+)|\\{(-?[\\d\\l\\u\\*\\+\\\\\\- ]+)\\}))");
+}
+
+boost::regex underscore() {
+  //static boost::regex rgx("(\\\\_)");
+  //return rgx;
+  return boost::regex("(\\\\_)");
+}
+
+std::string formatText(const std::string& str, DocumentFormat fmt) {
+  std::string wStr = formatSuperAndSubscripts(str, fmt);
+  if (fmt == DocumentFormat::LaTeX) {
+    wStr = boost::regex_replace(wStr, boost::regex("%"), "\\\\$&");
+    wStr = boost::regex_replace(wStr, boost::regex("&"), "\\\\$&");
+  }
+  if (fmt == DocumentFormat::XHTML) {
+    wStr = boost::regex_replace(wStr, boost::regex("$"), "<br/>");
+  }
+  return wStr;
+}
+
+std::string formatSuperAndSubscripts(const std::string& str, DocumentFormat fmt) {
+  if (fmt == DocumentFormat::LaTeX) {
+    std::string wStr(str);
+    wStr = boost::regex_replace(wStr, superscript(), "$1\\\\ensuremath{$2}");
+    wStr = boost::regex_replace(wStr, subscript(), "$1\\\\ensuremath{$2}");
+    return wStr;
+  }
+  if (fmt == DocumentFormat::XHTML) {
+    std::string wStr(str);
+    wStr = boost::regex_replace(wStr, superscript(), "$1<sup>$3$4</sup>");
+    wStr = boost::regex_replace(wStr, subscript(), "$1<sub>$3$4</sub>");
+    wStr = boost::regex_replace(wStr, underscore(), "_");
+    return wStr;
+  }
+  return str;
+}
+
+std::string formatUnitString(const std::string& str, DocumentFormat fmt) {
+  std::string result = formatSuperAndSubscripts(str, fmt);
+  boost::regex asterix("\\*");
+  if (fmt == DocumentFormat::LaTeX) {
+    result = boost::regex_replace(result, asterix, "\\\\ensuremath{\\\\cdot}");
+  }
+  if (fmt == DocumentFormat::XHTML) {
+    result = boost::regex_replace(result, asterix, "&middot;");
+  }
+  return result;
+}
+
+std::string formatUnderscore(const std::string& str) {
+  std::string wStr(str);
+  wStr = boost::regex_replace(wStr, boost::regex("_"), "\\\\_");
+  return wStr;
+}
+
 } // openstudio

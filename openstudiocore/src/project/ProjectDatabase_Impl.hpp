@@ -252,6 +252,7 @@ namespace project {
         void update_1_0_3_to_1_0_4(const VersionString& startVersion);
         void update_1_0_4_to_1_0_5(const VersionString& startVersion);
         void update_1_0_6_to_1_0_7(const VersionString& startVersion);
+        void update_1_4_0_to_1_4_1(const VersionString& startVersion);
 
         void setProjectDatabaseRecord(const ProjectDatabaseRecord& projectDatabaseRecord);
 

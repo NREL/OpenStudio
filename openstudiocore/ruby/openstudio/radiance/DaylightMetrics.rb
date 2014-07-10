@@ -375,11 +375,18 @@ building.spaces.each do |space|
 end
 
 # DLM: can we make some more metrics that are area weighted rather than just space weighted?
-building_average_space_sum = 0
+building_average_space_sum = 0.0
 building_average_space.each {|e| building_average_space_sum += e}
-building_average = building_average_space_sum / building_average_space.length
+
+# catch zero condition
+if building_average_space_sum == 0.0
+  building_average = 0.0
+  puts "warning: Daylight Autonomy for building is zero, check daylighting control point(s) setup."
+else
+  building_average = building_average_space_sum / building_average_space.length
+end
 
 File.open('./DaylightingMetrics.csv', 'w') do |file|
-  file.puts "Building average daylight autonomy:#{building_average}"
+  file.puts "Building average daylight autonomy,#{building_average}"
   file.puts summary_report
 end

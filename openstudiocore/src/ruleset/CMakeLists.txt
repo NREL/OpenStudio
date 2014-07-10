@@ -85,7 +85,6 @@ MAKE_SWIG_TARGET(OpenStudioRuleset ruleset "${CMAKE_CURRENT_SOURCE_DIR}/Ruleset.
 if(BUILD_TESTING)
   add_dependencies("${target_name}_tests"
     "openstudio_energyplus_resources"
-    "openstudio_standardsinterface_resources"
     "ruby_OpenStudioUtilitiesCore"
     "ruby_OpenStudioUtilitiesBCL"
     "ruby_OpenStudioUtilitiesIdd"

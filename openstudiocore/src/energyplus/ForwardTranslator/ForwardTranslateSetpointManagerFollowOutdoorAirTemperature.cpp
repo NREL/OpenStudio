@@ -20,7 +20,6 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 #include <utilities/idd/SetpointManager_FollowOutdoorAirTemperature_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

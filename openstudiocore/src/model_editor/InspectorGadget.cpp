@@ -58,9 +58,9 @@
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
-#include "../utilities/document/DocumentRegex.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

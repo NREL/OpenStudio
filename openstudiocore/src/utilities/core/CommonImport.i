@@ -6,11 +6,13 @@
 
 %{
   #include <sstream>
+  #include <utilities/core/Deprecated.hpp>
   #include <utilities/core/Containers.hpp>
   #include <boost/regex.hpp>
   #include <boost/variant.hpp>
 %}
 
+%include <utilities/core/Deprecated.hpp>
 %include <utilities/core/Containers.hpp>
 
 %template(BoolVector) std::vector<bool>;

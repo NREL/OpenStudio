@@ -28,8 +28,6 @@
 #include "../../utilities/core/Compare.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
 
-#include <boost/bind.hpp>
-
 namespace openstudio {
 namespace runmanager {
 namespace detail {
@@ -308,9 +306,9 @@ namespace detail {
                                                  const VersionString& version)
   {
     return deserializeOrderedVector<WorkItem>(
-               t_variant.toList(),
-               "work_item_index",
-               std::function<WorkItem (const QVariant&)>(boost::bind(JSON::toWorkItem,_1,version)));
+      t_variant.toList(),
+      "work_item_index",
+      std::function<WorkItem(const QVariant&)>(std::bind(static_cast<WorkItem (*)(const QVariant&, const VersionString&)>(&JSON::toWorkItem), std::placeholders::_1, version)));
   }
 
   std::vector<WorkItem> JSON::toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
@@ -547,7 +545,7 @@ namespace detail {
           t_variant.toList(),
           "param",
           "param_index",
-          std::function<JobParam (const QVariant&)>(boost::bind(runmanager::detail::JSON::toJobParam,_1,t_version)));
+          std::function<JobParam (const QVariant&)>(std::bind(runmanager::detail::JSON::toJobParam,std::placeholders::_1,t_version)));
   }
 
   // ToolInfo
