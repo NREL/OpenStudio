@@ -24,6 +24,7 @@
 #include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/OSDocument.hpp>
+#include <openstudio_lib/OSDropZone.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -102,6 +103,8 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
   OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", parent);
+  gridView->m_dropZone->hide();
+
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
