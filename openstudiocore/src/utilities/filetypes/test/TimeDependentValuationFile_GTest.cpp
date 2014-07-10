@@ -50,9 +50,11 @@ TEST(Filetypes, TimeDependentValuationFile) {
   ASSERT_TRUE(oTdvFile);
   TimeDependentValuationFile tdvFile = *oTdvFile;
 
+  EXPECT_EQ(6, tdvFile.numColumns());
+
   EXPECT_EQ(p,tdvFile.path());
   EXPECT_EQ("Climate zone 13 with externalities",tdvFile.name());
-  EXPECT_EQ(std::string("\"\"Created April 18, 2006\"\""),tdvFile.description());
+  EXPECT_EQ(std::string("Created April 18, 2006"),tdvFile.description());
   {
     SCOPED_TRACE("Commercial");
     testCostOfEnergy(tdvFile.nominalCommercialCostOfEnergy(),0.145972);
@@ -77,4 +79,7 @@ TEST(Filetypes, TimeDependentValuationFile) {
   p = resourcesPath()/toPath("utilities/Filetypes/TDV_2008_kBtu_CZ13_SI.csv");
   EXPECT_TRUE(oTdvFile->save(p,true));
   EXPECT_EQ(p,oTdvFile->path());
+
+  oTdvFile = TimeDependentValuationFile::load(p);
+  ASSERT_TRUE(oTdvFile);
 }
