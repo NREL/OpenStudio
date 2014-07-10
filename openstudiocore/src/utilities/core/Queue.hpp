@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef __UTILITIES_CORE_QUEUE_HPP__
-#define __UTILITIES_CORE_QUEUE_HPP__
+#ifndef UTILITIES_CORE_QUEUE_HPP
+#define UTILITIES_CORE_QUEUE_HPP
 
 #include <boost/thread/condition.hpp>
 #include <boost/thread/mutex.hpp>
@@ -169,7 +169,7 @@ namespace openstudio
         //! Protection mutex for local data
         boost::shared_mutex m_mutex;
 
-        //! stl deque of incomming items.
+        //! stl deque of incoming items.
         std::deque<T> m_deque;
 
         //! Copy constructor, private and explicitly not implemented
@@ -183,4 +183,4 @@ namespace openstudio
     };
 }
 
-#endif
+#endif // UTILITIES_CORE_QUEUE_HPP

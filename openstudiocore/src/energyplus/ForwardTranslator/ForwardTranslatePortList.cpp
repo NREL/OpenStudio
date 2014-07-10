@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/NodeList_FieldEnums.hxx>
 
@@ -57,11 +57,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePortList( PortList & mode
     idfObject.setName(*s);
   }
 
-  for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-       it != modelObjects.end();
-       ++it )
+  for( const auto & modelObject : modelObjects )
   {
-    if( boost::optional<Node> node = it->optionalCast<Node>() )
+    if( boost::optional<Node> node = modelObject.optionalCast<Node>() )
     {
       IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
 

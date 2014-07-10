@@ -20,8 +20,8 @@
 #ifndef MODEL_WEATHERFILE_HPP
 #define MODEL_WEATHERFILE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -159,7 +159,7 @@ protected:
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit WeatherFile(boost::shared_ptr<detail::WeatherFile_Impl> impl);
+  explicit WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl);
 
   /// @endcond
  private:

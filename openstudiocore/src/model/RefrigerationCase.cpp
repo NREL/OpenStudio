@@ -17,29 +17,29 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
+#include "RefrigerationCase.hpp"
+#include "RefrigerationCase_Impl.hpp"
 
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "RefrigerationSystem_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "RefrigerationDefrostCycleParameters.hpp"
+#include "RefrigerationDefrostCycleParameters_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Case_FieldEnums.hxx>
 
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Time.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -601,7 +601,7 @@ namespace detail {
   boost::optional<RefrigerationSystem> RefrigerationCase_Impl::system() const {
     std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
     RefrigerationCase refrigerationCase = this->getObject<RefrigerationCase>();
-    BOOST_FOREACH(RefrigerationSystem refrigerationSystem, refrigerationSystems) {
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
       RefrigerationCaseVector refrigerationCases = refrigerationSystem.cases();
       if ( !refrigerationCases.empty() && std::find(refrigerationCases.begin(), refrigerationCases.end(), refrigerationCase) != refrigerationCases.end() ) {
         return refrigerationSystem;
@@ -2093,7 +2093,7 @@ void RefrigerationCase::removeFromSystem() {
 }
 
 /// @cond
-RefrigerationCase::RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl)
+RefrigerationCase::RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

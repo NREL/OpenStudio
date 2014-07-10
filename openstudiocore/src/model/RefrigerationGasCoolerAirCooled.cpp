@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationGasCoolerAirCooled.hpp>
-#include <model/RefrigerationGasCoolerAirCooled_Impl.hpp>
+#include "RefrigerationGasCoolerAirCooled.hpp"
+#include "RefrigerationGasCoolerAirCooled_Impl.hpp"
 
-#include <model/CurveLinear.hpp>
-#include <model/CurveLinear_Impl.hpp>
-// #include <model/ThermalZone.hpp>
-// #include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "CurveLinear.hpp"
+#include "CurveLinear_Impl.hpp"
+// #include "ThermalZone.hpp"
+// #include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_GasCooler_AirCooled_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -372,8 +372,6 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(const Model& mo
 {
   OS_ASSERT(getImpl<detail::RefrigerationGasCoolerAirCooled_Impl>());
 
-  bool ok = true;
-
   CurveLinear heatRejectionCurve = CurveLinear(model);
   heatRejectionCurve.setName("Refrigeration Gas Cooler Air Cooled HR Curve");
   heatRejectionCurve.setCoefficient1Constant(0.0);
@@ -381,7 +379,7 @@ RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(const Model& mo
   heatRejectionCurve.setMinimumValueofx(3.0);
   heatRejectionCurve.setMaximumValueofx(22.2);
 
-  ok = setRatedTotalHeatRejectionRateCurve(heatRejectionCurve);
+  bool ok = setRatedTotalHeatRejectionRateCurve(heatRejectionCurve);
   OS_ASSERT(ok);
   ok = setGasCoolerFanSpeedControlType("VariableSpeed");
   OS_ASSERT(ok);
@@ -599,7 +597,7 @@ void RefrigerationGasCoolerAirCooled::resetGasCoolerOutletPipingRefrigerantInven
 }
 
 /// @cond
-RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(boost::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl)
+RefrigerationGasCoolerAirCooled::RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

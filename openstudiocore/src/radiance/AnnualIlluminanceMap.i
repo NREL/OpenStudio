@@ -15,10 +15,10 @@
 %}
 
 // create an instantiation of the smart ptr class
-%template(AnnualIlluminanceMapPtr) boost::shared_ptr<openstudio::radiance::AnnualIlluminanceMap>;
+%template(AnnualIlluminanceMapPtr) std::shared_ptr<openstudio::radiance::AnnualIlluminanceMap>;
  
 // create an instantiation of the vector class
-%template(AnnualIlluminanceMapVector) std::vector< boost::shared_ptr<openstudio::radiance::AnnualIlluminanceMap> >;
+%template(AnnualIlluminanceMapVector) std::vector< std::shared_ptr<openstudio::radiance::AnnualIlluminanceMap> >;
 
 %ignore openstudio::radiance::AnnualIlluminanceMap::AnnualIlluminanceMap(const openstudio::Path&);
 

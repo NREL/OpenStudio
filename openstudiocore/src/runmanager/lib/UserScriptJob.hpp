@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2010, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_USERSCRIPTJOB_HPP_
-#define OPENSTUDIO_USERSCRIPTJOB_HPP_
+#ifndef RUNMANAGER_LIB_USERSCRIPTJOB_HPP
+#define RUNMANAGER_LIB_USERSCRIPTJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include "RubyJob.hpp"
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 #include <QProcess>
 #include <QFileSystemWatcher>
@@ -68,4 +68,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_USERSCRIPTJOB_HPP

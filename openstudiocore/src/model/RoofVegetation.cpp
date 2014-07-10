@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
+#include "RoofVegetation.hpp"
+#include "RoofVegetation_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1455,7 +1455,7 @@ void RoofVegetation::resetMoistureDiffusionCalculationMethod() {
 }
 
 /// @cond
-RoofVegetation::RoofVegetation(boost::shared_ptr<detail::RoofVegetation_Impl> impl)
+RoofVegetation::RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

@@ -20,15 +20,13 @@
 #ifndef UTILITIES_UNITS_QUANTITYFACTORY_HPP
 #define UTILITIES_UNITS_QUANTITYFACTORY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Singleton.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../core/Singleton.hpp"
+#include "Quantity.hpp"
+#include "UnitFactory.hpp"
 
-#include <utilities/core/Logger.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../core/Logger.hpp"
 
 #include <set>
 #include <map>

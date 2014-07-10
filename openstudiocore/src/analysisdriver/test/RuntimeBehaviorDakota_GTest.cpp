@@ -18,39 +18,38 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
-#include <analysisdriver/test/StopWatcher.hpp>
+#include "AnalysisDriverFixture.hpp"
+#include "StopWatcher.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../AnalysisDriver.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/AnalysisRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperimentsOptions_Impl.hpp>
-#include <analysis/SamplingAlgorithmOptions.hpp>
-#include <analysis/SamplingAlgorithmOptions_Impl.hpp>
-#include <analysis/SamplingAlgorithm.hpp>
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/DesignOfExperiments_Impl.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
+#include "../../analysis/DesignOfExperimentsOptions_Impl.hpp"
+#include "../../analysis/SamplingAlgorithmOptions.hpp"
+#include "../../analysis/SamplingAlgorithmOptions_Impl.hpp"
+#include "../../analysis/SamplingAlgorithm.hpp"
+#include "../../analysis/ContinuousVariable.hpp"
+#include "../../analysis/ContinuousVariable_Impl.hpp"
 
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/JobErrors.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Job.hpp>
+#include "../../runmanager/lib/JobErrors.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Job.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>

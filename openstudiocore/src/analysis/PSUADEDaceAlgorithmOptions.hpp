@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_PSUADEDACEALGORITHMOPTIONS_HPP
 #define ANALYSIS_PSUADEDACEALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -52,7 +52,7 @@ class ANALYSIS_API PSUADEDaceAlgorithmOptions : public DakotaAlgorithmOptions {
   /** @name Getters and Queries */
   //@{
 
-  /** Returns the explict pseudo-random number generator seed if it exists, evaluates to false 
+  /** Returns the explicit pseudo-random number generator seed if it exists, evaluates to false 
    *  otherwise. */
   boost::optional<int> seed() const;
 
@@ -91,7 +91,7 @@ class ANALYSIS_API PSUADEDaceAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::PSUADEDaceAlgorithmOptions_Impl ImplType;
 
-  explicit PSUADEDaceAlgorithmOptions(boost::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl> impl);
+  explicit PSUADEDaceAlgorithmOptions(std::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl> impl);
 
   friend class detail::PSUADEDaceAlgorithmOptions_Impl;
   friend class AnalysisObject;

@@ -20,8 +20,8 @@
 #ifndef MODEL_STANDARDOPAQUEMATERIAL_HPP
 #define MODEL_STANDARDOPAQUEMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial.hpp"
 
 namespace openstudio {
 
@@ -240,7 +240,7 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
   /// @cond
   typedef detail::StandardOpaqueMaterial_Impl ImplType;
 
-  explicit StandardOpaqueMaterial(boost::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl);
+  explicit StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl);
 
   friend class detail::StandardOpaqueMaterial_Impl;
   friend class Model;

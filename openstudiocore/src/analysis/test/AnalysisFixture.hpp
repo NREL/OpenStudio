@@ -22,10 +22,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -41,7 +41,7 @@ class AnalysisFixture : public ::testing::Test {
   /// tear down after each test
   virtual void TearDown();
 
-  /// initiallize static members
+  /// initialize static members
   static void SetUpTestCase();
 
   /// tear down static members

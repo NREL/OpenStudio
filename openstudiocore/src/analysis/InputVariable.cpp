@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
+#include "InputVariable.hpp"
+#include "InputVariable_Impl.hpp"
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -68,7 +68,7 @@ namespace detail {
       return parent()->cast<WorkflowStep>();
     }
     InputVariable copyOfThis = getPublicObject<InputVariable>();
-    boost::shared_ptr<detail::WorkflowStep_Impl> workflowStepImpl(new detail::WorkflowStep_Impl(copyOfThis));
+    std::shared_ptr<detail::WorkflowStep_Impl> workflowStepImpl(new detail::WorkflowStep_Impl(copyOfThis));
     WorkflowStep result(workflowStepImpl);
     copyOfThis.setParent(result);
     return result;
@@ -196,7 +196,7 @@ runmanager::WorkItem InputVariable::createWorkItem(const QVariant& value,
 }
 
 /// @cond
-InputVariable::InputVariable(boost::shared_ptr<detail::InputVariable_Impl> impl)
+InputVariable::InputVariable(std::shared_ptr<detail::InputVariable_Impl> impl)
   : Variable(impl)
 {}
 /// @endcond

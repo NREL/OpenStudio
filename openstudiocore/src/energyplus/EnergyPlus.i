@@ -35,8 +35,6 @@
   using namespace openstudio::energyplus;
 %}
 
-%ignore StaticInitializer;
-
 #ifdef SWIGCSHARP
 %rename(EnergyPlusForwardTranslator) openstudio::energyplus::ForwardTranslator;
 %rename(EnergyPlusReverseTranslator) openstudio::energyplus::ReverseTranslator;
@@ -44,6 +42,8 @@
 
 // Ignore Static Initializers
 %ignore openstudio::energyplus::detail;
+%ignore StaticInitializer;
+%ignore ForwardTranslatorInitializer;
 %ignore openstudio::energyplus::detail::ForwardTranslatorInitializer;
 
 %include <energyplus/ErrorFile.hpp>

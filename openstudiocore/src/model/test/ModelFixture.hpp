@@ -24,12 +24,12 @@
 
 #include <resources.hxx>
 
-#include <model/Model.hpp>
+#include "../Model.hpp"
 
-#include <utilities/idd/IddField.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../utilities/idd/IddField.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
 class ModelFixture : public ::testing::Test {
  protected:
@@ -39,7 +39,7 @@ class ModelFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members

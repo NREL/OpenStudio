@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ExteriorLightsDefinition.hpp>
-#include <model/ExteriorLightsDefinition_Impl.hpp>
+#include "ExteriorLightsDefinition.hpp"
+#include "ExteriorLightsDefinition_Impl.hpp"
 
 #include <utilities/idd/OS_Exterior_Lights_Definition_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -97,7 +97,7 @@ bool ExteriorLightsDefinition::setDesignLevel(double designLevel) {
 }
 
 /// @cond
-ExteriorLightsDefinition::ExteriorLightsDefinition(boost::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
+ExteriorLightsDefinition::ExteriorLightsDefinition(std::shared_ptr<detail::ExteriorLightsDefinition_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

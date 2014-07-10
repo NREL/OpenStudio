@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACZONEMIXER_HPP
 #define MODEL_AIRLOOPHVACZONEMIXER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Mixer.hpp>
+#include "ModelAPI.hpp"
+#include "Mixer.hpp"
 
 namespace openstudio {
 namespace model {
@@ -72,7 +72,7 @@ class MODEL_API AirLoopHVACZoneMixer : public Mixer {
 
   typedef detail::AirLoopHVACZoneMixer_Impl ImplType;
 
-  explicit AirLoopHVACZoneMixer(boost::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
+  explicit AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl);
 
   private:
 

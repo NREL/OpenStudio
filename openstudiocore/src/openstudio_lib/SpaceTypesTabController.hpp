@@ -17,12 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SPACETYPESTABCONTROLLER_H
-#define OPENSTUDIO_SPACETYPESTABCONTROLLER_H
+#ifndef OPENSTUDIO_SPACETYPESTABCONTROLLER_HPP
+#define OPENSTUDIO_SPACETYPESTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -40,10 +38,10 @@ class SpaceTypesTabController : public MainTabController
 
   private:
 
-    boost::shared_ptr<SpaceTypesController> m_spaceTypesController;
+    std::shared_ptr<SpaceTypesController> m_spaceTypesController;
  
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_SPACETYPESTABCONTROLLER_H
+#endif // OPENSTUDIO_SPACETYPESTABCONTROLLER_HPP

@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef IGPRECISIONDIALOG_HPP
-#define IGPRECISIONDIALOG_HPP
+#ifndef MODELEDITOR_IGPRECISIONDIALOG_HPP
+#define MODELEDITOR_IGPRECISIONDIALOG_HPP
 
 #include <QDialog>
 
-#include <model_editor/ui_precisiondialog.hxx>
-#include <model_editor/ModelEditorAPI.hpp>
+#include <model_editor/ui_precisiondialog.h>
+#include "ModelEditorAPI.hpp"
 
 class MODELEDITOR_API IGPrecisionDialog:
   public QDialog, 
@@ -32,7 +32,7 @@ class MODELEDITOR_API IGPrecisionDialog:
 Q_OBJECT
 
 public:
-  IGPrecisionDialog(QWidget* parent=0);
+  IGPrecisionDialog(QWidget* parent=nullptr);
 
 public slots:
   void on_buttonBox_accepted();
@@ -40,5 +40,5 @@ public slots:
 
 };
 
-#endif
+#endif // MODELEDITOR_IGPRECISIONDIALOG_HPP
 

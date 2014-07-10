@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ConvergenceLimits.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "ConvergenceLimits.hpp"
+#include "ConvergenceLimits_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_ConvergenceLimits_FieldEnums.hxx>
 
 namespace openstudio {
@@ -224,7 +224,7 @@ void ConvergenceLimits::resetMaximumPlantIterations() {
 }
 
 /// @cond
-ConvergenceLimits::ConvergenceLimits(boost::shared_ptr<detail::ConvergenceLimits_Impl> impl)
+ConvergenceLimits::ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl)
   : ModelObject(impl)
 {}
 

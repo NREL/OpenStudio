@@ -20,8 +20,8 @@
 #ifndef MODEL_FANZONEEXHAUST_HPP
 #define MODEL_FANZONEEXHAUST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -113,7 +113,7 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
   /// @cond
   typedef detail::FanZoneExhaust_Impl ImplType;
 
-  explicit FanZoneExhaust(boost::shared_ptr<detail::FanZoneExhaust_Impl> impl);
+  explicit FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl);
 
   friend class detail::FanZoneExhaust_Impl;
   friend class Model;

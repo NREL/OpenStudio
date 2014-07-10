@@ -20,7 +20,7 @@
 #ifndef MODEL_LAYEREDCONSTRUCTION_IMPL_HPP
 #define MODEL_LAYEREDCONSTRUCTION_IMPL_HPP
 
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase_Impl.hpp"
 
 #include <QObject>
 
@@ -167,11 +167,11 @@ namespace detail {
      *  StandardOpaqueMaterials \endlink. */
     virtual boost::optional<double> heatCapacity() const;
 
-    /// get interior visible absorbtance (unitless)
-    virtual boost::optional<double> interiorVisibleAbsorbtance() const;
+    /// get interior visible absorptance (unitless)
+    virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /// get exterior visible absorbtance (unitless)
-    virtual boost::optional<double> exteriorVisibleAbsorbtance() const;
+    /// get exterior visible absorptance (unitless)
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /// get visible transmittance (unitless)
     virtual boost::optional<double> visibleTransmittance() const;

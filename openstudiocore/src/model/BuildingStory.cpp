@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
 
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -395,7 +395,7 @@ std::vector<Space> BuildingStory::spaces() const
 }
 
 /// @cond
-BuildingStory::BuildingStory(boost::shared_ptr<detail::BuildingStory_Impl> impl)
+BuildingStory::BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

@@ -287,7 +287,7 @@ QGraphicsObject * GridLayoutItem::createNewItemView(int i)
 
     graphicsItem->setParentItem(this);
 
-    m_widgetItemPairs.insert( std::make_pair<QGraphicsObject *,QSharedPointer<OSListItem> >(graphicsItem,itemData) );
+    m_widgetItemPairs.insert( std::make_pair(graphicsItem,itemData) );
 
     bool bingo = connect(graphicsItem,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
 
@@ -297,7 +297,7 @@ QGraphicsObject * GridLayoutItem::createNewItemView(int i)
   }
   else
   {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -388,14 +388,14 @@ void GridLayoutItem::removePair(QObject * object)
 {
   if( object )
   {
-    std::map<QObject *,QSharedPointer<OSListItem> >::iterator it = m_widgetItemPairs.find(object);
+    auto it = m_widgetItemPairs.find(object);
 
     if( it != m_widgetItemPairs.end() )
     {
       m_widgetItemPairs.erase(it);
     }
 
-    std::map<QObject *, std::pair<int,int> >::iterator it2 = m_itemViewGridPosPairs.find(object);
+    auto it2 = m_itemViewGridPosPairs.find(object);
 
     std::pair<int,int> pos;
 
@@ -405,7 +405,7 @@ void GridLayoutItem::removePair(QObject * object)
 
       m_itemViewGridPosPairs.erase(it2);
 
-      std::map<std::pair<int,int>,QObject *>::iterator it3 = m_gridPosItemViewPairs.find(pos);
+      auto it3 = m_gridPosItemViewPairs.find(pos);
 
       if( it3 != m_gridPosItemViewPairs.end() )
       {
@@ -469,9 +469,9 @@ std::pair<int,int> GridLayoutItem::gridPos(int index)
 
 QGraphicsObject * GridLayoutItem::viewFromGridPos(std::pair<int,int> location)
 {
-  QGraphicsObject * result = NULL;
+  QGraphicsObject * result = nullptr;
 
-  std::map<std::pair<int,int>,QObject *>::iterator it = m_gridPosItemViewPairs.find(location);
+  auto it = m_gridPosItemViewPairs.find(location);
 
   if( it != m_gridPosItemViewPairs.end() )
   {

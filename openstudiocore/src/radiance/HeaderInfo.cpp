@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <radiance/HeaderInfo.hpp>
+#include "HeaderInfo.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>

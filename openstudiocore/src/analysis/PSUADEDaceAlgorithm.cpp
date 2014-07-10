@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
+#include "PSUADEDaceAlgorithm.hpp"
+#include "PSUADEDaceAlgorithm_Impl.hpp"
 
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
-#include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
+#include "PSUADEDaceAlgorithmOptions.hpp"
+#include "PSUADEDaceAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -69,7 +69,7 @@ namespace detail {
   {}
 
   AnalysisObject PSUADEDaceAlgorithm_Impl::clone() const {
-    boost::shared_ptr<PSUADEDaceAlgorithm_Impl> impl(new PSUADEDaceAlgorithm_Impl(*this));
+    std::shared_ptr<PSUADEDaceAlgorithm_Impl> impl(new PSUADEDaceAlgorithm_Impl(*this));
     return PSUADEDaceAlgorithm(impl);
   }
 
@@ -133,7 +133,7 @@ namespace detail {
 } // detail
 
 PSUADEDaceAlgorithm::PSUADEDaceAlgorithm(const PSUADEDaceAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::PSUADEDaceAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::PSUADEDaceAlgorithm_Impl>(
         new detail::PSUADEDaceAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -150,7 +150,7 @@ PSUADEDaceAlgorithm::PSUADEDaceAlgorithm(const UUID& uuid,
                                          const boost::optional<FileReference>& restartFileReference,
                                          const boost::optional<FileReference>& outFileReference,
                                          const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::PSUADEDaceAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::PSUADEDaceAlgorithm_Impl>(
         new detail::PSUADEDaceAlgorithm_Impl(uuid,
                                              versionUUID,
                                              displayName,
@@ -171,7 +171,7 @@ PSUADEDaceAlgorithmOptions PSUADEDaceAlgorithm::psuadedaceAlgorithmOptions() con
 }
 
 /// @cond
-PSUADEDaceAlgorithm::PSUADEDaceAlgorithm(boost::shared_ptr<detail::PSUADEDaceAlgorithm_Impl> impl)
+PSUADEDaceAlgorithm::PSUADEDaceAlgorithm(std::shared_ptr<detail::PSUADEDaceAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

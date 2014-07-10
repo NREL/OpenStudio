@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat.hpp>
-#include <model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/Schedule.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
+#include "ModelFixture.hpp"
+#include "../AirTerminalSingleDuctParallelPIUReheat.hpp"
+#include "../AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../Schedule.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio::model;
 

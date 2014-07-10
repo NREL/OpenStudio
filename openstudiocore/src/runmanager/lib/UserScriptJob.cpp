@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2010, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -26,12 +26,10 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
+#include "../../utilities/time/DateTime.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {

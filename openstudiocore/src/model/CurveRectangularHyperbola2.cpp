@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveRectangularHyperbola2.hpp>
-#include <model/CurveRectangularHyperbola2_Impl.hpp>
+#include "CurveRectangularHyperbola2.hpp"
+#include "CurveRectangularHyperbola2_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_RectangularHyperbola2_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -337,7 +337,7 @@ void CurveRectangularHyperbola2::resetOutputUnitType() {
 }
 
 /// @cond
-CurveRectangularHyperbola2::CurveRectangularHyperbola2(boost::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl)
+CurveRectangularHyperbola2::CurveRectangularHyperbola2(std::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

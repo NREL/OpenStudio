@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DAKOTAALGORITHM_HPP
 #define ANALYSIS_DAKOTAALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm.hpp"
 
 namespace openstudio {
 
@@ -97,7 +97,7 @@ class ANALYSIS_API DakotaAlgorithm : public Algorithm {
   /// @cond
   typedef detail::DakotaAlgorithm_Impl ImplType;
 
-  explicit DakotaAlgorithm(boost::shared_ptr<detail::DakotaAlgorithm_Impl> impl);
+  explicit DakotaAlgorithm(std::shared_ptr<detail::DakotaAlgorithm_Impl> impl);
 
   friend class detail::DakotaAlgorithm_Impl;
   friend class AnalysisObject;

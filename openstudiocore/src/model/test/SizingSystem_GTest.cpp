@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/Model.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
+#include "../Model.hpp"
+#include "../SizingSystem.hpp"
+#include "../SizingSystem_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
 
 using namespace openstudio;
 

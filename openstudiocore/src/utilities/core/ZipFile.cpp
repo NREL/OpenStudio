@@ -39,16 +39,16 @@ namespace openstudio {
 
   ZipFile::~ZipFile()
   {
-    zipClose(m_zipFile, 0);
+    zipClose(m_zipFile, nullptr);
   }
 
   void ZipFile::addFile(const openstudio::path &localPath, const openstudio::path &destinationPath)
   {
     if (zipOpenNewFileInZip(m_zipFile, openstudio::toString(destinationPath).c_str(),
-          0,
-          0, 0,
-          0, 0,
-          0,
+          nullptr,
+          nullptr, 0,
+          nullptr, 0,
+          nullptr,
           Z_DEFLATED,
           Z_DEFAULT_COMPRESSION) != ZIP_OK)
     {
@@ -88,7 +88,7 @@ namespace openstudio {
     // following conventions in openstudio::copyDirectory
     QDir srcDir(toQString(localDir));
 
-    Q_FOREACH(const QFileInfo& info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
+    for (const QFileInfo& info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot)) {
       QString srcItemPath = toQString(localDir) + "/" + info.fileName();
       QString dstItemPath = toQString(destinationDir) + "/" + info.fileName();
       if (info.isDir()) {

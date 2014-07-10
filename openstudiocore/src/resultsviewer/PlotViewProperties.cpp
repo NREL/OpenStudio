@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/PlotViewProperties.hpp>
+#include "PlotViewProperties.hpp"
 
 namespace resultsviewer{
 
-PlotViewProperties::PlotViewProperties(QWidget *parent, Qt::WFlags flags)
+PlotViewProperties::PlotViewProperties(QWidget *parent, Qt::WindowFlags flags)
   : QDialog(parent, flags)
 {
   ui.setupUi(this);

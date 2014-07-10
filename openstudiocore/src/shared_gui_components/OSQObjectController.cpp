@@ -19,7 +19,7 @@
 
 #include "OSQObjectController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <algorithm>
 
@@ -33,8 +33,8 @@ OSQObjectController::OSQObjectController()
 
 OSQObjectController::~OSQObjectController()
 {
-  std::vector<QObject *>::iterator it = m_objects.begin();
-  std::vector<QObject *>::iterator itend = m_objects.end();
+  auto it = m_objects.begin();
+  auto itend = m_objects.end();
   for( ; it != itend; ++it)
   {
     if( *it )
@@ -54,11 +54,11 @@ void OSQObjectController::addQObject(QObject * object)
 
 void OSQObjectController::onObjectDestroyed(QObject * object)
 {
-  std::vector<QObject *>::iterator it = find(m_objects.begin(),m_objects.end(),object);
+  auto it = find(m_objects.begin(),m_objects.end(),object);
 
   if( it != m_objects.end() )
   {
-    *it = NULL;
+    *it = nullptr;
   }
 }
 

@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
+#include "../../utilities/geometry/Geometry.hpp"
 
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

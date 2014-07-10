@@ -17,27 +17,27 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
+#include "People.hpp"
+#include "People_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "Model.hpp"
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_People_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -120,7 +120,7 @@ namespace detail {
     this->makeUnique();
 
     PeopleDefinition peopleDefinition = this->peopleDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, peopleDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : peopleDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -671,7 +671,7 @@ double People::getFloorAreaPerPerson(double floorArea) const {
 }
 
 /// @cond
-People::People(boost::shared_ptr<detail::People_Impl> impl)
+People::People(std::shared_ptr<detail::People_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

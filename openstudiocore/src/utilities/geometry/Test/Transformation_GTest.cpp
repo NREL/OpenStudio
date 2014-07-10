@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
+#include "../Transformation.hpp"
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
+#include "../EulerAngles.hpp"
 
 #include <boost/math/constants/constants.hpp>
 

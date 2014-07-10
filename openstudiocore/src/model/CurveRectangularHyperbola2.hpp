@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVERECTANGULARHYPERBOLA2_HPP
 #define MODEL_CURVERECTANGULARHYPERBOLA2_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -118,7 +118,7 @@ class MODEL_API CurveRectangularHyperbola2 : public Curve {
   /// @cond
   typedef detail::CurveRectangularHyperbola2_Impl ImplType;
 
-  explicit CurveRectangularHyperbola2(boost::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl);
+  explicit CurveRectangularHyperbola2(std::shared_ptr<detail::CurveRectangularHyperbola2_Impl> impl);
 
   friend class detail::CurveRectangularHyperbola2_Impl;
   friend class Model;

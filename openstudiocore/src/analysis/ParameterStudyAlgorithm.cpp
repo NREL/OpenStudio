@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/ParameterStudyAlgorithm.hpp>
-#include <analysis/ParameterStudyAlgorithm_Impl.hpp>
+#include "ParameterStudyAlgorithm.hpp"
+#include "ParameterStudyAlgorithm_Impl.hpp"
 
-#include <analysis/ParameterStudyAlgorithmOptions.hpp>
-#include <analysis/ParameterStudyAlgorithmOptions_Impl.hpp>
+#include "ParameterStudyAlgorithmOptions.hpp"
+#include "ParameterStudyAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/String.hpp>
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/String.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -69,7 +69,7 @@ namespace detail {
   {}
 
   AnalysisObject ParameterStudyAlgorithm_Impl::clone() const {
-    boost::shared_ptr<ParameterStudyAlgorithm_Impl> impl(new ParameterStudyAlgorithm_Impl(*this));
+    std::shared_ptr<ParameterStudyAlgorithm_Impl> impl(new ParameterStudyAlgorithm_Impl(*this));
     return ParameterStudyAlgorithm(impl);
   }
 
@@ -95,16 +95,16 @@ namespace detail {
       if (!options.finalPoint().empty()) {
         ss << "          final_point = ";
         std::vector<double> finalPoint = options.finalPoint();
-        for (std::vector<double>::iterator i = finalPoint.begin(); i != finalPoint.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : finalPoint) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
       else if (!options.stepVector().empty()) {
         ss << "          step_vector = ";
         std::vector<double> stepVector = options.stepVector();
-        for (std::vector<double>::iterator i = stepVector.begin(); i != stepVector.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : stepVector) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
@@ -117,8 +117,8 @@ namespace detail {
       if (!options.listOfPoints().empty()) {
         ss << "          list_of_points = ";
         std::vector<double> listOfPoints = options.listOfPoints();
-        for (std::vector<double>::iterator i = listOfPoints.begin(); i != listOfPoints.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : listOfPoints) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
       }
@@ -127,17 +127,17 @@ namespace detail {
       }
     }
     else if (options.algorithmType() == ParameterStudyAlgorithmType::centered_parameter_study) {
-      if (!options.stepVector().empty() && !options.stepVector().empty()) {
+      if (!options.stepVector().empty()) {
         ss << "          step_vector = ";
         std::vector<double> stepVector = options.stepVector();
-        for (std::vector<double>::iterator i = stepVector.begin(); i != stepVector.end(); ++i) {
-          ss << toString(*i) << " ";
+        for (const auto & elem : stepVector) {
+          ss << toString(elem) << " ";
         }
         ss << std::endl;
         ss << "          steps_per_variable = ";
         std::vector<int> stepsPerVariable = options.stepsPerVariable();
-        for (std::vector<int>::iterator i = stepsPerVariable.begin(); i != stepsPerVariable.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : stepsPerVariable) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }
@@ -149,8 +149,8 @@ namespace detail {
       if (!options.partitions().empty()) {
         ss << "          partitions = ";
         std::vector<int> partitions = options.partitions();
-        for (std::vector<int>::iterator i = partitions.begin(); i != partitions.end(); ++i) {
-          ss << *i << " ";
+        for (const auto & elem : partitions) {
+          ss << elem << " ";
         }
         ss << std::endl;
       }
@@ -194,7 +194,7 @@ namespace detail {
 } // detail
 
 ParameterStudyAlgorithm::ParameterStudyAlgorithm(const ParameterStudyAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
         new detail::ParameterStudyAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -211,7 +211,7 @@ ParameterStudyAlgorithm::ParameterStudyAlgorithm(const UUID& uuid,
                                                  const boost::optional<FileReference>& restartFileReference,
                                                  const boost::optional<FileReference>& outFileReference,
                                                  const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl>(
         new detail::ParameterStudyAlgorithm_Impl(uuid,
                                                  versionUUID,
                                                  displayName,
@@ -232,7 +232,7 @@ ParameterStudyAlgorithmOptions ParameterStudyAlgorithm::parameterStudyAlgorithmO
 }
 
 /// @cond
-ParameterStudyAlgorithm::ParameterStudyAlgorithm(boost::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl)
+ParameterStudyAlgorithm::ParameterStudyAlgorithm(std::shared_ptr<detail::ParameterStudyAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

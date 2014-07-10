@@ -20,12 +20,12 @@
 #ifndef ANALYSIS_DAKOTAALGORITHM_IMPL_HPP
 #define ANALYSIS_DAKOTAALGORITHM_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm_Impl.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 namespace openstudio {
 namespace analysis {

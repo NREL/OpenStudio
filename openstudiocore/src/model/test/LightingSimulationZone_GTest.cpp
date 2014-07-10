@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/LightingSimulationZone.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/Space.hpp>
+#include "../LightingSimulationZone.hpp"
+#include "../RenderingColor.hpp"
+#include "../Space.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

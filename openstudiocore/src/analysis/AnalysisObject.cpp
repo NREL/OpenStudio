@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/AnalysisObject.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisObject.hpp"
+#include "AnalysisObject_Impl.hpp"
 
 // for deserializing top-level json files
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "Analysis.hpp"
+#include "Analysis_Impl.hpp"
+#include "DataPoint.hpp"
+#include "DataPoint_Impl.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/StringStreamLogSink.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/StringStreamLogSink.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -306,7 +306,7 @@ bool AnalysisObject::disconnect(const char* signal,
 }
 
 /// @cond
-AnalysisObject::AnalysisObject(boost::shared_ptr<detail::AnalysisObject_Impl> impl)
+AnalysisObject::AnalysisObject(std::shared_ptr<detail::AnalysisObject_Impl> impl)
   : m_impl(impl)
 {}
 

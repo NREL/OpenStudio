@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULESETSVIEW_H
-#define OPENSTUDIO_SCHEDULESETSVIEW_H
+#ifndef OPENSTUDIO_SCHEDULESETSVIEW_HPP
+#define OPENSTUDIO_SCHEDULESETSVIEW_HPP
 
-#include <openstudio_lib/ModelSubTabView.hpp>
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelSubTabView.hpp"
+#include "ModelObjectInspectorView.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 class QStackedWidget;
 
@@ -72,4 +72,4 @@ class ScheduleSetsInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCHEDULESETSVIEW_H
+#endif // OPENSTUDIO_SCHEDULESETSVIEW_HPP

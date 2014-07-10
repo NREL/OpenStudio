@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model_editor/InspectorGadget.hpp>
-#include <model_editor/InspectorDialog.hpp>
+#include "InspectorGadget.hpp"
+#include "InspectorDialog.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/AccessPolicyStore.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ResourceObject.hpp"
+#include "../model/ResourceObject_Impl.hpp"
+#include "../model/AccessPolicyStore.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/idd/IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <QLabel>
@@ -51,14 +51,12 @@
 #include <QCloseEvent>
 #include <QSettings>
 
-#include <boost/foreach.hpp>
-
 using namespace openstudio;
 using namespace openstudio::model;
 
 InspectorDialog::InspectorDialog(InspectorDialogClient client, QWidget * parent)
   : QMainWindow(parent),
-    m_inspectorGadget(NULL),
+    m_inspectorGadget(nullptr),
     m_workspaceChanged(false),
     m_workspaceObjectAdded(false),
     m_workspaceObjectRemoved(false)
@@ -70,7 +68,7 @@ InspectorDialog::InspectorDialog(openstudio::model::Model& model,
                                  InspectorDialogClient client,
                                  QWidget * parent)
   : QMainWindow(parent),
-    m_inspectorGadget(NULL),
+    m_inspectorGadget(nullptr),
     m_model(model),
     m_workspaceChanged(false),
     m_workspaceObjectAdded(false),
@@ -175,7 +173,7 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
   }
 
   // check if selection is ok
-  BOOST_FOREACH(Handle handle, selectedObjectHandles){
+  for (Handle handle : selectedObjectHandles){
     boost::optional<WorkspaceObject> object = m_model.getObject(handle);
     if (!object || (object->iddObject().type() != m_iddObjectType)){
       return false;
@@ -197,9 +195,9 @@ bool InspectorDialog::setSelectedObjectHandles(const std::vector<openstudio::Han
     //std::string temp = toString(handleString);
     Handle handle(handleString);
 
-    std::vector<Handle>::iterator it = std::find(m_selectedObjectHandles.begin(),
-                                                 m_selectedObjectHandles.end(),
-                                                 handle);
+    auto it = std::find(m_selectedObjectHandles.begin(),
+                        m_selectedObjectHandles.end(),
+                        handle);
     if (it != m_selectedObjectHandles.end()){
       //select this row
       m_tableWidget->selectRow(i);
@@ -284,7 +282,7 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
   }
 
   // disconnect all signals with previous model
-  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), 0, this, 0);
+  disconnect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(), nullptr, this, nullptr);
 
   // change model
   m_model = model;
@@ -379,7 +377,7 @@ void InspectorDialog::onPushButtonCopy(bool)
 void InspectorDialog::onPushButtonDelete(bool)
 {
   std::vector<Handle> handles = m_selectedObjectHandles;
-  BOOST_FOREACH(Handle handle, handles){
+  for (Handle handle : handles){
     boost::optional<WorkspaceObject> object = m_model.getObject(handle);
     if (object){
       // calls model object remove
@@ -435,7 +433,7 @@ void InspectorDialog::onTableWidgetSelectionChanged()
   setSelectedObjectHandles(selectedObjectHandles, true);
 }
 
-void InspectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   m_workspaceObjectAdded = true;
   m_workspaceChanged = true;
@@ -485,7 +483,7 @@ void InspectorDialog::onTimeout()
   }
 }
 
-void InspectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void InspectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   m_workspaceObjectRemoved = true;
   m_workspaceChanged = true;
@@ -493,7 +491,7 @@ void InspectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::deta
   // if removed object is of current type
   if (impl->iddObject().type() == m_iddObjectType){
 
-    std::vector<Handle>::iterator it = std::remove(m_objectHandles.begin(),m_objectHandles.end(),impl->handle());
+    auto it = std::remove(m_objectHandles.begin(),m_objectHandles.end(),impl->handle());
     if (it != m_objectHandles.end()){
       m_objectHandles.erase(it, m_objectHandles.end());
     }
@@ -524,7 +522,7 @@ void InspectorDialog::init(InspectorDialogClient client)
       m_iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
 
       // everything is allowable
-      BOOST_FOREACH(IddObject iddObject, m_iddFile.objects()){
+      for (IddObject iddObject : m_iddFile.objects()){
         m_typesToDisplay.insert(iddObject.type());
       }
 
@@ -746,7 +744,7 @@ void InspectorDialog::createWidgets()
   //subLabelFont.setPointSize(12);
   subLabelFont.setBold(true);
 
-  QLabel* listLabel = new QLabel(this);
+  auto listLabel = new QLabel(this);
   listLabel->setObjectName("listLabel");
   listLabel->setText("Select Type");
   listLabel->setFont(labelFont);
@@ -761,15 +759,15 @@ void InspectorDialog::createWidgets()
   m_listWidget->setAcceptDrops(false);
   m_listWidget->setDragEnabled(false);
 
-  QVBoxLayout* listHolderLayout = new QVBoxLayout;
+  auto listHolderLayout = new QVBoxLayout;
   listHolderLayout->addWidget(listLabel);
   listHolderLayout->addWidget(m_listWidget);
 
-  QWidget* listHolderWidget = new QWidget(this);
+  auto listHolderWidget = new QWidget(this);
   listHolderWidget->setLayout(listHolderLayout);
 
   /// The table widget
-  QLabel* tableLabel = new QLabel(this);
+  auto tableLabel = new QLabel(this);
   tableLabel->setObjectName("tableLabel");
   tableLabel->setText("Select Object");
   tableLabel->setFont(labelFont);
@@ -800,7 +798,7 @@ void InspectorDialog::createWidgets()
   m_tableWidget->verticalHeader()->hide();
   m_tableWidget->setHorizontalHeaderLabels(headerLabels);
   m_tableWidget->horizontalHeader()->setStretchLastSection(true);
-  m_tableWidget->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+  m_tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
   m_tableWidget->setAcceptDrops(false);
   m_tableWidget->setDragEnabled(false);
 
@@ -820,7 +818,7 @@ void InspectorDialog::createWidgets()
   m_pushButtonPurge->setObjectName("pushButtonPurge");
   m_pushButtonPurge->setToolTip(tr("Purge unused objects"));
 
-  QHBoxLayout* buttonLayout = new QHBoxLayout;
+  auto buttonLayout = new QHBoxLayout;
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_pushButtonNew);
   buttonLayout->addSpacing(5);
@@ -831,17 +829,17 @@ void InspectorDialog::createWidgets()
   buttonLayout->addWidget(m_pushButtonPurge);
   buttonLayout->addStretch(0);
 
-  QWidget* buttonGroup = new QWidget(this);
+  auto buttonGroup = new QWidget(this);
   buttonGroup->setLayout(buttonLayout);
 
-  QVBoxLayout* tableVBoxLayout = new QVBoxLayout;
+  auto tableVBoxLayout = new QVBoxLayout;
   tableVBoxLayout->addWidget(m_tableWidget);
   tableVBoxLayout->addWidget(buttonGroup);
 
-  QWidget* tableWidgetHolder = new QWidget(this);
+  auto tableWidgetHolder = new QWidget(this);
   tableWidgetHolder->setLayout(tableVBoxLayout);
 
-  QLabel* noSelectionImage = new QLabel(this);
+  auto noSelectionImage = new QLabel(this);
   noSelectionImage->setPixmap(QPixmap(":/images/alert_image.png"));
 
   QLabel * noSelectionLabel = new QLabel("Pick your selection in SketchUp.", this);
@@ -850,30 +848,30 @@ void InspectorDialog::createWidgets()
   noSelectionLabel->setAlignment(Qt::AlignCenter);
   noSelectionLabel->setWordWrap(true);
 
-  QVBoxLayout* noSelectionLayout = new QVBoxLayout;
+  auto noSelectionLayout = new QVBoxLayout;
   noSelectionLayout->addStretch();
   noSelectionLayout->addWidget(noSelectionImage,0,Qt::AlignCenter);
   noSelectionLayout->addWidget(noSelectionLabel,0,Qt::AlignCenter);
   noSelectionLayout->addStretch();
 
-  QWidget* noSelectionWidget = new QWidget(this);
+  auto noSelectionWidget = new QWidget(this);
   noSelectionWidget->setLayout(noSelectionLayout);
 
   m_stackedWidget = new QStackedWidget(this);
   m_stackedWidget->addWidget(tableWidgetHolder);
   m_stackedWidget->addWidget(noSelectionWidget);
 
-  QVBoxLayout* tableHolderLayout = new QVBoxLayout;
+  auto tableHolderLayout = new QVBoxLayout;
   tableHolderLayout->addWidget(tableLabel);
   tableHolderLayout->addWidget(m_selectionLabel);
   tableHolderLayout->addWidget(m_stackedWidget);
 
-  QWidget* tableHolderWidget = new QWidget(this);
+  auto tableHolderWidget = new QWidget(this);
   tableHolderWidget->setLayout(tableHolderLayout);
 
   // The inspectorGadget widget
 
-  QLabel* inspectorGadgetLabel = new QLabel(this);
+  auto inspectorGadgetLabel = new QLabel(this);
   inspectorGadgetLabel->setObjectName("igLabel");
   inspectorGadgetLabel->setText("Edit Object");
   inspectorGadgetLabel->setFont(labelFont);
@@ -885,16 +883,16 @@ void InspectorDialog::createWidgets()
                              m_inspectorGadget, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  QVBoxLayout* inspectorGadgetHolderLayout = new QVBoxLayout;
+  auto inspectorGadgetHolderLayout = new QVBoxLayout;
   inspectorGadgetHolderLayout->addWidget(inspectorGadgetLabel);
   inspectorGadgetHolderLayout->addWidget(m_inspectorGadget);
 
-  QWidget* inspectorGadgetHolderWidget = new QWidget(this);
+  auto inspectorGadgetHolderWidget = new QWidget(this);
   inspectorGadgetHolderWidget->setLayout(inspectorGadgetHolderLayout);
 
   // The left widget
 
-  QSplitter* leftSplitter = new QSplitter(this);
+  auto leftSplitter = new QSplitter(this);
   leftSplitter->setOrientation(Qt::Vertical);
   leftSplitter->addWidget(listHolderWidget);
   leftSplitter->addWidget(tableHolderWidget);
@@ -908,7 +906,7 @@ void InspectorDialog::createWidgets()
 */
   // The central widget
 
-  QSplitter* centralSplitter = new QSplitter(this);
+  auto centralSplitter = new QSplitter(this);
   centralSplitter->setOrientation(Qt::Horizontal);
   centralSplitter->addWidget(leftSplitter);
   centralSplitter->addWidget(inspectorGadgetHolderWidget);
@@ -981,9 +979,9 @@ void InspectorDialog::connectModelSignalsAndSlots()
   bool connected;
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
@@ -993,9 +991,9 @@ void InspectorDialog::connectModelSignalsAndSlots()
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 }
 
@@ -1045,11 +1043,11 @@ void InspectorDialog::loadListWidgetData()
   QBrush itemAlternateBackground(QColor(238,238,238));
 
   QListWidgetItem* listItem;
-  BOOST_FOREACH(const std::string& group, m_iddFile.groups()){
+  for (const std::string& group : m_iddFile.groups()){
 
     // quick check if group is empty
     bool empty = true;
-    BOOST_FOREACH(const IddObject& iddObject, m_iddFile.getObjectsInGroup(group)){
+    for (const IddObject& iddObject : m_iddFile.getObjectsInGroup(group)){
       if (m_typesToDisplay.find(iddObject.type()) != m_typesToDisplay.end()){
         empty = false;
         break;
@@ -1071,7 +1069,7 @@ void InspectorDialog::loadListWidgetData()
 
     // add each object
     bool alternate = false;
-    BOOST_FOREACH(const IddObject& iddObject, m_iddFile.getObjectsInGroup(group)){
+    for (const IddObject& iddObject : m_iddFile.getObjectsInGroup(group)){
 
       IddObjectType type = iddObject.type();
       if (m_typesToDisplay.find(type) == m_typesToDisplay.end()){
@@ -1146,7 +1144,7 @@ void InspectorDialog::loadTableWidgetData()
 
   std::vector<WorkspaceObject> objects = m_model.getObjectsByType(m_iddObjectType);
 
-  BOOST_FOREACH(WorkspaceObject object, objects){
+  for (WorkspaceObject object : objects){
 
     m_objectHandles.push_back(object.handle());
 
@@ -1159,9 +1157,9 @@ void InspectorDialog::loadTableWidgetData()
     unsigned numSources = object.numSources();
     displayName += QString(" (") + QString::number(numSources) + QString(")");
 
-    QTableWidgetItem * tableItem = new QTableWidgetItem(displayName);
+    auto tableItem = new QTableWidgetItem(displayName);
     tableItem->setFlags(Qt::NoItemFlags | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-    QString handleString(object.handle());
+    QString handleString(object.handle().toString());
     //std::string temp = toString(handleString);
     tableItem->setData(Qt::UserRole, handleString);
     m_tableWidget->setItem(i,j++,tableItem);

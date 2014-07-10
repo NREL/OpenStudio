@@ -20,19 +20,17 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVER_IMPL_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "AnalysisDriverAPI.hpp"
+#include "CurrentAnalysis.hpp"
+#include "AnalysisDriverEnums.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../project/ProjectDatabase.hpp"
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/JobErrors.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/JobErrors.hpp"
 
 #include <QObject>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
 
 namespace openstudio {
@@ -52,7 +50,7 @@ namespace detail {
   /** AnalysisDriver_Impl is the implementation class for AnalysisDriver.*/
   class ANALYSISDRIVER_API AnalysisDriver_Impl
       : public QObject,
-        public boost::enable_shared_from_this<AnalysisDriver_Impl>
+        public std::enable_shared_from_this<AnalysisDriver_Impl>
   {
     Q_OBJECT;
    public:

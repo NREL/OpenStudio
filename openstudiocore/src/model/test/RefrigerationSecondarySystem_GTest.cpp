@@ -19,24 +19,24 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationSecondarySystem_Impl.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/ModelObjectList.hpp>
-#include <model/ModelObjectList_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../RefrigerationSecondarySystem.hpp"
+#include "../RefrigerationSecondarySystem_Impl.hpp"
+#include "../RefrigerationAirChiller.hpp"
+#include "../RefrigerationAirChiller_Impl.hpp"
+#include "../RefrigerationCase.hpp"
+#include "../RefrigerationCase_Impl.hpp"
+#include "../RefrigerationWalkIn.hpp"
+#include "../RefrigerationWalkIn_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

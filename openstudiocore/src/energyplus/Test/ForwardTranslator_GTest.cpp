@@ -18,46 +18,46 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ErrorFile.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SiteGroundReflectance.hpp>
-#include <model/SiteGroundReflectance_Impl.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface_Impl.hpp>
-#include <model/SiteWaterMainsTemperature.hpp>
-#include <model/SiteWaterMainsTemperature_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Space.hpp>
-#include <model/Lights.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Schedule.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/Construction.hpp>
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/SiteGroundReflectance.hpp"
+#include "../../model/SiteGroundReflectance_Impl.hpp"
+#include "../../model/SiteGroundTemperatureBuildingSurface.hpp"
+#include "../../model/SiteGroundTemperatureBuildingSurface_Impl.hpp"
+#include "../../model/SiteWaterMainsTemperature.hpp"
+#include "../../model/SiteWaterMainsTemperature_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/CurveBiquadratic.hpp"
+#include "../../model/CurveBiquadratic_Impl.hpp"
+#include "../../model/CurveQuadratic.hpp"
+#include "../../model/CurveQuadratic_Impl.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Version.hpp"
+#include "../../model/Version_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
@@ -500,7 +500,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
   // log translator errors rather than having the exceptions propagate out of ForwardTranslator.)
   Workspace ws;
   IddObjectVector iddObjects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
-  BOOST_FOREACH(const IddObject& iddObject,iddObjects) {
+  for (const IddObject& iddObject : iddObjects) {
     ws.addObject(IdfObject(iddObject));
   }
   Model model(ws);

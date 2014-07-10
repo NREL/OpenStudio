@@ -18,8 +18,8 @@
 **********************************************************************/
 
 #include "URLHelpers.hpp"
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
+#include "Path.hpp"
+#include "String.hpp"
 
 namespace openstudio {
   
@@ -35,15 +35,13 @@ QUrl completeURL(const QUrl &t_source, const std::vector<QUrl> &t_searchPaths, b
       return QUrl::fromLocalFile(toQString(origpath));
     }
 
-    for (std::vector<QUrl>::const_iterator searchitr = t_searchPaths.begin();
-        searchitr != t_searchPaths.end();
-        ++searchitr)
+    for (const auto & searchitr : t_searchPaths)
     {
       //search for files here... 
       /// \todo support remote urls
-      if (searchitr->scheme() == "file" || searchitr->scheme().isEmpty())
+      if (searchitr.scheme() == "file" || searchitr.scheme().isEmpty())
       {
-        openstudio::path searchpath = toPath(searchitr->toLocalFile());
+        openstudio::path searchpath = toPath(searchitr.toLocalFile());
 
         openstudio::path completepath = searchpath / origpath;
 

@@ -21,7 +21,7 @@
 #define MODEL_SCHEDULEINTERVAL_HPP
 
 #include "ModelAPI.hpp"
-#include <model/Schedule.hpp>
+#include "Schedule.hpp"
 
 namespace openstudio {
 
@@ -72,7 +72,7 @@ class MODEL_API ScheduleInterval : public Schedule {
   ScheduleInterval(IddObjectType type,const Model& model);
 
   // constructor
-  explicit ScheduleInterval(boost::shared_ptr<detail::ScheduleInterval_Impl> impl);
+  explicit ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl);
 
  private:
 

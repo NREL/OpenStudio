@@ -22,9 +22,9 @@
 
 #include "EnergyPlusAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <string>

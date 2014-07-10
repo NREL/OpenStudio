@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectItem.hpp>
+#include "ModelObjectItem.hpp"
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
-#include <shared_gui_components/MeasureBadge.hpp>
+#include "../shared_gui_components/MeasureBadge.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
 #include <QLabel>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

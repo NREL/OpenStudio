@@ -20,7 +20,7 @@
 #ifndef MODEL_PLANTLOOP_IMPL_HPP
 #define MODEL_PLANTLOOP_IMPL_HPP
 
-#include <model/Loop_Impl.hpp>
+#include "Loop_Impl.hpp"
 
 namespace openstudio {
 

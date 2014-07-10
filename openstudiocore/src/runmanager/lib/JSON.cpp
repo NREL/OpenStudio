@@ -1,15 +1,32 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "JSON.hpp"
 
 #include "Job.hpp"
 #include "JobFactory.hpp"
 #include "WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/PathHelpers.hpp>
-
-#include <qjson/parser.h>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Json.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -48,7 +65,7 @@ namespace detail {
 
     if (t_jobTree.allParams().has("flatoutdir"))
     {
-      openstudio::path outdir = openstudio::toPath(t_jobTree.outdir().filename());
+      openstudio::path outdir = t_jobTree.outdir().filename();
       map["outdir"] = toQString(outdir);
     }
 
@@ -248,11 +265,9 @@ namespace detail {
     QVariantList qvl;
 
     int index(0);
-    for (std::vector<WorkItem>::const_iterator itr = t_workItems.begin();
-         itr != t_workItems.end();
-         ++itr)
+    for (const auto & workItem : t_workItems)
     {
-      QVariantMap qvm = toVariant(*itr).toMap();
+      QVariantMap qvm = toVariant(workItem).toMap();
       qvm["work_item_index"] = QVariant(index);
       qvl.push_back(qvm);
       ++index;
@@ -291,9 +306,9 @@ namespace detail {
                                                  const VersionString& version)
   {
     return deserializeOrderedVector<WorkItem>(
-               t_variant.toList(),
-               "work_item_index",
-               boost::function<WorkItem (const QVariant&)>(boost::bind(JSON::toWorkItem,_1,version)));
+      t_variant.toList(),
+      "work_item_index",
+      std::function<WorkItem(const QVariant&)>(std::bind(static_cast<WorkItem (*)(const QVariant&, const VersionString&)>(&JSON::toWorkItem), std::placeholders::_1, version)));
   }
 
   std::vector<WorkItem> JSON::toVectorOfWorkItem(const openstudio::path &t_pathToJson) {
@@ -338,11 +353,9 @@ namespace detail {
     QVariantList qvl;
 
     // ETH@20130725 If order is important, should explicitly serialize an index.
-    for (std::vector<Job>::const_iterator itr = t_jobs.begin();
-         itr != t_jobs.end();
-         ++itr)
+    for (const auto & job : t_jobs)
     {
-      qvl.push_back(toVariant(*itr));
+      qvl.push_back(toVariant(job));
     }
 
     return QVariant(qvl);
@@ -418,13 +431,11 @@ namespace detail {
   {
     QVariantList qvl;
 
-    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = t_requiredFiles.begin();
-         itr != t_requiredFiles.end();
-         ++itr)
+    for (const auto & requiredFile : t_requiredFiles)
     {
       QVariantMap qvm;
-      qvm["url"] = itr->first;
-      qvm["path"] = toQString(itr->second);
+      qvm["url"] = requiredFile.first;
+      qvm["path"] = toQString(requiredFile.second);
       qvl.push_back(qvm);
     }
 
@@ -455,11 +466,9 @@ namespace detail {
   {
     QVariantList qvl;
 
-    for (std::vector<FileInfo>::const_iterator itr = t_files.begin();
-         itr != t_files.end();
-         ++itr)
+    for (const auto & fileInfo : t_files)
     {
-      qvl.push_back(toVariant(*itr));
+      qvl.push_back(toVariant(fileInfo));
     }
 
     return QVariant(qvl);
@@ -518,13 +527,11 @@ namespace detail {
     QVariantList qvl;
 
     int index(0);
-    for (std::vector<JobParam>::const_iterator itr = t_params.begin();
-         itr != t_params.end();
-         ++itr)
+    for (const auto & jobParam : t_params)
     {
       QVariantMap qvm;
       qvm["param_index"] = index;
-      qvm["param"] = toVariant(*itr);
+      qvm["param"] = toVariant(jobParam);
       qvl.push_back(QVariant(qvm));
       ++index;
     }
@@ -538,7 +545,7 @@ namespace detail {
           t_variant.toList(),
           "param",
           "param_index",
-          boost::function<JobParam (const QVariant&)>(boost::bind(runmanager::detail::JSON::toJobParam,_1,t_version)));
+          std::function<JobParam (const QVariant&)>(std::bind(runmanager::detail::JSON::toJobParam,std::placeholders::_1,t_version)));
   }
 
   // ToolInfo
@@ -583,11 +590,9 @@ namespace detail {
   {
     QVariantList qvl;
 
-    for (std::vector<ToolInfo>::const_iterator itr = t_tools.begin();
-         itr != t_tools.end();
-         ++itr)
+    for (const auto & toolInfo : t_tools)
     {
-      qvl.push_back(toVariant(*itr));
+      qvl.push_back(toVariant(toolInfo));
     }
 
     return QVariant(qvl);
@@ -663,13 +668,11 @@ namespace detail {
   {
     QVariantList qvl;
 
-    for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = t_errors.begin();
-         itr != t_errors.end();
-         ++itr)
+    for (const auto & errorType : t_errors)
     {
       QVariantMap qvm;
-      qvm["error_type"] = toQString(itr->first.valueName());
-      qvm["description"] = toQString(itr->second);
+      qvm["error_type"] = toQString(errorType.first.valueName());
+      qvm["description"] = toQString(errorType.second);
       qvl.push_back(qvm);
     }
 
@@ -682,17 +685,15 @@ namespace detail {
 
     std::vector<std::pair<ErrorType, std::string> > retval;
 
-    for (QVariantList::const_iterator itr = qvl.begin();
-         itr != qvl.end();
-         ++itr)
+    for (const auto & variant : qvl)
     {
-      QVariantMap qvm = itr->toMap();
+      QVariantMap qvm = variant.toMap();
       retval.push_back(
-          std::make_pair(
-            ErrorType(toString(qvm["error_type"].toString())),
-            toString(qvm["description"].toString())
-            )
-          );
+        std::make_pair(
+          ErrorType(toString(qvm["error_type"].toString())),
+          toString(qvm["description"].toString())
+        )
+      );
     }
 
     return retval;

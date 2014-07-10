@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
+#include "HotWaterEquipment.hpp"
+#include "HotWaterEquipment_Impl.hpp"
 
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "HotWaterEquipmentDefinition.hpp"
+#include "HotWaterEquipmentDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_HotWaterEquipment_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     HotWaterEquipmentDefinition hotWaterEquipmentDefinition = this->hotWaterEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, hotWaterEquipmentDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : hotWaterEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -364,7 +364,7 @@ double HotWaterEquipment::getPowerPerPerson(double floorArea, double numPeople) 
 }
 
 /// @cond
-HotWaterEquipment::HotWaterEquipment(boost::shared_ptr<detail::HotWaterEquipment_Impl> impl)
+HotWaterEquipment::HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

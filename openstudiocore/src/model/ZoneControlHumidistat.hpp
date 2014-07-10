@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONECONTROLHUMIDISTAT_HPP
 #define MODEL_ZONECONTROLHUMIDISTAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -76,7 +76,7 @@ class MODEL_API ZoneControlHumidistat : public ModelObject {
   /// @cond
   typedef detail::ZoneControlHumidistat_Impl ImplType;
 
-  explicit ZoneControlHumidistat(boost::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
+  explicit ZoneControlHumidistat(std::shared_ptr<detail::ZoneControlHumidistat_Impl> impl);
 
   friend class detail::ZoneControlHumidistat_Impl;
   friend class Model;

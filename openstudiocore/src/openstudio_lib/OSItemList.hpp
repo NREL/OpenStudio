@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSITEMLIST_H
-#define OPENSTUDIO_OSITEMLIST_H
+#ifndef OPENSTUDIO_OSITEMLIST_HPP
+#define OPENSTUDIO_OSITEMLIST_HPP
 
-#include <openstudio_lib/OSItemSelector.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItemSelector.hpp"
+#include "OSItem.hpp"
 
 class QVBoxLayout;
 
@@ -105,5 +105,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSITEMLIST_H
+#endif // OPENSTUDIO_OSITEMLIST_HPP
 

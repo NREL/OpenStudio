@@ -20,11 +20,11 @@
 #ifndef MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_IMPL_HPP
 #define MODEL_OUTPUTCONTROLREPORTINGTOLERANCES_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef PROJECT_OSARGUMENTRECORD_HPP
 #define PROJECT_OSARGUMENTRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
 namespace openstudio {
 namespace project {
@@ -110,7 +110,7 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   OSArgumentRecord(const QSqlQuery& query, ProjectDatabase& database);
 
   /** Construct from impl. */
-  OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl,
+  OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl,
                    ProjectDatabase database);
 
   virtual ~OSArgumentRecord() {}
@@ -159,7 +159,7 @@ class PROJECT_API OSArgumentRecord : public ObjectRecord {
   //@}
  protected:
   /// @cond
-  explicit OSArgumentRecord(boost::shared_ptr<detail::OSArgumentRecord_Impl> impl);
+  explicit OSArgumentRecord(std::shared_ptr<detail::OSArgumentRecord_Impl> impl);
 
   friend class detail::OSArgumentRecord_Impl;
   friend class Record;

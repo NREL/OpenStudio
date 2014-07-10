@@ -20,18 +20,16 @@
 #ifndef MODEL_MODELOBJECT_IMPL_HPP
 #define MODEL_MODELOBJECT_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp> // required for Q_PROPERTY
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp" // required for Q_PROPERTY
 
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-#include <QtCore/QStringList>
-
-#include <boost/foreach.hpp>
+#include <QObject>
+#include <QVariant>
+#include <QStringList>
 
 namespace openstudio {
 
@@ -276,7 +274,7 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.ModelObject");
 
     // vector of connections to other ModelObject "ports"
-    std::vector<boost::shared_ptr<Connection> > m_connectionVector;
+    std::vector<std::shared_ptr<Connection> > m_connectionVector;
 
     boost::optional<ModelObject> parentAsModelObject() const;
 
@@ -291,7 +289,7 @@ namespace detail {
     boost::optional<std::string> getSpecificKeyValue(OptionalString keyValue) const;
   };
 
-  typedef boost::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
+  typedef std::shared_ptr<ModelObject_Impl> ModelObject_ImplPtr;
 
 } // detail
 } // model

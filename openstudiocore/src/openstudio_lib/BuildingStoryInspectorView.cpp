@@ -17,28 +17,27 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
+#include "BuildingStoryInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/RenderingColorWidget.hpp>
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
+#include "RenderingColorWidget.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/Space.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
 
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -157,7 +156,7 @@ void BuildingStoryDefaultScheduleSetVectorController::onDrop(const OSItemId& ite
 void BuildingStorySpacesVectorController::attach(const model::ModelObject& modelObject)
 {
   ModelObjectVectorController::attach(modelObject);
-  BOOST_FOREACH(const model::Space& space, modelObject.model().getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : modelObject.model().getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -167,7 +166,7 @@ std::vector<OSItemId> BuildingStorySpacesVectorController::makeVector()
   std::vector<OSItemId> result;
   if (m_modelObject){
     model::BuildingStory buildingStory = m_modelObject->cast<model::BuildingStory>();
-    BOOST_FOREACH(const model::Space& space, buildingStory.spaces()){
+    for (const model::Space& space : buildingStory.spaces()){
       result.push_back(modelObjectToItemId(space, false));
     }
   }
@@ -229,7 +228,7 @@ void BuildingStorySpacesVectorController::onDrop(const OSItemId& itemId)
 void BuildingStoryUnassignedSpacesVectorController::attachModel(const model::Model& model)
 {
   ModelObjectVectorController::attachModel(model);
-  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     attachOtherModelObject(space);
   }
 }
@@ -246,7 +245,7 @@ void BuildingStoryUnassignedSpacesVectorController::onChangeRelationship(const m
 std::vector<OSItemId> BuildingStoryUnassignedSpacesVectorController::makeVector()
 {
   std::vector<OSItemId> result;
-  BOOST_FOREACH(const model::Space& space, m_model->getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : m_model->getConcreteModelObjects<model::Space>()){
     if (!space.handle().isNull()){
       if (!space.buildingStory()){
         result.push_back(modelObjectToItemId(space, false));

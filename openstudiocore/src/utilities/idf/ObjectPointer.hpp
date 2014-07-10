@@ -20,7 +20,7 @@
 #ifndef UTILITIES_IDF_OBJECTPOINTER_HPP
 #define UTILITIES_IDF_OBJECTPOINTER_HPP
 
-#include <utilities/idf/Handle.hpp>
+#include "Handle.hpp"
 
 namespace openstudio {
 

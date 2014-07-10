@@ -20,13 +20,10 @@
 #ifndef ANALYSIS_ALGORITHMOPTIONS_IMPL_HPP
 #define ANALYSIS_ALGORITHMOPTIONS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm.hpp"
 
-#include <utilities/data/Attribute.hpp>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -34,7 +31,7 @@ namespace analysis {
 namespace detail {
 
   /** AlgorithmOptions_Impl is the implementation class for AlgorithmOptions.*/
-  class ANALYSIS_API AlgorithmOptions_Impl : public boost::enable_shared_from_this<AlgorithmOptions_Impl> {
+  class ANALYSIS_API AlgorithmOptions_Impl : public std::enable_shared_from_this<AlgorithmOptions_Impl> {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -89,8 +86,8 @@ namespace detail {
     /** Get a public object that wraps this impl.*/
     template<typename T>
     T getPublicObject() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<AlgorithmOptions_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<AlgorithmOptions_Impl>(shared_from_this())));
       return result;
     }
 

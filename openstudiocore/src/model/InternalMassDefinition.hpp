@@ -20,8 +20,8 @@
 #ifndef MODEL_INTERNALMASSDEFINITION_HPP
 #define MODEL_INTERNALMASSDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 namespace model {
@@ -123,7 +123,7 @@ class MODEL_API InternalMassDefinition : public SpaceLoadDefinition {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit InternalMassDefinition(boost::shared_ptr<detail::InternalMassDefinition_Impl> impl);
+  explicit InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl);
 
   /// @endcond
  private:

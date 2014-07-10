@@ -18,20 +18,20 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <utilities/data/TimeSeries.hpp>
+#include "../../utilities/data/TimeSeries.hpp"
 
-#include <model/Model.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ScheduleRuleset.hpp"
+#include "../../model/ScheduleRuleset_Impl.hpp"
+#include "../../model/ScheduleRule.hpp"
+#include "../../model/ScheduleRule_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 
 #include <sstream>

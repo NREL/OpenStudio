@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class ScaleFactory_Test < Test::Unit::TestCase
+class ScaleFactory_Test < MiniTest::Unit::TestCase
   # def setup
   # end
 

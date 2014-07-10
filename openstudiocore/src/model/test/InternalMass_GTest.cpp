@@ -19,15 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../InternalMass.hpp"
+#include "../InternalMass_Impl.hpp"
+#include "../InternalMassDefinition.hpp"
+#include "../InternalMassDefinition_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -17,39 +17,37 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/ExteriorLights.hpp>
-#include <model/ExteriorLights_Impl.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "ExteriorLights.hpp"
+#include "ExteriorLights_Impl.hpp"
+#include "LifeCycleCostParameters.hpp"
+#include "LifeCycleCostParameters_Impl.hpp"
+#include "Meter.hpp"
+#include "Meter_Impl.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "TimeDependentValuation.hpp"
+#include "TimeDependentValuation_Impl.hpp"
+#include "UtilityBill.hpp"
+#include "UtilityBill_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/economics/Economics.hpp>
-#include <utilities/sql/SqlFile.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/economics/Economics.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -140,7 +138,7 @@ namespace detail {
   {
     MeterVector result;
     MeterVector meters = this->model().getConcreteModelObjects<Meter>();
-    BOOST_FOREACH(const Meter& meter, meters){
+    for (const Meter& meter : meters){
       if (meter.installLocationType() && (InstallLocationType::Facility == meter.installLocationType().get().value())){
         result.push_back(meter);
       }
@@ -155,7 +153,7 @@ namespace detail {
     const boost::optional<std::string>& specificEndUse) const
   {
     OptionalMeter result;
-    BOOST_FOREACH(const Meter& meter,this->meters()) {
+    for (const Meter& meter : this->meters()) {
       if (meter.fuelType() && (meter.fuelType() == fuelType)) {
         if (istringEqual(meter.reportingFrequency(),reportingFrequency)) {
           OptionalEndUseType meterEndUseType = meter.endUseType();
@@ -340,7 +338,7 @@ namespace detail {
     if (oTDV) {
       TimeDependentValuation tdv = *oTDV;
       FuelTypeVector fts = Facility::fossilFuels();
-      BOOST_FOREACH(const FuelType& ft,fts) {
+      for (const FuelType& ft : fts) {
         OptionalDouble candidate = tdv.getEnergyTimeDependentValuation(ft);
         if (candidate) {
           if (result) { result = (*result + *candidate); }
@@ -357,7 +355,7 @@ namespace detail {
     if (oTDV) {
       TimeDependentValuation tdv = *oTDV;
       FuelTypeVector fts = Facility::fossilFuels();
-      BOOST_FOREACH(const FuelType& ft,fts) {
+      for (const FuelType& ft : fts) {
         OptionalDouble candidate = tdv.getCostTimeDependentValuation(ft);
         if (candidate) {
           if (result) { result = (*result + *candidate); }
@@ -472,7 +470,7 @@ namespace detail {
     double netArea;
     std::string constructionName;
     ComponentCostLineItemVector componentCostLineItems = this->model().getModelObjects<ComponentCostLineItem>();
-    BOOST_FOREACH(ComponentCostLineItem componentCostLineItem, componentCostLineItems){
+    for (ComponentCostLineItem componentCostLineItem : componentCostLineItems){
 
       ModelObject item = componentCostLineItem.item();
 
@@ -484,7 +482,7 @@ namespace detail {
         std::vector<PlanarSurface> surfaces = construction.getModelObjectSources<PlanarSurface>();
 
         netArea = 0;
-        BOOST_FOREACH(PlanarSurface surface, surfaces){
+        for (PlanarSurface surface : surfaces){
           netArea += surface.netArea();
         }
 
@@ -1553,7 +1551,7 @@ namespace detail {
     if (mySqlFile && mySqlFile->connectionOpen())
     {
       result = CalibrationResult();
-      BOOST_FOREACH(const model::UtilityBill& utilityBill, this->model().getConcreteModelObjects<model::UtilityBill>()){
+      for (const model::UtilityBill& utilityBill : this->model().getConcreteModelObjects<model::UtilityBill>()){
         CalibrationUtilityBill calibrationUtilityBill(utilityBill.name().get(), utilityBill.fuelType(),
           utilityBill.meterInstallLocation(), utilityBill.meterSpecificInstallLocation(), 
           utilityBill.meterEndUseCategory(), utilityBill.meterSpecificEndUse(), utilityBill.consumptionUnit(),
@@ -1561,7 +1559,7 @@ namespace detail {
           utilityBill.timestepsInPeakDemandWindow(), utilityBill.minutesInPeakDemandWindow(), utilityBill.numberBillingPeriodsInCalculations(),
           utilityBill.CVRMSE(), utilityBill.NMBE());
 
-        BOOST_FOREACH(const model::BillingPeriod& billingPeriod, utilityBill.billingPeriods()){
+        for (const model::BillingPeriod& billingPeriod : utilityBill.billingPeriods()){
           CalibrationBillingPeriod calibrationBillingPeriod(billingPeriod.startDate(), billingPeriod.numberOfDays(),
              utilityBill.consumptionUnit(), utilityBill.peakDemandUnit(),
              billingPeriod.consumption(), billingPeriod.peakDemand(), billingPeriod.totalCost(),
@@ -1606,7 +1604,7 @@ namespace detail {
 
 }// detail
 
-Facility::Facility(boost::shared_ptr<detail::Facility_Impl> impl)
+Facility::Facility(std::shared_ptr<detail::Facility_Impl> impl)
   : ParentObject(impl)
 {}
 

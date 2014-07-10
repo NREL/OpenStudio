@@ -17,18 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_FILEINFO_HPP__
-#define OPENSTUDIO_RUNMANAGER_FILEINFO_HPP__
+#ifndef RUNMANAGER_LIB_FILEINFO_HPP
+#define RUNMANAGER_LIB_FILEINFO_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <string>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/core/Path.hpp"
 #include <QMetaType>
 #include <QRegExp>
 #include <QUrl>
-#include <boost/bind.hpp>
 #include <algorithm>
 
 namespace openstudio {
@@ -150,11 +149,9 @@ class RUNMANAGER_API Files
     {
       std::vector<FileInfo> files;
 
-      for (std::vector<FileInfo>::const_iterator itr = m_files.begin();
-           itr != m_files.end();
-           ++itr)
+      for (const auto & file : m_files)
       {
-        files.push_back(itr->complete(t_basePath));
+        files.push_back(file.complete(t_basePath));
       }
 
       return Files(files);
@@ -300,10 +297,9 @@ class RUNMANAGER_API Files
       return fi.filename == t_filename;
     }
 
-    const FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) const
+    const FileInfo &getLast(const std::function<bool (const FileInfo &)> &f) const
     {
-      std::vector<openstudio::runmanager::FileInfo>::const_reverse_iterator itr 
-        = std::find_if(m_files.rbegin(), m_files.rend(), f);
+      auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
       if (itr != m_files.rend())
       {
@@ -313,10 +309,9 @@ class RUNMANAGER_API Files
       throw std::runtime_error("FileInfo not found");
     }
 
-    FileInfo &getLast(const boost::function<bool (const FileInfo &)> &f) 
+    FileInfo &getLast(const std::function<bool (const FileInfo &)> &f) 
     {
-      std::vector<openstudio::runmanager::FileInfo>::reverse_iterator itr 
-        = std::find_if(m_files.rbegin(), m_files.rend(), f);
+      auto itr = std::find_if(m_files.rbegin(), m_files.rend(), f);
 
       if (itr != m_files.rend())
       {
@@ -326,10 +321,10 @@ class RUNMANAGER_API Files
       throw std::runtime_error("FileInfo not found");
     }
 
-    Files getAll(const boost::function<bool (const FileInfo &)> &f) const
+    Files getAll(const std::function<bool (const FileInfo &)> &f) const
     {
-      std::vector<openstudio::runmanager::FileInfo>::const_iterator itr = m_files.begin();
-      const std::vector<openstudio::runmanager::FileInfo>::const_iterator end = m_files.end();
+      auto itr = m_files.begin();
+      auto end = m_files.end();
 
       Files ret;
 
@@ -355,5 +350,5 @@ class RUNMANAGER_API Files
 
 Q_DECLARE_METATYPE(openstudio::runmanager::FileInfo);
 
-#endif
+#endif // RUNMANAGER_LIB_FILEINFO_HPP
 

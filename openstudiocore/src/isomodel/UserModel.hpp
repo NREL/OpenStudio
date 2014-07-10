@@ -21,11 +21,11 @@
 #define ISOMODEL_USERMODEL_HPP
 
 #include "ISOModelAPI.hpp"
-#include <isomodel/EpwData.hpp>
-#include <isomodel/SimModel.hpp>
+#include "EpwData.hpp"
+#include "SimModel.hpp"
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
@@ -42,7 +42,7 @@ namespace isomodel {
      * Call setWeatherFilePath(path) then loadWeather() to update
      * the UserModel with a new set of weather data
      */
-    boost::shared_ptr<WeatherData> loadWeather();
+    std::shared_ptr<WeatherData> loadWeather();
 
     /**
      * Loads an ISO model from the specified .ISO file
@@ -346,7 +346,7 @@ namespace isomodel {
     void parseStructure(const std::string &attributeName, const char* attributeValue);
 
     REGISTER_LOGGER("openstudio.isomodel.UserModel");
-    boost::shared_ptr<WeatherData> _weather; 
+    std::shared_ptr<WeatherData> _weather; 
     bool _valid;
     double _terrainClass;
     double _floorArea;

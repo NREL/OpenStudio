@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "../AWSProvider.hpp"
+#include "../AWSProvider_Impl.hpp"
 
 #include <string>
 
@@ -54,14 +54,14 @@ TEST(AWSProvider, AWSProviderTest)
   
   if (awsProvider.warnings().size()) {
     cout << "WARNINGS:" << endl;
-    Q_FOREACH(std::string warning, awsProvider.warnings()) {
+    for (const std::string& warning : awsProvider.warnings()) {
       cout << "  " << warning << cout;
     }
   }
   
   if (awsProvider.errors().size()) {
     cout << "ERRORS:" << endl;
-    Q_FOREACH(std::string error, awsProvider.errors()) {
+    for (const std::string& error : awsProvider.errors()) {
       cout << "  " << error << cout;
     }
   }

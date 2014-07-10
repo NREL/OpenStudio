@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/ChangeAliasDialog.hpp>
+#include "ChangeAliasDialog.hpp"
 #include <QFile>
 #include <QFileDialog>
 #include <QVBoxLayout>
@@ -35,14 +35,14 @@ ChangeAliasDialog::ChangeAliasDialog(const QString& oldAlias, const QString& fil
   p.setColor(QPalette::Base, Qt::lightGray);    
 
   QLabel *fileLabel = new QLabel(tr("&EnergyPlus file:"));
-  QLineEdit *fileName = new QLineEdit(filename);
+  auto fileName = new QLineEdit(filename);
   fileLabel->setBuddy(fileName);
   fileName->setReadOnly(true);
   fileName->setPalette(p);
   fileName->setMinimumWidth(boxWidth);
 
   QLabel *oldAliasLabel = new QLabel(tr("&Old alias:"));
-  QLineEdit *oldAliasName = new QLineEdit(oldAlias);
+  auto oldAliasName = new QLineEdit(oldAlias);
   oldAliasLabel->setBuddy(oldAliasName);
   oldAliasName->setReadOnly(true);
   oldAliasName->setPalette(p);
@@ -64,7 +64,7 @@ ChangeAliasDialog::ChangeAliasDialog(const QString& oldAlias, const QString& fil
   connect(m_newAliasName, SIGNAL(textChanged(const QString&)), this, SLOT(enableUpdateButton(const QString&)));
 
 // layout
-  QGridLayout *gridLayout = new QGridLayout;
+  auto gridLayout = new QGridLayout;
   gridLayout->addWidget(fileLabel, 0, 0);
   gridLayout->addWidget(fileName, 0, 1);
   gridLayout->addWidget(oldAliasLabel, 1, 0);
@@ -72,12 +72,12 @@ ChangeAliasDialog::ChangeAliasDialog(const QString& oldAlias, const QString& fil
   gridLayout->addWidget(newAliasLabel, 2, 0);
   gridLayout->addWidget(m_newAliasName, 2, 1);
 
-  QHBoxLayout *buttonLayout = new QHBoxLayout;
+  auto buttonLayout = new QHBoxLayout;
   buttonLayout->addStretch();
   buttonLayout->addWidget(m_updateButton);
   buttonLayout->addWidget(cancelButton);
 
-  QVBoxLayout *mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   mainLayout->addLayout(gridLayout);
   mainLayout->addLayout(buttonLayout);
 

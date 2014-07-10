@@ -18,29 +18,29 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AlgorithmRecord.hpp>
-#include <project/DesignOfExperimentsRecord.hpp>
-#include <project/DesignOfExperimentsRecord_Impl.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/DataPointRecord.hpp>
+#include "../AnalysisRecord.hpp"
+#include "../AlgorithmRecord.hpp"
+#include "../DesignOfExperimentsRecord.hpp"
+#include "../DesignOfExperimentsRecord_Impl.hpp"
+#include "../ProblemRecord.hpp"
+#include "../AttributeRecord.hpp"
+#include "../DataPointRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Variable.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/Containers.hpp"
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/data/Tag.hpp"
 
 using namespace openstudio;
 using namespace openstudio::runmanager;

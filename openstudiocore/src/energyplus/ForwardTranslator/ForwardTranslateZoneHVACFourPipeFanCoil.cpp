@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/CoilCoolingWater.hpp"
+#include "../../model/CoilCoolingWater_Impl.hpp"
+#include "../../model/CoilHeatingWater.hpp"
+#include "../../model/CoilHeatingWater_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_FourPipeFanCoil_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>

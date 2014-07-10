@@ -20,7 +20,7 @@
 #ifndef MODEL_COMPONENT_IMPL_HPP
 #define MODEL_COMPONENT_IMPL_HPP
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 namespace openstudio {
 namespace model {

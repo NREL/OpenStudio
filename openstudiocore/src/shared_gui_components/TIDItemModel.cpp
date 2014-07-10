@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/TIDItemModel.hpp>
-#include <utilities/core/Compare.hpp>
+#include "TIDItemModel.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 
@@ -26,7 +26,7 @@ class TIDItem
 {
 public:
 
-  TIDItem(const QDomElement & element, TIDItem * parent = 0)
+  TIDItem(const QDomElement & element, TIDItem * parent = nullptr)
   {
     m_parentItem = parent;
 
@@ -51,7 +51,7 @@ public:
 
     QDomNodeList children = element.childNodes();
 
-    for( uint i = 0;
+    for( int i = 0;
          i < children.length();
          i++ )
     {
@@ -63,7 +63,7 @@ public:
 
         if( istringEqual(childElement.tagName().toStdString(),"term") )
         {
-          TIDItem * childItem = new TIDItem(childElement,this); 
+          auto childItem = new TIDItem(childElement,this); 
 
           m_childItems.append(childItem);
         }
@@ -153,7 +153,7 @@ Qt::ItemFlags TIDItemModel::flags(const QModelIndex & index) const
 {
   if( ! index.isValid() )
   {
-    return 0;
+    return nullptr;
   }
 
   return Qt::ItemIsEnabled | Qt::ItemIsSelectable;

@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONCONDENSERAIRCOOLED_HPP
 #define MODEL_REFRIGERATIONCONDENSERAIRCOOLED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -144,7 +144,7 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
   /// @cond
   typedef detail::RefrigerationCondenserAirCooled_Impl ImplType;
 
-  explicit RefrigerationCondenserAirCooled(boost::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl);
+  explicit RefrigerationCondenserAirCooled(std::shared_ptr<detail::RefrigerationCondenserAirCooled_Impl> impl);
 
   friend class detail::RefrigerationCondenserAirCooled_Impl;
   friend class Model;

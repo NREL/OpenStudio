@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_FSUDACEALGORITHMOPTIONS_IMPL_HPP
 #define ANALYSIS_FSUDACEALGORITHMOPTIONS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions_Impl.hpp"
 
-#include <analysis/FSUDaceAlgorithmOptions.hpp>
+#include "FSUDaceAlgorithmOptions.hpp"
 
 namespace openstudio {
 namespace analysis {

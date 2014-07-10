@@ -19,23 +19,23 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
+#include "../ScheduleRule.hpp"
+#include "../ScheduleRule_Impl.hpp"
+#include "../ScheduleDay.hpp"
+#include "../ScheduleDay_Impl.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../RunPeriodControlSpecialDays.hpp"
+#include "../RunPeriodControlSpecialDays_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/time/Time.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -90,10 +90,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all defaulted
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     EXPECT_EQ(-1, i);
   }
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     EXPECT_EQ(schedule.defaultDaySchedule().handle(), daySchedule.handle());
   }
 
@@ -115,10 +115,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all using the first rule
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     EXPECT_EQ(0, i);
   }
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     EXPECT_EQ(scheduleRules[0].daySchedule().handle(), daySchedule.handle());
   }
 
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   unsigned doy = 1;
-  BOOST_FOREACH(int i, activeRuleIndices){
+  for (int i : activeRuleIndices){
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
       EXPECT_EQ(0, i); // weekend rule
@@ -156,7 +156,7 @@ TEST_F(ModelFixture, ScheduleRuleset)
     ++doy;
   }
   doy = 1;
-  BOOST_FOREACH(ScheduleDay daySchedule, daySchedules){
+  for (ScheduleDay daySchedule : daySchedules){
     Date date = yd.makeDate(doy);
     if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
       EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle()); // weekend rule
@@ -585,7 +585,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   Workspace workspace2 = model.clone();
 
   IdfObjectVector idfObjects1;
-  BOOST_FOREACH(const WorkspaceObject& object, workspace1.objects()){
+  for (const WorkspaceObject& object : workspace1.objects()){
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 
@@ -593,7 +593,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   }
 
   IdfObjectVector idfObjects2;
-  BOOST_FOREACH(const WorkspaceObject& object, workspace2.objects()){
+  for (const WorkspaceObject& object : workspace2.objects()){
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 

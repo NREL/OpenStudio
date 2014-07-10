@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP
 #define MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -168,7 +168,7 @@ class MODEL_API RefrigerationGasCoolerAirCooled : public ParentObject {
   /// @cond
   typedef detail::RefrigerationGasCoolerAirCooled_Impl ImplType;
 
-  explicit RefrigerationGasCoolerAirCooled(boost::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
+  explicit RefrigerationGasCoolerAirCooled(std::shared_ptr<detail::RefrigerationGasCoolerAirCooled_Impl> impl);
 
   friend class detail::RefrigerationGasCoolerAirCooled_Impl;
   friend class Model;

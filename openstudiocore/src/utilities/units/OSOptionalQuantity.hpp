@@ -20,9 +20,9 @@
 #ifndef UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
 #define UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "Unit.hpp"
 
 #include <QMetaType>
 

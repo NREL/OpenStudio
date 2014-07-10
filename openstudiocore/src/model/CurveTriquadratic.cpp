@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveTriquadratic.hpp>
-#include <model/CurveTriquadratic_Impl.hpp>
+#include "CurveTriquadratic.hpp"
+#include "CurveTriquadratic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Triquadratic_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -1420,7 +1420,7 @@ void CurveTriquadratic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveTriquadratic::CurveTriquadratic(boost::shared_ptr<detail::CurveTriquadratic_Impl> impl)
+CurveTriquadratic::CurveTriquadratic(std::shared_ptr<detail::CurveTriquadratic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

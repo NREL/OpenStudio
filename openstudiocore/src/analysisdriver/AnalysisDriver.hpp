@@ -20,11 +20,10 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVER_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVER_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
+#include "AnalysisDriverAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -135,7 +134,7 @@ class ANALYSISDRIVER_API AnalysisDriver {
 
  //@}
  protected:
-  boost::shared_ptr<detail::AnalysisDriver_Impl> getImpl() const;
+  std::shared_ptr<detail::AnalysisDriver_Impl> getImpl() const;
 
   /// @cond
   typedef detail::AnalysisDriver_Impl ImplType;
@@ -144,12 +143,12 @@ class ANALYSISDRIVER_API AnalysisDriver {
   friend class detail::CurrentAnalysis_Impl;
   friend class detail::SimpleProject_Impl;
 
-  explicit AnalysisDriver(boost::shared_ptr<detail::AnalysisDriver_Impl> impl);
+  explicit AnalysisDriver(std::shared_ptr<detail::AnalysisDriver_Impl> impl);
 
   /// @endcond
  private:
 
-  boost::shared_ptr<detail::AnalysisDriver_Impl> m_impl;
+  std::shared_ptr<detail::AnalysisDriver_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysisdriver.AnalysisDriver");
 };

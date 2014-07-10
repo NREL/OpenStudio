@@ -22,9 +22,9 @@
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <utilities/core/test/CoreFixture.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "CoreFixture.hpp"
+#include "../Path.hpp"
+#include "../PathHelpers.hpp"
 
 using openstudio::path;
 using openstudio::toPath;
@@ -70,6 +70,22 @@ TEST_F(CoreFixture, Path_CompletePathToFile)
   logBeforeAndAfterPathInformation("completePathToFile",p,result);
   EXPECT_TRUE(result.empty());
   
+}
+
+TEST_F(CoreFixture, Path_toString) 
+{
+  EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled/", toString(toPath("energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled/", toString(toPath("energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/", toString(toPath("/energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/", toString(toPath("\\energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus\\5ZoneAirCooled")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("/energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
 }
 
 TEST_F(CoreFixture, Path_RelativePathToFile) 

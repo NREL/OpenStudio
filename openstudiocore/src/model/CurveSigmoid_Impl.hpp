@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVESIGMOID_IMPL_HPP
 #define MODEL_CURVESIGMOID_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Curve_Impl.hpp"
 
 namespace openstudio {
 namespace model {

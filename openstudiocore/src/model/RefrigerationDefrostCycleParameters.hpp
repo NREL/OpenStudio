@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONDEFROSTCYCLEPARAMETERS_HPP
 #define MODEL_REFRIGERATIONDEFROSTCYCLEPARAMETERS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,7 +62,7 @@ class MODEL_API RefrigerationDefrostCycleParameters : public ModelObject {
   /// @cond
   typedef detail::RefrigerationDefrostCycleParameters_Impl ImplType;
 
-  explicit RefrigerationDefrostCycleParameters(boost::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
+  explicit RefrigerationDefrostCycleParameters(std::shared_ptr<detail::RefrigerationDefrostCycleParameters_Impl> impl);
 
   friend class detail::RefrigerationDefrostCycleParameters_Impl;
   friend class Model;

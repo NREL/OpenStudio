@@ -19,33 +19,31 @@
 
 #include <gtest/gtest.h>
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Problem_Impl.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
 
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/Test/ProjectFixture.hpp>
+#include "../MeasureGroupRecord.hpp"
+#include "../MeasureGroupRecord_Impl.hpp"
+#include "../NullMeasureRecord.hpp"
+#include "../ProblemRecord.hpp"
+#include "../ProjectDatabase.hpp"
+#include "../RubyMeasureRecord.hpp"
+#include "ProjectFixture.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Path.hpp"
 
 #include <resources.hxx>
 
 #include <OpenStudio.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::analysis;

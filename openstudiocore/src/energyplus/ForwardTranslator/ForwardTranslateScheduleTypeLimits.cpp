@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
+#include "../../model/ScheduleTypeLimits.hpp"
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 
 #include <utilities/idd/ScheduleTypeLimits_FieldEnums.hxx>

@@ -20,7 +20,7 @@
 #ifndef MODEL_OPAQUEMATERIAL_IMPL_HPP
 #define MODEL_OPAQUEMATERIAL_IMPL_HPP
 
-#include <model/Material_Impl.hpp>
+#include "Material_Impl.hpp"
 
 #include <QObject>
 

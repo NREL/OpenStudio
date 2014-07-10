@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BCLMEASUREDIALOG_H
-#define OPENSTUDIO_BCLMEASUREDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP
+#define SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 class QLineEdit;
 class QTextEdit;
@@ -39,10 +39,10 @@ class BCLMeasureDialog : public OSDialog
   public:
 
     /// Constructor of the dialog to create a new BCL Measure
-    BCLMeasureDialog(QWidget* parent = 0);
+    BCLMeasureDialog(QWidget* parent = nullptr);
 
     /// Constructor of the dialog to create a copy of an existing BCL Measure
-    BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent = 0);
+    BCLMeasureDialog(const BCLMeasure& bclMeasure, QWidget* parent = nullptr);
 
     virtual ~BCLMeasureDialog();
 
@@ -79,4 +79,4 @@ class BCLMeasureDialog : public OSDialog
 
 } // openstudio
 
-#endif // OPENSTUDIO_BCLMEASUREDIALOG_H
+#endif // SHAREDGUICOMPONENTS_BCLMEASUREDIALOG_HPP

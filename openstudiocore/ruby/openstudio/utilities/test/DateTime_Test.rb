@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class DateTime_Test < Test::Unit::TestCase
+class DateTime_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
@@ -109,10 +109,10 @@ class DateTime_Test < Test::Unit::TestCase
     baseDate = OpenStudio::Date.new("Jan".to_MonthOfYear, 1, 2008)
 
     testDateTime = OpenStudio::DateTime.new(baseDate)
-    assert_not_nil(testDateTime.to_s)
+    assert(!testDateTime.to_s.nil?)
     
     testDateTime += OpenStudio::Time.new(1,1,1,1)
-    assert_not_nil(testDateTime.to_s)
+    assert(!testDateTime.to_s.nil?)
   end
 
 end

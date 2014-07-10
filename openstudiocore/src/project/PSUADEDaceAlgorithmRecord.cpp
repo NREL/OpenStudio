@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/PSUADEDaceAlgorithmRecord.hpp>
-#include <project/PSUADEDaceAlgorithmRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
+#include "PSUADEDaceAlgorithmRecord.hpp"
+#include "PSUADEDaceAlgorithmRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
+#include "FileReferenceRecord.hpp"
 
-#include <analysis/PSUADEDaceAlgorithm.hpp>
-#include <analysis/PSUADEDaceAlgorithm_Impl.hpp>
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
+#include "../analysis/PSUADEDaceAlgorithm.hpp"
+#include "../analysis/PSUADEDaceAlgorithm_Impl.hpp"
+#include "../analysis/PSUADEDaceAlgorithmOptions.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {
@@ -63,7 +63,7 @@ namespace detail {
     return result;
   }
 
-  void PSUADEDaceAlgorithmRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void PSUADEDaceAlgorithmRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<PSUADEDaceAlgorithmRecord>(query);
@@ -150,7 +150,7 @@ namespace detail {
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
     const analysis::PSUADEDaceAlgorithm& psuadedaceAlgorithm,
     AnalysisRecord& analysisRecord)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
         new detail::PSUADEDaceAlgorithmRecord_Impl(psuadedaceAlgorithm, analysisRecord)),
         analysisRecord.projectDatabase(),
         psuadedaceAlgorithm)
@@ -161,7 +161,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
 }
 
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : DakotaAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
+  : DakotaAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl>(
         new detail::PSUADEDaceAlgorithmRecord_Impl(query, database)),
         database,
         boost::optional<analysis::DakotaAlgorithm>())
@@ -170,7 +170,7 @@ PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(const QSqlQuery& query, Pro
 }
 
 PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(
-    boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
+    std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl,
     ProjectDatabase database)
   : DakotaAlgorithmRecord(impl, database, boost::optional<analysis::DakotaAlgorithm>())
 {
@@ -234,7 +234,7 @@ analysis::PSUADEDaceAlgorithm PSUADEDaceAlgorithmRecord::psuadedaceAlgorithm() c
 }
 
 /// @cond
-PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(boost::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl)
+PSUADEDaceAlgorithmRecord::PSUADEDaceAlgorithmRecord(std::shared_ptr<detail::PSUADEDaceAlgorithmRecord_Impl> impl)
   : DakotaAlgorithmRecord(impl)
 {}
 /// @endcond

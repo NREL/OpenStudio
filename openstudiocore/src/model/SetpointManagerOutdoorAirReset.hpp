@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
 #define MODEL_SETPOINTMANAGEROUTDOORAIRRESET_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -155,7 +155,7 @@ class MODEL_API SetpointManagerOutdoorAirReset : public SetpointManager {
   /// @cond
   typedef detail::SetpointManagerOutdoorAirReset_Impl ImplType;
 
-  explicit SetpointManagerOutdoorAirReset(boost::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
+  explicit SetpointManagerOutdoorAirReset(std::shared_ptr<detail::SetpointManagerOutdoorAirReset_Impl> impl);
 
   friend class detail::SetpointManagerOutdoorAirReset_Impl;
   friend class Model;

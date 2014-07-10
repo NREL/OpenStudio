@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNTABCONTROLLER_H
-#define OPENSTUDIO_RUNTABCONTROLLER_H
+#ifndef PATAPP_RUNTABCONTROLLER_HPP
+#define PATAPP_RUNTABCONTROLLER_HPP
 
 #include "../shared_gui_components/OSListController.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "PatConstants.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/Problem.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysisdriver/AnalysisDriverEnums.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
 #include <QObject>
 #include <QPointer>
@@ -217,4 +217,4 @@ class DataPointJobItemDelegate : public OSItemDelegate
 
 } // openstudio
 
-#endif // OPENSTUDIO_RUNTABCONTROLLER_H
+#endif // PATAPP_RUNTABCONTROLLER_HPP

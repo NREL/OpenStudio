@@ -17,28 +17,29 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_PLOTVIEW_H
-#define  RESULTSVIEWER_PLOTVIEW_H
+#ifndef RESULTSVIEWER_PLOTVIEW_HPP
+#define RESULTSVIEWER_PLOTVIEW_HPP
 
-#include <QtGui/QWidget>
-#include <QtGui/QAction>
-#include <QtGui/QFont>
-#include <QtGui/QColor>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QTextEdit>
-#include <QtGui/QLineEdit>
-#include <QtGui/QSlider>
-#include <QtGui/QSpinBox>
-#include <QtGui/QMenuBar>
-#include <QtGui/QToolBar>
-#include <QtGui/QPainter>
-#include <QtGui/QFileDialog>
-#include <QtGui/QBitmap>
+#include <QWidget>
+#include <QAction>
+#include <QFont>
+#include <QColor>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QSlider>
+#include <QSpinBox>
+#include <QMenuBar>
+#include <QToolBar>
+#include <QPainter>
+#include <QFileDialog>
+#include <QBitmap>
 #include <QDropEvent>
-#include <QtGui/QPixmap>
+#include <QPixmap>
 #include <QToolButton>
+#include <QMimeData>
 
 #include <qwt/qwt_plot.h>
 #include <qwt/qwt_plot_grid.h>
@@ -56,12 +57,10 @@
 #include <qwt/qwt_color_map.h>
 #include <qwt/qwt_plot_spectrogram.h>
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/plot/LinePlot.hpp"
 
 namespace resultsviewer{
 
@@ -264,7 +263,7 @@ namespace resultsviewer{
   {
     Q_OBJECT
   public:
-    PlotViewToolbar(const QString &title, QWidget *parent = 0);
+    PlotViewToolbar(const QString &title, QWidget *parent = nullptr);
 
   protected:
     void mouseDoubleClickEvent(QMouseEvent *evt);
@@ -283,12 +282,12 @@ signals:
 
   public:
 
-    PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=0);
-    PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=0);
+    PlotView(int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
+    PlotView(QString& path, int plotType=RVPV_LINEPLOT, QWidget* parent=nullptr);
 
 
     // plot view data handler
-    void plotViewData(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled);
+    void plotViewData(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled);
 
     // plot view difference data handler
     void plotViewDataDifference(PlotViewData &_plotViewData1, PlotViewData &_plotViewData2);
@@ -393,7 +392,7 @@ signals:
     QwtPlotPanner *m_panner;
 
     // line plot specific
-    void linePlotItem(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled);
+    void linePlotItem(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled);
     // flood plot specific
     void floodPlotItem(PlotViewData &_plotViewData);
     // illuminance plot specific
@@ -415,7 +414,7 @@ signals:
     void setPlotCursor(const QCursor& _cursor);
 
     // scale curves when multiple with different units
-    void scaleCurves(LinePlotCurve *curve, const boost::function<bool ()> &t_workCanceled);
+    void scaleCurves(LinePlotCurve *curve, const std::function<bool ()> &t_workCanceled);
 
     // set curve color
     QPen curvePen(QColor &color);
@@ -586,4 +585,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_PLOTVIEW_H
+#endif // RESULTSVIEWER_PLOTVIEW_HPP

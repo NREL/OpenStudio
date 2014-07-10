@@ -20,8 +20,8 @@
 #ifndef MODEL_WINDOWDATAFILE_HPP
 #define MODEL_WINDOWDATAFILE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ConstructionBase.hpp>
+#include "ModelAPI.hpp"
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
 namespace model {
@@ -56,7 +56,7 @@ class MODEL_API WindowDataFile : public ConstructionBase {
   friend class openstudio::IdfObject;
   friend class detail::WindowDataFile_Impl;
 
-  explicit WindowDataFile(boost::shared_ptr<detail::WindowDataFile_Impl> impl);  
+  explicit WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl);  
 
   /// @endcond
  private:

@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingControl.hpp>
-#include <model/ShadingControl_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/DaylightingDeviceShelf_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ShadingControl.hpp"
+#include "ShadingControl_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
+#include "DaylightingDeviceShelf.hpp"
+#include "DaylightingDeviceShelf_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
 
@@ -204,7 +204,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_SubSurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
 
     boost::optional<Surface> surface = this->surface();
@@ -673,7 +673,7 @@ namespace detail {
     bool test = setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
     OS_ASSERT(test);
 
-    BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_SubSurface)){
+    for (WorkspaceObject wo : this->getSources(IddObjectType::OS_SubSurface)){
       test = wo.setString(OS_SubSurfaceFields::OutsideBoundaryConditionObject, "");
       OS_ASSERT(test);
     }
@@ -699,12 +699,12 @@ namespace detail {
         result = "Skylight";
       }else{
         double surfaceMinZ = std::numeric_limits<double>::max();
-        BOOST_FOREACH(const Point3d& point, surface->vertices()){
+        for (const Point3d& point : surface->vertices()){
           surfaceMinZ = std::min(surfaceMinZ, point.z());
         }
 
         double thisMinZ = std::numeric_limits<double>::max();
-        BOOST_FOREACH(const Point3d& point, this->vertices()){
+        for (const Point3d& point : this->vertices()){
           thisMinZ = std::min(thisMinZ, point.z());
         }
 
@@ -758,7 +758,7 @@ namespace detail {
       double xmax = std::numeric_limits<double>::min();
       double ymin = std::numeric_limits<double>::max();
       double ymax = std::numeric_limits<double>::min();
-      BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+      for (const Point3d& faceVertex : faceVertices){
         xmin = std::min(xmin, faceVertex.x());
         xmax = std::max(xmax, faceVertex.x());
         ymin = std::min(ymin, faceVertex.y());
@@ -810,7 +810,7 @@ namespace detail {
       double xmax = std::numeric_limits<double>::min();
       double ymin = std::numeric_limits<double>::max();
       double ymax = std::numeric_limits<double>::min();
-      BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+      for (const Point3d& faceVertex : faceVertices){
         xmin = std::min(xmin, faceVertex.x());
         xmax = std::max(xmax, faceVertex.x());
         ymin = std::min(ymin, faceVertex.y());
@@ -1116,7 +1116,7 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 }
 
 /// @cond
-SubSurface::SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl)
+SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond
@@ -1127,7 +1127,7 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
   std::vector<SubSurface> result;
 
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
 
     if (space.isPlenum()){
       LOG_FREE(Warn, "OpenStudio.applySkylightPattern", "Cannot apply skylights to plenum space");
@@ -1139,11 +1139,11 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
     std::vector<std::vector<Point3d> > spacePattern;
     spacePattern.reserve(pattern.size());
-    BOOST_FOREACH(const std::vector<Point3d>& face, pattern){
+    for (const std::vector<Point3d>& face : pattern){
       spacePattern.push_back(inverseTransformation*face);
     }
 
-    BOOST_FOREACH(Surface surface, space.surfaces()){
+    for (Surface surface : space.surfaces()){
       if (istringEqual("RoofCeiling", surface.surfaceType()) &&
           istringEqual("Outdoors", surface.outsideBoundaryCondition())){
 
@@ -1151,7 +1151,7 @@ std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point
 
         std::vector<std::vector<Point3d> > surfacePattern;
         spacePattern.reserve(pattern.size());
-        BOOST_FOREACH(const std::vector<Point3d>& spaceFace, spacePattern){
+        for (const std::vector<Point3d>& spaceFace : spacePattern){
           surfacePattern.push_back(surfacePlane.project(spaceFace));
         }
 

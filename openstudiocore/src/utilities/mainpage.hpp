@@ -51,7 +51,7 @@ namespace openstudio {
  *      Logger.hpp, LogMessage.hpp, Optional.hpp, Path.hpp, PathHelpers.hpp, String.hpp, UUID.hpp
  *  \li Used more sparingly: Application.hpp, ApplicationPathHelpers.hpp, Checksum.hpp, 
  *      CommandLine.hpp, EnumHelpers.hpp, Exception.hpp, FileReference.hpp, Finder.hpp, 
- *      PathWatcher.hpp, Queue.hpp, Serialization.hpp, Singleton.hpp, StaticInitializer.hpp, 
+ *      PathWatcher.hpp, Queue.hpp, Singleton.hpp, StaticInitializer.hpp, 
  *      StringHelpers.hpp, StringStreamLogSink.hpp, System.hpp, UnzipFile.hpp, UpdateManager.hpp, 
  *      URLHelpers.hpp, ZipFile.hpp
  *

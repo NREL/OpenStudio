@@ -20,7 +20,7 @@
 #ifndef MODEL_SPACEITEM_IMPL_HPP
 #define MODEL_SPACEITEM_IMPL_HPP
 
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 #include <QObject>
 

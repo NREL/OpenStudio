@@ -20,14 +20,12 @@
 #ifndef UTILITIES_BCL_LOCALBCL_HPP
 #define UTILITIES_BCL_LOCALBCL_HPP
 
-#include <utilities/bcl/BCL.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
+#include "BCL.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Path.hpp"
 
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 class QSqlDatabase;
 class QWidget;
@@ -43,8 +41,6 @@ namespace openstudio{
   ///       this would avoid all known problems with threading. The Singleton<> template cannot be used because
   ///       of static initialize and destruction order problems caused by statics used in the QDatabase stuff
   class UTILITIES_API LocalBCL : public BCL {
-
-  static boost::shared_ptr<LocalBCL> ptr;
 
     Q_OBJECT
 
@@ -134,8 +130,8 @@ namespace openstudio{
 
     /// Prompt the user for auth key using a modal dialog, this is a blocking call that requires user input.
     /// If user enters input returns the value of setAuthKey, otherwise returns false
-    bool prodAuthKeyUserPrompt(QWidget* parent = NULL);
-    bool devAuthKeyUserPrompt(QWidget* parent = NULL);
+    bool prodAuthKeyUserPrompt(QWidget* parent = nullptr);
+    bool devAuthKeyUserPrompt(QWidget* parent = nullptr);
 
     /// Return production OAuth key
     std::string prodAuthKey() const;
@@ -149,7 +145,7 @@ namespace openstudio{
     /// Set the development OAuth key, validates the auth key before saving
     bool setDevAuthKey(const std::string& devAuthKey);
 
-    /// Retuns the path to the local BCL library
+    /// Returns the path to the local BCL library
     QString libraryPath() const;
 
     /// Relocates the local BCL library, stores the library path in user preferences
@@ -179,10 +175,11 @@ namespace openstudio{
 
     std::string formatString(double d, uint prec = 15);
 
+    static std::shared_ptr<LocalBCL> &instanceInternal();
+
     QString m_libraryPath;
     const QString m_dbName;
     QString dbVersion;
-    boost::shared_ptr<QSqlDatabase> m_qSqlDatabase;
     std::string m_prodAuthKey;
     std::string m_devAuthKey;
   };

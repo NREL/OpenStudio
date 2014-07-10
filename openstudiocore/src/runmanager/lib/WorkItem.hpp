@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef RUNMANAGER_WORKITEM_HPP
-#define RUNMANAGER_WORKITEM_HPP
+#ifndef RUNMANAGER_LIB_WORKITEM_HPP
+#define RUNMANAGER_LIB_WORKITEM_HPP
 
 #include "RunManagerAPI.hpp"
 #include "JobType.hpp"
@@ -26,7 +26,7 @@
 #include "FileInfo.hpp"
 #include "JobParam.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
@@ -104,4 +104,4 @@ RUNMANAGER_API std::vector<WorkItem> toVectorOfWorkItem(const std::string &t_jso
 } // runmanager
 } // openstudio
 
-#endif // RUNMANAGER_WORKITEM_HPP
+#endif // RUNMANAGER_LIB_WORKITEM_HPP

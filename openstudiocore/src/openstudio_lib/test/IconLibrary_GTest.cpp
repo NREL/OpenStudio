@@ -19,15 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <openstudio_lib/test/OpenStudioLibFixture.hpp>
+#include "OpenStudioLibFixture.hpp"
 
-#include <openstudio_lib/IconLibrary.hpp>
+#include "../IconLibrary.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
 #include <QPixmap>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 
@@ -113,7 +111,7 @@ TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
   iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
   iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
 
-  BOOST_FOREACH(IddObjectType iddObjectType, iddObjectTypes){
+  for (IddObjectType iddObjectType : iddObjectTypes){
     const QPixmap* pixmap = IconLibrary::Instance().findIcon(iddObjectType.value());
     EXPECT_TRUE(pixmap) << "Could not find icon for IddObjectType = '" << iddObjectType.valueName() << "'";
   }
@@ -202,7 +200,7 @@ TEST_F(OpenStudioLibFixture, IconLibrary_MiniIcon)
   iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
   iddObjectTypes.push_back(IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump);
 
-  BOOST_FOREACH(IddObjectType iddObjectType, iddObjectTypes){
+  for (IddObjectType iddObjectType : iddObjectTypes){
     const QPixmap* pixmap = IconLibrary::Instance().findMiniIcon(iddObjectType.value());
     EXPECT_TRUE(pixmap) << "Could not find mini-icon for IddObjectType = '" << iddObjectType.valueName() << "'";
   }

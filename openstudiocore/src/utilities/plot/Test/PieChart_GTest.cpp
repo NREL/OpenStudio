@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/PieChart.hpp>
+#include "../PieChart.hpp"
 
 TEST(PieChart, Test1)
 {

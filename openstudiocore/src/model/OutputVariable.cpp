@@ -17,20 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -220,7 +218,7 @@ OutputVariable::OutputVariable(const std::string& variableName, const Model& mod
   OS_ASSERT(test);
 }
 
-OutputVariable::OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl)
+OutputVariable::OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl)
   : ModelObject(impl)
 {}
 

@@ -202,9 +202,9 @@ model.getThermalZones.each do |thermalZone|
 
   if options.setpointInput == true
     # we have to calculate the average ourselves
-    reportIndicies = radSqlFile.illuminanceMapHourlyReportIndices(space_name)
+    reportIndices = radSqlFile.illuminanceMapHourlyReportIndices(space_name)
 
-    reportIndicies.each do |index|
+    reportIndices.each do |index|
 
       map = radSqlFile.illuminanceMap(index)
       #  averageIlluminances << OpenStudio::mean(map)

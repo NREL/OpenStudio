@@ -20,14 +20,13 @@
 #ifndef UTILITIES_BCL_BCLMEASURE_HPP
 #define UTILITIES_BCL_BCLMEASURE_HPP
 
-#include <utilities/bcl/BCLXML.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/UtilitiesAPI.hpp>
+#include "BCLXML.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../data/Attribute.hpp"
+#include "../UtilitiesAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace openstudio{
@@ -53,6 +52,11 @@ namespace openstudio{
     ((EnergyPlusMeasure)(EnergyPlus Measure)) 
     ((UtilityMeasure)(Utility Measure))
     ((ReportingMeasure)(Reporting Measure)) 
+  );
+
+  OPENSTUDIO_ENUM( MeasureBadgeType,
+    ((BCLMeasure))
+    ((MyMeasure))
   );
 
   /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.

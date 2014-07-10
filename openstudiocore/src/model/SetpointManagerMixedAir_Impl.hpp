@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP
 #define MODEL_SETPOINTMANAGERMIXEDAIR_IMPL_HPP
 
-#include <model/SetpointManager_Impl.hpp>
+#include "SetpointManager_Impl.hpp"
 #include <boost/optional.hpp>
 
 namespace openstudio {

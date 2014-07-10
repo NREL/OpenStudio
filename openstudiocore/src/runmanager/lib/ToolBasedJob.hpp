@@ -17,13 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_TOOLBASEDJOB_HPP_
-#define OPENSTUDIO_TOOLBASEDJOB_HPP_
+#ifndef RUNMANAGER_LIB_TOOLBASEDJOB_HPP
+#define RUNMANAGER_LIB_TOOLBASEDJOB_HPP
 
 #include <boost/filesystem.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "ToolInfo.hpp"
 #include <boost/optional.hpp>
@@ -35,7 +34,7 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <boost/regex.hpp>
-#include <energyplus/ErrorFile.hpp>
+#include "../../energyplus/ErrorFile.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -85,7 +84,7 @@ namespace detail {
        virtual ~ToolBasedJob();
 
       // Reimplemented virtual functions from Job_Impl
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_pc);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc);
       virtual bool outOfDateImpl(const boost::optional<QDateTime> &t_lastrun) const;
       virtual Files outputFilesImpl() const;
       virtual std::string getOutput() const;
@@ -270,10 +269,10 @@ namespace detail {
       std::vector<std::pair<QUrl, openstudio::path> > m_required_files;
       std::map<std::string, std::vector<std::string> > m_parameters;
       std::set<openstudio::path> m_expectedOutputFiles;
-      boost::shared_ptr<ProcessCreator> m_process_creator;
-      std::map<ToolInfo, boost::shared_ptr<Process> > m_processes;
-      boost::shared_ptr<Process> m_currentprocess;
-      std::vector<boost::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
+      std::shared_ptr<ProcessCreator> m_process_creator;
+      std::map<ToolInfo, std::shared_ptr<Process> > m_processes;
+      std::shared_ptr<Process> m_currentprocess;
+      std::vector<std::tuple<FileInfo, std::string, openstudio::path> > m_copyRequiredFiles;
 
       std::set<std::pair<openstudio::path, openstudio::path> > m_addedRequiredFiles;
 
@@ -320,4 +319,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_TOOLBASEDJOB_HPP

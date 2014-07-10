@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_CHECKSUM_HPP
 #define UTILITIES_CORE_CHECKSUM_HPP
 
-#include <utilities/core/Path.hpp>
-#include <utilities/UtilitiesAPI.hpp>
+#include "Path.hpp"
+#include "../UtilitiesAPI.hpp"
 
 #include <string>
 #include <ostream>

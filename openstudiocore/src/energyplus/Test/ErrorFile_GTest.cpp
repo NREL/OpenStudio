@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
+#include "../ErrorFile.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 
 #include <resources.hxx>
 

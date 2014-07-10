@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_ANALYSISDATA_HPP
-#define ANALYSIS_ANALYSISDATA_HPP
+#ifndef ANALYSIS_ANALYSIS_HPP
+#define ANALYSIS_ANALYSIS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 
@@ -32,7 +32,6 @@ namespace openstudio {
 
 class FileReference;
 class FileReferenceType;
-class Table;
 
 namespace runmanager {
   class Job;
@@ -277,8 +276,6 @@ class ANALYSIS_API Analysis : public AnalysisObject {
    *  completes. */
   void updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob);
 
-  /** Returns a csv summary of all the data points in this analysis. */
-  Table summaryTable() const;
 
   /** Relocate input path data from originalBase to newBase. Only updates file paths used to set
    *  up an analysis; paths that point to analysis results should be fixed up by a separate import
@@ -318,7 +315,7 @@ class ANALYSIS_API Analysis : public AnalysisObject {
   friend class detail::AnalysisObject_Impl;
   friend class detail::Analysis_Impl;
 
-  explicit Analysis(boost::shared_ptr<detail::Analysis_Impl> impl);
+  explicit Analysis(std::shared_ptr<detail::Analysis_Impl> impl);
 
   /// @endcond
  private:

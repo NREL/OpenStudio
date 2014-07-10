@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/PortList_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
@@ -43,7 +43,7 @@
 #include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentConnections_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 using namespace openstudio::model;
 
@@ -195,16 +195,14 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
     _airLoopHVACZoneMixers = workspaceObject.workspace().getObjectsByType(IddObjectType::AirLoopHVAC_ZoneMixer);
 
     boost::optional<WorkspaceObject> _airLoopHVACZoneMixer;
-    for( std::vector<WorkspaceObject>::iterator it = _airLoopHVACZoneMixers.begin();
-         it < _airLoopHVACZoneMixers.end();
-         ++it )
+    for( const auto & elem : _airLoopHVACZoneMixers )
     {
       boost::optional<std::string> mixerOutletNodeName;
-      mixerOutletNodeName = it->getString(AirLoopHVAC_ZoneMixerFields::OutletNodeName);
+      mixerOutletNodeName = elem.getString(AirLoopHVAC_ZoneMixerFields::OutletNodeName);
 
       if( mixerOutletNodeName && mixerOutletNodeName.get() == demandOutletNodeName.get() )
       {
-        _airLoopHVACZoneMixer = *it;
+        _airLoopHVACZoneMixer = elem;
         break;
       }
     }
@@ -221,15 +219,13 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
 
         _zoneHVACEquipmentConnections = _workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentConnections);
 
-        for( std::vector<WorkspaceObject>::iterator it = _zoneHVACEquipmentConnections.begin(),itEnd=_zoneHVACEquipmentConnections.end();
-             it !=itEnd ;
-             ++it )
+        for( const auto & _zoneHVACEquipmentConnection : _zoneHVACEquipmentConnections )
         {
 
-          OptionalString returnAirNodeName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName);
-          OptionalString inletAirNodeName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName);
-          OptionalString zoneName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
-          OptionalString zoneEquipListName = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);
+          OptionalString returnAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneReturnAirNodeName);
+          OptionalString inletAirNodeName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneAirInletNodeorNodeListName);
+          OptionalString zoneName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
+          OptionalString zoneEquipListName = _zoneHVACEquipmentConnection.getString(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);
 
           OptionalWorkspaceObject _zone;
           OptionalWorkspaceObject _zoneEquipmentList;

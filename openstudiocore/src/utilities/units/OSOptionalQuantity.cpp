@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "OSOptionalQuantity.hpp"
+#include "Quantity.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 #include <cmath>
 

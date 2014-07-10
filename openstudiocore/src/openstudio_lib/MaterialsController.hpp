@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MATERIALSCONTROLLER_H
-#define OPENSTUDIO_MATERIALSCONTROLLER_H
+#ifndef OPENSTUDIO_MATERIALSCONTROLLER_HPP
+#define OPENSTUDIO_MATERIALSCONTROLLER_HPP
 
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -53,4 +53,4 @@ class MaterialsController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_MATERIALSCONTROLLER_H
+#endif // OPENSTUDIO_MATERIALSCONTROLLER_HPP

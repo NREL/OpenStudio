@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScheduleSetsView.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/ScheduleSetInspectorView.hpp>
+#include "ScheduleSetsView.hpp"
+#include "ModelObjectListView.hpp"
+#include "OSItem.hpp"
+#include "ScheduleSetInspectorView.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QStyleOption>
 #include <QPainter>

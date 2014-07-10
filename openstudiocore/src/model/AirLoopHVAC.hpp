@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVAC_HPP
 #define MODEL_AIRLOOPHVAC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Loop.hpp>
+#include "ModelAPI.hpp"
+#include "Loop.hpp"
 
 namespace openstudio {
 
@@ -255,7 +255,7 @@ class MODEL_API AirLoopHVAC : public Loop
 
   typedef detail::AirLoopHVAC_Impl ImplType;
 
-  explicit AirLoopHVAC(boost::shared_ptr<ImplType> impl);
+  explicit AirLoopHVAC(std::shared_ptr<ImplType> impl);
 
   private:
 

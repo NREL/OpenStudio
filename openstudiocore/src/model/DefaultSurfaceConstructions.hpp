@@ -20,8 +20,8 @@
 #ifndef MODEL_DEFAULTSURFACECONSTRUCTIONS_HPP
 #define MODEL_DEFAULTSURFACECONSTRUCTIONS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,7 +88,7 @@ class MODEL_API DefaultSurfaceConstructions : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DefaultSurfaceConstructions(boost::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl);
+  explicit DefaultSurfaceConstructions(std::shared_ptr<detail::DefaultSurfaceConstructions_Impl> impl);
 
   /// @endcond
  private:

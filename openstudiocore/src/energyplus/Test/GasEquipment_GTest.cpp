@@ -18,16 +18,16 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/GasEquipment.hpp"
+#include "../../model/GasEquipment_Impl.hpp"
+#include "../../model/GasEquipmentDefinition.hpp"
+#include "../../model/GasEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/GasEquipment_FieldEnums.hxx>
 

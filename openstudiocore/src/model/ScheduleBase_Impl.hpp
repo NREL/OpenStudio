@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULEBASE_IMPL_HPP
 #define MODEL_SCHEDULEBASE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 

@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPENSTUDIOALGORITHM_HPP
 #define ANALYSIS_OPENSTUDIOALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -57,7 +57,7 @@ class ANALYSIS_API OpenStudioAlgorithm : public Algorithm {
   /// @cond
   typedef detail::OpenStudioAlgorithm_Impl ImplType;
 
-  explicit OpenStudioAlgorithm(boost::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl);
+  explicit OpenStudioAlgorithm(std::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl);
 
   friend class detail::OpenStudioAlgorithm_Impl;
   friend class AnalysisObject;

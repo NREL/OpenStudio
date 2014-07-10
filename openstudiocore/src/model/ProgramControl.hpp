@@ -20,8 +20,8 @@
 #ifndef MODEL_PROGRAMCONTROL_HPP
 #define MODEL_PROGRAMCONTROL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -68,7 +68,7 @@ class MODEL_API ProgramControl : public ModelObject {
   /// @cond
   typedef detail::ProgramControl_Impl ImplType;
 
-  explicit ProgramControl(boost::shared_ptr<detail::ProgramControl_Impl> impl);
+  explicit ProgramControl(std::shared_ptr<detail::ProgramControl_Impl> impl);
 
   friend class detail::ProgramControl_Impl;
   friend class Model;

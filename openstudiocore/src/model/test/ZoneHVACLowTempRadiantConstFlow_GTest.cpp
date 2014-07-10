@@ -19,26 +19,26 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "../ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
+#include "../CoilCoolingLowTempRadiantConstFlow.hpp"
+#include "../CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
+#include "../CoilHeatingLowTempRadiantConstFlow.hpp"
+#include "../CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

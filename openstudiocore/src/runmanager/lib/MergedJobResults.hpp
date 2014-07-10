@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_MERGEDJOBRESULTS_HPP__
-#define OPENSTUDIO_MERGEDJOBRESULTS_HPP__
+#ifndef RUNMANAGER_LIB_MERGEDJOBRESULTS_HPP
+#define RUNMANAGER_LIB_MERGEDJOBRESULTS_HPP
 
 #include "RunManagerAPI.hpp"
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/UUID.hpp"
 #include "FileInfo.hpp"
 #include "JobParam.hpp"
 #include "JobErrors.hpp"
@@ -46,5 +46,5 @@ namespace runmanager {
 }
 
 
-#endif
+#endif // RUNMANAGER_LIB_MERGEDJOBRESULTS_HPP
 

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/ThermUnit.hpp>
-#include <utilities/units/ThermUnit_Impl.hpp>
+#include "ThermUnit.hpp"
+#include "ThermUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit ThermUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Therm);
-    boost::shared_ptr<ThermUnit_Impl> impl(new ThermUnit_Impl(*this));
+    std::shared_ptr<ThermUnit_Impl> impl(new ThermUnit_Impl(*this));
     return ThermUnit(impl).cast<Unit>();
   }
 
   void ThermUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 ThermUnit::ThermUnit(const ThermExpnt& exponents,
                      int scaleExponent,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::ThermUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::ThermUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 ThermUnit::ThermUnit(const std::string& scaleAbbreviation,
                      const ThermExpnt& exponents,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::ThermUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::ThermUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-ThermUnit::ThermUnit(boost::shared_ptr<detail::ThermUnit_Impl> impl)
-  : Unit(impl)
+ThermUnit::ThermUnit(std::shared_ptr<detail::ThermUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

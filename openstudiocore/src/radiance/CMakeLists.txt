@@ -1,6 +1,6 @@
-SET( target_name openstudio_radiance )
+set(target_name openstudio_radiance)
 
-SET( ${target_name}_src
+set(${target_name}_src
   RadianceAPI.hpp
   mainpage.hpp
   AnnualIlluminanceMap.hpp
@@ -23,31 +23,32 @@ SET( ${target_name}_src
   WindowGroup.cpp
 )
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   Test/AnnualIlluminanceMap_GTest.cpp
   Test/ForwardTranslator_GTest.cpp
 )
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_model
 )
 
-SET ( ${target_name}_swig_src
+set(${target_name}_swig_src
   Radiance.i
   HeaderInfo.i
   AnnualIlluminanceMap.i
 )
 
-ADD_LIBRARY( ${target_name} SHARED ${${target_name}_src} )
-TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
+add_library(${target_name} SHARED ${${target_name}_src})
+target_link_libraries(${target_name} ${${target_name}_depends})
 AddPCH(${target_name})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}" )
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
-MAKE_SWIG_TARGET( OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel )
+MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)

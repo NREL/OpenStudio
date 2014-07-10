@@ -20,8 +20,8 @@
 #ifndef MODEL_THERMOCHROMICGLAZING_HPP
 #define MODEL_THERMOCHROMICGLAZING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
 
 namespace openstudio {
 namespace model {
@@ -71,7 +71,7 @@ class MODEL_API ThermochromicGlazing : public Glazing {
   /// @cond
   typedef detail::ThermochromicGlazing_Impl ImplType;
 
-  explicit ThermochromicGlazing(boost::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
+  explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
 
   friend class detail::ThermochromicGlazing_Impl;
   friend class Model;

@@ -18,27 +18,25 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <ruleset/test/RulesetFixture.hpp>
+#include "RulesetFixture.hpp"
 
-#include <ruleset/OSArgument.hpp>
-#include <ruleset/OSRunner.hpp>
-#include <ruleset/OSResult.hpp>
-#include <ruleset/ModelUserScript.hpp>
-#include <ruleset/UserScript.hpp>
+#include "../OSArgument.hpp"
+#include "../OSRunner.hpp"
+#include "../OSResult.hpp"
+#include "../ModelUserScript.hpp"
+#include "../UserScript.hpp"
 
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/LightsDefinition_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Finder.hpp>
+#include "../../utilities/core/Finder.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/units/QuantityConverter.hpp"
 
 #include <vector>
 #include <map>
@@ -77,7 +75,7 @@ class TestModelUserScript1 : public ModelUserScript {
 
     // remove old spaces
     int count(0);
-    BOOST_FOREACH(openstudio::model::Space space, model.getModelObjects<openstudio::model::Space>()) {
+    for (openstudio::model::Space space : model.getModelObjects<openstudio::model::Space>()) {
       space.remove();
       ++count;
     }

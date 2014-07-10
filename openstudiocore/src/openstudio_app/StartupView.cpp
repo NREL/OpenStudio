@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_app/StartupView.hpp>
-#include <openstudio_app/OpenStudioApp.hpp>
+#include "StartupView.hpp"
+#include "OpenStudioApp.hpp"
 #include <QBitmap>
 #include <QPainter>
 #include <QMouseEvent>
@@ -40,26 +40,26 @@ namespace openstudio {
 StartupView::StartupView( QWidget * parent ) 
   : QWidget( parent )
 {
-  m_templateListModel = boost::shared_ptr<TemplateListModel>( new TemplateListModel() );
+  m_templateListModel = std::shared_ptr<TemplateListModel>( new TemplateListModel() );
 
   setStyleSheet("openstudio--StartupView { background: #E6E6E6; }");
   
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   setWindowFlags(Qt::FramelessWindowHint);
 #else
   setWindowFlags(Qt::CustomizeWindowHint);
 #endif
 
-  QWidget * recentProjectsView = new QWidget();
+  auto recentProjectsView = new QWidget();
   recentProjectsView->setStyleSheet("QWidget { background: #F2F2F2; }");
-  QVBoxLayout * recentProjectsLayout = new QVBoxLayout();
+  auto recentProjectsLayout = new QVBoxLayout();
   recentProjectsLayout->setContentsMargins(10,10,10,10);
   QLabel * recentProjectsLabel = new QLabel("Recent Projects");
   recentProjectsLabel->setStyleSheet("QLabel { font: bold }");
   recentProjectsLayout->addWidget(recentProjectsLabel,0,Qt::AlignTop);
   recentProjectsView->setLayout(recentProjectsLayout);
 
-  QToolButton * openButton = new QToolButton();
+  auto openButton = new QToolButton();
   openButton->setText("Open File");
   openButton->setStyleSheet("QToolButton { font: bold; }");
   openButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -68,7 +68,7 @@ StartupView::StartupView( QWidget * parent )
   openButton->setIconSize(QSize(40,40));
   connect( openButton, SIGNAL(clicked()), this, SIGNAL(openClicked()) );
 
-  QToolButton * importButton = new QToolButton();
+  auto importButton = new QToolButton();
   importButton->setText("Import Idf");
   importButton->setStyleSheet("QToolButton { font: bold; }");
   importButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
@@ -86,10 +86,10 @@ StartupView::StartupView( QWidget * parent )
   importSDDButton->setIconSize(QSize(40,40));
   connect( importSDDButton, SIGNAL(clicked()), this, SIGNAL(importSDDClicked()) );
 */
-  QWidget * projectChooserView = new QWidget();
+  auto projectChooserView = new QWidget();
   projectChooserView->setFixedWidth(238);
   projectChooserView->setStyleSheet("QWidget { background: #F2F2F2; }");
-  QVBoxLayout * projectChooserLayout = new QVBoxLayout();
+  auto projectChooserLayout = new QVBoxLayout();
   projectChooserLayout->setContentsMargins(10,10,10,10);
   QLabel * projectChooserLabel = new QLabel("Create New From Template");
   projectChooserLabel->setStyleSheet("QLabel { font: bold }");
@@ -106,17 +106,17 @@ StartupView::StartupView( QWidget * parent )
 
   m_projectDetailView = new QWidget();
   m_projectDetailView->setStyleSheet("QWidget { background: #F2F2F2; }");
-  QVBoxLayout * projectDetailLayout = new QVBoxLayout();
+  auto projectDetailLayout = new QVBoxLayout();
   projectDetailLayout->setContentsMargins(10,10,10,10);
   m_projectDetailView->setLayout(projectDetailLayout);
 
-  QWidget * footerView = new QWidget();
+  auto footerView = new QWidget();
   footerView->setObjectName("FooterView");
   footerView->setStyleSheet("QWidget#FooterView { background: #E6E6E6; }");
   footerView->setMaximumHeight(50);
   footerView->setMinimumHeight(50);
 
-  QPushButton * cancelButton = new QPushButton();
+  auto cancelButton = new QPushButton();
   cancelButton->setObjectName("StandardGrayButton");
   cancelButton->setMinimumSize(QSize(99,28));
   #ifdef OPENSTUDIO_PLUGIN
@@ -132,14 +132,14 @@ StartupView::StartupView( QWidget * parent )
   #endif
   cancelButton->setStyleSheet("QPushButton { font: bold; }");
 
-  QPushButton * chooseButton = new QPushButton();
+  auto chooseButton = new QPushButton();
   chooseButton->setObjectName("StandardBlueButton");
   chooseButton->setText("Choose");
   chooseButton->setMinimumSize(QSize(99,28));
   connect( chooseButton, SIGNAL(clicked()), this, SLOT(newFromTemplateSlot()) );
   chooseButton->setStyleSheet("QPushButton { font: bold; }");
 
-  QHBoxLayout * hFooterLayout = new QHBoxLayout();
+  auto hFooterLayout = new QHBoxLayout();
   hFooterLayout->setSpacing(25);
   hFooterLayout->setContentsMargins(0,0,0,0);
   hFooterLayout->addStretch();
@@ -147,10 +147,10 @@ StartupView::StartupView( QWidget * parent )
   hFooterLayout->addWidget(chooseButton);
   footerView->setLayout(hFooterLayout);
 
-  QHBoxLayout * hLayout = new QHBoxLayout();
-  QVBoxLayout * vLayout = new QVBoxLayout();
+  auto hLayout = new QHBoxLayout();
+  auto vLayout = new QVBoxLayout();
 
-  QVBoxLayout * vOpenLayout = new QVBoxLayout();
+  auto vOpenLayout = new QVBoxLayout();
   vOpenLayout->addWidget(recentProjectsView);
   vOpenLayout->addWidget(openButton);
   vOpenLayout->addWidget(importButton);
@@ -174,7 +174,7 @@ StartupView::StartupView( QWidget * parent )
 
 void StartupView::resizeEvent(QResizeEvent * event)
 {
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   QPainterPath path;
   path.addRoundedRect(rect(),9.0,9.0);
   QPolygon p = path.toFillPolygon().toPolygon();
@@ -272,7 +272,7 @@ void StartupView::showDetailsForItem( const QModelIndex & index )
 
   if( ! name.isEmpty() )
   {
-    QLabel * nameLabel = new QLabel(name);
+    auto nameLabel = new QLabel(name);
 
     nameLabel->setStyleSheet("QLabel { font: bold }");
 
@@ -281,7 +281,7 @@ void StartupView::showDetailsForItem( const QModelIndex & index )
 
   if( ! description.isEmpty() )
   {
-    QTextEdit * descriptionLabel = new QTextEdit(description);
+    auto descriptionLabel = new QTextEdit(description);
     
     descriptionLabel->setStyleSheet("QTextEdit { border: none; }");
     

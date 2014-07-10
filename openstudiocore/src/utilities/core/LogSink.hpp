@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CORE_LOGSINK_HPP
 #define UTILITIES_CORE_LOGSINK_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/LogMessage.hpp>
+#include "LogMessage.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/shared_ptr.hpp>

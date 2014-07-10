@@ -19,23 +19,23 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/RunPeriodControlSpecialDays.hpp>
-#include <model/RunPeriodControlSpecialDays_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ScheduleRule.hpp"
+#include "../ScheduleRule_Impl.hpp"
+#include "../ScheduleRuleset.hpp"
+#include "../ScheduleRuleset_Impl.hpp"
+#include "../ScheduleDay.hpp"
+#include "../ScheduleDay_Impl.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../RunPeriodControlSpecialDays.hpp"
+#include "../RunPeriodControlSpecialDays_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/core/UUID.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/time/Time.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

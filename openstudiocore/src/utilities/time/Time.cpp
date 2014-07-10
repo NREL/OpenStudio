@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/time/Time.hpp>
+#include "Time.hpp"
 
 #include <cmath>
 
@@ -86,7 +86,7 @@ namespace openstudio{
   {
     boost::posix_time::time_duration td = boost::posix_time::duration_from_string(string);
 
-    m_impl = boost::shared_ptr<boost::posix_time::time_duration>(new boost::posix_time::time_duration(td));
+    m_impl = std::shared_ptr<boost::posix_time::time_duration>(new boost::posix_time::time_duration(td));
   }
 
   Time::Time(tm t_tm)

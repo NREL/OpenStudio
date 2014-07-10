@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_REFRIGERATIONCONTROLLER_H
-#define OPENSTUDIO_REFRIGERATIONCONTROLLER_H
+#ifndef OPENSTUDIO_REFRIGERATIONCONTROLLER_HPP
+#define OPENSTUDIO_REFRIGERATIONCONTROLLER_HPP
 
 #include <QObject>
 #include <boost/optional.hpp>
@@ -203,5 +203,5 @@ class RefrigerationSystemListItem : public OSListItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_REFRIGERATIONCONTROLLER_H
+#endif // OPENSTUDIO_REFRIGERATIONCONTROLLER_HPP
 

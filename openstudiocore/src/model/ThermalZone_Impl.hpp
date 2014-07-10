@@ -20,11 +20,11 @@
 #ifndef MODEL_THERMALZONE_IMPL_HPP
 #define MODEL_THERMALZONE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

@@ -6,22 +6,21 @@ set(OpenStudioCore_FOUND 1)
 # Get all directories relative to the location of OpenStudioConfig.cmake
 get_filename_component(OpenStudioCore_INSTALL_PREFIX "${OpenStudioCore_DIR}" ABSOLUTE)
 
-set(OpenStudioCore_VERSION_MAJOR   "@CMAKE_VERSION_MAJOR@")
-set(OpenStudioCore_VERSION_MINOR   "@CMAKE_VERSION_MINOR@")
-set(OpenStudioCore_VERSION_PATCH   "@CMAKE_VERSION_PATCH@")
-set(OpenStudioCore_VERSION
-  "${OpenStudioCore_VERSION_MAJOR}.${OpenStudioCore_VERSION_MINOR}.${OpenStudioCore_VERSION_PATCH}")
+set(OpenStudioCore_VERSION_MAJOR "@CMAKE_VERSION_MAJOR@")
+set(OpenStudioCore_VERSION_MINOR "@CMAKE_VERSION_MINOR@")
+set(OpenStudioCore_VERSION_PATCH "@CMAKE_VERSION_PATCH@")
+set(OpenStudioCore_VERSION "${OpenStudioCore_VERSION_MAJOR}.${OpenStudioCore_VERSION_MINOR}.${OpenStudioCore_VERSION_PATCH}")
 
-set(OpenStudioCore_INCLUDE_DIRS    "${OpenStudioCore_INSTALL_PREFIX}/../src"
-                               "${OpenStudioCore_INSTALL_PREFIX}/../src/boost-log"
-                               "@CMAKE_SOURCE_DIR@/src"
-                               "@CMAKE_SOURCE_DIR@/src/boost-log"
-                               "@CMAKE_SOURCE_DIR@/src/gtest/include"
-                               "@CMAKE_BINARY_DIR@/src"
-                               "@BoostLog_INCLUDE_DIRS@"
-                               "@QJSON_INCLUDE_DIR@"
-                               "@GTEST_INCLUDE_DIR@"
-    )
+set(OpenStudioCore_INCLUDE_DIRS "${OpenStudioCore_INSTALL_PREFIX}/../src"
+                                "${OpenStudioCore_INSTALL_PREFIX}/../src/boost-log"
+                                "@CMAKE_SOURCE_DIR@/src"
+                                "@CMAKE_SOURCE_DIR@/src/boost-log"
+                                "@CMAKE_SOURCE_DIR@/src/gtest/include"
+                                "@CMAKE_BINARY_DIR@/src"
+                                "@BoostLog_INCLUDE_DIRS@"
+                                "@QJSON_INCLUDE_DIR@"
+                                "@GTEST_INCLUDE_DIR@"
+)
 set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@" "@QJSON_LIBRARY_DIRS@")
 set(OpenStudioCore_CMAKE_DIR "@CMAKE_SOURCE_DIR@")
 set(OpenStudioCore_SWIG_INCLUDE_DIR "@CMAKE_SOURCE_DIR@/src")
@@ -31,7 +30,6 @@ if(NOT TARGET openstudio_model)
   include("@TARGETS_FILE@")
 endif()
 
-SET(OpenStudioCore_RUBY_MODULE_DIR "@RUBY_MODULE_DIR@")
-SET(OpenStudioCore_RUBY_MODULE_ARCH_DIR "@RUBY_MODULE_ARCH_DIR@")
-SET(OpenStudioCore_CMAKE_CXX_FLAGS "@CMAKE_CXX_FLAGS@")
-
+set(OpenStudioCore_RUBY_MODULE_DIR "@RUBY_MODULE_DIR@")
+set(OpenStudioCore_RUBY_MODULE_ARCH_DIR "@RUBY_MODULE_ARCH_DIR@")
+set(OpenStudioCore_CMAKE_CXX_FLAGS "@CMAKE_CXX_FLAGS@")

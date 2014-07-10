@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_H
-#define OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_H
+#ifndef OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_HPP
+#define OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_HPP
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QObject>
 #include <QPointer>
@@ -50,5 +50,5 @@ class RefrigerationGridController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_H
+#endif // OPENSTUDIO_REFRIGERATIONGRIDCONTROLLER_HPP
 

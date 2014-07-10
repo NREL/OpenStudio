@@ -19,44 +19,42 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/ZoneControlHumidistat.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../SizingZone.hpp"
+#include "../SizingZone_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../StraightComponent.hpp"
+#include "../Space.hpp"
+#include "../SpaceInfiltrationDesignFlowRate.hpp"
+#include "../SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../LifeCycleCost.hpp"
+#include "../LifeCycleCost_Impl.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../LightsDefinition.hpp"
+#include "../Lights.hpp"
+#include "../ZoneControlHumidistat.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

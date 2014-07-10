@@ -17,37 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/CurveCubic_Impl.hpp>
-#include <model/Curve.hpp>
-#include <model/Curve_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir.hpp>
-#include <model/AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACUnitarySystem.hpp>
-#include <model/AirLoopHVACUnitarySystem_Impl.hpp>
-#include <model/Model.hpp>
+#include "CoilCoolingDXSingleSpeed.hpp"
+#include "CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "CurveQuadratic.hpp"
+#include "CurveQuadratic_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "CurveCubic.hpp"
+#include "CurveCubic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -517,15 +516,13 @@ namespace detail{
     // AirLoopHVACUnitarySystem
     std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-    for( std::vector<AirLoopHVACUnitarySystem>::iterator it = airLoopHVACUnitarySystems.begin();
-    it < airLoopHVACUnitarySystems.end();
-    ++it )
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
     {
-      if( boost::optional<HVACComponent> coolingCoil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
       {
         if( coolingCoil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitarySystem;
         }
       }
     }
@@ -536,15 +533,13 @@ namespace detail{
 
     airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    for( std::vector<AirLoopHVACUnitaryHeatPumpAirToAir>::iterator it = airLoopHVACUnitaryHeatPumpAirToAirs.begin();
-    it < airLoopHVACUnitaryHeatPumpAirToAirs.end();
-    ++it )
+    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
     {
-      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return airLoopHVACUnitaryHeatPumpAirToAir;
         }
       }
     }
@@ -560,15 +555,13 @@ namespace detail{
 
     zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
-    for( std::vector<ZoneHVACPackagedTerminalAirConditioner>::iterator it = zoneHVACPackagedTerminalAirConditioners.begin();
-    it < zoneHVACPackagedTerminalAirConditioners.end();
-    ++it )
+    for( const auto & zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners )
     {
-      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACPackagedTerminalAirConditioner;
         }
       }
     }
@@ -579,15 +572,13 @@ namespace detail{
 
     zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
-    for( std::vector<ZoneHVACPackagedTerminalHeatPump>::iterator it = zoneHVACPackagedTerminalHeatPumps.begin();
-    it < zoneHVACPackagedTerminalHeatPumps.end();
-    ++it )
+    for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
     {
-      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil() )
       {
         if( coil->handle() == this->handle() )
         {
-          return *it;
+          return zoneHVACPackagedTerminalHeatPump;
         }
       }
     }
@@ -850,7 +841,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
   setCondenserType("AirCooled");
 }
 
-CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(boost::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p)
+CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p)
   : StraightComponent(p)
 {}
 

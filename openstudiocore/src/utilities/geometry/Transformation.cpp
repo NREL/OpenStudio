@@ -17,16 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Plane.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "Transformation.hpp"
+#include "Point3d.hpp"
+#include "Vector3d.hpp"
+#include "Plane.hpp"
+#include "BoundingBox.hpp"
+#include "EulerAngles.hpp"
+#include "Geometry.hpp"
+#include "../core/Assert.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 
 #include <algorithm>
@@ -38,7 +37,7 @@ using std::min;
 
 namespace openstudio{
 
-  /// default constructor creates identity transfomation
+  /// default constructor creates identity transformation
   Transformation::Transformation()
     : m_storage(identity_matrix<double>(4))
   {}
@@ -214,7 +213,7 @@ namespace openstudio{
     double minY = alignedVertices[0].y();
     double minZ = alignedVertices[0].z();
 
-    BOOST_FOREACH(const Point3d& vertex, alignedVertices){
+    for (const Point3d& vertex : alignedVertices){
       minX = min(minX, vertex.x());
       minY = min(minY, vertex.y());
       minZ = min(minZ, vertex.z());
@@ -236,7 +235,7 @@ namespace openstudio{
     return Transformation(matrix);
   }
 
-  /// get the matrix representationdirectly
+  /// get the matrix representation directly
   Matrix Transformation::matrix() const
   {
     return m_storage;

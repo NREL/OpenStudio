@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Enum_Test < Test::Unit::TestCase
+class Enum_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

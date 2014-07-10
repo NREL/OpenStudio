@@ -1,3 +1,21 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
 #include "NormalizeURLs.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
@@ -97,7 +115,7 @@ namespace runmanager {
       return t_filename;
     } else {
       openstudio::path newfilename 
-        = toPath(t_filename.stem() + toPath("-" + boost::lexical_cast<std::string>(existingcount)).file_string() + t_filename.extension());
+        = toPath(t_filename.stem().string() + toPath("-" + boost::lexical_cast<std::string>(existingcount)).string() + t_filename.extension().string());
 
       // Make sure both the newly generated file name and the passed in file name are tracked for counting purposes
       m_filenames.insert(newfilename);

@@ -16,16 +16,16 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "LocalBCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "RemoteBCL.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/System.hpp"
+#include "../core/UnzipFile.hpp"
+#include "../core/ZipFile.hpp"
 
 #include <QDir>
 #include <QDomDocument>
@@ -39,6 +39,7 @@
 #include <QSslError>
 #include <QTextStream>
 #include <QSslSocket>
+#include <QUrlQuery>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
 #define REMOTE_DEVELOPMENT_SERVER "http://bcl7.development.nrel.gov"
@@ -98,7 +99,7 @@ namespace openstudio{
     QByteArray oldpath = qgetenv("PATH");
     if (!t_pathToSSLLibraries.empty())
     {
-      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.file_string()).toUtf8());
+      qputenv("PATH", openstudio::toQString(t_pathToSSLLibraries.string()).toUtf8());
     }
 
 #ifdef QT_NO_OPENSSL
@@ -235,14 +236,14 @@ namespace openstudio{
   {
     m_componentsWithUpdates.clear();
 
-    Q_FOREACH(BCLComponent component, LocalBCL::instance().components()){
+    for (const BCLComponent& component : LocalBCL::instance().components()) {
       // can't start another search until the last one is done
       if (!m_mutex->tryLock()){
         return 0;
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns a bool, but was not checking, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns a bool, but was not checking, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -279,14 +280,14 @@ namespace openstudio{
   {
     m_measuresWithUpdates.clear();
 
-    Q_FOREACH(BCLMeasure measure, LocalBCL::instance().measures()){
+    for (const BCLMeasure& measure : LocalBCL::instance().measures()) {
       // can't start another search until the last one is done
       if (!m_mutex->tryLock()){
         return 0;
       }
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but no check, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but no check, so removed
 
       const_cast<RemoteBCL*>(this)->m_lastSearch.clear();
 
@@ -335,7 +336,7 @@ namespace openstudio{
       checkForComponentUpdates();
     }
 
-    Q_FOREACH(BCLSearchResult component, m_componentsWithUpdates){
+    for (const BCLSearchResult& component : m_componentsWithUpdates) {
       downloadMeasure(component.uid());
       boost::optional<BCLComponent> newComponent = waitForComponentDownload();
 
@@ -354,7 +355,7 @@ namespace openstudio{
       checkForMeasureUpdates();
     }
 
-    Q_FOREACH(BCLSearchResult measure, m_measuresWithUpdates){
+    for (const BCLSearchResult& measure : m_measuresWithUpdates) {
       downloadMeasure(measure.uid());
       boost::optional<BCLMeasure> newMeasure = waitForMeasureDownload();
 
@@ -520,7 +521,7 @@ namespace openstudio{
       //LOG(Warn, toString(url));
 
       // disconnect all signals from m_networkManager to this
-      disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+      disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
 
       // when the reply is finished call onSearchResponseComplete
       bool test = connect(m_networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onSearchResponseComplete(QNetworkReply*)));
@@ -601,7 +602,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -612,9 +613,12 @@ namespace openstudio{
     QUrl url = toQString(remoteUrl() + "/api/component/download");
 
     QByteArray data;
-    url.addQueryItem("uids", toQString(uid));
-    url.addQueryItem("api_version", toQString(m_apiVersion));
-    data.append(url.encodedQuery());
+    QUrlQuery query;
+    query.addQueryItem("uids", toQString(uid));
+    //query.addQueryItem("api_version", toQString(m_apiVersion));
+    url.setQuery(query);
+
+    data.append(url.query());
     LOG(Warn, url.toString().toStdString());
 
     QNetworkRequest request(toQString(remoteUrl() + "/api/component/download"));
@@ -626,7 +630,7 @@ namespace openstudio{
     LOG(Info, testString);
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -665,7 +669,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onOnDemandGeneratorResponseComplete
@@ -698,7 +702,7 @@ namespace openstudio{
       return false;
     }
 
-    m_downloadFile = boost::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+generator.uid()+".bcl"))));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
       return false;
@@ -734,7 +738,10 @@ namespace openstudio{
         arguments += "|";
       }
     }
-    url.addQueryItem("arguments", arguments);
+    QUrlQuery query;
+    query.addQueryItem("arguments", arguments);
+    url.setQuery(query);
+    
 
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
@@ -744,7 +751,7 @@ namespace openstudio{
     //LOG(Warn, url.toString().toStdString());
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onDownloadComplete
@@ -793,7 +800,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -841,7 +848,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onMetaSearchResponseComplete
@@ -895,7 +902,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
@@ -947,7 +954,7 @@ namespace openstudio{
     //LOG(Warn, toString(url));
 
     // disconnect all signals from m_networkManager to this
-    disconnect(m_networkManager, 0, this, 0); // returns bool, but not checked, so removed
+    disconnect(m_networkManager, nullptr, this, nullptr); // returns bool, but not checked, so removed
     //OS_ASSERT(test);
 
     // when the reply is finished call onSearchResponseComplete
@@ -1165,7 +1172,7 @@ namespace openstudio{
         // search for component.xml or measure.xml file
         boost::optional<openstudio::path> xmlPath;
         
-        Q_FOREACH(const openstudio::path& path, createdFiles){
+        for (const openstudio::path& path : createdFiles) {
           if (path.filename() == toPath("component.xml")) {
             componentType = "component";
             m_lastComponentDownload.reset();
@@ -1311,7 +1318,7 @@ namespace openstudio{
 
   void RemoteBCL::catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList)
   {
-    /*Q_FOREACH(QSslError error, errorList) {
+    /*for (const QSslError& error : errorList) {
       std::cout << error.errorString().toStdString() << std::endl;
     }*/
   }

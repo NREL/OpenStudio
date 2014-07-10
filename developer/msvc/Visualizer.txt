@@ -1,21 +1,21 @@
-;Qt 4.x Visualizers
+;Qt 5.x Visualizers
 
 QString|*::QString{
-	preview			([$e.d->data,su])
-	stringview		([$e.d->data,sub])
+	preview			([(unsigned short*)$e.d + $e.d->offset/2,su])
+	stringview		([(unsigned short*)$e.d + $e.d->offset/2,sub])
 	children
 	(
 		#(
 			d: $c.d,
 			[size]: $c.d->size,
-			[referenced]: $c.d->ref._q_value
+			[referenced]: $c.d->ref.atomic._q_value
 		)
 	)
 }
 
 QByteArray|*::QByteArray{
-	preview			([$e.d->data,s])
-	stringview		([$e.d->data,sb])
+	preview			([(char*)$e.d + $e.d->offset,s])
+	stringview		([(char*)$e.d + $e.d->offset,sb])
 	children
 	(
 		#(
@@ -1472,7 +1472,7 @@ QPolygonF{
 	)
 }
 
-;END Qt 4.x Visualizers
+;END Qt 5.x Visualizers
 
 ;Boost visualizers
 

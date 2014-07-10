@@ -1,5 +1,5 @@
-#ifndef __MODELEDITOR_API_HPP__
-#define __MODELEDITOR_API_HPP__
+#ifndef MODELEDITOR_MODELEDITORAPI_HPP
+#define MODELEDITOR_MODELEDITORAPI_HPP
 
 #if (_WIN32 || _MSC_VER)
 
@@ -18,4 +18,4 @@
 
 #endif
 
-#endif // __MODELEDITOR_API_HPP__
+#endif

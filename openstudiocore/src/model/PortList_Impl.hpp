@@ -20,8 +20,8 @@
 #ifndef MODEL_PORTLIST_IMPL_HPP
 #define MODEL_PORTLIST_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 
@@ -67,7 +67,7 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   unsigned newPortAfterIndex(unsigned portIndex);
   
-  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = NULL );
+  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = nullptr );
 
   unsigned nextPortIndex();
 

@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
 #define MODEL_ZONEHVACLOWTEMPRADIANTCONSTFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -174,7 +174,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACLowTempRadiantConstFlow_Impl ImplType;
 
-  explicit ZoneHVACLowTempRadiantConstFlow(boost::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl);
+  explicit ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl);
 
   friend class detail::ZoneHVACLowTempRadiantConstFlow_Impl;
   friend class Model;

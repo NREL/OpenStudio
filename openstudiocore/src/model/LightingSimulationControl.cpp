@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightingSimulationControl.hpp>
-#include <model/LightingSimulationControl_Impl.hpp>
+#include "LightingSimulationControl.hpp"
+#include "LightingSimulationControl_Impl.hpp"
 
 #include <utilities/idd/OS_LightingSimulationControl_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -151,7 +151,7 @@ void LightingSimulationControl::resetRunSimulationforWeatherFileRunPeriods() {
 }
 
 /// @cond
-LightingSimulationControl::LightingSimulationControl(boost::shared_ptr<detail::LightingSimulationControl_Impl> impl)
+LightingSimulationControl::LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl)
   : ModelObject(impl)
 {}
 LightingSimulationControl::LightingSimulationControl(Model& model)

@@ -22,8 +22,8 @@
 
 #include "RadianceAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/data/Vector.hpp"
+#include "../utilities/core/Logger.hpp"
 
 
 namespace openstudio{

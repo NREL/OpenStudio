@@ -20,16 +20,15 @@
 #ifndef MODEL_MODELOBJECT_HPP
 #define MODEL_MODELOBJECT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/AccessPolicyStore.hpp>
+#include "ModelAPI.hpp"
+#include "AccessPolicyStore.hpp"
 
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -192,7 +191,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectSources() const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = sources();
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       boost::optional<T> oSource = wo.optionalCast<T>();
       if (oSource) { result.push_back(*oSource); }
     }
@@ -210,7 +209,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = getSources(iddObjectType);
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       // assume iddObjectType is valid for T
       result.push_back(wo.cast<T>());
     }
@@ -232,7 +231,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   std::vector<T> getModelObjectTargets() const {
     std::vector<T> result;
     std::vector<WorkspaceObject> wos = targets();
-    BOOST_FOREACH(const WorkspaceObject& wo,wos) {
+    for (const WorkspaceObject& wo : wos) {
       boost::optional<T> oTarget = wo.optionalCast<T>();
       if (oTarget) { result.push_back(*oTarget); }
     }
@@ -318,7 +317,7 @@ class MODEL_API ModelObject : public openstudio::WorkspaceObject {
   explicit ModelObject(IddObjectType type, const Model& model, bool fastName = false);
 
   // constructor
-  explicit ModelObject(boost::shared_ptr<detail::ModelObject_Impl> impl);
+  explicit ModelObject(std::shared_ptr<detail::ModelObject_Impl> impl);
 
  private:
 

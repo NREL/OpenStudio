@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/OSLineEdit.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "OSLineEdit.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <boost/optional.hpp>
 #include <QString>
 

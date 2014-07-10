@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSGRIDVIEW_H
-#define OPENSTUDIO_OSGRIDVIEW_H
+#ifndef SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
+#define SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 
 #include <QWidget>
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
 class QGridLayout;
 class QLabel;
@@ -39,7 +39,7 @@ class OSGridView : public QWidget
 
 public:
 
-  OSGridView(OSGridController * gridController,  const QString & headerText, const QString & dropZoneText, QWidget * parent = 0);
+  OSGridView(OSGridController * gridController,  const QString & headerText, const QString & dropZoneText, QWidget * parent = nullptr);
 
   virtual ~OSGridView() {};
 
@@ -93,5 +93,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSGRIDVIEW_H
+#endif // SHAREDGUICOMPONENTS_OSGRIDVIEW_HPP
 

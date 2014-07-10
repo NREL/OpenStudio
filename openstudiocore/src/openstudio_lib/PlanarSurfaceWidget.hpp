@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PLANARSURFACEWIDGET_H
-#define OPENSTUDIO_PLANARSURFACEWIDGET_H
+#ifndef OPENSTUDIO_PLANARSURFACEWIDGET_HPP
+#define OPENSTUDIO_PLANARSURFACEWIDGET_HPP
 
-#include <model/PlanarSurface.hpp>
+#include "../model/PlanarSurface.hpp"
 
 #include <QWidget>
 
@@ -62,5 +62,5 @@ class PlanarSurfaceWidget : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_PLANARSURFACEWIDGET_H
+#endif // OPENSTUDIO_PLANARSURFACEWIDGET_HPP
 

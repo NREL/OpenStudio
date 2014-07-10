@@ -17,13 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_IDFOBJECT_DIFF_HPP
-#define UTILITIES_IDFOBJECT_DIFF_HPP
+#ifndef UTILITIES_IDF_IDFOBJECTDIFF_HPP
+#define UTILITIES_IDF_IDFOBJECTDIFF_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+
+#include <memory>
 
 namespace openstudio {
 namespace detail {
@@ -54,7 +55,7 @@ public:
   /// cast to type T, can throw std::bad_cast
   template<typename T>
   T cast() const{
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl){
       throw(std::bad_cast());
     }
@@ -65,7 +66,7 @@ public:
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -74,19 +75,19 @@ public:
 
 protected:
 
-  IdfObjectDiff(const boost::shared_ptr<detail::IdfObjectDiff_Impl>& impl);
+  IdfObjectDiff(const std::shared_ptr<detail::IdfObjectDiff_Impl>& impl);
 
   // get the impl
   template<typename T>
-    boost::shared_ptr<T> getImpl() const
-  {  return boost::dynamic_pointer_cast<T>(m_impl); }
+    std::shared_ptr<T> getImpl() const
+  {  return std::dynamic_pointer_cast<T>(m_impl); }
 
 private:
 
-  boost::shared_ptr<detail::IdfObjectDiff_Impl> m_impl;
+  std::shared_ptr<detail::IdfObjectDiff_Impl> m_impl;
 
 };
 
 } // openstudio
 
-#endif // UTILITIES_IDFOBJECT_DIFF_HPP
+#endif // UTILITIES_IDF_IDFOBJECTDIFF_HPP

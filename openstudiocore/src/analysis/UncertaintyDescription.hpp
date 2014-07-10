@@ -20,13 +20,12 @@
 #ifndef ANALYSIS_UNCERTAINTYDESCRIPTION_HPP
 #define ANALYSIS_UNCERTAINTYDESCRIPTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisEnums.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisEnums.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/data/Attribute.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 namespace openstudio {
@@ -103,16 +102,16 @@ class ANALYSIS_API UncertaintyDescription {
 
   //@}
  protected:
-   explicit UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+   explicit UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
    typedef detail::UncertaintyDescription_Impl ImplType;
 
    friend class detail::UncertaintyDescription_Impl;
    friend class AnalysisObject;
 
-   boost::shared_ptr<detail::UncertaintyDescription_Impl> impl() const;
+   std::shared_ptr<detail::UncertaintyDescription_Impl> impl() const;
  private: 
-   boost::shared_ptr<detail::UncertaintyDescription_Impl> m_impl;
+   std::shared_ptr<detail::UncertaintyDescription_Impl> m_impl;
 
    // private, unimplemented default constructor
    UncertaintyDescription();

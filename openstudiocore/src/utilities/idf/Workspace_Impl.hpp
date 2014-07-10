@@ -31,9 +31,6 @@
 
 #include <utilities/core/Logger.hpp>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-
 #include <QObject>
 
 #include <string>
@@ -55,7 +52,7 @@ namespace detail {
   /** Implementation of Workspace. Maintains object handles and relationships. Locks down
    *  relationship fields in its IdfObjects if possible. */
   class UTILITIES_API Workspace_Impl : public QObject,
-                                       public boost::enable_shared_from_this<Workspace_Impl>
+                                       public std::enable_shared_from_this<Workspace_Impl>
   {
     Q_OBJECT;
    public:
@@ -109,15 +106,15 @@ namespace detail {
 
     template<typename T>
     T getWorkspace() {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                   boost::const_pointer_cast<Workspace_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                   std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
       return result;
     }
 
     template<typename T>
     T getWorkspace() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                   boost::const_pointer_cast<Workspace_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                   std::const_pointer_cast<Workspace_Impl>(shared_from_this())));
       return result;
     }
 
@@ -214,15 +211,15 @@ namespace detail {
     virtual bool setStrictnessLevel(StrictnessLevel level);
 
     // Helper function to start the process of adding an object to the workspace.
-    virtual boost::shared_ptr<WorkspaceObject_Impl> createObject(const IdfObject& object,
+    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(const IdfObject& object,
                                                                  bool keepHandle);
 
     // Helper function to start the process of adding a cloned object to the workspace.
-    virtual boost::shared_ptr<WorkspaceObject_Impl> createObject(
-        const boost::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,bool keepHandle);
+    virtual std::shared_ptr<WorkspaceObject_Impl> createObject(
+        const std::shared_ptr<WorkspaceObject_Impl>& originalObjectImplPtr,bool keepHandle);
 
     virtual std::vector<WorkspaceObject> addObjects(
-        std::vector< boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
         const std::vector<UHPointer>& pointersIntoWorkspace=UHPointerVector(),
         const std::vector<HUPointer>& pointersFromWorkspace=HUPointerVector(),
         bool driverMethod=true,
@@ -233,7 +230,7 @@ namespace detail {
      *  then the map is applied to the directOrder (if it exists) as well, otherwise, the new
      *  objects' handles are pushed onto the directOrder. */
     virtual std::vector<WorkspaceObject> addClones(
-        std::vector< boost::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
+        std::vector< std::shared_ptr<WorkspaceObject_Impl> >& objectImplPtrs,
         const HandleMap& oldNewHandleMap,
         bool collectionClone,
         const std::vector<UHPointer>& pointersIntoWorkspace=UHPointerVector(),
@@ -319,13 +316,13 @@ namespace detail {
     virtual bool swap(WorkspaceObject& currentObject,IdfObject& newObject,bool keepTargets = false);
 
     /** Remove object from Workspace with the expectation that it will be destructed.
-     *  This function removes only the object specified by handle it is not overriden
+     *  This function removes only the object specified by handle it is not overridden
      *  to "do the right thing" for ModelObject.
      */
     virtual bool removeObject(const Handle& handle);
 
     /** Remove objects from Workspace with the expectation that they will be destructed.
-     *  This function removes only the objects specified by handles it is not overriden
+     *  This function removes only the objects specified by handles it is not overridden
      *  to "do the right thing" for ModelObjects.
      */
     virtual bool removeObjects(const std::vector<Handle>& handles);
@@ -454,13 +451,13 @@ namespace detail {
     void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
 
     // DLM: deprecate this version
-    void removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    void removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
 
     /** Sends an object just added to the Workspace. */
     void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
 
     // DLM: deprecate this version
-    void addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
+    void addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) const;
 
    public slots:
 
@@ -469,13 +466,13 @@ namespace detail {
    protected:
 
     // helper for non-virtual part of clone implementation
-    void createAndAddClonedObjects(const boost::shared_ptr<Workspace_Impl>& thisImpl,
-                                   boost::shared_ptr<Workspace_Impl> cloneImpl,
+    void createAndAddClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl,
+                                   std::shared_ptr<Workspace_Impl> cloneImpl,
                                    bool keepHandles) const;
 
     // helper for non-virtual part of clone subset implementation
-    void createAndAddSubsetClonedObjects(const boost::shared_ptr<Workspace_Impl>& thisImpl,
-                                         boost::shared_ptr<Workspace_Impl> cloneImpl,
+    void createAndAddSubsetClonedObjects(const std::shared_ptr<Workspace_Impl>& thisImpl,
+                                         std::shared_ptr<Workspace_Impl> cloneImpl,
                                          const std::vector<Handle>& handles,
                                          bool keepHandles) const;
 
@@ -488,7 +485,7 @@ namespace detail {
     IddFileAndFactoryWrapper m_iddFileAndFactoryWrapper; // IDD file to be used for validity checking
     bool m_fastNaming;
 
-    typedef std::map<Handle, boost::shared_ptr<WorkspaceObject_Impl> > WorkspaceObjectMap;
+    typedef std::map<Handle, std::shared_ptr<WorkspaceObject_Impl> > WorkspaceObjectMap;
     WorkspaceObjectMap m_workspaceObjectMap;
 
     // object for ordering objects in the collection.
@@ -505,9 +502,9 @@ namespace detail {
     // data object for undos
     struct SavedWorkspaceObject {
       Handle                   handle;
-      boost::shared_ptr<WorkspaceObject_Impl>  objectImplPtr;
+      std::shared_ptr<WorkspaceObject_Impl>  objectImplPtr;
       OptionalUnsigned         orderIndex;
-      SavedWorkspaceObject(const Handle& h, const boost::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
+      SavedWorkspaceObject(const Handle& h, const std::shared_ptr<WorkspaceObject_Impl>& o) : handle(h), objectImplPtr(o) {}
     };
     typedef boost::optional<SavedWorkspaceObject> OptionalSavedWorkspaceObject;
     typedef std::vector<SavedWorkspaceObject> SavedWorkspaceObjectVector;
@@ -534,13 +531,13 @@ namespace detail {
     bool setIddFile(const IddFileAndFactoryWrapper& iddFileAndFileWrapper);
 
       // Helper function to start the process of adding an object to the workspace.
-    bool nominallyAddObject(boost::shared_ptr<WorkspaceObject_Impl>& ptr);
+    bool nominallyAddObject(std::shared_ptr<WorkspaceObject_Impl>& ptr);
 
-    void insertIntoObjectMap(const Handle& handle, const boost::shared_ptr<WorkspaceObject_Impl>& object);
+    void insertIntoObjectMap(const Handle& handle, const std::shared_ptr<WorkspaceObject_Impl>& object);
 
-    void insertIntoIddObjectTypeMap(const boost::shared_ptr<WorkspaceObject_Impl>& object);
+    void insertIntoIddObjectTypeMap(const std::shared_ptr<WorkspaceObject_Impl>& object);
 
-    void insertIntoIdfReferencesMap(const boost::shared_ptr<WorkspaceObject_Impl>& object);
+    void insertIntoIdfReferencesMap(const std::shared_ptr<WorkspaceObject_Impl>& object);
 
     // note default parameter for toIgnore is empty vector
     bool resolvePotentialNameConflicts(Workspace& other,
@@ -573,7 +570,7 @@ namespace detail {
 
     void restoreObjects(SavedWorkspaceObjectVector& savedObjects);
 
-    void registerRemovalOfObject(boost::shared_ptr<WorkspaceObject_Impl> ptr,const std::vector<WorkspaceObject>& sources,const std::vector<Handle>& removedHandles);
+    void registerRemovalOfObject(std::shared_ptr<WorkspaceObject_Impl> ptr,const std::vector<WorkspaceObject>& sources,const std::vector<Handle>& removedHandles);
 
     void registerRemovalOfObjects(std::vector<SavedWorkspaceObject>& savedObjects,const std::vector<std::vector<WorkspaceObject> >& sources,const std::vector<Handle>& removedHandles);
 
@@ -595,7 +592,7 @@ namespace detail {
     REGISTER_LOGGER("utilities.idf.Workspace");
   };
 
-  typedef boost::shared_ptr<Workspace_Impl> Workspace_ImplPtr;
+  typedef std::shared_ptr<Workspace_Impl> Workspace_ImplPtr;
 
 } // detail
 

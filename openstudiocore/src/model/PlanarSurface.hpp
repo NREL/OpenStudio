@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANARSURFACE_HPP
 #define MODEL_PLANARSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -179,12 +179,20 @@ class MODEL_API PlanarSurface : public ParentObject {
   *  Attribute name: heatCapacity */
   boost::optional<double> heatCapacity() const;
 
-  /// Returns interior visible absorbtance (unitless), if available.
-  /// Attribute name: interiorVisibleAbsorbtance
+  /// Returns interior visible absorptance (unitless), if available.
+  /// Attribute name: interiorVisibleAbsorptance
+  boost::optional<double> interiorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> interiorVisibleAbsorbtance() const;
 
-  /// Returns exterior visible absorbtance (unitless), if available.
-  /// Attribute name: exteriorVisibleAbsorbtance
+  /// Returns exterior visible absorptance (unitless), if available.
+  /// Attribute name: exteriorVisibleAbsorptance
+  boost::optional<double> exteriorVisibleAbsorptance() const;
+
+  /** \deprecated 
+   *   This will be removed after 1.4.0 */
   boost::optional<double> exteriorVisibleAbsorbtance() const;
 
   /// Returns visible transmittance (unitless), if available.
@@ -226,7 +234,7 @@ class MODEL_API PlanarSurface : public ParentObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit PlanarSurface(boost::shared_ptr<detail::PlanarSurface_Impl> impl);
+  explicit PlanarSurface(std::shared_ptr<detail::PlanarSurface_Impl> impl);
 
  private:
 

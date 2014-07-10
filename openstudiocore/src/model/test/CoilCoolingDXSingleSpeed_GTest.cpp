@@ -18,19 +18,19 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

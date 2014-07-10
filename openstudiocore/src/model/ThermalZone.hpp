@@ -20,8 +20,8 @@
 #ifndef MODEL_THERMALZONE_HPP
 #define MODEL_THERMALZONE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -404,7 +404,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ThermalZone(boost::shared_ptr<detail::ThermalZone_Impl> impl);
+  explicit ThermalZone(std::shared_ptr<detail::ThermalZone_Impl> impl);
 
   /// @endcond
  private:

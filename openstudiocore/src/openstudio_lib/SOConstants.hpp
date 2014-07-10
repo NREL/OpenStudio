@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_SOCONSTANTS_H
-#define OPENSTUDIO_SOCONSTANTS_H
+#ifndef OPENSTUDIO_SOCONSTANTS_HPP
+#define OPENSTUDIO_SOCONSTANTS_HPP
 
 namespace openstudio {
 
@@ -47,5 +47,5 @@ enum NewFromTemplateEnum
 
 } //openstudio
 
-#endif // OPENSTUDIO_SOCONSTANTS_H
+#endif // OPENSTUDIO_SOCONSTANTS_HPP
 

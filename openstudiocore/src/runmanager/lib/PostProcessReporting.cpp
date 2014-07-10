@@ -18,10 +18,8 @@
 **********************************************************************/
 
 #include <vector>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include "PostProcessReporting.hpp"
 
@@ -164,23 +162,17 @@ namespace detail {
     if (enduses){
       std::vector<Attribute> v = enduses->attribute().valueAsAttributeVector();
 
-      for (std::vector<Attribute>::iterator itr = v.begin();
-          itr != v.end();
-          ++itr)
+      for (const auto & elem1 : v)
       {
-        std::vector<Attribute> v2 = itr->valueAsAttributeVector();
-        for (std::vector<Attribute>::iterator itr2 = v2.begin();
-            itr2 != v2.end();
-            ++itr2)
+        std::vector<Attribute> v2 = elem1.valueAsAttributeVector();
+        for (const auto & elem2 : v2)
         {
-          std::vector<Attribute> v3 = itr2->valueAsAttributeVector();
-          for (std::vector<Attribute>::iterator itr3 = v3.begin();
-              itr3 != v3.end();
-              ++itr3)
+          std::vector<Attribute> v3 = elem2.valueAsAttributeVector();
+          for (const auto & elem3 : v3)
           {
-            attributes.push_back(Attribute(enduses->attribute().name() + "." + itr->name() + "." + itr2->name() + "." + itr3->name(), 
-                  itr3->valueAsDouble(), 
-                  *itr3->units()));
+            attributes.push_back(Attribute(enduses->attribute().name() + "." + elem1.name() + "." + elem2.name() + "." + elem3.name(), 
+                  elem3.valueAsDouble(), 
+                  elem3.units()));
           }
         }
       }
@@ -235,7 +227,7 @@ namespace detail {
       LOG(Warn, "No attributes loaded for report");
     }
 
-	  BOOST_FOREACH(Attribute& attribute,attributes) {
+	  for (Attribute& attribute : attributes) {
       attribute.setSource(jobType);
 	  }
 

@@ -18,23 +18,23 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
+#include "../AirLoopHVAC.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilHeatingWater_Impl.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../ScheduleCompact.hpp"
 
 using namespace openstudio;
 

@@ -17,45 +17,45 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/InspectorController.hpp>
-#include <openstudio_lib/InspectorView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/MainWindow.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp>
-#include <model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat.hpp>
-#include <model/AirTerminalSingleDuctVAVReheat_Impl.hpp>
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner.hpp>
-#include <model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp>
-#include <model/ZoneHVACUnitHeater.hpp>
-#include <model/ZoneHVACUnitHeater_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "MainWindow.hpp"
+#include "../model/AirLoopHVACZoneSplitter.hpp"
+#include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../model/AirLoopHVACZoneMixer.hpp"
+#include "../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../model/AirLoopHVACReturnPlenum.hpp"
+#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
+#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil.hpp"
+#include "../model/ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../model/ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "../model/ZoneHVACUnitHeater.hpp"
+#include "../model/ZoneHVACUnitHeater_Impl.hpp"
+#include "../model/ScheduleCompact.hpp"
+#include "../model/ScheduleCompact_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 

@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP__
+#ifndef RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP
+#define RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
-#include <ui_JobOutputCleanup.hxx>
+#include "RunManager.hpp"
+#include <ui_JobOutputCleanup.h>
 
 
 namespace openstudio {
@@ -38,7 +38,7 @@ namespace runmanager {
 
   public:
     /** Create a JobOutputCleanup dialog for choosing files to remove */
-    JobOutputCleanup(QWidget *parent = 0, Qt::WFlags flags = 0, 
+    JobOutputCleanup(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr, 
         const std::vector<std::string> &files = std::vector<std::string>());
 
     virtual ~JobOutputCleanup();
@@ -62,4 +62,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBOUTPUT_HPP_
+#endif // RUNMANAGER_LIB_JOBOUTPUTCLEANUP_HPP

@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneHVACFourPipeFanCoil.hpp>
-#include <model/ZoneHVACFourPipeFanCoil_Impl.hpp>
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
+#include "CoilCoolingWater.hpp"
+#include "CoilCoolingWater_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_FourPipeFanCoil_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1303,7 +1303,7 @@ void ZoneHVACFourPipeFanCoil::resetHeatingConvergenceTolerance() {
 }
 
 /// @cond
-ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(boost::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
+ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

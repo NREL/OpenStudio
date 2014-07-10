@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ZoneCapacitanceMultiplierResearchSpecial.hpp>
-#include <model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
+#include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_ZoneCapacitanceMultiplier_ResearchSpecial_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -294,7 +294,7 @@ void ZoneCapacitanceMultiplierResearchSpecial::resetCarbonDioxideCapacityMultipl
 }
 
 /// @cond
-ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(boost::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
+ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(std::shared_ptr<detail::ZoneCapacitanceMultiplierResearchSpecial_Impl> impl)
   : ModelObject(impl)
 {}
 ZoneCapacitanceMultiplierResearchSpecial::ZoneCapacitanceMultiplierResearchSpecial(Model& model)

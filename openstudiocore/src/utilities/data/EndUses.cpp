@@ -17,10 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/EndUses.hpp>
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "EndUses.hpp"
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 
@@ -109,7 +107,7 @@ namespace openstudio {
       return boost::none;
     }
 
-    BOOST_FOREACH(const Attribute& fuelTypeAttribute, attribute.valueAsAttributeVector()){
+    for (const Attribute& fuelTypeAttribute : attribute.valueAsAttributeVector()){
 
       EndUseFuelType endUseFuelType(fuelTypeAttribute.name());
       if (fuelTypeAttribute.valueType() != AttributeValueType::AttributeVector) {
@@ -119,7 +117,7 @@ namespace openstudio {
         return boost::none;
       }
 
-      BOOST_FOREACH(const Attribute& categoryAttribute, fuelTypeAttribute.valueAsAttributeVector()){
+      for (const Attribute& categoryAttribute : fuelTypeAttribute.valueAsAttributeVector()){
 
         EndUseCategoryType endUseCategoryType(categoryAttribute.name());
         if (categoryAttribute.valueType() != AttributeValueType::AttributeVector){
@@ -129,7 +127,7 @@ namespace openstudio {
           return boost::none;
         }
 
-        BOOST_FOREACH(const Attribute& subCategoryAttribute, categoryAttribute.valueAsAttributeVector()) {
+        for (const Attribute& subCategoryAttribute : categoryAttribute.valueAsAttributeVector()) {
           if (subCategoryAttribute.valueType() != AttributeValueType::Double){
             LOG(Warn,"Cannot create EndUses from Attribute because sub-category attribute '" 
                 << categoryAttribute.name() << "' is a " << subCategoryAttribute.valueType() 
@@ -298,9 +296,9 @@ namespace openstudio {
   std::vector<std::string> EndUses::subCategories() const
   {
     std::set<std::string> subCategories;
-    BOOST_FOREACH(const Attribute& fuelType, m_attribute.valueAsAttributeVector()){
-      BOOST_FOREACH(const Attribute& category, fuelType.valueAsAttributeVector()){
-        BOOST_FOREACH(const Attribute& subCategory, category.valueAsAttributeVector()){
+    for (const Attribute& fuelType : m_attribute.valueAsAttributeVector()){
+      for (const Attribute& category : fuelType.valueAsAttributeVector()){
+        for (const Attribute& subCategory : category.valueAsAttributeVector()){
           subCategories.insert(subCategory.name());
         }
       }

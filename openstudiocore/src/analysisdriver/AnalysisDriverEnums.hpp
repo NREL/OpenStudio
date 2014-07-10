@@ -20,9 +20,9 @@
 #ifndef ANALYSISDRIVER_ANALYSISDRIVERENUMS_HPP
 #define ANALYSISDRIVER_ANALYSISDRIVERENUMS_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
+#include "AnalysisDriverAPI.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 
 namespace openstudio {

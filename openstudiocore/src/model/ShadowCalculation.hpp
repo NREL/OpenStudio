@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADOWCALCULATION_HPP
 #define MODEL_SHADOWCALCULATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -107,7 +107,7 @@ class MODEL_API ShadowCalculation : public ModelObject {
   friend class openstudio::IdfObject;
 
   // constructor
-  explicit ShadowCalculation(boost::shared_ptr<detail::ShadowCalculation_Impl> impl);
+  explicit ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl);
 
  private:
 

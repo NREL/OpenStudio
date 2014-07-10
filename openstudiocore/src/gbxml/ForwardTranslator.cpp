@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <gbxml/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
 
@@ -97,7 +97,7 @@ namespace gbxml {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -110,7 +110,7 @@ namespace gbxml {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -156,7 +156,7 @@ namespace gbxml {
     }
   /*
     // do constructions
-    BOOST_FOREACH(const model::ConstructionBase& constructionBase, model.getModelObjects<model::ConstructionBase>()){
+    for (const model::ConstructionBase& constructionBase : model.getModelObjects<model::ConstructionBase>()){
       boost::optional<QDomElement> constructionElement = translateConstructionBase(constructionBase, doc);
       if (constructionElement){
         projectElement.appendChild(*constructionElement);
@@ -164,7 +164,7 @@ namespace gbxml {
     }
 
     // do materials
-    BOOST_FOREACH(const model::Material& material, model.getModelObjects<model::Material>()){
+    for (const model::Material& material : model.getModelObjects<model::Material>()){
       boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
       if (materialElement){
         projectElement.appendChild(*materialElement);
@@ -180,7 +180,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ThermalZone& thermalZone, thermalZones){
+    for (const model::ThermalZone& thermalZone : thermalZones){
       boost::optional<QDomElement> zoneElement = translateThermalZone(thermalZone, doc);
       if (zoneElement){
         gbXMLElement.appendChild(*zoneElement);
@@ -224,7 +224,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::Surface& surface, surfaces){
+    for (const model::Surface& surface : surfaces){
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
@@ -274,7 +274,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
@@ -489,7 +489,7 @@ namespace gbxml {
 
     QDomElement polyLoopElement = doc.createElement("PolyLoop");
     planarGeometryElement.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -507,7 +507,7 @@ namespace gbxml {
     }
 
     // translate sub surfaces
-    BOOST_FOREACH(const model::SubSurface& subSurface, surface.subSurfaces()){
+    for (const model::SubSurface& subSurface : surface.subSurfaces()){
       boost::optional<QDomElement> openingElement = translateSubSurface(subSurface, transformation, doc);
       if (openingElement){
         result.appendChild(*openingElement);
@@ -649,7 +649,7 @@ namespace gbxml {
     // translate vertices
     QDomElement polyLoopElement = doc.createElement("PolyLoop");
     planarGeometryElement.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPoint");
       polyLoopElement.appendChild(cartesianPointElement);
 

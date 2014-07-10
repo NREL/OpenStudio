@@ -17,19 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ClimateZones.hpp>
-#include <model/ClimateZones_Impl.hpp>
-#include <model/Model.hpp>
+#include "ClimateZones.hpp"
+#include "ClimateZones_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_ClimateZones_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
 
 namespace openstudio {
 namespace model {
@@ -63,7 +61,7 @@ namespace detail {
   std::vector<ClimateZone> ClimateZones_Impl::climateZones() const {
     IdfExtensibleGroupVector egs = extensibleGroups();
     ClimateZoneVector result;
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       result.push_back(eg.cast<ClimateZone>());
     }
     return result;
@@ -72,17 +70,17 @@ namespace detail {
   ClimateZone ClimateZones_Impl::getClimateZone(unsigned index) const {
     IdfExtensibleGroup eg = getExtensibleGroup(index);
     if (eg.empty()) {
-      boost::shared_ptr<ClimateZones_Impl> p;
+      std::shared_ptr<ClimateZones_Impl> p;
       return ClimateZone(p,numFields());
     }
     return eg.cast<ClimateZone>();
   }      
 
   ClimateZone ClimateZones_Impl::getClimateZone(const std::string& institution,unsigned year) const {
-    boost::shared_ptr<ClimateZones_Impl> p;
+    std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
     ClimateZoneVector czs = climateZones();
-    BOOST_FOREACH(const ClimateZone& cz,czs) {
+    for (const ClimateZone& cz : czs) {
       if ( istringEqual(cz.institution(),institution) && (cz.year() == year) ) 
       {
         result = cz;
@@ -95,7 +93,7 @@ namespace detail {
   std::vector<ClimateZone> ClimateZones_Impl::getClimateZones(const std::string& institution) const {
     ClimateZoneVector result;
     ClimateZoneVector czs = climateZones();
-    BOOST_FOREACH(const ClimateZone& cz,czs) {
+    for (const ClimateZone& cz : czs) {
       if ( istringEqual(cz.institution(),institution) ) {
         result.push_back(cz);
       }
@@ -140,7 +138,7 @@ namespace detail {
   }
 /*
   ClimateZone ClimateZones_Impl::setActiveClimateZone(const std::string& institution) {
-    boost::shared_ptr<ClimateZones_Impl> p;
+    std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
 
     ClimateZoneVector czs = getClimateZones(institution);
@@ -175,7 +173,7 @@ namespace detail {
   ClimateZone ClimateZones_Impl::setClimateZone(const std::string& institution,
                                                 const std::string& value)
   {
-    boost::shared_ptr<ClimateZones_Impl> p;
+    std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
 
     ClimateZoneVector candidates = getClimateZones(institution);
@@ -196,7 +194,7 @@ namespace detail {
                                                 unsigned year, 
                                                 const std::string& value) 
   {
-    boost::shared_ptr<ClimateZones_Impl> p;
+    std::shared_ptr<ClimateZones_Impl> p;
     ClimateZone result(p,numFields());
 
     ClimateZone candidate = getClimateZone(institution,year);
@@ -252,7 +250,7 @@ namespace detail {
     values.push_back(value);
     IdfExtensibleGroup eg = pushExtensibleGroup(values);
     if (eg.empty()) {
-      boost::shared_ptr<ClimateZones_Impl> p;
+      std::shared_ptr<ClimateZones_Impl> p;
       return ClimateZone(p,numFields());
     }
     return eg.cast<ClimateZone>();
@@ -333,7 +331,7 @@ bool ClimateZone::setTypeAndValue(const std::string& institution,
   return result; 
 }
 
-ClimateZone::ClimateZone(boost::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index)
+ClimateZone::ClimateZone(std::shared_ptr<detail::ClimateZones_Impl> impl,unsigned index)
   : ModelExtensibleGroup(impl,index)
 {}
 
@@ -537,7 +535,7 @@ ClimateZones::ClimateZones(Model& model)
   // pushExtensibleGroup constructs an IdfExtensibleGroup from the _Impl.
 }
 
-ClimateZones::ClimateZones(boost::shared_ptr<detail::ClimateZones_Impl> impl)
+ClimateZones::ClimateZones(std::shared_ptr<detail::ClimateZones_Impl> impl)
   : ModelObject(impl) 
 {}
 /// @endcond

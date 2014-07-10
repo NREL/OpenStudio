@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/PathWatcher.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Logger.hpp>
+#include "PathWatcher.hpp"
+#include "Application.hpp"
+#include "Checksum.hpp"
+#include "Assert.hpp"
+#include "Logger.hpp"
 
 #include <QFileSystemWatcher>
 #include <QTimer>
@@ -50,7 +50,7 @@ namespace openstudio {
       m_impl->addPath(openstudio::toQString(p));
 
     }else{
-      m_timer = boost::shared_ptr<QTimer>(new QTimer());
+      m_timer = std::shared_ptr<QTimer>(new QTimer());
       bool connected = this->connect(m_timer.get(), SIGNAL(timeout()), SLOT(checkFile()));
       OS_ASSERT(connected);
       m_timer->start(m_msec);

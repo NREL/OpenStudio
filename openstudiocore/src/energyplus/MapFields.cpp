@@ -17,12 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/MapFields.hpp>
+#include "MapFields.hpp"
 
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace energyplus {
@@ -44,7 +42,7 @@ namespace energyplus {
   {
     bool result = true;
     typedef std::pair<unsigned, unsigned> PairType;
-    BOOST_FOREACH(PairType p, fieldMap){
+    for (PairType p : fieldMap){
       OptionalString oldStr = oldObject.getString(p.first);
       if (oldStr){
         result = result && newObject.setString(p.second, *oldStr);

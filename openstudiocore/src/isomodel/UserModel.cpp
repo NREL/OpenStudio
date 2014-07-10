@@ -17,7 +17,7 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <isomodel/UserModel.hpp>
+#include "UserModel.hpp"
 
 using namespace std;
 namespace openstudio {
@@ -39,7 +39,7 @@ namespace isomodel {
 
     SimModel sim;
 
-    boost::shared_ptr<Population> pop(new Population);
+    std::shared_ptr<Population> pop(new Population);
     pop->setDaysStart(_buildingOccupancyFrom);
     pop->setDaysEnd(_buildingOccupancyTo);
     pop->setHoursEnd(_equivFullLoadOccupancyTo);
@@ -50,12 +50,12 @@ namespace isomodel {
     pop->setHeatGainPerPerson(_heatGainPerPerson);
     sim.setPop(pop);
 
-    boost::shared_ptr<Location> loc(new Location);
+    std::shared_ptr<Location> loc(new Location);
     loc->setTerrain(_terrainClass);
     loc->setWeatherData(_weather);
     sim.setLocation(loc);
 
-    boost::shared_ptr<Building> building(new Building);
+    std::shared_ptr<Building> building(new Building);
     building->setBuildingEnergyManagement(_bemType);
     building->setConstantIllumination(_constantIlluminationControl);
     building->setElectricApplianceHeatGainOccupied(_elecPowerAppliancesOccupied);
@@ -65,7 +65,7 @@ namespace isomodel {
     building->setLightingOccupancySensor(_lightingOccupancySensorSystem);
     sim.setBuilding(building);
 
-    boost::shared_ptr<Cooling> cooling(new Cooling);
+    std::shared_ptr<Cooling> cooling(new Cooling);
     cooling->setCOP(_coolingSystemCOP);
     cooling->setHvacLossFactor(_hvacCoolingLossFactor);
     cooling->setPartialLoadValue(_coolingSystemIPLVToCOPRatio);
@@ -74,7 +74,7 @@ namespace isomodel {
     cooling->setTemperatureSetPointUnoccupied(_coolingUnoccupiedSetpoint);
     sim.setCooling(cooling);
     
-    boost::shared_ptr<Heating> heating(new Heating);
+    std::shared_ptr<Heating> heating(new Heating);
     heating->setEfficiency(_heatingSystemEfficiency);
     heating->setEnergyType(_heatingEnergyCarrier);
     heating->setHotcoldWasteFactor(_hvacWasteFactor);//??
@@ -88,14 +88,14 @@ namespace isomodel {
     heating->setTemperatureSetPointUnoccupied(_heatingUnoccupiedSetpoint);
     sim.setHeating(heating);
 
-    boost::shared_ptr<Lighting> lighting(new Lighting);
+    std::shared_ptr<Lighting> lighting(new Lighting);
     lighting->setDimmingFraction(_daylightSensorSystem);
     lighting->setExteriorEnergy(_exteriorLightingPower);
     lighting->setPowerDensityOccupied(_lightingPowerIntensityOccupied);
     lighting->setPowerDensityUnoccupied(_lightingPowerIntensityUnoccupied);
     sim.setLights(lighting);
 
-    boost::shared_ptr<Structure> structure(new Structure);
+    std::shared_ptr<Structure> structure(new Structure);
     structure->setFloorArea(_floorArea);
     structure->setBuildingHeight(_buildingHeight);
     structure->setInfiltrationRate(_buildingAirLeakage);
@@ -201,7 +201,7 @@ namespace isomodel {
     structure->setWindowUniform(winU);//vector
     sim.setStructure(structure);
 
-    boost::shared_ptr<Ventilation> ventilation(new Ventilation);
+    std::shared_ptr<Ventilation> ventilation(new Ventilation);
     ventilation->setExhaustAirRecirculated(_exhaustAirRecirculation);
     ventilation->setFanControlFactor(_fanFlowControlFactor);
     ventilation->setFanPower(_specificFanPower);
@@ -596,7 +596,7 @@ namespace isomodel {
       return -1;
   }
 
-  boost::shared_ptr<WeatherData> UserModel::loadWeather(){
+  std::shared_ptr<WeatherData> UserModel::loadWeather(){
     openstudio::path weatherFilename;
     //see if weather file path is absolute path
     //if so, use it, else assemble relative path
@@ -611,7 +611,7 @@ namespace isomodel {
       {
         LOG(Error, "Weather File Not Found: " << openstudio::toString(_weatherFilePath));
         _valid = false;
-        return boost::shared_ptr<WeatherData>();
+        return std::shared_ptr<WeatherData>();
       }
     }
     EpwData edata(weatherFilename);
@@ -625,7 +625,7 @@ namespace isomodel {
 
     edata.toISOData(_msolar, _mhdbt, _mhEgh, _mEgh, _mdbt, _mwind);
 
-    boost::shared_ptr<WeatherData> wdata(new WeatherData);
+    std::shared_ptr<WeatherData> wdata(new WeatherData);
     wdata->setMdbt(_mdbt);
     wdata->setMEgh(_mEgh);
     wdata->setMhdbt(_mhdbt);

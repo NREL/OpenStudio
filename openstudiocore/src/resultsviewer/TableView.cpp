@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/TableView.hpp>
+#include "TableView.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../utilities/sql/SqlFileEnums.hpp"
 
 #include<QHeaderView>
 
@@ -36,8 +36,8 @@ namespace resultsviewer{
     setContextMenuPolicy(Qt::CustomContextMenu);
     horizontalHeader()->setSortIndicator(0,Qt::AscendingOrder);
     horizontalHeader()->setSortIndicatorShown(true);
-    horizontalHeader()->setClickable(true);
-    horizontalHeader()->setMovable(true);
+    horizontalHeader()->setSectionsClickable(true);
+    horizontalHeader()->setSectionsMovable(true);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_slHeaders  << tr("Variable Name") << tr("Key Value") << tr("Reporting Frequency") << tr("Alias") << tr("Environment Period") << tr("File");
@@ -77,7 +77,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())
+      for (QTableWidgetItem *item : selectedItems())
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -190,27 +190,27 @@ namespace resultsviewer{
     int row = rowCount();
     insertRow(row);
 
-    QTableWidgetItem *aliasCol = new QTableWidgetItem;
+    auto aliasCol = new QTableWidgetItem;
     aliasCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Alias"),aliasCol);
 
-    QTableWidgetItem *fileCol = new QTableWidgetItem;
+    auto fileCol = new QTableWidgetItem;
     fileCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("File"),fileCol);
 
-    QTableWidgetItem *envPerCol = new QTableWidgetItem;
+    auto envPerCol = new QTableWidgetItem;
     envPerCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Environment Period"),envPerCol);
 
-    QTableWidgetItem *timestepCol = new QTableWidgetItem;
+    auto timestepCol = new QTableWidgetItem;
     timestepCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Reporting Frequency"),timestepCol);
 
-    QTableWidgetItem *zoneNameCol = new QTableWidgetItem;
+    auto zoneNameCol = new QTableWidgetItem;
     zoneNameCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Key Value"),zoneNameCol);
 
-    QTableWidgetItem *varNameCol = new QTableWidgetItem;
+    auto varNameCol = new QTableWidgetItem;
     varNameCol->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     setItem(row,m_slHeaders.indexOf("Variable Name"),varNameCol);
 
@@ -222,7 +222,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())  
+      for (QTableWidgetItem *item : selectedItems())  
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -239,7 +239,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
     if (selectedItems().count() > 0)
     {
-      foreach (QTableWidgetItem *item, selectedItems())  
+      for (QTableWidgetItem *item : selectedItems())  
       {
         int row = item->row();
         if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )
@@ -258,7 +258,7 @@ namespace resultsviewer{
     std::vector<int> selectedRows;
 
 
-    foreach (QTableWidgetItem *item, selectedItems())
+    for (QTableWidgetItem *item : selectedItems())
     {
       int row = item->row();
       if ( std::find(selectedRows.begin(), selectedRows.end(), row) == selectedRows.end() )

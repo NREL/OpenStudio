@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_COLLAPSIBLECOMPONENTLIST_H
-#define OPENSTUDIO_COLLAPSIBLECOMPONENTLIST_H
+#ifndef SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTLIST_HPP
+#define SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTLIST_HPP
 
-#include <shared_gui_components/Component.hpp>
+#include "Component.hpp"
 
 class QButtonGroup;
 class QHBoxLayout;
@@ -37,9 +37,9 @@ class CollapsibleComponentList : public QWidget
   Q_OBJECT
 
 public:
-  CollapsibleComponentList(QWidget * parent = 0);
+  CollapsibleComponentList(QWidget * parent = nullptr);
   CollapsibleComponentList(const std::vector<CollapsibleComponent *> & collapsibleComponents,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~CollapsibleComponentList() {}
   // return the checked component in the list, NULL if list is empty
   Component * checkedComponent() const;
@@ -92,4 +92,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_COLLAPSIBLECOMPONENTLIST_H
+#endif // SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENTLIST_HPP

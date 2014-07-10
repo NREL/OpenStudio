@@ -20,8 +20,8 @@
 #ifndef MODEL_SHADINGSURFACE_HPP
 #define MODEL_SHADINGSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurface.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurface.hpp"
 
 namespace openstudio {
 namespace model {
@@ -104,7 +104,7 @@ class MODEL_API ShadingSurface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ShadingSurface(boost::shared_ptr<detail::ShadingSurface_Impl> impl);
+  explicit ShadingSurface(std::shared_ptr<detail::ShadingSurface_Impl> impl);
 
   /// @endcond
  private:

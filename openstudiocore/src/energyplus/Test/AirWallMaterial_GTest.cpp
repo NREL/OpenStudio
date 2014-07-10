@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ErrorFile.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/AirWallMaterial.hpp"
+#include "../../model/AirWallMaterial_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

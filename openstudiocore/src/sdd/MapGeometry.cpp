@@ -16,80 +16,80 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <sdd/ReverseTranslator.hpp>
-#include <sdd/ForwardTranslator.hpp>
+#include "ReverseTranslator.hpp"
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/FFactorGroundFloorConstruction_Impl.hpp>
-#include <model/CFactorUndergroundWallConstruction.hpp>
-#include <model/CFactorUndergroundWallConstruction_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/People.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/MasslessOpaqueMaterial.hpp"
+#include "../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../model/FFactorGroundFloorConstruction.hpp"
+#include "../model/FFactorGroundFloorConstruction_Impl.hpp"
+#include "../model/CFactorUndergroundWallConstruction.hpp"
+#include "../model/CFactorUndergroundWallConstruction_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/PeopleDefinition.hpp"
+#include "../model/People.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/Lights.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/ScheduleConstant.hpp"
+#include "../model/ScheduleConstant_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
+#include "../model/ScheduleTypeLimits_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/WaterUseConnections.hpp"
+#include "../model/WaterUseConnections_Impl.hpp"
+#include "../model/WaterUseEquipment.hpp"
+#include "../model/WaterUseEquipment_Impl.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/MPHUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/TemperatureUnit.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/IPUnit.hpp"
+#include "../utilities/units/SIUnit.hpp"
+#include "../utilities/units/BTUUnit.hpp"
+#include "../utilities/units/MPHUnit.hpp"
+#include "../utilities/units/WhUnit.hpp"
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/TemperatureUnit.hpp"
+#include "../utilities/units/TemperatureUnit_Impl.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QDomDocument>
@@ -211,14 +211,14 @@ namespace sdd {
     }
 
     // remove unused CFactor constructions
-    BOOST_FOREACH(model::CFactorUndergroundWallConstruction cFactorConstruction, model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
+    for (model::CFactorUndergroundWallConstruction cFactorConstruction : model.getConcreteModelObjects<model::CFactorUndergroundWallConstruction>()){
       if (cFactorConstruction.directUseCount() == 0){
         cFactorConstruction.remove();
       }
     }
 
     // remove unused FFactor constructions
-    BOOST_FOREACH(model::FFactorGroundFloorConstruction fFactorConstruction, model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
+    for (model::FFactorGroundFloorConstruction fFactorConstruction : model.getConcreteModelObjects<model::FFactorGroundFloorConstruction>()){
       if (fFactorConstruction.directUseCount() == 0){
         fFactorConstruction.remove();
       }
@@ -1447,8 +1447,8 @@ namespace sdd {
 
   model::ConstructionBase ReverseTranslator::shadingConstruction(openstudio::model::Model& model, double solRefl, double visRefl)
   {
-    std::pair<double, double> key = std::make_pair<double, double>(solRefl, visRefl);
-    std::map<std::pair<double, double>, model::ConstructionBase>::iterator it = m_shadingConstructionMap.find(key);
+    std::pair<double, double> key = std::make_pair(solRefl, visRefl);
+    auto it = m_shadingConstructionMap.find(key);
     if (it != m_shadingConstructionMap.end()){
       return it->second;
     }
@@ -1479,7 +1479,7 @@ namespace sdd {
     test = construction.setLayers(materials);
     OS_ASSERT(test); // what type of error handling do we want?
 
-    m_shadingConstructionMap.insert(std::make_pair<std::pair<double, double>, model::ConstructionBase>(key, construction));
+    m_shadingConstructionMap.insert(std::make_pair(key, construction));
     return construction;
   }
 
@@ -1522,7 +1522,7 @@ namespace sdd {
     /*
     // aboveGradeStoryCount
     unsigned numAboveGroundStories = 0;
-    BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
+    for (const model::BuildingStory& buildingStory : buildingStories){
       boost::optional<double> nominalZCoordinate = buildingStory.nominalZCoordinate();
       if (nominalZCoordinate && *nominalZCoordinate >= 0){
         numAboveGroundStories += 1;
@@ -1545,12 +1545,12 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Building")){
 
         Transformation transformation = shadingSurfaceGroup.siteTransformation();
 
-        BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+        for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
           boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
           if (shadingSurfaceElement){
             result.appendChild(*shadingSurfaceElement);
@@ -1564,7 +1564,7 @@ namespace sdd {
     }
 
     // translate building story
-    BOOST_FOREACH(const model::BuildingStory& buildingStory, buildingStories){
+    for (const model::BuildingStory& buildingStory : buildingStories){
 
       boost::optional<QDomElement> buildingStoryElement = translateBuildingStory(buildingStory, doc);
       if (buildingStoryElement){
@@ -1580,7 +1580,7 @@ namespace sdd {
     std::vector<model::Space> spaces = building.model().getConcreteModelObjects<model::Space>();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       if (!space.buildingStory()){
         LOG(Warn, "Model contains spaces which are not assigned to a building story, these have not been translated.");
         break;
@@ -1598,7 +1598,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ThermalZone& thermalZone, thermalZones){
+    for (const model::ThermalZone& thermalZone : thermalZones){
 
       boost::optional<QDomElement> thermalZoneElement = translateThermalZone(thermalZone, doc);
       if (thermalZoneElement){
@@ -1628,7 +1628,7 @@ namespace sdd {
     std::vector<model::Space> spaces = buildingStory.spaces();
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Space& space, spaces){
+    for (const model::Space& space : spaces){
       boost::optional<QDomElement> spaceElement = translateSpace(space, doc);
       if (spaceElement){
         result.appendChild(*spaceElement);
@@ -1678,7 +1678,7 @@ namespace sdd {
     Point3dVector vertices = transformation*space.floorPrint();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result.appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -1708,10 +1708,10 @@ namespace sdd {
     std::vector<model::ShadingSurfaceGroup> shadingSurfaceGroups = space.shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       Transformation shadingTransformation = shadingSurfaceGroup.siteTransformation();
 
-      BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+      for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
         boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, shadingTransformation, doc);
         if (shadingSurfaceElement){
           result.appendChild(*shadingSurfaceElement);
@@ -1723,7 +1723,7 @@ namespace sdd {
     std::vector<model::Surface> surfaces = space.surfaces();
     std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::Surface& surface, surfaces){
+    for (const model::Surface& surface : surfaces){
       boost::optional<QDomElement> surfaceElement = translateSurface(surface, transformation, doc);
       if (surfaceElement){
         result.appendChild(*surfaceElement);
@@ -1871,7 +1871,7 @@ namespace sdd {
     Point3dVector vertices = transformation*surface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -1923,7 +1923,7 @@ namespace sdd {
     std::vector<model::SubSurface> subSurfaces = surface.subSurfaces();
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
 
-    BOOST_FOREACH(const model::SubSurface& subSurface, subSurfaces){
+    for (const model::SubSurface& subSurface : subSurfaces){
       boost::optional<QDomElement> subSurfaceElement = translateSubSurface(subSurface, transformation, doc);
       if (subSurfaceElement){
         result->appendChild(*subSurfaceElement);
@@ -1993,7 +1993,7 @@ namespace sdd {
     Point3dVector vertices = transformation*subSurface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 
@@ -2140,7 +2140,7 @@ namespace sdd {
     Point3dVector vertices = transformation*shadingSurface.vertices();
     QDomElement polyLoopElement = doc.createElement("PolyLp");
     result->appendChild(polyLoopElement);
-    BOOST_FOREACH(const Point3d& vertex, vertices){
+    for (const Point3d& vertex : vertices){
       QDomElement cartesianPointElement = doc.createElement("CartesianPt");
       polyLoopElement.appendChild(cartesianPointElement);
 

@@ -19,13 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../RunPeriodControlDaylightSavingTime.hpp"
+#include "../RunPeriodControlDaylightSavingTime_Impl.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../../utilities/time/Date.hpp"
 
 #include <iostream>
 

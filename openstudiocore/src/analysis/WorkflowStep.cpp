@@ -17,24 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "InputVariable_Impl.hpp"
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
+#include "Problem.hpp"
+#include "Problem_Impl.hpp"
 
-#include <runmanager/lib/JSON.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../runmanager/lib/JSON.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -88,7 +86,7 @@ namespace detail {
   }
 
   AnalysisObject WorkflowStep_Impl::clone() const {
-    boost::shared_ptr<WorkflowStep_Impl> impl(new WorkflowStep_Impl(*this));
+    std::shared_ptr<WorkflowStep_Impl> impl(new WorkflowStep_Impl(*this));
     WorkflowStep result(impl);
     if (result.isInputVariable()) {
       result.inputVariable().setParent(result);
@@ -252,7 +250,7 @@ namespace detail {
         m_workItem = rjb.toWorkItem();
       }
       else {
-        BOOST_FOREACH(runmanager::FileInfo& info,m_workItem->files.files()) {
+        for (runmanager::FileInfo& info : m_workItem->files.files()) {
           // update fullPath
           openstudio::path temp = relocatePath(info.fullPath,originalBase,newBase);
           if (!temp.empty()) {
@@ -273,13 +271,13 @@ WorkflowStep::WorkflowStep(const InputVariable& inputVariable)
 {}
 
 WorkflowStep::WorkflowStep(const runmanager::WorkItem& workItem)
-  : AnalysisObject(boost::shared_ptr<detail::WorkflowStep_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::WorkflowStep_Impl>(
                      new detail::WorkflowStep_Impl(workItem)))
 {}
 
 WorkflowStep::WorkflowStep(const boost::optional<InputVariable>& inputVariable,
                            const boost::optional<runmanager::WorkItem>& workItem)
-  : AnalysisObject(boost::shared_ptr<detail::WorkflowStep_Impl>(
+  : AnalysisObject(std::shared_ptr<detail::WorkflowStep_Impl>(
                      new detail::WorkflowStep_Impl(inputVariable,workItem)))
 {
   if (isInputVariable()) {
@@ -332,7 +330,7 @@ bool WorkflowStep::set(const runmanager::WorkItem& workItem) {
 }
 
 /// @cond
-WorkflowStep::WorkflowStep(boost::shared_ptr<detail::WorkflowStep_Impl> impl)
+WorkflowStep::WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

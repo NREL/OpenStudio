@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/Component.hpp>
+#include "Component.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/Unit.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -77,7 +77,7 @@ Component::Component(const BCLMeasure & bclMeasure,
       m_updateAvailable = false;
       if (m_msg){
         m_msg->setText("This measure requires a newer version of OpenStudio");
-        m_msg->setShown(true);
+        m_msg->setVisible(true);
       }
     }
   }else{
@@ -87,7 +87,7 @@ Component::Component(const BCLMeasure & bclMeasure,
     m_updateAvailable = true;
     if (m_msg){
       m_msg->setText("An update is available for this measure");
-      m_msg->setShown(true);
+      m_msg->setVisible(true);
     }
   }
 }
@@ -108,8 +108,8 @@ Component::Component(const BCLSearchResult & bclSearchResult,
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   parseBCLSearchResult(bclSearchResult);
@@ -136,7 +136,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
         m_updateAvailable = true;
         if (m_msg){
           m_msg->setText("An update is available for this component");
-          m_msg->setShown(true);
+          m_msg->setVisible(true);
         }
       }
     // This component has not yet been downloaded
@@ -157,7 +157,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
         m_updateAvailable = false;
         if (m_msg){
           m_msg->setText("This measure requires a newer version of OpenStudio");
-          m_msg->setShown(true);
+          m_msg->setVisible(true);
         }
       }
     }else{
@@ -176,7 +176,7 @@ Component::Component(const BCLSearchResult & bclSearchResult,
           m_updateAvailable = true;
           if (m_msg){
             m_msg->setText("An update is available for this measure");
-            m_msg->setShown(true);
+            m_msg->setVisible(true);
           }
         }
       // This measure has not yet been downloaded
@@ -207,8 +207,8 @@ Component::Component(bool showAbridgedView,
   m_tags(std::vector<std::string>()),
   m_showAbridgedView(showAbridgedView),
   m_showCheckBox(showCheckBox),
-  m_checkBox(NULL),
-  m_msg(NULL)
+  m_checkBox(nullptr),
+  m_msg(nullptr)
 {
   setCheckable(true);
   if(m_showAbridgedView){
@@ -353,7 +353,7 @@ void Component::parseBCLSearchResult(const BCLSearchResult & bclSearchResult)
   m_tags = bclSearchResult.tags();
 
   std::string componentVersion;
-  Q_FOREACH(const BCLFile & file, m_files){
+  for (const BCLFile & file : m_files) {
     if (file.usageType() == "script" && file.softwareProgram() == "OpenStudio"){
       componentVersion = file.identifier();
       break;
@@ -374,18 +374,18 @@ void Component::createAbridgedLayout()
     m_checkBox->hide();
   }
 
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   QString string;
 
-  QVBoxLayout * leftLayout = new QVBoxLayout();
+  auto leftLayout = new QVBoxLayout();
 
   string = "Name: ";
   string += m_name;
   label = new QLabel(string);
   leftLayout->addWidget(label);
 
-  Q_FOREACH(const Attribute & attribute, m_attributes){
+  for (const Attribute & attribute : m_attributes) {
     string = attribute.name().c_str();
     if(m_componentType == "component"){
       if(string.toStdString() == OPENSTUDIO_TYPE){
@@ -430,7 +430,7 @@ void Component::createAbridgedLayout()
   leftLayout->addWidget(m_msg);
   
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
   mainLayout->addLayout(leftLayout);
   mainLayout->addStretch();
   mainLayout->addWidget(m_checkBox);
@@ -439,13 +439,13 @@ void Component::createAbridgedLayout()
 
 void Component::createCompleteLayout()
 {
-  QLabel * label = NULL;
+  QLabel * label = nullptr;
 
   QString string;
 
-  QVBoxLayout * mainLayout = new QVBoxLayout();
+  auto mainLayout = new QVBoxLayout();
 
-  QTableWidget * tableWidget = NULL;
+  QTableWidget * tableWidget = nullptr;
 
   ///! Attributes
   ///! Class BCL only stores double (optional units),
@@ -464,12 +464,12 @@ void Component::createCompleteLayout()
   tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tableWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   tableWidget->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-  tableWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+  tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   tableWidget->horizontalHeader()->setStretchLastSection(true);
 
   mainLayout->addWidget(tableWidget);
 
-  Q_FOREACH(const Attribute & attribute, m_attributes){
+  for (const Attribute & attribute : m_attributes) {
     tableWidget->insertRow(tableWidget->rowCount());
 
     QTableWidgetItem * item = new QTableWidgetItem(attribute.name().c_str());
@@ -538,7 +538,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Files");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const BCLFile & file, m_files){
+  for (const BCLFile & file : m_files) {
     label = new QLabel(file.filename().c_str());
     mainLayout->addWidget(label);
 
@@ -551,7 +551,7 @@ void Component::createCompleteLayout()
     //label = new QLabel(file.identifier().c_str());
     //mainLayout->addWidget(label);
   }
-  Q_FOREACH(const BCLFileReference & fileReference, m_fileReferences){
+  for (const BCLFileReference & fileReference : m_fileReferences){
     label = new QLabel(fileReference.fileName().c_str());
     mainLayout->addWidget(label);
 
@@ -572,7 +572,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Sources");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const BCLProvenance & provenance, m_provenances){
+  for (const BCLProvenance & provenance : m_provenances) {
     string = "Author: ";
     string += provenance.author().c_str();
     label = new QLabel(string);
@@ -601,7 +601,7 @@ void Component::createCompleteLayout()
   label = new QLabel("Tags");
   label->setObjectName("H1");
   mainLayout->addWidget(label);
-  Q_FOREACH(const std::string & tag, m_tags){
+  for (const std::string & tag : m_tags) {
     label = new QLabel(tag.c_str());
     mainLayout->addWidget(label);
 

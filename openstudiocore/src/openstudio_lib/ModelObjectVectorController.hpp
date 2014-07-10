@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_H
-#define OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_H
+#ifndef OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_HPP
+#define OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_HPP
 
-#include <openstudio_lib/OSVectorController.hpp>
-#include <model/ModelObject.hpp>
-#include <model/Component.hpp>
+#include "OSVectorController.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/Component.hpp"
 #include <vector>
 
 namespace openstudio {
@@ -43,9 +43,9 @@ public:
 
 protected slots:
 
-  void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
-  void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
+  void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle);
 
   void changeRelationship(int index, Handle newHandle, Handle oldHandle);
 
@@ -112,5 +112,5 @@ protected:
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_H
+#endif // OPENSTUDIO_MODELOBJECTVECTORCONTROLLER_HPP
 

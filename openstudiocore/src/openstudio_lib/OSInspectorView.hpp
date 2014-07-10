@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSINSPECTORVIEW_H
-#define OPENSTUDIO_OSINSPECTORVIEW_H
+#ifndef OPENSTUDIO_OSINSPECTORVIEW_HPP
+#define OPENSTUDIO_OSINSPECTORVIEW_HPP
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 #include <boost/smart_ptr.hpp>
 #include <boost/optional.hpp>
@@ -77,5 +77,5 @@ class OSInspectorView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSINSPECTORVIEW_H
+#endif // OPENSTUDIO_OSINSPECTORVIEW_HPP
 

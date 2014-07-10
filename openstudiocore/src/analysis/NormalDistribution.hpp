@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_NORMALDISTRIBUTION_HPP
 #define ANALYSIS_NORMALDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -74,7 +74,7 @@ class ANALYSIS_API NormalDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit NormalDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit NormalDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
   
   friend class AnalysisObject;
   friend class UncertaintyDescription;

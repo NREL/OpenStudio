@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveFanPressureRise.hpp>
-#include <model/CurveFanPressureRise_Impl.hpp>
+#include "CurveFanPressureRise.hpp"
+#include "CurveFanPressureRise_Impl.hpp"
 
 #include <utilities/idd/OS_Curve_FanPressureRise_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -316,7 +316,7 @@ void CurveFanPressureRise::resetMaximumCurveOutput() {
 }
 
 /// @cond
-CurveFanPressureRise::CurveFanPressureRise(boost::shared_ptr<detail::CurveFanPressureRise_Impl> impl)
+CurveFanPressureRise::CurveFanPressureRise(std::shared_ptr<detail::CurveFanPressureRise_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

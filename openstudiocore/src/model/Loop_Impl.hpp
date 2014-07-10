@@ -20,7 +20,7 @@
 #ifndef MODEL_LOOP_IMPL_HPP
 #define MODEL_LOOP_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 

@@ -18,24 +18,24 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
-#include <project/TagRecord.hpp>
-#include <project/TagRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/DataPointRecord.hpp>
+#include "ProjectFixture.hpp"
+#include "../TagRecord.hpp"
+#include "../TagRecord_Impl.hpp"
+#include "../AnalysisRecord.hpp"
+#include "../DataPointRecord.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Variable.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <utilities/data/Tag.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/data/Tag.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/Finder.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -20,7 +20,7 @@
 #include "OSListView.hpp"
 #include "OSListController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QScrollArea>
@@ -33,7 +33,7 @@ namespace openstudio {
 OSListView::OSListView(bool scrollable, QWidget * parent)
   : QWidget(parent),
   m_scrollable(scrollable),
-  m_scrollArea(NULL)
+  m_scrollArea(nullptr)
 {
   m_delegate = QSharedPointer<OSItemDelegate>(new OSItemDelegate());
   m_mainVLayout = new QVBoxLayout();
@@ -42,7 +42,7 @@ OSListView::OSListView(bool scrollable, QWidget * parent)
 
   if( scrollable )
   {
-    QWidget * scrollWidget = new QWidget();
+    auto scrollWidget = new QWidget();
     scrollWidget->setObjectName("ScrollWidget");
     scrollWidget->setStyleSheet("QWidget#ScrollWidget { background: transparent; }");
     scrollWidget->setLayout(m_mainVLayout);
@@ -53,7 +53,7 @@ OSListView::OSListView(bool scrollable, QWidget * parent)
     m_scrollArea->setWidgetResizable(true);
     m_scrollArea->setBackgroundRole(QPalette::NoRole);
 
-    QVBoxLayout * scrollLayout = new QVBoxLayout();
+    auto scrollLayout = new QVBoxLayout();
     scrollLayout->setContentsMargins(0,0,0,0);
     scrollLayout->addWidget(m_scrollArea);
 
@@ -145,15 +145,15 @@ void OSListView::setContentsMargins(int left,int top,int right,int bottom)
 void OSListView::refreshAllViews()
 {
   QLayoutItem *child;
-  while((child = m_mainVLayout->takeAt(0)) != 0)
+  while((child = m_mainVLayout->takeAt(0)) != nullptr)
   {
-      QWidget * widget = child->widget();
+    QWidget * widget = child->widget();
 
-      OS_ASSERT(widget);
+    OS_ASSERT(widget);
 
-      delete widget;
+    delete widget;
 
-      delete child;
+    delete child;
   }
 
   if( m_listController )
@@ -179,7 +179,7 @@ void OSListView::insertItemView(int i)
 
   m_mainVLayout->insertWidget(i,itemView);
 
-  m_widgetItemPairs.insert( std::make_pair<QObject *,QSharedPointer<OSListItem> >(itemView,itemData) );
+  m_widgetItemPairs.insert( std::make_pair(itemView,itemData) );
 
   bool bingo = connect(itemView,SIGNAL(destroyed(QObject *)),this,SLOT(removePair(QObject *)));
 

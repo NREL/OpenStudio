@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_HPP
 #define MODEL_AIRLOOPHVACUNITARYHEATPUMPAIRTOAIR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -174,7 +174,7 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAir : public StraightComponent
 
   typedef detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl ImplType;
 
-  explicit AirLoopHVACUnitaryHeatPumpAirToAir(boost::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
+  explicit AirLoopHVACUnitaryHeatPumpAirToAir(std::shared_ptr<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl> impl);
 
   friend class detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl;
   friend class Model;

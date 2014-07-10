@@ -19,12 +19,12 @@
 #include <iostream>
 #include <sstream>
 
-#include <QtXml/QXmlDefaultHandler>
-#include <QtXml/QXmlReader>
+#include <QXmlDefaultHandler>
+#include <QXmlReader>
 
-#include <model/AccessPolicyStore.hpp>
+#include "AccessPolicyStore.hpp"
 
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
 using std::map;
 using std::stringstream;
@@ -33,7 +33,7 @@ namespace openstudio
 {
   namespace model
   {
-    AccessPolicyStore* AccessPolicyStore::s_instance=NULL;
+    AccessPolicyStore* AccessPolicyStore::s_instance=nullptr;
 
 
     //XML Parser
@@ -62,7 +62,7 @@ namespace openstudio
     };
 
     AccessParser::AccessParser():
-      m_curPolicy(NULL),
+      m_curPolicy(nullptr),
       m_curType(IddObjectType::Catchall)
     {
     }
@@ -113,7 +113,7 @@ namespace openstudio
               LOG(Debug,"IddObjectType failed conversion:"<<val.toStdString()<<"\n");
               return false;//Bad IddObjectType
             }
-            map<openstudio::IddObjectType,AccessPolicy*>::iterator exists = AccessPolicyStore::Instance().m_policyMap.find( m_curType );
+            auto exists = AccessPolicyStore::Instance().m_policyMap.find( m_curType );
             if( exists != AccessPolicyStore::Instance().m_policyMap.end() )
             {
               LOG(Warn,"2 entries of same type found in policy xml. Later entries will obscure previous entires:"<<val.toStdString()<<"\n");
@@ -214,7 +214,7 @@ namespace openstudio
     {
       if( !qName.compare("policy",Qt::CaseInsensitive))
       {
-        m_curPolicy = NULL;
+        m_curPolicy = nullptr;
       }
       return true;
     }
@@ -235,7 +235,7 @@ namespace openstudio
     {
       if(index<m_numNormalFields)
       {
-        map<unsigned int, ACCESS_LEVEL>::const_iterator i = m_accessMap.find(index);
+        auto i = m_accessMap.find(index);
         if( i != m_accessMap.end() )
         {
           return (*i).second;
@@ -245,7 +245,7 @@ namespace openstudio
       {
         index-=m_numNormalFields;
         index = index % m_extensibleSize;
-        map<unsigned int, ACCESS_LEVEL>::const_iterator i = m_extensibleAccessMap.find(index);
+        auto i = m_extensibleAccessMap.find(index);
         if( i != m_extensibleAccessMap.end() )
         {
           return (*i).second;
@@ -279,7 +279,7 @@ namespace openstudio
         LOG(Debug,"file:"<<file.fileName().toStdString()<<" was not found\n");
         return false;
       }
-      QXmlInputSource *source = new QXmlInputSource( &file );
+      auto source = new QXmlInputSource( &file );
       //LER:: add error handler
       if(!xmlReader.parse(source))
       {
@@ -298,13 +298,13 @@ namespace openstudio
 
     const AccessPolicy* AccessPolicyStore::getPolicy( const openstudio::IddObjectType& type)const
     {
-      std::map<openstudio::IddObjectType,AccessPolicy*>::const_iterator i = m_policyMap.find(type);
+      auto i = m_policyMap.find(type);
       if(i!=m_policyMap.end())
       {
         return (*i).second;
       }
 
-      return NULL;
+      return nullptr;
 
     }
 

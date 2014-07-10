@@ -17,19 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../ScaleFactory.hpp"
+#include "../UnitFactory.hpp"
+#include "../SIUnit.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../../data/Vector.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../../core/Containers.hpp"
 
 #include <cmath>
-
-#include <boost/foreach.hpp>
 
 using openstudio::ScaleFactory;
 using openstudio::UnitFactory;
@@ -38,7 +36,7 @@ using openstudio::FileLogSink;
 using openstudio::path;
 using openstudio::toPath;
 
-// initiallize for each test
+// initialize for each test
 void UnitsFixture::SetUp() {
 }
 
@@ -46,7 +44,7 @@ void UnitsFixture::SetUp() {
 void UnitsFixture::TearDown() {
 }
 
-// initiallize static members
+// initialize static members
 void UnitsFixture::SetUpTestCase() 
 {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));
@@ -57,7 +55,7 @@ void UnitsFixture::SetUpTestCase()
 
   openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0,1000.0,8760u));
   openstudio::Unit u = openstudio::createSIPower();
-  BOOST_FOREACH(double val,vals) {
+  for (double val : vals) {
     testQuantityVector.push_back(openstudio::Quantity(val,u));
   }
   testOSQuantityVector = openstudio::OSQuantityVector(u,vals);

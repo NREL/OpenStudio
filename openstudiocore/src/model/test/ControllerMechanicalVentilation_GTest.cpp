@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
 *  All rights reserved.
 *
 *  This library is free software; you can redistribute it and/or
@@ -18,10 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/ControllerMechanicalVentilation.hpp>
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../ControllerMechanicalVentilation.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatMainWindow.hpp>
+#include "PatMainWindow.hpp"
 
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/HorizontalTabWidget.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/PatMainMenu.hpp>
-#include <pat_app/PatVerticalTabWidget.hpp>
+#include "CloudMonitor.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "PatApp.hpp"
+#include "PatMainMenu.hpp"
+#include "PatVerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QAction>
 #include <QApplication>
@@ -38,6 +38,7 @@
 #include <QListWidget>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>
@@ -320,15 +321,15 @@ void PatMainWindow::setRubyProxyEnvironment(const QNetworkProxy &t_proxy)
     urlsimple.setHost(t_proxy.hostName());
     urlsimple.setPort(t_proxy.port());
     urlsimple.setScheme("http");
-    bool set = qputenv("HTTP_PROXY", urlsimple.toString().toAscii());
+    bool set = qputenv("HTTP_PROXY", urlsimple.toString().toLatin1());
     OS_ASSERT(set);
-    set = qputenv("HTTP_PROXY_USER", t_proxy.user().toAscii());
+    set = qputenv("HTTP_PROXY_USER", t_proxy.user().toLatin1());
     OS_ASSERT(set);
-    set = qputenv("HTTP_PROXY_PASS", t_proxy.password().toAscii());
+    set = qputenv("HTTP_PROXY_PASS", t_proxy.password().toLatin1());
     OS_ASSERT(set);
-    set = qputenv("HTTP_USER", t_proxy.user().toAscii());
+    set = qputenv("HTTP_USER", t_proxy.user().toLatin1());
     OS_ASSERT(set);
-    set = qputenv("HTTP_PASS", t_proxy.password().toAscii());
+    set = qputenv("HTTP_PASS", t_proxy.password().toLatin1());
     OS_ASSERT(set);
   }
 }

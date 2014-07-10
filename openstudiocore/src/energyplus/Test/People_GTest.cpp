@@ -18,18 +18,18 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Space.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
+#include "../../model/PeopleDefinition.hpp"
+#include "../../model/PeopleDefinition_Impl.hpp"
 
 #include <utilities/idd/People_FieldEnums.hxx>
 

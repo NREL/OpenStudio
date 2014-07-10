@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Matrix_Test < Test::Unit::TestCase
+class Matrix_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end
@@ -153,7 +153,7 @@ class Matrix_Test < Test::Unit::TestCase
   end
   
   def test_to_s
-    assert_not_nil(OpenStudio::Matrix.new(2,2,-1).to_s)
+    assert(!OpenStudio::Matrix.new(2,2,-1).to_s.nil?)
   end
   
 end

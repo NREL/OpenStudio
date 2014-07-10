@@ -20,8 +20,8 @@
 #ifndef MODEL_LIGHTINGSIMULATIONCONTROL_HPP
 #define MODEL_LIGHTINGSIMULATIONCONTROL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -80,7 +80,7 @@ class MODEL_API LightingSimulationControl : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::LightingSimulationControl_Impl;
 
-  explicit LightingSimulationControl(boost::shared_ptr<detail::LightingSimulationControl_Impl> impl);
+  explicit LightingSimulationControl(std::shared_ptr<detail::LightingSimulationControl_Impl> impl);
 
   explicit LightingSimulationControl(Model& model);
 

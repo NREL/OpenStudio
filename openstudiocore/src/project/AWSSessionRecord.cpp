@@ -17,19 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/AWSSessionRecord.hpp>
-#include <project/AWSSessionRecord_Impl.hpp>
+#include "AWSSessionRecord.hpp"
+#include "AWSSessionRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/UrlRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "UrlRecord.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace project {
@@ -89,7 +87,7 @@ namespace detail {
     m_workerInstanceType = value.toString().toStdString();
   }
 
-  void AWSSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase>& database) {
+  void AWSSessionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase>& database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<AWSSessionRecord>(query);
     this->bindValues(query);
@@ -109,7 +107,7 @@ namespace detail {
     }
     UrlVector workerUrls;
     StringVector workerIds;
-    BOOST_FOREACH(const UrlRecord& wur,workerUrlRecords()) {
+    for (const UrlRecord& wur : workerUrlRecords()) {
       workerUrls.push_back(wur.url());
       workerIds.push_back(wur.name());
     }
@@ -246,7 +244,7 @@ namespace detail {
 } // detail
 
 AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl>(
         new detail::AWSSessionRecord_Impl(awsSession, database)),
         database)
 {
@@ -255,7 +253,7 @@ AWSSessionRecord::AWSSessionRecord(const AWSSession& awsSession, ProjectDatabase
 }
 
 AWSSessionRecord::AWSSessionRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : CloudSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl>(
+  : CloudSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl>(
         new detail::AWSSessionRecord_Impl(query, database)),
         database)
 {
@@ -310,11 +308,11 @@ AWSSession AWSSessionRecord::awsSession() const {
 }
 
 /// @cond
-AWSSessionRecord::AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl)
+AWSSessionRecord::AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl)
   : CloudSessionRecord(impl)
 {}
 
-AWSSessionRecord::AWSSessionRecord(boost::shared_ptr<detail::AWSSessionRecord_Impl> impl,
+AWSSessionRecord::AWSSessionRecord(std::shared_ptr<detail::AWSSessionRecord_Impl> impl,
                                    ProjectDatabase database)
   : CloudSessionRecord(impl, database)
 {

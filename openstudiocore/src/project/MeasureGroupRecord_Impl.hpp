@@ -21,12 +21,10 @@
 #define PROJECT_MEASUREGROUPRECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/DiscreteVariableRecord_Impl.hpp>
+#include "DiscreteVariableRecord_Impl.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -73,7 +71,7 @@ namespace detail{
     virtual std::vector<ObjectRecord> resources() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Variable variable() const;
 

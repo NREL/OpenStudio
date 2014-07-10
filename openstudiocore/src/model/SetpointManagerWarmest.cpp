@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/Model.hpp>
+#include "SetpointManagerWarmest.hpp"
+#include "SetpointManagerWarmest_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "Model.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SetpointManager_Warmest_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -191,7 +191,7 @@ bool SetpointManagerWarmest::setStrategy(const std::string& strategy) {
 }
 
 /// @cond
-SetpointManagerWarmest::SetpointManagerWarmest(boost::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
+SetpointManagerWarmest::SetpointManagerWarmest(std::shared_ptr<detail::SetpointManagerWarmest_Impl> impl)
   : SetpointManager(impl)
 {}
 /// @endcond

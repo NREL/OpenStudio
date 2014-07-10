@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ParentObject.hpp>
-#include <model/ParentObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/Component.hpp>
+#include "ParentObject.hpp"
+#include "ParentObject_Impl.hpp"
+#include "ResourceObject.hpp"
+#include "LifeCycleCost.hpp"
+#include "Component.hpp"
 
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/idf/Workspace_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <deque>
 
@@ -69,14 +67,14 @@ namespace detail {
     // and we don't want to call remove on the same object recursively
     //
     //ModelObjectVector subTree = getRecursiveChildren(getObject<ParentObject>());
-    //BOOST_FOREACH(ModelObject& object, subTree) {
+    //for (ModelObject& object : subTree) {
     //  std::vector<IdfObject> removed = object.remove();
     //  result.insert(result.end(), removed.begin(), removed.end());
     //}
       
     // subTree includes this object, make sure to include costs as well 
     ModelObjectVector subTree = getRecursiveChildren(getObject<ParentObject>(), true);
-    BOOST_FOREACH(const ModelObject& object, subTree) {
+    for (const ModelObject& object : subTree) {
       result.push_back(object.idfObject());
     }
       
@@ -97,7 +95,7 @@ namespace detail {
   {
     ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
     ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
-    BOOST_FOREACH(ModelObject child, children())
+    for (ModelObject child : children())
     {
       ModelObject newChild = child.clone(model);
       newChild.setParent(newParent);
@@ -113,7 +111,7 @@ ParentObject::ParentObject(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ParentObject_Impl>());
 }
 
-ParentObject::ParentObject(boost::shared_ptr<detail::ParentObject_Impl> p)
+ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p)
   : ModelObject(p)
 {  }
 
@@ -137,7 +135,7 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
   result.push_back(object);
 
   if (includeLifeCycleCosts){
-    BOOST_FOREACH(const LifeCycleCost& lifeCycleCost, object.lifeCycleCosts()){
+    for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
       result.push_back(lifeCycleCost);
     }
   }
@@ -151,13 +149,13 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
 
     // parent's costs have already been added
     
-    BOOST_FOREACH(const ModelObject& child, currentParent.children()) {
+    for (const ModelObject& child : currentParent.children()) {
       insertResult = resultSet.insert(child.handle());
       if (insertResult.second) {
         result.push_back(child);
 
         if (includeLifeCycleCosts){
-          BOOST_FOREACH(const LifeCycleCost& lifeCycleCost, child.lifeCycleCosts()){
+          for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()){
             result.push_back(lifeCycleCost);
           }
         }
@@ -187,7 +185,7 @@ std::vector<ModelObject> getRecursiveChildrenAndResources(const ModelObject& obj
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
     // resources
-    BOOST_FOREACH(const ResourceObject& resource, currentObject.resources()) {
+    for (const ResourceObject& resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         // new object
@@ -200,7 +198,7 @@ std::vector<ModelObject> getRecursiveChildrenAndResources(const ModelObject& obj
     OptionalParentObject opo = currentObject.optionalCast<ParentObject>();
     if (opo) {
       ParentObject currentParent(*opo);
-      BOOST_FOREACH(const ModelObject& child, currentParent.children()) {
+      for (const ModelObject& child : currentParent.children()) {
         insertResult = resultSet.insert(child.handle());
         if (insertResult.second) {
           // new object

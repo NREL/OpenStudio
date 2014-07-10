@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_CoilCoolingDXTwoSpeed_IMPL_HPP
-#define MODEL_CoilCoolingDXTwoSpeed_IMPL_HPP
+#ifndef MODEL_COILCOOLINGDXTWOSPEED_IMPL_HPP
+#define MODEL_COILCOOLINGDXTWOSPEED_IMPL_HPP
 
-#include <model/StraightComponent_Impl.hpp>
+#include "StraightComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -228,4 +228,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_CoilCoolingDXTwoSpeed_IMPL_HPP
+#endif // MODEL_COILCOOLINGDXTWOSPEED_IMPL_HPP

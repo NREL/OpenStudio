@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurface_Impl.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../ShadingSurfaceGroup_Impl.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;

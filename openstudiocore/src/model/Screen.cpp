@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Screen.hpp>
-#include <model/Screen_Impl.hpp>
+#include "Screen.hpp"
+#include "Screen_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_Screen_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -924,7 +924,7 @@ void Screen::resetAngleofResolutionforScreenTransmittanceOutputMap() {
 }
 
 /// @cond
-Screen::Screen(boost::shared_ptr<detail::Screen_Impl> impl)
+Screen::Screen(std::shared_ptr<detail::Screen_Impl> impl)
   : ShadingMaterial(impl)
 {}
 /// @endcond

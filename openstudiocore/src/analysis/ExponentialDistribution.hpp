@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_ExponentialDISTRIBUTION_HPP
-#define ANALYSIS_ExponentialDISTRIBUTION_HPP
+#ifndef ANALYSIS_EXPONENTIALDISTRIBUTION_HPP
+#define ANALYSIS_EXPONENTIALDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -57,7 +57,7 @@ class ANALYSIS_API ExponentialDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit ExponentialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit ExponentialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -68,4 +68,4 @@ class ANALYSIS_API ExponentialDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_ExponentialDISTRIBUTION_HPP
+#endif // ANALYSIS_EXPONENTIALDISTRIBUTION_HPP

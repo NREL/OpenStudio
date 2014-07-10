@@ -177,7 +177,7 @@ SetpointManager::SetpointManager(IddObjectType type, const Model& model)
   OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
 }
 
-SetpointManager::SetpointManager(boost::shared_ptr<detail::SetpointManager_Impl> p)
+SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p)
   : HVACComponent(p)
 {
 }

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HEADERVIEWS_H
-#define OPENSTUDIO_HEADERVIEWS_H
+#ifndef SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
+#define SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
 
 #include "OSCollapsibleView.hpp"
 #include <QPushButton>
@@ -33,7 +33,7 @@ class LightHeaderToggleButton : public QPushButton
 {
   public:
 
-  LightHeaderToggleButton(QWidget * parent = 0);
+  LightHeaderToggleButton(QWidget * parent = nullptr);
   virtual ~LightHeaderToggleButton() {}
 };
 
@@ -41,7 +41,7 @@ class HeaderToggleButton : public QPushButton
 {
   public:
 
-  HeaderToggleButton(QWidget * parent = 0);
+  HeaderToggleButton(QWidget * parent = nullptr);
   virtual ~HeaderToggleButton() {}
 };
 
@@ -53,7 +53,7 @@ class DarkGradientHeader : public OSHeader
 
   QLabel * label;
 
-  DarkGradientHeader(QWidget * parent = 0);
+  DarkGradientHeader(QWidget * parent = nullptr);
   virtual ~DarkGradientHeader() {}
 };
 
@@ -65,7 +65,7 @@ class LightGradientHeader : public OSHeader
 
   QLabel * label;
 
-  LightGradientHeader(QWidget * parent = 0);
+  LightGradientHeader(QWidget * parent = nullptr);
   void setMeasureType(MeasureType measureType);
   virtual ~LightGradientHeader() {}
 
@@ -82,11 +82,11 @@ class LightHeader : public OSHeader
 
   QLabel * label;
 
-  LightHeader(QWidget * parent = 0);
+  LightHeader(QWidget * parent = nullptr);
   virtual ~LightHeader() {}
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_HEADERVIEWS_H
+#endif // SHAREDGUICOMPONENTS_HEADERVIEWS_HPP
 

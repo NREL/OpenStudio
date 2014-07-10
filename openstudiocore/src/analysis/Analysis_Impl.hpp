@@ -17,23 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ANALYSIS_ANALYSISDATA_IMPL_HPP
-#define ANALYSIS_ANALYSISDATA_IMPL_HPP
+#ifndef ANALYSIS_ANALYSIS_IMPL_HPP
+#define ANALYSIS_ANALYSIS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/Algorithm.hpp>
-#include <analysis/DataPoint.hpp>
+#include "Problem.hpp"
+#include "Algorithm.hpp"
+#include "DataPoint.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 #include <vector>
 
 namespace openstudio {
-
-class Table;
 
 namespace runmanager {
   class Job;
@@ -242,9 +240,6 @@ namespace detail {
      *  completes. */
     void updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob);
 
-    /** Returns a csv summary of all the data points in this analysis. */
-    Table summaryTable() const;
-
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,
                                      const openstudio::path& newBase);
@@ -306,5 +301,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // ANALYSIS_ANALYSISDATA_IMPL_HPP
+#endif // ANALYSIS_ANALYSIS_IMPL_HPP
 

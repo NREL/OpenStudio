@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OUTPUTVARIABLE_HPP
 #define ANALYSIS_OUTPUTVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Variable.hpp>
+#include "AnalysisAPI.hpp"
+#include "Variable.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -45,7 +45,7 @@ class ANALYSIS_API OutputVariable : public Variable {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit OutputVariable(boost::shared_ptr<detail::OutputVariable_Impl> impl);
+  explicit OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.analysis.OutputVariable");

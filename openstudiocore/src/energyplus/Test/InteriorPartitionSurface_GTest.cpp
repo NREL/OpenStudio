@@ -18,30 +18,30 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <energyplus/Test/EnergyPlusFixture.hpp>
+#include "EnergyPlusFixture.hpp"
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
+#include "../../model/InteriorPartitionSurface_Impl.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
+#include "../../model/DefaultSurfaceConstructions.hpp"
+#include "../../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
 
@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
 
   unsigned n = 0;
-  BOOST_FOREACH(Surface surface, space1->surfaces()){
+  for (Surface surface : space1->surfaces()){
     EXPECT_EQ(1.0, surface.grossArea());
     if (surface.adjacentSurface()){
       ++n;

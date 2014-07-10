@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Transformation_Test < Test::Unit::TestCase
+class Transformation_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

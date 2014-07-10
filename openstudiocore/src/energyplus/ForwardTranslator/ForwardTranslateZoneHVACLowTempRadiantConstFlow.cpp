@@ -17,38 +17,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ZoneHVACEquipmentList.hpp>
-#include <model/ZoneHVACEquipmentList_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow.hpp>
-#include <model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ModelObject.hpp"
+#include "../../model/ModelObject_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ConstructionWithInternalSource.hpp"
+#include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "../../model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
+#include "../../model/ZoneHVACEquipmentList.hpp"
+#include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/StraightComponent.hpp"
+#include "../../model/StraightComponent_Impl.hpp"
+#include "../../model/CoilHeatingLowTempRadiantConstFlow.hpp"
+#include "../../model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
+#include "../../model/CoilCoolingLowTempRadiantConstFlow.hpp"
+#include "../../model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
+#include "../../model/ZoneHVACComponent.hpp"
+#include "../../model/ZoneHVACComponent_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 
 #include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
@@ -113,15 +113,15 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   //aggregator for total area; will be used to create weighted area
   double totalAreaOfSurfaces = 0;
 
-  //loop thorugh all surfaces, adding up their area
-  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+  //loop through all surfaces, adding up their area
+  for (const Surface& surface : modelObject.surfaces()){
     totalAreaOfSurfaces = totalAreaOfSurfaces + surface.grossArea();
   }
 
   //loop through all the surfaces, adding them and their flow fractions (weighted per-area)
-  BOOST_FOREACH(const Surface& surface, modelObject.surfaces()){
+  for (const Surface& surface : modelObject.surfaces()){
     IdfExtensibleGroup group = _surfaceGroup.pushExtensibleGroup();
-    BOOST_ASSERT(group.numFields() == 2);
+    OS_ASSERT(group.numFields() == 2);
     group.setString(0, surface.name().get());        
     group.setDouble(1, (surface.grossArea()/totalAreaOfSurfaces) );     
   }

@@ -20,14 +20,13 @@
 #ifndef UTILITIES_UNITS_UNITFACTORY_HPP
 #define UTILITIES_UNITS_UNITFACTORY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Singleton.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../core/Singleton.hpp"
+#include "Unit.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/functional.hpp>
 
 #include <set>

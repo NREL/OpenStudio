@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScheduleSetInspectorView.hpp>
+#include "ScheduleSetInspectorView.hpp"
 
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "ModelObjectItem.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_DefaultScheduleSet_FieldEnums.hxx>
 
 #include <QGridLayout>
@@ -773,7 +773,7 @@ ScheduleSetInspectorView::ScheduleSetInspectorView(const model::Model& model,
 
 void ScheduleSetInspectorView::configDropZones()
 {
-  BOOST_FOREACH(openstudio::OSDropZone * dropZone,m_dropZones){
+  for (openstudio::OSDropZone * dropZone : m_dropZones){
     dropZone->setMinItems(0);
     dropZone->setMaxItems(1);
     dropZone->setItemsAcceptDrops(true);
@@ -798,7 +798,7 @@ void ScheduleSetInspectorView::onUpdate()
 
 void ScheduleSetInspectorView::attach(openstudio::model::DefaultScheduleSet& defaultScheduleSet)
 {
-  BOOST_FOREACH(ModelObjectVectorController * vc, m_vectorControllers){
+  for (ModelObjectVectorController * vc : m_vectorControllers){
     vc->attach(defaultScheduleSet);
     vc->reportItems();
   }
@@ -814,7 +814,7 @@ void ScheduleSetInspectorView::detach()
 
   m_nameEdit->unbind();
 
-  BOOST_FOREACH(ModelObjectVectorController * vc, m_vectorControllers){
+  for (ModelObjectVectorController * vc : m_vectorControllers){
     vc->detach();
     vc->reportItems();
   }

@@ -20,11 +20,11 @@
 #define OPENSTUDIO_LOOPCHOOSERVIEW_HPP
 
 #include <QWidget>
-#include <model/ModelObject.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Loop.hpp>
-#include <utilities/core/String.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/Loop.hpp"
+#include "../utilities/core/String.hpp"
 
 class QCheckBox;
 

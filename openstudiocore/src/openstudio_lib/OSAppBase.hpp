@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSAPPBASE_H
-#define OPENSTUDIO_OSAPPBASE_H
+#ifndef OPENSTUDIO_OSAPPBASE_HPP
+#define OPENSTUDIO_OSAPPBASE_HPP
 
 #include "../shared_gui_components/BaseApp.hpp"
 
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "../ruleset/RubyUserScriptArgumentGetter.hpp"
 
-#include <openstudio_lib/OpenStudioAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "OpenStudioAPI.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QApplication>
 
@@ -48,7 +48,7 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
   virtual ~OSAppBase();
 
-  virtual boost::shared_ptr<OSDocument> currentDocument() const = 0;
+  virtual std::shared_ptr<OSDocument> currentDocument() const = 0;
 
   static OSAppBase * instance();
 
@@ -82,5 +82,5 @@ class OPENSTUDIO_API OSAppBase : public QApplication, public BaseApp
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSAPPBASE_H
+#endif // OPENSTUDIO_OSAPPBASE_HPP
 

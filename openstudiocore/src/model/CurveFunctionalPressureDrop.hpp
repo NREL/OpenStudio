@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVEFUNCTIONALPRESSUREDROP_HPP
 #define MODEL_CURVEFUNCTIONALPRESSUREDROP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -100,7 +100,7 @@ class MODEL_API CurveFunctionalPressureDrop : public Curve {
   /// @cond
   typedef detail::CurveFunctionalPressureDrop_Impl ImplType;
 
-  explicit CurveFunctionalPressureDrop(boost::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl);
+  explicit CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl);
 
   friend class detail::CurveFunctionalPressureDrop_Impl;
   friend class Model;

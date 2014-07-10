@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/FileLogSink_Impl.hpp>
+#include "FileLogSink.hpp"
+#include "FileLogSink_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "Assert.hpp"
 
 #include <QReadWriteLock>
 #include <QWriteLocker>

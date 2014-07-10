@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/WaterUseEquipmentInspectorView.hpp>
+#include "WaterUseEquipmentInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "OSDropZone.hpp"
+#include "ModelObjectItem.hpp"
+#include "../model/WaterUseEquipmentDefinition.hpp"
+#include "../model/WaterUseEquipmentDefinition_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_Definition_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>

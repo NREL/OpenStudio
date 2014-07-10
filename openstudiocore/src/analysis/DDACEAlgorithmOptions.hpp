@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_DDACEALGORITHMOPTIONS_HPP
 #define ANALYSIS_DDACEALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -159,7 +159,7 @@ class ANALYSIS_API DDACEAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::DDACEAlgorithmOptions_Impl ImplType;
 
-  explicit DDACEAlgorithmOptions(boost::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl);
+  explicit DDACEAlgorithmOptions(std::shared_ptr<detail::DDACEAlgorithmOptions_Impl> impl);
 
   friend class detail::DDACEAlgorithmOptions_Impl;
   friend class AlgorithmOptions;

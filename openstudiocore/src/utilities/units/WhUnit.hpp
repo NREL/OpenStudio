@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_WHUNIT_HPP
 #define UTILITIES_UNITS_WHUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -111,7 +111,7 @@ class UTILITIES_API WhUnit : public Unit {
   /// @cond
   typedef detail::WhUnit_Impl ImplType;
 
-  explicit WhUnit(boost::shared_ptr<detail::WhUnit_Impl> impl);
+  explicit WhUnit(std::shared_ptr<detail::WhUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::WhUnit_Impl;

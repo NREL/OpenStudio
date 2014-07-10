@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <isomodel/Test/ISOModelFixture.hpp>
-#include <isomodel/SimModel.hpp>
-#include <isomodel/UserModel.hpp>
+#include "ISOModelFixture.hpp"
+#include "../SimModel.hpp"
+#include "../UserModel.hpp"
 #include <resources.hxx>
 #include <sstream>
 

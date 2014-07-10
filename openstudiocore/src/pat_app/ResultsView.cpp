@@ -17,43 +17,43 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/ResultsView.hpp>
-#include <pat_app/ResultsTabController.hpp>
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
+#include "ResultsView.hpp"
+#include "ResultsTabController.hpp"
+#include "CloudMonitor.hpp"
+#include "PatApp.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Analysis_Impl.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DataPoint_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Analysis_Impl.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/DataPoint_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/Problem_Impl.hpp"
+#include "../analysis/Variable.hpp"
+#include "../analysis/Variable_Impl.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/AnalysisDriver.hpp"
+#include "../analysisdriver/AnalysisDriver_Impl.hpp"
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
+#include "../project/AnalysisRecord.hpp"
+#include "../project/AnalysisRecord_Impl.hpp"
 
-#include <model/UtilityBill.hpp>
+#include "../model/UtilityBill.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/CalibrationResult.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/UnitFactory.hpp"
 
 #include <QBoxLayout>
 #include <QHeaderView>
@@ -94,7 +94,7 @@ boost::optional<double> getNMBE(const FuelType& fuelType, const analysis::DataPo
   if(attribute){
     boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
     if (calibrationResult){
-      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+      for (const CalibrationUtilityBill& bill : calibrationResult->utilityBills()) {
         if (bill.fuelType() == fuelType){
           return bill.NMBE();
         }
@@ -109,7 +109,7 @@ boost::optional<double> getCVRMSE(const FuelType& fuelType, const analysis::Data
   if(attribute){
     boost::optional<CalibrationResult> calibrationResult = CalibrationResult::fromAttribute(*attribute);
     if (calibrationResult){
-      Q_FOREACH(const CalibrationUtilityBill& bill, calibrationResult->utilityBills()){
+      for (const CalibrationUtilityBill& bill : calibrationResult->utilityBills()) {
         if (bill.fuelType() == fuelType){
           return bill.CVRMSE();
         }
@@ -120,7 +120,7 @@ boost::optional<double> getCVRMSE(const FuelType& fuelType, const analysis::Data
 }
 
 bool hasCalibrationResults(const analysis::DataPoint& dataPoint){
-  Q_FOREACH(int i, FuelType::getValues()){
+  for (int i : FuelType::getValues()) {
     FuelType fuelType(i);
     if (getNMBE(fuelType, dataPoint) || getCVRMSE(fuelType, dataPoint)){
       return true;
@@ -139,9 +139,9 @@ ResultsView::ResultsView()
 
   // Main Content
 
-  QWidget * mainContent = new QWidget();
+  auto mainContent = new QWidget();
 
-  QVBoxLayout * mainContentVLayout = new QVBoxLayout();
+  auto mainContentVLayout = new QVBoxLayout();
   mainContentVLayout->setContentsMargins(0,0,0,0);
   mainContentVLayout->setSpacing(0);
   mainContentVLayout->setAlignment(Qt::AlignTop);
@@ -150,13 +150,13 @@ ResultsView::ResultsView()
   
   // Make Selection Button Widget
   
-  QHBoxLayout* hLayout = new QHBoxLayout(this);
+  auto hLayout = new QHBoxLayout(this);
   QLabel* reportLabel = new QLabel("View: ",this);
   reportLabel->setObjectName("H2");
   reportLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   hLayout->addWidget(reportLabel, 0, Qt::AlignLeft | Qt::AlignTop);
 
-  QButtonGroup* buttonGroup = new QButtonGroup(this);
+  auto buttonGroup = new QButtonGroup(this);
   bool isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SIGNAL(viewSelected(int)));
   OS_ASSERT(isConnected);
 
@@ -171,7 +171,7 @@ ResultsView::ResultsView()
   buttonGroup->addButton(m_calibrationResultsBtn,1);
 
   hLayout->addStretch();
-  QWidget* widget = new QWidget(this);
+  auto widget = new QWidget(this);
   widget->setLayout(hLayout);
   mainContentVLayout->addWidget(widget);
 
@@ -180,7 +180,7 @@ ResultsView::ResultsView()
 
   //********************************************* PAGE 1 *********************************************
 
-  QVBoxLayout* innerContentVLayout = new QVBoxLayout();
+  auto innerContentVLayout = new QVBoxLayout();
   innerContentVLayout->setContentsMargins(5,5,5,5);
   innerContentVLayout->setSpacing(5);
   innerContentVLayout->setAlignment(Qt::AlignTop);
@@ -195,7 +195,7 @@ ResultsView::ResultsView()
   baselineDataPointResultListView->setContentsMargins(1,1,1,1);
   baselineDataPointResultListView->setStyleSheet("openstudio--OSListView { border: 1px solid black; }");
 
-  QHBoxLayout * baselineLayout = new QHBoxLayout();
+  auto baselineLayout = new QHBoxLayout();
   baselineLayout->setContentsMargins(0,0,0,0);
   baselineLayout->setSpacing(0);
   baselineLayout->addWidget(baselineDataPointResultListView);
@@ -229,8 +229,8 @@ ResultsView::ResultsView()
   // select calibration method
   hLayout = new QHBoxLayout();
 
-  QComboBox* calibrationComboBox = new QComboBox();
-  Q_FOREACH(const std::string& calibrationGuideline, model::UtilityBill::calibrationGuidelines()){
+  auto calibrationComboBox = new QComboBox();
+  for (const std::string& calibrationGuideline : model::UtilityBill::calibrationGuidelines()) {
     calibrationComboBox->addItem(toQString(calibrationGuideline));
   }
   calibrationComboBox->setCurrentIndex(-1); // needed so change to index 0 emits signal
@@ -265,7 +265,7 @@ ResultsView::ResultsView()
 
   //********************************************* Footer *********************************************
 
-  QWidget * footer = new QWidget();
+  auto footer = new QWidget();
   footer->setObjectName("Footer");
   QString style;
   style.append("QWidget#Footer {");
@@ -521,7 +521,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
   // mirroring code in ResultsView::searchForExistingResults
   std::vector<openstudio::path> reports;
   if (exists(directory) && !directory.empty()){
-    for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(directory); dir != end; ++dir ) {
+    for ( boost::filesystem::recursive_directory_iterator end, dir(directory); dir != end; ++dir ) {
       openstudio::path p = *dir;
       if (openstudio::toString(p.filename()) == "report.html") {
         reports.push_back(p);
@@ -537,7 +537,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
   // mirrors ResultsView::populateComboBox
   if (!reports.empty()){
     unsigned num = 0;
-    Q_FOREACH(openstudio::path report, reports){
+    for (openstudio::path report : reports) {
 
       QString fullPathString = toQString(report.string());
       QFile file(fullPathString);
@@ -568,7 +568,7 @@ void ResultsView::populateMenu(QMenu& menu, const openstudio::path& directory)
         }
       }
 
-      QAction* openAct = new QAction(name, &menu);
+      auto openAct = new QAction(name, &menu);
       openAct->setToolTip(fullPathString);
       openAct->setData(fullPathString);
       bool test = connect(openAct, SIGNAL(triggered()), this, SLOT(openReport()));
@@ -603,26 +603,26 @@ void ResultsView::openReport()
 ResultsHeader::ResultsHeader(bool isBaseline)
   : QWidget()
 {
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
 
   QString style("QLabel {font-size: 12px; font: bold; color: black;}");
 
-  QLabel* nameLabel = new QLabel();
+  auto nameLabel = new QLabel();
   nameLabel->setStyleSheet(style);
   nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
   //nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
   nameLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(nameLabel);
 
-  QLabel* space = new QLabel();
+  auto space = new QLabel();
   space->setFixedWidth(SPACER_WIDTH);
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* netSiteEnergyIntensityLabel = new QLabel();
+  auto netSiteEnergyIntensityLabel = new QLabel();
   netSiteEnergyIntensityLabel->setStyleSheet(style);
   netSiteEnergyIntensityLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   netSiteEnergyIntensityLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -633,7 +633,7 @@ ResultsHeader::ResultsHeader(bool isBaseline)
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* peakElectricDemandLabel = new QLabel();
+  auto peakElectricDemandLabel = new QLabel();
   peakElectricDemandLabel->setStyleSheet(style);
   peakElectricDemandLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   peakElectricDemandLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -644,7 +644,7 @@ ResultsHeader::ResultsHeader(bool isBaseline)
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* electricityLabel = new QLabel();
+  auto electricityLabel = new QLabel();
   electricityLabel->setStyleSheet(style);
   electricityLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   electricityLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -656,7 +656,7 @@ ResultsHeader::ResultsHeader(bool isBaseline)
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* naturalGasLabel = new QLabel();
+  auto naturalGasLabel = new QLabel();
   naturalGasLabel->setStyleSheet(style);
   naturalGasLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   naturalGasLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -668,7 +668,7 @@ ResultsHeader::ResultsHeader(bool isBaseline)
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* districtCoolingLabel = new QLabel();
+  auto districtCoolingLabel = new QLabel();
   districtCoolingLabel->setStyleSheet(style);
   districtCoolingLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   districtCoolingLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -680,37 +680,37 @@ ResultsHeader::ResultsHeader(bool isBaseline)
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  QLabel* districtHeatingLabel = new QLabel();
+  auto districtHeatingLabel = new QLabel();
   districtHeatingLabel->setStyleSheet(style);
   districtHeatingLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   districtHeatingLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(districtHeatingLabel);
 
-  QLabel* capitalCostLabel = new QLabel();
+  auto capitalCostLabel = new QLabel();
   capitalCostLabel->setStyleSheet(style);
   capitalCostLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   capitalCostLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(capitalCostLabel);
 
-  QLabel* energyCostLabel = new QLabel();
+  auto energyCostLabel = new QLabel();
   energyCostLabel->setStyleSheet(style);
   energyCostLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   energyCostLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(energyCostLabel);
 
-  QLabel* m_simplePayBackLabel = new QLabel();
+  auto m_simplePayBackLabel = new QLabel();
   m_simplePayBackLabel->setStyleSheet(style);
   m_simplePayBackLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   m_simplePayBackLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(m_simplePayBackLabel);
 
-  QLabel* m_lifeCycleCostLabel = new QLabel();
+  auto m_lifeCycleCostLabel = new QLabel();
   m_lifeCycleCostLabel->setStyleSheet(style);
   m_lifeCycleCostLabel->setFixedWidth(RESULT_LABEL_WIDTH);
   m_lifeCycleCostLabel->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
   hLayout->addWidget(m_lifeCycleCostLabel);
 
-  QLabel* scrollSpacer = new QLabel();
+  auto scrollSpacer = new QLabel();
   hLayout->addWidget(scrollSpacer);
 
   if (isBaseline){
@@ -748,11 +748,11 @@ ResultsHeader::ResultsHeader(bool isBaseline)
 DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint& dataPoint,
                                            const openstudio::analysis::DataPoint& baselineDataPoint, 
                                            bool alternateRow)
-  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_alternateRow(alternateRow), m_hasEmphasis(false)
+  : QAbstractButton(), m_dataPoint(dataPoint), m_baselineDataPoint(baselineDataPoint), m_hasEmphasis(false), m_alternateRow(alternateRow)
 {
   this->setMinimumHeight(75);
 
-  QHBoxLayout* hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
@@ -766,7 +766,7 @@ DataPointResultsView::DataPointResultsView(const openstudio::analysis::DataPoint
   //m_nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
   hLayout->addWidget(m_nameLabel);
 
-  QLabel* space = new QLabel();
+  auto space = new QLabel();
   space->setStyleSheet(style);
   space->setFixedWidth(SPACER_WIDTH);
   hLayout->addWidget(space);
@@ -1004,7 +1004,7 @@ void DataPointResultsView::update()
       openstudio::analysis::Problem problem = project->analysis().problem();
       std::vector<QVariant> variableValues = m_dataPoint.variableValues();
       std::vector<boost::optional<analysis::Measure> > measures = problem.getMeasures(variableValues);
-      Q_FOREACH(boost::optional<analysis::Measure> measure, measures){
+      for (boost::optional<analysis::Measure> measure : measures) {
         if (measure){
           if (!measure->optionalCast<analysis::NullMeasure>()){
             listOfMeasures += measure->name().c_str();
@@ -1261,7 +1261,7 @@ boost::optional<double> DataPointResultsView::getValue(const std::string& attrib
     if(optionalUnit){
       currentUnit = optionalUnit.get();
     
-      if(attribute == "Net Site Energy Use Intentsity"){
+      if(attribute == "Net Site Energy Use Intensity"){
         desiredUnit = createUnit("kBtu/ft^2").get();
       }
       else if(attribute == "Instantaneous Peak Electricity Demand"){
@@ -1376,14 +1376,14 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
 {
   this->setMinimumHeight(75);
 
-  QHBoxLayout* hLayout = new QHBoxLayout();
+  auto hLayout = new QHBoxLayout();
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
 
   QString style("QLabel {font-size: 12px; font: bold; color: black;}");
 
-  QLabel* nameLabel = new QLabel();
+  auto nameLabel = new QLabel();
   nameLabel->setStyleSheet(style);
   nameLabel->setMinimumWidth(NAME_LABEL_WIDTH);
   //nameLabel->setFixedWidth(NAME_LABEL_WIDTH);
@@ -1392,7 +1392,7 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
   hLayout->addWidget(nameLabel);
   hLayout->setStretchFactor(nameLabel, 100);
   
-  QLabel* space = new QLabel();
+  auto space = new QLabel();
   space->setStyleSheet(style);
   space->setFixedWidth(SPACER_WIDTH);
   space->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -1403,10 +1403,10 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
 
     analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
 
-    Q_FOREACH(int i, FuelType::getValues()){
+    for (int i : FuelType::getValues()) {
       FuelType fuelType(i);
       if (getNMBE(fuelType, baselineDataPoint) || getCVRMSE(fuelType, baselineDataPoint)){
-        QLabel* label = new QLabel();
+        auto label = new QLabel();
         label->setStyleSheet(style);
         label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
         label->setAlignment(Qt::AlignBottom | Qt::AlignHCenter);
@@ -1425,7 +1425,7 @@ DataPointCalibrationHeaderView::DataPointCalibrationHeaderView()
 
   hLayout->addStretch(10);
 
-  QLabel* scrollSpacer = new QLabel();
+  auto scrollSpacer = new QLabel();
   scrollSpacer->setStyleSheet(style);
   scrollSpacer->setFixedWidth(SCROLL_SPACER_WIDTH);
   hLayout->addWidget(scrollSpacer);
@@ -1450,7 +1450,7 @@ DataPointCalibrationView::DataPointCalibrationView(const openstudio::analysis::D
 
 void DataPointCalibrationView::update()
 {
-  QHBoxLayout* hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->setContentsMargins(0,0,0,0);
   hLayout->setSpacing(0);
   this->setLayout(hLayout);
@@ -1468,19 +1468,19 @@ void DataPointCalibrationView::update()
   hLayout->addWidget(m_nameLabel);
   hLayout->setStretchFactor(m_nameLabel, 100);
 
-  QLabel* space = new QLabel();
+  auto space = new QLabel();
   space->setStyleSheet(borderStyle);
   space->setFixedWidth(SPACER_WIDTH);
   space->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   hLayout->addWidget(space);
 
-  Q_FOREACH(int i, FuelType::getValues()){
+  for (int i : FuelType::getValues()) {
     FuelType fuelType(i);
     if (getNMBE(fuelType, m_baselineDataPoint) || getCVRMSE(fuelType, m_baselineDataPoint)){
       boost::optional<double> nmbe = getNMBE(fuelType, m_dataPoint);
       boost::optional<double> cvrmse = getCVRMSE(fuelType, m_dataPoint);
 
-      QLabel* label = new QLabel();
+      auto label = new QLabel();
       label->setStyleSheet(style);
       label->setFixedWidth(CALIBRATION_LABEL_WIDTH);
       label->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);

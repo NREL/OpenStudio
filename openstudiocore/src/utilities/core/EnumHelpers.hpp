@@ -20,15 +20,13 @@
 #ifndef UTILITIES_CORE_ENUMHELPERS_HPP
 #define UTILITIES_CORE_ENUMHELPERS_HPP
 
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "Containers.hpp"
 
 namespace openstudio {
 
 template <class _enum_name>
 bool isMember(const _enum_name& e, const StringVector& strValues) {
-  BOOST_FOREACH(const std::string& str, strValues) {
+  for (const std::string& str : strValues) {
     try {
       _enum_name setMember(str);
       if (e == setMember) { return true; }

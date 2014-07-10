@@ -1,5 +1,5 @@
-#ifndef __RULESET_API_HPP__
-#define __RULESET_API_HPP__
+#ifndef RULESET_RULESETAPI_HPP
+#define RULESET_RULESETAPI_HPP
 
 #if _WIN32 || _MSC_VER
 

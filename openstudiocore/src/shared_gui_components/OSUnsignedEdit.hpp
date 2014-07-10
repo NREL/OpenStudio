@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSUNSIGNEDEDIT_HPP
-#define OPENSTUDIO_OSUNSIGNEDEDIT_HPP
+#ifndef SHAREDGUICOMPONENTS_OSUNSIGNEDEDIT_HPP
+#define SHAREDGUICOMPONENTS_OSUNSIGNEDEDIT_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/ModelExtensibleGroup.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QLineEdit>
 
@@ -36,7 +36,7 @@ class OSUnsignedEdit2: public QLineEdit {
 
  public:
 
-  OSUnsignedEdit2(QWidget * parent = 0);
+  OSUnsignedEdit2(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit2() {}
 
@@ -120,7 +120,7 @@ class OSUnsignedEdit: public QLineEdit {
 
  public:
 
-  OSUnsignedEdit(QWidget * parent = 0);
+  OSUnsignedEdit(QWidget * parent = nullptr);
 
   virtual ~OSUnsignedEdit() {}
 
@@ -159,5 +159,5 @@ class OSUnsignedEdit: public QLineEdit {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSUNSIGNEDEDIT_HPP
+#endif // SHAREDGUICOMPONENTS_OSUNSIGNEDEDIT_HPP
 

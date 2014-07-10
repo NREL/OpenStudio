@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/idd/IddKey_Impl.hpp>
+#include "IddKey.hpp"
+#include "IddKey_Impl.hpp"
 
-#include <utilities/idd/IddKeyProperties.hpp>
-#include <utilities/idd/IddRegex.hpp>
+#include "IddKeyProperties.hpp"
+#include "IddRegex.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -50,16 +50,16 @@ namespace detail {
     return m_properties;
   }
 
-  boost::shared_ptr<IddKey_Impl> IddKey_Impl::load(const std::string& name,
+  std::shared_ptr<IddKey_Impl> IddKey_Impl::load(const std::string& name,
                                                    const std::string& text) {
 
-    boost::shared_ptr<IddKey_Impl> result;
+    std::shared_ptr<IddKey_Impl> result;
     IddKey_Impl iddKeyImpl(name);
 
     try { iddKeyImpl.parse(text); }
     catch (...) { return result; }
 
-    result = boost::shared_ptr<IddKey_Impl>(new IddKey_Impl(iddKeyImpl));
+    result = std::shared_ptr<IddKey_Impl>(new IddKey_Impl(iddKeyImpl));
     return result;
   }
 
@@ -94,7 +94,7 @@ namespace detail {
 
 IddKey::IddKey()
 {
-  m_impl = boost::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl());
+  m_impl = std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl());
 }
 
 IddKey::IddKey(const IddKey& other)
@@ -120,7 +120,7 @@ const IddKeyProperties& IddKey::properties() const
 }
 
 OptionalIddKey IddKey::load(const std::string& name, const std::string& text) {
-  boost::shared_ptr<detail::IddKey_Impl> p = detail::IddKey_Impl::load(name,text);
+  std::shared_ptr<detail::IddKey_Impl> p = detail::IddKey_Impl::load(name,text);
   if (p) { return IddKey(p); }
   else { return boost::none; }
 }
@@ -132,7 +132,7 @@ std::ostream& IddKey::print(std::ostream& os) const
 
 // PRIVATE
 
-IddKey::IddKey(const boost::shared_ptr<detail::IddKey_Impl>& impl) : m_impl(impl) {}
+IddKey::IddKey(const std::shared_ptr<detail::IddKey_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

@@ -18,18 +18,18 @@
  **********************************************************************/
 
 #include "EnergyPlusAPI.hpp"
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/GeometryTranslator.hpp>
+#include "ReverseTranslator.hpp"
+#include "GeometryTranslator.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <QThread>
 
@@ -132,9 +132,9 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   // if multiple runperiod objects in idf, remove them all
   vector<WorkspaceObject> runPeriods = m_workspace.getObjectsByType(IddObjectType::RunPeriod);
   if (runPeriods.size() > 1){
-    for(vector<WorkspaceObject>::iterator i = runPeriods.begin(),iend=runPeriods.end();i!=iend;++i)
+    for(auto & runPeriod : runPeriods)
     {
-      i->remove();
+      runPeriod.remove();
     }
   }
 
@@ -156,23 +156,23 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   // look for site object in workspace and translate if found
   LOG(Trace,"Translating Site:Location object.");
   vector<WorkspaceObject> site = m_workspace.getObjectsByType(IddObjectType::Site_Location);
-  for(vector<WorkspaceObject>::iterator i = site.begin(),iend=site.end();i!=iend;++i)
+  for(auto & elem : site)
   {
-    translateAndMapWorkspaceObject(*i);
+    translateAndMapWorkspaceObject(elem);
   }
 
   // look for simulation control object in workspace and translate if found
   LOG(Trace,"Translating SimulationControl object.");
   vector<WorkspaceObject> simulationControl = m_workspace.getObjectsByType(IddObjectType::SimulationControl);
-  for(vector<WorkspaceObject>::iterator i = simulationControl.begin(),iend=simulationControl.end();i!=iend;++i)
+  for(auto & elem : simulationControl)
   {
-    translateAndMapWorkspaceObject(*i);
+    translateAndMapWorkspaceObject(elem);
   }
 
   // loop over all of the air loops
   LOG(Trace,"Translating AirLoops.");
   vector<WorkspaceObject> airLoops = m_workspace.getObjectsByType(IddObjectType::AirLoopHVAC);
-  for(vector<WorkspaceObject>::iterator it = airLoops.begin(),iend=airLoops.end();it!=iend;++it)
+  for(auto it = airLoops.begin(),iend=airLoops.end();it!=iend;++it)
   {
     LOG(Trace,"Translating AirLoop '" << it->name().get() << "'.");
     translateAndMapWorkspaceObject( *it );
@@ -182,9 +182,9 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   // In the future this might be removed.
   LOG(Trace,"Translating remaining objects.");
   vector<WorkspaceObject> all = m_workspace.objects();
-  for(vector<WorkspaceObject>::iterator it = all.begin(),iend=all.end();it!=iend;++it)
+  for(auto & elem : all)
   {
-    translateAndMapWorkspaceObject( *it );
+    translateAndMapWorkspaceObject( elem );
   }
 
   LOG(Trace,"Translation nominally complete.");
@@ -196,7 +196,7 @@ std::vector<LogMessage> ReverseTranslator::warnings() const
 {
   std::vector<LogMessage> result;
 
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() == Warn){
       result.push_back(logMessage);
     }
@@ -209,7 +209,7 @@ std::vector<LogMessage> ReverseTranslator::errors() const
 {
   std::vector<LogMessage> result;
 
-  BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+  for (LogMessage logMessage : m_logSink.logMessages()){
     if (logMessage.logLevel() > Warn){
       result.push_back(logMessage);
     }
@@ -238,7 +238,7 @@ struct IdfObjectEqual {
 
 boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(const WorkspaceObject & workspaceObject)
 {
-  map<Handle,ModelObject>::iterator i = m_workspaceToModelMap.find(workspaceObject.handle());
+  auto i = m_workspaceToModelMap.find(workspaceObject.handle());
 
   boost::optional<ModelObject> modelObject;
 

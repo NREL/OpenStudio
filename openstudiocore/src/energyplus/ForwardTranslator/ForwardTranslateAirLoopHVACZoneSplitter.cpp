@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/AirLoopHVACZoneSplitter.hpp"
+#include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../../model/AirLoopHVACZoneMixer.hpp"
+#include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -65,12 +65,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
   // Field: Outlet 1-N Node Name //////////////////////////////////////////////
   std::vector<ModelObject> outletModelObjects = modelObject.outletModelObjects();
   int i = 2;
-  for( std::vector<ModelObject>::iterator it = outletModelObjects.begin();
-       it < outletModelObjects.end();
-       ++it )
+  for( const auto & outletModelObject : outletModelObjects )
   {
     if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
-        it->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+        outletModelObject.optionalCast<AirTerminalSingleDuctUncontrolled>() )
     {
       temp = airTerminal->outletModelObject();
       if(temp)
@@ -82,7 +80,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
     }
     else
     {
-      s = it->name().get();
+      s = outletModelObject.name().get();
       idfObject.setString(i,s);
     }
     i++;

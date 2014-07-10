@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_OPTIONAL_HPP
 #define UTILITIES_CORE_OPTIONAL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/optional.hpp>
 

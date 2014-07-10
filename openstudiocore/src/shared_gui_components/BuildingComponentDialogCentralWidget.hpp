@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef BUILDINGCOMPONENTDIALOGCENTRALWIDGET_H
-#define BUILDINGCOMPONENTDIALOGCENTRALWIDGET_H
+#ifndef SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOGCENTRALWIDGET_HPP
+#define SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOGCENTRALWIDGET_HPP
 
 #include <QWidget>
 
@@ -42,8 +42,8 @@ class BuildingComponentDialogCentralWidget : public QWidget
   Q_OBJECT
 
 public:
-  BuildingComponentDialogCentralWidget(QWidget * parent = 0);
-  BuildingComponentDialogCentralWidget(int tid, QWidget * parent = 0);
+  BuildingComponentDialogCentralWidget(QWidget * parent = nullptr);
+  BuildingComponentDialogCentralWidget(int tid, QWidget * parent = nullptr);
   virtual ~BuildingComponentDialogCentralWidget() {}
   int tid();
   void setTid(const std::string& filterType,
@@ -97,4 +97,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // BUILDINGCOMPONENTDIALOGCENTRALWIDGET_H
+#endif // SHAREDGUICOMPONENTS_BUILDINGCOMPONENTDIALOGCENTRALWIDGET_HPP

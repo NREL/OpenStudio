@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/WaterUseEquipmentDefinition.hpp>
-#include <model/WaterUseEquipmentDefinition_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "WaterUseEquipment.hpp"
+#include "WaterUseEquipment_Impl.hpp"
+#include "WaterUseEquipmentDefinition.hpp"
+#include "WaterUseEquipmentDefinition_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "WaterUseConnections.hpp"
+#include "WaterUseConnections_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include <utilities/idd/OS_WaterUse_Equipment_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -130,19 +130,15 @@ namespace detail {
   {
     std::vector<WaterUseConnections> connections = model().getConcreteModelObjects<WaterUseConnections>();
 
-    for( std::vector<WaterUseConnections>::iterator it = connections.begin();
-         it != connections.end();
-         ++it )
+    for( const auto & connection : connections )
     {
-      std::vector<WaterUseEquipment> equipment = it->waterUseEquipment();
+      std::vector<WaterUseEquipment> equipment = connection.waterUseEquipment();
 
-      for( std::vector<WaterUseEquipment>::iterator it2 = equipment.begin();
-           it2 != equipment.end();
-           ++it2 )
+      for( const auto & elem : equipment )
       {
-        if( it2->handle() == handle() )
+        if( elem.handle() == handle() )
         {
-          return *it;
+          return connection;
         }
       }
     }
@@ -251,7 +247,7 @@ bool WaterUseEquipment::setWaterUseEquipmentDefinition(const WaterUseEquipmentDe
 }
 
 /// @cond
-WaterUseEquipment::WaterUseEquipment(boost::shared_ptr<detail::WaterUseEquipment_Impl> impl)
+WaterUseEquipment::WaterUseEquipment(std::shared_ptr<detail::WaterUseEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

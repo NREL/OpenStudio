@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/CloudSessionRecord.hpp>
-#include <project/CloudSessionRecord_Impl.hpp>
+#include "CloudSessionRecord.hpp"
+#include "CloudSessionRecord_Impl.hpp"
 
-#include <project/AWSSessionRecord.hpp>
-#include <project/AWSSessionRecord_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/UrlRecord.hpp>
-#include <project/VagrantSessionRecord.hpp>
-#include <project/VagrantSessionRecord_Impl.hpp>
+#include "AWSSessionRecord.hpp"
+#include "AWSSessionRecord_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "UrlRecord.hpp"
+#include "VagrantSessionRecord.hpp"
+#include "VagrantSessionRecord_Impl.hpp"
 
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../utilities/cloud/AWSProvider.hpp"
+#include "../utilities/cloud/AWSProvider_Impl.hpp"
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
 
 namespace openstudio {
 namespace project {
@@ -100,7 +100,7 @@ namespace detail {
     return result;
   }
 
-  void CloudSessionRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void CloudSessionRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<CloudSessionRecord>(query);
     this->bindValues(query);
@@ -260,7 +260,7 @@ UpdateByIdQueryData CloudSessionRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -268,7 +268,7 @@ UpdateByIdQueryData CloudSessionRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -282,11 +282,10 @@ UpdateByIdQueryData CloudSessionRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -336,7 +335,7 @@ CloudSessionRecord CloudSessionRecord::factoryFromCloudSession(const CloudSessio
   }
 
   OS_ASSERT(false);
-  return CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl>());
+  return CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl>());
 }
 
 std::vector<CloudSessionRecord> CloudSessionRecord::getCloudSessionRecords(ProjectDatabase& database) {
@@ -386,11 +385,11 @@ CloudSession CloudSessionRecord::cloudSession() const {
 }
 
 /// @cond
-CloudSessionRecord::CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl)
+CloudSessionRecord::CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 
-CloudSessionRecord::CloudSessionRecord(boost::shared_ptr<detail::CloudSessionRecord_Impl> impl,
+CloudSessionRecord::CloudSessionRecord(std::shared_ptr<detail::CloudSessionRecord_Impl> impl,
                                        ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -410,7 +409,7 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
   if (isNew || (getImpl<detail::CloudSessionRecord_Impl>()->lastUuidLast() != cloudSession.versionUUID())) {
     // remove any existing UrlRecords that have this object as its parent
     ObjectRecordVector childUrls = children();
-    BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+    for (ObjectRecord& childUrl : childUrls) {
       database.removeRecord(childUrl);
     }
     // create new UrlRecords 
@@ -427,7 +426,7 @@ void CloudSessionRecord::constructRelatedRecords(const CloudSession& cloudSessio
       workerIds = awsSession->workerIds();
     }
     unsigned index(0);
-    BOOST_FOREACH(const Url& workerUrl, cloudSession.workerUrls()) {
+    for (const Url& workerUrl : cloudSession.workerUrls()) {
       UrlRecord workerRecord(workerUrl,copyOfThis);
       if (index < workerIds.size()) {
         workerRecord.setName(workerIds[index]);

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSITEM_H
-#define OPENSTUDIO_OSITEM_H
+#ifndef OPENSTUDIO_OSITEM_HPP
+#define OPENSTUDIO_OSITEM_HPP
 
-#include <utilities/core/Enum.hpp>
+#include <shared_gui_components/LocalLibrary.hpp>
 
 #include <QVariant>
 #include <QWidget>
@@ -33,19 +33,6 @@ class QMimeData;
 class QPushButton;
 
 namespace openstudio {
-
-OPENSTUDIO_ENUM(AspectRatio,
-  ((Square))
-  ((Rectangle))
-);
-
-OPENSTUDIO_ENUM(OSItemType,
-  ((CollapsibleListHeader)) // has the arrow
-  ((ListItem))               // regular item
-  ((LibraryItem))            // library or my model item
-  ((DropzoneSquare))         // in scrolling drop zone
-  ((DropzoneRectangle))      // for fixed drop zone 
-);
 
 class MeasureBadge;
 
@@ -199,4 +186,4 @@ class OSItem : public QWidget
 Q_DECLARE_METATYPE(openstudio::OSItemId)
 Q_DECLARE_METATYPE(std::vector<openstudio::OSItemId>)
 
-#endif // OPENSTUDIO_OSITEM_H
+#endif // OPENSTUDIO_OSITEM_HPP

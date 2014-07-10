@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model_editor/test/ModelEditorFixture.hpp>
+#include "ModelEditorFixture.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/Path.hpp"
 
 void ModelEditorFixture::SetUp() {
   openstudio::Application::instance().application();

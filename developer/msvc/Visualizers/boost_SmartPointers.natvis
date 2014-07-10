@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<Type Name="boost::scoped_ptr&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="px != 0">scoped_ptr {*px}</DisplayString>
+    <Expand>
+        <Item Condition="px != 0" Name="[ptr]">px</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::scoped_array&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="px != 0">scoped_array {px}</DisplayString>
+    <Expand>
+        <Item Condition="px != 0" Name="[ptr]">&amp;px</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::detail::sp_counted_impl_p&lt;*&gt;">
+    <DisplayString>default</DisplayString>
+    <Expand/>
+</Type>
+
+<Type Name="boost::detail::sp_counted_impl_pd&lt;*&gt;">
+    <!-- make_shared -->
+    <DisplayString>custom deleter</DisplayString>
+    <Expand>
+        <Item Name="[deleter]">del</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::detail::sp_counted_impl_pda&lt;*&gt;">
+    <DisplayString>custom deleter, custom allocator</DisplayString>
+    <Expand>
+        <Item Name="[deleter]">d_</Item>
+        <Item Name="[allocator]">a_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::shared_ptr&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 1)"  >shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ == 1)"  >shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">shared_ptr {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <Expand>
+        <Item Condition="px != 0" Name="[ptr]">px</Item>
+        <Item Condition="px != 0" Name="[deleter and allocator]">*pn.pi_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::weak_ptr&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 0)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 1)"  >expired [{pn.pi_-&gt;weak_count_} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 0)   &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 1)">expired [{pn.pi_-&gt;weak_count_} weak refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >weak_ptr {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">weak_ptr {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >weak_ptr {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">weak_ptr {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <Expand>
+        <Item Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 0)" Name="[ptr]">px</Item>
+        <Item Condition="px != 0" Name="[deleter and allocator]">*pn.pi_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::intrusive_ptr&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="px != 0">intrusive_ptr {*px}</DisplayString>
+    <Expand>
+        <Item Condition="px != 0" Name="[ptr]">px</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::shared_array&lt;*&gt;">
+    <DisplayString Condition="px == 0">empty</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 1)"  >shared_array {*px} [{pn.pi_-&gt;use_count_} strong ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >shared_array {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ == 1)   &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">shared_array {*px} [{pn.pi_-&gt;use_count_} strong ref, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ == 1)"  >shared_array {*px} [{pn.pi_-&gt;use_count_} strong refs] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ == 2)"  >shared_array {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak ref] [{*pn.pi_}]</DisplayString>
+    <DisplayString Condition="(px != 0) &amp;&amp; (pn.pi_-&gt;use_count_ &gt; 1) &amp;&amp; (pn.pi_-&gt;weak_count_ &gt; 2)">shared_array {*px} [{pn.pi_-&gt;use_count_} strong refs, {pn.pi_-&gt;weak_count_ - 1} weak refs] [{*pn.pi_}]</DisplayString>
+    <Expand>
+        <Item Condition="px != 0" Name="[ptr]">px</Item>
+        <Item Condition="px != 0" Name="[deleter and allocator]">*pn.pi_</Item>
+    </Expand>
+</Type>
+</AutoVisualizer>

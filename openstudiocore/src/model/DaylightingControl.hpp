@@ -20,8 +20,8 @@
 #ifndef MODEL_DAYLIGHTINGCONTROL_HPP
 #define MODEL_DAYLIGHTINGCONTROL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceItem.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceItem.hpp"
 
 namespace openstudio {
 
@@ -191,7 +191,7 @@ class MODEL_API DaylightingControl : public SpaceItem {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DaylightingControl(boost::shared_ptr<detail::DaylightingControl_Impl> impl);
+  explicit DaylightingControl(std::shared_ptr<detail::DaylightingControl_Impl> impl);
 
   /// @endcond
  private:

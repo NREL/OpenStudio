@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_LoguniformDISTRIBUTION_HPP
-#define ANALYSIS_LoguniformDISTRIBUTION_HPP
+#ifndef ANALYSIS_LOGUNIFORMDISTRIBUTION_HPP
+#define ANALYSIS_LOGUNIFORMDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -62,7 +62,7 @@ class ANALYSIS_API LoguniformDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit LoguniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit LoguniformDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -73,4 +73,4 @@ class ANALYSIS_API LoguniformDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_LoguniformDISTRIBUTION_HPP
+#endif // ANALYSIS_LOGUNIFORMDISTRIBUTION_HPP

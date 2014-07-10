@@ -17,28 +17,28 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/ConstructionBase.hpp"
+#include "../../model/ConstructionBase_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -97,7 +97,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   }
 
   idfObject.clearExtensibleGroups();
-  BOOST_FOREACH(const Point3d& point, modelObject.vertices()){
+  for (const Point3d& point : modelObject.vertices()){
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 3);
     group.setDouble(0, point.x());
@@ -108,7 +108,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSurface( model::Surface &
   // translate subsurfaces
   SubSurfaceVector subSurfaces = modelObject.subSurfaces();
   std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(SubSurface& subSurface, subSurfaces){
+  for (SubSurface& subSurface : subSurfaces){
     translateAndMapModelObject(subSurface);
   }
 

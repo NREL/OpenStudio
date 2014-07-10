@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
+#include "RefrigerationCompressor.hpp"
+#include "RefrigerationCompressor_Impl.hpp"
 
-#include <model/CurveBicubic.hpp>
-#include <model/CurveBicubic_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "CurveBicubic.hpp"
+#include "CurveBicubic_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_Compressor_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -515,7 +515,7 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
 }
 
 /// @cond
-RefrigerationCompressor::RefrigerationCompressor(boost::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
+RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
   : ParentObject(impl)
 {}
 /// @endcond

@@ -20,7 +20,7 @@
 #ifndef MODEL_COILCOOLINGWATER_IMPL_HPP
 #define MODEL_COILCOOLINGWATER_IMPL_HPP
 
-#include <model/WaterToAirComponent_Impl.hpp>
+#include "WaterToAirComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

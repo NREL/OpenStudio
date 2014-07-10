@@ -19,13 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../WeatherFile.hpp"
+#include "../WeatherFile_Impl.hpp"
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

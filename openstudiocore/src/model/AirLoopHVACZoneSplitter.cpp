@@ -17,21 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "Node.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -146,12 +145,10 @@ namespace detail{
                                                    demandOutletNode.get(),
                                                    ThermalZone::iddObjectType() );
 
-    for( std::vector<ModelObject>::iterator it = modelObjects.begin();
-    it < modelObjects.end();
-    ++it )
+    for( const auto & modelObject : modelObjects )
     {
       OptionalThermalZone zone;
-      zone = it->optionalCast<ThermalZone>();
+      zone = modelObject.optionalCast<ThermalZone>();
       if( zone )
       {
         zones.push_back(*zone);
@@ -169,7 +166,7 @@ AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(const Model& model)
   OS_ASSERT(getImpl<detail::AirLoopHVACZoneSplitter_Impl>());
 }
 
-AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(boost::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)
+AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p)
   : Splitter(p)
 {}
 

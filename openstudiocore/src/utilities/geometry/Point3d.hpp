@@ -20,9 +20,9 @@
 #ifndef UTILITIES_GEOMETRY_POINT3D_HPP
 #define UTILITIES_GEOMETRY_POINT3D_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../data/Vector.hpp"
+#include "../core/Logger.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>

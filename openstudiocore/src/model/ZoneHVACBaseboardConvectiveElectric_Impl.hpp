@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_IMPL_HPP
 #define MODEL_ZONEHVACBASEBOARDCONVECTIVEELECTRIC_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

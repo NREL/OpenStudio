@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SimSettingsTabView.hpp>
+#include "SimSettingsTabView.hpp"
 
-#include <openstudio_lib/SimSettingsView.hpp>
+#include "SimSettingsView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QScrollArea>
 

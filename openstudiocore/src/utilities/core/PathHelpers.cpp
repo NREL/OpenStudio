@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Logger.hpp>
+#include "PathHelpers.hpp"
+#include "Logger.hpp"
 #include <boost/filesystem.hpp>
 
 #include <QDir>
@@ -82,12 +82,12 @@ path completePathToFile(const path& p,const path& base,const std::string& ext,bo
 }
 
 std::string getFileExtension(const path& p) {
-  path::string_type pext = boost::filesystem::extension(p);
+  std::string pext = boost::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.'
-    pext = path::string_type(++pext.begin(),pext.end());
+    pext = std::string(++pext.begin(),pext.end());
   }
-  return toString(pext);
+  return pext;
 }
 
 path setFileExtension(const path& p,
@@ -97,10 +97,10 @@ path setFileExtension(const path& p,
 {
   path result(p);
   path wext = toPath(ext);
-  path::string_type pext = boost::filesystem::extension(p);
+  std::string pext = boost::filesystem::extension(p);
   if (!pext.empty()) {
     // remove '.' from pext
-    pext = path::string_type(++pext.begin(),pext.end());
+    pext = std::string(++pext.begin(),pext.end());
   }
   if (!pext.empty()) {
     if (pext != wext.string()) {
@@ -228,18 +228,14 @@ path relocatePath(const path& originalPath,
       << "', relative to '" << toString(originalBase) << "' is '" << toString(temp) << "'.");
   if (!temp.empty()) {
     result = newBase / temp;
-    LOG_FREE(Debug,"openstudio.utilities.core","Reloacting path to '" << toString(result) << "'.");
+    LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
   }
   return result;
 }
 
 std::ostream& printPathInformation(std::ostream& os,const path& p) {
   os << "p.string() = " << toString(p.string()) << std::endl;
-  os << "p.file_string() = " << toString(p.file_string()) << std::endl;
-  os << "p.directory_string() = " << toString(p.directory_string()) << std::endl;
-
-  os << "p.external_file_string() = " << toString(p.external_file_string()) << std::endl;
-  os << "p.external_directory_string() = " << toString(p.external_directory_string()) << std::endl;
+  os << "p.native() = " << toString(p.native()) << std::endl;
 
   os << "p.root_name() = " << toString(p.root_name()) << std::endl;
   os << "p.root_directory() = " << toString(p.root_directory()) << std::endl;
@@ -266,12 +262,11 @@ bool removeDirectory(const path& dirName) {
 
   if (dir.exists()) 
   {
-    Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
+    for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
     {
       if (info.isDir()) 
       {
         result = removeDirectory(toPath(info.absoluteFilePath()));
-        if (result == false) std::cout << "First: " << toString(info.absoluteFilePath()) << std::endl;
       }
       else 
       {
@@ -284,7 +279,6 @@ bool removeDirectory(const path& dirName) {
       }
     }
     result = QDir().rmdir(toQString(dirName));
-    if (result == false) std::cout << "Second: " << toString(dirName) << std::endl;
   }
 
   return result;
@@ -299,7 +293,7 @@ bool copyDirectory(const path& source, const path& destination) {
 
   QDir srcDir(toQString(source));
 
-  Q_FOREACH(const QFileInfo &info, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+  for (const QFileInfo &info : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
   {
     QString srcItemPath = toQString(source) + "/" + info.fileName();
     QString dstItemPath = toQString(destination) + "/" + info.fileName();
@@ -324,10 +318,10 @@ bool copyDirectory(const path& source, const path& destination) {
 
 bool isEmptyDirectory(const path& dirName)
 {
-  if (!exists(dirName)){
+  if (!QFile::exists(toQString(dirName))){
     return false;
   }
-  if (!is_directory(dirName)){
+  if (!QFileInfo(toQString(dirName)).isDir()){
     return false;
   }
 

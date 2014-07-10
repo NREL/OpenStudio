@@ -20,7 +20,7 @@
 #ifndef UTILITIES_UNITS_IDDUNITSTRING_HPP
 #define UTILITIES_UNITS_IDDUNITSTRING_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <string>
 

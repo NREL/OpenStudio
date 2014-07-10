@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Daylighting_Control_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -677,7 +677,7 @@ bool DaylightingControl::aimAt(const Point3d& target)
 }
 
 /// @cond
-DaylightingControl::DaylightingControl(boost::shared_ptr<detail::DaylightingControl_Impl> impl)
+DaylightingControl::DaylightingControl(std::shared_ptr<detail::DaylightingControl_Impl> impl)
   : SpaceItem(impl)
 {}
 /// @endcond

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/Misc1Unit.hpp>
-#include <utilities/units/Misc1Unit_Impl.hpp>
+#include "Misc1Unit.hpp"
+#include "Misc1Unit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit Misc1Unit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Misc1);
-    boost::shared_ptr<Misc1Unit_Impl> impl(new Misc1Unit_Impl(*this));
+    std::shared_ptr<Misc1Unit_Impl> impl(new Misc1Unit_Impl(*this));
     return Misc1Unit(impl).cast<Unit>();
   }
 
   void Misc1Unit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 Misc1Unit::Misc1Unit(const Misc1Expnt& exponents,
                      int scaleExponent,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Misc1Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::Misc1Unit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 Misc1Unit::Misc1Unit(const std::string& scaleAbbreviation,
                      const Misc1Expnt& exponents,
                      const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::Misc1Unit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::Misc1Unit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-Misc1Unit::Misc1Unit(boost::shared_ptr<detail::Misc1Unit_Impl> impl)
-  : Unit(impl)
+Misc1Unit::Misc1Unit(std::shared_ptr<detail::Misc1Unit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

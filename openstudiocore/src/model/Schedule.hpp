@@ -21,7 +21,7 @@
 #define MODEL_SCHEDULE_HPP
 
 #include "ModelAPI.hpp"
-#include <model/ScheduleBase.hpp>
+#include "ScheduleBase.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,7 +62,7 @@ class MODEL_API Schedule : public ScheduleBase {
   friend class openstudio::detail::IdfObject_Impl;
 
   // constructor
-  explicit Schedule(boost::shared_ptr<detail::Schedule_Impl> impl);
+  explicit Schedule(std::shared_ptr<detail::Schedule_Impl> impl);
 
   Schedule(IddObjectType type,const Model& model);
 

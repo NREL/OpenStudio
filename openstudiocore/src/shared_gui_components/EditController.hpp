@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_EDITCONTROLLER_H
-#define OPENSTUDIO_EDITCONTROLLER_H
+#ifndef SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 
-#include <ruleset/OSArgument.hpp>
-#include <utilities/core/Logger.hpp>
-#include <analysis/RubyMeasure.hpp>
+#include "../ruleset/OSArgument.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../analysis/RubyMeasure.hpp"
 #include <QObject>
 #include <QPointer>
 #include <QSharedPointer> 
@@ -116,5 +116,5 @@ class InputController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_EDITCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_EDITCONTROLLER_HPP
 

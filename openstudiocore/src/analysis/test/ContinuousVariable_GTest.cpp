@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/NormalDistribution.hpp>
-#include <analysis/WeibullDistribution.hpp>
+#include "../RubyContinuousVariable.hpp"
+#include "../RubyMeasure.hpp"
+#include "../NormalDistribution.hpp"
+#include "../WeibullDistribution.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

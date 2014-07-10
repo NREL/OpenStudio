@@ -19,39 +19,39 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/Construction.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Component.hpp"
+#include "../Construction.hpp"
+#include "../ComponentData.hpp"
+#include "../ComponentData_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../LightsDefinition.hpp"
+#include "../LightsDefinition_Impl.hpp"
+#include "../DesignDay.hpp"
+#include "../DesignDay_Impl.hpp"
+#include "../SimulationControl.hpp"
+#include "../SimulationControl_Impl.hpp"
+#include "../Version.hpp"
+#include "../Version_Impl.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <resources.hxx>
 
@@ -314,7 +314,7 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
 
   ScheduleVector schedules = model.getModelObjects<Schedule>();
   ComponentVector components;
-  BOOST_FOREACH(const Schedule& schedule, schedules) {
+  for (const Schedule& schedule : schedules) {
     Component newComponent = schedule.createComponent();
     bool ok = newComponent.componentData().setName(schedule.name().get());
     EXPECT_TRUE(ok);
@@ -322,7 +322,7 @@ TEST_F(ModelFixture, Component_CreateScheduleLibrary) {
   }
 
   int index(1);
-  BOOST_FOREACH(Component& component,components) {
+  for (Component& component : components) {
     std::stringstream ss;
     ss << "./component" << index;
     openstudio::path p = toPath(ss.str());

@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "ValidityReport.hpp"
+#include "IdfObject.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "../idd/IddObject.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/Optional.hpp"
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 

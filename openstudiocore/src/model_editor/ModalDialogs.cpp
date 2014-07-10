@@ -17,40 +17,38 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model_editor/ModalDialogs.hpp>
+#include "ModalDialogs.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/Lights.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Luminaire.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceLoadInstance.hpp"
+#include "../model/SpaceLoadInstance_Impl.hpp"
+#include "../model/SpaceLoadDefinition.hpp"
+#include "../model/SpaceLoadDefinition_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipmentDefinition.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipmentDefinition.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipmentDefinition.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMassDefinition.hpp"
+#include "../model/Lights.hpp"
+#include "../model/LightsDefinition.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/People.hpp"
+#include "../model/PeopleDefinition.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_ElectricEquipment_FieldEnums.hxx>
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
@@ -60,11 +58,11 @@
 #include <utilities/idd/OS_Luminaire_FieldEnums.hxx>
 #include <utilities/idd/OS_People_FieldEnums.hxx>
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/idd/IddObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Compare.hpp"
 
 #include <QLabel>
 #include <QComboBox>
@@ -72,8 +70,6 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QIcon>
-
-#include <boost/foreach.hpp>
 
 #include <algorithm>
 
@@ -150,7 +146,7 @@ void ModelObjectSelectorDialog::onPushButtonCancel(bool)
   emit closed(modelObject);
 }
 
-void ModelObjectSelectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -158,7 +154,7 @@ void ModelObjectSelectorDialog::onAddWorkspaceObject(boost::shared_ptr<openstudi
   }
 }
 
-void ModelObjectSelectorDialog::onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
+void ModelObjectSelectorDialog::onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl)
 {
   std::vector<openstudio::IddObjectType>::const_iterator it = std::find(m_typesToDisplay.begin(), m_typesToDisplay.end(), impl->iddObject().type());
   if (it != m_typesToDisplay.end()){
@@ -207,17 +203,17 @@ void ModelObjectSelectorDialog::createWidgets()
   m_cancelButton->setText(tr("Cancel"));
   m_cancelButton->setToolTip(tr("Cancel"));
 
-  QHBoxLayout* buttonLayout = new QHBoxLayout;
+  auto buttonLayout = new QHBoxLayout;
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_okButton);
   buttonLayout->addSpacing(5);
   buttonLayout->addWidget(m_cancelButton);
   buttonLayout->addStretch(0);
 
-  QWidget* buttonGroup = new QWidget(this);
+  auto buttonGroup = new QWidget(this);
   buttonGroup->setLayout(buttonLayout);
 
-  QVBoxLayout* mainLayout = new QVBoxLayout;
+  auto mainLayout = new QVBoxLayout;
   mainLayout->addWidget(m_userTextLabel);
   mainLayout->addWidget(m_comboBox);
   mainLayout->addWidget(buttonGroup);
@@ -241,15 +237,15 @@ void ModelObjectSelectorDialog::connectSignalsAndSlots()
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 
   connected = connect(m_model.getImpl<openstudio::model::detail::Model_Impl>().get(),
-                     SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                     SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                      this,
-                     SLOT(onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
+                     SLOT(onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>)));
   OS_ASSERT(connected);
 }
 
@@ -282,7 +278,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   std::vector<WorkspaceObject> workspaceObjects;
 
   // get all objects
-  BOOST_FOREACH(IddObjectType iddObjectType, m_typesToDisplay){
+  for (IddObjectType iddObjectType : m_typesToDisplay){
     std::vector<WorkspaceObject> temp = m_model.getObjectsByType(iddObjectType);
     workspaceObjects.insert(workspaceObjects.end(), temp.begin(), temp.end());
   }
@@ -291,7 +287,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), nameSorter);
 
   // add to combo box
-  BOOST_FOREACH(WorkspaceObject workspaceObject, workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     OS_ASSERT(workspaceObject.name());
     std::string objectName = workspaceObject.name().get();
     m_comboBox->addItem(toQString(objectName), workspaceObject.handle().toString());
@@ -303,7 +299,7 @@ void ModelObjectSelectorDialog::loadComboBoxData()
 }
 
 
-ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog)
+ModelObjectSelectorDialogWatcher::ModelObjectSelectorDialogWatcher(std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog)
   : m_modelObjectSelectorDialog(modelObjectSelectorDialog)
 {
   OS_ASSERT(modelObjectSelectorDialog);
@@ -353,7 +349,7 @@ void ensureThermalZone(openstudio::model::Space& space)
     std::vector<IddObjectType> typesToDisplay;
     typesToDisplay.push_back(thermalZoneType);
 
-    boost::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+    std::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
     dialog->setWindowTitle("Select ThermalZone");
     dialog->setUserText("Select an existing ThermalZone or press New to create a new one.");
     dialog->setOKButtonText("Select");
@@ -439,7 +435,7 @@ void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance)
     std::vector<IddObjectType> typesToDisplay;
     typesToDisplay.push_back(definitionType);
 
-    boost::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
+    std::shared_ptr<ModelObjectSelectorDialog> dialog(new ModelObjectSelectorDialog(typesToDisplay, model));
     dialog->setWindowTitle("Select " + instance.iddObjectType().valueDescription() + "Definition");
     dialog->setUserText("Select an existing " + instance.iddObjectType().valueDescription() + "Definition or press New to create a new definition.");
     dialog->setOKButtonText("Select");

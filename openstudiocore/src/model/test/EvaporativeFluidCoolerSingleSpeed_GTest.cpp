@@ -19,31 +19,31 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/EvaporativeFluidCoolerSingleSpeed.hpp>
-#include <model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp>
+#include "../EvaporativeFluidCoolerSingleSpeed.hpp"
+#include "../EvaporativeFluidCoolerSingleSpeed_Impl.hpp"
 
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../Splitter.hpp"
+#include "../Splitter_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../ConnectorMixer.hpp"
+#include "../ConnectorMixer_Impl.hpp"
+#include "../ConnectorSplitter.hpp"
+#include "../ConnectorSplitter_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
 
 using namespace openstudio::model;
 

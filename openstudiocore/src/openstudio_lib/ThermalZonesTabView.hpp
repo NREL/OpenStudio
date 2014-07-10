@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_THERMALZONESTABVIEW_H
-#define OPENSTUDIO_THERMALZONESTABVIEW_H
+#ifndef OPENSTUDIO_THERMALZONESTABVIEW_HPP
+#define OPENSTUDIO_THERMALZONESTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 
 namespace openstudio {
 
@@ -37,4 +37,4 @@ class ThermalZonesTabView : public MainTabView
 
 } // openstudio
 
-#endif // OPENSTUDIO_THERMALZONESTABVIEW_H
+#endif // OPENSTUDIO_THERMALZONESTABVIEW_HPP

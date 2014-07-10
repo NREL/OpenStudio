@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
 #define MODEL_REFRIGERATIONCONDENSERCASCADE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -107,7 +107,7 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
   /// @cond
   typedef detail::RefrigerationCondenserCascade_Impl ImplType;
 
-  explicit RefrigerationCondenserCascade(boost::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl);
+  explicit RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl);
 
   friend class detail::RefrigerationCondenserCascade_Impl;
   friend class Model;

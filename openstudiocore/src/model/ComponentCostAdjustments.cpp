@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ComponentCostAdjustments.hpp>
-#include <model/ComponentCostAdjustments_Impl.hpp>
+#include "ComponentCostAdjustments.hpp"
+#include "ComponentCostAdjustments_Impl.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_ComponentCost_Adjustments_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/algorithm/string.hpp>
 
@@ -167,7 +167,7 @@ ComponentCostAdjustments::ComponentCostAdjustments(const Model& model)
 }
 
 // constructor
-ComponentCostAdjustments::ComponentCostAdjustments(boost::shared_ptr<detail::ComponentCostAdjustments_Impl> impl)
+ComponentCostAdjustments::ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl)
   : ParentObject(impl)
 {}
 

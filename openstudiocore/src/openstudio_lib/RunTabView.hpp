@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNTABVIEW_H
-#define OPENSTUDIO_RUNTABVIEW_H
+#ifndef OPENSTUDIO_RUNTABVIEW_HPP
+#define OPENSTUDIO_RUNTABVIEW_HPP
 
-#include <model/Model.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../utilities/idf/WorkspaceObject_Impl.hpp"
 #include <boost/smart_ptr.hpp>
-#include <openstudio_lib/MainTabView.hpp>
+#include "MainTabView.hpp"
 #include <QComboBox>
 #include <QWidget>
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/ConfigOptions.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
 class QButtonGroup;
 class QPlainTextEdit;
@@ -150,7 +150,7 @@ namespace openstudio {
       QRadioButton * m_energyPlusButton;
       std::vector<std::string> m_radianceWarnings;
       std::vector<std::string> m_radianceErrors;
-      boost::shared_ptr<RunListModel> m_runListModel;
+      std::shared_ptr<RunListModel> m_runListModel;
       openstudio::path m_modelPath;
       openstudio::path m_tempFolder;
   
@@ -180,4 +180,4 @@ namespace openstudio {
 
 } // openstudio
 
-#endif // OPENSTUDIO_RUNTABVIEW_H
+#endif // OPENSTUDIO_RUNTABVIEW_HPP

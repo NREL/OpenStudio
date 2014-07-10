@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_CLOUDDIALOG_H
-#define OPENSTUDIO_CLOUDDIALOG_H
+#ifndef PATAPP_CLOUDDIALOG_HPP
+#define PATAPP_CLOUDDIALOG_HPP
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "../shared_gui_components/OSDialog.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 class QCheckBox;
 class QComboBox;
@@ -44,7 +44,7 @@ class CloudDialog : public OSDialog
 
 public:
 
-  CloudDialog(QWidget * parent = 0);
+  CloudDialog(QWidget * parent = nullptr);
 
   virtual ~CloudDialog();
 
@@ -288,4 +288,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_CLOUDDIALOG_H
+#endif // PATAPP_CLOUDDIALOG_HPP

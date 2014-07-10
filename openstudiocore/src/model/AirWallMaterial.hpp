@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRWALLMATERIAL_HPP
 #define MODEL_AIRWALLMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelPartitionMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "ModelPartitionMaterial.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,7 +62,7 @@ class MODEL_API AirWallMaterial : public ModelPartitionMaterial {
   /// @cond
   typedef detail::AirWallMaterial_Impl ImplType;
 
-  explicit AirWallMaterial(boost::shared_ptr<detail::AirWallMaterial_Impl> impl);
+  explicit AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl);
 
   friend class detail::AirWallMaterial_Impl;
   friend class Model;

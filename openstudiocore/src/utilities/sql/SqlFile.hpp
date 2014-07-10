@@ -17,27 +17,26 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_SQL_SQLFILE_H
-#define UTILITIES_SQL_SQLFILE_H
+#ifndef UTILITIES_SQL_SQLFILE_HPP
+#define UTILITIES_SQL_SQLFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include "SummaryData.hpp"
-#include <utilities/sql/SqlFileDataDictionary.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "SqlFileDataDictionary.hpp"
+#include "SqlFileEnums.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/EndUses.hpp>
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
+#include "../data/DataEnums.hpp"
+#include "../data/EndUses.hpp"
 
-#include <utilities/units/SIUnit.hpp>
+#include "../units/SIUnit.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Optional.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <string>
@@ -54,7 +53,7 @@ class DateTime;
 class EpwFile;
 class Calendar;
 class SqlFileTimeSeriesQuery;
-class Table;
+
 namespace detail {
   class SqlFile_Impl;
 }
@@ -848,7 +847,7 @@ private:
 
   REGISTER_LOGGER("openstudio.sql.SqlFile");
 
-  boost::shared_ptr<detail::SqlFile_Impl> m_impl;
+  std::shared_ptr<detail::SqlFile_Impl> m_impl;
 
   /// returns datadictionary of available timeseries
   friend class ::resultsviewer::TableView;
@@ -859,13 +858,6 @@ private:
 /// optional SqlFile
 typedef boost::optional<SqlFile> OptionalSqlFile;
 
-/** Returns the monthly end uses table for sqlFile and fuelType. By default, the table values
- *  are returned in J. If a different energy unit is desired, specify unit. If unit is
- *  invalid, the default table will be returned. \relates SqlFile */
-UTILITIES_API Table monthlyEndUsesTable(const SqlFile& sqlFile,
-                                        const EndUseFuelType& fuelType,
-                                        const Unit& unit=createSIEnergy());
-
 } // openstudio
 
-#endif // UTILITIES_SQL_SQLFILE_H
+#endif // UTILITIES_SQL_SQLFILE_HPP

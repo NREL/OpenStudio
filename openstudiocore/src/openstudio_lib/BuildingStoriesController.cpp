@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/BuildingStoriesController.hpp>
-#include <openstudio_lib/BuildingStoriesView.hpp>
+#include "BuildingStoriesController.hpp"
+#include "BuildingStoriesView.hpp"
 
-#include <model/Model.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/Space.hpp>
+#include "../model/Model.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/Space.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -57,7 +57,7 @@ void BuildingStoriesController::onReplaceObject(openstudio::model::ModelObject m
 
 void BuildingStoriesController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
-  BOOST_FOREACH(model::BuildingStory buildingStory, this->model().getConcreteModelObjects<model::BuildingStory>()){
+  for (model::BuildingStory buildingStory : this->model().getConcreteModelObjects<model::BuildingStory>()){
     if (buildingStory.spaces().empty()){
       buildingStory.remove();
     }

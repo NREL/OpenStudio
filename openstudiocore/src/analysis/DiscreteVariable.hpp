@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DISCRETEVARIABLE_HPP
 #define ANALYSIS_DISCRETEVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/InputVariable.hpp>
+#include "AnalysisAPI.hpp"
+#include "InputVariable.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -60,7 +60,7 @@ class ANALYSIS_API DiscreteVariable : public InputVariable {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit DiscreteVariable(boost::shared_ptr<detail::DiscreteVariable_Impl> impl);
+  explicit DiscreteVariable(std::shared_ptr<detail::DiscreteVariable_Impl> impl);
 
   /// @endcond
  private:

@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTCONSTANTVOLUMEREHEAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
-#include <model/ModelObject.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -126,7 +126,7 @@ class MODEL_API AirTerminalSingleDuctConstantVolumeReheat : public StraightCompo
   /// @cond
   typedef detail::AirTerminalSingleDuctConstantVolumeReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctConstantVolumeReheat(boost::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
+  explicit AirTerminalSingleDuctConstantVolumeReheat(std::shared_ptr<detail::AirTerminalSingleDuctConstantVolumeReheat_Impl> impl);
 
   friend class detail::AirTerminalSingleDuctConstantVolumeReheat_Impl;
   friend class Model;

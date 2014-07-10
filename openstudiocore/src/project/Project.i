@@ -151,7 +151,7 @@
 
 %define PROJECT_WRAP(_name) 
   // ignore impl
-  %ignore boost::shared_ptr<openstudio::project::detail##_name_Impl>;
+  %ignore std::shared_ptr<openstudio::project::detail##_name_Impl>;
 
  
   // create an instantiation of the vector class

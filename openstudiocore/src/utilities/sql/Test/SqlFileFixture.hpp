@@ -22,22 +22,22 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../SqlFile.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/FileLogSink.hpp"
 
 #include <resources.hxx>
 
 class SqlFileFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp();
 
   // tear down after for each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members

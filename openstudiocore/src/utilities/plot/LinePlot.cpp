@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/LinePlot.hpp>
+#include "LinePlot.hpp"
 #include <cfloat>
-#include <utilities/core/Application.hpp>
+#include "../core/Application.hpp"
 #include <qwt/qwt_painter.h>
 
 
@@ -100,7 +100,7 @@ double TimeSeriesLinePlotData::stdDevValue() const
 
 
 VectorLinePlotData::VectorLinePlotData(const Vector& xVector,
-                                         const Vector& yVector)
+                                       const Vector& yVector)
 : m_xVector(xVector),
   m_yVector(yVector),
   m_interpMethod(NearestInterp)
@@ -110,7 +110,7 @@ VectorLinePlotData::VectorLinePlotData(const Vector& xVector,
 
 VectorLinePlotData* VectorLinePlotData::copy() const
 {
-  VectorLinePlotData* result = new VectorLinePlotData(m_xVector, m_yVector);
+  auto result = new VectorLinePlotData(m_xVector, m_yVector);
   result->interpMethod(m_interpMethod);
   return result;
 }
@@ -211,12 +211,12 @@ double VectorLinePlotData::y(size_t pos) const
  * --------------------------------------
 */
 
-LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WFlags flags /*= 0*/) : Plot2D(parent, flags)
+LinePlot::LinePlot(QWidget* parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) : Plot2D(parent, flags)
 {
   init();
 }
 
-LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WFlags flags)
+LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
   Application::instance().application();
   return LinePlot::Ptr(new LinePlot(parent, flags));
@@ -224,7 +224,7 @@ LinePlot::Ptr LinePlot::create(QWidget* parent, Qt::WFlags flags)
 
 void LinePlot::init()
 {
-  m_plot2DTimeAxis = NULL;
+  m_plot2DTimeAxis = nullptr;
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
   m_qwtPlot->plotLayout()->setAlignCanvasToScales(true);
@@ -288,7 +288,7 @@ void LinePlot::timeseriesData(TimeSeries tsData, const std::string& name, QColor
   }
 
   double offset=0.0;
-  if (m_plot2DTimeAxis == NULL) 
+  if (m_plot2DTimeAxis == nullptr) 
   {
     m_startDateTime = tsData.firstReportDateTime();
     m_endDateTime = tsData.firstReportDateTime() + Time(tsData.daysFromFirstReport(tsData.daysFromFirstReport().size()-1));
@@ -323,7 +323,7 @@ void LinePlot::timeseriesData(TimeSeries tsData, const std::string& name, QColor
 
 QColor LinePlot::curveColor(QColor &lastColor)
 {
-  std::vector<QColor>::iterator colorIt = std::find(m_colorVec.begin(), m_colorVec.end(), lastColor);
+  auto colorIt = std::find(m_colorVec.begin(), m_colorVec.end(), lastColor);
   if ( (colorIt == m_colorVec.end()) ||  (*colorIt == m_colorVec.back()) ) {
     return (m_colorVec.at(0));
   } else {

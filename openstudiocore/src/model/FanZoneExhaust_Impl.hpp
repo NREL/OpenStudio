@@ -20,8 +20,8 @@
 #ifndef MODEL_FANZONEEXHAUST_IMPL_HPP
 #define MODEL_FANZONEEXHAUST_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

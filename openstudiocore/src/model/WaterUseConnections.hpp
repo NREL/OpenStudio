@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERUSECONNECTIONS_HPP
 #define MODEL_WATERUSECONNECTIONS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -79,7 +79,7 @@ class MODEL_API WaterUseConnections : public StraightComponent {
   /// @cond
   typedef detail::WaterUseConnections_Impl ImplType;
 
-  explicit WaterUseConnections(boost::shared_ptr<detail::WaterUseConnections_Impl> impl);
+  explicit WaterUseConnections(std::shared_ptr<detail::WaterUseConnections_Impl> impl);
 
   friend class detail::WaterUseConnections_Impl;
   friend class Model;

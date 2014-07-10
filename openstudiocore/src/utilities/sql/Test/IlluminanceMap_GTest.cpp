@@ -19,15 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../SqlFile.hpp"
+#include "../../core/Path.hpp"
+#include "../../plot/FloodPlot.hpp"
+#include "../../core/FileLogSink.hpp"
 
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
 using namespace std;
@@ -41,13 +40,13 @@ using namespace openstudio;
 class IlluminanceMapFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp() {}
 
   // tear down after for each test
   virtual void TearDown() {}
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase()
   {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));

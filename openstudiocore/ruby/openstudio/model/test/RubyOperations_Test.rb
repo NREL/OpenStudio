@@ -21,9 +21,9 @@ require 'openstudio'
 
 require 'set'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class RubyOperations_Test < Test::Unit::TestCase
+class RubyOperations_Test < MiniTest::Unit::TestCase
   
   def test_ModelObjectUniq
   

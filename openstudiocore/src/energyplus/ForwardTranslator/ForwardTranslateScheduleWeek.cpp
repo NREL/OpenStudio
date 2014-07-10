@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
-#include <model/ScheduleWeek.hpp>
-#include <model/ScheduleWeek_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
+#include "../../model/ScheduleTypeLimits.hpp"
+#include "../../model/ScheduleTypeLimits_Impl.hpp"
+#include "../../model/ScheduleWeek.hpp"
+#include "../../model/ScheduleWeek_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 #include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
 

@@ -20,9 +20,9 @@
 #ifndef MODEL_STRAIGHTCOMPONENT_HPP
 #define MODEL_STRAIGHTCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -81,7 +81,7 @@ class MODEL_API StraightComponent : public HVACComponent {
 
   typedef detail::StraightComponent_Impl ImplType;
 
-  explicit StraightComponent(boost::shared_ptr<detail::StraightComponent_Impl> impl);
+  explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
 
   private:
 

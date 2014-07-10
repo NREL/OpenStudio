@@ -1,0 +1,281 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="boost::circular_buffer&lt;*&gt;">
+    <DisplayString>{{ size={m_size} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">m_size</Item>
+        <Item Name="[capacity]" ExcludeView="simple">(size_t)(m_end - m_buff)</Item>
+        <IndexListItems>
+            <Size>m_size</Size>
+            <ValueNode>*(m_first + ($i &lt; (m_end - m_first) ? $i : $i - (size_t)(m_end - m_buff)))</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::cb_details::iterator&lt;*&gt;">
+    <DisplayString>{*m_it}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">m_it</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::dynamic_bitset&lt;*&gt;">
+    <DisplayString>{{ bits={m_num_bits} }}</DisplayString>
+    <Expand>
+        <Item Name="[bits]">m_num_bits</Item>
+        <IndexListItems>
+            <Size>m_num_bits</Size>
+            <ValueNode>(bool)((m_bits._Myfirst[$i / bits_per_block] &gt;&gt; ($i % bits_per_block)) &amp; 1)</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!--Copyright William Buklis 2007. Use, modification and distribution are subject to-->
+<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
+<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
+<!--@author   Bill Buklis-->
+<!--@email    bill at pbjzone dot com-->
+<Type Name="boost::array&lt;*,*&gt;">
+    <DisplayString>{{ size={(size_t) $T2} }}</DisplayString>
+    <Expand>
+        <ArrayItems>
+            <Size>$T2</Size>
+            <ValuePointer>elems</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::basic_string&lt;char,*&gt;">
+    <DisplayString Condition="members_.m_repr.s.h.is_short != 0">{members_.m_repr.s.data,s}</DisplayString>
+    <DisplayString Condition="members_.m_repr.s.h.is_short == 0">{((long_t*)&amp;members_.m_repr.r)->start,s}</DisplayString>
+    <StringView Condition="members_.m_repr.s.h.is_short != 0">members_.m_repr.s.data,s</StringView>
+    <StringView Condition="members_.m_repr.s.h.is_short == 0">((long_t*)&amp;members_.m_repr.r)->start,s</StringView>
+    <Expand>
+        <Item Condition="members_.m_repr.s.h.is_short != 0" Name="[size]" ExcludeView="simple">(int)members_.m_repr.s.h.length</Item>
+        <Item Condition="members_.m_repr.s.h.is_short == 0" Name="[size]" ExcludeView="simple">((long_t*)&amp;members_.m_repr.r)->length</Item>
+        <Item Condition="members_.m_repr.s.h.is_short != 0" Name="[capacity]" ExcludeView="simple">InternalBufferChars - 1</Item>
+        <Item Condition="members_.m_repr.s.h.is_short == 0" Name="[capacity]" ExcludeView="simple">((long_t*)&amp;members_.m_repr.r)->storage - 1</Item>
+        <ArrayItems Condition="members_.m_repr.s.h.is_short != 0">
+            <Size>(int)members_.m_repr.s.h.length</Size>
+            <ValuePointer>members_.m_repr.s.data</ValuePointer>
+        </ArrayItems>
+        <ArrayItems Condition="members_.m_repr.s.h.is_short == 0">
+            <Size>((long_t*)&amp;members_.m_repr.r)->length</Size>
+            <ValuePointer>((long_t*)&amp;members_.m_repr.r)->start</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::basic_string&lt;unsigned short,*&gt;">
+    <AlternativeType Name="boost::container::basic_string&lt;wchar_t,*&gt;" />
+    <DisplayString Condition="members_.m_repr.s.h.is_short != 0">{members_.m_repr.s.data,su}</DisplayString>
+    <DisplayString Condition="members_.m_repr.s.h.is_short == 0">{((long_t*)&amp;members_.m_repr.r)->start,su}</DisplayString>
+    <StringView Condition="members_.m_repr.s.h.is_short != 0">members_.m_repr.s.data,su</StringView>
+    <StringView Condition="members_.m_repr.s.h.is_short == 0">((long_t*)&amp;members_.m_repr.r)->start,su</StringView>
+    <Expand>
+        <Item Condition="members_.m_repr.s.h.is_short != 0" Name="[size]" ExcludeView="simple">(int)members_.m_repr.s.h.length</Item>
+        <Item Condition="members_.m_repr.s.h.is_short == 0" Name="[size]" ExcludeView="simple">((long_t*)&amp;members_.m_repr.r)->length</Item>
+        <Item Condition="members_.m_repr.s.h.is_short != 0" Name="[capacity]" ExcludeView="simple">InternalBufferChars - 1</Item>
+        <Item Condition="members_.m_repr.s.h.is_short == 0" Name="[capacity]" ExcludeView="simple">((long_t*)&amp;members_.m_repr.r)->storage - 1</Item>
+        <ArrayItems Condition="members_.m_repr.s.h.is_short != 0">
+            <Size>(int)members_.m_repr.s.h.length</Size>
+            <ValuePointer>members_.m_repr.s.data</ValuePointer>
+        </ArrayItems>
+        <ArrayItems Condition="members_.m_repr.s.h.is_short == 0">
+            <Size>((long_t*)&amp;members_.m_repr.r)->length</Size>
+            <ValuePointer>((long_t*)&amp;members_.m_repr.r)->start</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::deque&lt;*&gt;">
+    <DisplayString>{{ size={(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
+        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+        (members_.m_start.m_last - members_.m_start.m_cur)} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
+        (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+        (members_.m_start.m_last - members_.m_start.m_cur)</Item>
+        <Item Name="[buffer_size]" ExcludeView="simple">sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)</Item>
+        <IndexListItems>
+            <Size>(sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)) * 
+            (members_.m_finish.m_node - members_.m_start.m_node - 1) + (members_.m_finish.m_cur - members_.m_finish.m_first) + 
+            (members_.m_start.m_last - members_.m_start.m_cur)</Size>
+            <ValueNode>members_.m_start.m_node[(($i + (members_.m_start.m_cur - members_.m_start.m_first)) / (sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1)))][($i + (members_.m_start.m_cur - members_.m_start.m_first)) % (sizeof($T1) &lt; 512 ? size_t(512 / sizeof($T1)) : size_t(1))]</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::deque_base&lt;*&gt;::iterator">
+    <AlternativeType Name="boost::container::deque_base&lt;*&gt;::const_iterator" />
+    <DisplayString>{m_cur}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">m_cur</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::list&lt;*&gt;">
+    <AlternativeType Name="boost::container::slist&lt;*&gt;" />
+    <DisplayString>{members_.m_icont}</DisplayString>
+    <Expand>
+        <ExpandedItem>members_.m_icont</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::map&lt;*&gt;">
+    <AlternativeType Name="boost::container::set&lt;*&gt;" />
+    <DisplayString>{m_tree.members_.m_icont}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_tree.members_.m_icont</ExpandedItem>
+    </Expand>
+</Type>
+
+<!-- boost <= 1.54 -->
+<Type Name="boost::container::list&lt;*&gt;::iterator">
+    <AlternativeType Name="boost::container::list&lt;*&gt;::const_iterator" />
+    <DisplayString>{m_it}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_it</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::container_detail::list_node&lt;*,void *&gt;">
+    <AlternativeType Name="boost::container::container_detail::slist_node&lt;*,void *&gt;" />
+    <DisplayString>{m_data}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_data</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::container_detail::rbtree_node&lt;*,void *&gt;">
+    <DisplayString>{m_data}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_data</ExpandedItem>
+    </Expand>
+</Type>
+
+<!-- boost 1.55 >= -->
+<Type Name="boost::container::container_detail::iterator&lt;*&gt;">
+    <DisplayString>{m_iit}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_iit</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::flat_map&lt;*&gt;">
+    <DisplayString>{m_flat_tree.m_data.m_vect}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_flat_tree.m_data.m_vect</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::container_detail::pair&lt;*,*&gt;">
+    <DisplayString>({first}, {second})</DisplayString>
+    <Expand>
+        <Item Name="first">first</Item>
+        <Item Name="second">second</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::flat_set&lt;*&gt;">
+    <DisplayString>{m_flat_tree.m_data.m_vect}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_flat_tree.m_data.m_vect</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::container_detail::list_iterator&lt;*&gt;">
+    <AlternativeType Name="boost::container::container_detail::list_const_iterator&lt;*&gt;" />
+    <DisplayString>{m_it->m_data}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">m_it->m_data</Item>
+    </Expand>
+</Type>
+
+<!-- boost <= 1.54 -->
+<Type Name="boost::container::vector&lt;*&gt;">
+    <DisplayString>{{ size={members_.m_size} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">members_.m_size</Item>
+        <Item Name="[capacity]" ExcludeView="simple">members_.m_capacity</Item>
+        <ArrayItems>
+            <Size>members_.m_size</Size>
+            <ValuePointer>members_.m_start</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<!-- boost 1.55 >= -->
+<Type Name="boost::container::container_detail::vector_alloc_holder&lt;*,*&gt;">
+    <DisplayString>{{ size={m_size} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">m_size</Item>
+        <Item Name="[capacity]" ExcludeView="simple">m_capacity</Item>
+        <ArrayItems>
+            <Size>m_size</Size>
+            <ValuePointer>m_start</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<!-- boost 1.55 >= -->
+<Type Name="boost::container::vector&lt;*,*&gt;">
+    <DisplayString>{m_holder}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_holder</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::container::container_detail::vector_iterator&lt;*&gt;">
+    <AlternativeType Name="boost::container::container_detail::vector_const_iterator&lt;*&gt;" />
+    <!-- boost 1.55 >= -->
+    <AlternativeType Name="boost::container::container_detail::vec_iterator&lt;*,*&gt;" />
+    <AlternativeType Name="boost::container::container_detail::vec_const_iterator&lt;*,*&gt;" />
+    <DisplayString>{*m_ptr}</DisplayString>
+    <Expand>
+        <Item Name="[ptr]">m_ptr</Item>
+    </Expand>
+</Type>
+
+<!-- boost <= 1.54 -->
+<Type Name="boost::container::stable_vector&lt;*&gt;">
+    <DisplayString>{{ size={index.members_.m_size ? index.members_.m_size - ExtraPointers : 0} }}</DisplayString> 
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">index.members_.m_size ? index.members_.m_size - ExtraPointers : 0</Item>
+        <IndexListItems>
+            <Size>index.members_.m_size ? index.members_.m_size - ExtraPointers : 0</Size>
+            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.members_.m_start[$i])->value</ValueNode> 
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- boost <= 1.54 -->
+<Type Name="boost::container::stable_vector_detail::iterator&lt;*&gt;">
+    <DisplayString>{pn->value}</DisplayString>
+    <Expand>
+        <Item Name="[value]">pn->value</Item>
+    </Expand>
+</Type>
+
+<!-- boost 1.55 >= -->
+<Type Name="boost::container::stable_vector&lt;*,*&gt;">
+    <DisplayString>{{ size={index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0} }}</DisplayString> 
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0</Item>
+        <IndexListItems>
+            <Size>index.m_holder.m_size ? index.m_holder.m_size - ExtraPointers : 0</Size>
+            <ValueNode>((boost::container::stable_vector_detail::node_type&lt;void *,$T1&gt;*)index.m_holder.m_start[$i])->value</ValueNode> 
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- boost 1.55 >= -->
+<Type Name="boost::container::stable_vector_detail::iterator&lt;*&gt;">
+    <DisplayString>{m_pn->value}</DisplayString>
+    <Expand>
+        <Item Name="[value]">m_pn->value</Item>
+    </Expand>
+</Type>
+
+</AutoVisualizer>

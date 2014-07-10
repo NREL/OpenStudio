@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Loop.hpp>
-#include <model/Loop_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/WaterToWaterComponent.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Model.hpp>
+#include "Loop.hpp"
+#include "Loop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
+#include "WaterToWaterComponent.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "ConnectorSplitter.hpp"
+#include "ConnectorSplitter_Impl.hpp"
+#include "Model.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -235,18 +235,16 @@ namespace detail {
   {
     std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(isDemandComponents);
 
-    for(std::vector<HVACComponent>::iterator it = nodes.begin();
-        it != nodes.end();
-        it++)
+    for(const auto & node : nodes)
     {
       // if it node has already been visited then continue
-      if( std::find(visited.begin(), visited.end(), *it) != visited.end() )
+      if( std::find(visited.begin(),visited.end(),node) != visited.end() )
       {
         continue; 
       }
-      if( *it == sink )
+      if( node == sink )
       {
-        visited.push_back(*it);
+        visited.push_back(node);
         // Avoid pushing duplicate nodes into paths
         if( paths.empty() )
         {
@@ -254,13 +252,11 @@ namespace detail {
         }
         else
         {
-          for( std::vector<HVACComponent>::iterator visitedit = visited.begin();
-               visitedit != visited.end();
-               visitedit++ )
+          for( const auto & visitedit : visited )
           {
-            if( std::find(paths.begin(), paths.end(), *visitedit) == paths.end() )
+            if( std::find(paths.begin(),paths.end(),visitedit) == paths.end() )
             {
-              paths.push_back(*visitedit);
+              paths.push_back(visitedit);
             }
           }
         }
@@ -268,17 +264,15 @@ namespace detail {
       }
     }
 
-    for(std::vector<HVACComponent>::iterator it = nodes.begin();
-        it != nodes.end();
-        it++)
+    for(const auto & node : nodes)
     {
       // if it node has already been visited or node is sink then continue
-      if( std::find(visited.begin(), visited.end(), *it) != visited.end() ||
-          *it == sink )
+      if( std::find(visited.begin(),visited.end(),node) != visited.end() ||
+          node == sink )
       {
-        continue; 
+        continue;
       }
-      visited.push_back(*it);
+      visited.push_back(node);
       findModelObjects(sink, visited, paths, isDemandComponents);
       visited.pop_back();
     }
@@ -306,13 +300,11 @@ namespace detail {
     }
     std::vector<ModelObject> reducedModelObjects;
     
-    for(std::vector<ModelObject>::iterator it = _demandComponents.begin();
-        it != _demandComponents.end();
-        ++it)
+    for(const auto & demandComponent : _demandComponents)
     {
-      if( type == it->iddObject().type() )
+      if( type == demandComponent.iddObject().type() )
       {
-        reducedModelObjects.push_back(*it);
+        reducedModelObjects.push_back(demandComponent);
       }
     }
 
@@ -367,13 +359,11 @@ namespace detail {
     }
     std::vector<ModelObject> reducedModelObjects;
     
-    for(std::vector<ModelObject>::iterator it = _supplyComponents.begin();
-        it != _supplyComponents.end();
-        ++it)
+    for(const auto & supplyComponent : _supplyComponents)
     {
-      if( type == it->iddObject().type() )
+      if( type == supplyComponent.iddObject().type() )
       {
-        reducedModelObjects.push_back(*it);
+        reducedModelObjects.push_back(supplyComponent);
       }
     }
 
@@ -404,7 +394,7 @@ Loop::Loop(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::Loop_Impl>());
 }     
 
-Loop::Loop(boost::shared_ptr<detail::Loop_Impl> p)
+Loop::Loop(std::shared_ptr<detail::Loop_Impl> p)
   : ParentObject(p)
 {}
 

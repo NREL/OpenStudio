@@ -17,20 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/NullMeasureRecord.hpp>
-#include <project/NullMeasureRecord_Impl.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "NullMeasureRecord.hpp"
+#include "NullMeasureRecord_Impl.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "JoinRecord.hpp"
+#include "ProjectDatabase.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -55,7 +53,7 @@ namespace detail{
     : MeasureRecord_Impl(query, database)
   {}
 
-  void NullMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void NullMeasureRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<NullMeasureRecord>(query);
@@ -106,7 +104,7 @@ namespace detail{
 NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
                                      MeasureGroupRecord& measureGroupRecord,
                                      int measureVectorIndex)
-  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl>(
         new detail::NullMeasureRecord_Impl(nullMeasure,
                                            measureGroupRecord,
                                            measureVectorIndex)),
@@ -116,14 +114,14 @@ NullMeasureRecord::NullMeasureRecord(const analysis::NullMeasure& nullMeasure,
 }
 
 NullMeasureRecord::NullMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl>(
         new detail::NullMeasureRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
 }
 
-NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
+NullMeasureRecord::NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl, ProjectDatabase projectDatabase)
   : MeasureRecord(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());
@@ -179,7 +177,7 @@ analysis::NullMeasure NullMeasureRecord::nullMeasure() const {
 }
 
 /// @cond
-NullMeasureRecord::NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl)
+NullMeasureRecord::NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
   OS_ASSERT(getImpl<detail::NullMeasureRecord_Impl>());

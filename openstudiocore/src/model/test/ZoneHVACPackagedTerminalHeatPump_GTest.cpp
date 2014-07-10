@@ -18,30 +18,29 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/AirLoopHVAC.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/CurveQuadratic.hpp>
-#include <model/CurveQuadratic_Impl.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/CoilHeatingElectric_Impl.hpp>
-#include <model/CoilCoolingDXSingleSpeed.hpp>
-#include <model/CoilCoolingDXSingleSpeed_Impl.hpp>
-#include <model/CoilHeatingDXSingleSpeed.hpp>
-#include <model/CoilHeatingDXSingleSpeed_Impl.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump.hpp>
-#include <model/ZoneHVACPackagedTerminalHeatPump_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
+#include "../AirLoopHVAC.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingElectric_Impl.hpp"
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "../ScheduleCompact.hpp"
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
-#include <utilities/units/Quantity.hpp>
+#include "../../utilities/units/Quantity.hpp"
 
 using namespace openstudio;
 

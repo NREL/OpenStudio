@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODALDIALOGS_H
-#define MODALDIALOGS_H
+#ifndef MODELEDITOR_MODALDIALOGS_HPP
+#define MODELEDITOR_MODALDIALOGS_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/UUID.hpp"
 
 #include <QDialog>
 
@@ -54,11 +54,11 @@ public:
 
   ModelObjectSelectorDialog(const openstudio::IddObjectType& typeToDisplay,
                             const openstudio::model::Model& model,
-                            QWidget * parent = 0);
+                            QWidget * parent = nullptr);
 
   ModelObjectSelectorDialog(const std::vector<openstudio::IddObjectType>& typesToDisplay,
                             const openstudio::model::Model& model,
-                            QWidget * parent = 0);
+                            QWidget * parent = nullptr);
 
   virtual ~ModelObjectSelectorDialog();
 
@@ -81,8 +81,8 @@ private slots:
 
   void onPushButtonOK(bool);
   void onPushButtonCancel(bool);
-  void onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
-  void onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
 
 private:
 
@@ -110,7 +110,7 @@ class MODELEDITOR_API ModelObjectSelectorDialogWatcher : public QObject
   
 public:
 
-  ModelObjectSelectorDialogWatcher(boost::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog);
+  ModelObjectSelectorDialogWatcher(std::shared_ptr<ModelObjectSelectorDialog> modelObjectSelectorDialog);
   
   /// get the selected object
   boost::optional<openstudio::model::ModelObject> selectedModelObject() const;
@@ -124,7 +124,7 @@ private slots:
 
 private:
 
-  boost::shared_ptr<ModelObjectSelectorDialog> m_modelObjectSelectorDialog;
+  std::shared_ptr<ModelObjectSelectorDialog> m_modelObjectSelectorDialog;
   mutable boost::optional<openstudio::model::ModelObject> m_selectedModelObject;
 };
 
@@ -132,4 +132,4 @@ MODELEDITOR_API void ensureThermalZone(openstudio::model::Space& space);
 
 MODELEDITOR_API void ensureSpaceLoadDefinition(openstudio::model::SpaceLoadInstance& instance);
 
-#endif //MODALDIALOGS_H
+#endif //MODELEDITOR_MODALDIALOGS_HPP

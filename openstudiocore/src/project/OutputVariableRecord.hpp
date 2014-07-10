@@ -20,8 +20,8 @@
 #ifndef PROJECT_OUTPUTVARIABLERECORD_HPP
 #define PROJECT_OUTPUTVARIABLERECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/VariableRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "VariableRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -86,14 +86,14 @@ class PROJECT_API OutputVariableRecord : public VariableRecord {
   //@}
  protected:
   /// @cond
-  explicit OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl);
+  explicit OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl);
 
   friend class detail::OutputVariableRecord_Impl;
   friend class Record;
   friend class ProjectDatabase;
 
   /** Construct from impl. */
-  OutputVariableRecord(boost::shared_ptr<detail::OutputVariableRecord_Impl> impl,
+  OutputVariableRecord(std::shared_ptr<detail::OutputVariableRecord_Impl> impl,
                        ProjectDatabase database);
 
   /// @endcond

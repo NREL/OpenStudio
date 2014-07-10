@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_NULLMEASURE_HPP
 #define ANALYSIS_NULLMEASURE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Measure.hpp>
+#include "AnalysisAPI.hpp"
+#include "Measure.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -61,7 +61,7 @@ class ANALYSIS_API NullMeasure : public Measure {
   friend class detail::AnalysisObject_Impl;
   friend class detail::NullMeasure_Impl;
 
-  explicit NullMeasure(boost::shared_ptr<detail::NullMeasure_Impl> impl);
+  explicit NullMeasure(std::shared_ptr<detail::NullMeasure_Impl> impl);
 
   /// @endcond
  private:

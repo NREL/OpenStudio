@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef UTILITIES_SQL_SQLFILE_IMPL_H
-#define UTILITIES_SQL_SQLFILE_IMPL_H
+#ifndef UTILITIES_SQL_SQLFILE_IMPL_HPP
+#define UTILITIES_SQL_SQLFILE_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <sqlite/sqlite3.h>
 #include "SummaryData.hpp"
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFileDataDictionary.hpp>
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "SqlFileEnums.hpp"
+#include "SqlFileDataDictionary.hpp"
+#include "../data/DataEnums.hpp"
+#include "../data/EndUses.hpp"
+#include "../core/Optional.hpp"
+#include "../data/Matrix.hpp"
 
 #include <boost/optional.hpp>
 
@@ -681,7 +681,7 @@ namespace openstudio{
       boost::optional<double> illuminanceMapMaxValue(const std::string& name) const;
       boost::optional<double> illuminanceMapMaxValue(const int& mapIndex) const;
 
-      /// minimum and maximim of map
+      /// minimum and maximum of map
       void illuminanceMapMaxValue(const std::string& name, double& minValue, double& maxValue) const;
       void illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const;
 
@@ -751,7 +751,7 @@ namespace openstudio{
       // execute a statement and return the error code, used for create/drop tables
       int execute(const std::string& statement);
 
-      /// Returns the summary data for each installlocation and fuel type found in report variables
+      /// Returns the summary data for each install location and fuel type found in report variables
       std::vector<openstudio::SummaryData> getSummaryData() const;
 
       void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
@@ -829,4 +829,4 @@ namespace openstudio{
 
 } // openstudio
 
-#endif // UTILITIES_SQL_SQLFILE_IMPL_H
+#endif // UTILITIES_SQL_SQLFILE_IMPL_HPP

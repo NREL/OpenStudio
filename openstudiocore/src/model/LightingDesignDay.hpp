@@ -20,8 +20,8 @@
 #ifndef MODEL_LIGHTINGDESIGNDAY_HPP
 #define MODEL_LIGHTINGDESIGNDAY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -103,7 +103,7 @@ class MODEL_API LightingDesignDay : public ModelObject {
   friend class Model;
   friend class IdfObject;
 
-  explicit LightingDesignDay(boost::shared_ptr<detail::LightingDesignDay_Impl> impl);
+  explicit LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl);
 
   /// @endcond
  private:

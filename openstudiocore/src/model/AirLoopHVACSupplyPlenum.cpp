@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,26 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "AirLoopHVACZoneSplitter.hpp"
+#include "AirLoopHVACZoneSplitter_Impl.hpp"
+#include "AirLoopHVACSupplyPlenum.hpp"
+#include "AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "AirLoopHVACReturnPlenum.hpp"
+#include "AirLoopHVACReturnPlenum_Impl.hpp"
+#include "AirLoopHVACZoneMixer.hpp"
+#include "AirLoopHVACZoneMixer_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirTerminalSingleDuctUncontrolled.hpp"
+#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
 
 namespace openstudio {
 namespace model {
@@ -280,8 +279,8 @@ namespace detail {
       mixer = t_airLoopHVAC->zoneMixer();
     }
 
-    BOOST_ASSERT(splitter);
-    BOOST_ASSERT(mixer);
+    OS_ASSERT(splitter);
+    OS_ASSERT(mixer);
 
     return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),terminal);
   }
@@ -295,7 +294,7 @@ namespace detail {
       AirLoopHVACZoneSplitter zoneSplitter= t_airLoopHVAC->zoneSplitter();
       std::vector<ModelObject> t_outletModelObjects = outletModelObjects();
 
-      for( std::vector<ModelObject>::reverse_iterator it = t_outletModelObjects.rbegin();
+      for( auto it = t_outletModelObjects.rbegin();
            it != t_outletModelObjects.rend();
            ++it )
       {
@@ -373,7 +372,7 @@ bool AirLoopHVACSupplyPlenum::addBranchForZone(openstudio::model::ThermalZone & 
 
 
 /// @cond
-AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(boost::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)
+AirLoopHVACSupplyPlenum::AirLoopHVACSupplyPlenum(std::shared_ptr<detail::AirLoopHVACSupplyPlenum_Impl> impl)
   : Splitter(impl)
 {}
 /// @endcond

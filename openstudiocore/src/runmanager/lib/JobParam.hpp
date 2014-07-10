@@ -1,5 +1,24 @@
-#ifndef OPENSTUDIO_RUNMANAGER_JOBPARAM__
-#define OPENSTUDIO_RUNMANAGER_JOBPARAM__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_LIB_JOBPARAM_HPP
+#define RUNMANAGER_LIB_JOBPARAM_HPP
 
 #include "RunManagerAPI.hpp"
 
@@ -38,8 +57,7 @@ namespace runmanager {
       /// \returns the JobParam matching the given value. Throws an exception if it is not found
       static JobParam paramByValue(const std::vector<JobParam> &t_params, const std::string &t_value)
       {
-        std::vector<JobParam>::const_reverse_iterator itr 
-          = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
+        auto itr = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
 
         if (itr != t_params.rend())
         {
@@ -54,8 +72,7 @@ namespace runmanager {
       /// \returns the JobParam matching the given value. Throws an exception if it is not found
       static bool hasByValue(const std::vector<JobParam> &t_params, const std::string &t_value)
       {
-        std::vector<JobParam>::const_reverse_iterator itr 
-          = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
+        auto itr = std::find_if(t_params.rbegin(), t_params.rend(), JobParamValueCompare(t_value));
 
         if (itr != t_params.rend())
         {
@@ -75,8 +92,7 @@ namespace runmanager {
         bool cont = true;
         while (cont)
         {
-          std::vector<JobParam>::iterator itr 
-            = std::find_if(t_params.begin(), t_params.end(), JobParamValueCompare(t_value));
+          auto itr = std::find_if(t_params.begin(), t_params.end(), JobParamValueCompare(t_value));
 
           if (itr != t_params.end())
           {
@@ -189,5 +205,5 @@ namespace runmanager {
 }
 
 
-#endif
+#endif // RUNMANAGER_LIB_JOBPARAM_HPP
 
