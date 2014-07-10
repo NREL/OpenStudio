@@ -300,13 +300,13 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                             &model::ThermalZone::sizingZone));
 
     }else if(field == COOLINGDESIGNAIRFLOWMETHOD){
-      addComboBoxColumn<std::string,&model::ThermalZone::sizingZone>(
+      addComboBoxColumn(
             QString(COOLINGDESIGNAIRFLOWMETHOD),
-            static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-            ProxyAdapter(static_cast<std::vector<std::string> (model::SizingZone::*)(void)>(&model::SizingZone::coolingDesignAirFlowMethodValues), &model::ThermalZone::sizingZone),
+            boost::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
+            boost::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
             ProxyAdapter(&model::SizingZone::coolingDesignAirFlowMethod, &model::ThermalZone::sizingZone),
-            ProxyAdapter(static_cast<bool (model::SizingZone::*)(std::string )>(&model::SizingZone::setCoolingDesignAirFlowMethod),
-            &model::ThermalZone::sizingZone));
+            ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
+               &model::ThermalZone::sizingZone));
 
     //}else if(field == COOLINGTHERMOSTATSCHEDULE){
     //  addDropZoneColumn<std::string,SizingZoneProxy>(

@@ -74,6 +74,22 @@ public:
 
   template<typename ChoiceType, typename DataSourceType>
   void addComboBoxColumn(QString headingLabel,
+                         boost::function<std::string (const ChoiceType &)> toString,
+                         boost::function<std::vector<ChoiceType> ()> choices,
+                         boost::function<ChoiceType (DataSourceType*)> getter,
+                         boost::function<bool (DataSourceType*, const ChoiceType &)> setter)
+  {
+    m_baseConcepts.push_back(QSharedPointer<ComboBoxConcept>(
+        new ComboBoxRequiredChoiceImpl<ChoiceType,DataSourceType>(headingLabel,
+                                                                  toString,
+                                                                  choices,
+                                                                  getter,
+                                                                  setter)));
+  }
+
+
+  template<typename ChoiceType, typename DataSourceType>
+  void addComboBoxColumn(QString headingLabel,
                          boost::function<std::string (ChoiceType)> toString,
                          boost::function<std::vector<ChoiceType> ()> choices,
                          boost::function<ChoiceType (DataSourceType*)> getter,
