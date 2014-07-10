@@ -22,16 +22,14 @@
 #include "WorkItem.hpp"
 #include "JSON.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
 
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <QDir>
 
@@ -51,11 +49,9 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem)
 
     std::vector<std::pair<QUrl, openstudio::path> > requiredFiles = fi.requiredFiles;
 
-    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = requiredFiles.begin();
-        itr != requiredFiles.end();
-        ++itr)
+    for (const auto & requiredFile : requiredFiles)
     {
-      m_requiredFiles.push_back(std::make_pair(toPath(itr->first.toLocalFile()), itr->second));
+      m_requiredFiles.push_back(std::make_pair(toPath(requiredFile.first.toLocalFile()), requiredFile.second));
     }
 
   } catch (const std::exception &) {
@@ -172,7 +168,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
       LOG(Info, "setting ruby include dir: " << openstudio::toString(getOpenStudioRubyIncludePath()));
       clearIncludeDir();
       setIncludeDir(getOpenStudioRubyIncludePath());
-      LOG(Info, "Rebuild of radiance job successfull, returning");
+      LOG(Info, "Rebuild of radiance job successful, returning");
 
       return;
     } else {
@@ -199,7 +195,7 @@ RubyJobBuilder::RubyJobBuilder(const WorkItem &t_workItem,
 
 
   } catch (const std::exception &e) {
-    LOG(Info, "Exception occured while building job: " << e.what());
+    LOG(Info, "Exception occurred while building job: " << e.what());
     // carry on
   }
 
@@ -238,10 +234,9 @@ RubyJobBuilder::RubyJobBuilder(const openstudio::BCLMeasure &t_measure,
   : m_userScriptJob(true)
 {
   ruleset::OSArgumentVector argVector;
-  for (std::map<std::string,ruleset::OSArgument>::const_iterator it = t_args.begin(),
-       itEnd = t_args.end(); it != itEnd; ++it)
+  for (const auto & t_arg : t_args)
   {
-    argVector.push_back(it->second);
+    argVector.push_back(t_arg.second);
   }
   constructFromBCLMeasure(t_measure,argVector,t_relativeTo,t_copyFileTrue);
 }
@@ -277,15 +272,13 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam inputfiles = t_params.get("ruby_inputfiles");
 
-    for (std::vector<JobParam>::const_iterator itr = inputfiles.children.begin();
-         itr != inputfiles.children.end();
-         ++itr)
+    for (const auto & child : inputfiles.children)
     {
       try {
         m_inputfiles.push_back(
-          boost::make_tuple(FileSelection(itr->value), FileSource(itr->children.at(0).value),
-            itr->children.at(0).children.at(0).value,
-            itr->children.at(0).children.at(0).children.at(0).value));
+          std::make_tuple(FileSelection(child.value), FileSource(child.children.at(0).value),
+            child.children.at(0).children.at(0).value,
+            child.children.at(0).children.at(0).children.at(0).value));
       } catch (const std::exception &) { }
 
     }
@@ -295,14 +288,12 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam required = t_params.get("ruby_copyrequired");
 
-    for (std::vector<JobParam>::const_iterator itr = required.children.begin();
-         itr != required.children.end();
-         ++itr)
+    for (const auto & child : required.children)
     {
       try {
         m_copyRequiredFiles.push_back(
-          boost::make_tuple(itr->value, itr->children.at(0).value,
-            itr->children.at(0).children.at(0).value));
+          std::make_tuple(child.value, child.children.at(0).value,
+            child.children.at(0).children.at(0).value));
       } catch (const std::exception &) { }
 
     }
@@ -313,11 +304,9 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam parameters = t_params.get("ruby_scriptparameters");
 
-    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
-         itr != parameters.children.end();
-         ++itr)
+    for (const auto & child : parameters.children)
     {
-      m_params.push_back( itr->value );
+      m_params.push_back( child.value );
     }
 
   } catch (const std::exception &) {}
@@ -325,11 +314,9 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam parameters = t_params.get("ruby_toolparameters");
 
-    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
-         itr != parameters.children.end();
-         ++itr)
+    for (const auto & child : parameters.children)
     {
-      m_toolparams.push_back( itr->value );
+      m_toolparams.push_back( child.value );
     }
 
   } catch (const std::exception &) {}
@@ -337,17 +324,15 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam parameters = t_params.get("ruby_requiredfiles");
 
-    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
-         itr != parameters.children.end();
-         ++itr)
+    for (const auto & child : parameters.children)
     {
-      openstudio::path source = openstudio::toPath(itr->value);
-      openstudio::path destination = openstudio::toPath(itr->children.at(0).value);
+      openstudio::path source = openstudio::toPath(child.value);
+      openstudio::path destination = openstudio::toPath(child.children.at(0).value);
       // in constructor from WorkItem, files listed here may have already been added, so see if there already
       std::vector<std::pair<openstudio::path,openstudio::path> >::const_iterator finderIt = 
           std::find_if(m_requiredFiles.begin(),
                        m_requiredFiles.end(),
-                       boost::bind(secondOfPairEqual<openstudio::path,openstudio::path>,_1,destination));
+                       std::bind(secondOfPairEqual<openstudio::path,openstudio::path>,std::placeholders::_1,destination));
       if (finderIt == m_requiredFiles.end()) {
         if (!(t_originalBasePath.empty() || t_newBasePath.empty())) {
           openstudio::path temp = relocatePath(source,t_originalBasePath,t_newBasePath);
@@ -382,12 +367,10 @@ void RubyJobBuilder::initializeFromParams(const JobParams &t_params,
   try {
     JobParam parameters = t_params.get("ruby_bclmeasureparameters");
 
-    for (std::vector<JobParam>::const_iterator itr = parameters.children.begin();
-         itr != parameters.children.end();
-         ++itr)
+    for (const auto & child : parameters.children)
     {
-      if (itr->value == "bcl_measure_uuid"){
-        openstudio::UUID bclMeasureUUID = openstudio::toUUID(itr->children.at(0).value);
+      if (child.value == "bcl_measure_uuid"){
+        openstudio::UUID bclMeasureUUID = openstudio::toUUID(child.children.at(0).value);
         m_bclMeasureUUID = bclMeasureUUID;
       }
     }
@@ -446,7 +429,7 @@ void RubyJobBuilder::copyRequiredFiles(const std::string &t_infileextension,
                                        const std::string &t_outextension,
                                        const std::string &t_requiredFilename)
 {
-  m_copyRequiredFiles.push_back(boost::make_tuple(t_infileextension, t_outextension, t_requiredFilename));
+  m_copyRequiredFiles.push_back(std::make_tuple(t_infileextension, t_outextension, t_requiredFilename));
 }
 
 void RubyJobBuilder::addScriptParameter(const std::string &name, const std::string &value)
@@ -465,7 +448,7 @@ void RubyJobBuilder::addScriptArgument(const std::string &name)
 }
 
 void RubyJobBuilder::clearIncludeDir() {
-  std::vector<std::string>::iterator it = m_toolparams.begin();
+  auto it = m_toolparams.begin();
   while (it != m_toolparams.end()) {
     if (*it == std::string("-I")) {
       it = m_toolparams.erase(it); // erase -I
@@ -494,7 +477,7 @@ void RubyJobBuilder::addToolArgument(const std::string &name)
 void RubyJobBuilder::addInputFile(const FileSelection &t_fileselection, const FileSource &t_filesource,
     const std::string &t_inputregex, const std::string &t_outputname)
 {
-  m_inputfiles.push_back(boost::make_tuple(t_fileselection, t_filesource, t_inputregex, t_outputname));
+  m_inputfiles.push_back(std::make_tuple(t_fileselection, t_filesource, t_inputregex, t_outputname));
 }
 
 WorkItem RubyJobBuilder::toWorkItem(const std::vector<openstudio::path> &t_requiredFiles) const
@@ -506,29 +489,25 @@ WorkItem RubyJobBuilder::toWorkItem(const std::vector<openstudio::path> &t_requi
   {
     FileInfo fi(m_script, "rb");
 
-    for (std::vector<openstudio::PathPair>::const_iterator itr = m_requiredFiles.begin();
-         itr != m_requiredFiles.end();
-         ++itr)
+    for (const auto & requiredFile : m_requiredFiles)
     {
-      if (requiredfiles.count(itr->first) == 0)
+      if (requiredfiles.count(requiredFile.first) == 0)
       {
-        requiredfiles.insert(itr->first);
-        fi.addRequiredFile(itr->first, itr->second);
+        requiredfiles.insert(requiredFile.first);
+        fi.addRequiredFile(requiredFile.first, requiredFile.second);
       } else {
-        LOG(Info, "Skipping file, already exists as a required file: " << openstudio::toString(itr->first));
+        LOG(Info, "Skipping file, already exists as a required file: " << openstudio::toString(requiredFile.first));
       }
     }
 
-    for (std::vector<openstudio::path>::const_iterator fileitr = t_requiredFiles.begin();
-        fileitr != t_requiredFiles.end();
-        ++fileitr)
+    for (const auto & requiredFile : t_requiredFiles)
     {
-      if (requiredfiles.count(*fileitr) == 0)
+      if (requiredfiles.count(requiredFile) == 0)
       {
-        requiredfiles.insert(*fileitr);
-        fi.addRequiredFile(*fileitr);
+        requiredfiles.insert(requiredFile);
+        fi.addRequiredFile(requiredFile);
       } else {
-        LOG(Info, "Skipping file, already exists as a required file: " << openstudio::toString(*fileitr));
+        LOG(Info, "Skipping file, already exists as a required file: " << openstudio::toString(requiredFile));
       }
     }
 
@@ -554,15 +533,12 @@ JobParams RubyJobBuilder::toParams() const
  
   JobParam inputfilelist("ruby_inputfiles");
 
-  for(std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> >::const_iterator itr
-         = m_inputfiles.begin();
-      itr != m_inputfiles.end();
-      ++itr)
+  for(const auto & inputFile : m_inputfiles)
   {
-    JobParam fileselection(itr->get<0>().valueName());
-    JobParam filesource(itr->get<1>().valueName());
-    JobParam inputregex(itr->get<2>());
-    JobParam outputname(itr->get<3>());
+    JobParam fileselection(std::get<0>(inputFile).valueName());
+    JobParam filesource(std::get<1>(inputFile).valueName());
+    JobParam inputregex(std::get<2>(inputFile));
+    JobParam outputname(std::get<3>(inputFile));
 
     inputregex.children.push_back(outputname);
     filesource.children.push_back(inputregex);
@@ -572,14 +548,11 @@ JobParams RubyJobBuilder::toParams() const
   }
 
   JobParam copyrequiredfileslist("ruby_copyrequired");
-  for (std::vector<boost::tuple<std::string, std::string, std::string> >::const_iterator itr
-         = m_copyRequiredFiles.begin();
-       itr != m_copyRequiredFiles.end();
-       ++itr)
+  for (const auto & copyRequiredFile : m_copyRequiredFiles)
   {
-    JobParam fileextension(itr->get<0>());
-    JobParam fileoutextension(itr->get<1>());
-    JobParam requiredextension(itr->get<2>());
+    JobParam fileextension(std::get<0>(copyRequiredFile));
+    JobParam fileoutextension(std::get<1>(copyRequiredFile));
+    JobParam requiredextension(std::get<2>(copyRequiredFile));
 
     fileoutextension.children.push_back(requiredextension);
     fileextension.children.push_back(fileoutextension);
@@ -590,31 +563,25 @@ JobParams RubyJobBuilder::toParams() const
 
   JobParam scriptparams("ruby_scriptparameters");
 
-  for(std::vector<std::string>::const_iterator itr = m_params.begin();
-      itr != m_params.end();
-      ++itr)
+  for(const auto &  param : m_params)
   {
-    JobParam p(*itr);
+    JobParam p(param);
     scriptparams.children.push_back(p);
   }
 
   JobParam toolparams("ruby_toolparameters");
-  for(std::vector<std::string>::const_iterator itr = m_toolparams.begin();
-      itr != m_toolparams.end();
-      ++itr)
+  for(const auto & toolParam : m_toolparams)
   {
-    JobParam p(*itr);
+    JobParam p(toolParam);
     toolparams.children.push_back(p);
   }
 
   JobParam requiredFiles("ruby_requiredfiles");
 
-  for (std::vector<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = m_requiredFiles.begin();
-       itr != m_requiredFiles.end();
-       ++itr)
+  for (const auto & requiredFile : m_requiredFiles)
   {
-    JobParam p(openstudio::toString(itr->first));
-    p.children.push_back(JobParam(openstudio::toString(itr->second)));
+    JobParam p(openstudio::toString(requiredFile.first));
+    p.children.push_back(JobParam(openstudio::toString(requiredFile.second)));
     requiredFiles.children.push_back(p);
   }
 
@@ -664,7 +631,7 @@ std::vector<std::string> RubyJobBuilder::getToolParameters() const
   return m_toolparams;
 }
 
-std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > RubyJobBuilder::inputFiles() const
+std::vector<std::tuple<FileSelection, FileSource, std::string, std::string> > RubyJobBuilder::inputFiles() const
 {
   return m_inputfiles;
 }
@@ -678,7 +645,7 @@ boost::optional<openstudio::UUID> RubyJobBuilder::bclMeasureUUID() const {
   return m_bclMeasureUUID;
 }
 
-std::vector<boost::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
+std::vector<std::tuple<std::string, std::string, std::string> > RubyJobBuilder::copyRequiredFiles() const
 {
   return m_copyRequiredFiles;
 }
@@ -689,11 +656,9 @@ void RubyJobBuilder::addJobsToWorkflow(
     const openstudio::path &t_includePath,
     const std::vector<openstudio::path> &t_requiredFiles)
 {
-  for (std::vector<RubyJobBuilder>::const_iterator itr = t_jobs.begin();
-       itr != t_jobs.end();
-       ++itr)
+  for (const auto & elem : t_jobs)
   {
-    RubyJobBuilder job = *itr;
+    RubyJobBuilder job = elem;
     job.setIncludeDir(t_includePath);
 
     job.addToWorkflow(t_workflow, t_requiredFiles);
@@ -713,8 +678,8 @@ std::vector<RubyJobBuilder> RubyJobBuilder::createRubyJobsFromFolder(
       && boost::filesystem::exists(t_path)
       && boost::filesystem::is_directory(t_path))
   {
-    for(boost::filesystem::basic_directory_iterator<openstudio::path> itr(t_path);
-        itr != boost::filesystem::basic_directory_iterator<openstudio::path>();
+    for(boost::filesystem::directory_iterator itr(t_path);
+        itr != boost::filesystem::directory_iterator();
         ++itr)
     {
       openstudio::path p = itr->path();
@@ -728,19 +693,16 @@ std::vector<RubyJobBuilder> RubyJobBuilder::createRubyJobsFromFolder(
 
   std::vector<RubyJobBuilder> retval;
 
-  for (std::set<openstudio::path>::const_iterator itr = ruby_files.begin();
-       itr != ruby_files.end();
-       ++itr)
+  for (const auto & rubyFile : ruby_files)
   {
     RubyJobBuilder rjb;
-    std::vector<ruleset::UserScriptInfo>::const_iterator it =
-        std::find_if(t_userScripts.begin(),t_userScripts.end(),
-                     boost::bind(firstOfPairEqual<openstudio::path,ruleset::OSArgumentVector>,_1,*itr));
+    auto it = std::find_if(t_userScripts.begin(),t_userScripts.end(),
+                           std::bind(firstOfPairEqual<openstudio::path,ruleset::OSArgumentVector>,std::placeholders::_1,rubyFile));
     if (it != t_userScripts.end()) {
       rjb = createUserScriptRubyJob(it->first,it->second, t_relativePath, t_copyFileArguments);
     }
     else {
-      rjb.setScriptFile(*itr);
+      rjb.setScriptFile(rubyFile);
     }
     if (t_inputExtension == "sql") {
       rjb.addInputFile(openstudio::runmanager::FileSelection("last"),
@@ -786,24 +748,22 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
 {
   JobParams params;
 
-  for (std::vector<ruleset::OSArgument>::const_iterator itr = t_args.begin();
-       itr != t_args.end();
-       ++itr)
+  for (const auto & arg : t_args)
   {
     JobParams param;
 
-    param.append("uuid", openstudio::toString(itr->uuid()));
-    param.append("versionUUID", openstudio::toString(itr->versionUUID()));
-    param.append("name", itr->name());
-    param.append("displayName", itr->displayName());
-    param.append("type", itr->type().valueName());
-    param.append("required", boolToString(itr->required()));
+    param.append("uuid", openstudio::toString(arg.uuid()));
+    param.append("versionUUID", openstudio::toString(arg.versionUUID()));
+    param.append("name", arg.name());
+    param.append("displayName", arg.displayName());
+    param.append("type", arg.type().valueName());
+    param.append("required", boolToString(arg.required()));
 
-    if (itr->hasValue())
+    if (arg.hasValue())
     {
-      if (itr->type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
+      if (arg.type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
       {
-        openstudio::path p = itr->valueAsPath();
+        openstudio::path p = arg.valueAsPath();
         openstudio::path relative = openstudio::relativePath(p, t_basePath);
 
         if (!relative.empty())
@@ -813,16 +773,16 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
 
         param.append("value", openstudio::toString(p));
       } else {
-        param.append("value", itr->valueAsString());
+        param.append("value", arg.valueAsString());
       }
     }
 
 
-    if (itr->hasDefaultValue())
+    if (arg.hasDefaultValue())
     {
-      if (itr->type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
+      if (arg.type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
       {
-        openstudio::path p = itr->defaultValueAsPath();
+        openstudio::path p = arg.defaultValueAsPath();
         openstudio::path relative = openstudio::relativePath(p, t_basePath);
 
         if (!relative.empty())
@@ -832,25 +792,23 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
 
         param.append("defaultValue", openstudio::toString(p));
       } else {
-        param.append("defaultValue", itr->defaultValueAsString());
+        param.append("defaultValue", arg.defaultValueAsString());
       }
     }
 
-    param.append("domainType", itr->domainType().valueName());
+    param.append("domainType", arg.domainType().valueName());
 
     std::vector<std::string> domainvec;
-    if (itr->hasDomain())
+    if (arg.hasDomain())
     {
-      domainvec = itr->domainAsString();
+      domainvec = arg.domainAsString();
     }
     JobParams domain;
-    for (std::vector<std::string>::const_iterator itr2 = domainvec.begin();
-         itr2 != domainvec.end();
-         ++itr2)
+    for (const auto & dom : domainvec)
     {
-      if (itr->type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
+      if (arg.type() == openstudio::ruleset::OSArgumentType::Path && !t_basePath.empty())
       {
-        openstudio::path p = toPath(*itr2);
+        openstudio::path p = toPath(dom);
         openstudio::path relative = openstudio::relativePath(p, t_basePath);
 
         if (!relative.empty())
@@ -860,37 +818,33 @@ JobParams RubyJobBuilder::toJobParams(const std::vector<ruleset::OSArgument> &t_
 
         domain.append(openstudio::toString(p));
       } else {
-        domain.append(*itr2);
+        domain.append(dom);
       }
     }
     param.append("domain",domain);
 
-    std::vector<std::string> choicesvec = itr->choiceValues();
+    std::vector<std::string> choicesvec = arg.choiceValues();
 
     JobParams choices;
-    for (std::vector<std::string>::const_iterator itr2 = choicesvec.begin();
-         itr2 != choicesvec.end();
-         ++itr2)
+    for (const auto & choice : choicesvec)
     {
-      choices.append(*itr2);
+      choices.append(choice);
     }
     param.append("choices", choices);
 
-    std::vector<std::string> choiceDisplayNamesVec = itr->choiceValueDisplayNames();
+    std::vector<std::string> choiceDisplayNamesVec = arg.choiceValueDisplayNames();
 
     JobParams choiceDisplayNames;
-    for (std::vector<std::string>::const_iterator itr2 = choiceDisplayNamesVec.begin();
-         itr2 != choiceDisplayNamesVec.end();
-         ++itr2)
+    for (const auto & choiceDisplayName : choiceDisplayNamesVec)
     {
-      choiceDisplayNames.append(*itr2);
+      choiceDisplayNames.append(choiceDisplayName);
     }
     param.append("choiceDisplayNames", choiceDisplayNames);
 
-    param.append("isRead", boolToString(itr->isRead()));
-    param.append("extension", itr->extension());
+    param.append("isRead", boolToString(arg.isRead()));
+    param.append("extension", arg.extension());
 
-    params.append(itr->name(), param);
+    params.append(arg.name(), param);
   }
 
   JobParams p;
@@ -911,12 +865,10 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
   }
 
   LOG(Debug, "Params found: " << args.size());
-  for (std::vector<JobParam>::const_iterator itr = args.begin();
-       itr != args.end();
-       ++itr)
+  for (const auto & jobParam : args)
   {
     try {
-      JobParams arg(itr->children);
+      JobParams arg(jobParam.children);
       openstudio::UUID uuid = openstudio::toUUID(arg.get("uuid").children.at(0).value);
       openstudio::UUID versionUUID = openstudio::toUUID(arg.get("versionUUID").children.at(0).value);
       std::string name = arg.get("name").children.at(0).value;
@@ -945,31 +897,25 @@ std::vector<ruleset::OSArgument> RubyJobBuilder::toOSArguments(const JobParams &
       std::vector<JobParam> domainvec = arg.get("domain").children;
       std::vector<std::string> domain;
 
-      for (std::vector<JobParam>::const_iterator itr2 = domainvec.begin();
-          itr2 != domainvec.end();
-          ++itr2)
+      for (const auto & dom : domainvec)
       {
-        domain.push_back(itr2->value);
+        domain.push_back(dom.value);
       }
 
       std::vector<JobParam> choicesvec = arg.get("choices").children;
       std::vector<std::string> choices;
 
-      for (std::vector<JobParam>::const_iterator itr2 = choicesvec.begin();
-          itr2 != choicesvec.end();
-          ++itr2)
+      for (const auto & choice : choicesvec)
       {
-        choices.push_back(itr2->value);
+        choices.push_back(choice.value);
       }
 
       std::vector<JobParam> choiceDisplayNamesVec = arg.get("choiceDisplayNames").children;
       std::vector<std::string> choiceDisplayNames;
 
-      for (std::vector<JobParam>::const_iterator itr2 = choiceDisplayNamesVec.begin();
-          itr2 != choiceDisplayNamesVec.end();
-          ++itr2)
+      for (const auto & choiceDisplayName : choiceDisplayNamesVec)
       {
-        choiceDisplayNames.push_back(itr2->value);
+        choiceDisplayNames.push_back(choiceDisplayName.value);
       }
 
       bool isRead = stringToBool(arg.get("isRead").children.at(0).value);
@@ -1026,7 +972,7 @@ void RubyJobBuilder::setAsUserScriptRubyJob(const openstudio::path& t_userScript
   addRequiredFile(userScriptPath,toPath("user_script.rb"), t_relativeTo, true);
 
   // add arguments in -n, -v, name, value pairs
-  BOOST_FOREACH(const ruleset::OSArgument& argument,t_args) {
+  for (const ruleset::OSArgument& argument : t_args) {
     std::string argumentValue = argument.printValue(true);
 
     if (argument.type() == openstudio::ruleset::OSArgumentType::Path
@@ -1091,7 +1037,7 @@ runmanager::ScriptInfo RubyJobBuilder::updateArgumentsFromDb(runmanager::ScriptI
         LOG(Debug, "Unpacking user script arguments");
         ruleset::OSArgumentVector args = runmanager::RubyJobBuilder::toOSArguments(workflows[0].params(), t_info.scriptPath.parent_path().parent_path());
         LOG(Debug, "User script arguments found: " << args.size());
-        BOOST_FOREACH(const ruleset::OSArgument& arg,args) {
+        for (const ruleset::OSArgument& arg : args) {
           LOG(Debug, "Loading user script argument: " << arg.name());
           t_info.arguments[arg.name()] = arg;
           if ((!arg.hasValue()) &&
@@ -1144,11 +1090,9 @@ runmanager::ScriptInfo RubyJobBuilder::saveArgumentsToDb(runmanager::ScriptInfo 
         runmanager::Workflow wf("UserScript");
 
         std::vector<ruleset::OSArgument> args;
-        for (std::map<std::string, ruleset::OSArgument>::const_iterator itr = t_scriptInfo.arguments.begin();
-             itr != t_scriptInfo.arguments.end();
-             ++itr)
+        for (const auto & arg : t_scriptInfo.arguments)
         {
-          args.push_back(itr->second);
+          args.push_back(arg.second);
         }
 
         wf.add(openstudio::runmanager::RubyJobBuilder::toJobParams(args, t_scriptInfo.scriptPath.parent_path().parent_path()));
@@ -1169,11 +1113,9 @@ runmanager::ScriptInfo RubyJobBuilder::refreshArgumentsFromScript(runmanager::Ru
   // set up run manager for running
   t_rm.setPaused(true);
   std::vector<openstudio::runmanager::Job> jobs = t_rm.getJobs();
-  for (std::vector<openstudio::runmanager::Job>::iterator itr = jobs.begin();
-      itr != jobs.end();
-      ++itr)
+  for (const auto & job : jobs)
   {
-    t_rm.remove(*itr);
+    t_rm.remove(job);
   }
 
   // set up ruby job
@@ -1233,18 +1175,14 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
 
   std::vector<BCLFileReference> files = t_measure.files();
 
-  for (std::vector<BCLFileReference>::const_iterator itr = files.begin();
-       itr != files.end();
-       ++itr)
+  for (const auto & bclFileRef : files)
   {
-    openstudio::path relativePath = openstudio::relativePath(itr->path(), t_measure.directory());
+    openstudio::path relativePath = openstudio::relativePath(bclFileRef.path(), t_measure.directory());
 
     bool isTestPath = false;
-    for (openstudio::path::const_iterator pathitr = relativePath.begin();
-         pathitr != relativePath.end();
-         ++pathitr)
+    for (const auto & path : relativePath)
     {
-      if (boost::iequals(openstudio::toString(*pathitr), "tests"))
+      if (boost::iequals(openstudio::toString(path), "tests"))
       {
         isTestPath = true;
         break;
@@ -1253,10 +1191,10 @@ void RubyJobBuilder::constructFromBCLMeasure(const openstudio::BCLMeasure &t_mea
 
     if (!isTestPath)
     {
-      LOG(Trace, "Adding required file from measure: " << openstudio::toString(itr->path()) << " to: " << openstudio::toString(itr->path().filename()));
-      addRequiredFile(itr->path(), relativePath);
+      LOG(Trace, "Adding required file from measure: " << openstudio::toString(bclFileRef.path()) << " to: " << openstudio::toString(bclFileRef.path().filename()));
+      addRequiredFile(bclFileRef.path(), relativePath);
     } else {
-      LOG(Trace, "Skipping test file from measure: " << openstudio::toString(itr->path()));
+      LOG(Trace, "Skipping test file from measure: " << openstudio::toString(bclFileRef.path()));
     }
 
   }

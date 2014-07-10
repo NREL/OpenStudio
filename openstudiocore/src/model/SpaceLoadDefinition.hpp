@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACELOADDEFINITION_HPP
 #define MODEL_SPACELOADDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -79,7 +79,7 @@ class MODEL_API SpaceLoadDefinition : public ResourceObject {
   friend class openstudio::IdfObject;
   friend class detail::SpaceLoadDefinition_Impl;
 
-  explicit SpaceLoadDefinition(boost::shared_ptr<detail::SpaceLoadDefinition_Impl> impl);
+  explicit SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl);
 
  private:
 

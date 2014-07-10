@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/ToolFinder.hpp>
+#include "ToolFinder.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/idd/IddFile.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/idd/IddFile.hpp"
 
 #include <QIcon>
 #include <QLabel>
@@ -72,11 +72,9 @@ namespace runmanager {
   {
     QSharedPointer<ToolVersion> toolver;
 
-    for (openstudio::path::iterator itr = t_path.begin();
-         itr != t_path.end();
-         ++itr)
+    for (const auto & path : t_path)
     {
-      std::string pathstr = openstudio::toString(*itr);
+      std::string pathstr = openstudio::toString(path);
       LOG(Debug, "Parsing tool version number from string: " << pathstr);
 
       boost::regex reg(".*?V?([0-9]+)[\\.-]([0-9]+)[\\.-]?([0-9]*)([\\.-][0-9]+)?.*");
@@ -132,11 +130,9 @@ namespace runmanager {
   void ToolFinder::mergeTools(std::vector<std::pair<ToolVersion, ToolLocationInfo> > &t_tools,
     const std::vector<std::pair<ToolVersion, ToolLocationInfo> > &t_newtools)
   {
-    for (std::vector<std::pair<ToolVersion, ToolLocationInfo> >::const_iterator itr = t_newtools.begin();
-         itr != t_newtools.end();
-         ++itr)
+    for (const auto & newTools : t_newtools)
     {
-      mergeTool(t_tools, *itr);
+      mergeTool(t_tools, newTools);
     }
   }
 
@@ -238,15 +234,13 @@ namespace runmanager {
         << " " << toString(t_tool.second.linuxBinaryArchive) << " " <<
         t_tool.first.toString());
 
-    for (std::vector<std::pair<ToolVersion, ToolLocationInfo> >::iterator itr = t_tools.begin();
-         itr != t_tools.end();
-         ++itr)
+    for (auto & tool : t_tools)
     {
-      if (itr->second.toolType == t_tool.second.toolType
-          && itr->first == t_tool.first)
+      if (tool.second.toolType == t_tool.second.toolType
+          && tool.first == t_tool.first)
       {
-        itr->second.binaryDir = ComparePaths::bestPath(itr->second.binaryDir, t_tool.second.binaryDir, runbase);
-        itr->second.linuxBinaryArchive = ComparePaths::bestPath(itr->second.linuxBinaryArchive, t_tool.second.linuxBinaryArchive, runbase);
+        tool.second.binaryDir = ComparePaths::bestPath(tool.second.binaryDir, t_tool.second.binaryDir, runbase);
+        tool.second.linuxBinaryArchive = ComparePaths::bestPath(tool.second.linuxBinaryArchive, t_tool.second.linuxBinaryArchive, runbase);
 
         LOG(Debug, "Existing tool found with same type and version - merging data");
         return; // we found and updated the appropriate item
@@ -265,13 +259,11 @@ namespace runmanager {
   {
     std::vector<std::pair<ToolVersion, ToolLocationInfo> > retval;
 
-    for (std::vector<std::pair<ToolVersion, ToolLocationInfo> >::const_iterator itr = t_tools.begin();
-         itr != t_tools.end();
-         ++itr)
+    for (const auto & tool : t_tools)
     {
-      if (!itr->second.binaryDir.empty())
+      if (!tool.second.binaryDir.empty())
       {
-        retval.push_back(*itr);
+        retval.push_back(tool);
       }
     }
 
@@ -287,14 +279,12 @@ namespace runmanager {
     names.push_back("energyplus.exe");
     names.push_back("_energyplus.tar.gz");
     names.push_back("EPXMLPreproc2.exe");
-    names.push_back("dakota.exe");
 #else
     names.push_back("ies2rad");
     names.push_back("ruby");
     names.push_back("energyplus");
     names.push_back("_energyplus.tar.gz");
     names.push_back("EPXMLPreproc2");
-    names.push_back("dakota");
 #endif
 
     std::vector<openstudio::path> searchPaths = m_searchPaths;
@@ -307,7 +297,7 @@ namespace runmanager {
     // For Windows, maintain drive order while searching the deepest paths first
     std::vector<openstudio::path> newSearchPaths, temp;
     char drive = 'Z';
-    Q_FOREACH(openstudio::path path, searchPaths) {
+    for (const openstudio::path& path : searchPaths) {
       if (drive != path.string()[0]) {
         drive = path.string()[0];
         newSearchPaths.insert(newSearchPaths.end(), temp.rbegin(), temp.rend());
@@ -325,30 +315,26 @@ namespace runmanager {
 
     std::vector<std::pair<ToolVersion, ToolLocationInfo> > tools;
 
-    for (std::vector<openstudio::path>::const_iterator itr = exes.begin();
-         itr != exes.end();
-         ++itr)
+    for (const auto & exe : exes)
     {
-      LOG(Debug, "executable found: " + toString(*itr));
+      LOG(Debug, "executable found: " + toString(exe));
 
-      if (boost::iequals(toString(itr->stem()), "ies2rad"))
+      if (boost::iequals(toString(exe.stem()), "ies2rad"))
       {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Radiance, itr->parent_path(), openstudio::path())));
-      } else if (boost::iequals(toString(itr->stem()), "ruby")) {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Ruby, itr->parent_path(), openstudio::path())));
-      } else if (boost::iequals(toString(itr->stem()), "energyplus")) {
-        if (safeExists(itr->parent_path() / toPath("WeatherData"))
-          || safeExists(itr->parent_path().parent_path() / toPath("WeatherData")))
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Radiance, exe.parent_path(), openstudio::path())));
+      } else if (boost::iequals(toString(exe.stem()), "ruby")) {
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Ruby, exe.parent_path(), openstudio::path())));
+      } else if (boost::iequals(toString(exe.stem()), "energyplus")) {
+        if (safeExists(exe.parent_path() / toPath("WeatherData"))
+          || safeExists(exe.parent_path().parent_path() / toPath("WeatherData")))
         {
-          mergeTool(tools, std::make_pair(parseToolVersion(*itr), ToolLocationInfo(ToolType::EnergyPlus, itr->parent_path(), openstudio::path())));
+          mergeTool(tools, std::make_pair(parseToolVersion(exe), ToolLocationInfo(ToolType::EnergyPlus, exe.parent_path(), openstudio::path())));
         }
-      } else if (boost::iequals(toString(itr->filename()), "_energyplus.tar.gz")) {
-        mergeTool(tools, std::make_pair(parseToolVersion(*itr), ToolLocationInfo(ToolType::EnergyPlus, openstudio::path(), *itr)));
-      } else if (boost::iequals(toString(itr->stem()), "EPXMLPreproc2")
-                 && subPathMatch(*itr, boost::regex("preprocessor.*", boost::regex::perl|boost::regex::icase))) {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::XMLPreprocessor, itr->parent_path(), openstudio::path())));
-      } else if (boost::iequals(toString(itr->stem()), "dakota")) {
-        mergeTool(tools, std::make_pair(parseToolVersion(*itr), ToolLocationInfo(ToolType::Dakota, itr->parent_path(), openstudio::path())));
+      } else if (boost::iequals(toString(exe.filename()), "_energyplus.tar.gz")) {
+        mergeTool(tools, std::make_pair(parseToolVersion(exe), ToolLocationInfo(ToolType::EnergyPlus, openstudio::path(), exe)));
+      } else if (boost::iequals(toString(exe.stem()), "EPXMLPreproc2")
+                 && subPathMatch(exe, boost::regex("preprocessor.*", boost::regex::perl|boost::regex::icase))) {
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::XMLPreprocessor, exe.parent_path(), openstudio::path())));
       }
     }
 
@@ -361,7 +347,7 @@ namespace runmanager {
   std::vector<openstudio::path> ToolFinder::findExecutables(
       const openstudio::path &t_path,
       const std::vector<std::string> &t_names,
-      const boost::shared_ptr<QProgressDialog> &t_dlg,
+      const std::shared_ptr<QProgressDialog> &t_dlg,
       std::map<openstudio::path, int> &t_searchedPaths) const
   {
     std::vector<openstudio::path> results;
@@ -386,12 +372,10 @@ namespace runmanager {
       ++t_searchedPaths[pathsToSearch.front().second];
 
 
-      for (QFileInfoList::const_iterator itr = qfil.begin();
-           itr != qfil.end();
-           ++itr)
+      for (const auto & infoList : qfil)
       {
-        QString p = itr->absoluteFilePath();
-        QFileInfo fi(*itr);
+        QString p = infoList.absoluteFilePath();
+        QFileInfo fi(infoList);
 
         openstudio::path curPath = openstudio::toPath(p);
 
@@ -438,11 +422,9 @@ namespace runmanager {
 
         if (fi.isFile() && fi.isReadable() && !fi.isDir())
         {
-          for (std::vector<std::string>::const_iterator itr = t_names.begin();
-               itr != t_names.end();
-               ++itr)
+          for (const auto & name : t_names)
           {
-            if (boost::iequals(toString(curPath.filename()), *itr))
+            if (boost::iequals(toString(curPath.filename()), name))
             {
               results.push_back(curPath);
             }
@@ -470,11 +452,9 @@ namespace runmanager {
 
   bool ToolFinder::subPathMatch(const openstudio::path &t_path, const boost::regex &t_regex)
   {
-    for (openstudio::path::const_iterator itr = t_path.begin();
-         itr != t_path.end();
-         ++itr)
+    for (const auto & path : t_path)
     {
-      if (boost::regex_match(toString(*itr), t_regex))
+      if (boost::regex_match(toString(path), t_regex))
       {
         return true;
       }
@@ -487,7 +467,7 @@ namespace runmanager {
   {
     if (std::distance(t_path.begin(), t_path.end()) <= 5)
     {
-      return toString(t_path.file_string());
+      return t_path.string();
     } else {
       openstudio::path outpath;
 
@@ -504,7 +484,7 @@ namespace runmanager {
       ++itr;
       outpath /= *itr;
 
-      return toString(outpath.file_string());
+      return outpath.string();
     }
   }
 
@@ -513,11 +493,11 @@ namespace runmanager {
   {
     std::set<openstudio::path> files;
 
-    boost::shared_ptr<QProgressDialog> dlg;
+    std::shared_ptr<QProgressDialog> dlg;
 
     if (t_showProgressDialog)
     {
-      dlg = boost::shared_ptr<QProgressDialog>(new QProgressDialog(0, Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint)));
+      dlg = std::shared_ptr<QProgressDialog>(new QProgressDialog(nullptr, Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint)));
       dlg->setWindowTitle("Scanning For Tools");
       if (Application::instance().isDefaultInstance()){
         QIcon icon = QIcon(":/images/rm_16.png");
@@ -534,7 +514,7 @@ namespace runmanager {
       dlg->setMaximumWidth(400);
       dlg->setMinimumWidth(400);
       dlg->setCancelButtonText("Stop Scan");
-      QLabel *lbl = new QLabel(dlg.get());
+      auto lbl = new QLabel(dlg.get());
       
       lbl->setWordWrap(true);
       dlg->setLabel(lbl);
@@ -544,12 +524,10 @@ namespace runmanager {
     }
 
     std::map<openstudio::path, int> searchedPaths;
-    for (std::vector<openstudio::path>::const_iterator itr = t_searchPaths.begin();
-         itr != t_searchPaths.end();
-         ++itr)
+    for (const auto & searchPath : t_searchPaths)
     {
-      LOG(Info, "Scanning top level directory: " << openstudio::toString(*itr) << " for tools");
-      std::vector<openstudio::path> found = findExecutables(*itr, t_names, dlg, searchedPaths);
+      LOG(Info, "Scanning top level directory: " << openstudio::toString(searchPath) << " for tools");
+      std::vector<openstudio::path> found = findExecutables(searchPath, t_names, dlg, searchedPaths);
       files.insert(found.begin(), found.end());
     }
 

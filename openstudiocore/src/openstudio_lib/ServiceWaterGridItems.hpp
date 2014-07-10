@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SERVICEWATERGRIDITEM_H
-#define OPENSTUDIO_SERVICEWATERGRIDITEM_H
+#ifndef OPENSTUDIO_SERVICEWATERGRIDITEMS_HPP
+#define OPENSTUDIO_SERVICEWATERGRIDITEMS_HPP
 
 #include <QGraphicsObject>
 #include <QCoreApplication>
 #include <QPixmap>
-#include <model/ModelObject.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/GridItem.hpp>
+#include "../model/ModelObject.hpp"
+#include "OSItem.hpp"
+#include "GridItem.hpp"
 
 namespace openstudio {
 
@@ -284,5 +284,5 @@ class MakeupWaterItem : public GridItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_SERVICEWATERGRIDITEM_H
+#endif // OPENSTUDIO_SERVICEWATERGRIDITEMS_HPP
 

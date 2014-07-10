@@ -19,19 +19,19 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/People.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/ThermalZone.hpp>
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../People.hpp"
+#include "../PeopleDefinition.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Space.hpp"
+#include "../ThermalZone.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/geometry/Point3d.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

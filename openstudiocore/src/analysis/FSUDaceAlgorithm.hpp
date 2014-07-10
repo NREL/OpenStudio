@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_FSUDACEALGORITHM_HPP
 #define ANALYSIS_FSUDACEALGORITHM_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithm.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -73,7 +73,7 @@ class ANALYSIS_API FSUDaceAlgorithm : public DakotaAlgorithm {
   /// @cond
   typedef detail::FSUDaceAlgorithm_Impl ImplType;
 
-  explicit FSUDaceAlgorithm(boost::shared_ptr<detail::FSUDaceAlgorithm_Impl> impl);
+  explicit FSUDaceAlgorithm(std::shared_ptr<detail::FSUDaceAlgorithm_Impl> impl);
 
   friend class detail::FSUDaceAlgorithm_Impl;
   friend class AnalysisObject;

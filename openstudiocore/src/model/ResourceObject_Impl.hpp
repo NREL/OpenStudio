@@ -20,7 +20,7 @@
 #ifndef MODEL_RESOURCEOBJECT_IMPL_HPP
 #define MODEL_RESOURCEOBJECT_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
 #include <QObject>
 

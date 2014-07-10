@@ -15,10 +15,10 @@
 %}
 
 // create an instantiation of the smart ptr class
-%template(HeaderInfoPtr) boost::shared_ptr<openstudio::radiance::HeaderInfo>;
+%template(HeaderInfoPtr) std::shared_ptr<openstudio::radiance::HeaderInfo>;
  
 // create an instantiation of the vector class
-%template(HeaderInfoVector) std::vector< boost::shared_ptr<openstudio::radiance::HeaderInfo> >;
+%template(HeaderInfoVector) std::vector< std::shared_ptr<openstudio::radiance::HeaderInfo> >;
 
 %include <radiance/HeaderInfo.hpp>
 

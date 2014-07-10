@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_STARTUPVIEW_H
-#define OPENSTUDIO_STARTUPVIEW_H
+#ifndef OPENSTUDIO_STARTUPVIEW_HPP
+#define OPENSTUDIO_STARTUPVIEW_HPP
 
-#include <openstudio_lib/SOConstants.hpp>
+#include "../openstudio_lib/SOConstants.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QWidget>
 #include <QPoint>
@@ -38,7 +38,7 @@ class StartupView : public QWidget
 
   public:
 
-  StartupView(QWidget * parent = 0);
+  StartupView(QWidget * parent = nullptr);
 
   virtual ~StartupView() {}
 
@@ -76,7 +76,7 @@ class StartupView : public QWidget
 
   bool _move;
 
-  boost::shared_ptr<TemplateListModel> m_templateListModel;
+  std::shared_ptr<TemplateListModel> m_templateListModel;
 
   QWidget * m_projectDetailView;
 
@@ -88,7 +88,7 @@ class TemplateListModel : public QAbstractListModel
 {
   public:
 
-  TemplateListModel(QObject * parent = 0);
+  TemplateListModel(QObject * parent = nullptr);
 
   int rowCount( const QModelIndex & parent = QModelIndex() ) const;
 
@@ -102,5 +102,5 @@ class TemplateListModel : public QAbstractListModel
 
 } // openstudio
 
-#endif // OPENSTUDIO_STARTUPVIEW_H
+#endif // OPENSTUDIO_STARTUPVIEW_HPP
 

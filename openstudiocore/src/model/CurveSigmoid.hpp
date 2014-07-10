@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVESIGMOID_HPP
 #define MODEL_CURVESIGMOID_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -125,7 +125,7 @@ class MODEL_API CurveSigmoid : public Curve {
   /// @cond
   typedef detail::CurveSigmoid_Impl ImplType;
 
-  explicit CurveSigmoid(boost::shared_ptr<detail::CurveSigmoid_Impl> impl);
+  explicit CurveSigmoid(std::shared_ptr<detail::CurveSigmoid_Impl> impl);
 
   friend class detail::CurveSigmoid_Impl;
   friend class Model;

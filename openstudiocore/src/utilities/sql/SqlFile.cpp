@@ -17,13 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/sql/SqlFile_Impl.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-
-#include <utilities/document/Table.hpp>
-
-#include <boost/foreach.hpp>
+#include "SqlFile.hpp"
+#include "SqlFile_Impl.hpp"
+#include "SqlFileTimeSeriesQuery.hpp"
 
 namespace openstudio{
 
@@ -33,7 +29,7 @@ SqlFile::SqlFile()
 SqlFile::SqlFile(const openstudio::path& path)
 {
   try{
-    m_impl = boost::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(path));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(path) << "' error:" << e.what());
   }
@@ -44,7 +40,7 @@ SqlFile::SqlFile(const openstudio::path &t_path, const openstudio::EpwFile &t_ep
     const openstudio::Calendar &t_calendar)
 {
   try{
-    m_impl = boost::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar));
+    m_impl = std::shared_ptr<detail::SqlFile_Impl>(new detail::SqlFile_Impl(t_path, t_epwFile, t_simulationTime, t_calendar));
   }catch(const std::exception& e){
     LOG(Error, "Could not create SqlFile for path '" << openstudio::toString(t_path) << "' error:" << e.what());
   }
@@ -1707,87 +1703,6 @@ detail::DataDictionaryTable SqlFile::dataDictionary() const
   if (m_impl){
     result = m_impl->dataDictionary();
   }
-  return result;
-}
-
-Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,const Unit& unit)
-{
-  Table result;
-  result.setTitle(fuelType.valueDescription() + " Consumption");
-  TableElementVector row1,row2;
-  TableLoadOptions loadString(false,false,false);
-  std::set<int> months = MonthOfYear::getValues();
-
-  // set header rows
-  row1.push_back(TableElement("",loadString));
-  row2.push_back(TableElement("",loadString));
-  int numMonths = 0;
-  BOOST_FOREACH(int month,months) {
-    row1.push_back(TableElement(MonthOfYear(month).valueName(),loadString));
-    row2.push_back(TableElement("(J)",loadString));
-    ++numMonths;
-    if (numMonths == 12) {
-      break;
-    }
-  }
-  result.appendRow(row1);
-  result.appendRow(row2);
-  result.setNHead(2u);
-  result.setNLeft(1u); // where name of end use will go
-  row1.clear();
-  row2.clear();
-
-  // populate data rows
-  bool allNull(true);
-  std::set<int> endUses = EndUseCategoryType::getValues();
-  BOOST_FOREACH(int endUse,endUses) {
-    EndUseCategoryType category(endUse);
-    row1.push_back(TableElement(category.valueDescription(),loadString));
-    numMonths = 0;
-    BOOST_FOREACH(int month,months) {
-      OptionalDouble value = sqlFile.energyConsumptionByMonth(fuelType,category,MonthOfYear(month));
-      if (!value) {
-        row1.push_back(TableElement(0.0));
-      }
-      else {
-        row1.push_back(TableElement(*value));
-        allNull = false;
-      }
-      ++numMonths;
-      if (numMonths == 12) {
-        break;
-      }
-    }
-    if (!row1.empty()) {
-      result.appendRow(row1);
-      row1.clear();
-    }
-  }
-
-  if (allNull) {
-    LOG_FREE(Info,"openstudio.sql.SqlFile","No non-null montly end-use data for "
-             << fuelType.valueDescription() << ". If this is unexpected, make sure that "
-             << "the EnergyPlus simulation completed successfully and that the appropriate "
-             << "Building Energy Performance tabular report was requested.");
-  }
-
-  // convert units
-  if (unit != createSIEnergy()) {
-    bool convertOk(true);
-    numMonths = 0;
-    for (int i = 1, n = months.size(); i <= n; ++i) {
-      convertOk = convertOk && result.convertUnits(i,Table::HEAD,1u,unit);
-      ++numMonths;
-      if (numMonths == 12) {
-        break;
-      }
-    }
-    if (!convertOk) {
-      LOG_FREE(Warn,"openstudio.sql.SqlFile","Unable to convert monthlyEndUsesTable to "
-               << unit << ". Returning table in Joules.");
-    }
-  }
-
   return result;
 }
 

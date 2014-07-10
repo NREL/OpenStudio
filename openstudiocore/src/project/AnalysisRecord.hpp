@@ -21,7 +21,7 @@
 #define PROJECT_ANALYSISRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -183,11 +183,11 @@ class PROJECT_API AnalysisRecord : public ObjectRecord {
   friend class detail::AnalysisRecord_Impl;
 
   /** Construct from impl. */
-  AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl,
+  AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl,
                  ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit AnalysisRecord(boost::shared_ptr<detail::AnalysisRecord_Impl> impl);
+  explicit AnalysisRecord(std::shared_ptr<detail::AnalysisRecord_Impl> impl);
 
   /// @endcond
  private:

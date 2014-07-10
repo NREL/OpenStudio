@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_LINEARFUNCTION_HPP
 #define ANALYSIS_LINEARFUNCTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Function.hpp>
+#include "AnalysisAPI.hpp"
+#include "Function.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -76,7 +76,7 @@ class ANALYSIS_API LinearFunction : public Function {
   friend class detail::AnalysisObject_Impl;
   friend class detail::LinearFunction_Impl;
 
-  explicit LinearFunction(boost::shared_ptr<detail::LinearFunction_Impl> impl);
+  explicit LinearFunction(std::shared_ptr<detail::LinearFunction_Impl> impl);
 
   /// @endcond
  private:

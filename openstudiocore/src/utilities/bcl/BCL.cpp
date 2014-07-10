@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/BCL.hpp>
+#include "BCL.hpp"
 
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "LocalBCL.hpp"
+#include "RemoteBCL.hpp"
+#include "BCLComponent.hpp"
+#include "BCLMeasure.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../core/Assert.hpp"
+#include "../data/Attribute.hpp"
 
 #include <QDomElement>
 

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_COLLAPSIBLECOMPONENT_H
-#define OPENSTUDIO_COLLAPSIBLECOMPONENT_H
+#ifndef SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENT_HPP
+#define SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENT_HPP
 
 #include <QAbstractButton>
 
-#include <shared_gui_components/Component.hpp>
+#include "Component.hpp"
 
 class QVBoxLayout;
 
@@ -38,7 +38,7 @@ class CollapsibleComponent : public QAbstractButton
 public:
   CollapsibleComponent(CollapsibleComponentHeader * collapsibleComponentHeader,
     ComponentList * componentList,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~CollapsibleComponent() {}
   bool expanded() const;
   void setExpanded(bool expanded);
@@ -73,4 +73,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_COLLAPSIBLECOMPONENT_H
+#endif // SHAREDGUICOMPONENTS_COLLAPSIBLECOMPONENT_HPP

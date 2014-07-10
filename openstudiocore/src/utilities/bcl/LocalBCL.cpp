@@ -16,17 +16,17 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/bcl/OnDemandGenerator.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/System.hpp>
+#include "BCLComponent.hpp"
+#include "BCLMeasure.hpp"
+#include "LocalBCL.hpp"
+#include "RemoteBCL.hpp"
+#include "OnDemandGenerator.hpp"
+#include "../core/Application.hpp"
+#include "../core/Assert.hpp"
+#include "../data/Attribute.hpp"
+#include "../core/Path.hpp"
+#include "../core/PathHelpers.hpp"
+#include "../core/System.hpp"
 
 #include <QDir>
 #include <QFile>
@@ -47,8 +47,6 @@
 
 namespace openstudio{
 
-  boost::shared_ptr<LocalBCL> LocalBCL::ptr;
-
   LocalBCL::LocalBCL(const path& libraryPath):
     m_libraryPath(QDir().cleanPath(toQString(libraryPath))),
     m_dbName(QString("/components.sql")),
@@ -59,7 +57,6 @@ namespace openstudio{
 
     QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", m_libraryPath+m_dbName);
     database.setDatabaseName(m_libraryPath+m_dbName);
-    m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
     //Check for BCL directory
     if (!QDir(m_libraryPath).exists())
@@ -72,11 +69,11 @@ namespace openstudio{
       initializeLocalDb();
     }
 
-    bool test = m_qSqlDatabase->isValid();
+    bool test = database.isValid();
     OS_ASSERT(test);
-    if (!m_qSqlDatabase->isOpen())
+    if (!database.isOpen())
     {
-      test = m_qSqlDatabase->open();
+      test = database.open();
       OS_ASSERT(test);
     }
 
@@ -84,7 +81,7 @@ namespace openstudio{
     updateLocalDb();
 
     //Retrieve oauthConsumerKeys from database
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlQuery query(database);
     query.exec("SELECT data FROM Settings WHERE name='prodAuthKey'");
     if (query.next())
     {
@@ -105,10 +102,11 @@ namespace openstudio{
 
   LocalBCL &LocalBCL::instance()
   {
+    std::shared_ptr<LocalBCL> &ptr = instanceInternal();
     if (!ptr) {
       QSettings settings("OpenStudio", "LocalBCL");
       // DLM: might want to put this somewhere a little more hidden
-      ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(toPath(settings.value("libraryPath",
         QDir::homePath().append("/BCL")).toString())));
     }
     return *ptr;
@@ -116,37 +114,53 @@ namespace openstudio{
 
   LocalBCL &LocalBCL::instance(const path& libraryPath)
   {
-    if (!ptr) {
-      ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
+    std::shared_ptr<LocalBCL> &ptr = instanceInternal();
+    if (ptr) {
+      ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
     }
     else
     {
       if (ptr->libraryPath() != toQString(libraryPath)) {
         ptr.reset();
-        ptr = boost::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
+        ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
     }
     return *ptr;
   }
 
+  std::shared_ptr<LocalBCL> &LocalBCL::instanceInternal()
+  {
+    static std::shared_ptr<LocalBCL> instance;
+    return instance;
+  }
+
   void LocalBCL::close()
   {
-    ptr.reset();
+    instanceInternal().reset();
   }
 
   LocalBCL::~LocalBCL()
   {
-    if (m_qSqlDatabase->isOpen())
+    // we cannot cleanup if the driver has already bee
+    if (QSqlDatabase::isDriverAvailable("QSQLITE"))
     {
-      m_qSqlDatabase->close();
+      {
+        QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName, false);
+        if (database.isValid() && database.isOpen())
+        {
+          database.close();
+        }
+      }
+      QSqlDatabase::removeDatabase(m_libraryPath+m_dbName);
     }
   }
 
   bool LocalBCL::initializeLocalDb()
   {
-    if (m_qSqlDatabase->open())
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    if (database.open())
     {
-      QSqlQuery query(*m_qSqlDatabase);
+      QSqlQuery query(database);
       bool success = query.exec("CREATE TABLE Settings (name VARCHAR, data VARCHAR)");
       success = success && query.exec("CREATE TABLE Components (uid VARCHAR, version_id VARCHAR, "
         "name VARCHAR, description VARCHAR, date_added DATETIME, date_modified DATETIME)");
@@ -173,7 +187,8 @@ namespace openstudio{
 
   bool LocalBCL::updateLocalDb()
   {
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
 
     // If latest version, do nothing
     bool success = query.exec("SELECT data FROM Settings WHERE name='dbVersion'");
@@ -225,7 +240,7 @@ namespace openstudio{
         success = success && query.exec("ALTER TABLE Attributes ADD version_id VARCHAR");
         success = success && query.exec("ALTER TABLE Files ADD version_id VARCHAR");
         success = success && query.exec("SELECT uid, version_id FROM Components WHERE uid IN (SELECT DISTINCT uid FROM Components)");
-        QSqlQuery queryLoop(*m_qSqlDatabase);
+        QSqlQuery queryLoop(database);
         while (query.next()) {
           queryLoop.prepare("UPDATE Attributes SET version_ID = :versionId WHERE uid = :uid");
           queryLoop.bindValue(":versionId", query.value(1));
@@ -274,7 +289,8 @@ namespace openstudio{
 
   boost::optional<BCLComponent> LocalBCL::getComponent(const std::string& uid, const std::string& versionId) const
   {
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     if (versionId.empty())
     {
       query.exec(QString("SELECT version_id FROM Components WHERE uid='%1'").arg(escape(uid)));
@@ -294,7 +310,8 @@ namespace openstudio{
 
   boost::optional<BCLMeasure> LocalBCL::getMeasure(const std::string& uid, const std::string& versionId) const
   {
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     if (versionId.empty())
     {
       query.exec(QString("SELECT version_id FROM Measures WHERE uid='%1'").arg(escape(uid)));
@@ -329,7 +346,7 @@ namespace openstudio{
     searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator UID", generator.uid()));
     searchTerms.push_back(std::make_pair<std::string, std::string>("OnDemandGenerator VID", generator.versionId()));
 
-    Q_FOREACH(const OnDemandGeneratorArgument& argument, generator.activeArguments()){
+    for (const OnDemandGeneratorArgument& argument : generator.activeArguments()) {
 
       // can't handle other types for now
       if (argument.dataType() != OnDemandGeneratorArgumentType::String){
@@ -341,7 +358,7 @@ namespace openstudio{
       if (valueAsString){
         value = *valueAsString;
       }
-      searchTerms.push_back(std::make_pair<std::string, std::string>(argument.name(), value));
+      searchTerms.push_back(std::make_pair(argument.name(), value));
     }
 
     std::vector<BCLComponent> components = componentAttributeSearch(searchTerms);
@@ -356,7 +373,8 @@ namespace openstudio{
   std::vector<BCLComponent> LocalBCL::components() const
   {
     std::vector<BCLComponent> allComponents;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     query.exec("SELECT uid, version_id FROM Components");
     while (query.next())
     {
@@ -373,7 +391,8 @@ namespace openstudio{
   std::vector<BCLMeasure> LocalBCL::measures() const
   {
     std::vector<BCLMeasure> allMeasures;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     query.exec("SELECT uid, version_id FROM Measures");
     while (query.next())
     {
@@ -389,7 +408,8 @@ namespace openstudio{
   std::vector<std::string> LocalBCL::measureUids() const
   {
     std::vector<std::string> uids;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     query.exec("SELECT DISTINCT uid FROM Measures");
     while (query.next())
     {
@@ -402,7 +422,8 @@ namespace openstudio{
     const std::string& componentType) const 
   {
     std::vector<BCLComponent> results;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     query.exec(toQString("SELECT uid, version_id FROM Components where name LIKE \"%"+searchTerm+"%\" OR description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
     {
@@ -426,7 +447,8 @@ namespace openstudio{
     const std::string& componentType) const 
   {
     std::vector<BCLMeasure> results;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     query.exec(toQString("SELECT uid, version_id FROM Measures where name LIKE \"%"+searchTerm+"%\""
       "OR description LIKE \"%"+searchTerm+"%\" OR modeler_description LIKE \"%"+searchTerm+"%\""));
     while (query.next())
@@ -450,7 +472,8 @@ namespace openstudio{
 
   bool LocalBCL::addComponent(BCLComponent& component)
   {
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     //Check for uid
     if (!component.uid().empty() && !component.versionId().empty())
     {
@@ -484,7 +507,7 @@ namespace openstudio{
           return false;
       if (!component.attributes().empty())
       {
-        Q_FOREACH(const Attribute& attribute, component.attributes())
+        for (const Attribute& attribute : component.attributes())
         {
           std::string dataValue, dataType;
           if (attribute.valueType().value() == AttributeValueType::Boolean) {
@@ -532,7 +555,8 @@ namespace openstudio{
     }
     removeDirectory(pathToRemove);
 
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     bool test = query.exec(QString("DELETE FROM Components WHERE uid='%1' AND version_id='%2'").arg(escape(component.uid()),
       escape(component.versionId())));
     OS_ASSERT(test);
@@ -550,7 +574,8 @@ namespace openstudio{
 
   bool LocalBCL::addMeasure(BCLMeasure& measure)
   {
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     //Check for uid
     if (!measure.uid().empty() && !measure.versionId().empty())
     {
@@ -570,7 +595,7 @@ namespace openstudio{
           return false;
       if (!measure.files().empty())
       {
-        Q_FOREACH(const BCLFileReference& file, measure.files())
+        for (const BCLFileReference& file : measure.files())
         {
           if (!query.exec(QString("INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) "
             "VALUES('%1', '%2', '%3', '%4', '%5', '%6')").arg(escape(measure.uid()), escape(measure.versionId()),
@@ -585,7 +610,7 @@ namespace openstudio{
           return false;
       if (!measure.attributes().empty())
       {
-        Q_FOREACH(const Attribute& attribute, measure.attributes())
+        for (const Attribute& attribute : measure.attributes())
         {
           std::string dataValue, dataType;
           if (attribute.valueType().value() == AttributeValueType::Boolean) {
@@ -632,7 +657,8 @@ namespace openstudio{
     }
     removeDirectory(pathToRemove);
 
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     bool test = query.exec(QString("DELETE FROM Measures WHERE uid='%1' AND version_id='%2'").arg(escape(measure.uid()),
       escape(measure.versionId())));
     OS_ASSERT(test);
@@ -650,17 +676,15 @@ namespace openstudio{
 
   std::vector<BCLComponent> LocalBCL::componentAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const
   {
-    typedef std::set<std::pair<std::string, std::string> > UidsType;
-
-    UidsType uids = this->attributeSearch(searchTerms, "component");
+    auto uids = attributeSearch(searchTerms, "component");
     if (uids.empty()){
        return std::vector<BCLComponent>();
     }
 
     std::vector<BCLComponent> result;
-    for (UidsType::iterator it=uids.begin(); it!=uids.end(); ++it)
+    for (const auto & uid : uids)
     {
-      boost::optional<BCLComponent> component = getComponent(it->first, it->second);
+      boost::optional<BCLComponent> component = getComponent(uid.first, uid.second);
       if (component){
         result.push_back(*component);
       }
@@ -671,17 +695,15 @@ namespace openstudio{
 
   std::vector<BCLMeasure> LocalBCL::measureAttributeSearch(const std::vector<std::pair<std::string, std::string> >& searchTerms) const
   {
-    typedef std::set<std::pair<std::string, std::string> > UidsType;
-
-    UidsType uids = this->attributeSearch(searchTerms, "measure");
+    auto uids = this->attributeSearch(searchTerms, "measure");
     if (uids.empty()){
        return std::vector<BCLMeasure>();
     }
 
     std::vector<BCLMeasure> result;
-    for (UidsType::iterator it=uids.begin(); it!=uids.end(); ++it)
+    for (const auto uid : uids)
     {
-      boost::optional<BCLMeasure> measure = getMeasure(it->first, it->second);
+      boost::optional<BCLMeasure> measure = getMeasure(uid.first, uid.second);
       if (measure){
         result.push_back(*measure);
       }
@@ -696,28 +718,28 @@ namespace openstudio{
       const std::string componentType) const
   {
     typedef std::vector<std::pair<std::string, std::string> > UidsVecType;
-    typedef UidsVecType::const_iterator ItType;
     typedef std::set<std::pair<std::string, std::string> > UidsType;
 
     UidsType uids;
-    QSqlQuery query(*m_qSqlDatabase);
+    QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+    QSqlQuery query(database);
     std::string tableName = componentType == "component" ? "Components" : componentType == "measure" ? "Measures" : "";
     query.exec(toQString("SELECT DISTINCT uid, version_id FROM " + tableName));
     while (query.next()) {
       uids.insert(make_pair(toString(query.value(0).toString()), toString(query.value(1).toString())));
     }
     
-    for (ItType it = searchTerms.begin(), itend = searchTerms.end(); it != itend; ++it){
+    for (const auto & searchTerm : searchTerms){
 
       UidsType theseUids;
-      QString queryString = QString("SELECT uid, version_id FROM Attributes WHERE name='" + escape(it->first) + "' COLLATE NOCASE AND value='" + escape(it->second) + "' COLLATE NOCASE");
+      QString queryString = QString("SELECT uid, version_id FROM Attributes WHERE name='" + escape(searchTerm.first) + "' COLLATE NOCASE AND value='" + escape(searchTerm.second) + "' COLLATE NOCASE");
       query.exec(queryString);
       while (query.next()) {
         theseUids.insert(make_pair(toString(query.value(0).toString()), toString(query.value(1).toString())));
       }
 
       UidsVecType newUids(std::max(uids.size(), theseUids.size()));
-      UidsVecType::iterator insertEnd = std::set_intersection(uids.begin(), uids.end(), theseUids.begin(), theseUids.end(), newUids.begin());
+      auto insertEnd = std::set_intersection(uids.begin(), uids.end(), theseUids.begin(), theseUids.end(), newUids.begin());
       
       uids.clear();
       uids.insert(newUids.begin(), insertEnd);
@@ -736,7 +758,7 @@ namespace openstudio{
     ss << std::setprecision(prec) << std::showpoint << d;
     std::string s = ss.str();
 
-    // truncate zeroes from the end
+    // truncate zeros from the end
     int i = s.size() - 1;
     while (i > 0 && s[i] == '0')
     {
@@ -828,7 +850,8 @@ namespace openstudio{
     {
       m_prodAuthKey = authKey;
       //Overwrite prodAuthKey in database
-      QSqlQuery query(*m_qSqlDatabase);
+      QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+      QSqlQuery query(database);
       return query.exec(QString("UPDATE Settings SET data='%1' WHERE name='prodAuthKey'").arg(escape(authKey)));
     }
     return false;
@@ -846,7 +869,8 @@ namespace openstudio{
     {
       m_devAuthKey = authKey;
       //Overwrite devAuthKey in database
-      QSqlQuery query(*m_qSqlDatabase);
+      QSqlDatabase database = QSqlDatabase::database(m_libraryPath+m_dbName);
+      QSqlQuery query(database);
       return query.exec(QString("UPDATE Settings SET data='%1' WHERE name='devAuthKey'").arg(escape(authKey)));
     }
     return false;
@@ -859,6 +883,9 @@ namespace openstudio{
 
   bool LocalBCL::setLibraryPath(const std::string& libraryPath)
   {
+    //cleanup old straggling one if it exists
+    QSqlDatabase::removeDatabase(m_libraryPath+m_dbName);
+
     QString path = QDir().cleanPath(toQString(libraryPath));
     if (!QDir(path).exists())
     {
@@ -871,8 +898,6 @@ namespace openstudio{
     {
       QSqlDatabase database = QSqlDatabase::addDatabase("QSQLITE", path+m_dbName);
       database.setDatabaseName(path+m_dbName);
-      m_qSqlDatabase->close();
-      m_qSqlDatabase = boost::shared_ptr<QSqlDatabase>(new QSqlDatabase(database));
 
       bool success = initializeLocalDb();
       if (!success) return false;

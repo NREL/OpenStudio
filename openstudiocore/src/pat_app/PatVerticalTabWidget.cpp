@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <pat_app/PatVerticalTabWidget.hpp>
+#include "PatVerticalTabWidget.hpp"
 
 #include "../shared_gui_components/OSViewSwitcher.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QButtonGroup>
 #include <QHBoxLayout>
@@ -52,7 +52,7 @@ PatVerticalTabWidget::PatVerticalTabWidget(QWidget * parent)
                         this,SLOT(on_buttonClicked(int)));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
 
   mainLayout->setSpacing(0);
 
@@ -100,7 +100,7 @@ void PatVerticalTabWidget::addTab( int id,
                                    const QString & doneImagePath,
                                    bool enabled )
 {
-  QPushButton * button = new QPushButton(m_tabBar);
+  auto button = new QPushButton(m_tabBar);
 
   button->setFixedSize(QSize(39,42));
 

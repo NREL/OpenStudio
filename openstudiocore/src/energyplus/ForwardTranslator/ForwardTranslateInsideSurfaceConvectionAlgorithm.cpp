@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/InsideSurfaceConvectionAlgorithm.hpp"
 #include <utilities/idd/SurfaceConvectionAlgorithm_Inside_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

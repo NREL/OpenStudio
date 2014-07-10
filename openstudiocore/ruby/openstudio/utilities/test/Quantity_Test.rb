@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Quantity_Test < Test::Unit::TestCase
+class Quantity_Test < MiniTest::Unit::TestCase
   def setup
     @tol = 1.0E-5
   end

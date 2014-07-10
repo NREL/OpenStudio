@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_JOB_IMPL_HPP__
-#define OPENSTUDIO_JOB_IMPL_HPP__
+#ifndef RUNMANAGER_LIB_JOB_IMPL_HPP
+#define RUNMANAGER_LIB_JOB_IMPL_HPP
 
 #include <QObject>
 #include <QThread>
 #include <QFileInfo>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/String.hpp>
+#include "../../utilities/core/Checksum.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/String.hpp"
 #include "FileInfo.hpp"
 #include "JobErrors.hpp"
 #include "JobParam.hpp"
@@ -172,14 +172,14 @@ namespace detail {
       /// Adds a new child job to the given job. All child jobs
       /// will be executed in parallel after the parent finishes
       /// Any child added will be reparented to this Job
-      static void addChild(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      static void addChild(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       /// Deparents the provided Job from this Job.
       /// \return false if t_job is not a child of this Job
-      bool removeChild(const boost::shared_ptr<Job_Impl> &t_job);
+      bool removeChild(const std::shared_ptr<Job_Impl> &t_job);
 
       /// Returns a vector of all children that this job has.
-      std::vector<boost::shared_ptr<Job_Impl> > children() const;
+      std::vector<std::shared_ptr<Job_Impl> > children() const;
 
       /// Returns true if any of the regular child jobs are out of date
       bool childrenOutOfDate() const;
@@ -195,18 +195,18 @@ namespace detail {
 
       /// \returns the job finished job.
       /// \sa setFinishedJob
-      boost::shared_ptr<Job_Impl> finishedJob() const;
+      std::shared_ptr<Job_Impl> finishedJob() const;
 
       /// Sets the "finishedJob" This is a job that executes after
       /// the parent and all parallel children have finished executing.
-      static void setFinishedJob(const boost::shared_ptr<Job_Impl> &t_parent,
-          const boost::shared_ptr<Job_Impl> &t_job);
+      static void setFinishedJob(const std::shared_ptr<Job_Impl> &t_parent,
+          const std::shared_ptr<Job_Impl> &t_job);
 
       /// \returns the job's parent, if it exists
-      boost::shared_ptr<Job_Impl> parent() const;
+      std::shared_ptr<Job_Impl> parent() const;
 
       /// Sets the ProcessCreator to be used when the Job is executed
-      void setProcessCreator(const boost::shared_ptr<ProcessCreator> &t_pc);
+      void setProcessCreator(const std::shared_ptr<ProcessCreator> &t_pc);
 
       /// Sets the remote job id to use when recovering a process left running on a remote server
       void setRemoteId(int t_remoteid, int t_remotetaskid);
@@ -287,7 +287,7 @@ namespace detail {
       /// If not possible, throw MergeJobError with description as to why.
       /// accepts NullJobs automatically, passes off 
       /// to mergeJobImpl if otherwise.
-      void mergeJob(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      void mergeJob(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       /// Requests that the job stop
       virtual void requestStop() = 0;
@@ -305,7 +305,7 @@ namespace detail {
       void setBasePathRecursive(const openstudio::path &t_basePath);
 
       /// Update this job tree with the details from the other job tree
-      void updateJob(const boost::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate);
+      void updateJob(const std::shared_ptr<Job_Impl> &t_other, bool t_allowUUIDUpdate);
 
 
       /// \returns true if this job is externallyManaged
@@ -331,7 +331,7 @@ namespace detail {
 
       /// Overridable method for providing job merging capabilities.
       /// By default only throw 
-      virtual void mergeJobImpl(const boost::shared_ptr<Job_Impl> &t_parent, const boost::shared_ptr<Job_Impl> &t_job);
+      virtual void mergeJobImpl(const std::shared_ptr<Job_Impl> &t_parent, const std::shared_ptr<Job_Impl> &t_job);
 
       virtual Files outputFilesImpl() const = 0;
 
@@ -339,7 +339,7 @@ namespace detail {
       virtual void run();
 
       /// Begin execution of the job
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &t_pc) = 0;
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &t_pc) = 0;
 
       /// Return true if the job is out of date, needs to be implemented
       /// by base classes.
@@ -368,7 +368,7 @@ namespace detail {
       void emitChildrenChanged();
 
       /// Update parent, simply changes out the pointer and emits the signal
-      void setParent(const boost::shared_ptr<Job_Impl> &impl);
+      void setParent(const std::shared_ptr<Job_Impl> &impl);
 
       /// \returns a default description for this job
       std::string buildDescription(const std::string &extension) const;
@@ -482,14 +482,14 @@ namespace detail {
       void emitFinished(const openstudio::runmanager::JobErrors &t_e, const boost::optional<QDateTime> &t_lastRun, const openstudio::runmanager::Files &t_outputFiles);
 
       /// Log and set
-      void addChildInternal(const boost::shared_ptr<Job_Impl> &t_child);
+      void addChildInternal(const std::shared_ptr<Job_Impl> &t_child);
 
       /// Lock and set
-      void setFinishedJobInternal(const boost::shared_ptr<Job_Impl> &t_job);
+      void setFinishedJobInternal(const std::shared_ptr<Job_Impl> &t_job);
 
       /// Run the out of date assuming we are already inside of a thread, to avoid race conditions
       /// in relocking a thread that's already locked for read locking.
-      bool outOfDateInternal(const boost::shared_ptr<Job_Impl> &t_parent, const boost::optional<QDateTime> &t_lastrun) const;
+      bool outOfDateInternal(const std::shared_ptr<Job_Impl> &t_parent, const boost::optional<QDateTime> &t_lastrun) const;
 
       /// Return the index of this job in the list of children. Throw exception if the job is not found
       size_t childIndexInList(const UUID &t_uuid) const;
@@ -521,11 +521,11 @@ namespace detail {
       volatile bool m_force;    //< force state default false
       AdvancedStatus m_status; //< default idle
 
-      boost::shared_ptr<ProcessCreator> m_processCreator; //< ProcessCreator used during execution
+      std::shared_ptr<ProcessCreator> m_processCreator; //< ProcessCreator used during execution
 
-      boost::weak_ptr<Job_Impl> m_parent; //< parent of this job
-      boost::shared_ptr<Job_Impl> m_finishedJob; //< Job to execute after this job and all its children have finished
-      std::vector<boost::shared_ptr<Job_Impl> > m_children; //< List of children that this job has
+      std::weak_ptr<Job_Impl> m_parent; //< parent of this job
+      std::shared_ptr<Job_Impl> m_finishedJob; //< Job to execute after this job and all its children have finished
+      std::vector<std::shared_ptr<Job_Impl> > m_children; //< List of children that this job has
 
       boost::optional<std::pair<int,int> > m_remoteid; //< Id to use when reconnecting to remote job
 
@@ -555,4 +555,4 @@ namespace detail {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_JOB_IMPL_HPP

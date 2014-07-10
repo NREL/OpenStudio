@@ -20,8 +20,8 @@
 #ifndef MODEL_HVACCOMPONENT_HPP
 #define MODEL_HVACCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -162,7 +162,7 @@ class MODEL_API HVACComponent : public ParentObject
 
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit HVACComponent(boost::shared_ptr<ImplType> impl);
+  explicit HVACComponent(std::shared_ptr<ImplType> impl);
 
   virtual std::vector<ModelObject> children() const;
 

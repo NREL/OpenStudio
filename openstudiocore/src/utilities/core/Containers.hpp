@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_CONTAINERS_HPP
 #define UTILITIES_CORE_CONTAINERS_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Compare.hpp"
 
 #include <boost/optional.hpp>
 

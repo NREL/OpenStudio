@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/ConvergenceLimits.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
+#include "../../model/ConvergenceLimits.hpp"
+#include "../../model/ConvergenceLimits_Impl.hpp"
 
 #include <utilities/idd/ConvergenceLimits_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Optional.hpp"
 
 using namespace openstudio::model;
 

@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
+#include "Measure.hpp"
+#include "Measure_Impl.hpp"
 
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
+#include "RubyMeasure.hpp"
+#include "RubyMeasure_Impl.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -115,7 +115,7 @@ runmanager::WorkItem Measure::createWorkItem(
 }
 
 /// @cond
-Measure::Measure(boost::shared_ptr<detail::Measure_Impl> impl)
+Measure::Measure(std::shared_ptr<detail::Measure_Impl> impl)
   : AnalysisObject(impl)
 {}
 /// @endcond

@@ -1,7 +1,26 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "ErrorEstimation.hpp"
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/QuantityConverter.hpp"
+#include "../../utilities/units/UnitFactory.hpp"
 
 namespace openstudio {
   namespace runmanager {
@@ -24,11 +43,9 @@ namespace openstudio {
     double FuelUses::average() const
     {
       double sum = 0;
-      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
-          itr != m_uses.end();
-          ++itr)
+      for (const auto & use : m_uses)
       {
-        sum += itr->second;
+        sum += use.second;
       }
 
       return sum / m_uses.size();
@@ -37,11 +54,9 @@ namespace openstudio {
     double FuelUses::sum() const
     {
       double s = 0;
-      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
-          itr != m_uses.end();
-          ++itr)
+      for (const auto & use : m_uses)
       {
-        s += itr->second;
+        s += use.second;
       }
 
       return s;
@@ -51,11 +66,9 @@ namespace openstudio {
     double FuelUses::absoluteAverage() const
     {
       double sum = 0;
-      for (std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.begin();
-          itr != m_uses.end();
-          ++itr)
+      for (const auto & use : m_uses)
       {
-        sum += fabs(itr->second);
+        sum += fabs(use.second);
       }
 
       return sum / m_uses.size();
@@ -70,11 +83,9 @@ namespace openstudio {
 
     FuelUses &FuelUses::operator/=(const double scalar)
     {
-      for (std::map<openstudio::FuelType, double>::iterator itr = m_uses.begin();
-          itr != m_uses.end();
-          ++itr)
+      for (auto & use : m_uses)
       {
-        itr->second /= scalar;
+        use.second /= scalar;
       }
 
       return *this;
@@ -89,11 +100,9 @@ namespace openstudio {
 
     FuelUses &FuelUses::operator-=(const FuelUses &t_fuelUses)
     {
-      for (std::map<openstudio::FuelType, double>::const_iterator itr = t_fuelUses.m_uses.begin();
-          itr != t_fuelUses.m_uses.end();
-          ++itr)
+      for (const auto & use : t_fuelUses.m_uses)
       {
-        (*this) -= FuelUse(itr->first, itr->second, t_fuelUses.m_units);
+        (*this) -= FuelUse(use.first, use.second, t_fuelUses.m_units);
       }
 
       return *this;
@@ -101,7 +110,7 @@ namespace openstudio {
 
     FuelUses &FuelUses::operator-=(const FuelUse &t_fuelUse)
     {
-      std::map<openstudio::FuelType, double>::iterator itr = m_uses.find(t_fuelUse.fuelType);
+      auto itr = m_uses.find(t_fuelUse.fuelType);
       if (t_fuelUse.units != m_units)
       {
     //    throw std::runtime_error("Unable to convert fuel use to given units");
@@ -128,11 +137,9 @@ namespace openstudio {
 
     FuelUses &FuelUses::operator+=(const FuelUses &t_fuelUses)
     {
-      for (std::map<openstudio::FuelType, double>::const_iterator itr = t_fuelUses.m_uses.begin();
-          itr != t_fuelUses.m_uses.end();
-          ++itr)
+      for (const auto & use : t_fuelUses.m_uses)
       {
-        (*this) += FuelUse(itr->first, itr->second, t_fuelUses.m_units);
+        (*this) += FuelUse(use.first, use.second, t_fuelUses.m_units);
       }
 
       return *this;
@@ -140,7 +147,7 @@ namespace openstudio {
 
     FuelUses &FuelUses::operator+=(const FuelUse &t_fuelUse)
     {
-      std::map<openstudio::FuelType, double>::iterator itr = m_uses.find(t_fuelUse.fuelType);
+      auto itr = m_uses.find(t_fuelUse.fuelType);
       if (t_fuelUse.units != m_units)
       {
 //        throw std::runtime_error("Unable to convert fuel use to given units");
@@ -167,7 +174,7 @@ namespace openstudio {
 
     double FuelUses::fuelUse(const openstudio::FuelType &t_type) const
     {
-      std::map<openstudio::FuelType, double>::const_iterator itr = m_uses.find(t_type);
+      auto itr = m_uses.find(t_type);
 
       if (itr == m_uses.end())
       {
@@ -272,11 +279,9 @@ namespace openstudio {
     {
       std::set<std::pair<double, std::string> > retval;
 
-      for (std::map<std::string, double>::const_iterator itr = m_confidences.begin();
-           itr != m_confidences.end();
-           ++itr)
+      for (const auto & confidence : m_confidences)
       {
-        retval.insert(std::make_pair(itr->second, itr->first));
+        retval.insert(std::make_pair(confidence.second, confidence.first));
       }
 
       return retval;
@@ -292,7 +297,7 @@ namespace openstudio {
 
       std::set<std::pair<double, std::string> > confidences = getConfidences();
 
-      std::set<std::pair<double, std::string> >::const_reverse_iterator mostConfident = confidences.rbegin();
+      auto mostConfident = confidences.rbegin();
       
       
       // The baseline is the good value, no error
@@ -306,24 +311,22 @@ namespace openstudio {
       double sumConfidence = 0;
       int numFound = 0;
 
-      for (std::set<int>::const_iterator itr = allFuelUses.begin();
-           itr != allFuelUses.end();
-           ++itr)
+      for (const auto & fuelUse : allFuelUses)
       {
 
-        std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator thisOne = 
-          m_data.find(std::make_pair(t_sourceName, openstudio::FuelType(*itr)));
+        auto thisOne = 
+          m_data.find(std::make_pair(t_sourceName, openstudio::FuelType(fuelUse)));
 
         double error = 0;
         double confidence = 0;
         bool somethingFound = false;
 
-        for (std::set<std::pair<double, std::string> >::const_reverse_iterator confitr = confidences.rbegin();
+        for (auto confitr = confidences.rbegin();
              confitr != confidences.rend();
              ++confitr)
         {
-          std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
-            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(*itr)));
+          auto baseline = 
+            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(fuelUse)));
 
           confidence = confitr->first;
 
@@ -345,8 +348,8 @@ namespace openstudio {
 
         if (somethingFound)
         {
-          LOG(Trace, "Adding error for: " << openstudio::FuelType(*itr).valueName() << " of " << error);
-          retval += FuelUse(openstudio::FuelType(*itr), error, *openstudio::createUnit("J"));
+          LOG(Trace, "Adding error for: " << openstudio::FuelType(fuelUse).valueName() << " of " << error);
+          retval += FuelUse(openstudio::FuelType(), error, *openstudio::createUnit("J"));
           ++numFound;
           sumConfidence += confidence;
         }
@@ -375,25 +378,23 @@ namespace openstudio {
       int numApproximations = 0;
 
 
-      for (std::set<int>::const_iterator itr = allFuelUses.begin();
-           itr != allFuelUses.end();
-           ++itr)
+      for (const auto & fuelUse : allFuelUses)
       {
         std::map<std::pair<double, double>, FuelUse> approximations;
 
-        for (std::set<std::pair<double, std::string> >::const_reverse_iterator confitr = confidences.rbegin();
+        for (auto confitr = confidences.rbegin();
             confitr != confidences.rend();
             ++confitr)
         {
-          std::map<std::pair<std::string, openstudio::FuelType>, LinearApproximation>::const_iterator baseline = 
-            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(*itr)));
+          auto baseline = 
+            m_data.find(std::make_pair(confitr->second, openstudio::FuelType(fuelUse)));
 
 
           if (baseline != m_data.end())
           {
             try {
               double value = baseline->second.approximate(t_values);
-              FuelUse use(openstudio::FuelType(*itr), value, *openstudio::createUnit("J"));
+              FuelUse use(openstudio::FuelType(fuelUse), value, *openstudio::createUnit("J"));
               // If this is a known value, use the confidence straight up. If it's an approximation
               // scale it by the distances.
               try {
@@ -423,7 +424,7 @@ namespace openstudio {
 
         }
 
-        LOG(Trace, "confidence " << approximations.size() << " approximations generated for " << openstudio::FuelType(*itr).valueName());
+        LOG(Trace, "confidence " << approximations.size() << " approximations generated for " << openstudio::FuelType(fuelUse).valueName());
 
         if (!approximations.empty())
         {
@@ -449,7 +450,7 @@ namespace openstudio {
 
     double ErrorEstimation::getConfidence(const std::string &t_sourceName) const
     {
-      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+      auto itr = m_confidences.find(t_sourceName);
 
       if (itr == m_confidences.end())
       {
@@ -461,7 +462,7 @@ namespace openstudio {
 
     FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const isomodel::UserModel &t_userModel, const isomodel::ISOResults &t_results) const
     {
-      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+      auto itr = m_confidences.find(t_sourceName);
 
       if (itr == m_confidences.end())
       {
@@ -474,22 +475,18 @@ namespace openstudio {
       std::vector<EndUseFuelType> fuelTypes = EndUses::fuelTypes();
 
 
-      for (std::vector<EndUseFuelType>::const_iterator itr = fuelTypes.begin();
-           itr != fuelTypes.end();
-           ++itr)
+      for (const auto & fuelType : fuelTypes)
       {
         double value = 0;
-        for (std::vector<EndUses>::const_iterator itr2 = t_results.monthlyResults.begin();
-             itr2 != t_results.monthlyResults.end();
-             ++itr2)
+        for (const auto & monthlyResult : t_results.monthlyResults)
         {
-          value += itr2->getEndUseByFuelType(*itr);
+          value += monthlyResult.getEndUseByFuelType(fuelType);
         }
-        LOG(Debug, "Read fuel use of " << value << " For " << itr->valueName());
+        LOG(Debug, "Read fuel use of " << value << " For " << fuelType.valueName());
 
         try {
           // the fuel uses in this case seem to be stored in kWh/m2
-          FuelUse fuse(openstudio::FuelType(itr->valueName()), value * 3600000 * t_userModel.floorArea(), *openstudio::createUnit("J"));
+          FuelUse fuse(openstudio::FuelType(fuelType.valueName()), value * 3600000 * t_userModel.floorArea(), *openstudio::createUnit("J"));
           retval += fuse;
         } catch (const std::exception &e) {
           LOG(Error, "Unmatched fuel type " << e.what());
@@ -501,7 +498,7 @@ namespace openstudio {
 
     FuelUses ErrorEstimation::getUses(const std::string &t_sourceName, const SqlFile &t_sql) const
     {
-      std::map<std::string, double>::const_iterator itr = m_confidences.find(t_sourceName);
+      auto itr = m_confidences.find(t_sourceName);
 
       if (itr == m_confidences.end())
       {

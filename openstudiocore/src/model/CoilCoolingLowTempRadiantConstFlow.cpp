@@ -17,29 +17,29 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilCoolingLowTempRadiantConstFlow.hpp>
-#include <model/CoilCoolingLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow.hpp>
-#include <model/ZoneHVACLowTempRadiantConstFlow_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
+#include "CoilCoolingLowTempRadiantConstFlow.hpp"
+#include "CoilCoolingLowTempRadiantConstFlow_Impl.hpp"
+#include "ZoneHVACLowTempRadiantConstFlow.hpp"
+#include "ZoneHVACLowTempRadiantConstFlow_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Cooling_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -121,15 +121,13 @@ namespace detail {
 
     zoneHVACLowTempRadiantConstFlows = this->model().getConcreteModelObjects<ZoneHVACLowTempRadiantConstFlow>();
 
-    for( std::vector<ZoneHVACLowTempRadiantConstFlow>::iterator it = zoneHVACLowTempRadiantConstFlows.begin();
-    it < zoneHVACLowTempRadiantConstFlows.end();
-    ++it )
+    for( const auto & zoneHVACLowTempRadiantConstFlow : zoneHVACLowTempRadiantConstFlows )
     {
-      if( boost::optional<HVACComponent> coil = it->coolingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACLowTempRadiantConstFlow.coolingCoil() )
       {
         if( coil->handle() == this->handle() )  
         {
-          return *it;
+          return zoneHVACLowTempRadiantConstFlow;
         }
       }
     }
@@ -482,7 +480,7 @@ void CoilCoolingLowTempRadiantConstFlow::resetCondensationControlDewpointOffset(
 }
 
 /// @cond
-CoilCoolingLowTempRadiantConstFlow::CoilCoolingLowTempRadiantConstFlow(boost::shared_ptr<detail::CoilCoolingLowTempRadiantConstFlow_Impl> impl)
+CoilCoolingLowTempRadiantConstFlow::CoilCoolingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantConstFlow_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

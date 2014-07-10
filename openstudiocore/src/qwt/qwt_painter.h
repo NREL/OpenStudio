@@ -33,7 +33,7 @@ class QPalette;
 class QTextDocument;
 #endif
 
-#if defined(Q_WS_X11)
+#if defined(Q_OS_X11)
 // Warning: QCOORD_MIN, QCOORD_MAX are wrong on X11.
 #define QWT_COORD_MAX 16384
 #define QWT_COORD_MIN (-QWT_COORD_MAX - 1)

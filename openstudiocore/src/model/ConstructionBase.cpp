@@ -17,29 +17,27 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/StandardsInformationConstruction_Impl.hpp>
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
-#include <model/Space.hpp>
+#include "Model.hpp"
+#include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationConstruction_Impl.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
+#include "Space.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using std::vector;
 
@@ -83,7 +81,7 @@ namespace detail {
     std::set<Handle> adjacentPlanarSurfacesToSkip;
 
     double result = 0.0;
-    BOOST_FOREACH(const PlanarSurface& planarSurface, model().getModelObjects<PlanarSurface>()){
+    for (const PlanarSurface& planarSurface : model().getModelObjects<PlanarSurface>()){
 
       // if we have already processed this surface as an adjacent surface
       if (std::find(adjacentPlanarSurfacesToSkip.begin(), adjacentPlanarSurfacesToSkip.end(), planarSurface.handle()) != adjacentPlanarSurfacesToSkip.end()){
@@ -185,11 +183,11 @@ namespace detail {
 
   boost::optional<double> ConstructionBase_Impl::heatCapacity() const { return boost::none; }
 
-  boost::optional<double> ConstructionBase_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> ConstructionBase_Impl::interiorVisibleAbsorptance() const {
     return boost::none;
   }
 
-  boost::optional<double> ConstructionBase_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> ConstructionBase_Impl::exteriorVisibleAbsorptance() const {
     return boost::none;
   }
 
@@ -276,12 +274,22 @@ boost::optional<double> ConstructionBase::heatCapacity() const {
   return getImpl<detail::ConstructionBase_Impl>()->heatCapacity();
 }
 
+boost::optional<double> ConstructionBase::interiorVisibleAbsorptance() const {
+  return getImpl<detail::ConstructionBase_Impl>()->interiorVisibleAbsorptance();
+}
+
 boost::optional<double> ConstructionBase::interiorVisibleAbsorbtance() const {
-  return getImpl<detail::ConstructionBase_Impl>()->interiorVisibleAbsorbtance();
+  LOG(Warn,"interiorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return interiorVisibleAbsorptance();
+}
+
+boost::optional<double> ConstructionBase::exteriorVisibleAbsorptance() const {
+  return getImpl<detail::ConstructionBase_Impl>()->exteriorVisibleAbsorptance();
 }
 
 boost::optional<double> ConstructionBase::exteriorVisibleAbsorbtance() const {
-  return getImpl<detail::ConstructionBase_Impl>()->exteriorVisibleAbsorbtance();
+  LOG(Warn,"exteriorVisibleAbsorbtance() is deprecated and will be removed after 1.4.0");
+  return exteriorVisibleAbsorptance();
 }
 
 boost::optional<double> ConstructionBase::visibleTransmittance() const {
@@ -307,7 +315,7 @@ ConstructionBase::ConstructionBase(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ConstructionBase_Impl>());
 }
 
-ConstructionBase::ConstructionBase(boost::shared_ptr<detail::ConstructionBase_Impl> impl)
+ConstructionBase::ConstructionBase(std::shared_ptr<detail::ConstructionBase_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

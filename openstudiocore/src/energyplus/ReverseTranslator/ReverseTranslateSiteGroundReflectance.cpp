@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/SiteGroundReflectance.hpp>
-#include <model/SiteGroundReflectance_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/SiteGroundReflectance.hpp"
+#include "../../model/SiteGroundReflectance_Impl.hpp"
 #include <utilities/idd/Site_GroundReflectance_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

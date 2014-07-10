@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <sdd/ForwardTranslator.hpp>
+#include "ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Site.hpp"
+#include "../model/Site_Impl.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
 #include <QDomDocument>
@@ -107,7 +107,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() == Warn){
         result.push_back(logMessage);
       }
@@ -120,7 +120,7 @@ namespace sdd {
   {
     std::vector<LogMessage> result;
 
-    BOOST_FOREACH(LogMessage logMessage, m_logSink.logMessages()){
+    for (LogMessage logMessage : m_logSink.logMessages()){
       if (logMessage.logLevel() > Warn){
         result.push_back(logMessage);
       }
@@ -208,7 +208,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::Material& material, materials){
+    for (const model::Material& material : materials){
 
       boost::optional<QDomElement> materialElement = translateMaterial(material, doc);
       if (materialElement){
@@ -233,7 +233,7 @@ namespace sdd {
     }
 
     std::set<Handle> surfaceConstructions;
-    BOOST_FOREACH(const model::Surface& surface, model.getConcreteModelObjects<model::Surface>()){
+    for (const model::Surface& surface : model.getConcreteModelObjects<model::Surface>()){
       boost::optional<model::ConstructionBase> construction = surface.construction();
       if (construction){
         surfaceConstructions.insert(construction->handle());
@@ -242,7 +242,7 @@ namespace sdd {
 
     std::set<Handle> doorConstructions;
     std::set<Handle> fenestrationConstructions;
-    BOOST_FOREACH(const model::SubSurface& subSurface, model.getConcreteModelObjects<model::SubSurface>()){
+    for (const model::SubSurface& subSurface : model.getConcreteModelObjects<model::SubSurface>()){
       boost::optional<model::ConstructionBase> construction = subSurface.construction();
       if (construction){
         std::string subSurfaceType = subSurface.subSurfaceType();
@@ -255,7 +255,7 @@ namespace sdd {
     }
 
     // translate surface constructions
-    BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
+    for (const model::ConstructionBase& constructionBase : constructions){
       if (surfaceConstructions.find(constructionBase.handle()) == surfaceConstructions.end()){
         continue;
       }
@@ -271,7 +271,7 @@ namespace sdd {
     }
 
     // translate door constructions
-    BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
+    for (const model::ConstructionBase& constructionBase : constructions){
       if (doorConstructions.find(constructionBase.handle()) == doorConstructions.end()){
         continue;
       }
@@ -287,7 +287,7 @@ namespace sdd {
     }
 
     // translate fenestration constructions
-    BOOST_FOREACH(const model::ConstructionBase& constructionBase, constructions){
+    for (const model::ConstructionBase& constructionBase : constructions){
       if (fenestrationConstructions.find(constructionBase.handle()) == fenestrationConstructions.end()){
         continue;
       }
@@ -313,12 +313,12 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+    for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
       if (istringEqual(shadingSurfaceGroup.shadingSurfaceType(), "Site")){
 
         Transformation transformation = shadingSurfaceGroup.siteTransformation();
 
-        BOOST_FOREACH(const model::ShadingSurface& shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+        for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
           boost::optional<QDomElement> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
           if (shadingSurfaceElement){
             projectElement.appendChild(*shadingSurfaceElement);

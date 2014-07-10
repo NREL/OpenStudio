@@ -20,11 +20,11 @@
 #ifndef MODEL_MODEL_HPP
 #define MODEL_MODEL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <vector>
 
@@ -145,7 +145,7 @@ class MODEL_API Model : public openstudio::Workspace {
     boost::optional<T> result;
     boost::optional<WorkspaceObject> wo = this->getObject(handle);
     if (wo) {
-      boost::shared_ptr<typename T::ImplType> p = wo->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = wo->getImpl<typename T::ImplType>();
       if (p){ result = T(p); }
     }
     return result;
@@ -160,7 +160,7 @@ class MODEL_API Model : public openstudio::Workspace {
   template <typename T>
   T getUniqueModelObject() {
     std::vector<WorkspaceObject> objects = this->allObjects();
-    boost::shared_ptr<typename T::ImplType> p;
+    std::shared_ptr<typename T::ImplType> p;
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it){
       p = it->getImpl<typename T::ImplType>();
       if (p){
@@ -181,7 +181,7 @@ class MODEL_API Model : public openstudio::Workspace {
     boost::optional<T> result;
     std::vector<WorkspaceObject> objects = this->allObjects();
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it){
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p){
         result = T(p);
         break;
@@ -205,7 +205,7 @@ class MODEL_API Model : public openstudio::Workspace {
     result.reserve(objects.size());
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it)
     {
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p) { result.push_back(T(p)); }
     }
     return result;
@@ -221,7 +221,7 @@ class MODEL_API Model : public openstudio::Workspace {
     std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it)
     {
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p) { result.push_back(T(p)); }
     }
     return result;
@@ -243,7 +243,7 @@ class MODEL_API Model : public openstudio::Workspace {
     std::vector<WorkspaceObject> objects = this->getObjects(handles);
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it)
     {
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p){ result.push_back(T(p)); }
     }
     return result;
@@ -283,7 +283,7 @@ class MODEL_API Model : public openstudio::Workspace {
     std::vector<WorkspaceObject> objects = this->getObjectsByName(name,exactMatch);
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it)
     {
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p) {
         result.push_back(T(p));
       }
@@ -297,7 +297,7 @@ class MODEL_API Model : public openstudio::Workspace {
     boost::optional<T> result;
     boost::optional<WorkspaceObject> object = this->getObjectByTypeAndName(T::iddObjectType(),name);
     if (object) {
-      boost::shared_ptr<typename T::ImplType> p = object->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = object->getImpl<typename T::ImplType>();
       if (p) {
         result = T(p);
       }
@@ -312,7 +312,7 @@ class MODEL_API Model : public openstudio::Workspace {
     std::vector<WorkspaceObject> objects = this->getObjectsByTypeAndName(T::iddObjectType(),name);
     for(std::vector<WorkspaceObject>::const_iterator it = objects.begin(), itend = objects.end(); it < itend; ++it)
     {
-      boost::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p) {
         result.push_back(T(p));
       }
@@ -374,8 +374,8 @@ class MODEL_API Model : public openstudio::Workspace {
   friend class openstudio::Workspace;
   friend class detail::Model_Impl;
 
-  /** Protected contructor from impl. */
-  Model(boost::shared_ptr<detail::Model_Impl> impl);
+  /** Protected constructor from impl. */
+  Model(std::shared_ptr<detail::Model_Impl> impl);
 
   virtual void addVersionObject();
 

@@ -20,9 +20,9 @@
 #ifndef MODEL_WATERTOWATERCOMPONENT_HPP
 #define MODEL_WATERTOWATERCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -106,7 +106,7 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
 
   typedef detail::WaterToWaterComponent_Impl ImplType;
 
-  explicit WaterToWaterComponent(boost::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
+  explicit WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> impl);
 
   private:
 

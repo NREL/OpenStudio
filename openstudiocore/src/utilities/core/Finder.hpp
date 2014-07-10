@@ -17,14 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_PREDICATES_FINDER_H
-#define UTILITIES_PREDICATES_FINDER_H
+#ifndef UTILITIES_CORE_FINDER_HPP
+#define UTILITIES_CORE_FINDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/String.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "String.hpp"
 
 #include <boost/algorithm/string.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -47,7 +46,7 @@ namespace openstudio{
         return boost::iequals(m_name, object.name()); 
       }
 
-      bool operator()(const boost::shared_ptr<T>& object) const {
+      bool operator()(const std::shared_ptr<T>& object) const {
         if (m_caseSensitive) {
           return (m_name == object->name());
         }
@@ -79,13 +78,13 @@ namespace openstudio{
   /** Template function for finding objects in a vector of shared_ptr<T> by name
   */
   template <class T>
-  boost::shared_ptr<T> findByName(const std::vector< boost::shared_ptr<T> >& vec,
+  std::shared_ptr<T> findByName(const std::vector< std::shared_ptr<T> >& vec,
                                   const std::string& name,
                                   bool caseSensitive=false)
   {
-    boost::shared_ptr<T> result;
+    std::shared_ptr<T> result;
     NameFinder<T> finder(name,caseSensitive);
-    typename std::vector< boost::shared_ptr<T> >::const_iterator it;
+    typename std::vector< std::shared_ptr<T> >::const_iterator it;
     it = find_if(vec.begin(), vec.end(), finder);
     if (it != vec.end()){
       result = *it;
@@ -138,7 +137,7 @@ namespace openstudio{
         return boost::iequals(m_name, object.name); 
       }
 
-      bool operator()(const boost::shared_ptr<T>& object) const {
+      bool operator()(const std::shared_ptr<T>& object) const {
         if (m_caseSensitive) {
           return (m_name == object->name);
         }
@@ -170,13 +169,13 @@ namespace openstudio{
   /** Template function for finding objects in a vector of shared_ptr<T> by name
   */
   template <class T>
-  boost::shared_ptr<T> findStructByName(const std::vector< boost::shared_ptr<T> >& vec,
+  std::shared_ptr<T> findStructByName(const std::vector< std::shared_ptr<T> >& vec,
                                         const std::string& name,
                                         bool caseSensitive=false)
   {
-    boost::shared_ptr<T> result;
+    std::shared_ptr<T> result;
     StructNameFinder<T> finder(name,caseSensitive);
-    typename std::vector< boost::shared_ptr<T> >::const_iterator it;
+    typename std::vector< std::shared_ptr<T> >::const_iterator it;
     it = find_if(vec.begin(), vec.end(), finder);
     if (it != vec.end()){
       result = *it;
@@ -224,7 +223,7 @@ namespace openstudio{
         bool operator()(const T& object) const {
           return (m_value == object.value()); }
 
-        bool operator()(const boost::shared_ptr<T>& objectPointer) const {
+        bool operator()(const std::shared_ptr<T>& objectPointer) const {
           return (m_value == objectPointer->value()); }
 
       private:
@@ -233,4 +232,4 @@ namespace openstudio{
 
 } // openstudio
 
-#endif //UTILITIES_PREDICATES_FINDER_H
+#endif // UTILITIES_CORE_FINDER_HPP

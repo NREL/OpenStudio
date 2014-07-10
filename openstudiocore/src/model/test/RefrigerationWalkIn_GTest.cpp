@@ -19,15 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationWalkIn_Impl.hpp>
-#include <model/RefrigerationWalkInZoneBoundary.hpp>
-#include <model/RefrigerationWalkInZoneBoundary_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/RefrigerationDefrostCycleParameters.hpp>
-#include <model/RefrigerationDefrostCycleParameters_Impl.hpp>
+#include "../RefrigerationWalkIn.hpp"
+#include "../RefrigerationWalkIn_Impl.hpp"
+#include "../RefrigerationWalkInZoneBoundary.hpp"
+#include "../RefrigerationWalkInZoneBoundary_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../RefrigerationDefrostCycleParameters.hpp"
+#include "../RefrigerationDefrostCycleParameters_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

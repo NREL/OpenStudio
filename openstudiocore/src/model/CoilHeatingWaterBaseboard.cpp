@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilHeatingWaterBaseboard.hpp>
-#include <model/CoilHeatingWaterBaseboard_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater.hpp>
-#include <model/ZoneHVACBaseboardConvectiveWater_Impl.hpp>
+#include "CoilHeatingWaterBaseboard.hpp"
+#include "CoilHeatingWaterBaseboard_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "ZoneHVACBaseboardConvectiveWater.hpp"
+#include "ZoneHVACBaseboardConvectiveWater_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_Water_Baseboard_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -90,16 +90,14 @@ namespace detail {
     std::vector<ZoneHVACBaseboardConvectiveWater> zoneHVACBaseboardConvectiveWaters;
     // populate the vector with all of them
     zoneHVACBaseboardConvectiveWaters = this->model().getConcreteModelObjects<ZoneHVACBaseboardConvectiveWater>();
-    // looop through each one, seeing if the coil is contained by the zonehvacbaseboard
-    for( std::vector<ZoneHVACBaseboardConvectiveWater>::iterator it = zoneHVACBaseboardConvectiveWaters.begin();
-    it < zoneHVACBaseboardConvectiveWaters.end();
-    ++it )
+    // loop through each one, seeing if the coil is contained by the zonehvacbaseboard
+    for( const auto & zoneHVACBaseboardConvectiveWater : zoneHVACBaseboardConvectiveWaters )
     {
-      if( boost::optional<HVACComponent> coil = it->heatingCoil() )
+      if( boost::optional<HVACComponent> coil = zoneHVACBaseboardConvectiveWater.heatingCoil() )
       {
         if( coil->handle() == this->handle() )  //if the handles match, this coil is inside of a zonehvacbaseboard
         {
-          return *it;
+          return zoneHVACBaseboardConvectiveWater;
         }
       }
     }
@@ -305,7 +303,7 @@ void CoilHeatingWaterBaseboard::resetConvergenceTolerance() {
   getImpl<detail::CoilHeatingWaterBaseboard_Impl>()->resetConvergenceTolerance();
 }
 
-CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(boost::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
+CoilHeatingWaterBaseboard::CoilHeatingWaterBaseboard(std::shared_ptr<detail::CoilHeatingWaterBaseboard_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

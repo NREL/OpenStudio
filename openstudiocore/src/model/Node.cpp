@@ -17,28 +17,28 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/SetpointManager.hpp>
-#include <model/SetpointManager_Impl.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerOutdoorAirReset_Impl.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerScheduled_Impl.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/SetpointManagerWarmest_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/PortList.hpp>
-#include <model/PortList_Impl.hpp>
-#include <model/Model.hpp>
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "SetpointManager.hpp"
+#include "SetpointManager_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
+#include "SetpointManagerMixedAir_Impl.hpp"
+#include "SetpointManagerOutdoorAirReset.hpp"
+#include "SetpointManagerOutdoorAirReset_Impl.hpp"
+#include "SetpointManagerSingleZoneReheat.hpp"
+#include "SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "SetpointManagerScheduled.hpp"
+#include "SetpointManagerScheduled_Impl.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
+#include "SetpointManagerWarmest.hpp"
+#include "SetpointManagerWarmest_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "PortList.hpp"
+#include "PortList_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_Node_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -352,7 +352,7 @@ Node::Node(const Model& model)
   OS_ASSERT(getImpl<detail::Node_Impl>());
 }
 
-Node::Node(boost::shared_ptr<detail::Node_Impl> p)
+Node::Node(std::shared_ptr<detail::Node_Impl> p)
   : StraightComponent(p)
 {}
 

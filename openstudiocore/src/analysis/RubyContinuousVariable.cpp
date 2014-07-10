@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "RubyContinuousVariable.hpp"
+#include "RubyContinuousVariable_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "DataPoint.hpp"
+#include "Problem.hpp"
+#include "Problem_Impl.hpp"
+#include "RubyMeasure_Impl.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -93,7 +93,7 @@ namespace detail {
   }
 
   AnalysisObject RubyContinuousVariable_Impl::clone() const {
-    boost::shared_ptr<RubyContinuousVariable_Impl> impl(new RubyContinuousVariable_Impl(*this));
+    std::shared_ptr<RubyContinuousVariable_Impl> impl(new RubyContinuousVariable_Impl(*this));
     RubyContinuousVariable result(impl);
     RubyMeasure measure = result.measure();
     measure.setParent(result);
@@ -251,7 +251,7 @@ namespace detail {
 RubyContinuousVariable::RubyContinuousVariable(const std::string& name,
                                                const ruleset::UserScriptArgument& argument,
                                                const RubyMeasure& measure)
-  : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
+  : ContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl>(
         new detail::RubyContinuousVariable_Impl(name,argument,measure)))
 {
   RubyContinuousVariable copyOfThis(getImpl<detail::RubyContinuousVariable_Impl>());
@@ -270,7 +270,7 @@ RubyContinuousVariable::RubyContinuousVariable(const UUID& uuid,
                                                boost::optional<int> nSteps,
                                                const ruleset::UserScriptArgument& argument,
                                                const RubyMeasure& measure)
-  : ContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl>(
+  : ContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl>(
         new detail::RubyContinuousVariable_Impl(uuid,
                                                 versionUUID,
                                                 name,
@@ -313,7 +313,7 @@ bool RubyContinuousVariable::setRubyPerturbation(const RubyMeasure& measure) {
 }
 
 /// @cond
-RubyContinuousVariable::RubyContinuousVariable(boost::shared_ptr<detail::RubyContinuousVariable_Impl> impl)
+RubyContinuousVariable::RubyContinuousVariable(std::shared_ptr<detail::RubyContinuousVariable_Impl> impl)
   : ContinuousVariable(impl)
 {}
 

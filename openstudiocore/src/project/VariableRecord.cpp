@@ -17,26 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/VariableRecord.hpp>
-#include <project/VariableRecord_Impl.hpp>
+#include "VariableRecord.hpp"
+#include "VariableRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/OutputVariableRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "FunctionRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "OutputVariableRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/OutputVariable.hpp>
-#include <analysis/OutputVariable_Impl.hpp>
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/InputVariable_Impl.hpp"
+#include "../analysis/OutputVariable.hpp"
+#include "../analysis/OutputVariable_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -269,7 +266,7 @@ UpdateByIdQueryData VariableRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -277,7 +274,7 @@ UpdateByIdQueryData VariableRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -291,11 +288,10 @@ UpdateByIdQueryData VariableRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -365,7 +361,7 @@ VariableRecord VariableRecord::factoryFromVariable(const analysis::Variable& var
   }
 
   OS_ASSERT(false);
-  return VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl>());
+  return VariableRecord(std::shared_ptr<detail::VariableRecord_Impl>());
 }
 
 std::vector<VariableRecord> VariableRecord::getVariableRecords(ProjectDatabase& database)
@@ -415,14 +411,14 @@ analysis::Variable VariableRecord::variable() const {
   return getImpl<detail::VariableRecord_Impl>()->variable();
 }
 
-VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl,
+VariableRecord::VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl,
                                ProjectDatabase projectDatabase)
   : ObjectRecord(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::VariableRecord_Impl>());
 }
 
-VariableRecord::VariableRecord(boost::shared_ptr<detail::VariableRecord_Impl> impl)
+VariableRecord::VariableRecord(std::shared_ptr<detail::VariableRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::VariableRecord_Impl>());

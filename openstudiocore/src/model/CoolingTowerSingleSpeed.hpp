@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2011, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_COOLINGTOWERSINGLESPEED_HPP
 #define MODEL_COOLINGTOWERSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -332,7 +332,7 @@ class MODEL_API CoolingTowerSingleSpeed : public StraightComponent {
   /// @cond
   typedef detail::CoolingTowerSingleSpeed_Impl ImplType;
 
-  explicit CoolingTowerSingleSpeed(boost::shared_ptr<detail::CoolingTowerSingleSpeed_Impl> impl);
+  explicit CoolingTowerSingleSpeed(std::shared_ptr<detail::CoolingTowerSingleSpeed_Impl> impl);
 
   friend class detail::CoolingTowerSingleSpeed_Impl;
   friend class Model;

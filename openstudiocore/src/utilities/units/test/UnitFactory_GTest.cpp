@@ -19,26 +19,25 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/SIUnit_Impl.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/IPUnit_Impl.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/BTUUnit_Impl.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/CFMUnit_Impl.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CelsiusUnit_Impl.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/FahrenheitUnit_Impl.hpp>
+#include "../UnitFactory.hpp"
+#include "../Unit.hpp"
+#include "../SIUnit.hpp"
+#include "../SIUnit_Impl.hpp"
+#include "../IPUnit.hpp"
+#include "../IPUnit_Impl.hpp"
+#include "../BTUUnit.hpp"
+#include "../BTUUnit_Impl.hpp"
+#include "../CFMUnit.hpp"
+#include "../CFMUnit_Impl.hpp"
+#include "../CelsiusUnit.hpp"
+#include "../CelsiusUnit_Impl.hpp"
+#include "../FahrenheitUnit.hpp"
+#include "../FahrenheitUnit_Impl.hpp"
 
-#include <utilities/core/Exception.hpp>
+#include "../../core/Exception.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/pointer_cast.hpp>
 
 using openstudio::Unit;

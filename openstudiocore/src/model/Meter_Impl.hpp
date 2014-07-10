@@ -20,11 +20,11 @@
 #ifndef MODEL_METER_IMPL_HPP
 #define MODEL_METER_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Meter.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Meter.hpp"
 
-#include <utilities/core/StaticInitializer.hpp>
+#include "../utilities/core/StaticInitializer.hpp"
 
 namespace openstudio {
   

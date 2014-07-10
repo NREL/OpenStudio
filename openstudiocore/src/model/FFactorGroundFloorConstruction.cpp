@@ -17,18 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/FFactorGroundFloorConstruction_Impl.hpp>
+#include "FFactorGroundFloorConstruction.hpp"
+#include "FFactorGroundFloorConstruction_Impl.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Construction_FfactorGroundFloor_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -272,7 +270,7 @@ bool FFactorGroundFloorConstruction::setPerimeterExposed(const Quantity& perimet
 
 /// @cond
 FFactorGroundFloorConstruction::FFactorGroundFloorConstruction(
-    boost::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
+    std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl)
   : ConstructionBase(impl)
 {}
 /// @endcond

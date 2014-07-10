@@ -378,16 +378,16 @@ namespace openstudio {
 
     // get the impl
     template<typename T>
-      boost::shared_ptr<T> getImpl() const
-    {  return boost::dynamic_pointer_cast<T>(m_impl); }
+      std::shared_ptr<T> getImpl() const
+    {  return std::dynamic_pointer_cast<T>(m_impl); }
 
   protected:
 
     friend class WorkspaceObject;
     friend class detail::WorkspaceObject_Impl;
 
-    /** Protected contructor from impl. */
-    Workspace(boost::shared_ptr<detail::Workspace_Impl> impl);
+    /** Protected constructor from impl. */
+    Workspace(std::shared_ptr<detail::Workspace_Impl> impl);
 
   private:
 
@@ -395,22 +395,22 @@ namespace openstudio {
     REGISTER_LOGGER("utilities.idf.Workspace");
 
     // pointer to implementation
-    boost::shared_ptr<detail::Workspace_Impl> m_impl;
+    std::shared_ptr<detail::Workspace_Impl> m_impl;
 
     // convert _ImplPtr to optional object
     boost::optional<WorkspaceObject> objectFromImpl(
-                                                    const boost::shared_ptr<detail::WorkspaceObject_Impl>& objectImplPtr) const;
+                                                    const std::shared_ptr<detail::WorkspaceObject_Impl>& objectImplPtr) const;
 
     // convert _ImplPtrs to vector
     std::vector<WorkspaceObject> objectsFromImpls(
-                                                  const std::vector<boost::shared_ptr<detail::WorkspaceObject_Impl> >& objectImplPtrs) const;
+                                                  const std::vector<std::shared_ptr<detail::WorkspaceObject_Impl> >& objectImplPtrs) const;
 
     // convert object to _ImplPtr
-    boost::shared_ptr<detail::WorkspaceObject_Impl> 
+    std::shared_ptr<detail::WorkspaceObject_Impl> 
       objectImplPtr(const WorkspaceObject& object) const;
 
     // convert objects to _ImplPtrs
-    std::vector<boost::shared_ptr<detail::WorkspaceObject_Impl> > 
+    std::vector<std::shared_ptr<detail::WorkspaceObject_Impl> > 
       objectImplPtrs(const std::vector<WorkspaceObject>& objects) const;
 
     // link up WorkspaceObjectOrder and Workspace on deserialization

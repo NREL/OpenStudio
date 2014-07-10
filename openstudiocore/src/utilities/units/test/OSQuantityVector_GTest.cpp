@@ -18,19 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
+#include "../OSQuantityVector.hpp"
+#include "../Quantity.hpp"
+#include "../SIUnit.hpp"
+#include "../WhUnit.hpp"
+#include "../CelsiusUnit.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../../data/Vector.hpp"
 
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../core/Containers.hpp"
 
 using namespace openstudio;
 
@@ -210,7 +208,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Construction_QuantityVectorBaseCa
     DoubleVector vals = toStandardVector(randVector(0.0,1.0,8760u));
     Unit u = createSIForce();
     QuantityVector result;
-    BOOST_FOREACH(double val,vals) {
+    for (double val : vals) {
       result.push_back(Quantity(val,u));
     }
   }

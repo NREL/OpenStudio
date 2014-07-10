@@ -19,17 +19,15 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../DaylightingControl.hpp"
+#include "../DaylightingControl_Impl.hpp"
+#include "../GlareSensor.hpp"
+#include "../GlareSensor_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

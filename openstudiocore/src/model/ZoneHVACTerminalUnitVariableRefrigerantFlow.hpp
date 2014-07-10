@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACTERMINALUNITVARIABLEREFRIGERANTFLOW_HPP
 #define MODEL_ZONEHVACTERMINALUNITVARIABLEREFRIGERANTFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -138,7 +138,7 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
   /// @cond
   typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(boost::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
+  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
   friend class Model;

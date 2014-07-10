@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/WorkspaceObjectDiff.hpp>
-#include <utilities/idf/WorkspaceObjectDiff_Impl.hpp>
+#include "WorkspaceObjectDiff.hpp"
+#include "WorkspaceObjectDiff_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
   namespace detail {
@@ -46,12 +46,12 @@ namespace openstudio {
 
   WorkspaceObjectDiff::WorkspaceObjectDiff(unsigned index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue,
                                            boost::optional<UUID> oldHandle, boost::optional<UUID> newHandle)
-    : IdfObjectDiff(boost::shared_ptr<detail::WorkspaceObjectDiff_Impl>(new detail::WorkspaceObjectDiff_Impl(index, oldValue, newValue, oldHandle, newHandle)))
+    : IdfObjectDiff(std::shared_ptr<detail::WorkspaceObjectDiff_Impl>(new detail::WorkspaceObjectDiff_Impl(index, oldValue, newValue, oldHandle, newHandle)))
   {
     OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
   }
 
-  WorkspaceObjectDiff::WorkspaceObjectDiff(const boost::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl)
+  WorkspaceObjectDiff::WorkspaceObjectDiff(const std::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl)
     : IdfObjectDiff(impl)
   {
     OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());

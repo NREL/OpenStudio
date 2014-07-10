@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
+#include "../ScaleFactory.hpp"
 
 using openstudio::Scale;
 using openstudio::ScaleFactory;

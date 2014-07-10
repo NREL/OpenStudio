@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLFUELTYPEITEM_H
-#define OPENSTUDIO_UTILITYBILLFUELTYPEITEM_H
+#ifndef OPENSTUDIO_UTILITYBILLFUELTYPEITEM_HPP
+#define OPENSTUDIO_UTILITYBILLFUELTYPEITEM_HPP
 
-#include <openstudio_lib/OSCollapsibleItem.hpp>
+#include "OSCollapsibleItem.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 namespace openstudio {
 
@@ -50,5 +50,5 @@ class UtilityBillFuelTypeItem : public OSCollapsibleItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLFUELTYPEITEM_H
+#endif // OPENSTUDIO_UTILITYBILLFUELTYPEITEM_HPP
 

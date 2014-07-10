@@ -21,13 +21,13 @@
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../JobFactory.hpp"
 #include <boost/filesystem/path.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
 #include <QDir>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
+#include "../../../utilities/core/Application.hpp"
+#include "../../../utilities/core/System.hpp"
 
 #ifdef _MSC_VER
 #include <Windows.h>

@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithm_Impl.hpp>
+#include "DDACEAlgorithm.hpp"
+#include "DDACEAlgorithm_Impl.hpp"
 
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithmOptions_Impl.hpp>
+#include "DDACEAlgorithmOptions.hpp"
+#include "DDACEAlgorithmOptions_Impl.hpp"
 
-#include <analysis/Problem.hpp>
+#include "Problem.hpp"
 
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -69,7 +69,7 @@ namespace detail {
   {}
 
   AnalysisObject DDACEAlgorithm_Impl::clone() const {
-    boost::shared_ptr<DDACEAlgorithm_Impl> impl(new DDACEAlgorithm_Impl(*this));
+    std::shared_ptr<DDACEAlgorithm_Impl> impl(new DDACEAlgorithm_Impl(*this));
     return DDACEAlgorithm(impl);
   }
 
@@ -152,7 +152,7 @@ namespace detail {
 } // detail
 
 DDACEAlgorithm::DDACEAlgorithm(const DDACEAlgorithmOptions& options)
-  : DakotaAlgorithm(boost::shared_ptr<detail::DDACEAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::DDACEAlgorithm_Impl>(
         new detail::DDACEAlgorithm_Impl(options)))
 {
   createCallbackForOptions();
@@ -169,7 +169,7 @@ DDACEAlgorithm::DDACEAlgorithm(const UUID& uuid,
                                const boost::optional<FileReference>& restartFileReference,
                                const boost::optional<FileReference>& outFileReference,
                                const boost::optional<openstudio::runmanager::Job>& job)
-  : DakotaAlgorithm(boost::shared_ptr<detail::DDACEAlgorithm_Impl>(
+  : DakotaAlgorithm(std::shared_ptr<detail::DDACEAlgorithm_Impl>(
         new detail::DDACEAlgorithm_Impl(uuid,
                                         versionUUID,
                                         displayName,
@@ -190,7 +190,7 @@ DDACEAlgorithmOptions DDACEAlgorithm::ddaceAlgorithmOptions() const {
 }
 
 /// @cond
-DDACEAlgorithm::DDACEAlgorithm(boost::shared_ptr<detail::DDACEAlgorithm_Impl> impl)
+DDACEAlgorithm::DDACEAlgorithm(std::shared_ptr<detail::DDACEAlgorithm_Impl> impl)
   : DakotaAlgorithm(impl)
 {}
 /// @endcond

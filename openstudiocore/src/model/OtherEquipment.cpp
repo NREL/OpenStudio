@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
+#include "OtherEquipment.hpp"
+#include "OtherEquipment_Impl.hpp"
 
-#include <model/OtherEquipmentDefinition.hpp>
-#include <model/OtherEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "OtherEquipmentDefinition.hpp"
+#include "OtherEquipmentDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -94,7 +94,7 @@ namespace detail {
     makeUnique();
 
     OtherEquipmentDefinition definition = otherEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, definition.lifeCycleCosts()){
+    for (LifeCycleCost cost : definition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -313,7 +313,7 @@ double OtherEquipment::getPowerPerPerson(double floorArea, double numPeople) con
 }
 
 /// @cond
-OtherEquipment::OtherEquipment(boost::shared_ptr<detail::OtherEquipment_Impl> impl)
+OtherEquipment::OtherEquipment(std::shared_ptr<detail::OtherEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

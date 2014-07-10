@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/time/Time.hpp>
+#include "../Time.hpp"
 
 #include <string>
 

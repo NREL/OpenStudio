@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DISCRETEVARIABLE_IMPL_HPP
 #define ANALYSIS_DISCRETEVARIABLE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/InputVariable_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "InputVariable_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

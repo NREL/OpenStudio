@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SPACESCONTROLLER_H
-#define OPENSTUDIO_SPACESCONTROLLER_H
+#ifndef OPENSTUDIO_THERMALZONESCONTROLLER_HPP
+#define OPENSTUDIO_THERMALZONESCONTROLLER_HPP
 
-#include <model/Model.hpp>
-#include <model/Schedule.hpp>
+#include "../model/Model.hpp"
+#include "../model/Schedule.hpp"
 #include <boost/smart_ptr.hpp>
 #include "../shared_gui_components/OSQObjectController.hpp"
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -99,5 +99,5 @@ class ThermalZonesController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SPACESCONTROLLER_H 
+#endif // OPENSTUDIO_THERMALZONESCONTROLLER_HPP 
 

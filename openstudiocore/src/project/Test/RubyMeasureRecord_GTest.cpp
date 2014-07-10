@@ -18,32 +18,32 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <project/Test/ProjectFixture.hpp>
+#include "ProjectFixture.hpp"
 
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/OSArgumentRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
+#include "../MeasureGroupRecord.hpp"
+#include "../MeasureGroupRecord_Impl.hpp"
+#include "../MeasureRecord.hpp"
+#include "../FileReferenceRecord.hpp"
+#include "../OSArgumentRecord.hpp"
+#include "../ProblemRecord.hpp"
+#include "../ProjectDatabase.hpp"
+#include "../RubyMeasureRecord.hpp"
+#include "../RubyMeasureRecord_Impl.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../../analysis/Measure.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
 
 #include <OpenStudio.hxx>
 

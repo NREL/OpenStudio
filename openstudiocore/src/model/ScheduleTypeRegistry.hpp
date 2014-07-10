@@ -20,10 +20,10 @@
 #ifndef MODEL_SCHEDULETYPEREGISTRY_HPP
 #define MODEL_SCHEDULETYPEREGISTRY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <utilities/core/Singleton.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Singleton.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <map>
 #include <string>

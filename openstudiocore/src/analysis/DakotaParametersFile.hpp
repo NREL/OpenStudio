@@ -20,13 +20,12 @@
 #ifndef ANALYSIS_DAKOTAPARAMETERSFILE_HPP
 #define ANALYSIS_DAKOTAPARAMETERSFILE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Path.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 #include <vector>
@@ -115,14 +114,14 @@ class ANALYSIS_API DakotaParametersFile {
 
   /** Get the impl pointer */
   template<typename T>
-  boost::shared_ptr<T> getImpl() const {
-    return boost::dynamic_pointer_cast<T>(m_impl);
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
   }
 
   /** Cast to type T. Throws std::bad_cast if object is not a T. */
   template<typename T>
   T cast() const {
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (!impl) {
       throw(std::bad_cast());
     }
@@ -134,7 +133,7 @@ class ANALYSIS_API DakotaParametersFile {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl);
     }
@@ -146,14 +145,14 @@ class ANALYSIS_API DakotaParametersFile {
   /// @cond
   typedef detail::DakotaParametersFile_Impl ImplType;
 
-  explicit DakotaParametersFile(boost::shared_ptr<detail::DakotaParametersFile_Impl> impl);
+  explicit DakotaParametersFile(std::shared_ptr<detail::DakotaParametersFile_Impl> impl);
 
   friend class detail::DakotaParametersFile_Impl;
 
   /// @endcond
  private:
 
-  boost::shared_ptr<detail::DakotaParametersFile_Impl> m_impl;
+  std::shared_ptr<detail::DakotaParametersFile_Impl> m_impl;
 
   REGISTER_LOGGER("openstudio.analysis.DakotaParametersFile");
 };

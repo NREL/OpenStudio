@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <sdd/Test/SDDFixture.hpp>
+#include "SDDFixture.hpp"
 
 #include <resources.hxx>
 
@@ -28,7 +28,7 @@ void SDDFixture::TearDown() {}
 void SDDFixture::SetUpTestCase() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
-  logFile = boost::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./SDDFixture.log")));
+  logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./SDDFixture.log")));
   logFile->setLogLevel(Info);
 }
 
@@ -36,4 +36,4 @@ void SDDFixture::TearDownTestCase() {
   logFile->disable();
 }
 
-boost::shared_ptr<openstudio::FileLogSink> SDDFixture::logFile;
+std::shared_ptr<openstudio::FileLogSink> SDDFixture::logFile;

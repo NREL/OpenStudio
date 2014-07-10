@@ -17,20 +17,20 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/StandardsInformationConstruction_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Material.hpp>
+#include "StandardsInformationConstruction.hpp"
+#include "StandardsInformationConstruction_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Material.hpp"
 
-#include <model/Model.hpp>
+#include "Model.hpp"
 
 #include <utilities/idd/OS_StandardsInformation_Construction_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -146,7 +146,7 @@ namespace detail {
 
 	// include values from model
 
-    BOOST_FOREACH(const StandardsInformationConstruction& other, this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
+    for (const StandardsInformationConstruction& other : this->model().getConcreteModelObjects<StandardsInformationConstruction>()){
       if (other.handle() == this->handle()){
         continue;
       }
@@ -175,7 +175,7 @@ namespace detail {
     if (standardsConstructionType){
       finder.addTarget(*standardsConstructionType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -359,7 +359,7 @@ std::vector<std::string> StandardsInformationConstruction::standardPerturbableLa
   StringVector result;
   StringVector candidates = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                                            OS_StandardsInformation_ConstructionFields::PerturbableLayerType);
-  BOOST_FOREACH(const std::string& candidate,candidates) {
+  for (const std::string& candidate : candidates) {
     if ((candidate == "Not Applicable") || (candidate == "Other")) { continue; }
     result.push_back(candidate);
   }
@@ -438,7 +438,7 @@ void StandardsInformationConstruction::resetPerturbableLayerType() {
 
 /// @cond
 StandardsInformationConstruction::StandardsInformationConstruction(
-    boost::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
+    std::shared_ptr<detail::StandardsInformationConstruction_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

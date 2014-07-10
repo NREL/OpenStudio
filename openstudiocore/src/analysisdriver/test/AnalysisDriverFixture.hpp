@@ -22,12 +22,12 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
+#include "../../utilities/core/Enum.hpp"
 
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "../../ruleset/RubyUserScriptArgumentGetter.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -69,7 +69,7 @@ class AnalysisDriverFixture : public ::testing::Test {
   /// tear down after each test
   virtual void TearDown();
 
-  /// initiallize static members
+  /// initialize static members
   static void SetUpTestCase();
 
   /// tear down static members
@@ -77,7 +77,7 @@ class AnalysisDriverFixture : public ::testing::Test {
 
   /// static data
   static boost::optional<openstudio::FileLogSink> logFile;
-  static boost::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter;
+  static std::shared_ptr<openstudio::ruleset::RubyUserScriptArgumentGetter> argumentGetter;
 
   /** Return Problem saved to resources database by SetUpTestCase. Creates appropriate
    *  simulation workflow based on modelToIdf and energyPlus. */

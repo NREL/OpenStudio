@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
-#include <openstudio_lib/ScriptsListView.hpp>
+#include "OSItemList.hpp"
+#include "OSVectorController.hpp"
+#include "ScriptsListView.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QVBoxLayout>
 #include <QScrollArea>
@@ -161,7 +161,7 @@ bool OSItemList::itemsDraggable() const
 void OSItemList::setItemsDraggable(bool itemsDraggable)
 {
   m_itemsDraggable = itemsDraggable;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setDraggable(itemsDraggable);
   }
 }
@@ -174,7 +174,7 @@ bool OSItemList::itemsRemoveable() const
 void OSItemList::setItemsRemoveable(bool itemsRemoveable)
 {
   m_itemsRemoveable = itemsRemoveable;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setRemoveable(itemsRemoveable);
   }
 }
@@ -210,7 +210,7 @@ void OSItemList::setItemIds(const std::vector<OSItemId>& itemIds)
 
   m_selectedItem = NULL;
   
-  BOOST_FOREACH(const OSItemId& itemId, itemIds){
+  for (const OSItemId& itemId : itemIds){
     OSItem* item = OSItem::makeItem(itemId, OSItemType::ListItem);
     if (item){
       addItem(item, false);
@@ -355,7 +355,7 @@ OSItemType OSItemList::itemsType() const
 void OSItemList::setItemsType(OSItemType type)
 {
   m_type = type;
-  BOOST_FOREACH(OSItem* item, this->items()){
+  for (OSItem* item : this->items()){
     item->setOSItemType(type);
   }
 }

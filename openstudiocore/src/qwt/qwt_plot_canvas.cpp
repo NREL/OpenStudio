@@ -14,7 +14,7 @@
 #if QT_VERSION >= 0x040000
 #include <qstyleoption.h>
 #include <qpaintengine.h>
-#ifdef Q_WS_X11
+#ifdef Q_OS_X11
 #include <qx11info_x11.h>
 #endif
 #endif
@@ -307,7 +307,7 @@ void QwtPlotCanvas::drawCanvas(QPainter *painter)
     {
         *d_data->cache = QPixmap(contentsRect().size());
 
-#ifdef Q_WS_X11
+#ifdef Q_OS_X11
 #if QT_VERSION >= 0x040000
         if ( d_data->cache->x11Info().screen() != x11Info().screen() )
             d_data->cache->x11SetScreen(x11Info().screen());

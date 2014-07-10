@@ -19,22 +19,22 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/SkyTemperature.hpp>
-#include <model/SkyTemperature_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../SkyTemperature.hpp"
+#include "../SkyTemperature_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileDays_Impl.hpp>
-#include <model/WeatherFileConditionType.hpp>
-#include <model/WeatherFileConditionType_Impl.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
+#include "../DesignDay.hpp"
+#include "../DesignDay_Impl.hpp"
+#include "../WeatherFileDays.hpp"
+#include "../WeatherFileDays_Impl.hpp"
+#include "../WeatherFileConditionType.hpp"
+#include "../WeatherFileConditionType_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -19,11 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../ProgressBar.hpp"
+#include "../../core/System.hpp"
+#include "../../idf/Workspace.hpp"
+#include "../../idf/WorkspaceObject.hpp"
+#include "../../idf/IdfObject.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;

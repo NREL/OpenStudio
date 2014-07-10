@@ -17,18 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP__
-#define OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP__
+#ifndef RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP
+#define RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP
 
 #include <string>
 #include <QTimer>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_JobStatusWidget.hxx>
+#include "RunManager.hpp"
+#include <runmanager/lib/ui_JobStatusWidget.h>
 #include "JobErrors.hpp"
 #include "Job.hpp"
 #include "RunManagerAPI.hpp"
 #include <QStandardItemModel>
-#include "RunManager.hpp"
 
 
 namespace openstudio {
@@ -97,7 +96,7 @@ namespace openstudio {
 
       public:
         //! Create a JobStatusWidget dialog for displaying job status
-        JobStatusWidget(openstudio::runmanager::RunManager t_runmanager, QWidget *parent = 0);
+        JobStatusWidget(openstudio::runmanager::RunManager t_runmanager, QWidget *parent = nullptr);
         virtual ~JobStatusWidget();
 
         /// Returns a vector of QAction objects to display on a toolbar or some other easily accessible location
@@ -179,4 +178,4 @@ namespace openstudio {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_JOBSTATUSWIDGET_HPP_
+#endif // RUNMANAGER_LIB_JOBSTATUSWIDGET_HPP

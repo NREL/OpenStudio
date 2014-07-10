@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRTOAIRCOMPONENT_HPP
 #define MODEL_AIRTOAIRCOMPONENT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,7 +95,7 @@ class MODEL_API AirToAirComponent : public HVACComponent
 
   typedef detail::AirToAirComponent_Impl ImplType;
 
-  explicit AirToAirComponent(boost::shared_ptr<detail::AirToAirComponent_Impl> impl);
+  explicit AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_Impl> impl);
 
   private:
 

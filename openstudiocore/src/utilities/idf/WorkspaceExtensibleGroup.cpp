@@ -17,18 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/WorkspaceObject_Impl.hpp>
+#include "WorkspaceExtensibleGroup.hpp"
+#include "WorkspaceObject.hpp"
+#include "WorkspaceObject_Impl.hpp"
 
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
 
 #include <boost/lexical_cast.hpp>
-#include <boost/foreach.hpp>
 
-using boost::shared_ptr;
-using boost::dynamic_pointer_cast;
+using std::shared_ptr;
+using std::dynamic_pointer_cast;
 
 namespace openstudio {
 
@@ -87,7 +86,7 @@ bool WorkspaceExtensibleGroup::canBeSource() const {
 
 // PROTECTED
 WorkspaceExtensibleGroup::WorkspaceExtensibleGroup(
-    boost::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
+    std::shared_ptr<detail::WorkspaceObject_Impl> impl,unsigned index) 
   : IdfExtensibleGroup(impl,index) {}
 
 } // openstudio

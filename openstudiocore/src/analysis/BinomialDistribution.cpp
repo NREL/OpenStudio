@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/BinomialDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "BinomialDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 BinomialDistribution::BinomialDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(BinomialDistribution::type())))
 {}
 
 BinomialDistribution::BinomialDistribution(double probabilityPerTrial, int numTrials) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(BinomialDistribution::type())))
 {
   setProbabilityPerTrial(probabilityPerTrial);
@@ -72,7 +72,7 @@ bool BinomialDistribution::setNumTrials(int value) {
   }
 }
 
-BinomialDistribution::BinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+BinomialDistribution::BinomialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == BinomialDistribution::type());

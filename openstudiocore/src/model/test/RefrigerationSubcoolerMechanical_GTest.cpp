@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationSystem.hpp>
-#include <model/RefrigerationSystem_Impl.hpp>
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <model/RefrigerationSubcoolerMechanical_Impl.hpp>
+#include "../RefrigerationSystem.hpp"
+#include "../RefrigerationSystem_Impl.hpp"
+#include "../RefrigerationSubcoolerMechanical.hpp"
+#include "../RefrigerationSubcoolerMechanical_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

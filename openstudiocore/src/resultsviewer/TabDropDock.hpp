@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_TABDROPDOCK_H
-#define  RESULTSVIEWER_TABDROPDOCK_H
+#ifndef RESULTSVIEWER_TABDROPDOCK_HPP
+#define RESULTSVIEWER_TABDROPDOCK_HPP
 
-#include <QtGui/QTabWidget>
+#include <QTabWidget>
 #include <QDropEvent>
 
 
@@ -34,7 +34,7 @@ class TabDropDock : public QTabWidget
 
 public:
 
-  TabDropDock( QWidget* parent=0);
+  TabDropDock( QWidget* parent=nullptr);
 
 
 private:
@@ -56,4 +56,4 @@ signals:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TABDROPDOCK_H
+#endif // RESULTSVIEWER_TABDROPDOCK_HPP

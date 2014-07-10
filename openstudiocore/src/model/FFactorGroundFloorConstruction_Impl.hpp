@@ -20,10 +20,10 @@
 #ifndef MODEL_FFACTORGROUNDFLOORCONSTRUCTION_IMPL_HPP
 #define MODEL_FFACTORGROUNDFLOORCONSTRUCTION_IMPL_HPP 
 
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {

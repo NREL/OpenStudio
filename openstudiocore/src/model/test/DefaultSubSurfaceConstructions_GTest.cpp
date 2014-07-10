@@ -19,16 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../DefaultSubSurfaceConstructions.hpp"
+#include "../DefaultSubSurfaceConstructions_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -27,27 +27,25 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/TimeDependentValuation.hpp>
-#include <model/TimeDependentValuation_Impl.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/TimeDependentValuation.hpp"
+#include "../../model/TimeDependentValuation_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -107,7 +105,7 @@ namespace detail {
     return m_description;
   }
 
-  void EnergyPlusPreProcessJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void EnergyPlusPreProcessJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir();
 
@@ -180,7 +178,7 @@ namespace detail {
         {
           try {
             boost::filesystem::remove(outfile);
-          } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+          } catch (const boost::filesystem::filesystem_error &e) {
             LOG(Error, "Error removing existing out.idf file: " + std::string(e.what()) + " continuing with run, if copy_file errors, the process will fail");
           }
         }

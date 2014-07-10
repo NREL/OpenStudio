@@ -17,39 +17,37 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/IdfObject_Impl.hpp>
+#include "IdfObject.hpp"
+#include "IdfObject_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/IdfRegex.hpp>
-#include <utilities/idf/ValidityReport.hpp>
+#include "IdfExtensibleGroup.hpp"
+#include "IdfRegex.hpp"
+#include "ValidityReport.hpp"
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idd/IddObjectProperties.hpp>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
-#include <utilities/idd/ExtensibleIndex.hpp>
+#include "../idd/IddObject.hpp"
+#include "../idd/IddObjectProperties.hpp"
+#include "../idd/IddFieldProperties.hpp"
+#include "../idd/IddKey.hpp"
+#include "../idd/ExtensibleIndex.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddRegex.hpp>
-#include <utilities/idd/CommentRegex.hpp>
-#include <utilities/idd/Comments.hpp>
+#include "../idd/IddField.hpp"
+#include "../idd/IddRegex.hpp"
+#include "../idd/CommentRegex.hpp"
+#include "../idd/Comments.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../math/FloatCompare.hpp"
+#include "../core/Finder.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Url.hpp"
+#include "../core/UUID.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../units/Quantity.hpp"
+#include "../units/OSOptionalQuantity.hpp"
+#include "../units/QuantityConverter.hpp"
 
 #include <boost/filesystem/fstream.hpp> 
 #include <boost/lexical_cast.hpp>
-#include <boost/numeric/conversion/cast.hpp>  
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -322,7 +320,7 @@ namespace detail {
                                                bool returnDefault) const
   {
     UnsignedVector urlIdx = m_iddObject.urlFields();
-    UnsignedVector::iterator i= find( urlIdx.begin(), urlIdx.end(), index );
+    auto i= find( urlIdx.begin(), urlIdx.end(), index );
     if( i != urlIdx.end() ) {
       OptionalString value = getString(index, returnDefault, false);
       if (value) {
@@ -338,13 +336,13 @@ namespace detail {
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
     unsigned n = numFields();
     unsigned i = n;
-    boost::shared_ptr<detail::IdfObject_Impl> p;
+    std::shared_ptr<detail::IdfObject_Impl> p;
     IdfExtensibleGroup eg(p,i);
     if (m_iddObject.properties().extensible) {
       if (m_iddObject.index(
             ExtensibleIndex(groupIndex,m_iddObject.properties().numExtensible-1)) < n) {
         i = m_iddObject.index(ExtensibleIndex(groupIndex,0));
-        eg = IdfExtensibleGroup(boost::const_pointer_cast<IdfObject_Impl>(shared_from_this()),i);
+        eg = IdfExtensibleGroup(std::const_pointer_cast<IdfObject_Impl>(shared_from_this()),i);
       }
     }
     return eg;
@@ -952,7 +950,7 @@ namespace detail {
         while (!rollbackValues.empty()) {
           IdfExtensibleGroup pushed = pushExtensibleGroup(rollbackValues.back(),false);
           unsigned fieldIndex = 0;
-          BOOST_FOREACH(const std::string& cmnt,rollbackComments.back()) {
+          for (const std::string& cmnt : rollbackComments.back()) {
             pushed.setFieldComment(fieldIndex,cmnt);
             ++fieldIndex;
           }
@@ -1102,7 +1100,7 @@ namespace detail {
     OptionalUnsigned iName = m_iddObject.nameFieldIndex();
 
     // iddObject() same, field indices same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       bool compareStrings = true;
       OptionalIddField oIddField = m_iddObject.getField(i);
 
@@ -1164,7 +1162,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same, field indices same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
       OptionalString oOtherStringValue = other.getString(i);
@@ -1184,7 +1182,7 @@ namespace detail {
     if (myFields != otherFields) { return false; }
 
     // iddObject() same--compare data
-    BOOST_FOREACH(unsigned i,myFields) {
+    for (unsigned i : myFields) {
       // in idf, just comparing strings
       OptionalString oMyStringValue = getString(i);
       OS_ASSERT(oMyStringValue);
@@ -1203,9 +1201,9 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text)
+  std::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text)
   {
-    boost::shared_ptr<IdfObject_Impl> result;
+    std::shared_ptr<IdfObject_Impl> result;
     IdfObject_Impl idfObjectImpl;
 
     try {
@@ -1215,14 +1213,14 @@ namespace detail {
     catch (...) { return result; }
 
     bool keepHandle = idfObjectImpl.iddObject().hasHandleField();
-    result = boost::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
+    result = std::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
     return result;
   }
 
-  boost::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text,
+  std::shared_ptr<IdfObject_Impl> IdfObject_Impl::load(const std::string& text,
                                                          const IddObject& iddObject)
   {
-    boost::shared_ptr<IdfObject_Impl> result;
+    std::shared_ptr<IdfObject_Impl> result;
     IdfObject_Impl idfObjectImpl(iddObject,false,true);
 
     try {
@@ -1232,7 +1230,7 @@ namespace detail {
     catch (...) { return result; }
 
     bool keepHandle = idfObjectImpl.iddObject().hasHandleField();
-    result = boost::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
+    result = std::shared_ptr<IdfObject_Impl>(new IdfObject_Impl(idfObjectImpl,keepHandle));
     return result;
   }
 
@@ -1353,7 +1351,7 @@ namespace detail {
     bool nameChange = false;
     bool dataChange = false;
 
-    BOOST_FOREACH(const IdfObjectDiff& diff, m_diffs){
+    for (const IdfObjectDiff& diff : m_diffs){
 
       if (diff.isNull()){
         continue;
@@ -1529,7 +1527,7 @@ namespace detail {
         start = matches[2].first;
         stop = matches[3].second;
 
-        // maches[2] is not a comment
+        // matches[2] is not a comment
         commentOrOtherText.clear();
       }
 
@@ -1604,13 +1602,13 @@ namespace detail {
     return true;
   }
 
-  UnsignedVector IdfObject_Impl::trimFieldIndices(const UnsignedVector& indicies) const {
+  UnsignedVector IdfObject_Impl::trimFieldIndices(const UnsignedVector& indices) const {
     unsigned n = m_fields.size(); // number of fields
-    UnsignedVector result = indicies;
+    UnsignedVector result = indices;
     // quick check to see if action is necessary
     if (!result.empty() && (result.back() >= n)) {
-      // assume indicies are in order and find first that is out of range
-      for (UnsignedVector::iterator it = result.begin(), 
+      // assume indices are in order and find first that is out of range
+      for (auto it = result.begin(), 
            itEnd = result.end(); it != itEnd; ++it) {
         if (*it >= n) {
           result.erase(it,result.end());
@@ -1622,11 +1620,11 @@ namespace detail {
   }
 
   UnsignedVector IdfObject_Impl::repeatExtensibleIndices(
-      const UnsignedVector& indicies) const {
+      const UnsignedVector& indices) const {
 
-    // assume indicies is in order, and any extensible field indices are from the first
+    // assume indices is in order, and any extensible field indices are from the first
     // extensible group
-    UnsignedVector result = indicies; 
+    UnsignedVector result = indices; 
 
     // nothing to do if not extensible
     if (!m_iddObject.properties().extensible) { return result; }
@@ -1634,9 +1632,9 @@ namespace detail {
     // nothing to do if last index is not in extensible group
     if (!result.empty() && !m_iddObject.isExtensibleField(result.back())) { return result; }
 
-    // otherwise, find group indices of extensible field indieces in result
+    // otherwise, find group indices of extensible field indices in result
     UnsignedVector groupIndices;
-    BOOST_FOREACH(unsigned index,result) {
+    for (unsigned index : result) {
       if (m_iddObject.isExtensibleField(index)) {
         groupIndices.push_back(m_iddObject.extensibleIndex(index).field);
       }
@@ -1646,7 +1644,7 @@ namespace detail {
     unsigned nn = m_iddObject.numFields(), ne = m_iddObject.properties().numExtensible;
     unsigned groupIndex = 1;
     while (nn + groupIndex*ne < n) {
-      BOOST_FOREACH(unsigned gi,groupIndices) {
+      for (unsigned gi : groupIndices) {
         unsigned index = nn + groupIndex*ne + gi; 
         if (index < n) { result.push_back(index); }
       }
@@ -1663,7 +1661,7 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
     // field-level errors
     for (unsigned index = 0; index < m_fields.size(); ++index) { 
       DataErrorVector fieldErrors = fieldDataIsValid(index,report.level());
-      BOOST_FOREACH(const DataError& error,fieldErrors) {
+      for (const DataError& error : fieldErrors) {
         report.insertError(error);
       }
     }
@@ -1965,17 +1963,17 @@ void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNa
 
 IdfObject::IdfObject(IddObjectType type, bool fastName) 
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, fastName));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(type, fastName));
   OS_ASSERT(m_impl);
 }
 
 IdfObject::IdfObject(const IddObject& iddObject, bool fastName)
 {
-  m_impl = boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, fastName));
+  m_impl = std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(iddObject, fastName));
   OS_ASSERT(m_impl);
 }
 
-IdfObject::IdfObject(boost::shared_ptr<detail::IdfObject_Impl> impl):
+IdfObject::IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl):
   m_impl(impl) 
 {
   OS_ASSERT(m_impl);
@@ -1989,7 +1987,7 @@ IdfObject::IdfObject(const IdfObject& other):
 
 IdfObject IdfObject::clone(bool keepHandle) const
 {
-  IdfObject copy(boost::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(*m_impl, keepHandle)));
+  IdfObject copy(std::shared_ptr<detail::IdfObject_Impl>(new detail::IdfObject_Impl(*m_impl, keepHandle)));
   return copy;
 }
 
@@ -2219,13 +2217,13 @@ bool IdfObject::operator!=(const IdfObject& other) const
 // SERIALIZATION
 
 OptionalIdfObject IdfObject::load(const std::string& text) {
-  boost::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text);
+  std::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text);
   if (p) { return IdfObject(p); }
   return boost::none;
 }
 
 OptionalIdfObject IdfObject::load(const std::string& text,const IddObject& iddObject) {
-  boost::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text,iddObject);
+  std::shared_ptr<detail::IdfObject_Impl> p = detail::IdfObject_Impl::load(text,iddObject);
   if (p) { return IdfObject(p); }
   return boost::none;
 }

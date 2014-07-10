@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "SizingZone.hpp"
+#include "SizingZone_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Sizing_Zone_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -1228,7 +1228,7 @@ void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
 }
 
 /// @cond
-SizingZone::SizingZone(boost::shared_ptr<detail::SizingZone_Impl> impl)
+SizingZone::SizingZone(std::shared_ptr<detail::SizingZone_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

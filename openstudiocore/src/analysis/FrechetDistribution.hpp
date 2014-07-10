@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_FrechetDISTRIBUTION_HPP
-#define ANALYSIS_FrechetDISTRIBUTION_HPP
+#ifndef ANALYSIS_FRECHETDISTRIBUTION_HPP
+#define ANALYSIS_FRECHETDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -62,7 +62,7 @@ class ANALYSIS_API FrechetDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit FrechetDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit FrechetDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -73,4 +73,4 @@ class ANALYSIS_API FrechetDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_FrechetDISTRIBUTION_HPP
+#endif // ANALYSIS_FRECHETDISTRIBUTION_HPP

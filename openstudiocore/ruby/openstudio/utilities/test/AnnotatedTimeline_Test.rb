@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class AnnotatedTimeline_Test < Test::Unit::TestCase
+class AnnotatedTimeline_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

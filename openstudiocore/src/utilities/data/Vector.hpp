@@ -20,11 +20,10 @@
 #ifndef UTILITIES_DATA_VECTOR_HPP
 #define UTILITIES_DATA_VECTOR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/vector.hpp>
-#include <boost/function.hpp>
 
 namespace openstudio {
 
@@ -66,7 +65,7 @@ UTILITIES_API bool operator!=(const Vector& lhs, const Vector& rhs);
 // The following link has hints for interpolation
 // http://o2scl.sourceforge.net/o2scl/html/index.html#intp_section
 
-/** Enum to specify the interpoloation method. */
+/** Enum to specify the interpolation method. */
 enum InterpMethod{LinearInterp, NearestInterp, HoldLastInterp, HoldNextInterp};
 
 /** Enum to specify the extrapolation method. */
@@ -109,7 +108,7 @@ UTILITIES_API Vector linspace(double a, double b, unsigned N);
  *  interval delta. */
 UTILITIES_API Vector deltaSpace(double a, double b, double delta);
 
-/** Generates a Vector of N points logorithmically spaced between and including base^a and 
+/** Generates a Vector of N points logarithmically spaced between and including base^a and 
  *  base^b. */
 UTILITIES_API Vector logspace(double a, double b, unsigned N, double base = 10.0);
 
@@ -143,27 +142,27 @@ UTILITIES_API double variance(const Vector& vector);
 /** Returns the standard deviation of vector's values. */
 UTILITIES_API double stdDev(const Vector& vector);
 
-/** Returns boost::function pointer to sum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> sumVectorFunctor();
+/** Returns std::function pointer to sum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> sumVectorFunctor();
 
-/** Returns boost::function pointer to maxiumum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> maximumVectorFunctor();
+/** Returns std::function pointer to maximum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> maximumVectorFunctor();
 
-/** Returns boost::function pointer to miniumum(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> minimumVectorFunctor();
+/** Returns std::function pointer to minimum(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> minimumVectorFunctor();
 
-/** Returns boost::function pointer to mean(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> meanVectorFunctor();
+/** Returns std::function pointer to mean(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> meanVectorFunctor();
 
-/** Returns boost::function pointer to variance(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> varianceVectorFunctor();
+/** Returns std::function pointer to variance(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> varianceVectorFunctor();
 
-/** Returns boost::function pointer to stdDev(const Vector&). */
-UTILITIES_API boost::function<double (const Vector&)> stdDevVectorFunctor();
+/** Returns std::function pointer to stdDev(const Vector&). */
+UTILITIES_API std::function<double (const Vector&)> stdDevVectorFunctor();
 
 /** Evaluates functor(vector). For use in SWIG bindings. */
 UTILITIES_API double evaluateDoubleFromVectorFunctor(
-    const boost::function<double (const Vector&)>& functor,
+    const std::function<double (const Vector&)>& functor,
     const Vector& vector);
 
 //@}

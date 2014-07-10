@@ -17,16 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_TOOLINFO_HPP__
-#define OPENSTUDIO_RUNMANAGER_TOOLINFO_HPP__
+#ifndef RUNMANAGER_LIB_TOOLINFO_HPP
+#define RUNMANAGER_LIB_TOOLINFO_HPP
 
 #include "RunManagerAPI.hpp"
 
 #include <string>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Logger.hpp"
 #include <boost/regex.hpp>
-#include <boost/function.hpp>
 #include <algorithm>
 
 namespace openstudio {
@@ -65,7 +64,7 @@ namespace runmanager {
       /// \returns true if the object matches the requirements
       bool matches(const ToolVersion &requirements) const;
 
-      /// Return a string reprentation of the version object
+      /// Return a string representation of the version object
       std::string toString() const;
 
       static ToolVersion fromString(const std::string &);
@@ -145,7 +144,7 @@ namespace runmanager {
     {
     }
 
-    /// Simplist ToolInfo constructor, useful only for locally executing jobs
+    /// Simplest ToolInfo constructor, useful only for locally executing jobs
     /// \param[in] t_localBinPath Binary location for running locally
     ToolInfo(const openstudio::path &t_localBinPath)
       : localBinPath(t_localBinPath)
@@ -321,10 +320,9 @@ namespace runmanager {
           m_tools.insert(m_tools.end(), begin, end);
         }
 
-      ToolInfo getLast(const boost::function<bool (const ToolInfo &)> &f) const
+      ToolInfo getLast(const std::function<bool (const ToolInfo &)> &f) const
       {
-        std::vector<openstudio::runmanager::ToolInfo>::const_reverse_iterator itr 
-          = std::find_if(m_tools.rbegin(), m_tools.rend(), f);
+        auto itr = std::find_if(m_tools.rbegin(), m_tools.rend(), f);
 
         if (itr != m_tools.rend())
         {
@@ -334,9 +332,9 @@ namespace runmanager {
         throw std::out_of_range("ToolInfo not found");
       }
 
-      Tools getAll(const boost::function<bool (const ToolInfo &)> &f) const
+      Tools getAll(const std::function<bool (const ToolInfo &)> &f) const
       {
-        std::vector<openstudio::runmanager::ToolInfo>::const_iterator itr = m_tools.begin();
+        auto itr = m_tools.begin();
         const std::vector<openstudio::runmanager::ToolInfo>::const_iterator end = m_tools.end();
 
         Tools ret;
@@ -361,5 +359,5 @@ namespace runmanager {
 } // runmanager
 } // openstudio
 
-#endif
+#endif // RUNMANAGER_LIB_TOOLINFO_HPP
 

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PAT_STARTUPVIEW_H
-#define OPENSTUDIO_PAT_STARTUPVIEW_H
+#ifndef PATAPP_STARTUPVIEW_HPP
+#define PATAPP_STARTUPVIEW_HPP
 
 #include <QWidget>
 
@@ -32,7 +32,7 @@ class StartupView : public QWidget
 
   public:
 
-  StartupView(QWidget *parent = 0);
+  StartupView(QWidget *parent = nullptr);
 
   virtual ~StartupView() {}
 
@@ -47,7 +47,7 @@ class LoadingProjectView : public QWidget
 
   public:
 
-  LoadingProjectView(QWidget * parent = 0);
+  LoadingProjectView(QWidget * parent = nullptr);
 
   virtual ~LoadingProjectView() {}
 
@@ -60,5 +60,5 @@ class LoadingProjectView : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_PAT_STARTUPVIEW_H
+#endif // PATAPP_STARTUPVIEW_HPP
 

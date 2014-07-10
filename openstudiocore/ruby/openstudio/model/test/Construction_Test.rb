@@ -19,9 +19,9 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class Construction_Test < Test::Unit::TestCase
+class Construction_Test < MiniTest::Unit::TestCase
 
   def test_ConstructionConstructors
   

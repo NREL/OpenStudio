@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
 
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -68,7 +68,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSite( Site & modelObject 
   // translate shading groups
   ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
   std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
     translateAndMapModelObject(shadingSurfaceGroup);
   }
 

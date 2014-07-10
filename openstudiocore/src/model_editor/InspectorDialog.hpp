@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef INSPECTORDIALOG_H
-#define INSPECTORDIALOG_H
+#ifndef MODELEDITOR_INSPECTORDIALOG_HPP
+#define MODELEDITOR_INSPECTORDIALOG_HPP
 
-#include <model_editor/ModelEditorAPI.hpp>
+#include "ModelEditorAPI.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../utilities/idd/IddFile.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/core/Enum.hpp"
 
 #include <QWidget>
 #include <QMainWindow>
@@ -49,10 +49,12 @@ namespace openstudio{
   }
 }
 
+#ifndef Q_MOC_RUN
 OPENSTUDIO_ENUM( InspectorDialogClient,
   ((AllOpenStudio))
   ((SketchUpPlugin))
 );
+#endif
 
 
 class MODELEDITOR_API InspectorDialog : public QMainWindow
@@ -62,12 +64,12 @@ class MODELEDITOR_API InspectorDialog : public QMainWindow
 public:
 
   /// create a new dialog with empty model
-  InspectorDialog(InspectorDialogClient client = InspectorDialogClient::AllOpenStudio, QWidget * parent = 0);
+  InspectorDialog(InspectorDialogClient client = InspectorDialogClient::AllOpenStudio, QWidget * parent = nullptr);
 
   /// create a new dialog for existing model
   InspectorDialog(openstudio::model::Model& model,
                   InspectorDialogClient client = InspectorDialogClient::AllOpenStudio,
-                  QWidget * parent = 0);
+                  QWidget * parent = nullptr);
 
   virtual ~InspectorDialog();
 
@@ -142,10 +144,10 @@ private slots:
   //void onCheckBox(bool checked);
   void onListWidgetSelectionChanged();
   void onTableWidgetSelectionChanged();
-  void onAddWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onAddWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
   void onWorkspaceChange();
   void onTimeout();
-  void onRemoveWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
+  void onRemoveWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl);
 
 private:
 
@@ -189,4 +191,4 @@ private:
   void loadModel();
 };
 
-#endif
+#endif // MODELEDITOR_INSPECTORDIALOG_HPP

@@ -20,8 +20,8 @@
 #ifndef PROJECT_FSUDACEALGORITHMRECORD_HPP
 #define PROJECT_FSUDACEALGORITHMRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "DakotaAlgorithmRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -72,11 +72,11 @@ class PROJECT_API FSUDaceAlgorithmRecord : public DakotaAlgorithmRecord {
   //@}
  protected:
   /** Construct from impl. */
-  FSUDaceAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
+  FSUDaceAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl,
                          ProjectDatabase database);
 
   /// @cond
-  explicit FSUDaceAlgorithmRecord(boost::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl);
+  explicit FSUDaceAlgorithmRecord(std::shared_ptr<detail::FSUDaceAlgorithmRecord_Impl> impl);
 
   friend class detail::FSUDaceAlgorithmRecord_Impl;
   friend class Record;

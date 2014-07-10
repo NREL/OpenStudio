@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_H
-#define OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_H
+#ifndef OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_HPP
+#define OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
-#include <model/Model.hpp>
+#include "MainTabController.hpp"
+#include "../model/Model.hpp"
 
 namespace openstudio {
 
@@ -41,7 +41,7 @@ class HVACSystemsTabController : public MainTabController
 
   private:
 
-  boost::shared_ptr<HVACSystemsController> m_hvacSystemsController;
+  std::shared_ptr<HVACSystemsController> m_hvacSystemsController;
 
   bool m_isIP;
 
@@ -57,4 +57,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_H
+#endif // OPENSTUDIO_HVACSYSTEMSTABCONTROLLER_HPP

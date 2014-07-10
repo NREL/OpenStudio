@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
-#include <runmanager/lib/ConfigOptions.hpp>
+#include "../ConfigOptions.hpp"
 #include <QCoreApplication>
 
 #ifdef _WIN32

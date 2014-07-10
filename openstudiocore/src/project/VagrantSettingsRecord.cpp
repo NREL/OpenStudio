@@ -17,18 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/VagrantSettingsRecord.hpp>
-#include <project/VagrantSettingsRecord_Impl.hpp>
+#include "VagrantSettingsRecord.hpp"
+#include "VagrantSettingsRecord_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/UrlRecord.hpp>
+#include "ProjectDatabase.hpp"
+#include "UrlRecord.hpp"
 
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
+#include "../utilities/cloud/VagrantProvider.hpp"
+#include "../utilities/cloud/VagrantProvider_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -93,7 +91,7 @@ namespace detail {
     return result;
   }
 
-  void VagrantSettingsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database) {
+  void VagrantSettingsRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database) {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<VagrantSettingsRecord>(query);
     this->bindValues(query);
@@ -258,7 +256,7 @@ namespace detail {
 } // detail
 
 VagrantSettingsRecord::VagrantSettingsRecord(const VagrantSettings& vagrantSettings, ProjectDatabase& database)
-  : CloudSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl>(
+  : CloudSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl>(
         new detail::VagrantSettingsRecord_Impl(vagrantSettings, database)),
         database)
 {
@@ -267,7 +265,7 @@ VagrantSettingsRecord::VagrantSettingsRecord(const VagrantSettings& vagrantSetti
 }
 
 VagrantSettingsRecord::VagrantSettingsRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : CloudSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl>(
+  : CloudSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl>(
         new detail::VagrantSettingsRecord_Impl(query, database)),
         database)
 {
@@ -331,11 +329,11 @@ VagrantSettings VagrantSettingsRecord::vagrantSettings() const {
 }
 
 /// @cond
-VagrantSettingsRecord::VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl> impl)
+VagrantSettingsRecord::VagrantSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl> impl)
   : CloudSettingsRecord(impl)
 {}
 
-VagrantSettingsRecord::VagrantSettingsRecord(boost::shared_ptr<detail::VagrantSettingsRecord_Impl> impl,
+VagrantSettingsRecord::VagrantSettingsRecord(std::shared_ptr<detail::VagrantSettingsRecord_Impl> impl,
                                              ProjectDatabase database)
   : CloudSettingsRecord(impl, database)
 {
@@ -354,7 +352,7 @@ void VagrantSettingsRecord::constructRelatedRecords(const VagrantSettings& vagra
     if (!isNew) {
       // remove any existing UrlRecords that have this object as its parent
       ObjectRecordVector childUrls = children();
-      BOOST_FOREACH(ObjectRecord& childUrl,childUrls) {
+      for (ObjectRecord& childUrl : childUrls) {
         database.removeRecord(childUrl);
       }
     }

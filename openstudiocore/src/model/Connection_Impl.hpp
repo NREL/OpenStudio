@@ -20,7 +20,7 @@
 #ifndef MODEL_CONNECTION_IMPL_HPP
 #define MODEL_CONNECTION_IMPL_HPP
 
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

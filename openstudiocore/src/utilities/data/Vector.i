@@ -177,22 +177,22 @@ UTILITIES_API double variance(const Vector& vector);
 /** Returns the standard deviation of vector's values. */
 UTILITIES_API double stdDev(const Vector& vector);
 
-/** Returns boost::function pointer to sum(const Vector&). */
+/** Returns std::function pointer to sum(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> sumVectorFunctor();
 
-/** Returns boost::function pointer to maxiumum(const Vector&). */
+/** Returns std::function pointer to maxiumum(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> maximumVectorFunctor();
 
-/** Returns boost::function pointer to miniumum(const Vector&). */
+/** Returns std::function pointer to miniumum(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> minimumVectorFunctor();
 
-/** Returns boost::function pointer to mean(const Vector&). */
+/** Returns std::function pointer to mean(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> meanVectorFunctor();
 
-/** Returns boost::function pointer to variance(const Vector&). */
+/** Returns std::function pointer to variance(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> varianceVectorFunctor();
 
-/** Returns boost::function pointer to stdDev(const Vector&). */
+/** Returns std::function pointer to stdDev(const Vector&). */
 UTILITIES_API boost::function1<double, const Vector &> stdDevVectorFunctor();
 
 /** Evaluates functor(vector). For use in SWIG bindings. */

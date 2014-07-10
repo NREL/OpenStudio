@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_SIUNIT_HPP
 #define UTILITIES_UNITS_SIUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -114,7 +114,7 @@ class UTILITIES_API SIUnit : public Unit {
   /// @cond
   typedef detail::SIUnit_Impl ImplType;
 
-  explicit SIUnit(boost::shared_ptr<detail::SIUnit_Impl> impl);
+  explicit SIUnit(std::shared_ptr<detail::SIUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::SIUnit_Impl;

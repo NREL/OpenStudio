@@ -17,35 +17,35 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/PlanarSurface.hpp>
-#include <model/PlanarSurface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "DefaultSubSurfaceConstructions.hpp"
+#include "DefaultSubSurfaceConstructions_Impl.hpp"
+#include "DefaultSurfaceConstructions.hpp"
+#include "DefaultSurfaceConstructions_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
 
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::istringEqual;
 
@@ -817,7 +817,7 @@ void DefaultConstructionSet::merge(const DefaultConstructionSet& other){
 }
 
 /// @cond
-DefaultConstructionSet::DefaultConstructionSet(boost::shared_ptr<detail::DefaultConstructionSet_Impl> impl)
+DefaultConstructionSet::DefaultConstructionSet(std::shared_ptr<detail::DefaultConstructionSet_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

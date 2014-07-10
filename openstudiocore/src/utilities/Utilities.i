@@ -22,7 +22,6 @@
 %import <utilities/UtilitiesBCL.i>
 %import <utilities/UtilitiesCloud.i>
 %import <utilities/UtilitiesUnits.i>
-%import <utilities/UtilitiesDocument.i>
 %import <utilities/UtilitiesIdd.i>
 %import <utilities/UtilitiesIdf.i>
 %import <utilities/UtilitiesFileTypes.i>

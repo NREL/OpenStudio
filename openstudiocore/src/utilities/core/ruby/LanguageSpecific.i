@@ -122,6 +122,45 @@ SWIG_FromWCharPtrAndSize(const wchar_t * carray, size_t size)
 }
 
 
+// std::shared_ptr wrapper, the current macros in shared_ptr.i are not defined for Ruby
+// this has to be missing a lot but seems to work
+namespace std {
+
+    template <class T>
+    class shared_ptr {
+        #if defined(SWIGRUBY) || defined(SWIGMZSCHEME) || defined(SWIGGUILE)
+          %rename("nil?") isNull;
+        #endif
+
+      public:
+
+    // constructor from pointer
+    %apply SWIGTYPE *DISOWN {T* t}; // the shared_ptr now owns the object
+    shared_ptr (T* t);
+    void reset();
+    %clear T *t; // clear apply type
+
+    // dereference
+//        T* operator->();
+        T* get() const;
+
+        #if defined(SWIGPYTHON)
+        %extend {
+            bool __nonzero__() {
+                return !!(*self);
+            }
+        }
+        #else
+        %extend {
+            bool isNull() {
+                return !(*self);
+            }
+        }
+        #endif
+    };
+};
+
+
 // boost::shared_ptr wrapper, the current macros in shared_ptr.i are not defined for Ruby
 // this has to be missing a lot but seems to work
 %{
@@ -138,7 +177,7 @@ namespace boost {
       public:
 
     // constructor from pointer
-    %apply SWIGTYPE *DISOWN {T* t}; // the shared_ptr now own's the object
+    %apply SWIGTYPE *DISOWN {T* t}; // the shared_ptr now owns the object
     shared_ptr (T* t);
     void reset();
     %clear T *t; // clear apply type

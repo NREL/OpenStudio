@@ -20,8 +20,8 @@
 #ifndef MODEL_HEATEXCHANGERFLUIDTOFLUID_IMPL_HPP
 #define MODEL_HEATEXCHANGERFLUIDTOFLUID_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

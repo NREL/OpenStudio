@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SCHEDULESETINSPECTORVIEW_H
-#define OPENSTUDIO_SCHEDULESETINSPECTORVIEW_H
+#ifndef OPENSTUDIO_SCHEDULESETINSPECTORVIEW_HPP
+#define OPENSTUDIO_SCHEDULESETINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
-#include <openstudio_lib/ModelObjectVectorController.hpp>
+#include "ModelObjectInspectorView.hpp"
+#include "ModelObjectVectorController.hpp"
 
-#include <model/DefaultScheduleSet.hpp>
-#include <model/Model.hpp>
+#include "../model/DefaultScheduleSet.hpp"
+#include "../model/Model.hpp"
 
 namespace openstudio {
 
@@ -230,4 +230,4 @@ class ScheduleSetInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_SCHEDULESETINSPECTORVIEW_H
+#endif // OPENSTUDIO_SCHEDULESETINSPECTORVIEW_HPP

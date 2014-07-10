@@ -18,26 +18,26 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/Variable.hpp>
-#include <analysis/Function.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../Problem.hpp"
+#include "../Variable.hpp"
+#include "../Function.hpp"
+#include "../Measure.hpp"
+#include "../MeasureGroup.hpp"
+#include "../MeasureGroup_Impl.hpp"
+#include "../NullMeasure.hpp"
+#include "../RubyMeasure.hpp"
+#include "../RubyMeasure_Impl.hpp"
+#include "../WorkflowStep.hpp"
 
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/core/Containers.hpp"
 
 #include <OpenStudio.hxx>
 #include <resources.hxx>

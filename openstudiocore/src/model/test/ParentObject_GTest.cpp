@@ -19,32 +19,30 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ParentObject.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Zone.hpp>
-#include <model/Zone_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/Lights.hpp>
-#include <model/LightShelf.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../ParentObject.hpp"
+#include "../SimulationControl.hpp"
+#include "../SimulationControl_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Zone.hpp"
+#include "../Zone_Impl.hpp"
+#include "../Surface.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../InteriorPartitionSurface.hpp"
+#include "../InteriorPartitionSurfaceGroup.hpp"
+#include "../Lights.hpp"
+#include "../LightShelf.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
 //#include <utilities/idd/IddFieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -97,7 +95,7 @@ TEST_F(ModelFixture, ParentChildObject_Daylighting_School_1)
 
   // check that building children includes buildingShades
   bool found = false;
-  BOOST_FOREACH(ModelObject obj, building.children()){
+  for (ModelObject obj : building.children()){
     OptionalParentObject parent = obj.optionalCast<ParentObject>();
     if (parent){
       if (parent->handle() == buildingShades[0].handle()){
@@ -194,7 +192,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  BOOST_FOREACH(IddObjectType iddObjectType, allowableChildTypes){
+  for (IddObjectType iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 
@@ -230,7 +228,7 @@ TEST_F(ModelFixture, ParentChildObject_AllowableChildTypes)
   EXPECT_TRUE(!allowableChildTypes.empty());
 
   // loop over and add an object of each type
-  BOOST_FOREACH(IddObjectType iddObjectType, allowableChildTypes){
+  for (IddObjectType iddObjectType : allowableChildTypes){
 
     // note that if any of the following steps failed we could call remove on the object and pretend it never happened
 

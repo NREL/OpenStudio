@@ -17,11 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/BoundingBox.hpp>
+#include "BoundingBox.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-
-#include <boost/foreach.hpp>
+#include "Point3d.hpp"
 
 namespace openstudio{
 
@@ -57,7 +55,7 @@ namespace openstudio{
 
   void BoundingBox::addPoints(const std::vector<Point3d>& points)
   {
-    BOOST_FOREACH(const Point3d& point, points){
+    for (const Point3d& point : points){
       addPoint(point);
     }
   }

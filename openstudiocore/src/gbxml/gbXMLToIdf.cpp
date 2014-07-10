@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <gbxml/ReverseTranslator.hpp>
-#include <gbxml/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <energyplus/ForwardTranslator.hpp>
+#include "ReverseTranslator.hpp"
+#include "ForwardTranslator.hpp"
+#include "../model/Model.hpp"
+#include "../energyplus/ForwardTranslator.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/core/CommandLine.hpp>
-#include <utilities/core/Path.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/core/CommandLine.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <string>
 #include <iostream>

@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CORE_URL_HPP
 #define UTILITIES_CORE_URL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <QUrl>
 #include <boost/optional.hpp>
@@ -28,7 +28,7 @@
 
 namespace openstudio {
 
-  /// Uniform resource locator
+  /// Uniform resource locater
   typedef QUrl Url;
 
   /// optional Url

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_UTILITYBILLSCONTROLLER_H
-#define OPENSTUDIO_UTILITYBILLSCONTROLLER_H
+#ifndef OPENSTUDIO_UTILITYBILLSCONTROLLER_HPP
+#define OPENSTUDIO_UTILITYBILLSCONTROLLER_HPP
 
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -62,4 +62,4 @@ class UtilityBillsController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_UTILITYBILLSCONTROLLER_H
+#endif // OPENSTUDIO_UTILITYBILLSCONTROLLER_HPP

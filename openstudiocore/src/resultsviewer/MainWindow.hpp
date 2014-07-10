@@ -17,34 +17,34 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RESULTSVIEWER_MAINWINDOW_H
-#define RESULTSVIEWER_MAINWINDOW_H
+#ifndef RESULTSVIEWER_MAINWINDOW_HPP
+#define RESULTSVIEWER_MAINWINDOW_HPP
 
-#include <resultsviewer/TreeView.hpp>
-#include <resultsviewer/TableView.hpp>
-#include <resultsviewer/PlotView.hpp>
-#include <resultsviewer/ResultsViewerData.hpp>
-#include <resultsviewer/BrowserView.hpp>
-#include <resultsviewer/TabDropDock.hpp>
+#include "TreeView.hpp"
+#include "TableView.hpp"
+#include "PlotView.hpp"
+#include "ResultsViewerData.hpp"
+#include "BrowserView.hpp"
+#include "TabDropDock.hpp"
 
-#include <utilities/core/TemporaryDirectory.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/plot/LinePlot.hpp>
+#include "../utilities/core/TemporaryDirectory.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/plot/LinePlot.hpp"
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QTabWidget>
-#include <QtGui/QLineEdit>
-#include <QtGui/QTreeWidgetItem>
-#include <QtCore/QList>
-#include <QtCore/QSettings>
-#include <QtGui/QMessageBox>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QDockWidget>
+#include <QMainWindow>
+#include <QTabWidget>
+#include <QLineEdit>
+#include <QTreeWidgetItem>
+#include <QList>
+#include <QSettings>
+#include <QMessageBox>
+#include <QAction>
+#include <QMenu>
+#include <QDockWidget>
 #include <string>
-#include <ui_MainWindow.hxx>
+#include <ui_MainWindow.h>
 
 // forward declarations to minimize header files
 class QToolBar;
@@ -64,14 +64,14 @@ class MainWindow : public QMainWindow
 static const int MaxRecentFiles = 10;
 
 public:
-  MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
+  MainWindow(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
   virtual ~MainWindow();
 
 private:
   REGISTER_LOGGER("resultsviewer.MainWindow");
 
   // list of files to be auto cleaned up when the process exits
-  std::list<boost::shared_ptr<openstudio::TemporaryDirectory> > m_temporaryDirectories;
+  std::list<std::shared_ptr<openstudio::TemporaryDirectory> > m_temporaryDirectories;
 
   Ui::MainWindowClass ui;
 
@@ -249,4 +249,4 @@ private slots:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_MAINWINDOW_H
+#endif // RESULTSVIEWER_MAINWINDOW_HPP

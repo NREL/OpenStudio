@@ -20,10 +20,10 @@
 #ifndef MODEL_SPACE_IMPL_HPP
 #define MODEL_SPACE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurfaceGroup_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurfaceGroup_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>

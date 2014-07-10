@@ -17,90 +17,90 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/ApplyMeasureNowDialog.hpp>
-#include <openstudio_lib/BuildingStoriesTabController.hpp>
-#include <openstudio_lib/ConstructionsTabController.hpp>
-#include <openstudio_lib/FacilityTabController.hpp>
-#include <openstudio_lib/FacilityView.hpp>
-#include <openstudio_lib/FileOperations.hpp>
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/HVACSystemsTabController.hpp>
-#include <openstudio_lib/InspectorController.hpp>
-#include <openstudio_lib/InspectorView.hpp>
-#include <openstudio_lib/LibraryTabWidget.hpp>
-#include <openstudio_lib/LoadsTabController.hpp>
-#include <openstudio_lib/LocationTabController.hpp>
-#include <openstudio_lib/LocationTabView.hpp>
-#include <openstudio_lib/MainRightColumnController.hpp>
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/ResultsTabController.hpp>
-#include <openstudio_lib/ResultsTabView.hpp>
-#include <openstudio_lib/RunTabController.hpp>
-#include <openstudio_lib/RunTabView.hpp>
-#include <openstudio_lib/SchedulesTabController.hpp>
-#include <openstudio_lib/ScriptFolderListView.hpp>
-#include <openstudio_lib/ScriptsTabController.hpp>
-#include <openstudio_lib/ScriptsTabView.hpp>
-#include <openstudio_lib/SimSettingsTabController.hpp>
-#include <openstudio_lib/SimSettingsTabView.hpp>
-#include <openstudio_lib/SpaceTypesTabController.hpp>
-#include <openstudio_lib/SpaceTypesView.hpp>
-#include <openstudio_lib/SummaryTabController.hpp>
-#include <openstudio_lib/SummaryTabView.hpp>
-#include <openstudio_lib/ThermalZonesTabController.hpp>
-#include <openstudio_lib/VariablesTabController.hpp>
-#include <openstudio_lib/YearSettingsWidget.hpp>
+#include "OSDocument.hpp"
+#include "ApplyMeasureNowDialog.hpp"
+#include "BuildingStoriesTabController.hpp"
+#include "ConstructionsTabController.hpp"
+#include "FacilityTabController.hpp"
+#include "FacilityView.hpp"
+#include "FileOperations.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "HVACSystemsTabController.hpp"
+#include "InspectorController.hpp"
+#include "InspectorView.hpp"
+#include "LibraryTabWidget.hpp"
+#include "LoadsTabController.hpp"
+#include "LocationTabController.hpp"
+#include "LocationTabView.hpp"
+#include "MainRightColumnController.hpp"
+#include "MainWindow.hpp"
+#include "ModelObjectItem.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSAppBase.hpp"
+#include "ResultsTabController.hpp"
+#include "ResultsTabView.hpp"
+#include "RunTabController.hpp"
+#include "RunTabView.hpp"
+#include "SchedulesTabController.hpp"
+#include "ScriptFolderListView.hpp"
+#include "ScriptsTabController.hpp"
+#include "ScriptsTabView.hpp"
+#include "SimSettingsTabController.hpp"
+#include "SimSettingsTabView.hpp"
+#include "SpaceTypesTabController.hpp"
+#include "SpaceTypesView.hpp"
+#include "SummaryTabController.hpp"
+#include "SummaryTabView.hpp"
+#include "ThermalZonesTabController.hpp"
+#include "VariablesTabController.hpp"
+#include "YearSettingsWidget.hpp"
 
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
 #include "../shared_gui_components/LocalLibraryController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/WaitDialog.hpp"
 
-#include <analysis/Analysis.hpp>
+#include "../analysis/Analysis.hpp"
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/LifeCycleCostParameters.hpp>
-#include <model/LifeCycleCostParameters_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/Component.hpp"
+#include "../model/Facility.hpp"
+#include "../model/Facility_Impl.hpp"
+#include "../model/LifeCycleCostParameters.hpp"
+#include "../model/LifeCycleCostParameters_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
-#include <utilities/bcl/RemoteBCL.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/Workspace.hpp>
+#include "../utilities/bcl/BCLComponent.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
+#include "../utilities/bcl/RemoteBCL.hpp"
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/idf/Workspace.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
 #include <OpenStudio.hxx>
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <gbxml/ForwardTranslator.hpp>
-#include <sdd/ForwardTranslator.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
+#include "../gbxml/ForwardTranslator.hpp"
+#include "../sdd/ForwardTranslator.hpp"
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem.hpp>
@@ -228,10 +228,10 @@ OSDocument::OSDocument( openstudio::model::Model library,
 
       // check that all Ruby scripts exist, duplicates code in PatApp::openFile
       std::stringstream ss;
-      BOOST_FOREACH(const analysis::InputVariable& inputVariable, problem.variables()){
+      for (const analysis::InputVariable& inputVariable : problem.variables()){
         boost::optional<analysis::MeasureGroup> measureGroup = inputVariable.optionalCast<analysis::MeasureGroup>();
         if (measureGroup){
-          BOOST_FOREACH(const analysis::Measure& measure, measureGroup->measures(false)){
+          for (const analysis::Measure& measure : measureGroup->measures(false)){
             boost::optional<analysis::RubyMeasure> rubyMeasure = measure.optionalCast<analysis::RubyMeasure>();
             if (rubyMeasure){
               boost::optional<BCLMeasure> bclMeasure = rubyMeasure->bclMeasure();
@@ -488,7 +488,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   m_model = model;
 
-  boost::shared_ptr<OSDocument> currentDocument = app->currentDocument();
+  std::shared_ptr<OSDocument> currentDocument = app->currentDocument();
   if(currentDocument && saveCurrentTabs){
     m_startTabIndex = app->currentDocument()->verticalTabIndex();
     m_startSubTabIndex = app->currentDocument()->subTabIndex();
@@ -496,7 +496,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Main Right Column
 
-  m_mainRightColumnController = boost::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
+  m_mainRightColumnController = std::shared_ptr<MainRightColumnController>(new MainRightColumnController(m_model, m_resourcesPath));
   isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
                         m_mainRightColumnController.get(), SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
@@ -509,7 +509,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Location
 
-  m_locationTabController = boost::shared_ptr<LocationTabController>( new LocationTabController(m_model, m_modelTempDir) );
+  m_locationTabController = std::shared_ptr<LocationTabController>( new LocationTabController(m_model, m_modelTempDir) );
   m_mainWindow->addVerticalTab( m_locationTabController->mainContentWidget(),
                                 SITE,
                                 "Site",
@@ -520,7 +520,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Schedules
 
-  m_schedulesTabController = boost::shared_ptr<SchedulesTabController>( new SchedulesTabController(isIP, m_model) );
+  m_schedulesTabController = std::shared_ptr<SchedulesTabController>( new SchedulesTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_schedulesTabController->mainContentWidget(),
                                 SCHEDULES,
                                 "Schedules",
@@ -543,7 +543,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Constructions
 
-  m_constructionsTabController = boost::shared_ptr<ConstructionsTabController>( new ConstructionsTabController(isIP, m_model) );
+  m_constructionsTabController = std::shared_ptr<ConstructionsTabController>( new ConstructionsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_constructionsTabController->mainContentWidget(),
                                 CONSTRUCTIONS,
                                 "Constructions",
@@ -566,7 +566,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Loads
 
-  m_loadsTabController = boost::shared_ptr<LoadsTabController>( new LoadsTabController(isIP, m_model) );
+  m_loadsTabController = std::shared_ptr<LoadsTabController>( new LoadsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_loadsTabController->mainContentWidget(),
                                 LOADS,
                                 "Loads",
@@ -589,7 +589,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Space Types
 
-  m_spaceTypesTabController = boost::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
+  m_spaceTypesTabController = std::shared_ptr<SpaceTypesTabController>( new SpaceTypesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_spaceTypesTabController->mainContentWidget(),
                                 SPACE_TYPES,
                                 "Space Types",
@@ -613,7 +613,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Building Stories
 
-  m_buildingStoriesTabController = boost::shared_ptr<BuildingStoriesTabController>( new BuildingStoriesTabController(m_model) );
+  m_buildingStoriesTabController = std::shared_ptr<BuildingStoriesTabController>( new BuildingStoriesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_buildingStoriesTabController->mainContentWidget(),
                                 BUILDING_STORIES,
                                 "Building Stories",
@@ -632,7 +632,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Facility
 
-  m_facilityTabController = boost::shared_ptr<FacilityTabController>( new FacilityTabController(isIP, m_model) );
+  m_facilityTabController = std::shared_ptr<FacilityTabController>( new FacilityTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_facilityTabController->mainContentWidget(),
                                 FACILITY,
                                 "Facility",
@@ -660,7 +660,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Thermal Zones 
 
-  m_thermalZonesTabController = boost::shared_ptr<ThermalZonesTabController>( new ThermalZonesTabController(isIP, m_model) );
+  m_thermalZonesTabController = std::shared_ptr<ThermalZonesTabController>( new ThermalZonesTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_thermalZonesTabController->mainContentWidget(),
                                 THERMAL_ZONES,
                                 "Thermal Zones",
@@ -680,7 +680,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // HVAC Systems
 
-  m_hvacSystemsTabController = boost::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
+  m_hvacSystemsTabController = std::shared_ptr<HVACSystemsTabController>( new HVACSystemsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_hvacSystemsTabController->mainContentWidget(),
                                 HVAC_SYSTEMS,
                                 "HVAC Systems",
@@ -699,7 +699,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   //
   //// Summary
   //
-  //m_summaryTabController = boost::shared_ptr<SummaryTabController>( new SummaryTabController(m_model) );
+  //m_summaryTabController = std::shared_ptr<SummaryTabController>( new SummaryTabController(m_model) );
   //m_mainWindow->addVerticalTab( m_summaryTabController->mainContentWidget(),
   //                              BUILDING_SUMMARY,
   //                              "Building Summary",
@@ -712,7 +712,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Variables
 
-  m_variablesTabController = boost::shared_ptr<VariablesTabController>( new VariablesTabController(m_model) );
+  m_variablesTabController = std::shared_ptr<VariablesTabController>( new VariablesTabController(m_model) );
   m_mainWindow->addVerticalTab( m_variablesTabController->mainContentWidget(),
                                 OUTPUT_VARIABLES,
                                 "Output Variables",
@@ -723,7 +723,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Sim Settings
 
-  m_simSettingsTabController = boost::shared_ptr<SimSettingsTabController>( new SimSettingsTabController(isIP, m_model) );
+  m_simSettingsTabController = std::shared_ptr<SimSettingsTabController>( new SimSettingsTabController(isIP, m_model) );
   m_mainWindow->addVerticalTab( m_simSettingsTabController->mainContentWidget(),
                                 SIMULATION_SETTINGS,
                                 "Simulation Settings",
@@ -738,7 +738,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Scripts
 
-  m_scriptsTabController = boost::shared_ptr<ScriptsTabController>( new ScriptsTabController() );
+  m_scriptsTabController = std::shared_ptr<ScriptsTabController>( new ScriptsTabController() );
   m_mainWindow->addVerticalTab( m_scriptsTabController->mainContentWidget(),
                                 RUBY_SCRIPTS,
                                 "Measures",
@@ -760,7 +760,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
 
   // Run
 
-  m_runTabController = boost::shared_ptr<RunTabController>( new RunTabController(m_model, 
+  m_runTabController = std::shared_ptr<RunTabController>( new RunTabController(m_model, 
         openstudio::toPath(m_savePath), openstudio::toPath(m_modelTempDir), m_simpleProject->runManager()));
         
   m_mainWindow->addVerticalTab( m_runTabController->mainContentWidget(),
@@ -784,7 +784,7 @@ void OSDocument::setModel(const model::Model& model, bool modified, bool saveCur
   
   // Results
 
-  m_resultsTabController = boost::shared_ptr<ResultsTabController>( new ResultsTabController() );
+  m_resultsTabController = std::shared_ptr<ResultsTabController>( new ResultsTabController() );
   m_mainWindow->addVerticalTab( m_resultsTabController->mainContentWidget(),
                                 RESULTS_SUMMARY,
                                 "Results Summary",
@@ -927,7 +927,7 @@ bool OSDocument::setFullWeatherFilePath()
       if (!weatherFilePath->is_complete()){
         if (!m_savePath.isEmpty()){
           openstudio::path osmPath = toPath(m_savePath);
-          openstudio::path searchDir = osmPath.parent_path() / toPath(osmPath.stem());
+          openstudio::path searchDir = osmPath.parent_path() / osmPath.stem();
           result = weatherFile->makeUrlAbsolute(searchDir);
         }
       }
@@ -1308,7 +1308,7 @@ boost::optional<IddObjectType> OSDocument::getIddObjectType(const OSItemId& item
   if (fromBCL(itemId)){
     boost::optional<BCLComponent> component = LocalBCL::instance().getComponent(itemId.itemId().toStdString());
     if (component){
-      BOOST_FOREACH(const Attribute& attribute, component->attributes()){
+      for (const Attribute& attribute : component->attributes()){
         if (istringEqual("OpenStudio Type", attribute.name())){
           try{
             IddObjectType iddObjectType(attribute.valueAsString());
@@ -1550,7 +1550,7 @@ void OSDocument::openLibDlg()
   }
 }
 
-boost::shared_ptr<MainRightColumnController> OSDocument::mainRightColumnController() const
+std::shared_ptr<MainRightColumnController> OSDocument::mainRightColumnController() const
 {
   return m_mainRightColumnController;
 }

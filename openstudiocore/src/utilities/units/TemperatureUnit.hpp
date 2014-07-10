@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_TEMPERATUREUNIT_HPP
 #define UTILITIES_UNITS_TEMPERATUREUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -59,7 +59,7 @@ class UTILITIES_API TemperatureUnit : public Unit {
   /// @cond
   typedef detail::TemperatureUnit_Impl ImplType;
 
-  explicit TemperatureUnit(boost::shared_ptr<detail::TemperatureUnit_Impl> impl);
+  explicit TemperatureUnit(std::shared_ptr<detail::TemperatureUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::TemperatureUnit_Impl;

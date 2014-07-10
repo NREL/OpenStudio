@@ -17,20 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/WorkflowRecord.hpp>
-#include <project/WorkflowRecord_Impl.hpp>
+#include "WorkflowRecord.hpp"
+#include "WorkflowRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional/optional.hpp>
-#include <boost/foreach.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -108,7 +107,7 @@ namespace detail {
     return std::vector<JoinRecord>();
   }
 
-  void WorkflowRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void WorkflowRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<WorkflowRecord>(query);
@@ -220,7 +219,7 @@ namespace detail {
 WorkflowRecord::WorkflowRecord(const runmanager::Workflow& workflow,
                                ProblemRecord& problemRecord,
                                int workflowIndex)
-  : ObjectRecord(boost::shared_ptr<detail::WorkflowRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::WorkflowRecord_Impl>(
                    new detail::WorkflowRecord_Impl(workflow,
                                                    problemRecord,
                                                    workflowIndex)),
@@ -230,7 +229,7 @@ WorkflowRecord::WorkflowRecord(const runmanager::Workflow& workflow,
 }
 
 WorkflowRecord::WorkflowRecord(const QSqlQuery& query,ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::WorkflowRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::WorkflowRecord_Impl>(
                    new detail::WorkflowRecord_Impl(query,database)),
                    database)
 {
@@ -252,7 +251,7 @@ UpdateByIdQueryData WorkflowRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -260,7 +259,7 @@ UpdateByIdQueryData WorkflowRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -274,11 +273,10 @@ UpdateByIdQueryData WorkflowRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -354,7 +352,7 @@ runmanager::Workflow WorkflowRecord::workflow() const {
 }
 
 /// @cond
-WorkflowRecord::WorkflowRecord(boost::shared_ptr<detail::WorkflowRecord_Impl> impl)
+WorkflowRecord::WorkflowRecord(std::shared_ptr<detail::WorkflowRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::WorkflowRecord_Impl>());

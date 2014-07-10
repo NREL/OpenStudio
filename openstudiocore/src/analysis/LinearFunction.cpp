@@ -17,21 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/LinearFunction.hpp>
-#include <analysis/LinearFunction_Impl.hpp>
+#include "LinearFunction.hpp"
+#include "LinearFunction_Impl.hpp"
 
-#include <analysis/Variable.hpp>
-#include <analysis/Variable_Impl.hpp>
+#include "Variable.hpp"
+#include "Variable_Impl.hpp"
 
-#include <utilities/data/Vector.hpp>
+#include "../utilities/data/Vector.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -66,10 +63,10 @@ namespace detail {
   {}
 
   AnalysisObject LinearFunction_Impl::clone() const {
-    boost::shared_ptr<LinearFunction_Impl> impl(new LinearFunction_Impl(*this));
+    std::shared_ptr<LinearFunction_Impl> impl(new LinearFunction_Impl(*this));
     LinearFunction result(impl);
     VariableVector variables = result.variables();
-    BOOST_FOREACH(Variable& variable,variables) {
+    for (Variable& variable : variables) {
       if (!doNotParent(variable)) {
         variable.setParent(result);
       }
@@ -84,7 +81,7 @@ namespace detail {
   double LinearFunction_Impl::getValue(const DataPoint& dataPoint) const {
     VariableVector variables = this->variables();
     DoubleVector variableValues, coefficients;
-    BOOST_FOREACH(const Variable& variable, variables) {
+    for (const Variable& variable : variables) {
       variableValues.push_back(variable.getValue(dataPoint));
     }
     OptionalDouble result;
@@ -116,7 +113,7 @@ namespace detail {
     QVariantList variablesList;
     DoubleVector coeffs = coefficients();
     int index(0), coeffsN(coeffs.size());
-    Q_FOREACH(const Variable& var,variables()) {
+    for (const Variable& var : variables()) {
       QVariantMap varMap = var.toVariant().toMap();
       varMap["variable_index"] = index;
       if (index < coeffsN) {
@@ -137,7 +134,7 @@ namespace detail {
     VariableVector variables = deserializeOrderedVector(
           variablesList,
           "variable_index",
-          boost::function<Variable (const QVariant&)>(boost::bind(analysis::detail::Variable_Impl::factoryFromVariant,_1,version)));
+          std::function<Variable (const QVariant&)>(std::bind(analysis::detail::Variable_Impl::factoryFromVariant,std::placeholders::_1,version)));
     bool ok(false);
     DoubleVector coefficients;
     if (!variablesList.empty() && variablesList[0].toMap().contains("coefficient")) {
@@ -145,7 +142,7 @@ namespace detail {
           variablesList,
           "coefficient",
           "variable_index",
-          boost::function<double (QVariant*)>(boost::bind(&QVariant::toDouble,_1,&ok)));
+          std::function<double (QVariant*)>(std::bind(&QVariant::toDouble,std::placeholders::_1,&ok)));
     }
 
     return LinearFunction(toUUID(map["uuid"].toString().toStdString()),
@@ -163,11 +160,11 @@ namespace detail {
 LinearFunction::LinearFunction(const std::string& name,
                                const std::vector<Variable>& variables,
                                const std::vector<double>& coefficients)
-  : Function(boost::shared_ptr<detail::LinearFunction_Impl>(
+  : Function(std::shared_ptr<detail::LinearFunction_Impl>(
                  new detail::LinearFunction_Impl(name,variables,coefficients)))
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
-  BOOST_FOREACH(const Variable& variable,variables) {
+  for (const Variable& variable : variables) {
     if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
       variable.setParent(copyOfThis);
     }
@@ -181,7 +178,7 @@ LinearFunction::LinearFunction(const UUID& uuid,
                                const std::string& description,
                                const std::vector<Variable>& variables,
                                const std::vector<double>& coefficients)
-  : Function(boost::shared_ptr<detail::LinearFunction_Impl>(
+  : Function(std::shared_ptr<detail::LinearFunction_Impl>(
                  new detail::LinearFunction_Impl(uuid,
                                                  versionUUID,
                                                  name,
@@ -191,7 +188,7 @@ LinearFunction::LinearFunction(const UUID& uuid,
                                                  coefficients)))
 {
   LinearFunction copyOfThis(getImpl<detail::LinearFunction_Impl>());
-  BOOST_FOREACH(const Variable& variable,variables) {
+  for (const Variable& variable : variables) {
     if (!getImpl<detail::Function_Impl>()->doNotParent(variable)) {
       variable.setParent(copyOfThis);
     }
@@ -208,7 +205,7 @@ bool LinearFunction::setCoefficients(const std::vector<double>& coefficients) {
 
 /// @cond
 
-LinearFunction::LinearFunction(boost::shared_ptr<detail::LinearFunction_Impl> impl)
+LinearFunction::LinearFunction(std::shared_ptr<detail::LinearFunction_Impl> impl)
   : Function(impl)
 {}
 

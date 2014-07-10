@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Relationship.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "Relationship.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Model.hpp"
+#include "Component.hpp"
+#include "Component_Impl.hpp"
+#include "ComponentData.hpp"
+#include "ComponentData_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <QtCore/QMetaType>
+#include <QMetaType>
 
 namespace openstudio {
 namespace model {

@@ -17,17 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/EvaporativeCoolerDirectResearchSpecial.hpp>
-#include <model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
+#include "EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
 #include <utilities/idd/OS_EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <boost/foreach.hpp>
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -303,7 +302,7 @@ void EvaporativeCoolerDirectResearchSpecial::setBlowdownConcentrationRatio( doub
 }
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(
-  boost::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> p)
+  std::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> p)
   : StraightComponent(p)
 {}
 

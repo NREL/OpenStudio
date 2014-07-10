@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/EnumHelpers.hpp>
+#include "../Enum.hpp"
+#include "../EnumHelpers.hpp"
 
 using openstudio::isMember;
 

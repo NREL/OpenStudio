@@ -1,3 +1,21 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
 #include "SqliteMerge.hpp"
 #include "sqlite3.h"
@@ -437,9 +455,9 @@ void SqliteMerge::printNumberRows(sqlite3 *db, const std::string &table)
   std::stringstream cmd;
   cmd << "select count(*) from " << table;
   std::cout << "\t" << table << " ";
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(db, cmd.str().c_str(),
-      rowCount, 0, &zErrMsg);
+      rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -454,9 +472,9 @@ void SqliteMerge::returnNumberRows(sqlite3 *db, const std::string &table)
   std::stringstream cmd;
   cmd << "select count(*) from " << table;
   std::cout << "\t" << table << " ";
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(db, cmd.str().c_str(),
-      rowCount, 0, &zErrMsg);
+      rowCount, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -467,7 +485,7 @@ void SqliteMerge::returnNumberRows(sqlite3 *db, const std::string &table)
 
 sqlite3 * SqliteMerge::openDatabase(const openstudio::path &file)
 {
-  sqlite3 *db = 0;
+  sqlite3 *db = nullptr;
   int rc = sqlite3_open(openstudio::toString(file).c_str(), &db);
   if (rc)
   {
@@ -600,9 +618,9 @@ void SqliteMerge::printMeterData(sqlite3 * dest)
   cmd << "where a.ReportMeterDataDictionaryIndex = b.ReportMeterDataDictionaryIndex ";
   cmd << "and a.timeIndex = t.timeIndex";
 
-  char *zErrMsg = 0;
+  char *zErrMsg = nullptr;
   int rc = sqlite3_exec(dest, cmd.str().c_str(),
-      callback, 0, &zErrMsg);
+      callback, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);
@@ -646,8 +664,8 @@ void SqliteMerge::detachDatabases(sqlite3 *destination)
 
 bool SqliteMerge::executeCommand(sqlite3 *destination, const std::string &cmd)
 {
-  char *zErrMsg = 0;
-  int rc = sqlite3_exec(destination, cmd.c_str(), callback, 0, &zErrMsg);
+  char *zErrMsg = nullptr;
+  int rc = sqlite3_exec(destination, cmd.c_str(), callback, nullptr, &zErrMsg);
   if (rc != SQLITE_OK)
   {
     //fprintf(stderr, "SQL error: %s\n", zErrMsg);

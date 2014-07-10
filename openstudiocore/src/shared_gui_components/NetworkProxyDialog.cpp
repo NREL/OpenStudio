@@ -1,3 +1,22 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "NetworkProxyDialog.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/core/Application.hpp"
@@ -24,11 +43,11 @@
 
 namespace openstudio
 {
-  NetworkProxyDialog::NetworkProxyDialog(QSettings &t_settings, QWidget *t_parent = 0)
+  NetworkProxyDialog::NetworkProxyDialog(QSettings &t_settings, QWidget *t_parent = nullptr)
     : QDialog(t_parent), 
       m_settings(t_settings)
   {
-    QGridLayout *layout = new QGridLayout(this);
+    auto layout = new QGridLayout(this);
 
     // NoProxy, DefaultProxy, Socks5Proxy, HttpProxy, HttpCachingProxy, FtpCachingProxy
     m_proxyType = new QComboBox();
@@ -55,7 +74,7 @@ namespace openstudio
     layout->addWidget(new QLabel("User Name"), 3, 0);
     layout->addWidget(m_user, 3, 1);
     
-    QHBoxLayout *buttonBox = new QHBoxLayout();
+    auto buttonBox = new QHBoxLayout();
 
     QPushButton *saveButton = new QPushButton("Save");
     QPushButton *cancelButton = new QPushButton("Cancel");

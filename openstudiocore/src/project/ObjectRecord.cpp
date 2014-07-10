@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ObjectRecord.hpp>
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectDatabase_Impl.hpp>
+#include "ObjectRecord.hpp"
+#include "ObjectRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "ProjectDatabase_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/String.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -314,13 +314,13 @@ namespace detail {
 
 } // detail
 
-ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl, ProjectDatabase projectDatabase)
+ObjectRecord::ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl, ProjectDatabase projectDatabase)
   : Record(impl, projectDatabase)
 {
   OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());
 }
 
-ObjectRecord::ObjectRecord(boost::shared_ptr<detail::ObjectRecord_Impl> impl)
+ObjectRecord::ObjectRecord(std::shared_ptr<detail::ObjectRecord_Impl> impl)
   : Record(impl)
 {
   OS_ASSERT(getImpl<detail::ObjectRecord_Impl>());

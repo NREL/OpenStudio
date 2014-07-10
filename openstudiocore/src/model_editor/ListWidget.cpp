@@ -19,7 +19,7 @@
 
 #include <QMimeData>
 
-#include <model_editor/ListWidget.hpp>
+#include "ListWidget.hpp"
 
 namespace modeleditor
 {

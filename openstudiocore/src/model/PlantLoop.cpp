@@ -17,35 +17,33 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/SizingPlant.hpp>
-#include <model/SizingPlant_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/ConnectorMixer.hpp>
-#include <model/ConnectorMixer_Impl.hpp>
-#include <model/ConnectorSplitter.hpp>
-#include <model/ConnectorSplitter_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/WaterToWaterComponent.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/CoilCoolingWater_Impl.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/ControllerWaterCoil_Impl.hpp>
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "SizingPlant.hpp"
+#include "SizingPlant_Impl.hpp"
+#include "Model.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "ConnectorMixer.hpp"
+#include "ConnectorMixer_Impl.hpp"
+#include "ConnectorSplitter.hpp"
+#include "ConnectorSplitter_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "WaterToAirComponent.hpp"
+#include "WaterToAirComponent_Impl.hpp"
+#include "WaterToWaterComponent.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "CoilCoolingWater.hpp"
+#include "CoilCoolingWater_Impl.hpp"
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
+#include "ControllerWaterCoil.hpp"
+#include "ControllerWaterCoil_Impl.hpp"
 #include <utilities/idd/OS_PlantLoop_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -370,17 +368,15 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
   allComponents.erase(allComponents.begin());
   allComponents.erase(allComponents.end() - 1);
 
-  for( std::vector<ModelObject>::iterator it = allComponents.begin();
-       it < allComponents.end();
-       ++it )
+  for( auto & elem : allComponents )
   {
-    if( ! it->optionalCast<Node>() )
+    if( ! elem.optionalCast<Node>() )
     {
-      if( boost::optional<StraightComponent> comp = it->optionalCast<StraightComponent>() )
+      if( boost::optional<StraightComponent> comp = elem.optionalCast<StraightComponent>() )
       {
-        it->remove();
+        elem.remove();
       }
-      else if( boost::optional<WaterToAirComponent> comp = it->optionalCast<WaterToAirComponent>() )
+      else if( boost::optional<WaterToAirComponent> comp = elem.optionalCast<WaterToAirComponent>() )
       {
         comp->removeFromPlantLoop();
 
@@ -389,7 +385,7 @@ bool PlantLoop_Impl::removeBranchWithComponent( HVACComponent component, Splitte
           comp->remove();
         }
       }
-      else if( boost::optional<WaterToWaterComponent> comp = it->optionalCast<WaterToWaterComponent>() )
+      else if( boost::optional<WaterToWaterComponent> comp = elem.optionalCast<WaterToWaterComponent>() )
       {
         if( isSupplyComponent )
         {
@@ -596,13 +592,11 @@ SizingPlant PlantLoop_Impl::sizingPlant() const
   
   sizingObjects = model().getConcreteModelObjects<SizingPlant>();
 
-  for( std::vector<SizingPlant>::iterator it = sizingObjects.begin();
-       it < sizingObjects.end();
-       ++it )
+  for( const auto & sizingObject : sizingObjects )
   {
-    if( it->plantLoop().handle() == this->handle() )
+    if( sizingObject.plantLoop().handle() == this->handle() )
     {
-      sizingPlant = *it;
+      sizingPlant = sizingObject;
     }
   }
 
@@ -705,7 +699,7 @@ PlantLoop::PlantLoop(Model& model)
   setString(OS_PlantLoopFields::PressureSimulationType,"");
 }
 
-PlantLoop::PlantLoop(boost::shared_ptr<detail::PlantLoop_Impl> impl)
+PlantLoop::PlantLoop(std::shared_ptr<detail::PlantLoop_Impl> impl)
   : Loop(impl)
 {}
 

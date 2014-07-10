@@ -17,16 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "WorkspaceObjectOrder.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "../idd/IddObject.hpp"
 
-#include <utilities/math/Permutation.hpp>
+#include "../math/Permutation.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 
@@ -67,7 +64,7 @@ namespace detail {
 
   bool WorkspaceObjectOrder_Impl::insert(const Handle& handle, const Handle& insertBeforeHandle) {
     if (!m_directOrder) { return false; }
-    HandleVector::iterator it = getIterator(insertBeforeHandle);
+    auto it = getIterator(insertBeforeHandle);
     m_directOrder->insert(it,handle);
     return true;
   }
@@ -75,7 +72,7 @@ namespace detail {
   bool WorkspaceObjectOrder_Impl::insert(const Handle& handle,unsigned index) {
     if (!m_directOrder) { return false; }
     if (index < m_directOrder->size()) {
-      HandleVector::iterator it = m_directOrder->begin();
+      auto it = m_directOrder->begin();
       for (unsigned i = 0; i < index; ++i, ++it);
       m_directOrder->insert(it,handle);
       return true;
@@ -89,7 +86,7 @@ namespace detail {
   bool WorkspaceObjectOrder_Impl::move(const Handle& handle, const Handle& insertBeforeHandle) {
     if (!m_directOrder) { return false; }
     // find type in order
-    HandleVector::iterator it = getIterator(handle);
+    auto it = getIterator(handle);
     if (it == m_directOrder->end()) { return false; }
     // handle degenerate case
     if (handle == insertBeforeHandle) { return true; }
@@ -102,7 +99,7 @@ namespace detail {
   bool WorkspaceObjectOrder_Impl::move(const Handle& handle, unsigned index) {
     if (!m_directOrder) { return false; }
     // find type in order
-    HandleVector::iterator it = getIterator(handle);
+    auto it = getIterator(handle);
     if (it == m_directOrder->end()) { return false; }
     // handle degenerate case
     if ((it - m_directOrder->begin()) == static_cast<int>(index)) { return true; }
@@ -114,8 +111,8 @@ namespace detail {
 
   bool WorkspaceObjectOrder_Impl::swap(const Handle& handle1, const Handle& handle2) {
     if (!m_directOrder) { return false; }
-    HandleVector::iterator it1 = getIterator(handle1);
-    HandleVector::iterator it2 = getIterator(handle2);
+    auto it1 = getIterator(handle1);
+    auto it2 = getIterator(handle2);
     if ((it1 == m_directOrder->end()) || (it2 == m_directOrder->end())) { return false; }
     if (it1 == it2) { return true; }
     *it1 = handle2;
@@ -125,7 +122,7 @@ namespace detail {
 
   bool WorkspaceObjectOrder_Impl::erase(const Handle& handle) {
     if (!m_directOrder) { return false; }
-    HandleVector::iterator it = getIterator(handle);
+    auto it = getIterator(handle);
     if (it == m_directOrder->end()) { return false; }
     m_directOrder->erase(it);
     return true;
@@ -176,7 +173,7 @@ namespace detail {
 
   std::vector<Handle> WorkspaceObjectOrder_Impl::sort(const std::vector<Handle>& handles) const {
     HandleVector result(handles);
-    std::sort(result.begin(),result.end(),boost::bind(&WorkspaceObjectOrder_Impl::less_Handle,this,_1,_2));
+    std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_Handle, this, std::placeholders::_1, std::placeholders::_2));
     return result;
   }
 
@@ -184,7 +181,7 @@ namespace detail {
       const std::vector<WorkspaceObject>& objects) const 
   {
     WorkspaceObjectVector result(objects);
-    std::sort(result.begin(),result.end(),boost::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject,this,_1,_2));
+    std::sort(result.begin(), result.end(), std::bind(&WorkspaceObjectOrder_Impl::less_WorkspaceObject, this, std::placeholders::_1, std::placeholders::_2));
     return result;
   }
 
@@ -222,7 +219,7 @@ namespace detail {
   /** Returns whether order of handle is directly specified. */
   bool WorkspaceObjectOrder_Impl::inOrder(const Handle& handle) const {
     if (m_directOrder) {
-      HandleVector::const_iterator loc = getIterator(handle);
+      auto loc = getIterator(handle);
       if (loc != m_directOrder->end()) { return true; }
     }
     return false;
@@ -231,7 +228,7 @@ namespace detail {
   /** Returns index of handle in order, if its order is directly specified. */
   boost::optional<unsigned> WorkspaceObjectOrder_Impl::indexInOrder(const Handle& handle) const {
     if (m_directOrder) {
-      HandleVector::const_iterator loc = getIterator(handle);
+      auto loc = getIterator(handle);
       if (loc != m_directOrder->end()) { 
         return (loc - m_directOrder->begin()); 
       }
@@ -255,7 +252,7 @@ namespace detail {
 
   std::vector<Handle>::iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) {
     OS_ASSERT(m_directOrder);
-    for (HandleVector::iterator it = m_directOrder->begin(), 
+    for (auto it = m_directOrder->begin(), 
          itEnd = m_directOrder->end(); it != itEnd; ++ it) 
     {
       if (getIddObjectType(*it) == type) { return it; }
@@ -279,7 +276,7 @@ namespace detail {
 
   std::vector<Handle>::const_iterator WorkspaceObjectOrder_Impl::getIterator(IddObjectType type) const {
     OS_ASSERT(m_directOrder);
-    for (HandleVector::const_iterator it = m_directOrder->begin(), 
+    for (auto it = m_directOrder->begin(), 
          itEnd = m_directOrder->end(); it != itEnd; ++ it) {
       if (getIddObjectType(*it) == type) { return it; }
     }
@@ -307,7 +304,7 @@ namespace detail {
   {
     WorkspaceObjectVector objects;
     // loop through handles and try to find objects
-    BOOST_FOREACH(const Handle& handle,handles) {
+    for (const Handle& handle : handles) {
       OS_ASSERT(m_objectGetter);
       OptionalWorkspaceObject object = m_objectGetter(handle);
       if (object) { objects.push_back(*object); }
@@ -315,8 +312,8 @@ namespace detail {
     return objects;
   }
 
-  // ETH@20100409 boost::bind seems to need non-overloaded functions
-  // These are (ugly) wrappers to accomodate.
+  // ETH@20100409 std::bind seems to need non-overloaded functions
+  // These are (ugly) wrappers to accommodate.
   bool WorkspaceObjectOrder_Impl::less_Handle(const Handle& left, const Handle& right) const {
     return less(left,right);
   }
@@ -445,7 +442,7 @@ boost::optional<unsigned> WorkspaceObjectOrder::indexInOrder(const Handle& handl
 // CONSTRUCTORS
 
 WorkspaceObjectOrder::WorkspaceObjectOrder(
-    const boost::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl) 
+    const std::shared_ptr<detail::WorkspaceObjectOrder_Impl>& impl) 
   : m_impl(impl) {}
 
 } // openstudio

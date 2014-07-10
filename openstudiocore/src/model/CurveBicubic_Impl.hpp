@@ -20,7 +20,7 @@
 #ifndef MODEL_CURVEBICUBIC_IMPL_HPP
 #define MODEL_CURVEBICUBIC_IMPL_HPP
 
-#include <model/Curve_Impl.hpp>
+#include "Curve_Impl.hpp"
 
 namespace openstudio {
 namespace model {

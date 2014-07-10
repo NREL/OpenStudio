@@ -21,11 +21,10 @@
 #define PROJECT_URLSEARCHPATHRECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord.hpp>
+#include "ObjectRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 class QSqlDatabase;
@@ -110,10 +109,10 @@ class PROJECT_API URLSearchPathRecord : public ObjectRecord {
   friend class ProjectDatabase;
 
   // from impl
-  URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl, ProjectDatabase projectDatabase);
+  URLSearchPathRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl> impl, ProjectDatabase projectDatabase);
 
   // from impl, does not register in database, use with caution
-  URLSearchPathRecord(boost::shared_ptr<detail::URLSearchPathRecord_Impl> impl);
+  URLSearchPathRecord(std::shared_ptr<detail::URLSearchPathRecord_Impl> impl);
 
  private:
 

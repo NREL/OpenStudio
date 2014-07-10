@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <ruleset/ModelUserScript.hpp>
+#include "ModelUserScript.hpp"
 
-#include <ruleset/OSArgument.hpp>
-#include <ruleset/OSRunner.hpp>
+#include "OSArgument.hpp"
+#include "OSRunner.hpp"
 
 namespace openstudio {
 namespace ruleset {

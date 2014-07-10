@@ -20,9 +20,9 @@
 #ifndef UTILITIES_DATA_MATRIX_HPP
 #define UTILITIES_DATA_MATRIX_HPP
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Vector.hpp"
+#include "../UtilitiesAPI.hpp"
+#include "../core/Logger.hpp"
 
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -94,7 +94,7 @@ namespace openstudio{
   UTILITIES_API std::vector<std::vector<unsigned> > findConnectedComponents(const Matrix& matrix);
 
   // from the boost vault:
-  // The following code inverts the matrix input using LU-decomposition with backsubstitution of unit vectors. Reference: Numerical Recipies in C, 2nd ed., by Press, Teukolsky, Vetterling & Flannery.
+  // The following code inverts the matrix input using LU-decomposition with backsubstitution of unit vectors. Reference: Numerical Recipes in C, 2nd ed., by Press, Teukolsky, Vetterling & Flannery.
   /// Matrix inversion routine, using lu_factorize and lu_substitute in uBLAS to invert a matrix */
  template<class T>
  bool invert(const boost::numeric::ublas::matrix<T>& input, boost::numeric::ublas::matrix<T>& inverse) {

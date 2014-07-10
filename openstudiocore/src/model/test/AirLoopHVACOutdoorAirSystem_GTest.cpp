@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/ControllerOutdoorAir_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/Schedule.hpp>
-#include <model/Node.hpp>
-#include <model/AirLoopHVAC.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../ControllerOutdoorAir_Impl.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../Schedule.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVAC.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

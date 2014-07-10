@@ -20,10 +20,10 @@
 #ifndef MODEL_COMPONENTDATA_HPP
 #define MODEL_COMPONENTDATA_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../utilities/core/UUID.hpp"
 
 namespace openstudio {
 namespace model {
@@ -107,7 +107,7 @@ class MODEL_API ComponentData : public ModelObject {
   explicit ComponentData(const Model& model);
 
   // constructor
-  explicit ComponentData(boost::shared_ptr<detail::ComponentData_Impl> impl);
+  explicit ComponentData(std::shared_ptr<detail::ComponentData_Impl> impl);
 
   /// @endcond
  private:

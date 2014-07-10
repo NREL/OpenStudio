@@ -1,10 +1,29 @@
-#ifndef __OPENSTUDIO_ENUM_HPP__
-#define __OPENSTUDIO_ENUM_HPP__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef UTILITIES_CORE_ENUM_HPP
+#define UTILITIES_CORE_ENUM_HPP
 
 #include <set>
 #include <map>
 #include <vector>
-#include <utilities/core/StaticInitializer.hpp>
+#include "StaticInitializer.hpp"
 #include <boost/preprocessor.hpp>
 #include <boost/optional.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -42,7 +61,7 @@ template<typename Enum>
       static std::string valueName(int t_value) 
       { 
         const std::map<int, std::string> &m = getNames();
-        std::map<int, std::string>::const_iterator itr = m.find(t_value);
+        auto itr = m.find(t_value);
         if (itr == m.end()) 
         { 
           throw std::runtime_error("Invalid domain"); 
@@ -55,7 +74,7 @@ template<typename Enum>
       static std::string valueDescription(int t_value) 
       {
         const std::map<int, std::string> &m = getDescriptions();
-        std::map<int, std::string>::const_iterator itr = m.find(t_value);
+        auto itr = m.find(t_value);
         if (itr == m.end()) 
         { 
           return valueName(t_value); 
@@ -88,7 +107,7 @@ template<typename Enum>
         return valueDescription(m_value); 
       } 
 
-      /** Set this intance's value to t_value. Throws std::runtime_error if 
+      /** Set this instance's value to t_value. Throws std::runtime_error if 
        *  t_value is not in the domain. */
       void setValue(int t_value)
       {
@@ -116,7 +135,7 @@ template<typename Enum>
       { 
         boost::algorithm::to_upper(t_name); 
         const std::map<std::string, int> &names = getLookupMap(); 
-        std::map<std::string, int>::const_iterator itr = names.find(t_name); 
+        auto itr = names.find(t_name); 
         if (itr != names.end()) 
         { 
           return itr->second; 
@@ -180,18 +199,14 @@ template<typename Enum>
         const std::map<int, std::string> &m = getNames();
         const std::map<int, std::string> &d = getDescriptions();
 
-        for (std::map<int, std::string>::const_iterator itr = m.begin();
-            itr != m.end();
-            ++itr)
+        for (const auto & name : m)
         {
-          retval[boost::algorithm::to_upper_copy(itr->second)] = itr->first;
+          retval[boost::algorithm::to_upper_copy(name.second)] = name.first;
         }
 
-        for (std::map<int, std::string>::const_iterator itr = d.begin();
-            itr != d.end();
-            ++itr)
+        for (const auto & description : d)
         {
-          retval[boost::algorithm::to_upper_copy(itr->second)] = itr->first;
+          retval[boost::algorithm::to_upper_copy(description.second)] = description.first;
         }
 
         return retval;
@@ -203,11 +218,9 @@ template<typename Enum>
 
         std::set<int> retvals;
 
-        for (std::map<int, std::string>::const_iterator itr = names.begin();
-             itr != names.end();
-             ++itr)
+        for (const auto & name : names)
         {
-          retvals.insert(itr->first);
+          retvals.insert(name.first);
         }
 
         return retvals;
@@ -532,4 +545,4 @@ class _enum_name : public EnumBase<_enum_name> \
 
 
 
-#endif
+#endif // UTILITIES_CORE_ENUM_HPP

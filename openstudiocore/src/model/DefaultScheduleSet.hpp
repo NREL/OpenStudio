@@ -20,10 +20,10 @@
 #ifndef MODEL_DEFAULTSCHEDULESET_HPP
 #define MODEL_DEFAULTSCHEDULESET_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace model {
@@ -152,7 +152,7 @@ class MODEL_API DefaultScheduleSet : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit DefaultScheduleSet(boost::shared_ptr<detail::DefaultScheduleSet_Impl> impl);
+  explicit DefaultScheduleSet(std::shared_ptr<detail::DefaultScheduleSet_Impl> impl);
 
   /// @endcond
  private:

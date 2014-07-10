@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveFunctionalPressureDrop.hpp>
-#include <model/CurveFunctionalPressureDrop_Impl.hpp>
+#include "CurveFunctionalPressureDrop.hpp"
+#include "CurveFunctionalPressureDrop_Impl.hpp"
 
 #include <utilities/idd/OS_Curve_Functional_PressureDrop_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -235,7 +235,7 @@ void CurveFunctionalPressureDrop::resetFixedFrictionFactor() {
 }
 
 /// @cond
-CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(boost::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl)
+CurveFunctionalPressureDrop::CurveFunctionalPressureDrop(std::shared_ptr<detail::CurveFunctionalPressureDrop_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

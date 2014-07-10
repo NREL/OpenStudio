@@ -19,15 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/OtherEquipmentDefinition.hpp>
-#include <model/OtherEquipmentDefinition_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../OtherEquipment.hpp"
+#include "../OtherEquipment_Impl.hpp"
+#include "../OtherEquipmentDefinition.hpp"
+#include "../OtherEquipmentDefinition_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

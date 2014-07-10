@@ -17,7 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddRegex.hpp>
+#include "IddRegex.hpp"
 
 namespace openstudio{
 namespace iddRegex{

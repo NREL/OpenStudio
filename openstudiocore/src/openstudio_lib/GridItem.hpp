@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_GRIDITEM_H
-#define OPENSTUDIO_GRIDITEM_H
+#ifndef OPENSTUDIO_GRIDITEM_HPP
+#define OPENSTUDIO_GRIDITEM_HPP
 
 #include <QGraphicsObject>
 #include <QCoreApplication>
 #include <QPixmap>
 #include <QPointer>
-#include <model/ModelObject.hpp>
-#include <model/Node.hpp>
-#include <model/Mixer.hpp>
-#include <model/Splitter.hpp>
-#include <model/Loop.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../model/ModelObject.hpp"
+#include "../model/Node.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/Splitter.hpp"
+#include "../model/Loop.hpp"
+#include "OSItem.hpp"
 #include "shared_gui_components/GraphicsItems.hpp"
 
 class QMenu;
@@ -965,5 +965,5 @@ class TwoThreeFourStraightItem : public GridItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_GRIDITEM_H
+#endif // OPENSTUDIO_GRIDITEM_HPP
 

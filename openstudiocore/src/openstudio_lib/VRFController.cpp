@@ -99,7 +99,7 @@ void VRFController::refreshNow()
 
     if( m_currentSystem )
     {
-      m_detailView->setId(OSItemId(m_currentSystem->handle(),modelToSourceId(m_currentSystem->model()),false));
+      m_detailView->setId(OSItemId(m_currentSystem->handle().toString(),modelToSourceId(m_currentSystem->model()),false));
 
       bool bingo;
       bingo = connect(m_detailView,SIGNAL(inspectClicked(const OSItemId &)),
@@ -112,7 +112,7 @@ void VRFController::refreshNow()
           ++it)
       {
         VRFTerminalView * vrfTerminalView = new VRFTerminalView();
-        vrfTerminalView->setId(OSItemId(it->handle(),modelToSourceId(it->model()),false));
+        vrfTerminalView->setId(OSItemId(it->handle().toString(),modelToSourceId(it->model()),false));
         m_detailView->addVRFTerminalView(vrfTerminalView);
         bingo = connect(vrfTerminalView,SIGNAL(componentDroppedOnZone(const OSItemId &, const OSItemId &)),
                         this,SLOT(onVRFTerminalViewDrop(const OSItemId &, const OSItemId &)));
@@ -141,7 +141,7 @@ void VRFController::refreshNow()
 void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -163,7 +163,7 @@ void VRFController::onVRFSystemViewDrop(const OSItemId & itemid)
 void VRFController::onVRFSystemViewZoneDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromModel(itemid) )
   {
@@ -195,7 +195,7 @@ void VRFController::onVRFSystemViewZoneDrop(const OSItemId & itemid)
 void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSItemId & thermalZoneId)
 {
   OS_ASSERT(m_currentSystem);
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromModel(thermalZoneId) )
   {
@@ -217,7 +217,7 @@ void VRFController::onVRFTerminalViewDrop(const OSItemId & terminalId, const OSI
 void VRFController::onRemoveZoneClicked(const OSItemId & terminalId)
 {
   OS_ASSERT(m_currentSystem);
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   boost::optional<model::ModelObject> mo = doc->getModelObject(terminalId);
   OS_ASSERT(mo);
@@ -231,7 +231,7 @@ void VRFController::onRemoveZoneClicked(const OSItemId & terminalId)
 void VRFController::onRemoveTerminalClicked(const OSItemId & terminalId)
 {
   OS_ASSERT(m_currentSystem);
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   boost::optional<model::ModelObject> mo = doc->getModelObject(terminalId);
   OS_ASSERT(mo);
@@ -246,7 +246,7 @@ void VRFController::zoomInOnSystem(model::AirConditionerVariableRefrigerantFlow 
 {
   m_currentSystem = system;
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::OptionalModelObject mo;
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 
@@ -269,7 +269,7 @@ void VRFController::zoomOutToSystemGridView()
   m_currentSystem = boost::none;
 
   model::OptionalModelObject mo;
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 
   m_vrfSystemListController->reset();
@@ -286,7 +286,7 @@ void VRFController::inspectOSItem(const OSItemId & itemid)
   OS_ASSERT(m_currentSystem);
   boost::optional<model::ModelObject> mo = m_currentSystem->model().getModelObject<model::ModelObject>(Handle(itemid.itemId()));
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   OS_ASSERT(doc);
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 }
@@ -360,7 +360,7 @@ void VRFSystemListController::createNewSystem()
 
 void VRFSystemListController::addSystem(const OSItemId & itemid)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {

@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SpaceLoad.hpp>
-#include <model/SpaceLoad_Impl.hpp>
+#include "SpaceLoad.hpp"
+#include "SpaceLoad_Impl.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -123,7 +121,7 @@ SpaceLoad::SpaceLoad(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::SpaceLoad_Impl>());
 }
 
-SpaceLoad::SpaceLoad(boost::shared_ptr<detail::SpaceLoad_Impl> impl)
+SpaceLoad::SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl)
   : SpaceItem(impl)
 {}
 

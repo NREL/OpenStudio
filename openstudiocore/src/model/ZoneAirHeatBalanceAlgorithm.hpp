@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEAIRHEATBALANCEALGORITHM_HPP
 #define MODEL_ZONEAIRHEATBALANCEALGORITHM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -70,7 +70,7 @@ class MODEL_API ZoneAirHeatBalanceAlgorithm : public ModelObject {
   /// @cond
   typedef detail::ZoneAirHeatBalanceAlgorithm_Impl ImplType;
 
-  explicit ZoneAirHeatBalanceAlgorithm(boost::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
+  explicit ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl);
 
   friend class detail::ZoneAirHeatBalanceAlgorithm_Impl;
   friend class Model;

@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
+#include "SteamEquipmentDefinition.hpp"
+#include "SteamEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SteamEquipment_Definition_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -403,7 +403,7 @@ bool SteamEquipmentDefinition::setDesignLevelCalculationMethod(const std::string
 }
 
 /// @cond
-SteamEquipmentDefinition::SteamEquipmentDefinition(boost::shared_ptr<detail::SteamEquipmentDefinition_Impl> impl)
+SteamEquipmentDefinition::SteamEquipmentDefinition(std::shared_ptr<detail::SteamEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

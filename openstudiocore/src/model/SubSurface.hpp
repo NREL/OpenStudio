@@ -20,8 +20,8 @@
 #ifndef MODEL_SUBSURFACE_HPP
 #define MODEL_SUBSURFACE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/PlanarSurface.hpp>
+#include "ModelAPI.hpp"
+#include "PlanarSurface.hpp"
 
 namespace openstudio {
 namespace model {
@@ -176,7 +176,7 @@ class MODEL_API SubSurface : public PlanarSurface {
   friend class openstudio::IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
 
-  explicit SubSurface(boost::shared_ptr<detail::SubSurface_Impl> impl);
+  explicit SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl);
 
   /// @endcond
  private:

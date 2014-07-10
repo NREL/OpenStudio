@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_IMPL_HPP
 #define MODEL_REFRIGERATIONGASCOOLERAIRCOOLED_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {

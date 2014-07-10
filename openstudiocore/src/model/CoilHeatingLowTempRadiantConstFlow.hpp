@@ -20,8 +20,8 @@
 #ifndef MODEL_COILHEATINGLOWTEMPRADIANTCONSTFLOW_HPP
 #define MODEL_COILHEATINGLOWTEMPRADIANTCONSTFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 
 namespace openstudio {
@@ -103,7 +103,7 @@ class MODEL_API CoilHeatingLowTempRadiantConstFlow : public StraightComponent {
   /// @cond
   typedef detail::CoilHeatingLowTempRadiantConstFlow_Impl ImplType;
 
-  explicit CoilHeatingLowTempRadiantConstFlow(boost::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
+  explicit CoilHeatingLowTempRadiantConstFlow(std::shared_ptr<detail::CoilHeatingLowTempRadiantConstFlow_Impl> impl);
 
   friend class detail::CoilHeatingLowTempRadiantConstFlow_Impl;
   friend class Model;

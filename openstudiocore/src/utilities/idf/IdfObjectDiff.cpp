@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idf/IdfObjectDiff.hpp>
-#include <utilities/idf/IdfObjectDiff_Impl.hpp>
+#include "IdfObjectDiff.hpp"
+#include "IdfObjectDiff_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
   namespace detail {
@@ -64,18 +64,18 @@ namespace openstudio {
   } // detail
 
   IdfObjectDiff::IdfObjectDiff()
-    : m_impl(boost::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl()))
+    : m_impl(std::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl()))
   {
     OS_ASSERT(m_impl);
   }
 
   IdfObjectDiff::IdfObjectDiff(boost::optional<unsigned> index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue)
-    : m_impl(boost::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl(index, oldValue, newValue)))
+    : m_impl(std::shared_ptr<detail::IdfObjectDiff_Impl>(new detail::IdfObjectDiff_Impl(index, oldValue, newValue)))
   {
     OS_ASSERT(m_impl);
   }
 
-  IdfObjectDiff::IdfObjectDiff(const boost::shared_ptr<detail::IdfObjectDiff_Impl>& impl)
+  IdfObjectDiff::IdfObjectDiff(const std::shared_ptr<detail::IdfObjectDiff_Impl>& impl)
     : m_impl(impl)
   {
     OS_ASSERT(m_impl);

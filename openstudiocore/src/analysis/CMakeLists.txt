@@ -1,6 +1,6 @@
-SET( target_name openstudio_analysis )
+set(target_name openstudio_analysis)
 
-SET( ${target_name}_src
+set(${target_name}_src
   mainpage.hpp
   AnalysisAPI.hpp
   AnalysisEnums.hpp
@@ -168,12 +168,12 @@ SET( ${target_name}_src
   WorkflowStep.cpp
 )
 
-SET( ${target_name}_moc
+set(${target_name}_moc
   Analysis_Impl.hpp
   AnalysisObject_Impl.hpp
 )
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   test/AnalysisFixture.hpp
   test/AnalysisFixture.cpp
   test/Algorithm_GTest.cpp
@@ -194,41 +194,41 @@ SET( ${target_name}_test_src
   test/UncertaintyDescription_GTest.cpp
 )
 
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   Analysis.i
 )
 
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_energyplus
   openstudio_ruleset
   openstudio_runmanager
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-ADD_LIBRARY( ${target_name} SHARED
+add_library(${target_name} SHARED
   ${${target_name}_src}
   ${${target_name}_moc_src}
 )
-TARGET_LINK_LIBRARIES(${target_name} ${${target_name}_depends} )
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib )
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-CREATE_SRC_GROUPS( "${${target_name}_src}" )
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-CREATE_SRC_GROUPS( "${${target_name}_swig_src}" )
+CREATE_SRC_GROUPS("${${target_name}_src}")
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-MAKE_SWIG_TARGET( OpenStudioAnalysis Analysis "${CMAKE_CURRENT_SOURCE_DIR}/Analysis.i" "${${target_name}_swig_src}" "${target_name}" "OpenStudioEnergyPlus;OpenStudioRuleset;OpenStudioRunManager")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+MAKE_SWIG_TARGET(OpenStudioAnalysis Analysis "${CMAKE_CURRENT_SOURCE_DIR}/Analysis.i" "${${target_name}_swig_src}" "${target_name}" "OpenStudioEnergyPlus;OpenStudioRuleset;OpenStudioRunManager")
 
 AddPCH(${target_name})
 
-# IF (BUILD_TESTING)
-  # ADD_DEPENDENCIES( "${target_name}_tests" "" )
-# ENDIF ()
-
+#if(BUILD_TESTING)
+#  add_dependencies("${target_name}_tests" "")
+#endif()

@@ -19,24 +19,23 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../Model.hpp"
+#include "../Space.hpp"
+#include "../SpaceType.hpp"
+#include "../ThermalZone.hpp"
+#include "../Luminaire.hpp"
+#include "../Luminaire_Impl.hpp"
+#include "../LuminaireDefinition.hpp"
+#include "../LuminaireDefinition_Impl.hpp"
+#include "../LifeCycleCost.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
+#include "../../utilities/geometry/EulerAngles.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/math/constants/constants.hpp>
 
 using namespace openstudio;

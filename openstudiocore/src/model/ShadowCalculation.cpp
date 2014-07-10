@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ShadowCalculation.hpp>
-#include <model/ShadowCalculation_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "ShadowCalculation.hpp"
+#include "ShadowCalculation_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ShadowCalculation_FieldEnums.hxx>
@@ -175,7 +175,7 @@ ShadowCalculation::ShadowCalculation(const Model& model)
 }
 
 // constructor
-ShadowCalculation::ShadowCalculation(boost::shared_ptr<detail::ShadowCalculation_Impl> impl)
+ShadowCalculation::ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl)
   : ModelObject(impl)
 {}
 

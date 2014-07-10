@@ -17,19 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Unit_Impl.hpp>
+#include "Unit.hpp"
+#include "Unit_Impl.hpp"
 
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/QuantityRegex.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "ScaleFactory.hpp"
+#include "QuantityRegex.hpp"
+#include "UnitFactory.hpp"
 
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
+#include "../core/Compare.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -97,12 +94,12 @@ namespace detail {
 
   Unit Unit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Mixed);
-    boost::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
+    std::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
     return Unit(impl);
   }
 
   Unit Unit_Impl::cloneToMixed() const {
-    boost::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
+    std::shared_ptr<Unit_Impl> impl(new Unit_Impl(*this));
     impl->m_system = UnitSystem::Mixed;
     return Unit(impl);
   }
@@ -113,7 +110,7 @@ namespace detail {
     std::vector<std::string>::iterator resultIter;
 
     std::vector<UnitElement>::const_iterator unitsIter;
-    std::vector<UnitElement>::const_iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
     for (resultIter = result.begin(), unitsIter = m_units.begin();
     unitsIter != unitsEnd; ++unitsIter, ++resultIter) {
       *resultIter = unitsIter->first; // copy baseUnit into result vector
@@ -123,7 +120,7 @@ namespace detail {
   }
 
   bool Unit_Impl::isBaseUnit(const std::string& baseUnit) const {
-    std::vector<UnitElement>::const_iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc == m_units.end()) {
       return false;
     }
@@ -131,7 +128,7 @@ namespace detail {
   }
 
   int Unit_Impl::baseUnitExponent(const std::string& baseUnit) const {
-    std::vector<UnitElement>::const_iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc == m_units.end()) {
       return 0;
     }
@@ -142,7 +139,7 @@ namespace detail {
 
   void Unit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -184,7 +181,7 @@ namespace detail {
     // determine number of non-zero, positive, and negative baseUnits
     int nnz(0), npos(0);
     std::vector<UnitElement>::const_iterator unitsIter,firstPosIter,firstNegIter;
-    std::vector<UnitElement>::const_iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
 
     firstPosIter = unitsEnd;
     firstNegIter = unitsEnd;
@@ -349,7 +346,7 @@ namespace detail {
     allBaseUnits.insert(baseUnits.begin(),baseUnits.end());
 
     // loop through and see if exponents are equal
-    BOOST_FOREACH(const std::string& baseUnit,allBaseUnits) {
+    for (const std::string& baseUnit : allBaseUnits) {
       if (baseUnitExponent(baseUnit) != rUnit.baseUnitExponent(baseUnit)) {
         return false;
       }
@@ -373,7 +370,7 @@ namespace detail {
 
     // u1 * u2, loop through both
     std::vector<UnitElement>::iterator lUnitsIter;
-    std::vector<UnitElement>::iterator lUnitsEnd = m_units.end();
+    auto lUnitsEnd = m_units.end();
     std::vector<UnitElement>::const_iterator rUnitsIter;
     std::vector<UnitElement>::const_iterator rUnitsEnd = rUnit.getImpl<detail::Unit_Impl>()->m_units.end();
     bool ordered = true;
@@ -414,12 +411,11 @@ namespace detail {
         }
       }
       // check rUnits
-      std::vector<std::string>::iterator checkedBaseUnitsEnd = checkedBaseUnits.end();
+      auto checkedBaseUnitsEnd = checkedBaseUnits.end();
       for (rUnitsIter = rUnit.getImpl<detail::Unit_Impl>()->m_units.begin();
       rUnitsIter != rUnitsEnd; ++rUnitsIter)
       {
-        std::vector<std::string>::iterator loc =
-            std::find(checkedBaseUnits.begin(),checkedBaseUnitsEnd,rUnitsIter->first);
+        auto loc = std::find(checkedBaseUnits.begin(),checkedBaseUnitsEnd,rUnitsIter->first);
         if (loc == checkedBaseUnitsEnd) {
           // this base unit not checked yet, and is not in lUnits
           if (rUnitsIter->second != 0) {
@@ -467,7 +463,7 @@ namespace detail {
 
   void Unit_Impl::pow(int expNum, int expDenom, bool okToCallFactory) {
     std::vector<UnitElement>::iterator unitsIter;
-    std::vector<UnitElement>::iterator unitsEnd = m_units.end();
+    auto unitsEnd = m_units.end();
 
     // check for errors first
     if (expDenom != 1) {
@@ -521,20 +517,18 @@ namespace detail {
   std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(
       const std::string& baseUnit)
   {
-    std::vector<Unit_Impl::UnitElement>::iterator result =
-        std::find_if(m_units.begin(),
-                     m_units.end(),
-                     boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+    auto result = std::find_if(m_units.begin(),
+                               m_units.end(),
+                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
     return result;
   }
 
   std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(
       const std::string& baseUnit) const
   {
-    std::vector<Unit_Impl::UnitElement>::const_iterator result =
-        std::find_if(m_units.begin(),
-                     m_units.end(),
-                     boost::bind(firstOfPairEqual<std::string,int>,_1,baseUnit));
+    auto result = std::find_if(m_units.begin(),
+                               m_units.end(),
+                               std::bind(firstOfPairEqual<std::string,int>,std::placeholders::_1,baseUnit));
     return result;
   }
 
@@ -624,7 +618,7 @@ Unit& Unit::pow(int expNum,int expDenom,bool okToCallFactory) {
 }
 
 /// @cond
-Unit::Unit(boost::shared_ptr<detail::Unit_Impl> impl)
+Unit::Unit(std::shared_ptr<detail::Unit_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

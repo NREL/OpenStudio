@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "WeatherFile.hpp"
+#include "WeatherFile_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/URLHelpers.hpp>
-#include <utilities/core/String.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/URLHelpers.hpp"
+#include "../utilities/core/String.hpp"
 
 #include <boost/algorithm/string/replace.hpp>
 
@@ -271,7 +271,7 @@ namespace detail {
         }catch (...) {}
 
         // loading absolute path failed, try as relative path
-        currentPath = toPath(currentPath->filename());
+        currentPath = currentPath->filename();
       }
 
       // try relative path
@@ -294,7 +294,7 @@ namespace detail {
     if (currentPath){
       openstudio::path newPath;
       if (basePath.empty()) {
-        newPath = toPath(currentPath->filename());
+        newPath = currentPath->filename();
       } else {
         newPath = relativePath(*currentPath,basePath);
       }
@@ -324,7 +324,7 @@ namespace detail {
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }
       if (newPath.empty() || !boost::filesystem::exists(newPath)) {
-        workingPath = toPath(currentPath->filename());
+        workingPath = currentPath->filename();
         newPath = searchDirectory / workingPath;
         LOG(Debug,"Going to look for '" << toString(newPath) << "'.");
       }
@@ -517,7 +517,7 @@ boost::optional<std::string> WeatherFile::environmentName() const {
 }
 
 /// @cond
-WeatherFile::WeatherFile(boost::shared_ptr<detail::WeatherFile_Impl> impl)
+WeatherFile::WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl)
   : ModelObject(impl)
 {}
 WeatherFile::WeatherFile(Model& model)

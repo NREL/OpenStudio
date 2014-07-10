@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ConstructionWithInternalSource.hpp>
-#include <model/ConstructionWithInternalSource_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ConstructionWithInternalSource.hpp"
+#include "../../model/ConstructionWithInternalSource_Impl.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
 #include <utilities/idd/Construction_InternalSource_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

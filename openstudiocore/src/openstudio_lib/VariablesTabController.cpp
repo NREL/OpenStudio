@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/VariablesTabController.hpp>
-#include <openstudio_lib/VariablesTabView.hpp>
+#include "VariablesTabController.hpp"
+#include "VariablesTabView.hpp"
 
 namespace openstudio {
 

@@ -1,5 +1,5 @@
-#ifndef __UTILITIES_API_HPP__
-#define __UTILITIES_API_HPP__
+#ifndef UTILITIES_UTILITIESAPI_HPP
+#define UTILITIES_UTILITIESAPI_HPP
 
 #if (_WIN32 || _MSC_VER) && !OPENSTUDIO_DIRECT_INCLUDE
 
@@ -18,4 +18,4 @@
 
 #endif
 
-#endif // __UTILITIES_API_HPP__
+#endif

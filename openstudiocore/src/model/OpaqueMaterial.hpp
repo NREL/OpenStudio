@@ -20,8 +20,8 @@
 #ifndef MODEL_OPAQUEMATERIAL_HPP
 #define MODEL_OPAQUEMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Material.hpp>
+#include "ModelAPI.hpp"
+#include "Material.hpp"
 
 namespace openstudio {
 namespace model {
@@ -169,7 +169,7 @@ class MODEL_API OpaqueMaterial : public Material {
 
   OpaqueMaterial(IddObjectType type,const Model& model);
 
-  explicit OpaqueMaterial(boost::shared_ptr<detail::OpaqueMaterial_Impl> impl);  
+  explicit OpaqueMaterial(std::shared_ptr<detail::OpaqueMaterial_Impl> impl);  
 
   /// @endcond
  private:

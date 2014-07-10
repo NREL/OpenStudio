@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_MATH_PERMUTATION
-#define UTILITIES_MATH_PERMUTATION
+#ifndef UTILITIES_MATH_PERMUTATION_HPP
+#define UTILITIES_MATH_PERMUTATION_HPP
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 #include <vector>
 
 namespace openstudio {
@@ -67,4 +67,4 @@ T permute(const T& original,const std::vector<unsigned>& order) {
 
 } // openstudio
 
-#endif // UTILITIES_MATH_PERMUTATION
+#endif // UTILITIES_MATH_PERMUTATION_HPP

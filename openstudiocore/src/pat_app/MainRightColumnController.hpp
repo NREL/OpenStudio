@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
-#define OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
+#ifndef PATAPP_MAINRIGHTCOLUMNCONTROLLER_HPP
+#define PATAPP_MAINRIGHTCOLUMNCONTROLLER_HPP
 
 #include <QObject>
 #include <QPointer>
@@ -77,5 +77,5 @@ class MainRightColumnController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_MAINRIGHTCOLUMNCONTROLLER_H
+#endif // PAT_APP_MAINRIGHTCOLUMNCONTROLLER_HPP
 

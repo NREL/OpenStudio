@@ -16,17 +16,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef _OPENSTUDIO_RUNMANAGER_JOB_FACTORY_HPP_
-#define _OPENSTUDIO_RUNMANAGER_JOB_FACTORY_HPP_
+#ifndef RUNMANAGER_LIB_JOBFACTORY_HPP
+#define RUNMANAGER_LIB_JOBFACTORY_HPP
 
 #include "Job.hpp"
 #include "JobParam.hpp"
 #include "RunManagerAPI.hpp"
 #include "ToolInfo.hpp"
 #include "JobState.hpp"
-#include <utilities/idf/URLSearchPath.hpp>
+#include "../../utilities/idf/URLSearchPath.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 
 namespace openstudio {
 namespace ruleset {
@@ -664,5 +664,5 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_JOBFACTORY_HPP
 

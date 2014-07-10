@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_DESIGNOFEXPERIMENTS_HPP
 #define ANALYSIS_DESIGNOFEXPERIMENTS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/OpenStudioAlgorithm.hpp>
+#include "AnalysisAPI.hpp"
+#include "OpenStudioAlgorithm.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -75,7 +75,7 @@ class ANALYSIS_API DesignOfExperiments : public OpenStudioAlgorithm {
   friend class detail::AnalysisObject_Impl;
   friend class detail::DesignOfExperiments_Impl;
 
-  explicit DesignOfExperiments(boost::shared_ptr<detail::DesignOfExperiments_Impl> impl);
+  explicit DesignOfExperiments(std::shared_ptr<detail::DesignOfExperiments_Impl> impl);
 
   /// @endcond
  private:

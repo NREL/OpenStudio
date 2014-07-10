@@ -17,17 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Plane.hpp>
+#include "Plane.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "Point3d.hpp"
+#include "Vector3d.hpp"
+#include "Geometry.hpp"
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../core/Assert.hpp"
 
 #include <iomanip>
 
@@ -323,7 +321,7 @@ namespace openstudio{
   {
     std::vector<Point3d> result;
     result.reserve(points.size());
-    BOOST_FOREACH(const Point3d& point, points){
+    for (const Point3d& point : points){
       result.push_back(this->project(point));
     }
     return result;

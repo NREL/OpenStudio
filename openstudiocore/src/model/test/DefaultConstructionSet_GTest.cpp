@@ -19,30 +19,28 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/DefaultSubSurfaceConstructions.hpp>
-#include <model/DefaultSubSurfaceConstructions_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/Space.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../DefaultSurfaceConstructions.hpp"
+#include "../DefaultSurfaceConstructions_Impl.hpp"
+#include "../DefaultSubSurfaceConstructions.hpp"
+#include "../DefaultSubSurfaceConstructions_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../Surface.hpp"
+#include "../SubSurface.hpp"
+#include "../InteriorPartitionSurface.hpp"
+#include "../InteriorPartitionSurfaceGroup.hpp"
+#include "../ShadingSurface.hpp"
+#include "../ShadingSurfaceGroup.hpp"
+#include "../Space.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -17,15 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VRFCONTROLLER_H
-#define OPENSTUDIO_VRFCONTROLLER_H
+#ifndef OPENSTUDIO_VRFCONTROLLER_HPP
+#define OPENSTUDIO_VRFCONTROLLER_HPP
 
 #include <QObject>
 #include <QSharedPointer>
 #include <boost/optional.hpp>
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../shared_gui_components/OSListController.hpp"
-#include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 
 class QGraphicsScene;
 class QGraphicsView;
@@ -180,5 +179,5 @@ class VRFSystemListItem : public OSListItem
 
 } // openstudio
 
-#endif // OPENSTUDIO_VRFCONTROLLER_H
+#endif // OPENSTUDIO_VRFCONTROLLER_HPP
 

@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Meter.hpp"
+#include "../Meter_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../../utilities/sql/SqlFileEnums.hpp"
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/core/Compare.hpp"
 #include <utilities/idd/OS_Meter_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 #include <QThreadPool>
 
@@ -339,7 +337,7 @@ TEST_F(ModelFixture, MeterEnumValues)
   Model model;
     
   std::set<int> installLocationTypes = InstallLocationType::getValues();
-  BOOST_FOREACH(int installLocationType, installLocationTypes){
+  for (int installLocationType : installLocationTypes){
     Meter meter(model);
     EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
     ASSERT_TRUE(meter.installLocationType()) << InstallLocationType(installLocationType).valueName();
@@ -347,7 +345,7 @@ TEST_F(ModelFixture, MeterEnumValues)
   }
 
   std::set<int> fuelTypes = FuelType::getValues();
-  BOOST_FOREACH(int fuelType, fuelTypes){
+  for (int fuelType : fuelTypes){
     Meter meter(model);
     EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();
     ASSERT_TRUE(meter.fuelType()) << FuelType(fuelType).valueName();
@@ -355,16 +353,16 @@ TEST_F(ModelFixture, MeterEnumValues)
   }
 
   std::set<int> endUseTypes = EndUseType::getValues();
-  BOOST_FOREACH(int endUseType, endUseTypes){
+  for (int endUseType : endUseTypes){
     Meter meter(model);
     EXPECT_TRUE(meter.setEndUseType(EndUseType(endUseType))) << EndUseType(endUseType).valueName();
     ASSERT_TRUE(meter.endUseType()) << EndUseType(endUseType).valueName();
     EXPECT_EQ(endUseType, meter.endUseType().get().value()) << EndUseType(endUseType).valueName() << " != " << meter.endUseType().get().valueName();
   }
 
-  BOOST_FOREACH(int installLocationType, installLocationTypes){
-    BOOST_FOREACH(int fuelType, fuelTypes){
-      BOOST_FOREACH(int endUseType, endUseTypes){
+  for (int installLocationType : installLocationTypes){
+    for (int fuelType : fuelTypes){
+      for (int endUseType : endUseTypes){
         Meter meter(model);
         EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType(installLocationType))) << InstallLocationType(installLocationType).valueName();
         EXPECT_TRUE(meter.setFuelType(FuelType(fuelType))) << FuelType(fuelType).valueName();

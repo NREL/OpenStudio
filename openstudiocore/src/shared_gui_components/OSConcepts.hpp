@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,15 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSCONCEPT_H
-#define OPENSTUDIO_OSCONCEPT_H
+#ifndef SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
+#define SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
-
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 
@@ -196,7 +193,7 @@ template<typename ChoiceType, typename DataSourceType>
 class RequiredChoiceSaveDataSourceConceptImpl : public RequiredChoiceConceptImpl<ChoiceType> {
  public:
   RequiredChoiceSaveDataSourceConceptImpl(
-      boost::shared_ptr<DataSourceType> dataSource,
+      std::shared_ptr<DataSourceType> dataSource,
       boost::function<std::string (ChoiceType)> toString,
       boost::function<std::vector<ChoiceType> ()> choices,
       boost::function<ChoiceType ()> getter,
@@ -214,7 +211,7 @@ class RequiredChoiceSaveDataSourceConceptImpl : public RequiredChoiceConceptImpl
 
   virtual ~RequiredChoiceSaveDataSourceConceptImpl() {}
  private:
-  boost::shared_ptr<DataSourceType> m_dataSource;
+  std::shared_ptr<DataSourceType> m_dataSource;
 };
 
 /** Concept of an optional choice, that is, one in which an empty choice (converted
@@ -297,7 +294,7 @@ template<typename ChoiceType, typename DataSourceType>
 class OptionalChoiceSaveDataSourceConceptImpl : public OptionalChoiceConceptImpl<ChoiceType> {
  public:
   OptionalChoiceSaveDataSourceConceptImpl(
-      boost::shared_ptr<DataSourceType> dataSource,
+      std::shared_ptr<DataSourceType> dataSource,
       boost::function<std::string (ChoiceType)> toString,
       boost::function<std::vector<ChoiceType> ()> choices,
       boost::function<boost::optional<ChoiceType> ()> getter,
@@ -314,7 +311,7 @@ class OptionalChoiceSaveDataSourceConceptImpl : public OptionalChoiceConceptImpl
   virtual ~OptionalChoiceSaveDataSourceConceptImpl() {}
 
  private:
-  boost::shared_ptr<DataSourceType> m_dataSource;
+  std::shared_ptr<DataSourceType> m_dataSource;
 };
 
 
@@ -329,7 +326,7 @@ class ComboBoxConcept : public BaseConcept
 
   virtual ~ComboBoxConcept() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) = 0;
+  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) = 0;
 };
 
 template<typename ChoiceType, typename DataSourceType>
@@ -353,16 +350,16 @@ class ComboBoxRequiredChoiceImpl : public ComboBoxConcept
 
   virtual ~ComboBoxRequiredChoiceImpl() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
-    boost::shared_ptr<DataSourceType> dataSource = boost::shared_ptr<DataSourceType>(
+  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
+    std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
-    return boost::shared_ptr<ChoiceConcept>(
+    return std::shared_ptr<ChoiceConcept>(
         new RequiredChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
             dataSource,
             m_toString,
             m_choices,
-            boost::bind(m_getter,dataSource.get()),
-            boost::bind(m_setter,dataSource.get(),_1)));
+            std::bind(m_getter,dataSource.get()),
+            std::bind(m_setter,dataSource.get(),std::placeholders::_1)));
   }
 
  private:
@@ -394,28 +391,28 @@ class ComboBoxOptionalChoiceImpl : public ComboBoxConcept
 
   virtual ~ComboBoxOptionalChoiceImpl() {}
 
-  virtual boost::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
-    boost::shared_ptr<DataSourceType> dataSource = boost::shared_ptr<DataSourceType>(
+  virtual std::shared_ptr<ChoiceConcept> choiceConcept(const model::ModelObject& obj) {
+    std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
         new DataSourceType(obj.cast<DataSourceType>()));
-    boost::shared_ptr<ChoiceConcept> result;
+    std::shared_ptr<ChoiceConcept> result;
     if (m_reset) {
-      result = boost::shared_ptr<ChoiceConcept>(
+      result = std::shared_ptr<ChoiceConcept>(
           new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
               dataSource,
               m_toString,
               m_choices,
-              boost::bind(m_getter,dataSource.get()),
-              boost::bind(m_setter,dataSource.get(),_1),
-              boost::optional<NoFailAction>(boost::bind(m_reset.get(),dataSource.get()))));
+              std::bind(m_getter,dataSource.get()),
+              std::bind(m_setter,dataSource.get(),std::placeholders::_1),
+              boost::optional<NoFailAction>(std::bind(m_reset.get(),dataSource.get()))));
     }
     else {
-      result = boost::shared_ptr<ChoiceConcept>(
+      result = std::shared_ptr<ChoiceConcept>(
         new OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>(
             dataSource,
             m_toString,
             m_choices,
-            boost::bind(m_getter,dataSource.get()),
-            boost::bind(m_setter,dataSource.get(),_1)));
+            std::bind(m_getter,dataSource.get()),
+            std::bind(m_setter,dataSource.get(),std::placeholders::_1)));
     }
     return result;
   }
@@ -1065,5 +1062,5 @@ class DropZoneConceptImpl : public DropZoneConcept
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSCONCEPT_H
+#endif // SHAREDGUICOMPONENTS_OSCONCEPTS_HPP
 

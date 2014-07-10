@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERUSEEQUIPMENTDEFINITION_HPP
 #define MODEL_WATERUSEEQUIPMENTDEFINITION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition.hpp"
 
 namespace openstudio {
 
@@ -74,7 +74,7 @@ class MODEL_API WaterUseEquipmentDefinition : public SpaceLoadDefinition {
 
   typedef detail::WaterUseEquipmentDefinition_Impl ImplType;
 
-  explicit WaterUseEquipmentDefinition(boost::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl);
+  explicit WaterUseEquipmentDefinition(std::shared_ptr<detail::WaterUseEquipmentDefinition_Impl> impl);
 
   friend class detail::WaterUseEquipmentDefinition_Impl;
   friend class Model;

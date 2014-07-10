@@ -20,13 +20,12 @@
 #ifndef UTILITIES_CLOUD_CLOUDPROVIDER_HPP
 #define UTILITIES_CLOUD_CLOUDPROVIDER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Optional.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Url.hpp"
+#include "../core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace openstudio{
@@ -69,13 +68,13 @@ namespace openstudio{
   //@{
 
     template<typename T>
-      boost::shared_ptr<T> getImpl() const
-    {  return boost::dynamic_pointer_cast<T>(m_impl); }
+      std::shared_ptr<T> getImpl() const
+    {  return std::dynamic_pointer_cast<T>(m_impl); }
 
     /// cast to type T, can throw std::bad_cast
     template<typename T>
     T cast() const{
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (!impl){
         throw(std::bad_cast());
       }
@@ -86,7 +85,7 @@ namespace openstudio{
     template<typename T>
     boost::optional<T> optionalCast() const{
       boost::optional<T> result;
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (impl){
         result = T(impl);
       }
@@ -97,13 +96,13 @@ namespace openstudio{
 
   protected:
 
-    CloudSettings(const boost::shared_ptr<detail::CloudSettings_Impl>& impl);
+    CloudSettings(const std::shared_ptr<detail::CloudSettings_Impl>& impl);
 
     typedef detail::CloudSettings_Impl ImplType;
 
   private:
 
-    boost::shared_ptr<detail::CloudSettings_Impl> m_impl;
+    std::shared_ptr<detail::CloudSettings_Impl> m_impl;
     
     // configure logging
     REGISTER_LOGGER("utilities.cloud.CloudSettings");
@@ -143,13 +142,13 @@ namespace openstudio{
   //@{
 
     template<typename T>
-      boost::shared_ptr<T> getImpl() const
-    {  return boost::dynamic_pointer_cast<T>(m_impl); }
+      std::shared_ptr<T> getImpl() const
+    {  return std::dynamic_pointer_cast<T>(m_impl); }
 
     /// cast to type T, can throw std::bad_cast
     template<typename T>
     T cast() const{
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (!impl){
         throw(std::bad_cast());
       }
@@ -160,7 +159,7 @@ namespace openstudio{
     template<typename T>
     boost::optional<T> optionalCast() const{
       boost::optional<T> result;
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (impl){
         result = T(impl);
       }
@@ -171,13 +170,13 @@ namespace openstudio{
 
   protected:
 
-    CloudSession(const boost::shared_ptr<detail::CloudSession_Impl>& impl);
+    CloudSession(const std::shared_ptr<detail::CloudSession_Impl>& impl);
 
     typedef detail::CloudSession_Impl ImplType;
 
   private:
 
-    boost::shared_ptr<detail::CloudSession_Impl> m_impl;
+    std::shared_ptr<detail::CloudSession_Impl> m_impl;
     
     // configure logging
     REGISTER_LOGGER("utilities.cloud.CloudSession");
@@ -362,13 +361,13 @@ namespace openstudio{
   //@{
 
     template<typename T>
-      boost::shared_ptr<T> getImpl() const
-    {  return boost::dynamic_pointer_cast<T>(m_impl); }
+      std::shared_ptr<T> getImpl() const
+    {  return std::dynamic_pointer_cast<T>(m_impl); }
 
     /// cast to type T, can throw std::bad_cast
     template<typename T>
     T cast() const{
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (!impl){
         throw(std::bad_cast());
       }
@@ -379,7 +378,7 @@ namespace openstudio{
     template<typename T>
     boost::optional<T> optionalCast() const{
       boost::optional<T> result;
-      boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+      std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
       if (impl){
         result = T(impl);
       }
@@ -390,13 +389,13 @@ namespace openstudio{
 
   protected:
 
-    CloudProvider(const boost::shared_ptr<detail::CloudProvider_Impl>& impl);
+    CloudProvider(const std::shared_ptr<detail::CloudProvider_Impl>& impl);
 
     typedef detail::CloudProvider_Impl ImplType;
 
   private:
 
-    boost::shared_ptr<detail::CloudProvider_Impl> m_impl;
+    std::shared_ptr<detail::CloudProvider_Impl> m_impl;
     
     // configure logging
     REGISTER_LOGGER("utilities.cloud.CloudProvider");

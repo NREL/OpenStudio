@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSGRIDCONTROLLER_H
-#define OPENSTUDIO_OSGRIDCONTROLLER_H
+#ifndef SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
 
-#include <shared_gui_components/OSConcepts.hpp>
+#include "OSConcepts.hpp"
 
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "../openstudio_lib/OSItem.hpp"
+#include "../openstudio_lib/OSVectorController.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/idd/IddObject.hpp"
 
 #include <boost/function.hpp>
 
@@ -226,7 +226,7 @@ protected:
 
   // Call this function with the fields required,
   // and it adds the columns and does the binds.
-  // This provides a mechinism to easily manage
+  // This provides a mechanism to easily manage
   // a dynamic, user-preference column.
   // This function will be called from the slot
   // connected to the QButtonGroup signal
@@ -324,7 +324,7 @@ class HorizontalHeaderWidget : public QWidget
 
 public:
 
-  HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = 0);
+  HorizontalHeaderWidget(const QString & fieldName, QWidget * parent = nullptr);
 
   virtual ~HorizontalHeaderWidget() {}
 
@@ -340,7 +340,7 @@ class BulkSelectionWidget : public QWidget
 
 public:
 
-  BulkSelectionWidget(QWidget * parent = 0);
+  BulkSelectionWidget(QWidget * parent = nullptr);
 
   virtual ~BulkSelectionWidget() {}
 
@@ -359,5 +359,5 @@ class GridViewDropZoneVectorController : public OSVectorController
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSGRIDCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_OSGRIDCONTROLLER_HPP
 

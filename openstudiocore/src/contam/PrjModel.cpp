@@ -1,21 +1,22 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
-*  All rights reserved.
-*  
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*  
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*  
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "PrjModel.hpp"
 #include "PrjReader.hpp"
 #include "SimFile.hpp"
@@ -29,24 +30,24 @@ namespace contam {
 
 IndexModel::IndexModel()
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
 }
 
 IndexModel::IndexModel(openstudio::path path)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(path);
 }
 
 IndexModel::IndexModel(std::string filename)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(filename);
 }
 
 IndexModel::IndexModel(Reader &input)
 {
-  m_impl = boost::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
+  m_impl = std::shared_ptr<detail::IndexModelImpl>(new detail::IndexModelImpl);
   m_impl->read(input);
 }
 

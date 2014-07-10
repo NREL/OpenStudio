@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/core/Application.hpp>
+#include "FloodPlot.hpp"
+#include "../time/Time.hpp"
+#include "../core/Application.hpp"
 
 using namespace std;
 using namespace boost;
@@ -317,7 +317,7 @@ MatrixFloodPlotData::MatrixFloodPlotData(const std::vector<double>& xVector,
 MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
                                          const Vector& yVector,
                                          const Matrix& matrix,
-                     QwtDoubleInterval colorMapRange)
+                                         QwtDoubleInterval colorMapRange)
 : m_xVector(xVector),
   m_yVector(yVector),
   m_matrix(matrix),
@@ -329,7 +329,7 @@ MatrixFloodPlotData::MatrixFloodPlotData(const Vector& xVector,
 
 MatrixFloodPlotData* MatrixFloodPlotData::copy() const
 {
-  MatrixFloodPlotData* result = new MatrixFloodPlotData(m_xVector, m_yVector, m_matrix, m_colorMapRange);
+  auto result = new MatrixFloodPlotData(m_xVector, m_yVector, m_matrix, m_colorMapRange);
   result->interpMethod(m_interpMethod);
   return result;
 }
@@ -419,7 +419,7 @@ void MatrixFloodPlotData::init(){
  * --------------------------------------
 */
 
-FloodPlot::FloodPlot(QWidget* parent, Qt::WFlags flags) : Plot2D(parent, flags)
+FloodPlot::FloodPlot(QWidget* parent, Qt::WindowFlags flags) : Plot2D(parent, flags)
 {
   init();
 }
@@ -432,7 +432,7 @@ FloodPlot::FloodPlot(const Matrix& m)
   floodPlotData(data);
 }
 
-FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WFlags flags)
+FloodPlot::Ptr FloodPlot::create(QWidget* parent, Qt::WindowFlags flags)
 {
   Application::instance().application();
   return FloodPlot::Ptr(new FloodPlot(parent, flags));
@@ -446,7 +446,7 @@ FloodPlot::Ptr FloodPlot::create(const Matrix& m)
 
 void FloodPlot::init()
 {
-  m_plot2DTimeAxis = NULL;
+  m_plot2DTimeAxis = nullptr;
   // destroy windows when closed
   setAttribute(Qt::WA_DeleteOnClose);
 
@@ -466,7 +466,7 @@ void FloodPlot::selectColorMap()
 {// cycle through list
   switch (m_colorMapType)
   {
-  case FloodPlotColorMap::Jet:
+    case FloodPlotColorMap::Jet:
       {
         colorMap(FloodPlotColorMap::Gray);
         break;
@@ -509,7 +509,7 @@ void FloodPlot::timeseriesData(TimeSeries tsData)
   m_duration = (m_endDateTime-m_startDateTime).totalDays();
   m_xAxisMin = 0.0;
   m_xAxisMax = m_duration;
-  if (m_plot2DTimeAxis == NULL) 
+  if (m_plot2DTimeAxis == nullptr) 
   {
     m_plot2DTimeAxis = new Plot2DTimeAxis(m_startDateTime, m_duration);
     m_qwtPlot->setAxisTitle(QwtPlot::xBottom, " Simulation Time");
@@ -579,7 +579,7 @@ void FloodPlot::colorLevels(Vector& colorLevels)
 
   m_spectrogram->setColorMap(colorMap);
   m_qwtPlot->setAxisScale(QwtPlot::yRight, minimum(colorLevels), maximum(colorLevels)); // legend numbers
-    m_rightAxis->setColorMap(QwtDoubleInterval(minimum(colorLevels), maximum(colorLevels)), m_spectrogram->colorMap()); // legend colors
+  m_rightAxis->setColorMap(QwtDoubleInterval(minimum(colorLevels), maximum(colorLevels)), m_spectrogram->colorMap()); // legend colors
   m_qwtPlot->replot();
 }
 
@@ -594,19 +594,19 @@ void FloodPlot::colorMapRange(double min, double max)
   m_floodPlotData->colorMapRange(colorMap); // color range applied to plot data
   m_spectrogram->setData(*m_floodPlotData);
   m_qwtPlot->setAxisScale(QwtPlot::yRight, min, max); // legend numbers
-    m_rightAxis->setColorMap(colorMap, m_spectrogram->colorMap()); // legend colors
+  m_rightAxis->setColorMap(colorMap, m_spectrogram->colorMap()); // legend colors
   m_qwtPlot->replot();
 }
 
 void FloodPlot::showContour(bool on)
 {
-    m_spectrogram->setDisplayMode(QwtPlotSpectrogram::ContourMode, on);
+  m_spectrogram->setDisplayMode(QwtPlotSpectrogram::ContourMode, on);
 }
 
 void FloodPlot::showSpectrogram(bool on)
 {
-    m_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, on);
-    m_spectrogram->setDefaultContourPen(on ? QPen() : QPen(Qt::NoPen));
+  m_spectrogram->setDisplayMode(QwtPlotSpectrogram::ImageMode, on);
+  m_spectrogram->setDefaultContourPen(on ? QPen() : QPen(Qt::NoPen));
 }
 
 void FloodPlot::colorMap(FloodPlotColorMap::ColorMapList clrMap)
@@ -633,12 +633,12 @@ void FloodPlot::dataAutoRange()
 
 void FloodPlot::initColorBar()
 {
-    m_rightAxis = m_qwtPlot->axisWidget(QwtPlot::yRight);
-    m_rightAxis->setColorBarEnabled(true);
-    m_rightAxis->setColorMap(m_dataRange, m_spectrogram->colorMap());
+  m_rightAxis = m_qwtPlot->axisWidget(QwtPlot::yRight);
+  m_rightAxis->setColorBarEnabled(true);
+  m_rightAxis->setColorMap(m_dataRange, m_spectrogram->colorMap());
 
-    m_qwtPlot->setAxisScale(QwtPlot::yRight, m_dataRange.minValue(), m_dataRange.maxValue() );
-    m_qwtPlot->enableAxis(QwtPlot::yRight);
+  m_qwtPlot->setAxisScale(QwtPlot::yRight, m_dataRange.minValue(), m_dataRange.maxValue() );
+  m_qwtPlot->enableAxis(QwtPlot::yRight);
 
 }
 

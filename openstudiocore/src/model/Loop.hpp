@@ -20,8 +20,8 @@
 #ifndef MODEL_LOOP_HPP
 #define MODEL_LOOP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -208,7 +208,7 @@ class MODEL_API Loop : public ParentObject {
 
   typedef detail::Loop_Impl ImplType;
 
-  explicit Loop(boost::shared_ptr<ImplType> impl);
+  explicit Loop(std::shared_ptr<ImplType> impl);
 
   Loop(IddObjectType type,const Model& model);
 

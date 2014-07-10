@@ -20,14 +20,14 @@
 #ifndef UTILITIES_FILETYPES_EPWFILE_HPP
 #define UTILITIES_FILETYPES_EPWFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/DateTime.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../core/Path.hpp"
+#include "../core/Logger.hpp"
+#include "../time/Time.hpp"
+#include "../time/Date.hpp"
+#include "../time/DateTime.hpp"
+#include "../data/TimeSeries.hpp"
 
 namespace openstudio{
 

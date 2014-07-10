@@ -26,12 +26,9 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
+#include "../../utilities/time/DateTime.hpp"
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -126,7 +123,7 @@ namespace detail {
     addParameter("dakota","dakota.in");
 
     // add additional parameters
-    BOOST_FOREACH(const JobParam& param,params().params()) {
+    for (const JobParam& param : params().params()) {
       std::string val = param.value;
       if (val.find("-",0) == 0) {
         unsigned pos = val.find(" ",0);

@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/LoguniformDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "LoguniformDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 LoguniformDistribution::LoguniformDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(LoguniformDistribution::type())))
 {}
 
 LoguniformDistribution::LoguniformDistribution(double lowerBound, double upperBound) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(LoguniformDistribution::type())))
 {
   setLowerBound(lowerBound);
@@ -65,7 +65,7 @@ void LoguniformDistribution::setUpperBound(double value) {
   impl()->setAttribute(Attribute("upper_bounds",value),false);
 }
 
-LoguniformDistribution::LoguniformDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+LoguniformDistribution::LoguniformDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == LoguniformDistribution::type());

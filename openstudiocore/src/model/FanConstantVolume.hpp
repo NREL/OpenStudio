@@ -20,10 +20,10 @@
 #ifndef MODEL_FANCONSTANTVOLUME_HPP
 #define MODEL_FANCONSTANTVOLUME_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -114,7 +114,7 @@ class MODEL_API FanConstantVolume : public StraightComponent {
 
   /// @cond
   typedef detail::FanConstantVolume_Impl ImplType;
-  explicit FanConstantVolume(boost::shared_ptr<detail::FanConstantVolume_Impl> impl);
+  explicit FanConstantVolume(std::shared_ptr<detail::FanConstantVolume_Impl> impl);
  private:
   REGISTER_LOGGER("openstudio.model.FanConstantVolume");
   /// @endcond

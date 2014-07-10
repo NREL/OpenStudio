@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
+#include "ContinuousVariableRecord.hpp"
+#include "ContinuousVariableRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/RubyContinuousVariableRecord.hpp>
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "RubyContinuousVariableRecord.hpp"
 
-#include <analysis/RubyContinuousVariable.hpp>
-#include <analysis/RubyContinuousVariable_Impl.hpp>
+#include "../analysis/RubyContinuousVariable.hpp"
+#include "../analysis/RubyContinuousVariable_Impl.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -105,7 +105,7 @@ namespace detail {
 
   }
 
-  void ContinuousVariableRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ContinuousVariableRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ContinuousVariableRecord>(query);
@@ -278,7 +278,7 @@ namespace detail {
 
 } // detail
 
-ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
+ContinuousVariableRecord::ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl,
                                                    ProjectDatabase database,
                                                    const boost::optional<analysis::ContinuousVariable>& variable)
   : InputVariableRecord(impl, database, (variable) ? *variable : analysis::OptionalInputVariable())
@@ -319,7 +319,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
   }
 
   OS_ASSERT(false);
-  return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
+  return ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
 ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable(
@@ -337,7 +337,7 @@ ContinuousVariableRecord ContinuousVariableRecord::factoryFromContinuousVariable
   }
 
   OS_ASSERT(false);
-  return ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl>());
+  return ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl>());
 }
 
 std::vector<ContinuousVariableRecord> ContinuousVariableRecord::getContinuousVariableRecords(
@@ -401,7 +401,7 @@ analysis::ContinuousVariable ContinuousVariableRecord::continuousVariable() cons
 }
 
 /// @cond
-ContinuousVariableRecord::ContinuousVariableRecord(boost::shared_ptr<detail::ContinuousVariableRecord_Impl> impl)
+ContinuousVariableRecord::ContinuousVariableRecord(std::shared_ptr<detail::ContinuousVariableRecord_Impl> impl)
   : InputVariableRecord(impl)
 {}
 /// @endcond

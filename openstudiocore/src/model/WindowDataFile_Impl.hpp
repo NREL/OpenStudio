@@ -20,7 +20,7 @@
 #ifndef MODEL_WINDOWDATAFILE_IMPL_HPP
 #define MODEL_WINDOWDATAFILE_IMPL_HPP 
 
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase_Impl.hpp"
 
 namespace openstudio {
 namespace model {

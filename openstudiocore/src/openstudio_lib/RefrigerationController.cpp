@@ -69,25 +69,25 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
 
   if( system )
   {
-    systemView->setId(OSItemId(system->handle(),QString(),false));
+    systemView->setId(OSItemId(system->handle().toString(),QString(),false));
 
     if( boost::optional<model::RefrigerationSubcoolerLiquidSuction> subcooler = system->liquidSuctionHeatExchangerSubcooler() )
     {
-      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle(),QString(),false));
+      systemView->refrigerationSHXView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
       systemView->refrigerationSHXView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::RefrigerationSubcoolerMechanical> subcooler = system->mechanicalSubcooler() )
     {
-      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle(),QString(),false));
+      systemView->refrigerationSubCoolerView->setId(OSItemId(subcooler->handle().toString(),QString(),false));
 
       systemView->refrigerationSubCoolerView->setName(QString::fromStdString(subcooler->name().get()));
     }
 
     if( boost::optional<model::ModelObject> condenser = system->refrigerationCondenser() )
     {
-      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle(),QString(),false));
+      systemView->refrigerationCondenserView->setCondenserId(OSItemId(condenser->handle().toString(),QString(),false));
 
       systemView->refrigerationCondenserView->setCondenserName(QString::fromStdString(condenser->name().get()));
 
@@ -134,7 +134,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCompressorDetailView * detailView = new RefrigerationCompressorDetailView(); 
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setLabel(QString::number(compressorIndex));
 
@@ -163,7 +163,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -190,7 +190,7 @@ void RefrigerationController::refreshRefrigerationSystemView(RefrigerationSystem
     {
       RefrigerationCaseDetailView * detailView = new RefrigerationCaseDetailView();
 
-      detailView->setId(OSItemId(it->handle(),QString(),false));
+      detailView->setId(OSItemId(it->handle().toString(),QString(),false));
 
       detailView->setName(QString::fromStdString(it->name().get()));
 
@@ -288,7 +288,7 @@ boost::optional<model::RefrigerationSystem> RefrigerationController::cascadeSyst
 
 void RefrigerationController::zoomInOnSystem(const Handle & handle)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
   
   if( boost::optional<model::RefrigerationSystem> system = t_model.getModelObject<model::RefrigerationSystem>(handle) )
@@ -301,7 +301,7 @@ void RefrigerationController::zoomInOnSystem(model::RefrigerationSystem & refrig
 {
   model::OptionalModelObject mo;
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 
@@ -385,7 +385,7 @@ void RefrigerationController::zoomOutToSystemGridView()
 {
   model::OptionalModelObject mo;
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   doc->mainRightColumnController()->inspectModelObject(mo,false);
 
@@ -406,7 +406,7 @@ void RefrigerationController::onCondenserViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -481,7 +481,7 @@ void RefrigerationController::onCompressorViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -507,7 +507,7 @@ void RefrigerationController::onSecondaryViewDrop(const OSItemId & itemid)
   OS_ASSERT(m_currentSystem);
   model::Model t_model = m_currentSystem->model();
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   if( doc->fromComponentLibrary(itemid) )
   {
     boost::optional<model::ModelObject> mo = doc->getModelObject(itemid);
@@ -582,7 +582,7 @@ void RefrigerationController::onCasesViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -618,7 +618,7 @@ void RefrigerationController::onSubCoolerViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -680,7 +680,7 @@ void RefrigerationController::onSHXViewDrop(const OSItemId & itemid)
 {
   OS_ASSERT(m_currentSystem);
 
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {
@@ -740,7 +740,7 @@ RefrigerationView * RefrigerationController::refrigerationView() const
 
 void RefrigerationController::inspectOSItem(const OSItemId & itemid)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   OS_ASSERT(doc);
 
@@ -800,7 +800,7 @@ QSharedPointer<RefrigerationSystemListController> RefrigerationController::refri
 RefrigerationSystemListController::RefrigerationSystemListController(RefrigerationController * refrigerationController)
   : m_refrigerationController(refrigerationController)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
   model::Model t_model = doc->model();
   bool bingo = connect(t_model.getImpl<model::detail::Model_Impl>().get(),SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                        this,SLOT(onModelObjectAdd(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)));
@@ -880,7 +880,7 @@ void RefrigerationSystemListController::onModelObjectAdd(const WorkspaceObject& 
 
 void RefrigerationSystemListController::addSystem(const OSItemId & itemid)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
 
   if( doc->fromComponentLibrary(itemid) )
   {

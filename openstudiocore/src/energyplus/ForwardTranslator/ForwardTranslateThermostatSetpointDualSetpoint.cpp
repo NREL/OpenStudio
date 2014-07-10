@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Schedule.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
 #include <utilities/idd/ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
 
 using namespace openstudio::model;

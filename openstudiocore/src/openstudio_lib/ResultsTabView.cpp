@@ -17,9 +17,9 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ResultsTabView.hpp>
+#include "ResultsTabView.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
 #include "OSAppBase.hpp"
 
@@ -34,12 +34,12 @@
 #include <QString>
 #include <QRegExp>
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/JobStatusWidget.hpp"
+#include "../runmanager/lib/RunManager.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/filesystem.hpp>
 
@@ -216,7 +216,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir)
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( boost::filesystem::basic_recursive_directory_iterator<openstudio::path> end, dir(t_runDir); 
+  for ( boost::filesystem::recursive_directory_iterator end, dir(t_runDir); 
         dir != end; 
         ++dir ) 
   {
@@ -278,12 +278,12 @@ void ResultsView::treeChanged(const openstudio::UUID &t_uuid)
         openstudio::runmanager::Files f = j.treeAllFiles().getAllByFilename("report.html");
         std::vector<openstudio::runmanager::FileInfo> t_files = f.files();
         std::vector<openstudio::path> reports;
-        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+        for (const openstudio::runmanager::FileInfo& file : t_files) {
           reports.push_back(file.fullPath);
         }
         f = j.treeAllFiles().getAllByFilename("eplustbl.htm");
         t_files = f.files();
-        Q_FOREACH(openstudio::runmanager::FileInfo file, t_files){
+        for (const openstudio::runmanager::FileInfo& file : t_files) {
           reports.push_back(file.fullPath);
         }
         populateComboBox(reports);
@@ -309,7 +309,7 @@ void ResultsView::populateComboBox(std::vector<openstudio::path> reports)
   openstudio::path path;
 
   m_comboBox->clear();
-  Q_FOREACH(openstudio::path report, reports){
+  for (const openstudio::path& report : reports) {
 
     fullPathString = toQString(report.string());
     QFile file(fullPathString);

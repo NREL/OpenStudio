@@ -19,7 +19,7 @@
 #ifndef MODEL_AIRLOOPHVACOUTDOORAIRSYSTEM_IMPL_HPP
 #define MODEL_AIRLOOPHVACOUTDOORAIRSYSTEM_IMPL_HPP
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

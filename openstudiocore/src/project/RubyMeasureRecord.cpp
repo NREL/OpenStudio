@@ -17,27 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/OSArgumentRecord.hpp>
+#include "RubyMeasureRecord.hpp"
+#include "RubyMeasureRecord_Impl.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "JoinRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "FileReferenceRecord.hpp"
+#include "OSArgumentRecord.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/Measure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/Measure_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Checksum.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/Compare.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Checksum.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <sstream>
 
@@ -131,7 +128,7 @@ namespace detail {
     return result;
   }
 
-  void RubyMeasureRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void RubyMeasureRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<RubyMeasureRecord>(query);
@@ -181,7 +178,7 @@ namespace detail {
     FileReferenceRecord fileReferenceRecord = this->fileReferenceRecord();
     OSArgumentRecordVector argumentRecords = this->osArgumentRecords();
     ruleset::OSArgumentVector arguments;
-    BOOST_FOREACH(const OSArgumentRecord& argumentRecord,argumentRecords) {
+    for (const OSArgumentRecord& argumentRecord : argumentRecords) {
       arguments.push_back(argumentRecord.osArgument());
     }
 
@@ -302,7 +299,7 @@ namespace detail {
 RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                MeasureGroupRecord& measureGroupRecord,
                                                int measureVectorIndex)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(rubyMeasure,
                                                 measureGroupRecord,
                                                 measureVectorIndex)),
@@ -315,7 +312,7 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
 
 RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
                                                ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(rubyMeasure,
                                                 database)),
         database)
@@ -326,20 +323,20 @@ RubyMeasureRecord::RubyMeasureRecord(const analysis::RubyMeasure& rubyMeasure,
 }
 
 RubyMeasureRecord::RubyMeasureRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : MeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl>(
+  : MeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl>(
         new detail::RubyMeasureRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
+RubyMeasureRecord::RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl, ProjectDatabase database)
   : MeasureRecord(impl, database)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
 }
 
-RubyMeasureRecord::RubyMeasureRecord(boost::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
+RubyMeasureRecord::RubyMeasureRecord(std::shared_ptr<detail::RubyMeasureRecord_Impl> impl)
   : MeasureRecord(impl)
 {
   OS_ASSERT(getImpl<detail::RubyMeasureRecord_Impl>());
@@ -463,7 +460,7 @@ void RubyMeasureRecord::constructRelatedRecords(const analysis::RubyMeasure& rub
   // Save child OSArguments
   OSArgumentVector arguments = rubyMeasure.arguments();
   std::vector<UUID> argumentUUIDs;
-  BOOST_FOREACH(const OSArgument& argument,arguments) {
+  for (const OSArgument& argument : arguments) {
     // no dirty flag, so construct them all
     argumentUUIDs.push_back(argument.uuid());
     OSArgumentRecord newArgumentRecord = OSArgumentRecord(argument, copyOfThis);
@@ -483,7 +480,7 @@ void RubyMeasureRecord::removeOSArgumentRecords(const std::vector<UUID>& uuidsTo
   ss << "SELECT * FROM " + OSArgumentRecord::databaseTableName() +
         " WHERE (rubyPerturbationRecordId=:rubyPerturbationRecordId) AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPointValueRecord.hpp>
-#include <project/DataPointValueRecord_Impl.hpp>
+#include "DataPointValueRecord.hpp"
+#include "DataPointValueRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
+#include "JoinRecord.hpp"
+#include "DataPointRecord.hpp"
+#include "FunctionRecord.hpp"
+#include "ContinuousVariableRecord.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -109,7 +109,7 @@ namespace detail {
     return result;
   }
 
-  void DataPointValueRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPointValueRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPointValueRecord>(query);
@@ -264,7 +264,7 @@ namespace detail {
 DataPointValueRecord::DataPointValueRecord(double dataPointValue, 
                                            DataPointRecord& dataPointRecord,
                                            FunctionRecord& functionRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(dataPointValue, dataPointRecord, functionRecord)),
         dataPointRecord.projectDatabase())
 {
@@ -274,7 +274,7 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
 DataPointValueRecord::DataPointValueRecord(double dataPointValue, 
                                            DataPointRecord& dataPointRecord,
                                            ContinuousVariableRecord& continuousVariableRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(dataPointValue, 
                                               dataPointRecord, 
                                               continuousVariableRecord)),
@@ -284,14 +284,14 @@ DataPointValueRecord::DataPointValueRecord(double dataPointValue,
 }
 
 DataPointValueRecord::DataPointValueRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointValueRecord_Impl>(
         new detail::DataPointValueRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::DataPointValueRecord_Impl>());
 }
 
-DataPointValueRecord::DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl,
+DataPointValueRecord::DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl,
                                            ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -312,7 +312,7 @@ UpdateByIdQueryData DataPointValueRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
+    for (auto it = result.columnValues.begin(), 
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -320,7 +320,7 @@ UpdateByIdQueryData DataPointValueRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -334,11 +334,10 @@ UpdateByIdQueryData DataPointValueRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(), 
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -434,7 +433,7 @@ double DataPointValueRecord::dataPointValue() const {
 }
 
 /// @cond
-DataPointValueRecord::DataPointValueRecord(boost::shared_ptr<detail::DataPointValueRecord_Impl> impl)
+DataPointValueRecord::DataPointValueRecord(std::shared_ptr<detail::DataPointValueRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond

@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationCompressor_Impl.hpp>
-#include <model/CurveBicubic.hpp>
-#include <model/CurveBicubic_Impl.hpp>
+#include "../ReverseTranslator.hpp"
+#include "../../model/RefrigerationCompressor.hpp"
+#include "../../model/RefrigerationCompressor_Impl.hpp"
+#include "../../model/CurveBicubic.hpp"
+#include "../../model/CurveBicubic_Impl.hpp"
 #include <utilities/idd/Refrigeration_Compressor_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SUBTABCONTROLLER_H
-#define OPENSTUDIO_SUBTABCONTROLLER_H
+#ifndef OPENSTUDIO_SUBTABCONTROLLER_HPP
+#define OPENSTUDIO_SUBTABCONTROLLER_HPP
 
 #include "../shared_gui_components/OSQObjectController.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include <QObject>
 
@@ -105,4 +105,4 @@ signals:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SUBTABCONTROLLER_H
+#endif // OPENSTUDIO_SUBTABCONTROLLER_HPP

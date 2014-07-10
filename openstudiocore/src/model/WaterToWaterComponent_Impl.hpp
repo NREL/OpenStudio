@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 #ifndef MODEL_WATERTOWATERCOMPONENT_IMPL_HPP
 #define MODEL_WATERTOWATERCOMPONENT_IMPL_HPP
 
-#include <model/WaterToWaterComponent.hpp>
+#include "WaterToWaterComponent.hpp"
 
-#include <model/HVACComponent_Impl.hpp>
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 

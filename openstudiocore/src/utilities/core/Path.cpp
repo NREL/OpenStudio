@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
+#include "Path.hpp"
+#include "String.hpp"
 
 #include <QDir>
 
@@ -49,44 +49,20 @@ QString longPathName(const QString& path)
 
 #endif
 
-#ifdef _WINDOWS
 
-  // allow path to be written to cout on Windows
-  std::ostream& operator<<(std::ostream& os, const path& p)
-  {
-    os << toString(p);
-    return os;
-  }
+// allow path to be written to cout on Windows
+std::ostream& operator<<(std::ostream& os, const path& p)
+{
+  os << toString(p);
+  return os;
+}
 
-  /** UTF-16 encoded wchar* to path*/
-  path toPath(const wchar_t* s)
-  {
-    return path(s);
-  }
-
-  /** UTF-16 encoded std::wstring to path*/
-  path toPath(const std::wstring& s)
-  {
-    return path(s);
-  }
-
-  /** QString to path*/
-  path toPath(const QString& q)
-  {
-    std::wstring w = toWString(q);
-    return path(w);
-  }
-
-#else
-
-  /** QString to path*/
-  path toPath(const QString& q)
-  {
-    std::string s = toString(q);
-    return path(s);
-  }
-
-#endif
+/** QString to path*/
+path toPath(const QString& q)
+{
+  std::string s = toString(q);
+  return path(s);
+}
 
 /** path to a temporary directory. */
 path tempDir()
@@ -97,13 +73,13 @@ path tempDir()
 /** path to UTF-8 encoding. */
 std::string toString(const path& p) 
 {
-  return toString(toQString(p));
+  return p.generic_string();
 }
 
 /** path to QString. */
 QString toQString(const path& p) 
 {
-  return toQString(p.string());
+  return toQString(toString(p));
 }
 
 /** UTF-8 encoded char* to path*/

@@ -20,19 +20,18 @@
 #ifndef UTILITIES_PLOT_LINEPLOT_HPP
 #define UTILITIES_PLOT_LINEPLOT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/data/Vector.hpp>
-#include <utilities/data/Matrix.hpp>
+#include "Plot2D.hpp"
+#include "../data/TimeSeries.hpp"
+#include "../data/Vector.hpp"
+#include "../data/Matrix.hpp"
  
-#include <QtGui/QWidget>
-#include <QtGui/QPushButton>
-#include <QtGui/QAction>
-#include <QtGui/QColor>
+#include <QWidget>
+#include <QPushButton>
+#include <QAction>
+#include <QColor>
  
-#include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_legend.h>
 #include <qwt/qwt_plot_grid.h>
 #include <qwt/qwt_legend_item.h>
@@ -45,7 +44,6 @@
 #include <qwt/qwt_plot_layout.h>
 
 #include <cmath>
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
 
@@ -301,10 +299,10 @@ public:
 
 
   /// constructor
-  LinePlot(QWidget* parent = 0, Qt::WFlags flags = 0);
+  LinePlot(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// create
-  static LinePlot::Ptr create(QWidget* parent = 0, Qt::WFlags flags = 0);
+  static LinePlot::Ptr create(QWidget* parent = nullptr, Qt::WindowFlags flags = nullptr);
 
   /// virtual destructor
   virtual ~LinePlot() {}
@@ -329,8 +327,8 @@ public:
   const int lineThickness() const {return m_lineThickness;}
 
 protected:
-/// drop target support for drag/drop operations
-    void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
+  /// drop target support for drag/drop operations
+  void dragEnterEvent(QDragEnterEvent *e) { e->accept(); }
 
 
 private:
@@ -360,13 +358,13 @@ private:
   // curve thickness for multiple lines trac #170
   int m_lineThickness;
 
-  // set line based on color and number of curves and thicknes trac #179
+  // set line based on color and number of curves and thickness trac #179
   QPen curvePen(QColor &color);
 
 
 private slots:
   /// legend clicked event
-    void showCurve(QwtPlotItem *, bool on);
+  void showCurve(QwtPlotItem *, bool on);
 
 };
 

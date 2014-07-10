@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+<!-- based on https://svn.boost.org/trac/boost/wiki/DebuggerVisualizers -->
+<!--Copyright Bruno Durin 2010. Use, modification and distribution are subject-->
+<!--to the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
+<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
+<!--@guid     2421DB60-44CC-11DF-9879-0800200C9A66-->
+<!--@platform msvc-8, msvc-9-->
+<!--@version  1.0-->
+<!--@author   Bruno Durin-->
+<!--@email    bruno dot durin at gmail dot com-->
+<!--Usage-->
+<!--Unlike the other visualizer for date_time, this visualizer does not need a header-->
+<!--file to work. Note that the displayed time is in UTC.-->
+<Type Name="boost::gregorian::date">
+    <DisplayString>{100*((4*(days_+32044)+3)/146097)+((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461)-4800+(((5*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4)-(1461*((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10)}-{((5*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4)-(1461*((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+3-12*(((5*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4)-(1461*((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10)}-{(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4)-(1461*((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461))/4)-((153*((5*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4)-(1461*((4*(days_+32044-((146097*((4*(days_+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+2)/5)+1}</DisplayString>
+</Type>
+
+<Type Name="boost::gregorian::date_duration">
+    <DisplayString Condition="days_.value_ == 1">{days_.value_} day</DisplayString>
+    <DisplayString Condition="days_.value_ != 1">{days_.value_} days</DisplayString>
+</Type>
+
+<!--only works with microseconds resolution-->
+<Type Name="boost::posix_time::time_duration">
+    <DisplayString>{ticks_.value_/86400000000}d {(ticks_.value_-86400000000*(ticks_.value_/86400000000))/3600000000}h {(ticks_.value_-86400000000*(ticks_.value_/86400000000)-3600000000*((ticks_.value_-86400000000*(ticks_.value_/86400000000))/3600000000))/60000000}m {((ticks_.value_-86400000000*(ticks_.value_/86400000000)-3600000000*((ticks_.value_-86400000000*(ticks_.value_/86400000000))/3600000000))-60000000*((ticks_.value_-86400000000*(ticks_.value_/86400000000) - 3600000000*((ticks_.value_-86400000000*(ticks_.value_/86400000000))/3600000000))/60000000))/1000000}s {(ticks_.value_%1000000)/1000}ms {ticks_.value_%1000}us</DisplayString>
+</Type>
+
+<!--only works with microseconds resolution-->
+<Type Name="boost::posix_time::ptime">
+    <DisplayString>{100*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097)+((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461)-4800+(((5*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10)}-{((5*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+3-12*(((5*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)/10)}-{((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)-((153*((5*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4)-(1461*((4*((time_.time_count_.value_/86400000000)+32044-((146097*((4*((time_.time_count_.value_/86400000000)+32044)+3)/146097))/4))+3)/1461))/4)+2)/153)+2)/5)+1}  {(time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000))/3600000000}h{(time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000)-3600000000*((time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000))/3600000000))/60000000}m{((time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000)-3600000000*((time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000))/3600000000))-60000000*((time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000) - 3600000000*((time_.time_count_.value_-86400000000*(time_.time_count_.value_/86400000000))/3600000000))/60000000))/1000000}s ({time_.time_count_.value_%1000000}us)</DisplayString>
+</Type>
+
+<Type Name="boost::date_time::period&lt;*&gt;">
+    <DisplayString>{begin_}/{last_}</DisplayString>
+    <Expand>
+        <Item Name="begin">begin_</Item>
+        <Item Name="last">last_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::date_time::date_itr&lt;*&gt;">
+    <DisplayString>{current_}</DisplayString>
+    <Expand>
+        <ExpandedItem>current_</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::date_time::time_itr&lt;*&gt;">
+    <DisplayString>{current_}</DisplayString>
+    <Expand>
+        <ExpandedItem>current_</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::local_time::posix_time_zone_base&lt;*&gt;">
+    <DisplayString>{zone_names_.std_zone_abbrev_,sb}{(base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000))/3600000000}:{(base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000)-3600000000*((base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000))/3600000000))/60000000}:{((base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000)-3600000000*((base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000))/3600000000))-60000000*((base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000) - 3600000000*((base_utc_offset_.ticks_.value_-86400000000*(base_utc_offset_.ticks_.value_/86400000000))/3600000000))/60000000))/1000000}</DisplayString>
+</Type>
+
+<Type Name="boost::chrono::duration&lt;*,*&gt;">
+    <DisplayString>{rep_} {*(($T2*)1)}</DisplayString>
+    <Expand>
+        <Item Name="rep">rep_</Item>
+        <Item Name="ratio">*(($T2*)1)</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::chrono::time_point&lt;*&gt;">
+    <DisplayString>{d_}</DisplayString>
+    <Expand>
+        <ExpandedItem>d_</ExpandedItem>
+    </Expand>
+</Type>
+</AutoVisualizer>

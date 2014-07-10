@@ -20,7 +20,7 @@
 #ifndef MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_IMPL_HPP
 
-#include <model/SetpointManager_Impl.hpp>
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 

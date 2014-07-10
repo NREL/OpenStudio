@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_WORKSPACEOBJECT_DIFF_IMPL_HPP
-#define UTILITIES_WORKSPACEOBJECT_DIFF_IMPL_HPP
+#ifndef UTILITIES_IDF_WORKSPACEOBJECTDIFF_IMPL_HPP
+#define UTILITIES_IDF_WORKSPACEOBJECTDIFF_IMPL_HPP
 
-#include <utilities/idf/IdfObjectDiff_Impl.hpp>
+#include "IdfObjectDiff_Impl.hpp"
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/UUID.hpp>
+#include "../core/UUID.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -51,4 +51,4 @@ namespace detail {
 } // detail
 } // openstudio
 
-#endif // UTILITIES_WORKSPACEOBJECT_DIFF_IMPL_HPP
+#endif // UTILITIES_IDF_WORKSPACEOBJECTDIFF_IMPL_HPP

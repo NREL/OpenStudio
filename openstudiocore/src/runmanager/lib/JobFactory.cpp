@@ -118,7 +118,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToIdfJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ModelToIdfJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToIdfJob(
@@ -145,7 +145,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ModelToRadJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToRadJob(
@@ -174,7 +174,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::IdfToModelJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::IdfToModelJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createIdfToModelJob(
@@ -202,7 +202,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::CalculateEconomicsJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::CalculateEconomicsJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles processing of EnergyPlus job outputs
@@ -216,7 +216,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles processing of EnergyPlus job outputs from an OSM file
@@ -230,7 +230,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::OpenStudioPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::OpenStudioPostProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   // Creates a job that handles prepping an input file by enabling sql output
@@ -244,7 +244,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createModelToRadPreProcessJob(
@@ -257,7 +257,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ModelToRadPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ModelToRadPreProcessJob(*t_uuid, t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createEnergyPlusJob(
@@ -270,7 +270,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -344,7 +344,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ExpandObjectsJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ExpandObjectsJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -358,7 +358,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::XMLPreprocessorJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::XMLPreprocessorJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -387,7 +387,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::PreviewIESJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::PreviewIESJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -418,7 +418,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::RubyJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::RubyJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -432,7 +432,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::UserScriptJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::UserScriptJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -458,12 +458,12 @@ namespace runmanager {
     if (!scriptPath.empty())
     {
       openstudio::runmanager::FileInfo fi(scriptPath,"rb");
-      BOOST_FOREACH(const PathPair& reqFile,t_builder.requiredFiles()) {
+      for (const PathPair& reqFile : t_builder.requiredFiles()) {
         fi.addRequiredFile(reqFile.first,reqFile.second);
       }
       files.append(fi);
     }
-    return Job(boost::shared_ptr<detail::Job_Impl>(
+    return Job(std::shared_ptr<detail::Job_Impl>(
           new detail::RubyJob(*t_uuid,Tools(),t_builder.toParams(),
             normalizeURLs(files,t_url_search_paths,t_loading,*t_uuid), JobState())));
   }
@@ -478,14 +478,14 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
   Job JobFactory::createNullJob(
       const boost::optional<openstudio::UUID> &t_uuid)
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::NullJob(*t_uuid,
             Tools(), JobParams(), Files(), JobState())));
   }
 
@@ -499,7 +499,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ReadVarsJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ReadVarsJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -513,7 +513,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -523,7 +523,7 @@ namespace runmanager {
     p.append("numsplits", boost::lexical_cast<std::string>(t_numSplits));
     p.append("offset", boost::lexical_cast<std::string>(t_offset));
 
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(createUUID(),
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(createUUID(),
             Tools(), p, Files(), JobState())));
   }
 
@@ -533,7 +533,7 @@ namespace runmanager {
     p.append("numsplits", boost::lexical_cast<std::string>(t_numSplits));
     p.append("offset", boost::lexical_cast<std::string>(t_offset));
 
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(createUUID(),
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusSplitJob(createUUID(),
             Tools(), p, Files(), JobState())));
   }
 
@@ -541,7 +541,7 @@ namespace runmanager {
   {
     JobParams p;
     p.append("filename", t_filename);
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(createUUID(), Tools(), p, Files(), JobState())));
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::EnergyPlusJob(createUUID(), Tools(), p, Files(), JobState())));
   }
 
   Job JobFactory::createParallelEnergyPlusJobTree(
@@ -571,7 +571,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::ParallelEnergyPlusJoinJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -585,7 +585,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::BasementJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::BasementJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -599,7 +599,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::SlabJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::SlabJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -613,7 +613,7 @@ namespace runmanager {
       const JobState &t_state
       )
   {
-    return Job(boost::shared_ptr<detail::Job_Impl>(new detail::DakotaJob(*t_uuid,
+    return Job(std::shared_ptr<detail::Job_Impl>(new detail::DakotaJob(*t_uuid,
             t_tools, t_params, normalizeURLs(t_files, t_url_search_paths, t_loading, *t_uuid), t_state)));
   }
 
@@ -660,19 +660,17 @@ namespace runmanager {
     boost::optional<Job> finished = t_job.finishedJob();
 
     // Optimize all children
-    std::for_each(children.begin(), children.end(), boost::function<void (Job)>(&JobFactory::optimizeJobTree));
+    std::for_each(children.begin(), children.end(), std::function<void (Job)>(&JobFactory::optimizeJobTree));
     if (finished)
     {
       optimizeJobTree(*finished);
     }
 
     // Then try to merge them with the parent
-    for (std::vector<Job>::iterator itr = children.begin();
-        itr != children.end();
-        ++itr)
+    for (const auto & child : children)
     {
       try {
-        t_job.mergeJob(*itr);
+        t_job.mergeJob(child);
         didsomething = true;
       } catch (const openstudio::runmanager::MergeJobError &) {
         // continue anyhow

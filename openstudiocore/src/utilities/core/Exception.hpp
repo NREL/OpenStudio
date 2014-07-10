@@ -22,7 +22,7 @@
 
 #include <string>
 #include <exception>
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 namespace openstudio{
 

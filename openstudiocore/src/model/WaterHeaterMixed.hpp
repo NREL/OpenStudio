@@ -20,8 +20,8 @@
 #ifndef MODEL_WATERHEATERMIXED_HPP
 #define MODEL_WATERHEATERMIXED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent.hpp"
 
 namespace openstudio {
 
@@ -414,7 +414,7 @@ class MODEL_API WaterHeaterMixed : public WaterToWaterComponent {
   /// @cond
   typedef detail::WaterHeaterMixed_Impl ImplType;
 
-  explicit WaterHeaterMixed(boost::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
+  explicit WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl> impl);
 
   friend class detail::WaterHeaterMixed_Impl;
   friend class Model;

@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_H
-#define OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_H
+#ifndef OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_HPP
+#define OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -81,5 +81,5 @@ class DaylightingControlInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_H
+#endif // OPENSTUDIO_DAYLIGHTINGCONTROLINSPECTORVIEW_HPP
 

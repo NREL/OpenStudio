@@ -79,7 +79,7 @@ namespace std {
 
 
 
-
+%include <std_shared_ptr.i>
 %include <boost_shared_ptr.i>
 
 #endif 

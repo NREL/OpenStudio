@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
+#include "../../model/OpaqueMaterial.hpp"
+#include "../../model/OpaqueMaterial_Impl.hpp"
+#include "../../model/FenestrationMaterial.hpp"
+#include "../../model/FenestrationMaterial_Impl.hpp"
+#include "../../model/ModelPartitionMaterial.hpp"
+#include "../../model/ModelPartitionMaterial_Impl.hpp"
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Construction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 

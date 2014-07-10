@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "RunPeriodControlDaylightSavingTime.hpp"
+#include "RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_RunPeriodControl_DaylightSavingTime_FieldEnums.hxx>
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/Date.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -323,7 +323,7 @@ void RunPeriodControlDaylightSavingTime::ensureNoLeapDays()
 }
 
 /// @cond
-RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(boost::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl)
+RunPeriodControlDaylightSavingTime::RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl)
   : ModelObject(impl)
 {}
 

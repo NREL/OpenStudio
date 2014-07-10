@@ -18,12 +18,12 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Plane.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/Transformation.hpp>
+#include "../Plane.hpp"
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
+#include "../Transformation.hpp"
 
 using namespace openstudio;
 

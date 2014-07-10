@@ -18,13 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
-#include <utilities/idd/IddField.hpp>
-#include <utilities/idd/IddKey.hpp>
-
-#include <boost/foreach.hpp>
+#include "../IddField.hpp"
+#include "../IddKey.hpp"
 
 using namespace openstudio;
 
@@ -40,7 +38,7 @@ TEST_F(IddFixture,IddKey_Getters) {
   LOG(Info,"Keys for field " << Controller_OutdoorAirFields::EconomizerControlType 
       << ", " << f->name() << ", of IddObject " << obj.name() << ":");
   unsigned i = 0;
-  BOOST_FOREACH(IddKey& key,keys) {
+  for (IddKey& key : keys) {
     LOG(Info,"  Key " << i << ": " << key.name());
     ++i;
   }

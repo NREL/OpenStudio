@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/BuildingComponentDialog.hpp>
-#include <shared_gui_components/BuildingComponentDialogCentralWidget.hpp>
-#include <shared_gui_components/BusyWidget.hpp>
-#include <shared_gui_components/Component.hpp>
-#include <shared_gui_components/TIDItemModel.hpp>
+#include "BuildingComponentDialog.hpp"
+#include "BuildingComponentDialogCentralWidget.hpp"
+#include "BusyWidget.hpp"
+#include "Component.hpp"
+#include "TIDItemModel.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -50,13 +50,13 @@ BuildingComponentDialog::BuildingComponentDialog(std::string& filterType, bool i
 : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint),
   m_filterType(filterType),
   m_dlgTitle(QString()),
-  m_tidTreeView(NULL),
-  m_centralWidget(NULL),
-  m_rightScrollArea(NULL),
-  m_expandedComponent(NULL),
-  m_lineEdit(NULL),
-  m_stackedWidget(NULL),
-  m_timer(NULL)
+  m_tidTreeView(nullptr),
+  m_centralWidget(nullptr),
+  m_rightScrollArea(nullptr),
+  m_expandedComponent(nullptr),
+  m_lineEdit(nullptr),
+  m_stackedWidget(nullptr),
+  m_timer(nullptr)
 {
   createLayout(isBclDlg);
 }
@@ -79,9 +79,9 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
 
   // The left pane
 
-  QVBoxLayout * leftPanelayout = new QVBoxLayout();
+  auto leftPanelayout = new QVBoxLayout();
 
-  QWidget * leftPaneWidget = new QWidget(this);
+  auto leftPaneWidget = new QWidget(this);
   leftPaneWidget->setObjectName("GrayWidget");
   leftPaneWidget->setLayout(leftPanelayout);
 
@@ -89,7 +89,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
 
   m_lineEdit = new QLineEdit(this);
 
-  QPushButton * searchButton = new QPushButton();
+  auto searchButton = new QPushButton();
   searchButton->setToolTip("Click to add a search term to the selected category");
   searchButton->setStyleSheet("QPushButton { border: none; background-image: url(\":/shared_gui_components/images/searchbox_magnifyingglass.png\"); }");
   searchButton->setFixedSize(24,24);
@@ -98,7 +98,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
                         this,SLOT(on_searchButton()));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * searchlayout = new QHBoxLayout();
+  auto searchlayout = new QHBoxLayout();
   searchlayout->addWidget(searchButton);
   searchlayout->addWidget(m_lineEdit);
   leftPanelayout->addLayout(searchlayout);
@@ -129,7 +129,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
 
   doc.setContent(docString);
 
-  TIDItemModel * model = new TIDItemModel(doc,this);
+  auto model = new TIDItemModel(doc,this);
 
   m_tidTreeView = new QTreeView();
 
@@ -197,7 +197,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
                         this, SLOT(on_noComponents()));
   OS_ASSERT(isConnected);
 
-  QScrollArea * centralScrollArea = new QScrollArea(this);
+  auto centralScrollArea = new QScrollArea(this);
   centralScrollArea->setFrameStyle(QFrame::NoFrame);
   centralScrollArea->setObjectName("GrayWidget");
   centralScrollArea->setWidgetResizable(true);
@@ -210,7 +210,7 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   m_rightScrollArea->setObjectName("GrayWidget");
   m_rightScrollArea->setWidgetResizable(true);
 
-  QSplitter * splitter = new QSplitter(this);
+  auto splitter = new QSplitter(this);
   splitter->setOrientation(Qt::Horizontal);
   splitter->addWidget(leftPaneWidget);
   splitter->addWidget(centralScrollArea);
@@ -219,9 +219,9 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   QLabel * busyLabel = new QLabel("Searching BCL...");
   busyLabel->setObjectName("H1");
 
-  BusyWidget * busyIcon = new BusyWidget();
+  auto busyIcon = new BusyWidget();
 
-  QVBoxLayout * busyLayout = new QVBoxLayout();
+  auto busyLayout = new QVBoxLayout();
   busyLayout->addStretch();
   busyLayout->addWidget(busyLabel,0,Qt::AlignCenter);
   busyLayout->addWidget(busyIcon,0,Qt::AlignCenter);
@@ -230,14 +230,14 @@ void BuildingComponentDialog::createLayout(bool isBclDlg)
   m_timer = new QTimer(this);
   connect(m_timer,SIGNAL(timeout()),busyIcon,SLOT(rotate()));
 
-  QWidget * busy = new QWidget();
+  auto busy = new QWidget();
   busy->setLayout(busyLayout);
 
   m_stackedWidget = new QStackedWidget();
   m_stackedWidget->insertWidget(0,busy);
   m_stackedWidget->insertWidget(1,splitter);
 
-  QHBoxLayout * mainLayout = new QHBoxLayout();
+  auto mainLayout = new QHBoxLayout();
   mainLayout->addWidget(m_stackedWidget);
 
   setLayout(mainLayout);
@@ -347,7 +347,7 @@ void BuildingComponentDialog::on_componentClicked(bool checked)
 {
   if(m_expandedComponent){
     delete m_expandedComponent;
-    m_expandedComponent = NULL;
+    m_expandedComponent = nullptr;
   }
   m_expandedComponent = new Component(*m_centralWidget->checkedComponent());
   m_expandedComponent->setCheckable(false);

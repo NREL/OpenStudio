@@ -17,61 +17,59 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SimSettingsView.hpp>
+#include "SimSettingsView.hpp"
 
-#include <openstudio_lib/CollapsibleInspector.hpp>
-#include <openstudio_lib/ModelObjectTypeListView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
+#include "CollapsibleInspector.hpp"
+#include "ModelObjectTypeListView.hpp"
+#include "OSAppBase.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
-#include <openstudio_lib/SchedulesView.hpp> // ScheduleCalendarWidget, MonthView
+#include "SchedulesView.hpp" // ScheduleCalendarWidget, MonthView
 
-#include <model/ConvergenceLimits.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
-#include <model/HeatBalanceAlgorithm.hpp>
-#include <model/HeatBalanceAlgorithm_Impl.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/OutputControlReportingTolerances.hpp>
-#include <model/OutputControlReportingTolerances_Impl.hpp>
-#include <model/OutsideSurfaceConvectionAlgorithm.hpp>
-#include <model/OutsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/ProgramControl.hpp>
-#include <model/ProgramControl_Impl.hpp>
-#include <model/RadianceParameters.hpp>
-#include <model/RadianceParameters_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/ShadowCalculation.hpp>
-#include <model/ShadowCalculation_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/SizingParameters.hpp>
-#include <model/SizingParameters_Impl.hpp>
-#include <model/Timestep.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/ZoneAirContaminantBalance.hpp>
-#include <model/ZoneAirContaminantBalance_Impl.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
-#include <model/ZoneCapacitanceMultiplierResearchSpecial.hpp>
-#include <model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp>
+#include "../model/ConvergenceLimits.hpp"
+#include "../model/ConvergenceLimits_Impl.hpp"
+#include "../model/HeatBalanceAlgorithm.hpp"
+#include "../model/HeatBalanceAlgorithm_Impl.hpp"
+#include "../model/InsideSurfaceConvectionAlgorithm.hpp"
+#include "../model/InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/OutputControlReportingTolerances.hpp"
+#include "../model/OutputControlReportingTolerances_Impl.hpp"
+#include "../model/OutsideSurfaceConvectionAlgorithm.hpp"
+#include "../model/OutsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../model/ProgramControl.hpp"
+#include "../model/ProgramControl_Impl.hpp"
+#include "../model/RadianceParameters.hpp"
+#include "../model/RadianceParameters_Impl.hpp"
+#include "../model/RunPeriod.hpp"
+#include "../model/RunPeriod_Impl.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../model/ShadowCalculation.hpp"
+#include "../model/ShadowCalculation_Impl.hpp"
+#include "../model/SimulationControl.hpp"
+#include "../model/SimulationControl_Impl.hpp"
+#include "../model/SizingParameters.hpp"
+#include "../model/SizingParameters_Impl.hpp"
+#include "../model/Timestep.hpp"
+#include "../model/Timestep_Impl.hpp"
+#include "../model/YearDescription.hpp"
+#include "../model/YearDescription_Impl.hpp"
+#include "../model/ZoneAirContaminantBalance.hpp"
+#include "../model/ZoneAirContaminantBalance_Impl.hpp"
+#include "../model/ZoneAirHeatBalanceAlgorithm.hpp"
+#include "../model/ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "../model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Date.hpp"
+#include "../utilities/time/Time.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -515,7 +513,7 @@ QWidget * SimSettingsView::createSimulationControlWidget()
   addField(gridLayout,row,col,"Solar Distribution",m_solarDistribution);
   
   std::vector<std::string>  validSolarDistributionValues = model::SimulationControl::validSolarDistributionValues();
-  BOOST_FOREACH(std::string validSolarDistributionValue, validSolarDistributionValues){
+  for (std::string validSolarDistributionValue : validSolarDistributionValues){
     m_solarDistribution->addItem(validSolarDistributionValue.c_str());
   }
 
@@ -949,7 +947,7 @@ QWidget * SimSettingsView::createRadianceParametersWidget()
   addField(gridLayout,row,col,m_skyDiscretizationResolutionLbl,"Sky Discretization Resolution: ",m_skyDiscretizationResolution);
 
   std::vector<std::string>  skyDiscretizationResolutionValues = model::RadianceParameters::skyDiscretizationResolutionValues();
-  BOOST_FOREACH(std::string skyDiscretizationResolutionValue, skyDiscretizationResolutionValues){
+  for (std::string skyDiscretizationResolutionValue : skyDiscretizationResolutionValues){
     m_skyDiscretizationResolution->addItem(skyDiscretizationResolutionValue.c_str());
   }
 
@@ -1272,50 +1270,50 @@ void SimSettingsView::attachSimulationControl()
 
   m_doZoneSizingCalculation->bind(
       *m_simulationControl,
-      boost::bind(&model::SimulationControl::doZoneSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoZoneSizingCalculation,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoZoneSizingCalculation,m_simulationControl.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoZoneSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+      std::bind(&model::SimulationControl::doZoneSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoZoneSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoZoneSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoZoneSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_doSystemSizingCalculation->bind(
       *m_simulationControl,
-      boost::bind(&model::SimulationControl::doSystemSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoSystemSizingCalculation,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoSystemSizingCalculation,m_simulationControl.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoSystemSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+      std::bind(&model::SimulationControl::doSystemSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoSystemSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoSystemSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoSystemSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_doPlantSizingCalculation->bind(
       *m_simulationControl,
-      boost::bind(&model::SimulationControl::doPlantSizingCalculation,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setDoPlantSizingCalculation,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetDoPlantSizingCalculation,m_simulationControl.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isDoPlantSizingCalculationDefaulted,m_simulationControl.get_ptr())));
+      std::bind(&model::SimulationControl::doPlantSizingCalculation,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setDoPlantSizingCalculation,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetDoPlantSizingCalculation,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isDoPlantSizingCalculationDefaulted,m_simulationControl.get_ptr())));
   m_runSimulationforSizingPeriods->bind(
       *m_simulationControl,
-      boost::bind(&model::SimulationControl::runSimulationforSizingPeriods,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforSizingPeriods,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforSizingPeriods,m_simulationControl.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforSizingPeriodsDefaulted,m_simulationControl.get_ptr())));
+      std::bind(&model::SimulationControl::runSimulationforSizingPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforSizingPeriods,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetRunSimulationforSizingPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isRunSimulationforSizingPeriodsDefaulted,m_simulationControl.get_ptr())));
   m_runSimulationforWeatherFileRunPeriods->bind(
       *m_simulationControl,
-      boost::bind(&model::SimulationControl::runSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr()),
-      boost::optional<BoolSetter>(boost::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr())),
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted,m_simulationControl.get_ptr())));
+      std::bind(&model::SimulationControl::runSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr()),
+      boost::optional<BoolSetter>(std::bind(&model::SimulationControl::setRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetRunSimulationforWeatherFileRunPeriods,m_simulationControl.get_ptr())),
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isRunSimulationforWeatherFileRunPeriodsDefaulted,m_simulationControl.get_ptr())));
   m_maximumNumberofWarmupDays->bind(
       *m_simulationControl,
-      IntGetter(boost::bind(&model::SimulationControl::maximumNumberofWarmupDays,m_simulationControl.get_ptr())),
-      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMaximumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMaximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      IntGetter(std::bind(&model::SimulationControl::maximumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(std::bind(&model::SimulationControl::setMaximumNumberofWarmupDays,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetMaximumNumberofWarmupDays,m_simulationControl.get_ptr())),
       boost::none,
       boost::none,
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMaximumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isMaximumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
   m_minimumNumberofWarmupDays->bind(
       *m_simulationControl,
-      IntGetter(boost::bind(&model::SimulationControl::minimumNumberofWarmupDays,m_simulationControl.get_ptr())),
-      boost::optional<IntSetter>(boost::bind(&model::SimulationControl::setMinimumNumberofWarmupDays,m_simulationControl.get_ptr(),_1)),
-      boost::optional<NoFailAction>(boost::bind(&model::SimulationControl::resetMinimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      IntGetter(std::bind(&model::SimulationControl::minimumNumberofWarmupDays,m_simulationControl.get_ptr())),
+      boost::optional<IntSetter>(std::bind(&model::SimulationControl::setMinimumNumberofWarmupDays,m_simulationControl.get_ptr(),std::placeholders::_1)),
+      boost::optional<NoFailAction>(std::bind(&model::SimulationControl::resetMinimumNumberofWarmupDays,m_simulationControl.get_ptr())),
       boost::none,
       boost::none,
-      boost::optional<BasicQuery>(boost::bind(&model::SimulationControl::isMinimumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
+      boost::optional<BasicQuery>(std::bind(&model::SimulationControl::isMinimumNumberofWarmupDaysDefaulted,m_simulationControl.get_ptr())));
   m_loadsConvergenceToleranceValue->bind(*m_simulationControl,"loadsConvergenceToleranceValue",m_isIP);
   m_temperatureConvergenceToleranceValue->bind(*m_simulationControl,"temperatureConvergenceToleranceValue",m_isIP);
   m_solarDistribution->bind(*m_simulationControl,"solarDistribution");
@@ -1372,17 +1370,17 @@ void SimSettingsView::attachShadowCalculation()
   m_polygonClippingAlgorithm->bind<std::string>(
       *m_shadowCalculation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(model::ShadowCalculation::validPolygonClippingAlgorithmValues),
-      boost::function<boost::optional<std::string> ()>(boost::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
-      boost::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),_1),
-      NoFailAction(boost::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
+      std::bind(model::ShadowCalculation::validPolygonClippingAlgorithmValues),
+      std::function<boost::optional<std::string> ()>(std::bind(&model::ShadowCalculation::polygonClippingAlgorithm,m_shadowCalculation.get_ptr())),
+      std::bind(&model::ShadowCalculation::setPolygonClippingAlgorithm,m_shadowCalculation.get_ptr(),std::placeholders::_1),
+      NoFailAction(std::bind(&model::ShadowCalculation::resetPolygonClippingAlgorithm,m_shadowCalculation.get_ptr())));
   m_skyDiffuseModelingAlgorithm->bind<std::string>(
       *m_shadowCalculation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(model::ShadowCalculation::validSkyDiffuseModelingAlgorithmValues),
-      boost::function<boost::optional<std::string> ()>(boost::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
-      boost::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),_1),
-      NoFailAction(boost::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
+      std::bind(model::ShadowCalculation::validSkyDiffuseModelingAlgorithmValues),
+      std::function<boost::optional<std::string> ()>(std::bind(&model::ShadowCalculation::skyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())),
+      std::bind(&model::ShadowCalculation::setSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr(),std::placeholders::_1),
+      NoFailAction(std::bind(&model::ShadowCalculation::resetSkyDiffuseModelingAlgorithm,m_shadowCalculation.get_ptr())));
 }
 
 void SimSettingsView::attachSurfaceConvectionAlgorithmInside()

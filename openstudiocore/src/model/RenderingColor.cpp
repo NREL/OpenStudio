@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QColor>
 
@@ -205,7 +205,7 @@ void RenderingColor::resetRenderingAlphaValue() {
 }
 
 /// @cond
-RenderingColor::RenderingColor(boost::shared_ptr<detail::RenderingColor_Impl> impl)
+RenderingColor::RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl)
   : ResourceObject(impl)
 {}
 

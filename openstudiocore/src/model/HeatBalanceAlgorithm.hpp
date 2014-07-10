@@ -20,8 +20,8 @@
 #ifndef MODEL_HEATBALANCEALGORITHM_HPP
 #define MODEL_HEATBALANCEALGORITHM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -133,7 +133,7 @@ class MODEL_API HeatBalanceAlgorithm : public ModelObject {
   friend class openstudio::detail::IdfObject_Impl;
   explicit HeatBalanceAlgorithm(Model& model);
   // constructor
-  explicit HeatBalanceAlgorithm(boost::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl);
+  explicit HeatBalanceAlgorithm(std::shared_ptr<detail::HeatBalanceAlgorithm_Impl> impl);
 
  private:
 

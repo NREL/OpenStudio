@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef ANALYSIS_GumbelDISTRIBUTION_HPP
-#define ANALYSIS_GumbelDISTRIBUTION_HPP
+#ifndef ANALYSIS_GUMBELDISTRIBUTION_HPP
+#define ANALYSIS_GUMBELDISTRIBUTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/UncertaintyDescription.hpp>
+#include "AnalysisAPI.hpp"
+#include "UncertaintyDescription.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -62,7 +62,7 @@ class ANALYSIS_API GumbelDistribution : public UncertaintyDescription {
 
   //@}
  protected:
-  explicit GumbelDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl);
+  explicit GumbelDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl);
 
   friend class AnalysisObject;
   friend class UncertaintyDescription;
@@ -73,4 +73,4 @@ class ANALYSIS_API GumbelDistribution : public UncertaintyDescription {
 } // analysis
 } // openstudio
 
-#endif // ANALYSIS_GumbelDISTRIBUTION_HPP
+#endif // ANALYSIS_GUMBELDISTRIBUTION_HPP

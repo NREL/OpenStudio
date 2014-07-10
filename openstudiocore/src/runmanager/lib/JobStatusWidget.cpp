@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/JobStatusWidget.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "JobStatusWidget.hpp"
+#include "Job.hpp"
+#include "RunManager.hpp"
 
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Application.hpp"
 
 #include <QDesktopServices>
 #include <QMessageBox>
@@ -180,12 +180,12 @@ namespace runmanager {
     {
       std::vector<FileInfo> fis = m_job.outputFiles();
 
-      std::for_each(fis.begin(), fis.end(), boost::bind(&JobItem::updateOutputFile, this, _1));
+      std::for_each(fis.begin(), fis.end(), std::bind(&JobItem::updateOutputFile, this, std::placeholders::_1));
     }
 
     void JobItem::updateOutputFile(const openstudio::runmanager::FileInfo &t_fi)
     {
-      QStandardItem *fileparent = 0;
+      QStandardItem *fileparent = nullptr;
 
       for (int i = 0; i < rowCount(); ++i)
       {
@@ -412,7 +412,7 @@ namespace runmanager {
       } catch (const std::exception &) {
         // no description available
       }
-      ui.txtOutputDirectory->setText(toQString(m_job->outdir().external_file_string()));
+      ui.txtOutputDirectory->setText(toQString(m_job->outdir().native()));
     }
   }
 
@@ -438,7 +438,7 @@ namespace runmanager {
   void JobStatusWidget::jobSelectionChanged(const openstudio::runmanager::Job &t_job)
   {
     if (m_outputjob) {
-      m_outputjob->disconnect(0,this, 0);
+      m_outputjob->disconnect(nullptr,this, nullptr);
     }
 
     t_job.connect(SIGNAL(outputDataAdded(const openstudio::UUID &, const std::string &)), 
@@ -578,7 +578,7 @@ namespace runmanager {
 
     // now we need to sort them based on index()
     std::sort(ret.begin(), ret.end(), 
-      boost::function<bool (const Job &, const Job &)>(&JobStatusWidget::jobIndexLessThan));
+      std::function<bool (const Job &, const Job &)>(&JobStatusWidget::jobIndexLessThan));
 
     return ret;
   }
@@ -637,7 +637,7 @@ namespace runmanager {
     LOG(Info, "Adding Job to tree: " << toString(job.uuid()) << " " << job.description());
 
     boost::optional<Job> parent = job.parent();
-    QStandardItem *parentitem = 0;
+    QStandardItem *parentitem = nullptr;
 
     if (parent)
     {
@@ -650,7 +650,7 @@ namespace runmanager {
       }
     }
 
-    if (getJobItem(job) == 0)
+    if (getJobItem(job) == nullptr)
     {
 
       QList<QStandardItem*> cols;
@@ -720,7 +720,7 @@ namespace runmanager {
       }
     }
 
-    return 0;
+    return nullptr;
   }
 
 
@@ -737,11 +737,9 @@ namespace runmanager {
   {
     std::vector<Job> jobs = getJobs(ui.treeJobs->selectionModel()->selectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
-      itr->setCanceled(!itr->canceled());
+      job.setCanceled(!job.canceled());
     }
   }
 
@@ -749,12 +747,10 @@ namespace runmanager {
   {
     std::vector<Job> jobs = getJobs(ui.treeJobs->selectionModel()->selectedRows());
 
-    for (std::vector<Job>::iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (auto & job : jobs)
     {
-      itr->setTreeRunnable(false);
-      itr->setRunnable(true);
+      job.setTreeRunnable(false);
+      job.setRunnable(true);
     }
   }
 
@@ -785,7 +781,7 @@ namespace runmanager {
   // Note: the following code was taken from the QDesktopServices implementation
   // and adapted to not call "startDetached" so that it is possible to monitor the outcome
   // of the attempted URL launch.
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
   bool openDocument(const QUrl &file)
   {
     if (!file.isValid())
@@ -802,7 +798,7 @@ namespace runmanager {
 
     return process.exitCode() == 0;
   }
-#elif defined(Q_WS_X11)
+#elif defined(Q_OS_X11)
   inline static bool launch(const QUrl &url, const QString &client)
   {
     QProcess process;
@@ -851,7 +847,7 @@ namespace runmanager {
 
   void JobStatusWidget::openFile(const openstudio::path &p)
   {
-    QString url = toQString(p.native_file_string());
+    QString url = toQString(p.native());
     QUrl qurl1 = QUrl::fromLocalFile(url);
 
     LOG(Debug, "Opening file: " << openstudio::toString(qurl1.toString()));

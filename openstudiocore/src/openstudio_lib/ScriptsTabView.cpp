@@ -17,18 +17,18 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptsTabView.hpp>
+#include "ScriptsTabView.hpp"
 
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
+#include "MainWindow.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
 
 #include "../shared_gui_components/Buttons.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
 #include "../shared_gui_components/OSListView.hpp"
 #include "../shared_gui_components/SyncMeasuresDialog.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
 #include <QLabel>
 #include <QVBoxLayout>

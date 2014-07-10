@@ -18,27 +18,27 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
-#include <analysisdriver/AnalysisDriverWatcher.hpp>
+#include "../SimpleProject.hpp"
+#include "../AnalysisDriver.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
+#include "../AnalysisDriverWatcher.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../../project/ProjectDatabase.hpp"
 
-#include <analysis/Problem.hpp>
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/DDACEAlgorithm.hpp"
+#include "../../analysis/DDACEAlgorithmOptions.hpp"
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/DataPoint.hpp"
 
 #include <runmanager/Test/ToolBin.hxx>
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../../utilities/core/FileReference.hpp"
 
 #include <OpenStudio.hxx>
 

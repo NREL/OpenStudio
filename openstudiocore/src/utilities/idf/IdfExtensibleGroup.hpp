@@ -20,13 +20,11 @@
 #ifndef UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP
 #define UTILITIES_IDF_IDFEXTENSIBLEGROUP_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/idd/ExtensibleIndex.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../idd/ExtensibleIndex.hpp"
+#include "Handle.hpp"
 
-#include <utilities/core/Logger.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../core/Logger.hpp"
 
 namespace openstudio {
 
@@ -150,7 +148,7 @@ class UTILITIES_API IdfExtensibleGroup {
    *  by the IddObject. */
   std::vector<unsigned> requiredFields() const;
 
-  /** Equality comparitor for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for 
+  /** Equality comparator for \link IdfExtensibleGroup IdfExtensibleGroups\endlink. Tests for 
    *  strict identity (same IdfObject, same groupIndex()). */
   bool operator==(const IdfExtensibleGroup& other) const;
 
@@ -171,7 +169,7 @@ class UTILITIES_API IdfExtensibleGroup {
   template<typename T>
   boost::optional<T> optionalCast() const{
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+    std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
     if (impl){
       result = T(impl,m_index);
     }
@@ -181,7 +179,7 @@ class UTILITIES_API IdfExtensibleGroup {
   /** Get the parent object. */
   template<typename T>
   T getObject() const { 
-    T result(boost::dynamic_pointer_cast<typename T::ImplType>(m_impl));
+    T result(std::dynamic_pointer_cast<typename T::ImplType>(m_impl));
     return result; 
   }
 
@@ -189,7 +187,7 @@ class UTILITIES_API IdfExtensibleGroup {
   template<typename T>
   boost::optional<T> getOptionalObject() const { 
     boost::optional<T> result;
-    boost::shared_ptr<typename T::ImplType> p = boost::dynamic_pointer_cast<typename T::ImplType>(m_impl);
+    std::shared_ptr<typename T::ImplType> p = std::dynamic_pointer_cast<typename T::ImplType>(m_impl);
     if (p){
      result = T(p);
     }
@@ -203,18 +201,18 @@ class UTILITIES_API IdfExtensibleGroup {
 
   friend class detail::IdfObject_Impl;  
 
-  boost::shared_ptr<detail::IdfObject_Impl> m_impl;
+  std::shared_ptr<detail::IdfObject_Impl> m_impl;
   unsigned m_index; // index corresponding to first field of the extensible group
 
   // get the impl
   template<typename T>
-  boost::shared_ptr<T> getImpl() const
+  std::shared_ptr<T> getImpl() const
   {  
-    return boost::dynamic_pointer_cast<T>(m_impl); 
+    return std::dynamic_pointer_cast<T>(m_impl); 
   }
 
   /** Private constructor to be used by IdfObject. */
-  IdfExtensibleGroup(boost::shared_ptr<detail::IdfObject_Impl> impl,unsigned index);  
+  IdfExtensibleGroup(std::shared_ptr<detail::IdfObject_Impl> impl,unsigned index);  
 
   /** Set all the fields in this group, if possible. Returns false if values is wrong size or
    *  setString fails on any individual fields. Emits signals if checkValidity == true. Function

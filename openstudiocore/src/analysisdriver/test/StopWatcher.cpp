@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysisdriver/test/StopWatcher.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
+#include "StopWatcher.hpp"
+#include "../CurrentAnalysis.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysisdriver;

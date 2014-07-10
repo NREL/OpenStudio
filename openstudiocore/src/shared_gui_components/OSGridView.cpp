@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSGridView.hpp>
+#include "OSGridView.hpp"
 
-#include <shared_gui_components/HeaderViews.hpp>
-#include <shared_gui_components/OSCollapsibleView.hpp>
-#include <shared_gui_components/OSGridController.hpp>
+#include "HeaderViews.hpp"
+#include "OSCollapsibleView.hpp"
+#include "OSGridController.hpp"
 
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/OSItem.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/idd/IddObject.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/idd/IddObject.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -51,8 +51,8 @@ namespace openstudio {
 
 OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
   : QWidget(parent),
-  m_gridLayout(0),
-  m_CollapsibleView(0),
+  m_gridLayout(nullptr),
+  m_CollapsibleView(nullptr),
   m_gridController(gridController)
 {
   m_gridLayout = new QGridLayout();
@@ -61,19 +61,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   m_gridLayout->setSizeConstraint(QLayout::SetMinimumSize);
   m_gridLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-  QButtonGroup * buttonGroup = new QButtonGroup();
+  auto buttonGroup = new QButtonGroup();
   bool isConnected = false;
   isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
     this, SLOT(selectCategory(int)));
   OS_ASSERT(isConnected);
 
-  QHBoxLayout * buttonLayout = new QHBoxLayout();
+  auto buttonLayout = new QHBoxLayout();
   buttonLayout->setSpacing(3);
   buttonLayout->setContentsMargins(0,0,0,0);
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-  GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-  OSDropZone * dropZone = 0; 
+  auto vectorController = new GridViewDropZoneVectorController();
+  OSDropZone * dropZone = nullptr; 
 #ifdef Q_OS_MAC
     dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
 #else
@@ -88,9 +88,8 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
-  QPushButton * button = 0;
   for(unsigned i=0; i<categories.size(); i++){
-    button = new QPushButton(categories.at(i));
+    auto button = new QPushButton(categories.at(i));
 #ifdef Q_OS_MAC
     button->setFixedSize(WIDTH,HEIGHT);
 #else
@@ -102,19 +101,19 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   }
   buttonLayout->addStretch();
 
-  QVBoxLayout * layout = 0;
+  QVBoxLayout * layout = nullptr;
 
   layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
 
-  DarkGradientHeader * header = new DarkGradientHeader();
+  auto header = new DarkGradientHeader();
   header->label->setText(headerText);
 
-  QWidget * widget = new QWidget;
+  auto widget = new QWidget;
 
-  OSCollapsibleView * collabsibleView = new OSCollapsibleView(this);
+  auto collabsibleView = new OSCollapsibleView(this);
   layout->addWidget(collabsibleView);
   collabsibleView->setHeader(header);
   collabsibleView->setContent(widget);
@@ -122,7 +121,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   setGridController(m_gridController);
 
-  QVBoxLayout * m_contentLayout = 0;
+  QVBoxLayout * m_contentLayout = nullptr;
   m_contentLayout = new QVBoxLayout();
   m_contentLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   m_contentLayout->setSpacing(10);
@@ -195,15 +194,15 @@ void OSGridView::removeWidget(int row, int column)
 void OSGridView::deleteAll()
 {
   QLayoutItem * child;
-  while((child = m_gridLayout->takeAt(0)) != 0)
+  while((child = m_gridLayout->takeAt(0)) != nullptr)
   {
-      QWidget * widget = child->widget();
+    QWidget * widget = child->widget();
 
-      OS_ASSERT(widget);
+    OS_ASSERT(widget);
 
-      delete widget;
+    delete widget;
 
-      delete child;
+    delete child;
   }
 }
 
@@ -225,7 +224,7 @@ void OSGridView::refreshAll()
   }
   // NOTE This was added to make dissimilar widget types in a given column to
   // fill and justify correctly.  It appeared to be the most simple solution.
-  QWidget * widget = new QWidget();
+  auto widget = new QWidget();
   widget->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::MinimumExpanding);
   m_gridLayout->addWidget(widget,0,m_gridController->columnCount());
 }
@@ -246,7 +245,7 @@ void OSGridView::setHorizontalHeader(std::vector<QWidget *> widgets)
   OS_ASSERT(m_gridLayout);
 
   int column = 0;
-  Q_FOREACH(QWidget * widget, widgets){
+  for (QWidget * widget : widgets) {
     m_gridLayout->addWidget(widget,0,column++);
   }
 }
@@ -255,10 +254,8 @@ void OSGridView::setHorizontalHeader(std::vector<QString> names)
 {
   OS_ASSERT(m_gridLayout);
 
-  QLabel * label = 0;
   int column = 0;
-  Q_FOREACH(QString name, names){
-    label = new QLabel(name);
+  for (const QString& name : names) {
     m_gridLayout->addWidget(new QLabel(name),0,column++);
   }
 }

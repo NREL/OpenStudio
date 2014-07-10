@@ -20,9 +20,9 @@
 #ifndef UTILITIES_IDD_IDDKEY_HPP
 #define UTILITIES_IDD_IDDKEY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 
@@ -71,7 +71,7 @@ class UTILITIES_API IddKey {
   bool operator!=(const IddKey& other) const;
 
   //@}
-  /** @name Sertialization */
+  /** @name Serialization */
   //@{
 
   /** Load from text. */
@@ -84,10 +84,10 @@ class UTILITIES_API IddKey {
  private:
   ///@cond
   // pointer to implementation
-  boost::shared_ptr<detail::IddKey_Impl> m_impl;
+  std::shared_ptr<detail::IddKey_Impl> m_impl;
 
   // construct from impl
-  IddKey(const boost::shared_ptr<detail::IddKey_Impl>& impl);
+  IddKey(const std::shared_ptr<detail::IddKey_Impl>& impl);
   ///@endcond
 
   // configure logging

@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightingDesignDay.hpp>
-#include <model/LightingDesignDay_Impl.hpp>
+#include "LightingDesignDay.hpp"
+#include "LightingDesignDay_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "Model.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_LightingDesignDay_FieldEnums.hxx>
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/time/DateTime.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -126,7 +126,7 @@ namespace detail {
   {
     std::vector<openstudio::Time> result;
 
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalInt hour = group.getInt(OS_LightingDesignDayExtensibleFields::HourtoSimulate, true);
       OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
@@ -143,7 +143,7 @@ namespace detail {
     Date date = this->date();
     std::vector<openstudio::DateTime> result;
 
-    BOOST_FOREACH(const ModelExtensibleGroup& group, castVector<ModelExtensibleGroup>(extensibleGroups()))
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups()))
     {
       OptionalInt hour = group.getInt(OS_LightingDesignDayExtensibleFields::HourtoSimulate, true);
       OptionalInt minute = group.getInt(OS_LightingDesignDayExtensibleFields::MinutetoSimulate, true);
@@ -276,7 +276,7 @@ void LightingDesignDay::ensureNoLeapDays()
 }
 
 /// @cond
-LightingDesignDay::LightingDesignDay(boost::shared_ptr<detail::LightingDesignDay_Impl> impl)
+LightingDesignDay::LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

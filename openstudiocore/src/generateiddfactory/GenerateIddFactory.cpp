@@ -17,9 +17,7 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/GenerateIddFactory.hpp>
-
-#include <boost/foreach.hpp>
+#include "GenerateIddFactory.hpp"
 
 #include <iostream>
 #include <iomanip>
@@ -33,7 +31,7 @@ IddFileFactoryDataVector constructIddFileObjects(const std::vector<std::string>&
   IddFileFactoryDataVector result;
   // Construct one IddFileFactoryData object per Idd file input by the user. Constructor will 
   // throw if it is unable to parse iddArg or is unable to validate the path or name.
-  BOOST_FOREACH(const std::string& iddArg,iddArgs) {
+  for (const std::string& iddArg : iddArgs) {
     result.push_back(IddFileFactoryData(iddArg));
   }
   return result;
@@ -198,7 +196,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << " private:" << std::endl
     << std::endl
     << "  IddFactorySingleton();" << std::endl;
-  BOOST_FOREACH(const IddFileFactoryData& iddFile,iddFiles) {
+  for (const IddFileFactoryData& iddFile : iddFiles) {
     outFiles.iddFactoryHxx.tempFile
       << "  void register" << iddFile.fileName() << "ObjectsInCallbackMap();" << std::endl;
   }
@@ -206,7 +204,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "  REGISTER_LOGGER(\"utilities.idd.IddFactory\");" << std::endl
     << std::endl
-    << "  typedef boost::function<IddObject ()> CreateIddObjectCallback;" << std::endl
+    << "  typedef std::function<IddObject ()> CreateIddObjectCallback;" << std::endl
     << "  typedef std::map<IddObjectType,CreateIddObjectCallback> IddObjectCallbackMap;" << std::endl
     << "  IddObjectCallbackMap m_callbackMap;" << std::endl
     << "  mutable QMutex m_callbackmutex;" << std::endl
@@ -247,9 +245,6 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << std::endl
     << "#include <OpenStudio.hxx>" << std::endl
     << std::endl
-    << "#include <boost/bind.hpp>" << std::endl
-    << "#include <boost/foreach.hpp>" << std::endl
-    << std::endl
     << "#include <QMutexLocker>" << std::endl
     << "#include <QMetaType>" << std::endl
     << std::endl
@@ -268,15 +263,13 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles,
     << "}" << std::endl;
 
   // start other IddFactory cxx files
-  BOOST_FOREACH(boost::shared_ptr<IddFactoryOutFile>& cxxFile,outFiles.iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile
       << "#include <utilities/idd/IddFactory.hxx>" << std::endl
       << std::endl
       << "#include <utilities/core/Assert.hpp>" << std::endl
       << "#include <utilities/core/Compare.hpp>" << std::endl
       << std::endl
-      << "#include <boost/bind.hpp>" << std::endl
-      << "#include <boost/foreach.hpp>" << std::endl
       << "#include <QMutexLocker>" << std::endl
       << std::endl
       << "namespace openstudio {" << std::endl;
@@ -290,7 +283,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
 
   // calculate total number of objects for purpose of splitting up IddObjectType OPENSTUDIO_ENUM
   unsigned numObjects = 3; // Catchall, UserCustom, CommentOnly
-  BOOST_FOREACH(const IddFileFactoryData& idd,iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     numObjects += idd.objectNames().size();
   }
 
@@ -301,7 +294,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "OPENSTUDIO_ENUM( IddFileType," << std::endl
     << "  ((UserCustom))" << std::endl
     << "  ((WholeFactory))";
-  BOOST_FOREACH(const IddFileFactoryData& idd,iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     tempSS
       << std::endl
       << "  ((" << idd.fileName() << "))";
@@ -335,9 +328,9 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "  ((Catchall))" << std::endl
     << "  ((UserCustom))" << std::endl;
   // loop through each IDD file
-  BOOST_FOREACH(const IddFileFactoryData& idd,iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     // write out an IddObjectType enum value for each object in the IDD file
-    BOOST_FOREACH(const StringPair& objectName,idd.objectNames()) {
+    for (const StringPair& objectName : idd.objectNames()) {
       // splits the enum values into seven groups
       if (n % groupSize == 0) {
         tempSS << "  ," << std::endl;
@@ -437,7 +430,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "  m_callbackMap.insert(IddObjectCallbackMap::value_type(IddObjectType::Catchall,"
     << "createCatchallIddObject));" << std::endl;
   // parsed objects
-  BOOST_FOREACH(const IddFileFactoryData& idd,iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     outFiles.iddFactoryCxx.tempFile
       << "  register" << idd.fileName() << "ObjectsInCallbackMap();" << std::endl;
   }
@@ -449,11 +442,11 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "  // instantiate IddObjectType to IddFileType multimap" << std::endl
     << std::endl;
   // register IddObjectTypes with IddFileTypes
-  BOOST_FOREACH(const IddFileFactoryData& idd, iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     std::string fileName = idd.fileName();
 
     // register local objects
-    BOOST_FOREACH(const StringPair& objectName, idd.objectNames()) {
+    for (const StringPair& objectName : idd.objectNames()) {
       outFiles.iddFactoryCxx.tempFile
         << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::" 
         << objectName.first << ",IddFileType::" << fileName << "));" << std::endl;
@@ -468,7 +461,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       IddFileFactoryData includedFile = getFile(includedFileData.first,iddFiles);
 
       std::vector<std::string> excludedObjects;
-      BOOST_FOREACH(const StringPair& objectName, includedFile.objectNames()) {
+      for (const StringPair& objectName : includedFile.objectNames()) {
 
         // If objectName is in list of removed objects, do not add it to m_sourceFileMap,
         if (std::find(includedFileData.second.begin(),includedFileData.second.end(),objectName.first) 
@@ -483,7 +476,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
           << "  m_sourceFileMap.insert(IddObjectSourceFileMap::value_type(IddObjectType::" 
           << objectName.first << ",IddFileType::" << fileName << "));" << std::endl;
 
-      } // BOOST_FOREACH
+      } // foreach
 
       // Write warning if we did not encounter all of the objects that were to be removed.
       if (excludedObjects.size() != includedFileData.second.size()) {
@@ -518,7 +511,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "  std::string result;" << std::endl
       << std::endl
       << "  switch (fileType.value()) {" << std::endl;
-  BOOST_FOREACH(const IddFileFactoryData& idd, iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     outFiles.iddFactoryCxx.tempFile
         << "    case IddFileType::" << idd.fileName() << " :" << std::endl
         << "      result = \"" << idd.version() << "\";" << std::endl
@@ -535,7 +528,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "std::string IddFactorySingleton::getHeader(IddFileType fileType) const {" << std::endl
       << "  std::stringstream result;" << std::endl
       << "  switch (fileType.value()) {" << std::endl;
-  BOOST_FOREACH(const IddFileFactoryData& idd, iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     outFiles.iddFactoryCxx.tempFile
         << "    case IddFileType::" << idd.fileName() << " :" << std::endl
         << "      result";
@@ -557,7 +550,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
         << "        << \"! Includes File: '" << includedFile.fileName() << "'\\n\"" << std::endl
         << "        << \"!\\n\"" << std::endl
         << "        << \"! Contains all objects from " << includedFile.fileName() << " IDD_Version " << includedFile.version() << ", except: \\n\"" << std::endl;
-      BOOST_FOREACH(const std::string& objectName, includedFileData.second) {
+      for (const std::string& objectName : includedFileData.second) {
         outFiles.iddFactoryCxx.tempFile
           << "        << \"!   " << objectName << "\\n\"" << std::endl;
       }
@@ -608,7 +601,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << std::endl
       << "std::vector<std::string> IddFactorySingleton::groups() const {" << std::endl
       << "  StringSet result;" << std::endl
-      << "  BOOST_FOREACH(const IddObject& object,objects()) {" << std::endl
+      << "  for (const IddObject& object : objects()) {" << std::endl
       << "    result.insert(object.group());" << std::endl
       << "  }" << std::endl
       << "  return StringVector(result.begin(),result.end());" << std::endl
@@ -616,7 +609,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << std::endl
       << "std::vector<std::string> IddFactorySingleton::getGroups(IddFileType fileType) const {" << std::endl
       << "  StringSet result;" << std::endl
-      << "  BOOST_FOREACH(const IddObject& object,getObjects(fileType)) {" << std::endl
+      << "  for (const IddObject& object : getObjects(fileType)) {" << std::endl
       << "    result.insert(object.group());" << std::endl
       << "  }" << std::endl
       << "  return StringVector(result.begin(),result.end());" << std::endl
@@ -624,7 +617,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << std::endl
       << "std::vector<IddObject> IddFactorySingleton::getObjectsInGroup(const std::string& group) const {" << std::endl
       << "  IddObjectVector result;" << std::endl
-      << "  BOOST_FOREACH(const IddObject& object,objects()) {" << std::endl
+      << "  for (const IddObject& object : objects()) {" << std::endl
       << "    if (istringEqual(object.group(),group)) {" << std::endl
       << "      result.push_back(object);" << std::endl
       << "    }" << std::endl
@@ -634,7 +627,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << std::endl
       << "std::vector<IddObject> IddFactorySingleton::getObjectsInGroup(const std::string& group, IddFileType fileType) const {" << std::endl
       << "  IddObjectVector result;" << std::endl
-      << "  BOOST_FOREACH(const IddObject& object,getObjects(fileType)) {" << std::endl
+      << "  for (const IddObject& object : getObjects(fileType)) {" << std::endl
       << "    if (istringEqual(object.group(),group)) {" << std::endl
       << "      result.push_back(object);" << std::endl
       << "    }" << std::endl
@@ -645,7 +638,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "std::vector<IddObject> IddFactorySingleton::getObjects(const boost::regex& objectRegex) const {" << std::endl
       << "  IddObjectVector result;" << std::endl
       << std::endl
-      << "  BOOST_FOREACH(int value,IddObjectType::getValues()) {" << std::endl
+      << "  for (int value : IddObjectType::getValues()) {" << std::endl
       << "    IddObjectType candidate(value);" << std::endl
       << "    if (boost::regex_match(candidate.valueName(),objectRegex) || " << std::endl
       << "        boost::regex_match(candidate.valueDescription(),objectRegex))" << std::endl
@@ -664,7 +657,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
       << "{" << std::endl
       << "  IddObjectVector result;" << std::endl
       << std::endl
-      << "  BOOST_FOREACH(int value,IddObjectType::getValues()) {" << std::endl
+      << "  for (int value : IddObjectType::getValues()) {" << std::endl
       << "    IddObjectType candidate(value);" << std::endl
       << "    if (isInFile(candidate,fileType) && " << std::endl
       << "        (boost::regex_match(candidate.valueName(),objectRegex) || " << std::endl
@@ -891,7 +884,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
     << "} // openstudio" << std::endl;
 
   // close out other IddFactory cxx files
-  BOOST_FOREACH(boost::shared_ptr<IddFactoryOutFile>& cxxFile,outFiles.iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile
       << std::endl
       << "} // openstudio" << std::endl;
@@ -904,7 +897,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles,
 
 IddFileFactoryData getFile(const std::string& fileName,
                            const IddFileFactoryDataVector& iddFiles) {
-  BOOST_FOREACH(const IddFileFactoryData& idd, iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     if (idd.fileName() == fileName) { return idd; }
   }
 
@@ -912,7 +905,7 @@ IddFileFactoryData getFile(const std::string& fileName,
   std::stringstream ss;
   ss << "Unable to located included Idd file '" << fileName << "' in list of Idd files. "
      << "The available files are named:" << std::endl;
-  BOOST_FOREACH(const IddFileFactoryData& idd, iddFiles) {
+  for (const IddFileFactoryData& idd : iddFiles) {
     ss << "  " << idd.fileName() << std::endl;
   }
   throw std::runtime_error(ss.str().c_str());

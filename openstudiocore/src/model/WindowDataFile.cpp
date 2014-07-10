@@ -17,18 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/WindowDataFile.hpp>
-#include <model/WindowDataFile_Impl.hpp>
+#include "WindowDataFile.hpp"
+#include "WindowDataFile_Impl.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Construction_WindowDataFile_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -94,7 +92,7 @@ IddObjectType WindowDataFile::iddObjectType() {
 }
 
 /// @cond
-WindowDataFile::WindowDataFile(boost::shared_ptr<detail::WindowDataFile_Impl> impl)
+WindowDataFile::WindowDataFile(std::shared_ptr<detail::WindowDataFile_Impl> impl)
   : ConstructionBase(impl)
 {}
 /// @endcond

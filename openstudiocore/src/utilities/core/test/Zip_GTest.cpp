@@ -23,12 +23,12 @@
 
 #include <boost/filesystem.hpp>
 
-#include <utilities/core/test/CoreFixture.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/core/ZipFile.hpp>
+#include "CoreFixture.hpp"
+#include "../UnzipFile.hpp"
+#include "../ZipFile.hpp"
 
 
-#ifdef Q_WS_WIN32
+#ifdef Q_OS_WIN32
 std::ostream& operator<<(std::ostream& t_o, const openstudio::path &t_path)
 {
   return t_o << openstudio::toString(t_path);

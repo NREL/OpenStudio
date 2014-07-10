@@ -20,10 +20,10 @@
 #ifndef MODEL_COMPONENTCOSTADJUSTMENTS_HPP
 #define MODEL_COMPONENTCOSTADJUSTMENTS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -102,7 +102,7 @@ protected:
   explicit ComponentCostAdjustments(const Model& model);
   
   // constructor
-  explicit ComponentCostAdjustments(boost::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
+  explicit ComponentCostAdjustments(std::shared_ptr<detail::ComponentCostAdjustments_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.ComponentCostAdjustments");

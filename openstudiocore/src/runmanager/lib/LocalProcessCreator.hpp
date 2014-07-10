@@ -1,11 +1,29 @@
-#ifndef OPENSTUDIO_RUNMANAGER_LOCALPROCESSCREATOR_HPP__
-#define OPENSTUDIO_RUNMANAGER_LOCALPROCESSCREATOR_HPP__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_LIB_LOCALPROCESSCREATOR_HPP
+#define RUNMANAGER_LIB_LOCALPROCESSCREATOR_HPP
 
 #include "ProcessCreator.hpp"
-#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -32,7 +50,7 @@ namespace runmanager {
       ///                       is a relative path and does not reside in the tool path
       /// \param[in] t_remoteId optional remote id for recreating remote process. Throws exception if set
       /// \returns the created Process
-      virtual boost::shared_ptr<Process> createProcess(
+      virtual std::shared_ptr<Process> createProcess(
           const openstudio::runmanager::ToolInfo &t_tool,
           const std::vector<std::pair<openstudio::path, openstudio::path> > &t_requiredFiles,
           const std::vector<std::string> &t_parameters,
@@ -53,4 +71,4 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_LOCALPROCESSCREATOR_HPP

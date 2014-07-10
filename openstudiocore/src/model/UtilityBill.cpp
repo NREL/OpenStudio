@@ -17,32 +17,32 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
-#include <model/Meter.hpp>
-#include <model/Meter_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/YearDescription.hpp>
-#include <model/YearDescription_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Facility.hpp>
-#include <model/Facility_Impl.hpp>
-#include <model/Timestep.hpp>
-#include <model/Timestep_Impl.hpp>
+#include "UtilityBill.hpp"
+#include "UtilityBill_Impl.hpp"
+#include "Meter.hpp"
+#include "Meter_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "YearDescription.hpp"
+#include "YearDescription_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
 
-#include <model/Model.hpp>
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_UtilityBill_FieldEnums.hxx>
 
-#include <utilities/data/DataEnums.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/DataEnums.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 
-#include <utilities/time/Date.hpp>
+#include "../utilities/time/Date.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QDate>
 
@@ -708,7 +708,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getConcreteModelObjects<Meter>()){
+    for (const Meter& meter : this->model().getConcreteModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Daily", meter.reportingFrequency()))){
         return meter;
@@ -754,7 +754,7 @@ namespace detail {
                                            meterSpecificInstallLocation);
 
     boost::optional<Meter> result;
-    BOOST_FOREACH(const Meter& meter, this->model().getConcreteModelObjects<Meter>()){
+    for (const Meter& meter : this->model().getConcreteModelObjects<Meter>()){
       if ((istringEqual(meter.name(), meterName)) &&
           (istringEqual("Timestep", meter.reportingFrequency()))){
         return meter;
@@ -782,7 +782,7 @@ namespace detail {
   {
     IdfExtensibleGroupVector egs = extensibleGroups();
     std::vector<BillingPeriod> result;
-    BOOST_FOREACH(const IdfExtensibleGroup& eg,egs) {
+    for (const IdfExtensibleGroup& eg : egs) {
       result.push_back(eg.cast<BillingPeriod>());
     }
     return result;
@@ -841,7 +841,7 @@ namespace detail {
   unsigned UtilityBill_Impl::numberBillingPeriodsInCalculations() const
   {
     unsigned n = 0;
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         boost::optional<double> modelConsumption = p.modelConsumption();
@@ -861,7 +861,7 @@ namespace detail {
     double squaredError = 0;
     unsigned n = 0;
     double conv = this->consumptionUnitConversionFactor();
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         double convertedConsumption = conv * consumption.get();
@@ -889,7 +889,7 @@ namespace detail {
     double sumError = 0;
     unsigned n = 0;
     double conv = this->consumptionUnitConversionFactor();
-    BOOST_FOREACH(const BillingPeriod& p, this->billingPeriods()){
+    for (const BillingPeriod& p : this->billingPeriods()){
       boost::optional<double> consumption = p.consumption();
       if (consumption){
         double convertedConsumption = conv * consumption.get();
@@ -1316,7 +1316,7 @@ boost::optional<double> BillingPeriod::modelTotalCost() const
   return boost::none;
 }
 
-BillingPeriod::BillingPeriod(boost::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
+BillingPeriod::BillingPeriod(std::shared_ptr<detail::UtilityBill_Impl> impl,unsigned index)
   : ModelExtensibleGroup(impl, index)
 {}
 
@@ -1543,7 +1543,7 @@ boost::optional<double> UtilityBill::NMBE() const{
 }
 
 /// @cond
-UtilityBill::UtilityBill(boost::shared_ptr<detail::UtilityBill_Impl> impl)
+UtilityBill::UtilityBill(std::shared_ptr<detail::UtilityBill_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

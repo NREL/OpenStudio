@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSVECTORCONTROLLER_H
-#define OPENSTUDIO_OSVECTORCONTROLLER_H
+#ifndef OPENSTUDIO_OSVECTORCONTROLLER_HPP
+#define OPENSTUDIO_OSVECTORCONTROLLER_HPP
 
 #include <QWidget>
-#include <model/ComponentData.hpp>
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/ComponentData.hpp"
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 #include <vector>
 
 namespace openstudio {
@@ -77,5 +77,5 @@ protected:
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSVECTORCONTROLLER_H
+#endif // OPENSTUDIO_OSVECTORCONTROLLER_HPP
 

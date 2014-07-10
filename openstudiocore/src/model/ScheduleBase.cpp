@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleBase.hpp>
-#include <model/ScheduleBase_Impl.hpp>
+#include "ScheduleBase.hpp"
+#include "ScheduleBase_Impl.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSQuantityVector.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/ScaleFactory.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSQuantityVector.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/ScaleFactory.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -136,7 +136,7 @@ namespace detail {
 
   bool ScheduleBase_Impl::okToResetScheduleTypeLimits() const {
     // can only reset if not used by object with keys
-    BOOST_FOREACH(const ModelObject& user, getObject<ScheduleBase>().getModelObjectSources<ModelObject>()) {
+    for (const ModelObject& user : getObject<ScheduleBase>().getModelObjectSources<ModelObject>()) {
       if (!user.optionalCast<ScheduleBase>()) {
         return false;
       }
@@ -149,7 +149,7 @@ namespace detail {
       OptionalDouble minBound = scheduleTypeLimits->lowerLimitValue();
       OptionalDouble maxBound = scheduleTypeLimits->upperLimitValue();
       if (minBound || maxBound) {
-        BOOST_FOREACH(double value,values()) {
+        for (double value : values()) {
           if (minBound && (value < *minBound)) {
             return false;
           }
@@ -207,7 +207,7 @@ void ScheduleBase::ensureNoLeapDays()
 }
 
 /// @cond
-ScheduleBase::ScheduleBase(boost::shared_ptr<detail::ScheduleBase_Impl> impl)
+ScheduleBase::ScheduleBase(std::shared_ptr<detail::ScheduleBase_Impl> impl)
   : ResourceObject(impl)
 {}
 

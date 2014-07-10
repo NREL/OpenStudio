@@ -17,14 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef COSTOBJECT_H
-#define COSTOBJECT_H
+#ifndef UTILITIES_ECONOMICS_COSTOBJECT_HPP
+#define UTILITIES_ECONOMICS_COSTOBJECT_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <utilities/UtilitiesAPI.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../UtilitiesAPI.hpp"
 
 namespace openstudio{
 
@@ -111,7 +110,7 @@ private:
   double m_OMInflation;
   double m_inflation;
 
-  std::vector < boost::shared_ptr<CostLineItem> > m_RefCostObjsData;
+  std::vector < std::shared_ptr<CostLineItem> > m_RefCostObjsData;
   std::vector< double > m_cashFlows;
   std::vector< double > m_cashFlows_Inflation;
   std::vector< double > m_cashFlows_Gas_Inflation;
@@ -124,4 +123,4 @@ private:
 
 }
 
-#endif // COSTOBJECT_H
+#endif // UTILITIES_ECONOMICS_COSTOBJECT_HPP

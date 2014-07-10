@@ -17,27 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/InputVariableRecord.hpp>
-#include <project/InputVariableRecord_Impl.hpp>
+#include "InputVariableRecord.hpp"
+#include "InputVariableRecord_Impl.hpp"
 
-#include <project/AttributeRecord.hpp>
-#include <project/AttributeRecord_Impl.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/DiscreteVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/ProblemRecord.hpp>
+#include "AttributeRecord.hpp"
+#include "AttributeRecord_Impl.hpp"
+#include "ContinuousVariableRecord.hpp"
+#include "DiscreteVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "ProblemRecord.hpp"
 
-#include <analysis/ContinuousVariable.hpp>
-#include <analysis/ContinuousVariable_Impl.hpp>
-#include <analysis/DiscreteVariable.hpp>
-#include <analysis/DiscreteVariable_Impl.hpp>
-#include <analysis/GenericUncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "../analysis/ContinuousVariable.hpp"
+#include "../analysis/ContinuousVariable_Impl.hpp"
+#include "../analysis/DiscreteVariable.hpp"
+#include "../analysis/DiscreteVariable_Impl.hpp"
+#include "../analysis/GenericUncertaintyDescription.hpp"
+#include "../analysis/UncertaintyDescription.hpp"
+#include "../analysis/UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace project {
@@ -150,7 +148,7 @@ namespace detail {
     analysis::OptionalUncertaintyDescription result;
     if (m_uncertaintyDescriptionType) {
       AttributeVector attributes;
-      BOOST_FOREACH(const AttributeRecord& attributeRecord, attributeRecords()) {
+      for (const AttributeRecord& attributeRecord : attributeRecords()) {
         attributes.push_back(attributeRecord.attribute());
       }
       result = analysis::GenericUncertaintyDescription(*m_uncertaintyDescriptionType,attributes);
@@ -299,7 +297,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
   }
 
   OS_ASSERT(false);
-  return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
+  return InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
 InputVariableRecord InputVariableRecord::factoryFromInputVariable(
@@ -324,7 +322,7 @@ InputVariableRecord InputVariableRecord::factoryFromInputVariable(
   }
 
   OS_ASSERT(false);
-  return InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl>());
+  return InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl>());
 }
 
 std::vector<InputVariableRecord> InputVariableRecord::getInputVariableRecords(ProjectDatabase& database) {
@@ -378,11 +376,11 @@ analysis::InputVariable InputVariableRecord::inputVariable() const {
 }
 
 /// @cond
-InputVariableRecord::InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl)
+InputVariableRecord::InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl)
   : VariableRecord(impl)
 {}
 
-InputVariableRecord::InputVariableRecord(boost::shared_ptr<detail::InputVariableRecord_Impl> impl,
+InputVariableRecord::InputVariableRecord(std::shared_ptr<detail::InputVariableRecord_Impl> impl,
                                          ProjectDatabase database,
                                          const boost::optional<analysis::InputVariable>& inputVariable)
   : VariableRecord(impl, database)
@@ -405,10 +403,10 @@ void InputVariableRecord::constructRelatedRecords(const analysis::InputVariable&
     attributes = udesc->cast<analysis::GenericUncertaintyDescription>().attributes();
   }
 
-  BOOST_FOREACH(const Attribute& attribute, attributes) {
+  for (const Attribute& attribute : attributes) {
     // find in dbOptions
-    std::vector<Attribute>::iterator dbIt = std::find_if(dbAttributes.begin(),dbAttributes.end(),
-                                                         boost::bind(uuidsEqual<Attribute,Attribute>,_1,attribute));
+    auto dbIt = std::find_if(dbAttributes.begin(),dbAttributes.end(),
+                             std::bind(uuidsEqual<Attribute,Attribute>,std::placeholders::_1,attribute));
     // if not there, or if different versionUUID, save it
     if ((dbIt == dbAttributes.end()) || (attribute.versionUUID() != dbIt->versionUUID())) {
       AttributeRecord udescAttributeRecord(attribute,copyOfThis);
@@ -422,7 +420,7 @@ void InputVariableRecord::constructRelatedRecords(const analysis::InputVariable&
 
   // any attributes left in dbAttributes should be removed from the database
   ProjectDatabase database = projectDatabase();
-  BOOST_FOREACH(const Attribute& toRemove,dbAttributes) {
+  for (const Attribute& toRemove : dbAttributes) {
     AttributeRecord dbUDescAttributeRecord = database.getObjectRecordByHandle<AttributeRecord>(toRemove.uuid()).get();
     database.removeRecord(dbUDescAttributeRecord);
   }

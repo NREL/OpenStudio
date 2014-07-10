@@ -16,8 +16,8 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#ifndef ISOMODEL_EPW_DATA_HPP
-#define ISOMODEL_EPW_DATA_HPP
+#ifndef ISOMODEL_EPWDATA_HPP
+#define ISOMODEL_EPWDATA_HPP
 
 #include <iostream>
 #include <fstream>
@@ -25,9 +25,9 @@
 #include <vector>
 #include <sstream>
 #include "TimeFrame.hpp"
-#include <utilities/core/Path.hpp>
-#include <utilities/data/Matrix.hpp>
-#include <utilities/data/Vector.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/data/Matrix.hpp"
+#include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
 namespace isomodel {
@@ -70,4 +70,4 @@ class EpwData
 }
 }
 
-#endif
+#endif // ISOMODEL_EPWDATA_HPP

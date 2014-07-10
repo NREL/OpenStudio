@@ -19,18 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/Model.hpp>
-#include <model/Connection.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/Node.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/FanConstantVolume_Impl.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
-#include <utilities/idd/OS_Node_FieldEnums.hxx>
+#include "../Model.hpp"
+#include "../Connection.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../FanConstantVolume_Impl.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
 
 #include <utilities/idd/OS_AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/OS_Node_FieldEnums.hxx>

@@ -20,8 +20,8 @@
 #ifndef MODEL_MIXER_HPP
 #define MODEL_MIXER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -99,7 +99,7 @@ class MODEL_API Mixer : public HVACComponent
 
   friend class openstudio::IdfObject;
 
-  explicit Mixer(boost::shared_ptr<ImplType> impl);
+  explicit Mixer(std::shared_ptr<ImplType> impl);
 
   private:
 

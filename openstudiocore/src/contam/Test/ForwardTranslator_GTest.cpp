@@ -1,47 +1,47 @@
 /**********************************************************************
-*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <contam/Test/ContamFixture.hpp>
+#include "ContamFixture.hpp"
 
-#include <contam/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/BuildingStory.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <model/ThermostatSetpointDualSetpoint.hpp>
-#include <model/ThermostatSetpointDualSetpoint_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SizingZone.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/HVACTemplates.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerSingleZoneReheat_Impl.hpp>
-#include <osversion/VersionTranslator.hpp>
-#include <utilities/idf/Handle.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/BuildingStory.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/SizingZone.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/HVACTemplates.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../../model/SetpointManagerSingleZoneReheat_Impl.hpp"
+#include "../../osversion/VersionTranslator.hpp"
+#include "../../utilities/idf/Handle.hpp"
 
 #include <resources.hxx>
 
@@ -154,7 +154,7 @@ boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Mode
 
   // find thermostat
   boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  BOOST_FOREACH(openstudio::model::ThermostatSetpointDualSetpoint t,
+  for (openstudio::model::ThermostatSetpointDualSetpoint t :
     model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>())
   {
     thermostat = t;
@@ -202,7 +202,7 @@ boost::optional<openstudio::model::Model> buildDemoModel(openstudio::model::Mode
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  BOOST_FOREACH(openstudio::model::SetpointManagerSingleZoneReheat t, 
+  for (openstudio::model::SetpointManagerSingleZoneReheat t : 
     model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>())
   {
     setpointManager = t;
@@ -252,7 +252,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   EXPECT_EQ(6,prjModel->zones().size());
   int systemZoneCount=0;
   int interiorZoneCount=0;
-  BOOST_FOREACH(const contam::Zone zone, prjModel->zones())
+  for (const contam::Zone& zone : prjModel->zones())
   {
     if(zone.system())
     {
@@ -273,7 +273,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   int outsideAirPathCount=0;
   int recirculationPathCount=0;
   int plainPathCount=0;
-  BOOST_FOREACH(contam::AirflowPath afp, prjModel->airflowPaths())
+  for (contam::AirflowPath afp : prjModel->airflowPaths())
   {
     if(afp.system())
     {
@@ -322,7 +322,7 @@ TEST_F(ContamFixture, ForwardTranslator_DemoModel_2012)
   std::vector<std::vector<int> > exteriorFlowPaths = prjModel->zoneExteriorFlowPaths();
   EXPECT_EQ(6,exteriorFlowPaths.size());
 
-  BOOST_FOREACH(model::ThermalZone thermalZone, model.getConcreteModelObjects<model::ThermalZone>())
+  for (const model::ThermalZone& thermalZone : model.getConcreteModelObjects<model::ThermalZone>())
   {
     ASSERT_TRUE(zoneNames.contains(thermalZone.name().get()));
     unsigned zoneNumber = zoneMap[thermalZone.handle()];

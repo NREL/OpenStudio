@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OBJECTEXPLORER_H
-#define OBJECTEXPLORER_H
+#ifndef MODELEDITOR_OBJECTEXPLORER_HPP
+#define MODELEDITOR_OBJECTEXPLORER_HPP
 
 #include <QWidget>
 
-#include <utilities/idf/IdfFile.hpp>
+#include "../utilities/idf/IdfFile.hpp"
 
 class QLineEdit;
 class QListWidget;
@@ -37,7 +37,7 @@ class ObjectExplorer : public QWidget
   Q_OBJECT
 
 public:
-  ObjectExplorer(openstudio::IddFile& iddFile, QWidget * parent = 0);
+  ObjectExplorer(openstudio::IddFile& iddFile, QWidget * parent = nullptr);
   virtual ~ObjectExplorer();
   void updateIddFile();
 
@@ -69,4 +69,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // OBJECTEXPLORER_H
+#endif // MODELEDITOR_OBJECTEXPLORER_HPP

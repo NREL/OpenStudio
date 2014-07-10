@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCase_Impl.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Schedule.hpp>
-#include <utilities/time/Time.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationCase_Impl.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../utilities/time/Time.hpp"
 
 #include <utilities/idd/Refrigeration_Case_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

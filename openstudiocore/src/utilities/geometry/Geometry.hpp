@@ -20,10 +20,10 @@
 #ifndef UTILITIES_GEOMETRY_GEOMETRY_HPP
 #define UTILITIES_GEOMETRY_GEOMETRY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "Point3d.hpp"
+#include "Vector3d.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>
@@ -52,8 +52,8 @@ namespace openstudio{
   /// reorder points to upper-left-corner convention
   UTILITIES_API std::vector<Point3d> reorderULC(const Point3dVector& points);
 
-  /// removes colinear points, tolerance is for length of cross product after normalizing each line segment
-  UTILITIES_API std::vector<Point3d> removeColinear(const Point3dVector& points, double tol = 0.001);
+  /// removes collinear points, tolerance is for length of cross product after normalizing each line segment
+  UTILITIES_API std::vector<Point3d> removeCollinear(const Point3dVector& points, double tol = 0.001);
 
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);

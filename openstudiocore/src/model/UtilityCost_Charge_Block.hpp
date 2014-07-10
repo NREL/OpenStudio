@@ -20,9 +20,9 @@
 #ifndef MODEL_UTILITYCOST_CHARGE_BLOCK_HPP
 #define MODEL_UTILITYCOST_CHARGE_BLOCK_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -112,7 +112,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Charge_Block(boost::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl);
+  explicit UtilityCost_Charge_Block(std::shared_ptr<detail::UtilityCost_Charge_Block_Impl> impl);
 
 private:
 

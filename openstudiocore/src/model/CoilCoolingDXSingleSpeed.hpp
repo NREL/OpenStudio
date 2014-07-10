@@ -20,11 +20,11 @@
 #ifndef MODEL_COILCOOLINGDXSINGLESPEED_HPP
 #define MODEL_COILCOOLINGDXSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -120,12 +120,12 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   boost::optional<double> evaporativeCondenserEffectiveness()const;
 
   /** Returns the value of the EvaporativeCondenserAirFlowRate field.
-      optional == flase means "autosize"
+      optional == false means "autosize"
   **/
   boost::optional<double> evaporativeCondenserAirFlowRate()const;
 
   /** Returns the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
-      optional == flase means "autosize"
+      optional == false means "autosize"
   **/
   boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption()const;
 
@@ -343,7 +343,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   typedef detail::CoilCoolingDXSingleSpeed_Impl ImplType;
 
-  explicit CoilCoolingDXSingleSpeed(boost::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
+  explicit CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> impl);
 
   private:
 

@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionCfactorUndergroundWallInspectorView.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "ConstructionCfactorUndergroundWallInspectorView.hpp"
+#include "OSItem.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 
-#include <model/CFactorUndergroundWallConstruction.hpp>
-#include <model/CFactorUndergroundWallConstruction_Impl.hpp>
+#include "../model/CFactorUndergroundWallConstruction.hpp"
+#include "../model/CFactorUndergroundWallConstruction_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -216,8 +216,8 @@ void ConstructionCfactorUndergroundWallInspectorView::populateStandardsConstruct
   if (m_standardsInformation){
     m_standardsConstructionType->addItem("");
     std::vector<std::string> suggestedStandardsConstructionTypes = m_standardsInformation->suggestedStandardsConstructionTypes();
-    Q_FOREACH(const std::string& standardsConstructionType, suggestedStandardsConstructionTypes){
-        m_standardsConstructionType->addItem(toQString(standardsConstructionType));
+    for (const std::string& standardsConstructionType : suggestedStandardsConstructionTypes) {
+      m_standardsConstructionType->addItem(toQString(standardsConstructionType));
     }
     boost::optional<std::string> standardsConstructionType = m_standardsInformation->standardsConstructionType();
     if (standardsConstructionType){
@@ -250,9 +250,9 @@ void ConstructionCfactorUndergroundWallInspectorView::attach(openstudio::model::
       *m_standardsInformation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       &openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues,
-      boost::function<boost::optional<std::string> ()>(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1),
-      NoFailAction(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
   bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
   OS_ASSERT(test);

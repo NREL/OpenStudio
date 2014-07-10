@@ -20,7 +20,7 @@
 #ifndef UTILITIES_IDF_HANDLE_HPP
 #define UTILITIES_IDF_HANDLE_HPP
 
-#include <utilities/core/UUID.hpp>
+#include "../core/UUID.hpp"
 
 #include <boost/optional.hpp>
 

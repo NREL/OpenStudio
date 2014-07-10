@@ -20,7 +20,7 @@
 #ifndef ANALYSIS_ANALYSISENUMS_HPP
 #define ANALYSIS_ANALYSISENUMS_HPP
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 #include <vector>
 

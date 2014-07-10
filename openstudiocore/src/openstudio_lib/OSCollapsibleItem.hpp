@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSCOLLAPSIBLEITEM_H
-#define OPENSTUDIO_OSCOLLAPSIBLEITEM_H
+#ifndef OPENSTUDIO_OSCOLLAPSIBLEITEM_HPP
+#define OPENSTUDIO_OSCOLLAPSIBLEITEM_HPP
 
 #include <QWidget>
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
 class QButtonGroup;
 class QComboBox;
@@ -118,4 +118,4 @@ class OSCollapsibleItem : public QWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSCOLLAPSIBLEITEM_H
+#endif // OPENSTUDIO_OSCOLLAPSIBLEITEM_HPP

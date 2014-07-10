@@ -19,33 +19,33 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
-#include <model/Blind.hpp>
-#include <model/Blind_Impl.hpp>
-#include <model/Gas.hpp>
-#include <model/Gas_Impl.hpp>
-#include <model/GasMixture.hpp>
-#include <model/GasMixture_Impl.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
-#include <model/Screen.hpp>
-#include <model/Screen_Impl.hpp>
-#include <model/Shade.hpp>
-#include <model/Shade_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
+#include "../Blind.hpp"
+#include "../Blind_Impl.hpp"
+#include "../Gas.hpp"
+#include "../Gas_Impl.hpp"
+#include "../GasMixture.hpp"
+#include "../GasMixture_Impl.hpp"
+#include "../RefractionExtinctionGlazing.hpp"
+#include "../RefractionExtinctionGlazing_Impl.hpp"
+#include "../Screen.hpp"
+#include "../Screen_Impl.hpp"
+#include "../Shade.hpp"
+#include "../Shade_Impl.hpp"
+#include "../SimpleGlazing.hpp"
+#include "../SimpleGlazing_Impl.hpp"
+#include "../StandardGlazing.hpp"
+#include "../StandardGlazing_Impl.hpp"
+#include "../ThermochromicGlazing.hpp"
+#include "../ThermochromicGlazing_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idd/IddKey.hpp"
 #include <utilities/idd/OS_WindowMaterial_Blind_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_Gas_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_GasMixture_FieldEnums.hxx>
@@ -54,8 +54,6 @@
 #include <utilities/idd/OS_WindowMaterial_Shade_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_SimpleGlazingSystem_FieldEnums.hxx>
 #include <utilities/idd/OS_WindowMaterial_Glazing_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -76,7 +74,7 @@ TEST_F(ModelFixture, FenestrationMaterial_Daylighting_School_1)
   std::sort(fenestrationMaterials.begin(),fenestrationMaterials.end(),comparator);
   LOG(Info,"List of FenestrationMaterials in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const FenestrationMaterial& material,fenestrationMaterials) {
+  for (const FenestrationMaterial& material : fenestrationMaterials) {
     unsigned absCount = material.directUseCount();
     unsigned mainCount = material.nonResourceObjectUseCount();
     std::string name = material.name().get();

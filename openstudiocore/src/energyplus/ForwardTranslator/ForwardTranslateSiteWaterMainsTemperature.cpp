@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/SiteWaterMainsTemperature.hpp>
-#include <model/SiteWaterMainsTemperature_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
+#include "../../model/SiteWaterMainsTemperature.hpp"
+#include "../../model/SiteWaterMainsTemperature_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include <utilities/idd/Site_WaterMainsTemperature_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

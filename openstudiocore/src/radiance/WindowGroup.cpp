@@ -68,7 +68,7 @@ namespace radiance{
   std::string WindowGroup::azimuthString() const
   {
     // DLM: implement binning here
-// keep for future feature (offer auto-binning to window groups for highly tesselated facades)
+// keep for future feature (offer auto-binning to window groups for highly tessellated facades)
 //
 //         if (azi >= 352.50 && azi < 7.50)
 //         {
@@ -152,7 +152,7 @@ namespace radiance{
     boost::optional<Point3d> centroid;
     boost::optional<Vector3d> outwardNormal;
 
-    BOOST_FOREACH(const openstudio::Point3dVector& windowPolygon, m_windowPolygons){
+    for (const auto & windowPolygon : m_windowPolygons){
       boost::optional<double> area = getArea(windowPolygon);
       if (area){
         if (!largestArea || (*area > *largestArea)){

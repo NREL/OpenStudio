@@ -20,8 +20,8 @@
 #ifndef MODEL_INSIDESURFACECONVECTIONALGORITHM_HPP
 #define MODEL_INSIDESURFACECONVECTIONALGORITHM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -86,7 +86,7 @@ class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject {
 
   // constructor
   explicit InsideSurfaceConvectionAlgorithm(
-      boost::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
+      std::shared_ptr<detail::InsideSurfaceConvectionAlgorithm_Impl> impl);
 
  private:
 

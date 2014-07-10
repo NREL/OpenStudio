@@ -17,20 +17,20 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationSystem.hpp>
-#include <model/ThermalZone.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationSystem.hpp"
+#include "../../model/ThermalZone.hpp"
 //#include <model/RefrigerationCondenserAirCooled.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationCondenserCascade.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationCompressor.hpp>
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/RefrigerationWalkIn.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerMechanical.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../model/RefrigerationAirChiller.hpp"
+#include "../../model/RefrigerationCondenserCascade.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationCompressor.hpp"
+#include "../../model/RefrigerationSecondarySystem.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
+#include "../../model/RefrigerationSubcoolerLiquidSuction.hpp"
+#include "../../model/RefrigerationSubcoolerMechanical.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_System_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>
@@ -77,11 +77,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
   	_caseAndWalkinList.setName(refrigerationSystem.name().get() + name);
 
-  	for( std::vector<RefrigerationCase>::iterator it = cases.begin();
-  	   it != cases.end();
-  	   ++it )
+  	for( auto & elem : cases )
   	{
-  		boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
+  		boost::optional<IdfObject> _case = translateAndMapModelObject(elem);
 
   		if( _case )
   		{
@@ -91,11 +89,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   		}
   	}
 
-  	for( std::vector<RefrigerationWalkIn>::iterator it = walkins.begin();
-  	   it != walkins.end();
-  	   ++it )
+  	for( auto & elem : walkins )
   	{
-  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
+  		boost::optional<IdfObject> _walkin = translateAndMapModelObject(elem);
 
   		if( _walkin )
   		{
@@ -105,11 +101,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
   		}
   	}
 
-    for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
-       it != airChillers.end();
-       it++ )
+    for( auto & elem : airChillers )
     {
-      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(elem);
 
       if( _airChiller )
       {
@@ -136,11 +130,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     _transferLoadList.setName(refrigerationSystem.name().get() + name);
 
-    for( std::vector<RefrigerationSecondarySystem>::iterator it = secondarySystemLoads.begin();
-       it != secondarySystemLoads.end();
-       ++it )
+    for( auto & elem : secondarySystemLoads )
     {
-      boost::optional<IdfObject> _secondarySystemLoad = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _secondarySystemLoad = translateAndMapModelObject(elem);
 
       if( _secondarySystemLoad )
       {
@@ -150,11 +142,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
       }
     }
 
-    for( std::vector<RefrigerationCondenserCascade>::iterator it = cascadeCondenserLoads.begin();
-       it != cascadeCondenserLoads.end();
-       ++it )
+    for( auto & elem : cascadeCondenserLoads )
     {
-      boost::optional<IdfObject> _cascadeCondenserLoad = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _cascadeCondenserLoad = translateAndMapModelObject(elem);
 
       if( _cascadeCondenserLoad )
       {
@@ -193,11 +183,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     _compressorList.setName(refrigerationSystem.name().get() + name);
 
-    for( std::vector<RefrigerationCompressor>::iterator it = compressors.begin();
-       it != compressors.end();
-       ++it )
+    for( auto & elem : compressors )
     {
-      boost::optional<IdfObject> _compressor = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _compressor = translateAndMapModelObject(elem);
 
       if( _compressor )
       {
@@ -316,11 +304,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSystem( Refr
 
     _highStageCompressorList.setName(refrigerationSystem.name().get() + name);
 
-    for( std::vector<RefrigerationCompressor>::iterator it = highStageCompressors.begin();
-       it != highStageCompressors.end();
-       it++ )
+    for( auto & elem : highStageCompressors )
     {
-      boost::optional<IdfObject> _highStageCompressor = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _highStageCompressor = translateAndMapModelObject(elem);
 
       if( _highStageCompressor )
       {

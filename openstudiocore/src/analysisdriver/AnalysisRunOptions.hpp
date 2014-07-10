@@ -20,13 +20,13 @@
 #ifndef ANALYSISDRIVER_ANALYSISRUNOPTIONS_HPP
 #define ANALYSISDRIVER_ANALYSISRUNOPTIONS_HPP
 
-#include <analysisdriver/AnalysisDriverAPI.hpp>
+#include "AnalysisDriverAPI.hpp"
 
-#include <runmanager/lib/ToolInfo.hpp>
+#include "../runmanager/lib/ToolInfo.hpp"
 
-#include <utilities/idf/URLSearchPath.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/idf/URLSearchPath.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace analysisdriver {

@@ -20,11 +20,11 @@
 #ifndef MODEL_STANDARDGLAZING_IMPL_HPP
 #define MODEL_STANDARDGLAZING_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -317,9 +317,9 @@ namespace detail {
 
     double exteriorVisibleReflectance() const;
 
-    virtual boost::optional<double> interiorVisibleAbsorbtance() const;
+    virtual boost::optional<double> interiorVisibleAbsorptance() const;
 
-    virtual boost::optional<double> exteriorVisibleAbsorbtance() const;
+    virtual boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /** Sets the conductance of the material in W/m^2*K, if possible. */
     bool setThermalConductance(double value);

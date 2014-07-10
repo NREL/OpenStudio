@@ -17,21 +17,21 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/BCLComponentItem.hpp>
+#include "ModelObjectListView.hpp"
+#include "ModelObjectItem.hpp"
+#include "BCLComponentItem.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/ZoneHVACComponent.hpp"
+#include "../model/ZoneHVACComponent_Impl.hpp"
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 
 #include <iostream>
 
@@ -44,16 +44,16 @@ ModelObjectListController::ModelObjectListController(const openstudio::IddObject
 {
   bool isConnected = false;
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -64,13 +64,13 @@ IddObjectType ModelObjectListController::iddObjectType() const
   return m_iddObjectType;
 }
 
-void ModelObjectListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void ModelObjectListController::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     std::vector<OSItemId> ids = this->makeVector();
     emit itemIds(ids);
 
-    BOOST_FOREACH(const OSItemId& id, ids){
+    for (const OSItemId& id : ids){
       if (id.itemId() == impl->handle().toString()){
         emit selectedItemId(id);
         break;
@@ -79,7 +79,7 @@ void ModelObjectListController::objectAdded(boost::shared_ptr<openstudio::detail
   }
 }
 
-void ModelObjectListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void ModelObjectListController::objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     emit itemIds(makeVector());
@@ -115,7 +115,7 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
   // sort by name
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
 
-  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
       if(boost::optional<model::HVACComponent> hvacComponent = modelObject.optionalCast<model::HVACComponent>()) {

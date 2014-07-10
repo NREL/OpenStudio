@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRLOOPHVACZONESPLITTER_HPP
 #define MODEL_AIRLOOPHVACZONESPLITTER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Splitter.hpp>
+#include "ModelAPI.hpp"
+#include "Splitter.hpp"
 
 namespace openstudio {
 
@@ -82,7 +82,7 @@ class MODEL_API AirLoopHVACZoneSplitter : public Splitter {
 
   typedef detail::AirLoopHVACZoneSplitter_Impl ImplType;
 
-  explicit AirLoopHVACZoneSplitter(boost::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl);
+  explicit AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl);
 
   private:
 

@@ -18,64 +18,62 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../SimpleProject.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Algorithm.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/DDACEAlgorithmOptions.hpp>
-#include <analysis/DDACEAlgorithm.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../../analysis/Analysis.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Algorithm.hpp"
+#include "../../analysis/DataPoint.hpp"
+#include "../../analysis/DDACEAlgorithmOptions.hpp"
+#include "../../analysis/DDACEAlgorithm.hpp"
+#include "../../analysis/DesignOfExperimentsOptions.hpp"
+#include "../../analysis/DesignOfExperiments.hpp"
+#include "../../analysis/Measure.hpp"
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../../analysis/WorkflowStep.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/DakotaAlgorithmRecord.hpp>
-#include <project/DakotaAlgorithmRecord_Impl.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/WorkflowRecord.hpp>
+#include "../../project/ProjectDatabase.hpp"
+#include "../../project/AnalysisRecord.hpp"
+#include "../../project/ProblemRecord.hpp"
+#include "../../project/DataPointRecord.hpp"
+#include "../../project/InputVariableRecord.hpp"
+#include "../../project/DakotaAlgorithmRecord.hpp"
+#include "../../project/DakotaAlgorithmRecord_Impl.hpp"
+#include "../../project/FileReferenceRecord.hpp"
+#include "../../project/WorkflowRecord.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../../runmanager/lib/Job.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/WorkItem.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/cloud/VagrantProvider.hpp>
-#include <utilities/cloud/VagrantProvider_Impl.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/UnzipFile.hpp>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../utilities/bcl/BCLMeasure.hpp"
+#include "../../utilities/cloud/VagrantProvider.hpp"
+#include "../../utilities/cloud/VagrantProvider_Impl.hpp"
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/UnzipFile.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
 
 #include <OpenStudio.hxx>
 #include <resources.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -272,7 +270,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_UpdateMeasure) {
   EXPECT_TRUE(dv.push(rp));
   EXPECT_EQ(args.size(),rp.arguments().size());
   EXPECT_TRUE(rp.hasIncompleteArguments());
-  BOOST_FOREACH(const OSArgument& arg,args) {
+  for (const OSArgument& arg : args) {
     if (arg.name() == "wwr") {
       OSArgument temp = arg.clone();
       temp.setValue(0.6);
@@ -363,7 +361,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     ASSERT_TRUE(index);
     MeasureGroup dv("Idf Measure",MeasureVector(1u,NullMeasure()));
     problem.insert(*index,dv);
-    BOOST_FOREACH(const BCLMeasure& bclMeasure,BCLMeasure::patApplicationMeasures()) {
+    for (const BCLMeasure& bclMeasure : BCLMeasure::patApplicationMeasures()) {
       if (bclMeasure.inputFileType() == FileReferenceType::IDF) {
         RubyMeasure rubyMeasure(bclMeasure);
         dv.push(rubyMeasure);
@@ -377,7 +375,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = project.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
   }
@@ -402,7 +400,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = project.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
   }
@@ -415,7 +413,7 @@ TEST_F(AnalysisDriverFixture,SimpleProject_EditProblemWithTwoWorkflows) {
     RunManager runManager = database.runManager();
     WorkflowRecordVector workflowRecords = WorkflowRecord::getWorkflowRecords(database);
     EXPECT_EQ(2u,workflowRecords.size());
-    BOOST_FOREACH(const WorkflowRecord& wr,workflowRecords) {
+    for (const WorkflowRecord& wr : workflowRecords) {
       EXPECT_NO_THROW(runManager.loadWorkflow(wr.runManagerWorkflowKey()));
     }
 
@@ -455,7 +453,7 @@ TEST_F(AnalysisDriverFixture, SimpleProject_ZipFileForCloud) {
       boost::filesystem::remove_all(remoteDir);
     }
     boost::filesystem::create_directory(remoteDir);
-    openstudio::path zipFilePath = remoteDir / toPath(tempZipFilePath.filename());
+    openstudio::path zipFilePath = remoteDir / tempZipFilePath.filename();
     boost::filesystem::copy_file(tempZipFilePath,zipFilePath);
     UnzipFile unzip(zipFilePath);
     unzip.extractAllFiles(remoteDir);

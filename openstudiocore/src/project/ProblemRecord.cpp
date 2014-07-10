@@ -17,31 +17,30 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "ProblemRecord.hpp"
+#include "ProblemRecord_Impl.hpp"
 
-#include <project/FunctionRecord.hpp>
-#include <project/InputVariableRecord.hpp>
-#include <project/JoinRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/WorkflowRecord.hpp>
+#include "FunctionRecord.hpp"
+#include "InputVariableRecord.hpp"
+#include "JoinRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "ProjectDatabase.hpp"
+#include "WorkflowRecord.hpp"
 
-#include <analysis/InputVariable.hpp>
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
+#include "../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <boost/optional/optional.hpp>
-#include <boost/foreach.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -113,7 +112,7 @@ namespace detail {
     return result;
   }
 
-  void ProblemRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void ProblemRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<ProblemRecord>(query);
@@ -269,7 +268,7 @@ namespace detail {
         OS_ASSERT(temp == wIndex); // saved index into workflow should match expected value
         OS_ASSERT(wrIndex < wrN);  // there is a workflow record to deserialize
         std::vector<runmanager::WorkItem> workItems = workflowRecords[wrIndex].workflow().toWorkItems();
-        BOOST_FOREACH(const runmanager::WorkItem& workItem,workItems) {
+        for (const runmanager::WorkItem& workItem : workItems) {
           if (fixupPaths && (workItem.type == runmanager::JobType::UserScript || workItem.type == runmanager::JobType::Ruby)) {
             LOG(Debug, "Updating paths for ruby / userscript job. Keyname: " + workItem.jobkeyname);
             // hoping that this resets the location of UserScriptAdapter.rb
@@ -295,7 +294,7 @@ namespace detail {
 
     analysis::FunctionVector responses;
     FunctionRecordVector responseRecords = this->responseRecords();
-    BOOST_FOREACH(const FunctionRecord responseRecord,responseRecords) {
+    for (const FunctionRecord responseRecord : responseRecords) {
       responses.push_back(responseRecord.function());
     }
 
@@ -311,7 +310,7 @@ namespace detail {
   boost::optional<int> ProblemRecord_Impl::combinatorialSize(bool selectedMeasuresOnly) const {
     int result(1);
     InputVariableRecordVector inputVariableRecords = this->inputVariableRecords();
-    BOOST_FOREACH(const InputVariableRecord& inputVariableRecord, inputVariableRecords) {
+    for (const InputVariableRecord& inputVariableRecord : inputVariableRecords) {
       OptionalMeasureGroupRecord omgr = inputVariableRecord.optionalCast<MeasureGroupRecord>();
       if (!omgr) {
         return boost::none;
@@ -383,7 +382,7 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -391,7 +390,7 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -405,11 +404,10 @@ UpdateByIdQueryData ProblemRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -510,7 +508,7 @@ boost::optional<int> ProblemRecord::combinatorialSize(bool selectedMeasuresOnly)
   return getImpl<detail::ProblemRecord_Impl>()->combinatorialSize(selectedMeasuresOnly);
 }
 
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl,
                              ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -518,7 +516,7 @@ ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl,
 }
 
 /// @cond
-ProblemRecord::ProblemRecord(boost::shared_ptr<detail::ProblemRecord_Impl> impl)
+ProblemRecord::ProblemRecord(std::shared_ptr<detail::ProblemRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::ProblemRecord_Impl>());
@@ -534,7 +532,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   // Workflows do not have consistent UUIDs, so always remove
   if (!isNew) {
     WorkflowRecordVector oldWorkflowRecords = workflowRecords();
-    BOOST_FOREACH(WorkflowRecord& oldRecord,oldWorkflowRecords) {
+    for (WorkflowRecord& oldRecord : oldWorkflowRecords) {
       database.removeRecord(oldRecord);
     }
   }
@@ -543,7 +541,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   std::vector<UUID> inputVariableUUIDs;
   std::vector<runmanager::WorkItem> workflow;
   OptionalInt workflowIndex;
-  BOOST_FOREACH(const analysis::WorkflowStep& step,problem.workflow()) {
+  for (const analysis::WorkflowStep& step : problem.workflow()) {
     if (step.isInputVariable()) {
       if (workflowIndex) {
         runmanager::Workflow rmWorkflow(workflow);
@@ -586,7 +584,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
   // Save child response functions
   i = 0;
   std::vector<UUID> responseUUIDs;
-  BOOST_FOREACH(const analysis::Function& response, problem.responses()) {
+  for (const analysis::Function& response : problem.responses()) {
     responseUUIDs.push_back(response.uuid());
     if (response.isDirty() || isNew) {
       FunctionRecord newFunctionRecord = FunctionRecord::factoryFromFunction(
@@ -603,7 +601,7 @@ void ProblemRecord::constructRelatedRecords(const analysis::Problem& problem) {
 }
 
 ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(problem, ProblemRecordType::ProblemRecord, database)),
         database)
 {
@@ -613,7 +611,7 @@ ProblemRecord::ProblemRecord(const analysis::Problem& problem, ProjectDatabase& 
 }
 
 ProblemRecord::ProblemRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::ProblemRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::ProblemRecord_Impl>(
         new detail::ProblemRecord_Impl(query, database)),
         database)
 {
@@ -629,7 +627,7 @@ void ProblemRecord::removeInputVariableRecords(const std::vector<UUID>& uuidsToK
         " WHERE (problemRecordId=:problemRecordId) AND (variableRecordType=:variableRecordType) " +
         "AND (handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }
@@ -655,7 +653,7 @@ void ProblemRecord::removeResponseRecords(const std::vector<UUID>& uuidsToKeep,
   ss << "(problemRecordId=:problemRecordId) AND (functionType=:functionType) AND ";
   ss << "(handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

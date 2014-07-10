@@ -17,43 +17,41 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
-#include <project/DataPoint_Measure_JoinRecord.hpp>
-#include <project/DataPoint_Measure_JoinRecord_Impl.hpp>
-#include <project/DataPointValueRecord.hpp>
+#include "DataPointRecord.hpp"
+#include "DataPointRecord_Impl.hpp"
+#include "DataPoint_Measure_JoinRecord.hpp"
+#include "DataPoint_Measure_JoinRecord_Impl.hpp"
+#include "DataPointValueRecord.hpp"
 
-#include <project/AnalysisRecord.hpp>
-#include <project/AttributeRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ContinuousVariableRecord.hpp>
-#include <project/ContinuousVariableRecord_Impl.hpp>
-#include <project/FunctionRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/MeasureGroupRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
-#include <project/OptimizationDataPointRecord.hpp>
+#include "AnalysisRecord.hpp"
+#include "AttributeRecord.hpp"
+#include "ProblemRecord.hpp"
+#include "ContinuousVariableRecord.hpp"
+#include "ContinuousVariableRecord_Impl.hpp"
+#include "FunctionRecord.hpp"
+#include "FileReferenceRecord.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "MeasureGroupRecord_Impl.hpp"
+#include "MeasureRecord.hpp"
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
+#include "OptimizationDataPointRecord.hpp"
 
-#include <project/TagRecord.hpp>
+#include "TagRecord.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/OptimizationDataPoint.hpp"
+#include "../analysis/OptimizationDataPoint_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/Tag.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/PathHelpers.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 using namespace openstudio::analysis;
 
@@ -154,7 +152,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
-      Q_FOREACH(const QString& path, value.toString().split(QString(pathSep), QString::SkipEmptyParts)){
+      for (const QString& path : value.toString().split(QString(pathSep), QString::SkipEmptyParts)) {
         m_dakotaParametersFiles.push_back(toPath(path));
       }
     }
@@ -210,7 +208,7 @@ namespace detail {
     return result;
   }
 
-  void DataPointRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DataPointRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DataPointRecord>(query);
@@ -298,22 +296,22 @@ namespace detail {
     query.clear();    
     
     // order them
-    BOOST_FOREACH(const InputVariableRecord& ivr,ivrs) {
+    for (const InputVariableRecord& ivr : ivrs) {
       if (ivr.optionalCast<MeasureGroupRecord>()) {
-        MeasureRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             measureRecords.begin(),
             measureRecords.end(),
-            boost::bind(variableRecordIdEquals,_1,ivr.id()));
+            std::bind(variableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != measureRecords.end());
         OS_ASSERT(it->measureVectorIndex());
         result.push_back(QVariant(it->measureVectorIndex().get()));
         measureRecords.erase(it);
       }
       else {
-        DataPointValueRecordVector::iterator it = std::find_if(
+        auto it = std::find_if(
             cvValueRecords.begin(),
             cvValueRecords.end(),
-            boost::bind(continuousVariableRecordIdEquals,_1,ivr.id()));
+            std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,ivr.id()));
         OS_ASSERT(it != cvValueRecords.end());
         result.push_back(QVariant(it->dataPointValue()));
         cvValueRecords.erase(it);
@@ -351,11 +349,11 @@ namespace detail {
     query.clear();
 
     // order them
-    BOOST_FOREACH(const MeasureGroupRecord& mgr,mgrs) {
-      MeasureRecordVector::iterator it = std::find_if(
+    for (const MeasureGroupRecord& mgr : mgrs) {
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(variableRecordIdEquals,_1,mgr.id()));
+          std::bind(variableRecordIdEquals,std::placeholders::_1,mgr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -388,11 +386,11 @@ namespace detail {
     query.clear();
 
     // order them
-    BOOST_FOREACH(const ContinuousVariableRecord& cvr,cvrs) {
-      DataPointValueRecordVector::iterator it = std::find_if(
+    for (const ContinuousVariableRecord& cvr : cvrs) {
+      auto it = std::find_if(
           temp.begin(),
           temp.end(),
-          boost::bind(continuousVariableRecordIdEquals,_1,cvr.id()));
+          std::bind(continuousVariableRecordIdEquals,std::placeholders::_1,cvr.id()));
       OS_ASSERT(it != temp.end());
       result.push_back(*it);
       temp.erase(it);
@@ -406,7 +404,7 @@ namespace detail {
     DataPointValueRecordVector result;
     ProjectDatabase database = projectDatabase();
     FunctionRecordVector responses = problemRecord().responseRecords();
-    BOOST_FOREACH(const FunctionRecord& response,responses) {
+    for (const FunctionRecord& response : responses) {
       QSqlQuery query(*(database.qSqlDatabase()));
       query.prepare(toQString("SELECT * FROM " + DataPointValueRecord::databaseTableName() +
           " WHERE dataPointRecordId=:dataPointRecordId AND functionRecordId=:functionRecordId "));
@@ -423,7 +421,7 @@ namespace detail {
   std::vector<double> DataPointRecord_Impl::responseValues() const {
     DoubleVector result;
     DataPointValueRecordVector valueRecords = responseValueRecords();
-    BOOST_FOREACH(const DataPointValueRecord& valueRecord,valueRecords) {
+    for (const DataPointValueRecord& valueRecord : valueRecords) {
       result.push_back(valueRecord.dataPointValue());
     }
     return result;
@@ -522,13 +520,13 @@ namespace detail {
       oSqlOutputData = ofrr->fileReference();
     }
     AttributeRecordVector ars = attributeRecords();
-    Q_FOREACH(const AttributeRecord& ar,ars) {
+    for (const AttributeRecord& ar : ars) {
       attributes.push_back(ar.attribute());
     }
 
     TagRecordVector tagRecords = this->tagRecords();
     TagVector tags;
-    BOOST_FOREACH(const TagRecord& tagRecord,tagRecords) {
+    for (const TagRecord& tagRecord : tagRecords) {
       tags.push_back(tagRecord.tag());
     }
 
@@ -589,11 +587,11 @@ namespace detail {
       database.removeRecord(*ofrr);
     }
     AttributeRecordVector ars = attributeRecords();
-    BOOST_FOREACH(AttributeRecord& ar, ars) {
+    for (AttributeRecord& ar : ars) {
       database.removeRecord(ar);
     }
     DataPointValueRecordVector rvrs = responseValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& rvr,rvrs) {
+    for (DataPointValueRecord& rvr : rvrs) {
       database.removeRecord(rvr);
     }
     m_topLevelJobUUID.reset();
@@ -681,7 +679,7 @@ namespace detail {
     }
     if (!m_dakotaParametersFiles.empty()){
       QStringList dakotaParametersFiles;
-      BOOST_FOREACH(const openstudio::path& path, m_dakotaParametersFiles) {
+      for (const openstudio::path& path : m_dakotaParametersFiles) {
         dakotaParametersFiles << toQString(path);
       }
       query.bindValue(DataPointRecordColumns::dakotaParametersFiles, dakotaParametersFiles.join(QString(pathSep)));
@@ -764,7 +762,7 @@ namespace detail {
 
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
-      Q_FOREACH(const QString& path, value.toString().split(QString(pathSep), QString::SkipEmptyParts)){
+      for (const QString& path : value.toString().split(QString(pathSep), QString::SkipEmptyParts)) {
         m_lastDakotaParametersFiles.push_back(toPath(path));
       }
     }else{
@@ -845,7 +843,7 @@ namespace detail {
     value = query.value(DataPointRecordColumns::dakotaParametersFiles);
     if (value.isValid() && !value.isNull()) {
       QStringList dakotaParametersFiles;
-      BOOST_FOREACH(const openstudio::path& path, m_dakotaParametersFiles) {
+      for (const openstudio::path& path : m_dakotaParametersFiles) {
         dakotaParametersFiles << toQString(path);
       }
       result = result && (value.toString() == dakotaParametersFiles.join(QString(pathSep)));
@@ -897,7 +895,7 @@ namespace detail {
 DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
                                  AnalysisRecord& analysisRecord,
                                  const ProblemRecord& problemRecord)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(dataPoint,
                                          DataPointRecordType::DataPointRecord,
                                          analysisRecord,
@@ -910,14 +908,14 @@ DataPointRecord::DataPointRecord(const analysis::DataPoint& dataPoint,
 }
 
 DataPointRecord::DataPointRecord(const QSqlQuery& query, ProjectDatabase& database)
-  : ObjectRecord(boost::shared_ptr<detail::DataPointRecord_Impl>(
+  : ObjectRecord(std::shared_ptr<detail::DataPointRecord_Impl>(
         new detail::DataPointRecord_Impl(query, database)),
         database)
 {
   OS_ASSERT(getImpl<detail::DataPointRecord_Impl>());
 }
 
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl,
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl,
                                  ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
@@ -938,7 +936,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -946,7 +944,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -960,7 +958,7 @@ UpdateByIdQueryData DataPointRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // bind all values to avoid parameter mismatch error
@@ -992,7 +990,7 @@ void DataPointRecord::updatePathData(ProjectDatabase database,
                                      const openstudio::path& newBase)
 {
   DataPointRecordVector records = getDataPointRecords(database);
-  BOOST_FOREACH(DataPointRecord& record,records) {
+  for (DataPointRecord& record : records) {
     record.getImpl<detail::DataPointRecord_Impl>()->updatePathData(originalBase,newBase);
   }
 }
@@ -1033,7 +1031,7 @@ DataPointRecord DataPointRecord::factoryFromDataPoint(const analysis::DataPoint&
   }
 
   OS_ASSERT(false);
-  return DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl>());
+  return DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl>());
 }
 
 std::vector<DataPointRecord> DataPointRecord::getDataPointRecords(ProjectDatabase& database) {
@@ -1161,7 +1159,7 @@ void DataPointRecord::clearResults() {
 }
 
 /// @cond
-DataPointRecord::DataPointRecord(boost::shared_ptr<detail::DataPointRecord_Impl> impl)
+DataPointRecord::DataPointRecord(std::shared_ptr<detail::DataPointRecord_Impl> impl)
   : ObjectRecord(impl)
 {}
 /// @endcond
@@ -1209,10 +1207,10 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     if (n < variableValues.size()) {
       // variables have been added
       // remove all old records
-      BOOST_FOREACH(JoinRecord& jr,jrs) {
+      for (JoinRecord& jr : jrs) {
         database.removeRecord(jr);
       }
-      BOOST_FOREACH(DataPointValueRecord& cvvr,cvvrs) {
+      for (DataPointValueRecord& cvvr : cvvrs) {
         database.removeRecord(cvvr);
       }
       // add new records
@@ -1283,10 +1281,10 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
   // Save attributes
   AttributeVector outputAttributes = dataPoint.outputAttributes();
   AttributeRecordVector oldAttributeRecords = attributeRecords();
-  BOOST_FOREACH(const Attribute& outputAttribute, outputAttributes) {
+  for (const Attribute& outputAttribute : outputAttributes) {
     std::vector<AttributeRecord>::iterator oldIt = std::find_if(oldAttributeRecords.begin(),
                                                                 oldAttributeRecords.end(),
-                                                                boost::bind(handleEquals<AttributeRecord,openstudio::UUID>,_1,outputAttribute.uuid()));
+                                                                std::bind(handleEquals<AttributeRecord,openstudio::UUID>,std::placeholders::_1,outputAttribute.uuid()));
 
     if ((oldIt == oldAttributeRecords.end()) || (outputAttribute.versionUUID() != oldIt->uuidLast())) {
       AttributeRecord outputAttributeRecord(outputAttribute,copyOfThis);
@@ -1297,14 +1295,14 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
     }
   }
 
-  BOOST_FOREACH(AttributeRecord& oldAttributeRecord, oldAttributeRecords) {
+  for (AttributeRecord& oldAttributeRecord : oldAttributeRecords) {
     database.removeRecord(oldAttributeRecord);
   }
 
   // Remove old response function values
   if (!isNew) {
     DataPointValueRecordVector oldResponseValueRecords = responseValueRecords();
-    BOOST_FOREACH(DataPointValueRecord& oldRecord,oldResponseValueRecords) {
+    for (DataPointValueRecord& oldRecord : oldResponseValueRecords) {
       database.removeRecord(oldRecord);
     }
   }
@@ -1322,13 +1320,13 @@ void DataPointRecord::constructRelatedRecords(const analysis::DataPoint& dataPoi
 
   // Create tag records
   TagVector tags = dataPoint.tags();
-  BOOST_FOREACH(const Tag& tag,tags) {
+  for (const Tag& tag : tags) {
     TagRecord newTagRecord(tag,copyOfThis);
   }
 
   // Delete obsolete tag records
-  BOOST_FOREACH(const TagRecord& tagRecord,tagRecords()) {
-    if (std::find_if(tags.begin(),tags.end(),boost::bind(uuidEquals<Tag,UUID>,_1,tagRecord.handle())) == tags.end()) {
+  for (const TagRecord& tagRecord : tagRecords()) {
+    if (std::find_if(tags.begin(),tags.end(),std::bind(uuidEquals<Tag,UUID>,std::placeholders::_1,tagRecord.handle())) == tags.end()) {
       Record record = tagRecord.cast<Record>();
       analysisRecord.projectDatabase().removeRecord(record);
     }

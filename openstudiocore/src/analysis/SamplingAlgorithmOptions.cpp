@@ -17,14 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/SamplingAlgorithmOptions.hpp>
-#include <analysis/SamplingAlgorithmOptions_Impl.hpp>
+#include "SamplingAlgorithmOptions.hpp"
+#include "SamplingAlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -51,7 +49,7 @@ namespace detail {
   {}
 
   AlgorithmOptions SamplingAlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<SamplingAlgorithmOptions_Impl> impl(new SamplingAlgorithmOptions_Impl(*this));
+    std::shared_ptr<SamplingAlgorithmOptions_Impl> impl(new SamplingAlgorithmOptions_Impl(*this));
     return SamplingAlgorithmOptions(impl);
   }
 
@@ -201,7 +199,7 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return SamplingAlgorithmOptions(
           map.contains("sample_type") ? SamplingAlgorithmSampleType(map["sample_type"].toString().toStdString()) : OptionalSamplingAlgorithmSampleType(),
           map.contains("rng_type") ? SamplingAlgorithmRNGType(map["rng_type"].toString().toStdString()) : OptionalSamplingAlgorithmRNGType(),
@@ -211,14 +209,14 @@ namespace detail {
 } // detail
 
 SamplingAlgorithmOptions::SamplingAlgorithmOptions()
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
         new detail::SamplingAlgorithmOptions_Impl()))
 {}
 
 SamplingAlgorithmOptions::SamplingAlgorithmOptions(const boost::optional<SamplingAlgorithmSampleType>& sampleType,
                                                    const boost::optional<SamplingAlgorithmRNGType>& rngType,
                                                    const std::vector<Attribute>& options)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::SamplingAlgorithmOptions_Impl>(
         new detail::SamplingAlgorithmOptions_Impl(sampleType,rngType,options)))
 {}
 
@@ -300,7 +298,7 @@ void SamplingAlgorithmOptions::clearSampleType() {
 }
 
 /// @cond
-SamplingAlgorithmOptions::SamplingAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl> impl)
+SamplingAlgorithmOptions::SamplingAlgorithmOptions(std::shared_ptr<detail::SamplingAlgorithmOptions_Impl> impl)
   : DakotaAlgorithmOptions(impl)
 {}
 

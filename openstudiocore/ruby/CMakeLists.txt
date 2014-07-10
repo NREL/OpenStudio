@@ -1,17 +1,17 @@
 # currently we are using only the ResultsViewer resources for Ruby tests
 
 # which directory will we run ruby tests from
-SET(RUBY_RUN_DIR "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
+set(RUBY_RUN_DIR "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}")
 
 # get all possible configurations
-LIST(LENGTH CMAKE_CONFIGURATION_TYPES POSSIBLE_CONFIGURATIONS_LENGTH)
-IF(CMAKE_CONFIGURATION_TYPES)
-  SET(POSSIBLE_CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES})
-ELSE()
-  SET(POSSIBLE_CONFIGURATIONS ".")
-ENDIF()
+list(LENGTH CMAKE_CONFIGURATION_TYPES POSSIBLE_CONFIGURATIONS_LENGTH)
+if(CMAKE_CONFIGURATION_TYPES)
+  set(POSSIBLE_CONFIGURATIONS ${CMAKE_CONFIGURATION_TYPES})
+else()
+  set(POSSIBLE_CONFIGURATIONS ".")
+endif()
 
-INCLUDE(GetPrerequisites)
+include(GetPrerequisites)
 
 # find all source
 file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
@@ -20,221 +20,230 @@ file(GLOB_RECURSE RUBY_SRC "openstudio/*.rb" "cloud/*.template" "cloud/*.sh")
 file(GLOB_RECURSE RUBY_TEST_SRC "openstudio/*_Test.rb")
 
 # add a test for each unit test
-SET( RUBY_TEST_REQUIRES "#include test files" )
-FOREACH( f ${RUBY_TEST_SRC} )
+set(RUBY_TEST_REQUIRES "#include test files")
+foreach(f ${RUBY_TEST_SRC})
 
-  FILE( RELATIVE_PATH REQUIRE_NAME "${CMAKE_SOURCE_DIR}/ruby/" ${f} )
-  SET( RUBY_TEST_REQUIRES "${RUBY_TEST_REQUIRES} \nrequire '${REQUIRE_NAME}'" )
+  file(RELATIVE_PATH REQUIRE_NAME "${CMAKE_SOURCE_DIR}/ruby/" ${f})
+  set(RUBY_TEST_REQUIRES "${RUBY_TEST_REQUIRES} \nrequire '${REQUIRE_NAME}'")
 
-  FILE( READ "${f}" CONTENTS)
-  STRING( REGEX MATCHALL "def +test_([A-Za-z_0-9 ]+)" FOUND_TESTS ${CONTENTS} )
+  file(READ "${f}" CONTENTS)
+  string(REGEX MATCHALL "def +test_([A-Za-z_0-9 ]+)" FOUND_TESTS ${CONTENTS})
 
-  FOREACH(HIT ${FOUND_TESTS})
-    STRING(REGEX REPLACE "def +test_([A-Za-z_0-9]+)" "\\1" TEST_NAME ${HIT})
-    STRING(REGEX MATCH "/?([A-Za-z_0-9 ]+)\\.rb" FILE_NAME ${f})
-    STRING(REGEX REPLACE "/?([A-Za-z_0-9 ]+)\\.rb" "\\1" FILE_NAME ${FILE_NAME})
-    IF(BUILD_TESTING)
-      IF(MSVC)
-        ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
+  foreach(HIT ${FOUND_TESTS})
+    string(REGEX REPLACE "def +test_([A-Za-z_0-9]+)" "\\1" TEST_NAME ${HIT})
+    string(REGEX MATCH "/?([A-Za-z_0-9 ]+)\\.rb" FILE_NAME ${f})
+    string(REGEX REPLACE "/?([A-Za-z_0-9 ]+)\\.rb" "\\1" FILE_NAME ${FILE_NAME})
+    if(BUILD_TESTING)
+      if(MSVC)
+        add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>"
           "$<TARGET_FILE:ruby_cpp>" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
-      ELSE()
+      else()
         # $<CONFIGURATION> may resolve to 'Release' on Mac or Linux but directory will not exist
-        ADD_TEST(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
+        add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "${RUBY_EXECUTABLE}" -I"${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb" "--name=test_${TEST_NAME}"
         )
-      ENDIF()
-      SET_TESTS_PROPERTIES("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
-    ENDIF(BUILD_TESTING)
-  ENDFOREACH(HIT)
-ENDFOREACH( f ${RUBY_TEST_SRC} )
+      endif()
+      set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES DEPENDS "${ALL_RUBY_BINDING_TARGETS}" ruby_cpp ResultsViewer_resources)
+    endif()
+  endforeach()
+endforeach()
 
 # configure ruby files for installer
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install" )
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/Win32API.so" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install" )
-CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb" )
-CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.in" "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb" )
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins" )
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install")
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/Win32API.so" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install")
+configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb")
+configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup.in" "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb")
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins")
 
-CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/cloud/aws.rb.in" "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" )
-IF (WIN32 OR APPLE)
-  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "Ruby/cloud" )
-ELSE() #Linux
-  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "${RUBY_MODULE_DIR}/cloud" )
-  INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/cloud" )
-ENDIF()
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/mongoid.yml.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/server_script.sh" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
-FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/worker_script.sh.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud" )
+configure_file("${CMAKE_SOURCE_DIR}/ruby/cloud/aws.rb.in" "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb")
+if(WIN32 OR APPLE)
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "Ruby/cloud")
+else() #Linux
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "${RUBY_MODULE_DIR}/cloud")
+  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cloud/aws.rb" DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/cloud")
+endif()
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/mongoid.yml.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/server_script.sh" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
+file(COPY "${CMAKE_SOURCE_DIR}/ruby/cloud/worker_script.sh.template" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/cloud")
 
 # install qt plugins and fixup for apple
 
-IF( WIN32 OR APPLE )
-  install( PROGRAMS "${QT_QSQLITE_PLUGIN_RELEASE}"
-           DESTINATION "Ruby/openstudio/sqldrivers/"
-         )
+if(WIN32 OR APPLE)
+  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
 
-  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN_RELEASE}" NAME)
+  install(PROGRAMS "${QT_QSQLITE_PLUGIN}"
+          DESTINATION "Ruby/openstudio/sqldrivers/"
+  )
 
-  IF(APPLE)
-    SET(QTPLUGIN "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
 
-    SET( Prereq_Dirs
+  if(WIN32)
+    get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+
+    install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
+            DESTINATION "Ruby/openstudio/platforms/" 
     )
+  endif()
 
-    INSTALL(CODE "
-      INCLUDE(GetPrerequisites)
-      GET_PREREQUISITES( \"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\" )
+  if(APPLE)
+    set(QTPLUGIN "\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/sqldrivers/${QSQLITE_PLUGIN_NAME}")
 
-      FOREACH( PREREQ IN LISTS PREREQUISITES )
-        GP_RESOLVE_ITEM( \"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var )
+    set(Prereq_Dirs)
 
-        GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
+    install(CODE "
+      include(GetPrerequisites)
+      get_prerequisites(\"${QTPLUGIN}\" PREREQUISITES 1 0 \"\" \"${Prereq_Dirs}\")
 
-        EXECUTE_PROCESS(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
-      ENDFOREACH( PREREQ IN LISTS PREREQUISITES )
-    " )
-  ENDIF()
-ENDIF()
+      foreach(PREREQ IN LISTS PREREQUISITES)
+        gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+
+        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+
+        execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/../\${PREREQNAME}\" \"${QTPLUGIN}\")
+      endforeach()
+    ")
+  endif()
+endif()
 
 # optionally build ruby gem
-IF (BUILD_RUBY_GEM)
-  SET(GEMDIR "${CMAKE_BINARY_DIR}/Products/RubyGem")
+if(BUILD_RUBY_GEM)
+  set(GEMDIR "${CMAKE_BINARY_DIR}/Products/RubyGem")
 
-  INSTALL(CODE "
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/lib\")
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/lib\")
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/share\")
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/share/openstudio-${OPENSTUDIO_VERSION}\")
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy \"${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb\" \"${GEMDIR}/lib\")
+  install(CODE "
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/lib\")
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/lib\")
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E remove_directory \"${GEMDIR}/share\")
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E make_directory \"${GEMDIR}/share/openstudio-${OPENSTUDIO_VERSION}\")
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb\" \"${GEMDIR}/lib\")
   ")
 
   # Find libs that need to be copied for generating ruby gem
-  IF(BUILD_RUBY_GEM_WITH_LIBS)
-    INSTALL(CODE "
-      SET(qtinstalled false)
-      SET(SEARCH_PATHS \"/usr/local/lib;\${CMAKE_INSTALL_PREFIX}/lib;\${CMAKE_INSTALL_PREFIX}/bin;${Boost_LIBRARY_DIRS};${QT_LIBRARY_DIR}\")
-      FILE(GLOB ruby_libs \"\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_ARCH_DIR}/*\")
-      INCLUDE(GetPrerequisites)
-      FOREACH(lib IN LISTS ruby_libs)
-        GET_PREREQUISITES(\"\${lib}\" prereqs 1 1 \"\" \"\${SEARCH_PATHS}\" )
-        EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"\${lib}\" \"${GEMDIR}/lib\")
-        FOREACH(prereq IN LISTS prereqs)
-          STRING(TOLOWER \"\${prereq}\" lowerprereq)
-          STRING(REGEX MATCH \".*qtcore.*\" regexmatch \"\${lowerprereq}\")
-          IF(regexmatch)
-            SET(qtinstalled true)
-          ENDIF()
-          GP_RESOLVE_ITEM( \"\" \${prereq} \"\" \"\${SEARCH_PATHS}\" resolved_item_var )
-          EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"\${resolved_item_var}\" \"${GEMDIR}/lib\")
-          GET_FILENAME_COMPONENT( PREREQNAME \${resolved_item_var} NAME)
-        ENDFOREACH(prereq IN LISTS prereqs)
-      ENDFOREACH(lib IN LISTS ruby_libs)
+  if(BUILD_RUBY_GEM_WITH_LIBS)
+    install(CODE "
+      set(qtinstalled false)
+      set(SEARCH_PATHS \"/usr/local/lib;\${CMAKE_INSTALL_PREFIX}/lib;\${CMAKE_INSTALL_PREFIX}/bin;${Boost_LIBRARY_DIRS};${QT_LIBRARY_DIR}\")
+      file(GLOB ruby_libs \"\${CMAKE_INSTALL_PREFIX}/${RUBY_MODULE_ARCH_DIR}/*\")
+      include(GetPrerequisites)
+      foreach(lib IN LISTS ruby_libs)
+        get_prerequisites(\"\${lib}\" prereqs 1 1 \"\" \"\${SEARCH_PATHS}\" )
+        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"\${lib}\" \"${GEMDIR}/lib\")
+        foreach(prereq IN LISTS prereqs)
+          string(TOLOWER \"\${prereq}\" lowerprereq)
+          string(REGEX MATCH \".*qtcore.*\" regexmatch \"\${lowerprereq}\")
+          if(regexmatch)
+            set(qtinstalled true)
+          endif()
+          gp_resolve_item(\"\" \${prereq} \"\" \"\${SEARCH_PATHS}\" resolved_item_var)
+          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"\${resolved_item_var}\" \"${GEMDIR}/lib\")
+          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+        endforeach()
+      endforeach()
 
       execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"\${CMAKE_INSTALL_PREFIX}/share/openstudio-${OPENSTUDIO_VERSION}/osversion\" \"${GEMDIR}/share/openstudio/osversion\")
 
-      IF( qtinstalled )
-        file(WRITE \"${GEMDIR}/lib/qt.conf\" \"\")
+      if(qtinstalled)
         execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_directory \"${QT_PLUGINS_DIR}\" \"${GEMDIR}/lib/plugins\")
-      ENDIF()
+      endif()
 
-     ")
-  ENDIF()
+    ")
+  endif()
 
-  CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio.gemspec.in" "${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec" )
+  configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio.gemspec.in" "${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec")
 
-  INSTALL(CODE "
-    IF(WIN32)
-      EXECUTE_PROCESS(COMMAND cmd.exe /C \"${GEM} build ${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec\"
+  install(CODE "
+    if(WIN32)
+      execute_process(COMMAND cmd.exe /C \"${GEM} build ${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec\"
                       WORKING_DIRECTORY \"${CMAKE_BINARY_DIR}/Products/RubyGem/\")
-    ELSE()
-      EXECUTE_PROCESS(COMMAND \"${GEM}\" build \"${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec\"
+    else()
+      execute_process(COMMAND \"${GEM}\" build \"${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio.gemspec\"
                       WORKING_DIRECTORY \"${CMAKE_BINARY_DIR}/Products/RubyGem/\")
-    ENDIF()
+    endif()
 
-    EXECUTE_PROCESS(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio-${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.gem\" \"${CMAKE_BINARY_DIR}/../../../\")
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy_if_different \"${CMAKE_BINARY_DIR}/Products/RubyGem/openstudio-${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}.gem\" \"${CMAKE_BINARY_DIR}/../../../\")
   ")
-ENDIF()
+endif()
 
 
 # configure ruby files for testing from build directory
-FOREACH(POSSIBLE_CONFIGURATION ${POSSIBLE_CONFIGURATIONS})
-  FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio_dev.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}" )
-  FILE( RENAME "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_dev.rb" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio.rb" )
+foreach(POSSIBLE_CONFIGURATION ${POSSIBLE_CONFIGURATIONS})
+  file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio_dev.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}")
+  file(RENAME "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_dev.rb" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio.rb")
 
-  CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/config.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/config.rb" )
-  CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_test.rb" )
+  configure_file("${CMAKE_SOURCE_DIR}/ruby/config.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/config.rb")
+  configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio_test.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/openstudio_test.rb")
 
-  CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup_dev.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins/OpenStudio/Startup.rb" )
-  FILE( COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins" )
+  configure_file("${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/Startup_dev.in" "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins/OpenStudio/Startup.rb")
+  file(COPY "${CMAKE_SOURCE_DIR}/ruby/openstudio/sketchup_plugin/OpenStudio.rb" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/${POSSIBLE_CONFIGURATION}/SketchUp/Plugins")
   
-  IF( WIN32 AND ${BUILD_WITH_OPENSSL} AND ${OPENSSL_FOUND} )
-    FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
-    FILE(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
-  ENDIF()
+  if(WIN32 AND ${BUILD_WITH_OPENSSL} AND ${OPENSSL_FOUND})
+    file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
+    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/ruby/${POSSIBLE_CONFIGURATION}")
+  endif()
 
-ENDFOREACH(POSSIBLE_CONFIGURATION IN ${POSSIBLE_CONFIGURATIONS})
+endforeach()
 
 # run rdoc for openstudio
-IF( BUILD_DOCUMENTATION )
-  ADD_CUSTOM_TARGET( ruby_OpenStudioSketchUpPlugin_rdoc
+if(BUILD_DOCUMENTATION)
+  add_custom_target(ruby_OpenStudioSketchUpPlugin_rdoc
     ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/../developer/ruby/OpenStudioSketchUpPluginRDoc.rb" "${RUBY_RUN_DIR}/"
   )
 
-  list( APPEND ALL_RDOC_TARGETS ruby_OpenStudioSketchUpPlugin_rdoc )
-  set( ALL_RDOC_TARGETS "${ALL_RDOC_TARGETS}" PARENT_SCOPE )
+  list(APPEND ALL_RDOC_TARGETS ruby_OpenStudioSketchUpPlugin_rdoc)
+  set(ALL_RDOC_TARGETS "${ALL_RDOC_TARGETS}" PARENT_SCOPE)
 
-ENDIF()
+endif()
 
 # some unit tests previously defined depend on the ruby bindings, set those here so they are all defined
-IF( BUILD_TESTING )
-  ADD_DEPENDENCIES(openstudio_runmanager_tests ${ALL_RUBY_BINDING_TARGETS})
-  ADD_DEPENDENCIES(openstudio_analysisdriver_tests ${ALL_RUBY_BINDING_TARGETS})
-ENDIF()
+if(BUILD_TESTING)
+  add_dependencies(openstudio_runmanager_tests ${ALL_RUBY_BINDING_TARGETS})
+  add_dependencies(openstudio_analysisdriver_tests ${ALL_RUBY_BINDING_TARGETS})
+endif()
 
 # run all the unit tests
-IF( ENABLE_TEST_RUNNER_TARGETS )
-  IF(MSVC)
-    ADD_CUSTOM_TARGET( ruby_run_tests
+if(ENABLE_TEST_RUNNER_TARGETS)
+  if(MSVC)
+    add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I "${RUBY_RUBY_LIB_DIR}/i386-mingw32" -I. "openstudio_test.rb"
       DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
     )  
-  ELSE()
-    ADD_CUSTOM_TARGET( ruby_run_tests
+  else()
+    add_custom_target(ruby_run_tests
       ${CMAKE_COMMAND} -E chdir "${RUBY_RUN_DIR}" "${RUBY_EXECUTABLE}" -I "${RUBY_RUBY_LIB_DIR}" -I. "openstudio_test.rb"
       DEPENDS ${ALL_RUBY_BINDING_TARGETS} ruby_cpp ResultsViewer_resources openstudio_energyplus_resources
     )  
-  ENDIF()
-ENDIF()
+  endif()
+endif()
 
 # install the files
-INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio.rb" DESTINATION ${RUBY_MODULE_DIR} )
-INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/install/Win32API.so" DESTINATION ${RUBY_MODULE_DIR} )
-INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb" DESTINATION ${RUBY_MODULE_DIR} )
-INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb" DESTINATION "${RUBY_MODULE_DIR}/Plugins/OpenStudio/" )
-INSTALL( FILES "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio.rb" DESTINATION "${RUBY_MODULE_DIR}/Plugins/" )
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio.rb" DESTINATION ${RUBY_MODULE_DIR})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/Win32API.so" DESTINATION ${RUBY_MODULE_DIR})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/openstudio_test.rb" DESTINATION ${RUBY_MODULE_DIR})
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio/Startup.rb" DESTINATION "${RUBY_MODULE_DIR}/Plugins/OpenStudio/")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/install/SketchUp/Plugins/OpenStudio.rb" DESTINATION "${RUBY_MODULE_DIR}/Plugins/")
 
 # installation
-IF (WIN32 OR APPLE)
-  FOREACH(f ${RUBY_SRC})
-    FILE( RELATIVE_PATH SRC_FILE "${CMAKE_SOURCE_DIR}/ruby/" ${f} )
-    GET_FILENAME_COMPONENT(SRC_PATH ${SRC_FILE} PATH)
-    #MESSAGE("install ${f} -> Ruby/${SRC_PATH}")
-    INSTALL( FILES ${f} DESTINATION "Ruby/${SRC_PATH}" )
-  ENDFOREACH(f)
-ELSE() #Linux
-  FOREACH(f ${RUBY_SRC})
-    FILE( RELATIVE_PATH SRC_FILE "${CMAKE_SOURCE_DIR}/ruby/" ${f} )
-    GET_FILENAME_COMPONENT(SRC_PATH ${SRC_FILE} PATH)
-    #MESSAGE("install ${f} -> Ruby/${SRC_PATH}")
-    INSTALL( FILES ${f} DESTINATION "${RUBY_MODULE_DIR}/${SRC_PATH}" )
-    INSTALL( FILES ${f} DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/${SRC_PATH}" )
-  ENDFOREACH(f)
-ENDIF()
+if(WIN32 OR APPLE)
+  foreach(f ${RUBY_SRC})
+    file(RELATIVE_PATH SRC_FILE "${CMAKE_SOURCE_DIR}/ruby/" ${f})
+    get_filename_component(SRC_PATH ${SRC_FILE} PATH)
+    #message("install ${f} -> Ruby/${SRC_PATH}")
+    install(FILES ${f} DESTINATION "Ruby/${SRC_PATH}")
+  endforeach()
+else() #Linux
+  foreach(f ${RUBY_SRC})
+    file(RELATIVE_PATH SRC_FILE "${CMAKE_SOURCE_DIR}/ruby/" ${f})
+    get_filename_component(SRC_PATH ${SRC_FILE} PATH)
+    #message("install ${f} -> Ruby/${SRC_PATH}")
+    install(FILES ${f} DESTINATION "${RUBY_MODULE_DIR}/${SRC_PATH}")
+    install(FILES ${f} DESTINATION "share/openstudio-${OPENSTUDIO_VERSION}/Ruby/${SRC_PATH}")
+  endforeach()
+endif()
 
 # install the openstudio resources (html, gif, etc.)
-INSTALL( DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/sketchup_plugin"
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/sketchup_plugin"
         DESTINATION "${RUBY_MODULE_DIR}/openstudio"
-        PATTERN "*.rb" EXCLUDE )
+        PATTERN "*.rb" EXCLUDE
+)

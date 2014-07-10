@@ -1,3 +1,22 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "WorkflowTools.hpp"
 
 #include <QSysInfo>
@@ -62,7 +81,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
     // ThermalZone
     std::vector<model::ThermalZone> thermalZones = t_model->getModelObjects<model::ThermalZone>();
     if(thermalZones.size() > 0){
-      //BOOST_FOREACH(model::ThermalZone thermalZone, thermalZones){
+      //for (model::ThermalZone thermalZone : thermalZones){
       //  std::vector<model::Space> spaces = thermalZone.spaces();
       //  if(spaces.size() > 0){
       //  }
@@ -87,7 +106,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
     // IlluminanceMap
     std::vector<model::IlluminanceMap> illuminanceMaps = t_model->getModelObjects<model::IlluminanceMap>();
     if(illuminanceMaps.size() > 0){
-      BOOST_FOREACH(model::IlluminanceMap illuminanceMap, illuminanceMaps){
+      for (model::IlluminanceMap illuminanceMap : illuminanceMaps){
         boost::optional<model::Space> space = illuminanceMap.space();
         if(!space){
           t_errors.push_back("An OpenStudio model IlluminanceMap object is not assigned to a Space object.");
@@ -108,7 +127,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
     // DaylightingControl
     std::vector<model::DaylightingControl> daylightingControls = t_model->getModelObjects<model::DaylightingControl>();
     if(daylightingControls.size() > 0){
-      BOOST_FOREACH(model::DaylightingControl daylightingControl, daylightingControls){
+      for (model::DaylightingControl daylightingControl : daylightingControls){
         boost::optional<model::Space> space = daylightingControl.space();
         if(!space){
           t_errors.push_back("An OpenStudio model DaylightingControl object is not assigned to a Space object.");

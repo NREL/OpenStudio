@@ -20,10 +20,10 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTVAVREHEAT_HPP
 
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
-#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
+#include "ModelAPI.hpp"
 
 namespace openstudio {
 
@@ -181,7 +181,7 @@ class MODEL_API AirTerminalSingleDuctVAVReheat : public StraightComponent {
 
   typedef detail::AirTerminalSingleDuctVAVReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctVAVReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
+  explicit AirTerminalSingleDuctVAVReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVReheat_Impl> impl);
 
  private:
 
