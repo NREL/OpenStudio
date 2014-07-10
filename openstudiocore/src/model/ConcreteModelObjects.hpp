@@ -540,6 +540,5 @@
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneHVACUnitHeater_Impl.hpp"
->>>>>>> origin/develop
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP
