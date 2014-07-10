@@ -217,7 +217,7 @@ void SetpointManagerScheduledDualSetpoint::resetLowSetpointSchedule() {
 }
 
 /// @cond
-SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(boost::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl)
+SetpointManagerScheduledDualSetpoint::SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl)
   : SetpointManager(impl)
 {}
 /// @endcond

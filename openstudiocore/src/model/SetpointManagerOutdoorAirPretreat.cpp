@@ -379,7 +379,7 @@ void SetpointManagerOutdoorAirPretreat::resetReturnAirStreamNode() {
 }
 
 /// @cond
-SetpointManagerOutdoorAirPretreat::SetpointManagerOutdoorAirPretreat(boost::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl)
+SetpointManagerOutdoorAirPretreat::SetpointManagerOutdoorAirPretreat(std::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl)
   : SetpointManager(impl)
 {}
 /// @endcond

@@ -131,7 +131,7 @@ class MODEL_API SetpointManagerOutdoorAirPretreat : public SetpointManager {
   /// @cond
   typedef detail::SetpointManagerOutdoorAirPretreat_Impl ImplType;
 
-  explicit SetpointManagerOutdoorAirPretreat(boost::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl);
+  explicit SetpointManagerOutdoorAirPretreat(std::shared_ptr<detail::SetpointManagerOutdoorAirPretreat_Impl> impl);
 
   friend class detail::SetpointManagerOutdoorAirPretreat_Impl;
   friend class Model;

@@ -85,7 +85,7 @@ class MODEL_API SetpointManagerScheduledDualSetpoint : public SetpointManager {
   /// @cond
   typedef detail::SetpointManagerScheduledDualSetpoint_Impl ImplType;
 
-  explicit SetpointManagerScheduledDualSetpoint(boost::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
+  explicit SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
 
   friend class detail::SetpointManagerScheduledDualSetpoint_Impl;
   friend class Model;
