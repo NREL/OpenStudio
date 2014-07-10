@@ -380,7 +380,7 @@ boost::optional<TimeDependentValuationFile> TimeDependentValuationFile::load(
       // Climate zone 13 with externalities,"Created April 18, 2006",Nominal nonres $0.145972/kBtu,Nominal res $0.164171/kBtu,,
       // QStringList line = in.readLine().split(',', QString::KeepEmptyParts);
 
-      bool inside = (line.at(0) == "\""); //true if the first character is "
+      bool inside = (line.at(0) == QString("\"")); //true if the first character is "
       QStringList tmpList = line.split(QRegExp("\""), QString::KeepEmptyParts); // Split by " and make sure you don't have an empty string at the beginning
       QString escapedLine;
       QString comma(",");
