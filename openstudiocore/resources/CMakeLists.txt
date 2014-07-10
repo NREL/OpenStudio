@@ -34,9 +34,6 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
-  utilities/Table/HeightWeight.csv
-  utilities/Table/EUI.csv
-  utilities/Table/OddlyShaped.csv
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf

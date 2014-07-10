@@ -32,7 +32,6 @@
 #include "DiscreteVariable.hpp"
 #include "DiscreteVariable_Impl.hpp"
 
-#include "../utilities/document/Table.hpp"
 #include "../utilities/math/FloatCompare.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Containers.hpp"
@@ -392,156 +391,6 @@ namespace detail {
     return result;
   }
 
-  Table SequentialSearch_Impl::getSummaryTable(Analysis& analysis) const {
-    Table result;
-
-    TableElementVector row;
-    std::stringstream ss;
-    row.push_back(TableElement(std::string("iter")));
-    row.push_back(TableElement(std::string("current")));
-    row.push_back(TableElement(std::string("curve0")));
-    row.push_back(TableElement(std::string("curve1")));
-    row.push_back(TableElement(std::string("pareto")));
-    row.push_back(TableElement(std::string("explored")));
-    InputVariableVector variables = analysis.problem().variables();
-    for (int i = 0, n = analysis.problem().numVariables(); i < n; ++i) {
-      ss << "v" << i << ", " << variables[i].name();
-      row.push_back(TableElement(ss.str())); ss.str("");
-    }
-    FunctionVector objectiveFunctions = analysis.problem().cast<OptimizationProblem>().objectives();
-    ss << "f0, " << objectiveFunctions[0].name();
-    row.push_back(TableElement(ss.str())); ss.str("");
-    ss << "f1, " << objectiveFunctions[1].name();
-    row.push_back(TableElement(ss.str())); ss.str("");
-    row.push_back(TableElement(std::string("incomplete")));
-    row.push_back(TableElement(std::string("failed")));
-    result.appendRow(row); row.clear();
-    result.setNHead(1);
-    int nCols = result.nCols();
-
-    // populate curves
-    int i =  sequentialSearchOptions().objectiveToMinimizeFirst();
-    int otherIndex(0);
-    if (i == 0) {
-      otherIndex = 1;
-    }
-    else {
-      OS_ASSERT(i == 1);
-    }
-
-    getMinimumCurve(otherIndex,analysis);
-    getMinimumCurve(i,analysis);
-    getParetoFront(analysis);
-
-    // construct table row for each data point
-    struct TagInfo {
-      TagInfo()
-        : current(false), curve0(false), curve1(false), pareto(false), explored(false)
-      {}
-      boost::optional<int> iter;
-      bool current;
-      bool curve0;
-      bool curve1;
-      bool pareto;
-      bool explored;
-    };
-
-    boost::regex re("iter([0-9]+)");
-    boost::smatch m;
-
-    OptimizationDataPointVector dataPoints = castVector<OptimizationDataPoint>(analysis.dataPoints());
-    for (const OptimizationDataPoint& dataPoint : dataPoints) {
-      TagVector tags = dataPoint.tags();
-      TagInfo tagInfo;
-      for (const Tag& tag : tags) {
-        std::string tagName = tag.name();
-        if (tagName == "current") {
-          tagInfo.current = true;
-        }
-        else if (tagName == "curve0") {
-          tagInfo.curve0 = true;
-        }
-        else if (tagName == "curve1") {
-          tagInfo.curve1 = true;
-        }
-        else if (tagName == "pareto") {
-          tagInfo.pareto = true;
-        }
-        else if (tagName == "explored") {
-          tagInfo.explored = true;
-        }
-        else if (boost::regex_match(tagName,m,re)) {
-          std::string iterNumber(m[1].first,m[1].second);
-          tagInfo.iter = boost::lexical_cast<int>(iterNumber);
-        }
-      }
-      if (tagInfo.iter) {
-        row.push_back(TableElement(tagInfo.iter.get()));
-      }
-      else {
-        row.push_back(TableElement(std::string("custom")));
-      }
-      if (tagInfo.current) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      if (tagInfo.curve0) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      if (tagInfo.curve1) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      if (tagInfo.pareto) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      if (tagInfo.explored) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      for (const QVariant& value : dataPoint.variableValues()) {
-        row.push_back(TableElement(value.toInt()));
-      }
-      DoubleVector values = dataPoint.objectiveValues();
-      if (values.size() == 2u) {
-        row.push_back(TableElement(values[0]));
-        row.push_back(TableElement(values[1]));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-        row.push_back(TableElement(std::string("")));
-      }
-      if (!dataPoint.isComplete()) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      if (dataPoint.failed()) {
-        row.push_back(TableElement(std::string("x")));
-      }
-      else {
-        row.push_back(TableElement(std::string("")));
-      }
-      OS_ASSERT(row.size() == static_cast<size_t>(nCols));
-      result.appendRow(row); row.clear();
-    }
-
-    return result;
-  }
-
   std::vector< std::vector<QVariant> > SequentialSearch_Impl::getCandidateCombinations(
       const DataPoint& dataPoint) const
   {
@@ -632,10 +481,6 @@ std::vector<OptimizationDataPoint> SequentialSearch::getParetoFront(
     Analysis& analysis) const
 {
   return getImpl<detail::SequentialSearch_Impl>()->getParetoFront(analysis);
-}
-
-Table SequentialSearch::getSummaryTable(Analysis& analysis) const {
-  return getImpl<detail::SequentialSearch_Impl>()->getSummaryTable(analysis);
 }
 
 std::vector< std::vector<QVariant> > SequentialSearch::getCandidateCombinations(

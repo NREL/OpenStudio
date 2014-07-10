@@ -53,7 +53,7 @@ class DateTime;
 class EpwFile;
 class Calendar;
 class SqlFileTimeSeriesQuery;
-class Table;
+
 namespace detail {
   class SqlFile_Impl;
 }
@@ -857,13 +857,6 @@ private:
 
 /// optional SqlFile
 typedef boost::optional<SqlFile> OptionalSqlFile;
-
-/** Returns the monthly end uses table for sqlFile and fuelType. By default, the table values
- *  are returned in J. If a different energy unit is desired, specify unit. If unit is
- *  invalid, the default table will be returned. \relates SqlFile */
-UTILITIES_API Table monthlyEndUsesTable(const SqlFile& sqlFile,
-                                        const EndUseFuelType& fuelType,
-                                        const Unit& unit=createSIEnergy());
 
 } // openstudio
 

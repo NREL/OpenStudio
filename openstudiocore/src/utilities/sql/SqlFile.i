@@ -9,8 +9,6 @@
   #include <utilities/sql/SqlFileEnums.hpp>
   #include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
   
-  #include <utilities/document/Table.hpp>
-  
   #include <utilities/units/Unit.hpp>
   #include <utilities/units/BTUUnit.hpp>
   #include <utilities/units/CelsiusUnit.hpp>

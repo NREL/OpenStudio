@@ -52,7 +52,6 @@
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/data/Attribute.hpp"
-#include "../../utilities/document/Table.hpp"
 #include "../../utilities/filetypes/EpwFile.hpp"
 
 #include <OpenStudio.hxx>
@@ -228,9 +227,6 @@ TEST_F(AnalysisDriverFixture,PostProcessJobs_OpenStudioPostProcessAndResponses) 
   CurrentAnalysis currentAnalysis = analysisDriver.run(analysis,runOptions);
   EXPECT_TRUE(analysisDriver.waitForFinished());
   EXPECT_TRUE(analysisDriver.currentAnalyses().empty());
-  Table summary = currentAnalysis.analysis().summaryTable();
-  EXPECT_EQ(2u,summary.nRows());
-  summary.save(analysisDriver.database().path().parent_path() / toPath("summary.csv"));
 
   for (const DataPoint& dataPoint : analysis.dataPoints()) {
     EXPECT_TRUE(dataPoint.isComplete());

@@ -33,8 +33,6 @@
 
 namespace openstudio {
 
-class Table;
-
 namespace runmanager {
   class Job;
 }
@@ -241,9 +239,6 @@ namespace detail {
      *  does not correspond to the proper Dakota job. Should be called when the given Dakota job
      *  completes. */
     void updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob);
-
-    /** Returns a csv summary of all the data points in this analysis. */
-    Table summaryTable() const;
 
     /// Relocate path data from originalBase to newBase.
     virtual void updateInputPathData(const openstudio::path& originalBase,

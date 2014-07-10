@@ -21,8 +21,6 @@
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
 
-#include "../document/Table.hpp"
-
 namespace openstudio{
 
 SqlFile::SqlFile()
@@ -1705,87 +1703,6 @@ detail::DataDictionaryTable SqlFile::dataDictionary() const
   if (m_impl){
     result = m_impl->dataDictionary();
   }
-  return result;
-}
-
-Table monthlyEndUsesTable(const SqlFile& sqlFile,const EndUseFuelType& fuelType,const Unit& unit)
-{
-  Table result;
-  result.setTitle(fuelType.valueDescription() + " Consumption");
-  TableElementVector row1,row2;
-  TableLoadOptions loadString(false,false,false);
-  std::set<int> months = MonthOfYear::getValues();
-
-  // set header rows
-  row1.push_back(TableElement("",loadString));
-  row2.push_back(TableElement("",loadString));
-  int numMonths = 0;
-  for (int month : months) {
-    row1.push_back(TableElement(MonthOfYear(month).valueName(),loadString));
-    row2.push_back(TableElement("(J)",loadString));
-    ++numMonths;
-    if (numMonths == 12) {
-      break;
-    }
-  }
-  result.appendRow(row1);
-  result.appendRow(row2);
-  result.setNHead(2u);
-  result.setNLeft(1u); // where name of end use will go
-  row1.clear();
-  row2.clear();
-
-  // populate data rows
-  bool allNull(true);
-  std::set<int> endUses = EndUseCategoryType::getValues();
-  for (int endUse : endUses) {
-    EndUseCategoryType category(endUse);
-    row1.push_back(TableElement(category.valueDescription(),loadString));
-    numMonths = 0;
-    for (int month : months) {
-      OptionalDouble value = sqlFile.energyConsumptionByMonth(fuelType,category,MonthOfYear(month));
-      if (!value) {
-        row1.push_back(TableElement(0.0));
-      }
-      else {
-        row1.push_back(TableElement(*value));
-        allNull = false;
-      }
-      ++numMonths;
-      if (numMonths == 12) {
-        break;
-      }
-    }
-    if (!row1.empty()) {
-      result.appendRow(row1);
-      row1.clear();
-    }
-  }
-
-  if (allNull) {
-    LOG_FREE(Info,"openstudio.sql.SqlFile","No non-null monthly end-use data for "
-             << fuelType.valueDescription() << ". If this is unexpected, make sure that "
-             << "the EnergyPlus simulation completed successfully and that the appropriate "
-             << "Building Energy Performance tabular report was requested.");
-  }
-
-  // convert units
-  if (unit != createSIEnergy()) {
-    bool convertOk(true);
-    numMonths = 0;
-    for (int i = 1, n = months.size(); i <= n; ++i) {
-      convertOk = convertOk && result.convertUnits(i,Table::HEAD,1u,unit);
-      ++numMonths;
-      if (numMonths == 12) {
-        break;
-      }
-    }
-    if (!convertOk) {
-      LOG_FREE(Warn,"openstudio.sql.SqlFile","Unable to convert monthlyEndUsesTable to "
-               << unit << ". Returning table in Joules.");
-    }
-  }
-
   return result;
 }
 

@@ -488,12 +488,6 @@ if(BUILD_DOCUMENTATION)
       set(DOXY_ADDITIONAL_FILES "")
       set(DOXY_EXCLUDE_DIR "")
       #set(DOXY_TAGFILES "utilities_idd.tag utilities.tag")
-    elseif(${D} MATCHES "standardsinterface")
-      set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
-      set(DOXY_ADDITIONAL_FILES "")
-      set(DOXY_EXCLUDE_DIR "")
-      #set(DOXY_TAGFILES "utilities_idd.tag utilities.tag model.tag")
     else()
       set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
       set(DOXY_ADDITIONAL_DIR "")
@@ -547,7 +541,7 @@ elseif(WIN32)
 
   # uncomment all of this if we want to force dynamic libs on windows
   #set(Boost_USE_STATIC_LIBS OFF)
-  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -DBOOST_DATE_TIME_DYN_LINK)
+  #add_definitions(-DBOOST_THREAD_USE_DLL -DBOOST_THREAD_DYN_LINK -DBOOST_PROGRAM_OPTIONS_DYN_LINK  -DBOOST_REGEX_DYN_LINK  -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SYSTEM_DYN_LINK -DBOOST_DATE_TIME_DYN_LINK)
   #link_directories(${Boost_LIBRARY_DIRS})
   #if(MSVC)
     ##Ignore dll specific warnings that are out of our hands to control, coming from external projects
@@ -560,7 +554,7 @@ mark_as_advanced(
   BOOST_THREAD_LIBRARY
 )
 
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time serialization log)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
 include_directories(SYSTEM ${Boost_INCLUDE_DIR})
 
 # require these run time checks
@@ -574,6 +568,9 @@ endif()
 
 # use chrono as a header only library
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
+
+# do not autolink with serialization
+add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 
 # check if boost is being linked dynamically
 # DLM: should we allow this on Unix or should we force static for all platforms?
@@ -589,6 +586,15 @@ add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 #--------------------------------------------------------------------------------
 # Qt
+
+if(MSVC AND MSVC_IS_EXPRESS)
+  if(CMAKE_CL_64)
+    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x64/")
+  else()
+    list(APPEND CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.0/Lib/win8/um/x86/")
+  endif()
+endif()
+
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Sql REQUIRED)
 find_package(Qt5Network REQUIRED)

@@ -32,8 +32,6 @@
 
 #include "../runmanager/lib/Job.hpp"
 
-#include "../utilities/document/Table.hpp"
-
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Json.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -689,27 +687,6 @@ namespace detail {
     onChange(AnalysisObject_Impl::Benign);
   }
 
-  Table Analysis_Impl::summaryTable() const {
-    Table table;
-
-    TableRow row;
-    for (const InputVariable& variable : problem().variables()) {
-      row.push_back(variable.displayName());
-    }
-    table.appendRow(row);
-    row.clear();
-
-    for (const DataPoint& dataPoint : dataPoints()) {
-      for (const QVariant& value : dataPoint.variableValues()) {
-        row.push_back(TableElement(value));
-      }
-      table.appendRow(row);
-      row.clear();
-    }
-
-    return table;
-  }
-
   void Analysis_Impl::updateInputPathData(const openstudio::path& originalBase,
                                           const openstudio::path& newBase)
   {
@@ -1106,10 +1083,6 @@ void Analysis::initializeDakotaAlgorithm(DakotaAlgorithm& dakotaAlgorithm,
 
 void Analysis::updateDakotaAlgorithm(const runmanager::Job& completedDakotaJob) {
   getImpl<detail::Analysis_Impl>()->updateDakotaAlgorithm(completedDakotaJob);
-}
-
-Table Analysis::summaryTable() const {
-  return getImpl<detail::Analysis_Impl>()->summaryTable();
 }
 
 void Analysis::updateInputPathData(const openstudio::path& originalBase,
