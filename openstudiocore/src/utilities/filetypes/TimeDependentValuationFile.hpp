@@ -94,13 +94,13 @@ class UTILITIES_API TimeDependentValuationFile {
 
   //@}
  private:
-  //Table m_table;
+  std::vector<std::vector<std::string> > m_table;
   openstudio::path m_path;
   std::string m_checksum;
 
   REGISTER_LOGGER("openstudio.TimeDependentValuationFile");
 
-  //TimeDependentValuationFile(const Table& table,const openstudio::path& p=openstudio::path());
+  TimeDependentValuationFile(const std::vector<std::vector<std::string> >& table,const openstudio::path& p=openstudio::path());
 
   boost::optional<Quantity> mf_extractNominalCostOfEnergy(const std::string& cellContents) const;
 
