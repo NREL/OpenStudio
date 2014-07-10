@@ -533,6 +533,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   setLayout(layout);
 
   m_label->setWordWrap(true);
+  m_label->setAlignment(Qt::AlignCenter);
   layout->addWidget(m_label);
 
   layout->addWidget(m_checkBox);
