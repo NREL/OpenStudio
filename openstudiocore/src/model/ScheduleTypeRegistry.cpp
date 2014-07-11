@@ -243,6 +243,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SetpointManagerScheduled","(Exact, Min, Max) Temperature","schedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Humidity Ratio","schedule",true,"",0.0,OptionalDouble()},
     {"SetpointManagerScheduled","(Exact, Min, Max) Mass Flow Rate","schedule",true,"MassFlowRate",OptionalDouble(),OptionalDouble()},
+    {"SetpointManagerScheduledDualSetpoint","High Setpoint","highSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SetpointManagerScheduledDualSetpoint","Low Setpoint","lowSetpointSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SetpointManagerOutdoorAirReset","Setpoint Manager Outdoor Air Reset","schedule",true,"",0.0,OptionalDouble()},
     {"ShadingSurface","Transmittance","transmittanceSchedule",true,"",0.0,1.0},
     {"SiteWaterMainsTemperature","Temperature","temperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

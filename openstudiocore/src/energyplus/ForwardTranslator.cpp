@@ -1384,6 +1384,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSetpointManagerScheduled(spm);
       break;
     }
+  case  openstudio::IddObjectType::OS_SetpointManager_Scheduled_DualSetpoint :
+    {
+      model::SetpointManagerScheduledDualSetpoint spm = modelObject.cast<SetpointManagerScheduledDualSetpoint>();
+      retVal = translateSetpointManagerScheduledDualSetpoint(spm);
+      break;
+    }
   case  openstudio::IddObjectType::OS_SetpointManager_MixedAir :
     {
       model::SetpointManagerMixedAir spm = modelObject.cast<SetpointManagerMixedAir>();
@@ -1394,6 +1400,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::SetpointManagerOutdoorAirReset spm = modelObject.cast<SetpointManagerOutdoorAirReset>();
       retVal = translateSetpointManagerOutdoorAirReset(spm);
+      break;
+    }
+  case  openstudio::IddObjectType::OS_SetpointManager_OutdoorAirPretreat :
+    {
+      model::SetpointManagerOutdoorAirPretreat spm = modelObject.cast<SetpointManagerOutdoorAirPretreat>();
+      retVal = translateSetpointManagerOutdoorAirPretreat(spm);
       break;
     }
   case  openstudio::IddObjectType::OS_SetpointManager_Warmest :

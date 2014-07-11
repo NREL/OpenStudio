@@ -22,4 +22,4 @@ Additionally, OpenStudio requires that the following packages be installed
 
 ## Linux 
 
- * Official builds of Qt, openssl and Boost: `sudo apt-get install libboost-all-dev qtbase5-dev libssl-dev`
+ * Official builds of Qt, openssl and Boost: `sudo apt-get install libboost-all-dev qtbase5-dev libssl-dev libqt5webkit5-dev`
