@@ -666,7 +666,7 @@ if(BUILD_QT)
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
     #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
-    set(APPLE_SDK_COMMAND "")
+    set(APPLE_SDK_COMMAND "-sdk macosx10.9")
 
     if(CMAKE_OSX_SYSROOT MATCHES ".*10.7.sdk")
       set(APPLE_PATCH_COMMAND "${CMAKE_COMMAND}" -E rename "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a.bak" COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceLion.a" "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/src/3rdparty/webkit/WebKitLibraries/libWebKitSystemInterfaceMountainLion.a")
@@ -678,14 +678,13 @@ if(BUILD_QT)
     # it would appear that calling "make" in some way that CMake can detect that we are calling
     # make (and attempt to pass parameters to the child make jobs) is breaking our ability to install
     # the below code circumvents that by calling make through a call to "sh"
-    message(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add(Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
       URL_MD5 a355749e4f200a6392ecad151d1d0cdc
-      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake tests -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
-      PATCH_COMMAND ${APPLE_PATCH_COMMAND}
-      BUILD_COMMAND  /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && make"
-      INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && make -j1 install"
+      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -debug-and-release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+      PATCH_COMMAND ${APPLE_PATCH_COMMAND} COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/qt/macx-clang-32-64/  ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/qtbase/mkspecs/macx-clang-32-64/
+      BUILD_COMMAND  /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${CPU_COUNT}"
+      INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"
     )
   elseif(UNIX)
     message(WARNING "Qt5 super build is currently untested")
