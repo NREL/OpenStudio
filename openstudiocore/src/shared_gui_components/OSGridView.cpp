@@ -52,6 +52,7 @@ namespace openstudio {
 OSGridView::OSGridView(OSGridController * gridController, const QString & headerText, const QString & dropZoneText, QWidget * parent)
   : QWidget(parent),
   m_gridLayout(0),
+  m_dropZone(0),
   m_CollapsibleView(0),
   m_gridController(gridController)
 {
@@ -73,19 +74,18 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
   buttonLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
   GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-  OSDropZone * dropZone = 0; 
 #ifdef Q_OS_MAC
-    dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
+  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH_DZ,HEIGHT_DZ));
 #else
-    dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
+  m_dropZone = new OSDropZone(vectorController, dropZoneText, QSize(WIDTH,HEIGHT));
 #endif
-  dropZone->setMaxItems(1);
+  m_dropZone->setMaxItems(1);
 
-  isConnected = connect(dropZone,SIGNAL(itemDropped(const OSItemId&)),
+  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),
     m_gridController,SLOT(onItemDropped(const OSItemId&)));
   OS_ASSERT(isConnected);
 
-  buttonLayout->addWidget(dropZone,0,Qt::AlignLeft);
+  buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);
 
   std::vector<QString> categories = m_gridController->categories();
   QPushButton * button = 0;

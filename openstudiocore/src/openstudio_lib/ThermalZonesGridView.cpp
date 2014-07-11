@@ -24,6 +24,7 @@
 #include <openstudio_lib/ModelObjectItem.hpp>
 #include <openstudio_lib/OSAppBase.hpp>
 #include <openstudio_lib/OSDocument.hpp>
+#include <openstudio_lib/OSDropZone.hpp>
 
 #include <model/Model.hpp>
 #include <model/Model_Impl.hpp>
@@ -55,31 +56,27 @@
 #define IDEALAIRLOADS "Turn On\nIdeal\nAir Loads"
 #define AIRLOOPNAME "Air Loop Name"
 #define ZONEEQUIPMENT "Zone Equipment"
-#define COOLINGTHERMOSTATSCHEDULE "Cooling Thermostat Schedule"
-#define HEATINGTHERMOSTATSCHEDULE "Heating Thermostat Schedule"
-#define HUMIDIFYINGSETPOINTSCHEDULE "Humidifying Setpoint Schedule"
-#define DEHUMIDIFYINGSETPOINTSCHEDULE "Dehumidifying Setpoint Schedule"
+#define COOLINGTHERMOSTATSCHEDULE "Cooling Thermostat\nSchedule"
+#define HEATINGTHERMOSTATSCHEDULE "Heating Thermostat\nSchedule"
+#define HUMIDIFYINGSETPOINTSCHEDULE "Humidifying Setpoint\nSchedule"
+#define DEHUMIDIFYINGSETPOINTSCHEDULE "Dehumidifying Setpoint\nSchedule"
 #define MULTIPLIER "Multiplier"
 
 //COOLING SIZING PARAMETERS
-#define ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE "Zone Cooling Design Supply Air Temperature"
-#define ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO "Zone Cooling Design Supply Air Humidity Ratio"
-#define ZONECOOLINGSIZINGFACTOR "Zone Cooling Sizing Factor"
-#define COOLINGDESIGNAIRFLOWMETHOD "Cooling Design Air Flow Method"
-#define COOLINGDESIGNAIRFLOWRATE "Cooling Design Air Flow Rate"
-#define DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE "Design Zone Air Distribution Effectiveness in Cooling Mode"
+#define ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE "Zone Cooling\nDesign Supply\nAir Temperature"
+#define ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO "Zone Cooling\nDesign Supply\nAir Humidity Ratio"
+#define ZONECOOLINGSIZINGFACTOR "Zone Cooling\nSizing Factor"
+#define COOLINGDESIGNAIRFLOWMETHOD "Cooling Design\nAir Flow Method"
+#define COOLINGDESIGNAIRFLOWRATE "Cooling Design\nAir Flow Rate"
+#define DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE "Design Zone Air\nDistribution Effectiveness\nin Cooling Mode"
 
 //HEATING SIZING PARAMETERS
-#define ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE "Zone Heating Design Supply Air Temperature"
-#define ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO "Zone Heating Design Supply Air Humidity Ratio"
-#define ZONEHEATINGSIZINGFACTOR "Zone Heating Sizing Factor"
-#define HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA "Heating Maximum Air Flow per Zone Floor Area"
-#define HEATINGMAXIMUMAIRFLOWFRACTION "Heating Maximum Air Flow Fraction"
-#define DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE "Design Zone Air Distribution Effectiveness in Heating Mode"
-
-//MEASURE TAGS
-#define STANDARDSBUILDINGTYPE "Standards Building Type"
-#define STANDARDSSPACETYPE "Standards Space Type"
+#define ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE "Zone Heating\nDesign Supply\nAir Temperature"
+#define ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO "Zone Heating\nDesign Supply\nAir Humidity Ratio"
+#define ZONEHEATINGSIZINGFACTOR "Zone Heating\nSizing Factor"
+#define HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA "Heating Maximum Air\nFlow per Zone\nFloor Area"
+#define HEATINGMAXIMUMAIRFLOWFRACTION "Heating Maximum\nAir Flow Fraction"
+#define DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE "Design Zone Air\nDistribution Effectiveness\nin Heating Mode"
 
 namespace openstudio {
 
@@ -106,6 +103,8 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
   OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", parent);
+  gridView->m_dropZone->hide();
+
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
@@ -171,14 +170,6 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
     fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating  Sizing Parameters"),fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
-
-  {
-    std::vector<QString> fields;
-    //fields.push_back(STANDARDSBUILDINGTYPE);
-    //fields.push_back(STANDARDSSPACETYPE);
-    std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("Measure Tags"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
   }
 
@@ -308,15 +299,19 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                           &model::ThermalZone::sizingZone));
 
     //}else if(field == COOLINGTHERMOSTATSCHEDULE){
-    //  addDropZoneColumn<std::string,SizingZoneProxy>(
-    //        QString(COOLINGTHERMOSTATSCHEDULE),
-    //        static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-    //        &SizingZoneProxy::coolingDesignAirFlowMethodValues,
-    //        boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
-    //        &SizingZoneProxy::setCoolingThermostatSchedule);
-            //ProxyAdapter(&model::SizingZone::??, &model::ThermalZone::sizingZone),
-            //ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::??), 
-            //&model::ThermalZone::sizingZone));
+      //addDropZoneColumn<std::string,SizingZoneProxy>(QString(COOLINGTHERMOSTATSCHEDULE),
+      //                                               static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
+      //                                               &SizingZoneProxy::coolingDesignAirFlowMethodValues,
+      //                                               boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
+      //                                               &SizingZoneProxy::setCoolingThermostatSchedule);
+      //                                               ProxyAdapter(&model::SizingZone::??, &model::ThermalZone::sizingZone),
+      //                                               ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::??), 
+      //                                                 &model::ThermalZone::sizingZone));
+
+    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
+    //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
+    //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
+    //fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
