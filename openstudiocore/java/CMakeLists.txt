@@ -1,5 +1,5 @@
 
-  FILE(TO_NATIVE_PATH "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java" JAVA_LIBRARY_OUTPUT_DIRECTORY )
+  SET( JAVA_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java" )
 
   FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources")
   FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources")
@@ -10,11 +10,13 @@
   ELSE()
     SET( OPENSTUDIO_JAVA_JAR "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" )
   ENDIF()
+
+  FILE(TO_NATIVE_PATH "${OPENSTUDIO_JAVA_JAR}" OPENSTUDIO_NATIVE_JAVA_JAR )
   
   
   # custom command to make OPENSTUDIO_JAVA_JAR
   ADD_CUSTOM_COMMAND(
-    OUTPUT ${OPENSTUDIO_JAVA_JAR}
+    OUTPUT "${OPENSTUDIO_JAVA_JAR}"
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
     DEPENDS ${ALL_JAVA_BINDING_TARGETS}
@@ -22,38 +24,40 @@
 
   FOREACH( D ${ALL_JAVA_SRC_DIRECTORIES} )
     ADD_CUSTOM_COMMAND(
-      OUTPUT ${OPENSTUDIO_JAVA_JAR}
+      OUTPUT "${OPENSTUDIO_JAVA_JAR}"
       COMMAND "${CMAKE_COMMAND}" -E copy_directory "${D}" "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
       APPEND
       )
   ENDFOREACH()
 
   IF(MSVC)
+    FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/*.java" NATIVE_JAVA_SOURCE_LIST )
+    FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist" NATIVE_JAVA_SOURCE_FILELIST )
     ADD_CUSTOM_COMMAND(
-      OUTPUT  ${OPENSTUDIO_JAVA_JAR}
-      COMMAND cmd /C dir /B "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/*.java" > "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+      OUTPUT  "${OPENSTUDIO_JAVA_JAR}"
+      COMMAND cmd /C dir /s /B "${NATIVE_JAVA_SOURCE_LIST}" > "${NATIVE_JAVA_SOURCE_FILELIST}"
       APPEND
       )
   ELSE()
     ADD_CUSTOM_COMMAND(
-      OUTPUT  ${OPENSTUDIO_JAVA_JAR}
+      OUTPUT  "${OPENSTUDIO_JAVA_JAR}"
       COMMAND find "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/" -name "\"*.java\"" > "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
       APPEND
       )
   ENDIF()
 
   ADD_CUSTOM_COMMAND(
-    OUTPUT ${OPENSTUDIO_JAVA_JAR}
+    OUTPUT "${OPENSTUDIO_JAVA_JAR}"
     COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/" 
     COMMAND "${Java_JAVAC_EXECUTABLE}" -target 1.6 -source 1.6 -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "@${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
-    COMMAND "${Java_JAR_EXECUTABLE}"  -cvf ${OPENSTUDIO_JAVA_JAR} -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
+    COMMAND "${Java_JAR_EXECUTABLE}"  -cvf "${OPENSTUDIO_JAVA_JAR}" -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
     APPEND
     )
 
-  # convienience target to just build the SDK
+  # convenience target to just build the SDK
   ADD_CUSTOM_TARGET( java_sdk ALL
-    DEPENDS ${OPENSTUDIO_JAVA_JAR}
+    DEPENDS "${OPENSTUDIO_JAVA_JAR}"
     COMMENT "Compiling Java JAR"
   )
 
