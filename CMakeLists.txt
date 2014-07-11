@@ -680,8 +680,8 @@ if(BUILD_QT)
     # the below code circumvents that by calling make through a call to "sh"
     message(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add(Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
-      URL_MD5 a78408c887c04c34ce615da690e0b4c8
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
+      URL_MD5 a355749e4f200a6392ecad151d1d0cdc
       CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -debug-and-release -opensource -openssl -qt-sql-sqlite -plugin-sql-sqlite -nomake examples -nomake tests -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
       PATCH_COMMAND ${APPLE_PATCH_COMMAND}
       BUILD_COMMAND  /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && make"
@@ -690,8 +690,8 @@ if(BUILD_QT)
   elseif(UNIX)
     message(WARNING "Qt5 super build is currently untested")
     ExternalProject_Add(Qt
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
-      URL_MD5 a78408c887c04c34ce615da690e0b4c8
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
+      URL_MD5 a355749e4f200a6392ecad151d1d0cdc
       CONFIGURE_COMMAND ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/configure -debug-and-release -opensource -confirm-license -shared -qt-sql-sqlite -qt-xcb -openssl -nomake examples -nomake tests -plugindir ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/share/openstudio/qtplugins -qtlibinfix OpenStudio -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install
       BUILD_COMMAND $(MAKE) -f ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build/Makefile
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-build && $(MAKE) install
@@ -701,8 +701,8 @@ if(BUILD_QT)
     #find_program(NMAKE_EXE nmake)
 
     #ExternalProject_Add(Qt
-    #  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.2.1.tar.gz
-    #  URL_MD5 a78408c887c04c34ce615da690e0b4c8
+    #  URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
+    #  URL_MD5 a355749e4f200a6392ecad151d1d0cdc
     #  CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && configure -debug-and-release -opensource -confirm-license -shared -plugin-sql-sqlite -no-qt3support -nomake examples -nomake docs -nomake demos -mp -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install -L ${OPENSSL_ROOT_DIR}/lib -I ${OPENSSL_ROOT_DIR}/include -openssl
     #  BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE}
     #  INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt && ${NMAKE_EXE} install
