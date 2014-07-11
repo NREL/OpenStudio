@@ -206,7 +206,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
       checkBox->bind(mo,
                      BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo)),
-                     boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)));
+					 boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), mo, std::placeholders::_1)));
 
 
       widget = checkBox;
@@ -384,13 +384,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
         GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
         OSDropZone2 * dropZone = new OSDropZone2(vectorController);
 
-
         dropZone->bind(mo,
                        ModelObjectGetter(std::bind(&DropZoneConcept<model::ModelObject>::get,dropZoneConcept.data(),mo)),
-                       boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept<model::ModelObject>::set,dropZoneConcept.data(),mo,_1)),
+					   boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept<model::ModelObject>::set, dropZoneConcept.data(), mo, std::placeholders::_1)),
                        boost::none,
                        boost::none);
-
 
         widget = dropZone;
     } else {

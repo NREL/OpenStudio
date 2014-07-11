@@ -214,8 +214,8 @@ void RefrigerationCaseGridController::setCategoriesAndFields()
 
   {
     std::vector<QString> fields;
-    fields.push_back(RACK);
-    fields.push_back(THERMALZONE);
+    //fields.push_back(RACK);
+    //fields.push_back(THERMALZONE);
     fields.push_back(CASELENGTH);
     std::pair<QString,std::vector<QString> > categoryAndFields = std::make_pair(QString("General"),fields);
     m_categoriesAndFields.push_back(categoryAndFields);
@@ -529,28 +529,24 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::RefrigerationCase::availabilitySchedule),
           NullAdapter(&model::RefrigerationCase::setAvailabilitySchedule),
           boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetAvailabilitySchedule));
-    }else if(field == THERMALZONE){
-      addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>(
-          QString(THERMALZONE),
-          &openstudio::objectName,
-
-          std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-          std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),del::ThermalZone>,m_model)),
-          NullAdapter(&model::RefrigerationCase::thermalZone),
-          NullAdapter(&model::RefrigerationCase::setThermalZone),
-
-          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
-    }else if(field == RACK){
-      addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
-          QString(RACK),
-          &openstudio::objectName,
-
-          std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
-                      std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
-          NullAdapter(&model::RefrigerationCase::system),
-          NullAdapter(&model::RefrigerationCase::addToSystem),
-
-          boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::removeFromSystem));
+    //}else if(field == THERMALZONE){
+    //  addComboBoxColumn<model::ThermalZone,model::RefrigerationCase>( TODO
+    //      QString(THERMALZONE),
+    //      &openstudio::objectName,
+    //      std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
+    //      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>,m_model)),del::ThermalZone>,m_model)),
+    //      NullAdapter(&model::RefrigerationCase::thermalZone),
+    //      NullAdapter(&model::RefrigerationCase::setThermalZone),
+    //      boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::resetThermalZone));
+    //}else if(field == RACK){
+    //  addComboBoxColumn<model::RefrigerationSystem,model::RefrigerationCase>(
+    //      QString(RACK),
+    //      &openstudio::objectName,
+    //      std::bind(&openstudio::sortByObjectName<model::RefrigerationSystem>,
+    //      std::bind(&model::Model::getConcreteModelObjects<model::RefrigerationSystem>,m_model)),
+    //      NullAdapter(&model::RefrigerationCase::system),
+    //      NullAdapter(&model::RefrigerationCase::addToSystem),
+    //      boost::optional<boost::function<void (model::RefrigerationCase*)> >(&model::RefrigerationCase::removeFromSystem));
     }else if(field == DEFROSTENERGYCORRECTIONCURVE){
       //boost::optional<CurveCubic> defrostEnergyCorrectionCurve() const; TODO
     }else if(field == NAME){

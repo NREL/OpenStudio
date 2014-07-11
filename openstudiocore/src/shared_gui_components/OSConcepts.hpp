@@ -24,6 +24,8 @@
 
 #include "../model/ModelObject.hpp"
 
+#include <boost/any.hpp>
+
 namespace openstudio {
 
 template<typename RetType, typename FromDataType, typename ToDataType>
@@ -45,7 +47,7 @@ boost::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_f
 {
   boost::function<RetType (ToDataType *)> outter(t_func);
   boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
-  return boost::bind(&ZeroParamProxy<RetType,FromDataType,ToDataType>, _1, outter, inner);
+  return std::bind(&ZeroParamProxy<RetType, FromDataType, ToDataType>, std::placeholders::_1, outter, inner);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
@@ -53,7 +55,7 @@ boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataTy
 {
   boost::function<RetType (ToDataType *, Param1)> outter(t_func);
   boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
-  return boost::bind(&OneParamProxy<RetType,FromDataType,Param1,ToDataType>, _1, _2, outter, inner);
+  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
@@ -61,7 +63,7 @@ boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataTy
 {
   boost::function<RetType (ToDataType *, Param1)> outter(t_func);
   boost::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
-  return boost::bind(&OneParamProxy<RetType,FromDataType,Param1,ToDataType>, _1, _2, outter, inner);
+  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
 }
 
 
