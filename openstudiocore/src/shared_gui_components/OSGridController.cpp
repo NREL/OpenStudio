@@ -290,7 +290,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         nameLineEdit->bind(mo,
                            OptionalStringGetter(boost::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,true)),
-                           boost::optional<StringSetter>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)));
+                           // If the concept is read only, pass an empty optional
+                           nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)));
 
         widget = nameLineEdit;
 
