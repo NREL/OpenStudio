@@ -18,11 +18,14 @@
 **********************************************************************/
 
 #include "ThermalZonesView.hpp"
+
+#include "../openstudio_lib/ThermalZonesGridView.hpp"
 #include "MainTabView.hpp"
 #include "OSDropZone.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "IconLibrary.hpp"
 #include "../shared_gui_components/OSIntegerEdit.hpp"
+#include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 #include "ModelObjectListView.hpp"
 #include "../shared_gui_components/OSSwitch.hpp"
@@ -122,6 +125,9 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   vLayout->setContentsMargins(7,7,7,7);
   vLayout->setSpacing(7);
   mainVLayout->addLayout(vLayout);
+
+  ThermalZonesGridView * thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
+  vLayout->addWidget(thermalZonesGridView);
 
   // Name
 
@@ -316,7 +322,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   humidifyingLabel->setPixmap(QPixmap(":images/humidify_schedule_icon.png"));
   humidistatLayout->addWidget(humidifyingLabel,0,0,Qt::AlignLeft);
 
-  QLabel * humidifyingTextLabel = new QLabel("Humdifying Setpoint Schedule");
+  QLabel * humidifyingTextLabel = new QLabel("Humidifying Setpoint Schedule");
   humidifyingTextLabel->setObjectName("H2");
   humidistatLayout->addWidget(humidifyingTextLabel,0,1);
   
@@ -332,7 +338,7 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
   dehumidifyingLabel->setFixedSize(24,24);
   humidistatLayout->addWidget(dehumidifyingLabel,0,2,Qt::AlignLeft);
 
-  QLabel * dehumidifyingTextLabel = new QLabel("Dehumdifying Setpoint Schedule");
+  QLabel * dehumidifyingTextLabel = new QLabel("Dehumidifying Setpoint Schedule");
   dehumidifyingTextLabel->setObjectName("H2");
   humidistatLayout->addWidget(dehumidifyingTextLabel,0,3);
   

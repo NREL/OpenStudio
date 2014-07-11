@@ -134,14 +134,14 @@ class MODEL_API AirLoopHVAC : public Loop
 
   /** Returns the supply side splitter inlet node.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not suppported so this method
+   * Currently these air loop topologies are not supported so this method
    * will always return a false optional.
    */
   boost::optional<Node> supplySplitterInletNode();
 
   /** Returns the supply side splitter outlet nodes.  If the system is a dual duct
    * or has a return air bypass then it will have a supply side splitter.
-   * Currently these air loop topologies are not suppported so this method
+   * Currently these air loop topologies are not supported so this method
    * will always return a false optional.
    */
   std::vector<Node> supplySplitterOutletNodes();
@@ -183,7 +183,7 @@ class MODEL_API AirLoopHVAC : public Loop
    */
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = IddObjectType::Catchall);
 
-  /** Adds a new component to the air loop.  In most cases the newObj will be added immediatly after the
+  /** Adds a new component to the air loop.  In most cases the newObj will be added immediately after the
    * targetObj.  The notable exceptions are when the targetObj is either a supply outlet node or a
    * demand outlet node.  This interface is deprecated in favor of HVACComponent::addToNode.
    */

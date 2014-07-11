@@ -359,7 +359,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Return all equipment.  Order is determined by heating priority */
   std::vector<ModelObject> equipmentInHeatingOrder();
 
-  /** Return all equipment.  Order is determined by coooling priority */
+  /** Return all equipment.  Order is determined by cooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder();
 
   /** Return true if the ThermalZone is attached to 
@@ -367,7 +367,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool isPlenum() const;
 
-  /** Retrun true if the ThermalZone is unconditioned and available to be used as a plenum
+  /** Return true if the ThermalZone is unconditioned and available to be used as a plenum
   *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
   *   and there is no zone equipment.
   */

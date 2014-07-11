@@ -456,7 +456,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SizingZone_Impl::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
+  bool SizingZone_Impl::setCoolingDesignAirFlowMethod(const std::string &coolingDesignAirFlowMethod) {
     bool result = setString(OS_Sizing_ZoneFields::CoolingDesignAirFlowMethod, coolingDesignAirFlowMethod);
     return result;
   }
@@ -1091,7 +1091,7 @@ void SizingZone::resetZoneCoolingSizingFactor() {
   getImpl<detail::SizingZone_Impl>()->resetZoneCoolingSizingFactor();
 }
 
-bool SizingZone::setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod) {
+bool SizingZone::setCoolingDesignAirFlowMethod(const std::string &coolingDesignAirFlowMethod) {
   return getImpl<detail::SizingZone_Impl>()->setCoolingDesignAirFlowMethod(coolingDesignAirFlowMethod);
 }
 

@@ -31,6 +31,7 @@ class QString;
 namespace openstudio{
 
 class OSCollapsibleView;
+class OSDropZone;
 class OSGridController;
 
 class OSGridView : public QWidget
@@ -44,6 +45,8 @@ public:
   virtual ~OSGridView() {};
 
   QGridLayout * m_gridLayout;
+
+  OSDropZone * m_dropZone;
 
 signals:
 

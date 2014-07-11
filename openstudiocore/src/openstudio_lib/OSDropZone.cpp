@@ -109,8 +109,13 @@ OSDropZone2::OSDropZone2(OSVectorController* vectorController,
   QString mainBoxStyle;
   mainBoxStyle.append("QWidget#OSDropZone {");
   mainBoxStyle.append(" background: #CECECE;");
-  mainBoxStyle.append(" border: 2px dashed #808080;");
-  mainBoxStyle.append(" border-radius: 10px;");
+  if(m_size.height() && m_size.width()){ 
+    mainLayout->setContentsMargins(0,0,0,0);
+    mainBoxStyle.append(" border: none;"); 
+  } else {
+    mainBoxStyle.append(" border: 2px dashed #808080;");
+    mainBoxStyle.append(" border-radius: 10px;"); 
+  }
   mainBoxStyle.append("}");
   setStyleSheet(mainBoxStyle);
 
@@ -138,36 +143,19 @@ void OSDropZone2::bind(model::ModelObject & modelObject,
   completeBind();
 }
 
-void OSDropZone2::bind(model::ModelObject & modelObject,
-                         OptionalModelObjectGetter get,
-                         boost::optional<ModelObjectSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<BasicQuery> isDefaulted)
-{
-  m_modelObject = modelObject;
-  m_getOptional = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
-
-  completeBind();
-}
-
 void OSDropZone2::completeBind() {
 
   setEnabled(true);
 
   bool isConnected = false;
 
-  OS_ASSERT(false); // TODO this bind function not yet complete
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),// TODO NEW
+    this,SLOT(onModelObjectChange()) );
+  OS_ASSERT(isConnected);
 
-  //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),
-  //  this,SLOT(onModelObjectChange()) );
-  //OS_ASSERT(isConnected);
-
-  //isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),
-  //  this,SLOT(onModelObjectRemove(Handle)) );
-  //OS_ASSERT(isConnected);
+  isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),// TODO NEW
+    this,SLOT(onModelObjectRemove(Handle)) );
+  OS_ASSERT(isConnected);
 
   isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
   OS_ASSERT(isConnected);
@@ -199,7 +187,6 @@ void OSDropZone2::completeBind() {
   OS_ASSERT(isConnected);
 
   emit itemsRequested();
-
 }
 
 void OSDropZone2::unbind() {
@@ -235,7 +222,14 @@ bool OSDropZone2::setMaxItems(int max)
     emit itemsRequested();
     if( max == 1 )
     {
-      if(m_growsHorizontally){
+      if(m_size.height() && m_size.width())
+      { 
+        m_scrollArea->setFixedHeight(m_size.height());
+        m_scrollArea->setMaximumWidth(m_size.width());
+        setMaximumHeight(m_size.height());
+        setMaximumWidth(m_size.width());
+      }
+      else if(m_growsHorizontally){
         m_scrollArea->setFixedHeight(OSItem::ITEM_HEIGHT);
         m_scrollArea->setMaximumWidth(OSItem::ITEM_WIDTH);
         setMaximumWidth(OSItem::ITEM_WIDTH + 20);
@@ -248,7 +242,14 @@ bool OSDropZone2::setMaxItems(int max)
     }
     else
     {
-      if(m_growsHorizontally){
+      if(m_size.height() && m_size.width())
+      {
+        m_scrollArea->setFixedHeight(m_size.height());
+        m_scrollArea->setMaximumWidth(m_size.width());
+        setMaximumHeight(m_size.height());
+        setMaximumWidth(m_size.width());
+      }
+      else if(m_growsHorizontally){
         m_scrollArea->setFixedHeight(OSItem::ITEM_SIDE);
         m_scrollArea->setMaximumWidth(QWIDGETSIZE_MAX);
         setMaximumWidth(QWIDGETSIZE_MAX);
@@ -383,8 +384,7 @@ void OSDropZone2::setItemIds(const std::vector<OSItemId>& itemIds)
     OSItemDropZone* dropZone = new OSItemDropZone(this->m_growsHorizontally, m_text, m_size);
     m_mainBoxLayout->addWidget(dropZone,0,Qt::AlignLeft);
 
-    bool isConnected = false;
-    isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
+    bool isConnected = connect(dropZone, SIGNAL(dropped(QDropEvent*)), this, SLOT(handleDrop(QDropEvent*)));
     OS_ASSERT(isConnected);
 
     if( m_maxItems == 1 )
