@@ -289,6 +289,9 @@ elseif(CPUCOUNT EQUAL 8)
 elseif(CPUCOUNT EQUAL 16)
   set(BOOST_CPUCOUNT "4")
   set(QT_CPUCOUNT "6")    
+else()
+  set(BOOST_CPUCOUNT "1")
+  set(QT_CPUCOUNT "1")    
 endif()
 
 mark_as_advanced(
