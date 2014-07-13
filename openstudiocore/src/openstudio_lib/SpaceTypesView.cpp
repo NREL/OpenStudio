@@ -18,20 +18,22 @@
 **********************************************************************/
 
 #include "SpaceTypesView.hpp"
-#include "SpaceTypeInspectorView.hpp"
+
 #include "ModelObjectListView.hpp"
+#include "SpaceTypeInspectorView.hpp"
 
 #include "../model/Model_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
-#include <QStyleOption>
-#include <QPainter>
-#include <QVBoxLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QPushButton>
-#include <QStackedWidget>
 #include <QScrollArea>
+#include <QStackedWidget>
+#include <QStyleOption>
+#include <QVBoxLayout>
+
 #include <sstream>
 
 namespace openstudio {

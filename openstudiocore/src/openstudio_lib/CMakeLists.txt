@@ -278,6 +278,8 @@ set(${target_name}_SRC
   SpaceTypeInspectorView.hpp
   SpaceTypesController.cpp
   SpaceTypesController.hpp
+  SpaceTypesGridView.cpp
+  SpaceTypesGridView.hpp
   SpaceTypesTabController.cpp
   SpaceTypesTabController.hpp
   SpaceTypesTabView.cpp
@@ -588,6 +590,7 @@ set(${target_name}_moc
   SpaceLoadInstancesWidget.hpp
   SpaceTypeInspectorView.hpp
   SpaceTypesController.hpp
+  SpaceTypesGridView.hpp
   SpaceTypesTabController.hpp
   SpaceTypesTabView.hpp
   SpaceTypesView.hpp

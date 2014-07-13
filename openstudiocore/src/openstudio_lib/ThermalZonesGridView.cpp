@@ -19,26 +19,25 @@
 
 #include "ThermalZonesGridView.hpp"
 
-#include <shared_gui_components/OSGridView.hpp>
+#include "ModelObjectItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSDropZone.hpp"
 
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
-
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../shared_gui_components/OSGridView.hpp"
 
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
-#include <model/SizingZone.hpp>
-#include <model/SizingZone_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/SizingZone.hpp"
+#include "../model/SizingZone_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 
-#include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
+#include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
 #include <QBoxLayout>
 #include <QCheckBox>

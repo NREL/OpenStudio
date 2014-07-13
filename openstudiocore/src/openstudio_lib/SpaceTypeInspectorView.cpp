@@ -18,49 +18,50 @@
 **********************************************************************/
 
 #include "SpaceTypeInspectorView.hpp"
+
 #include "ModelObjectItem.hpp"
+#include "OSDropZone.hpp"
+#include "OSVectorController.hpp"
+#include "RenderingColorWidget.hpp"
+#include "SpaceLoadInstancesWidget.hpp"
+#include "SpaceTypesGridView.hpp"
+
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include "OSVectorController.hpp"
-#include "OSDropZone.hpp"
-#include "SpaceLoadInstancesWidget.hpp"
-#include "RenderingColorWidget.hpp"
 
-#include "../model/SpaceType.hpp"
-#include "../model/SpaceType_Impl.hpp"
-#include "../model/RenderingColor.hpp"
-#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
-#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
-#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
-#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
-#include "../model/DesignSpecificationOutdoorAir.hpp"
-#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
 #include "../model/DefaultConstructionSet.hpp"
 #include "../model/DefaultConstructionSet_Impl.hpp"
 #include "../model/DefaultScheduleSet.hpp"
 #include "../model/DefaultScheduleSet_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../model/RenderingColor.hpp"
 #include "../model/Space.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 #include "../model/Space_Impl.hpp"
-#include "../model/Building.hpp"
-#include "../model/Building_Impl.hpp"
-
-
-#include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
-#include <utilities/idd/OS_Building_FieldEnums.hxx>
-#include <utilities/idd/OS_Space_FieldEnums.hxx>
-#include <utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx>
-#include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/idd/OS_Building_FieldEnums.hxx"
+#include "../utilities/idd/OS_SpaceInfiltration_DesignFlowRate_FieldEnums.hxx"
+#include "../utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx"
+#include "../utilities/idd/OS_SpaceType_FieldEnums.hxx"
+#include "../utilities/idd/OS_Space_FieldEnums.hxx"
 
-#include <QVBoxLayout>
+#include <QComboBox>
+#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QGridLayout>
 #include <QScrollArea>
 #include <QStackedWidget>
-#include <QComboBox>
+#include <QVBoxLayout>
 
 namespace openstudio {
 
@@ -550,6 +551,12 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   vLayout->addWidget(m_nameEdit);
 
   int row = 0;
+
+  //SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(this->m_isIP, this->m_model, this);
+  SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(true, this->m_model, this);
+  mainGridLayout->addWidget(spaceTypesGridView, row, 0);
+
+  ++row;
 
   mainGridLayout->addLayout(vLayout,row,0,1,2, Qt::AlignTop|Qt::AlignLeft);
 
