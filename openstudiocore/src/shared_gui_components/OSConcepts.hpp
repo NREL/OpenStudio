@@ -28,85 +28,6 @@
 
 namespace openstudio {
 
-// Proxy with optional<> default values
-template<typename RetType, typename FromDataType, typename ToDataType>
-RetType ZeroParamOptionalProxy(FromDataType *t_from, const std::function<RetType (ToDataType *)> &t_outter, const std::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
-{
-  boost::optional<ToDataType> t(t_inner(t_from));
-  return t ? t_outter(t.get_ptr()) : t_defaultValue;
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const std::function<RetType (ToDataType *, Param1)> &t_outter, const std::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
-{
-  boost::optional<ToDataType> t(t_inner(t_from));
-  return t ? t_outter(t.get_ptr(), t_param1) : t_defaultValue;
-}
-
-template<typename RetType, typename FromDataType, typename ToDataType>
-std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
-{
-  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&ZeroParamOptionalProxy<RetType,FromDataType,ToDataType>, std::placeholders::_1, outter, inner, t_defaultValue);
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
-{
-  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
-{
-  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
-}
-
-
-// Proxies which do not deal with optionals
-template<typename RetType, typename FromDataType, typename ToDataType>
-RetType ZeroParamProxy(FromDataType *t_from, const std::function<RetType (ToDataType *)> &t_outter, const std::function<ToDataType (FromDataType *)> t_inner)
-{
-  ToDataType t(t_inner(t_from));
-  return t_outter(&t);
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-RetType OneParamProxy(FromDataType *t_from, Param1 param1, const std::function<RetType (ToDataType *, Param1)> &t_outter, const std::function<ToDataType (FromDataType *)> t_inner)
-{
-  ToDataType t(t_inner(t_from));
-  return t_outter(&t, param1);
-}
-
-template<typename RetType, typename FromDataType, typename ToDataType>
-std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, ToDataType (FromDataType:: *t_proxyFunc)() const)
-{
-  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&ZeroParamProxy<RetType, FromDataType, ToDataType>, std::placeholders::_1, outter, inner);
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), ToDataType (FromDataType:: *t_proxyFunc)() const)
-{
-  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
-}
-
-template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
-std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, ToDataType (FromDataType:: *t_proxyFunc)() const)
-{
-  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
-  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
-  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
-}
-
 
 template<typename DataType, typename RetType>
 std::function<RetType(DataType *)> NullAdapter(RetType(DataType::*t_func)() )
@@ -186,6 +107,85 @@ std::function<RetType(DataType *, Param1)> CastNullAdapter(RetType(DataType2::*t
   return std::function<RetType(DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
 }
 
+
+// Proxy with optional<> default values
+template<typename RetType, typename FromDataType, typename ToDataType>
+RetType ZeroParamOptionalProxy(FromDataType *t_from, const std::function<RetType (ToDataType *)> &t_outter, const std::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
+{
+  boost::optional<ToDataType> t(t_inner(t_from));
+  return t ? t_outter(t.get_ptr()) : t_defaultValue;
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const std::function<RetType (ToDataType *, Param1)> &t_outter, const std::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
+{
+  boost::optional<ToDataType> t(t_inner(t_from));
+  return t ? t_outter(t.get_ptr(), t_param1) : t_defaultValue;
+}
+
+template<typename RetType, typename FromDataType, typename ToDataType>
+std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&ZeroParamOptionalProxy<RetType,FromDataType,ToDataType>, std::placeholders::_1, outter, inner, t_defaultValue);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
+}
+
+
+// Proxies which do not deal with optionals
+template<typename RetType, typename FromDataType, typename ToDataType>
+RetType ZeroParamProxy(FromDataType *t_from, const std::function<RetType (ToDataType *)> &t_outter, const std::function<ToDataType (FromDataType *)> t_inner)
+{
+  ToDataType t(t_inner(t_from));
+  return t_outter(&t);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+RetType OneParamProxy(FromDataType *t_from, Param1 param1, const std::function<RetType (ToDataType *, Param1)> &t_outter, const std::function<ToDataType (FromDataType *)> t_inner)
+{
+  ToDataType t(t_inner(t_from));
+  return t_outter(&t, param1);
+}
+
+template<typename RetType, typename FromDataType, typename ToDataType>
+std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&ZeroParamProxy<RetType, FromDataType, ToDataType>, std::placeholders::_1, outter, inner);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, ToDataType (FromDataType:: *t_proxyFunc)() const)
+{
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+  return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
+}
 
 
 class ConceptProxy
