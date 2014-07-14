@@ -54,20 +54,19 @@ class DataSource
         bool t_wantsPlaceholder = false,
         const QSharedPointer<BaseConcept> &t_dropZoneConcept = QSharedPointer<BaseConcept>()
         )
-    : m_sourceFunc(
-          [t_sourceFunc] (ConceptProxy t_proxy) { 
-            typedef decltype(t_sourceFunc) IncommingFuncType;
-            typedef typename std::remove_reference<typename std::remove_cv<IncommingFuncType>::type>::type FunctionType;
-            typedef typename std::remove_reference<typename std::remove_cv<typename FunctionType::argument_type>::type>::type ParamType;
-
-            auto result = t_sourceFunc(t_proxy.cast<ParamType>());
-            return std::vector<ConceptProxy>(result.begin(), result.end());
-          }
-        ),
-      m_wantsPlaceholder(t_wantsPlaceholder),
-      m_dropZoneConcept(t_dropZoneConcept)
+        : m_wantsPlaceholder(t_wantsPlaceholder),
+        m_dropZoneConcept(t_dropZoneConcept)
     {
+      typedef decltype(t_sourceFunc) IncommingFuncType;
+      typedef typename std::remove_reference<typename std::remove_cv<IncommingFuncType>::type>::type FunctionType;
+      typedef typename std::remove_reference<typename std::remove_cv<typename FunctionType::argument_type>::type>::type ParamType;
+
+      m_sourceFunc = [t_sourceFunc](ConceptProxy t_proxy)  {
+        auto result = t_sourceFunc(t_proxy.cast<ParamType>());
+        return std::vector<ConceptProxy>(result.begin(), result.end());
+      };
     }
+
 
     std::vector<ConceptProxy> items(const ConceptProxy &t_proxy) const
     {
@@ -244,8 +243,8 @@ public:
 
   template<typename DataSourceType>
   void addNameLineEditColumn(QString headingLabel,
-                             std::function<boost::optional<std::string> (DataSourceType *, bool)>  getter,
-                             std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> setter,
+                             const std::function<boost::optional<std::string> (DataSourceType *, bool)>  &getter,
+                             const std::function<boost::optional<std::string> (DataSourceType *, const std::string &)> &setter,
                              const boost::optional<DataSource> &t_source = boost::none)
   {
     m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<NameLineEditConcept>(new NameLineEditConceptImpl<DataSourceType>(headingLabel,getter,setter)), t_source));

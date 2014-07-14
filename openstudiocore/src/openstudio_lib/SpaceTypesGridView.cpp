@@ -194,9 +194,12 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 
   Q_FOREACH(QString field, fields){
     if(field == NAME){
+      auto getter = CastNullAdapter<model::SpaceType>(&model::SpaceType::name);
+      auto setter = CastNullAdapter<model::SpaceType>(&model::SpaceType::setName);
+
       addNameLineEditColumn(QString(NAME),
-                            NullAdapter(&model::SpaceType::name),
-                            NullAdapter(&model::SpaceType::setName));
+        getter,
+        setter);
 
     } else if (field == NAME_LOAD) {
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
@@ -231,8 +234,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
       );
 
       addNameLineEditColumn(QString(NAME_LOAD),
-          NullAdapter(&model::SpaceLoad::name),
-          NullAdapter(&model::SpaceLoad::setName),
+          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
+          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
           DataSource(
             allLoads,
             false,

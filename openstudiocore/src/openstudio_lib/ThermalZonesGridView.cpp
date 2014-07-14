@@ -314,8 +314,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),
-                            NullAdapter(&model::ThermalZone::name),
-                            NullAdapter(&model::ThermalZone::setName));
+                            CastNullAdapter<model::ThermalZone>(&model::ThermalZone::name),
+                            CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setName));
 
     }else if(field == AIRLOOPNAME){
       // Notes: this only requires a static_cast because `name` comes from IdfObject

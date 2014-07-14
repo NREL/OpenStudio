@@ -46,24 +46,24 @@ RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const std::
 template<typename RetType, typename FromDataType, typename ToDataType>
 std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
-  std::function<RetType (ToDataType *)> outter(t_func);
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&ZeroParamOptionalProxy<RetType,FromDataType,ToDataType>, std::placeholders::_1, outter, inner, t_defaultValue);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
 std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
-  std::function<RetType (ToDataType *, Param1)> outter(t_func);
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
 std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
-  std::function<RetType (ToDataType *, Param1)> outter(t_func);
-  std::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
 }
 
@@ -86,65 +86,107 @@ RetType OneParamProxy(FromDataType *t_from, Param1 param1, const std::function<R
 template<typename RetType, typename FromDataType, typename ToDataType>
 std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, ToDataType (FromDataType:: *t_proxyFunc)() const)
 {
-  std::function<RetType (ToDataType *)> outter(t_func);
-  std::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&ZeroParamProxy<RetType, FromDataType, ToDataType>, std::placeholders::_1, outter, inner);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
 std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), ToDataType (FromDataType:: *t_proxyFunc)() const)
 {
-  std::function<RetType (ToDataType *, Param1)> outter(t_func);
-  std::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
 std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, ToDataType (FromDataType:: *t_proxyFunc)() const)
 {
-  std::function<RetType (ToDataType *, Param1)> outter(t_func);
-  std::function<ToDataType (FromDataType *)> inner(t_proxyFunc);
+  std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<ToDataType (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&OneParamProxy<RetType, FromDataType, Param1, ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner);
 }
 
 
-template<typename RetType, typename DataType>
+template<typename DataType, typename RetType>
+std::function<RetType(DataType *)> NullAdapter(RetType(DataType::*t_func)() )
+{
+  return std::function<RetType(DataType *)>([t_func](DataType *obj) { return (obj->*t_func)(); });
+}
+
+template<typename DataType, typename RetType>
 std::function<RetType (DataType *)> NullAdapter(RetType (DataType::*t_func)() const)
 {
   return std::function<RetType (DataType *)>([t_func] (DataType *obj) { return (obj->*t_func)(); } );
 }
 
-template<typename RetType, typename DataType, typename Param1>
+template<typename DataType, typename RetType, typename Param1>
 std::function<RetType (DataType *, const Param1 &)> NullAdapter(RetType (DataType::*t_func)(const Param1 &) )
 {
   return std::function<RetType (DataType *, const Param1 &)>(t_func);
 }
 
-
-template<typename RetType, typename DataType, typename Param1>
+template<typename DataType, typename RetType, typename Param1>
 std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1 &) )
 {
-  // Note: this normalizes the return type to a copied type. 
-  // This only works because we are passing pimpl types around. Really the getters
-  // and setters shouldn't care what the exact param types are.
-  // It seems boost::function was willing to do this conversion automatically (which really doesn't make sense)
-  // and std::function is not
   return std::function<RetType (DataType *, Param1)>( [t_func] (DataType *obj, Param1 p1) { return (obj->*t_func)(p1); }  );
 }
 
 
-template<typename RetType, typename DataType, typename Param1>
+template<typename DataType, typename RetType, typename Param1>
 std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) )
 {
-  return std::function<RetType (DataType *, Param1)>(t_func);
+  return std::function<RetType (DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
 }
 
 
-template<typename RetType, typename DataType, typename Param1>
+template<typename DataType, typename RetType, typename Param1>
 std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) const)
 {
   return std::function<RetType (DataType *, Param1)>([t_func] ( DataType *obj, Param1 p1) { return (obj->*t_func)(p1); } );
 }
+
+
+template<typename DataType, typename RetType, typename DataType2>
+std::function<RetType(DataType *)> CastNullAdapter(RetType(DataType2::*t_func)() )
+{
+  return std::function<RetType(DataType *)>([t_func](DataType *obj) { return (obj->*t_func)(); });
+}
+
+
+template<typename DataType, typename RetType, typename DataType2>
+std::function<RetType(DataType *)> CastNullAdapter(RetType(DataType2::*t_func)() const)
+{
+  return std::function<RetType(DataType *)>([t_func](DataType *obj) { return (obj->*t_func)(); });
+}
+
+template<typename DataType, typename RetType, typename Param1, typename DataType2>
+std::function<RetType(DataType *, const Param1 &)> CastNullAdapter(RetType(DataType2::*t_func)(const Param1 &))
+{
+  return std::function<RetType(DataType *, const Param1 &)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
+}
+
+template<typename DataType, typename RetType, typename Param1, typename DataType2>
+std::function<RetType(DataType *, Param1)> CastNullAdapter(RetType(DataType2::*t_func)(Param1 &))
+{
+  return std::function<RetType(DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
+}
+
+
+template<typename DataType, typename RetType, typename Param1, typename DataType2>
+std::function<RetType(DataType *, Param1)> CastNullAdapter(RetType(DataType2::*t_func)(Param1))
+{
+  return std::function<RetType(DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
+}
+
+
+template<typename DataType, typename RetType, typename Param1, typename DataType2>
+std::function<RetType(DataType *, Param1)> CastNullAdapter(RetType(DataType2::*t_func)(Param1) const)
+{
+  return std::function<RetType(DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
+}
+
+
 
 class ConceptProxy
 {
