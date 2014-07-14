@@ -44,11 +44,11 @@ shadeOffset = ""
 
 	if tType == "cl" 
 
-		tRange = [40] #use 1..91
+		tRange = (1..91).to_a 
 
 	elsif tType == "df"
 
-		tRange = [40] #use 1..75
+		tRange = (1..75).to_a 
 
 	else
 
@@ -162,7 +162,7 @@ shadeOffset = ""
 
 		end # blinds
 	
-		#system("rm *.rad")
+		system("rm *.rad")
 		inRad = ""
 		inRadShades = ""
 	

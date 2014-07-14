@@ -3,7 +3,7 @@ require 'fileutils'
 Gem::Specification.new do |s|
   s.name = "openstudio"
   s.version = "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}"
-  s.required_ruby_version = ">= 1.8.6"
+  s.required_ruby_version = ">= 2.0.0"
   s.platform = "ruby"
   s.required_rubygems_version = ">= 0"
   s.author = "NREL"
