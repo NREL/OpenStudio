@@ -417,7 +417,10 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
       if (dataSource->source().wantsDropZone())
       {
-        // this needs to become an actual drop zone widget
+        // this needs to become an actual drop zone widge
+        // and how this drop zone widget is hooked up is another question I guess too
+        // probably some other data that needs to be attached to the DataSource object
+        // that was passed in
         layout->addWidget(new QWidget());
       } else {
         // this needs to actually be a just a blank space holder

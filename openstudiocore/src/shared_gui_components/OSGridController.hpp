@@ -55,7 +55,7 @@ class DataSource
         )
       : m_sourceFunc(
             [t_sourceFunc] (ConceptProxy t_proxy) { 
-              std::vector<ItemType> result = t_func(t_proxy.cast<typename std::remove_reference<typename std::remove_cv<InputType>::type>::type>());
+              std::vector<ItemType> result = t_sourceFunc(t_proxy.cast<typename std::remove_reference<typename std::remove_cv<InputType>::type>::type>());
               return std::vector<ConceptProxy>(result.begin(), result.end());
             }
           ),
