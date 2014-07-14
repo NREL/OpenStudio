@@ -538,11 +538,7 @@ endif()
 
 if(BUILD_BOOST)
   if(APPLE)
-    if(CMAKE_OSX_DEPLOYMENT_TARGET MATCHES ".*10\\.9.*")
-      set(apple-flags "-stdlib=libc++ -std=c++11 -arch i386 -arch x86_64")
-    else()
-      set(apple-flags "-stdlib=libstdc++ -arch i386 -arch x86_64")
-    endif()
+    set(apple-flags "-arch i386 -arch x86_64")
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
