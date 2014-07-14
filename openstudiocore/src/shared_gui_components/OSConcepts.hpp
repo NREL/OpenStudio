@@ -111,7 +111,7 @@ std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType
 template<typename RetType, typename DataType>
 std::function<RetType (DataType *)> NullAdapter(RetType (DataType::*t_func)() const)
 {
-  return std::function<RetType (DataType *)>(t_func);
+  return std::function<RetType (DataType *)>([t_func] (DataType *obj) { return (obj->*t_func)(); } );
 }
 
 template<typename RetType, typename DataType, typename Param1>
