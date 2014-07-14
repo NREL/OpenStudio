@@ -54,15 +54,15 @@ class DataSource
         bool t_wantsPlaceholder = false,
         const QSharedPointer<BaseConcept> &t_dropZoneConcept = QSharedPointer<BaseConcept>()
         )
-      : m_sourceFunc(
-            [t_sourceFunc] (ConceptProxy t_proxy) { 
-              std::vector<ItemType> result = t_sourceFunc(t_proxy.cast<typename std::remove_reference<typename std::remove_cv<InputType>::type>::type>());
-              return std::vector<ConceptProxy>(result.begin(), result.end());
-            }
-          ),
-        m_wantsPlaceholder(t_wantsPlaceholder),
+      : m_wantsPlaceholder(t_wantsPlaceholder),
         m_dropZoneConcept(t_dropZoneConcept)
     {
+      typedef InputType Input;
+
+      m_sourceFunc = [t_sourceFunc] (ConceptProxy t_proxy) { 
+        auto result = t_sourceFunc(t_proxy.cast<typename std::remove_reference<typename std::remove_cv<Input>::type>::type>());
+        return std::vector<ConceptProxy>(result.begin(), result.end());
+      };
     }
 
     std::vector<ConceptProxy> items(const ConceptProxy &t_proxy) const
