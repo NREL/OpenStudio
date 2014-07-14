@@ -55,13 +55,7 @@ if(MSVC)
 
   set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${CSHARP_VERSION_PATCH}.${CSHARP_VERSION_BUILD}")
 
-  #if(MSVC12)
-    set(CSHARP_TOOLS_VERSION "4.5")
-  #elseif(MSVC10)
-  #  set(CSHARP_TOOLS_VERSION "4.0")
-  #else()
-  #  set(CSHARP_TOOLS_VERSION "3.5")
-  #endif()
+  set(CSHARP_TOOLS_VERSION "4.5")
 
   file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources")
   configure_file("${CMAKE_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj.in" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
