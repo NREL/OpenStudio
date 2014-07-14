@@ -168,6 +168,211 @@ void OSGridController::setHorizontalHeader()
   checkSelectedFields();
 }
 
+QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPointer<BaseConcept> &t_baseConcept)
+{
+  QWidget *widget = nullptr;
+  bool isConnected = false;
+
+  if(QSharedPointer<CheckBoxConcept> checkBoxConcept = t_baseConcept.dynamicCast<CheckBoxConcept>()){
+
+    auto checkBox = new OSCheckBox2();
+
+    checkBox->bind(t_mo,
+                   BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
+                                       boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), t_mo, std::placeholders::_1)));
+
+
+    widget = checkBox;
+
+  } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
+
+    auto comboBox = new OSComboBox2();
+
+    comboBox->bind(t_mo,
+                   comboBoxConcept->choiceConcept(t_mo));
+
+    widget = comboBox;
+
+    isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
+      this, SLOT(onComboBoxIndexChanged(int)));
+    OS_ASSERT(isConnected);
+
+  } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
+
+    auto doubleEdit = new OSDoubleEdit2();
+
+    doubleEdit->bind(t_mo,
+                     DoubleGetter(std::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),t_mo)),
+                     boost::optional<DoubleSetter>(std::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = doubleEdit;
+
+  } else if(QSharedPointer<OptionalValueEditConcept<double> > optionalDoubleEditConcept = t_baseConcept.dynamicCast<OptionalValueEditConcept<double> >()) {
+
+    auto optionalDoubleEdit = new OSDoubleEdit2();
+
+    optionalDoubleEdit->bind(t_mo,
+                             OptionalDoubleGetter(std::bind(&OptionalValueEditConcept<double>::get,optionalDoubleEditConcept.data(),t_mo)),
+                             boost::optional<DoubleSetter>(std::bind(&OptionalValueEditConcept<double>::set,optionalDoubleEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = optionalDoubleEdit;
+
+  } else if(QSharedPointer<ValueEditVoidReturnConcept<double> > doubleEditVoidReturnConcept = t_baseConcept.dynamicCast<ValueEditVoidReturnConcept<double> >()) {
+
+    auto doubleEditVoidReturn = new OSDoubleEdit2();
+
+    doubleEditVoidReturn->bind(t_mo,
+                               DoubleGetter(std::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),t_mo)),
+                               DoubleSetterVoidReturn(std::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = doubleEditVoidReturn;
+
+  } else if(QSharedPointer<OptionalValueEditVoidReturnConcept<double> > optionalDoubleEditVoidReturnConcept = t_baseConcept.dynamicCast<OptionalValueEditVoidReturnConcept<double> >()) {
+
+    auto optionalDoubleEditVoidReturn = new OSDoubleEdit2();
+
+    optionalDoubleEditVoidReturn->bind(t_mo,
+                                       OptionalDoubleGetter(std::bind(&OptionalValueEditVoidReturnConcept<double>::get,optionalDoubleEditVoidReturnConcept.data(),t_mo)),
+                                       DoubleSetterVoidReturn(std::bind(&OptionalValueEditVoidReturnConcept<double>::set,optionalDoubleEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = optionalDoubleEditVoidReturn;
+
+  } else if(QSharedPointer<ValueEditConcept<int> > integerEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<int> >()) {
+
+    auto integerEdit = new OSIntegerEdit2();
+
+    integerEdit->bind(t_mo,
+                      IntGetter(std::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),t_mo)),
+                      boost::optional<IntSetter>(std::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = integerEdit;
+
+  } else if(QSharedPointer<ValueEditConcept<std::string> > lineEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<std::string> >()) {
+
+    auto lineEdit = new OSLineEdit2();
+
+    lineEdit->bind(t_mo,
+                   StringGetter(std::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),t_mo)),
+                   boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = lineEdit;
+
+  } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = t_baseConcept.dynamicCast<NameLineEditConcept>()) {
+
+    auto nameLineEdit = new OSLineEdit2();
+
+    nameLineEdit->bind(t_mo,
+                       OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),t_mo,true)),
+                       // If the concept is read only, pass an empty optional
+                       nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = nameLineEdit;
+
+  } else if(QSharedPointer<QuantityEditConcept<double> > quantityEditConcept = t_baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
+
+    OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2(
+          quantityEditConcept->modelUnits().toStdString().c_str(),
+          quantityEditConcept->siUnits().toStdString().c_str(),
+          quantityEditConcept->ipUnits().toStdString().c_str(),
+          quantityEditConcept->isIP());
+
+    quantityEdit->bind(m_isIP,
+                       t_mo,
+                       DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),t_mo)),
+                       boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+      quantityEdit, SLOT(onUnitSystemChange(bool)));
+    OS_ASSERT(isConnected);
+
+    widget = quantityEdit;
+
+  } else if(QSharedPointer<OptionalQuantityEditConcept<double> > optionalQuantityEditConcept = t_baseConcept.dynamicCast<OptionalQuantityEditConcept<double> >()) {
+
+    OSQuantityEdit2 * optionalQuantityEdit = new OSQuantityEdit2(
+          optionalQuantityEditConcept->modelUnits().toStdString().c_str(),
+          optionalQuantityEditConcept->siUnits().toStdString().c_str(),
+          optionalQuantityEditConcept->ipUnits().toStdString().c_str(),
+          optionalQuantityEditConcept->isIP());
+
+    optionalQuantityEdit->bind(m_isIP,
+                               t_mo,
+                               OptionalDoubleGetter(std::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),t_mo)),
+                               boost::optional<DoubleSetter>(std::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+      optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
+    OS_ASSERT(isConnected);
+
+    widget = optionalQuantityEdit;
+
+  } else if(QSharedPointer<QuantityEditVoidReturnConcept<double> > quantityEditVoidReturnConcept = t_baseConcept.dynamicCast<QuantityEditVoidReturnConcept<double> >()) {
+
+    OSQuantityEdit2 * quantityEditVoidReturn = new OSQuantityEdit2(
+          quantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
+          quantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
+          quantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
+          quantityEditVoidReturnConcept->isIP());
+
+    quantityEditVoidReturn->bind(m_isIP,
+                                 t_mo,
+                                 DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),t_mo)),
+                                 DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+      quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+    OS_ASSERT(isConnected);
+
+    widget = quantityEditVoidReturn;
+
+  } else if(QSharedPointer<OptionalQuantityEditVoidReturnConcept<double> > optionalQuantityEditVoidReturnConcept = t_baseConcept.dynamicCast<OptionalQuantityEditVoidReturnConcept<double> >()) {
+
+    OSQuantityEdit2 * optionalQuantityEditVoidReturn = new OSQuantityEdit2(
+          optionalQuantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
+          optionalQuantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
+          optionalQuantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
+          optionalQuantityEditVoidReturnConcept->isIP());
+
+    optionalQuantityEditVoidReturn->bind(m_isIP,
+                                         t_mo,
+                                         OptionalDoubleGetter(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),t_mo)),
+                                         DoubleSetterVoidReturn(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
+
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
+      optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+    OS_ASSERT(isConnected);
+
+    widget = optionalQuantityEditVoidReturn;
+
+  } else if(QSharedPointer<ValueEditConcept<unsigned> > unsignedEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
+
+    auto unsignedEdit = new OSUnsignedEdit2();
+
+    unsignedEdit->bind(t_mo,
+                       UnsignedGetter(std::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),t_mo)),
+                       boost::optional<UnsignedSetter>(std::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),t_mo,std::placeholders::_1)));
+
+    widget = unsignedEdit;
+
+  } else if(QSharedPointer<DropZoneConcept<model::ModelObject> > dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept<model::ModelObject> >()) {
+    GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
+    OSDropZone2 * dropZone = new OSDropZone2(vectorController);
+
+    dropZone->bind(t_mo,
+                   ModelObjectGetter(std::bind(&DropZoneConcept<model::ModelObject>::get,dropZoneConcept.data(),t_mo)),
+                                       boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept<model::ModelObject>::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)),
+                   boost::none,
+                   boost::none);
+
+    widget = dropZone;
+  } else {
+    // Unknown type
+    OS_ASSERT(false);
+  }
+
+  return widget;
+}
+
 QWidget * OSGridController::widgetAt(int row, int column)
 {
   OS_ASSERT(row >= 0);
@@ -181,7 +386,6 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
   QWidget * widget = nullptr;
 
-  bool isConnected = false;
 
   QString cellColor("#FFFFFF"); // white // TODO add alternate row colors here
 
@@ -200,201 +404,38 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
-    if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
+    if (QSharedPointer<DataSourceAdapter> dataSource = baseConcept.dynamicCast<DataSourceAdapter>()) {
+      // here we magically create a mutirow column of any type that was constructed
+
+      auto layout = new QVBoxLayout();
+
+      // we have a data source that provides multiple rows.
+      for (auto &item : dataSource->source().items(mo))
+      {
+        layout->addWidget(makeWidget(item.cast<model::ModelObject>(), dataSource->innerConcept()));
+      }
+
+      if (dataSource->source().wantsDropZone())
+      {
+        // this needs to become an actual drop zone widget
+        layout->addWidget(new QWidget());
+      } else {
+        // this needs to actually be a just a blank space holder
+        // ... you can Modify DataSource class to have more bits of info
+        // for how you need to lay this out
+        layout->addWidget(new QWidget());
+      }
+
+      // right here you probably want some kind of container that's smart enough to know how to grow
+      // and shrink as the contained items change. But I don't know enough about the model
+      // to know how you'd want to do that. For now we make a fixed list that's got a VBoxLayout
+      widget = new QWidget();
+      widget->setLayout(layout);
 
-      auto checkBox = new OSCheckBox2();
 
-      checkBox->bind(mo,
-                     BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo)),
-					 boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), mo, std::placeholders::_1)));
-
-
-      widget = checkBox;
-
-    } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
-
-        auto comboBox = new OSComboBox2();
-
-        comboBox->bind(mo,
-                       comboBoxConcept->choiceConcept(mo));
-
-        widget = comboBox;
-
-        isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-          this, SLOT(onComboBoxIndexChanged(int)));
-        OS_ASSERT(isConnected);
-
-    } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = baseConcept.dynamicCast<ValueEditConcept<double> >()) {
-
-        auto doubleEdit = new OSDoubleEdit2();
-
-        doubleEdit->bind(mo,
-                         DoubleGetter(std::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),mo)),
-                         boost::optional<DoubleSetter>(std::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = doubleEdit;
-
-    } else if(QSharedPointer<OptionalValueEditConcept<double> > optionalDoubleEditConcept = baseConcept.dynamicCast<OptionalValueEditConcept<double> >()) {
-
-        auto optionalDoubleEdit = new OSDoubleEdit2();
-
-        optionalDoubleEdit->bind(mo,
-                                 OptionalDoubleGetter(std::bind(&OptionalValueEditConcept<double>::get,optionalDoubleEditConcept.data(),mo)),
-                                 boost::optional<DoubleSetter>(std::bind(&OptionalValueEditConcept<double>::set,optionalDoubleEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = optionalDoubleEdit;
-
-    } else if(QSharedPointer<ValueEditVoidReturnConcept<double> > doubleEditVoidReturnConcept = baseConcept.dynamicCast<ValueEditVoidReturnConcept<double> >()) {
-
-        auto doubleEditVoidReturn = new OSDoubleEdit2();
-
-        doubleEditVoidReturn->bind(mo,
-                                   DoubleGetter(std::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),mo)),
-                                   DoubleSetterVoidReturn(std::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
-
-        widget = doubleEditVoidReturn;
-
-    } else if(QSharedPointer<OptionalValueEditVoidReturnConcept<double> > optionalDoubleEditVoidReturnConcept = baseConcept.dynamicCast<OptionalValueEditVoidReturnConcept<double> >()) {
-
-        auto optionalDoubleEditVoidReturn = new OSDoubleEdit2();
-
-        optionalDoubleEditVoidReturn->bind(mo,
-                                           OptionalDoubleGetter(std::bind(&OptionalValueEditVoidReturnConcept<double>::get,optionalDoubleEditVoidReturnConcept.data(),mo)),
-                                           DoubleSetterVoidReturn(std::bind(&OptionalValueEditVoidReturnConcept<double>::set,optionalDoubleEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
-
-        widget = optionalDoubleEditVoidReturn;
-
-    } else if(QSharedPointer<ValueEditConcept<int> > integerEditConcept = baseConcept.dynamicCast<ValueEditConcept<int> >()) {
-
-        auto integerEdit = new OSIntegerEdit2();
-
-        integerEdit->bind(mo,
-                          IntGetter(std::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),mo)),
-                          boost::optional<IntSetter>(std::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = integerEdit;
-
-    } else if(QSharedPointer<ValueEditConcept<std::string> > lineEditConcept = baseConcept.dynamicCast<ValueEditConcept<std::string> >()) {
-
-        auto lineEdit = new OSLineEdit2();
-
-        lineEdit->bind(mo,
-                       StringGetter(std::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),mo)),
-                       boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = lineEdit;
-
-    } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = baseConcept.dynamicCast<NameLineEditConcept>()) {
-
-        auto nameLineEdit = new OSLineEdit2();
-
-        nameLineEdit->bind(mo,
-                           OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,true)),
-                           // If the concept is read only, pass an empty optional
-                           nameLineEditConcept->readOnly() ? boost::none : boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = nameLineEdit;
-
-    } else if(QSharedPointer<QuantityEditConcept<double> > quantityEditConcept = baseConcept.dynamicCast<QuantityEditConcept<double> >()) {
-
-        OSQuantityEdit2 * quantityEdit = new OSQuantityEdit2(
-              quantityEditConcept->modelUnits().toStdString().c_str(),
-              quantityEditConcept->siUnits().toStdString().c_str(),
-              quantityEditConcept->ipUnits().toStdString().c_str(),
-              quantityEditConcept->isIP());
-
-        quantityEdit->bind(m_isIP,
-                           mo,
-                           DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo)),
-                           boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,std::placeholders::_1)));
-
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          quantityEdit, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
-
-        widget = quantityEdit;
-
-    } else if(QSharedPointer<OptionalQuantityEditConcept<double> > optionalQuantityEditConcept = baseConcept.dynamicCast<OptionalQuantityEditConcept<double> >()) {
-
-        OSQuantityEdit2 * optionalQuantityEdit = new OSQuantityEdit2(
-              optionalQuantityEditConcept->modelUnits().toStdString().c_str(),
-              optionalQuantityEditConcept->siUnits().toStdString().c_str(),
-              optionalQuantityEditConcept->ipUnits().toStdString().c_str(),
-              optionalQuantityEditConcept->isIP());
-
-        optionalQuantityEdit->bind(m_isIP,
-                                   mo,
-                                   OptionalDoubleGetter(std::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo)),
-                                   boost::optional<DoubleSetter>(std::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,std::placeholders::_1)));
-
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
-
-        widget = optionalQuantityEdit;
-
-    } else if(QSharedPointer<QuantityEditVoidReturnConcept<double> > quantityEditVoidReturnConcept = baseConcept.dynamicCast<QuantityEditVoidReturnConcept<double> >()) {
-
-        OSQuantityEdit2 * quantityEditVoidReturn = new OSQuantityEdit2(
-              quantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
-              quantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
-              quantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
-              quantityEditVoidReturnConcept->isIP());
-
-        quantityEditVoidReturn->bind(m_isIP,
-                                     mo,
-                                     DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo)),
-                                     DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
-
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
-
-        widget = quantityEditVoidReturn;
-
-    } else if(QSharedPointer<OptionalQuantityEditVoidReturnConcept<double> > optionalQuantityEditVoidReturnConcept = baseConcept.dynamicCast<OptionalQuantityEditVoidReturnConcept<double> >()) {
-
-        OSQuantityEdit2 * optionalQuantityEditVoidReturn = new OSQuantityEdit2(
-              optionalQuantityEditVoidReturnConcept->modelUnits().toStdString().c_str(),
-              optionalQuantityEditVoidReturnConcept->siUnits().toStdString().c_str(),
-              optionalQuantityEditVoidReturnConcept->ipUnits().toStdString().c_str(),
-              optionalQuantityEditVoidReturnConcept->isIP());
-
-        optionalQuantityEditVoidReturn->bind(m_isIP,
-                                             mo,
-                                             OptionalDoubleGetter(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo)),
-                                             DoubleSetterVoidReturn(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
-
-        isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-          optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
-        OS_ASSERT(isConnected);
-
-        widget = optionalQuantityEditVoidReturn;
-
-    } else if(QSharedPointer<ValueEditConcept<unsigned> > unsignedEditConcept = baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
-
-        auto unsignedEdit = new OSUnsignedEdit2();
-
-        unsignedEdit->bind(mo,
-                           UnsignedGetter(std::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),mo)),
-                           boost::optional<UnsignedSetter>(std::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),mo,std::placeholders::_1)));
-
-        widget = unsignedEdit;
-
-    } else if(QSharedPointer<DropZoneConcept<model::ModelObject> > dropZoneConcept = baseConcept.dynamicCast<DropZoneConcept<model::ModelObject> >()) {
-        GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-        OSDropZone2 * dropZone = new OSDropZone2(vectorController);
-
-        dropZone->bind(mo,
-                       ModelObjectGetter(std::bind(&DropZoneConcept<model::ModelObject>::get,dropZoneConcept.data(),mo)),
-					   boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept<model::ModelObject>::set, dropZoneConcept.data(), mo, std::placeholders::_1)),
-                       boost::none,
-                       boost::none);
-
-        widget = dropZone;
     } else {
-      // Unknown type
-      OS_ASSERT(false);
+      // just the one
+      widget = makeWidget(mo, baseConcept);
     }
   }
 
