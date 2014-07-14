@@ -235,8 +235,15 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
           NullAdapter(&model::SpaceLoad::setName),
           DataSource(
             allLoads,
-            true)
+            false,
+            // I have *no idea* what this needs to actually be
+            makeDropZoneConcept(QString("Heading"),
+              std::function<model::ModelObject (model::ModelObject *)>([] (model::ModelObject *m) { return *m; }),
+              std::function<bool (model::ModelObject *, const model::ModelObject &)>([] (model::ModelObject *, const model::ModelObject &) { return false;  })
+            )
+          )
           );
+
 
     }else{
       // unhandled

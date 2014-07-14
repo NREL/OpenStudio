@@ -415,27 +415,26 @@ QWidget * OSGridController::widgetAt(int row, int column)
         layout->addWidget(makeWidget(item.cast<model::ModelObject>(), dataSource->innerConcept()));
       }
 
-      if (dataSource->source().wantsDropZone())
+      if (dataSource->source().wantsPlaceholder())
       {
-        // this needs to become an actual drop zone widge
-        // and how this drop zone widget is hooked up is another question I guess too
-        // probably some other data that needs to be attached to the DataSource object
-        // that was passed in
+        // use this space to put in a blank placeholder of some kind to make sure the 
+        // widget is evenly laid out relative to its friends in the adjacent columns
         layout->addWidget(new QWidget());
-      } else {
-        // this needs to actually be a just a blank space holder
-        // ... you can Modify DataSource class to have more bits of info
-        // for how you need to lay this out
-        layout->addWidget(new QWidget());
+      } 
+
+      if (dataSource->source().dropZoneConcept())
+      {
+        // it makes sense to me that the drop zone would need a reference to the parent containing object
+        // not an object the rest in the list was derived from
+        layout->addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
       }
+
 
       // right here you probably want some kind of container that's smart enough to know how to grow
       // and shrink as the contained items change. But I don't know enough about the model
       // to know how you'd want to do that. For now we make a fixed list that's got a VBoxLayout
       widget = new QWidget();
       widget->setLayout(layout);
-
-
     } else {
       // just the one
       widget = makeWidget(mo, baseConcept);

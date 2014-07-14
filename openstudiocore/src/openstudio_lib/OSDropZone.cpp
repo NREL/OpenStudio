@@ -151,11 +151,11 @@ void OSDropZone2::completeBind() {
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onChange()),// TODO NEW
     this,SLOT(onModelObjectChange()) );
-  OS_ASSERT(isConnected);
+//  OS_ASSERT(isConnected);
 
   isConnected = connect( m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get(),SIGNAL(onRemoveFromWorkspace(Handle)),// TODO NEW
     this,SLOT(onModelObjectRemove(Handle)) );
-  OS_ASSERT(isConnected);
+//  OS_ASSERT(isConnected);
 
   isConnected = connect(m_addButton,SIGNAL(clicked()),this,SIGNAL(addButtonClicked()));
   OS_ASSERT(isConnected);

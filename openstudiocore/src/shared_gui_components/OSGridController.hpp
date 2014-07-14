@@ -51,7 +51,8 @@ class DataSource
     template<typename ItemType, typename InputType>
     DataSource(
         const std::function<std::vector<ItemType> (InputType)> &t_sourceFunc,
-        bool t_wantsDropZone
+        bool t_wantsPlaceholder = false,
+        const QSharedPointer<BaseConcept> &t_dropZoneConcept = QSharedPointer<BaseConcept>()
         )
       : m_sourceFunc(
             [t_sourceFunc] (ConceptProxy t_proxy) { 
@@ -59,7 +60,8 @@ class DataSource
               return std::vector<ConceptProxy>(result.begin(), result.end());
             }
           ),
-        m_wantsDropZone(t_wantsDropZone)
+        m_wantsPlaceholder(t_wantsPlaceholder),
+        m_dropZoneConcept(t_dropZoneConcept)
     {
     }
 
@@ -68,14 +70,20 @@ class DataSource
       return m_sourceFunc(t_proxy);
     }
 
-    bool wantsDropZone() const
+    QSharedPointer<BaseConcept> dropZoneConcept() const
     {
-      return m_wantsDropZone;
+      return m_dropZoneConcept;
+    }
+
+    bool wantsPlaceholder() const
+    {
+      return m_wantsPlaceholder;
     }
 
   private:
     std::function<std::vector<ConceptProxy> (const ConceptProxy &)> m_sourceFunc;
-    bool m_wantsDropZone;
+    bool m_wantsPlaceholder;
+    QSharedPointer<BaseConcept> m_dropZoneConcept;
 };
 
 class DataSourceAdapter : public BaseConcept
@@ -294,10 +302,18 @@ public:
   template<typename ValueType, typename DataSourceType>
   void addDropZoneColumn(QString headingLabel,
                          std::function<ValueType (DataSourceType *)>  getter,
-                         std::function<void (DataSourceType *, const ValueType &)> setter,
+                         std::function<bool (DataSourceType *, const ValueType &)> setter,
                          const boost::optional<DataSource> &t_source = boost::none)
   {
-    m_baseConcepts.push_back(makeDataSourceAdapter(QSharedPointer<DropZoneConcept<ValueType> >(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter)), t_source));
+    m_baseConcepts.push_back(makeDataSourceAdapter(makeDropZoneConcept(headingLabel, getter, setter), t_source));
+  }
+
+  template<typename ValueType, typename DataSourceType>
+  QSharedPointer<DropZoneConcept<ValueType> > makeDropZoneConcept(QString headingLabel,
+                         std::function<ValueType (DataSourceType *)>  getter,
+                         std::function<bool (DataSourceType *, const ValueType &)> setter)
+  {
+    return QSharedPointer<DropZoneConcept<ValueType> >(new DropZoneConceptImpl<ValueType, DataSourceType>(headingLabel,getter,setter));
   }
 
   std::vector<QString> categories();
