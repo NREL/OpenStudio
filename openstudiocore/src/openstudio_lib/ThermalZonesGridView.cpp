@@ -291,8 +291,8 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == COOLINGDESIGNAIRFLOWMETHOD){
       addComboBoxColumn(QString(COOLINGDESIGNAIRFLOWMETHOD),
-                        boost::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
-                        boost::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
+                        std::function<std::string (const std::string &)>(static_cast<std::string (*)(const std::string&)>(&openstudio::toString)),
+                        std::function<std::vector<std::string> ()>(&model::SizingZone::coolingDesignAirFlowMethodValues),
                         ProxyAdapter(&model::SizingZone::coolingDesignAirFlowMethod, &model::ThermalZone::sizingZone),
                         ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
                           &model::ThermalZone::sizingZone));
@@ -301,7 +301,7 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
       //addDropZoneColumn<std::string,SizingZoneProxy>(QString(COOLINGTHERMOSTATSCHEDULE),
       //                                               static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
       //                                               &SizingZoneProxy::coolingDesignAirFlowMethodValues,
-      //                                               boost::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
+      //                                               std::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
       //                                               &SizingZoneProxy::setCoolingThermostatSchedule);
       //                                               ProxyAdapter(&model::SizingZone::??, &model::ThermalZone::sizingZone),
       //                                               ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::??), 
@@ -319,11 +319,11 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
 
     }else if(field == AIRLOOPNAME){
       // Notes: this only requires a static_cast because `name` comes from IdfObject
-      // we are passing in an empty boost::function for the separate parameter because there's no way to set it
+      // we are passing in an empty std::function for the separate parameter because there's no way to set it
       addNameLineEditColumn(QString(AIRLOOPNAME),
                             ProxyAdapter(static_cast<boost::optional<std::string> (model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name), 
                               &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
-                            boost::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>());
+                            std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>());
 
     }else if(field == MULTIPLIER){
       addValueEditColumn(QString(MULTIPLIER),
