@@ -199,9 +199,9 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
                             NullAdapter(&model::SpaceType::setName));
 
     } else if (field == NAME_LOAD) {
-      std::function<std::vector<model::SpaceLoad> (const model::SpaceType &)> allLoads(
+      std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
         [] (const model::SpaceType &t_spaceType) {
-          std::vector<model::SpaceLoad> loads;
+          std::vector<model::ModelObject> loads;
           auto InternalMass = t_spaceType.internalMass();
           auto People = t_spaceType.people();
           auto Lights = t_spaceType.lights();
