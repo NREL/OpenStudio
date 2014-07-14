@@ -202,6 +202,8 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         setter);
 
     } else if (field == NAME_LOAD) {
+      // Create a lambda function that collates all of the loads in a space type 
+      // and returns them as an std::vector
       std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
         [] (const model::SpaceType &t_spaceType) {
           std::vector<model::ModelObject> loads;
@@ -233,6 +235,17 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         }
       );
 
+      // Here we create a NameLineEdit column, but this one includes a "DataSource" object
+      // The DataSource object is used in OSGridController::widgetAt to make a list of NameLineEdit widgets
+      // for each SpaceType that is passed in.
+      //
+      // Notice that it takes the "allLoads" functor from above.
+      //
+      // Just as an implementation note, it would be possible to use the DataSource as an alternative
+      // to the ProxyAdapter function, if the DataSource were to return a vector of 1.
+      //
+      // The final argument to DataSource tells the system that we want an additional widget to be displayed
+      // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
       addNameLineEditColumn(QString(NAME_LOAD),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
           CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),

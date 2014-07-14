@@ -45,9 +45,47 @@ namespace openstudio {
 
 class OSComboBox;
 
+/// Provides a Concept with an alternative source of data.
+///
+/// Generally, Concepts take a ModelObject and display some field of it.
+///
+/// This has been extended with the ProxyAdapter, which inserts itself betweeh the `getter`, `setter` 
+/// and the Concept. This ProxyAdapter allows you to not just display data with the ModelObject
+/// but to actually display data on something the ModelObject contains, for example, showing the name
+/// of a SizingZone which is associated with a ThermalZone
+///
+/// DataSource takes the ProxyAdapter concept one step further, by allowing you to examine an `std::vector`
+/// of items which are associated with the ModelObject that was passed in. The vector could be a list
+/// of one, if you were so inclined, and all of the interactions with the ModelObject
+/// are abstracted via std::function objects, so the data you display can truly come from anywhere.
+///
+///
+/// Essentially, by using this class you are creating a stack of widets in the grid cell:
+///
+/// <widget for t_sourceFunc item 1>
+/// <widget for t_sourceFunc item 2>
+/// ...
+/// <widget for t_sourceFunc item N>
+/// <widget for t_dropZoneConcept (see notes below)>
+/// <space holder widget if enabled>
 class DataSource
 {
   public:
+
+    /// Create a new DataSource object, which is optionally passed into the various
+    /// add.*Column functions.
+    ///
+    ///
+    /// \param[in] t_sourceFunc Takes an Input object (pratically speaking, a ModelObject derivation) and returns a vector 
+    ///                         of items (probably some derived class from ModelObject)
+    /// \param[in] t_wantsPlaceHolder Informs the system to add a placeholder gap at the bottom of the list when it is 
+    ///                         rendering the list of widgets. This is to help non-dropzone enabled stacks of widgets
+    ///                         line up with those stacks that do contain dropzones
+    /// \param[in] t_dropZoneConcept The `BaseConcept` you want displayed at the bottom of the list of widgets.
+    ///                         It will be displayed after the PlaceHolder, but it is probably illogical to enable both.
+    ///                         It is named "t_dropZoneConcept" because it's intended for DropZone widgets. However,
+    ///                         it's rendered with the function OSGridController::makeWidget function just like every
+    ///                         other widget, so it can really be anything.
     template<typename ItemType, typename InputType>
     DataSource(
         const std::function<std::vector<ItemType> (InputType)> &t_sourceFunc,

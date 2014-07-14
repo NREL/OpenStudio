@@ -406,10 +406,16 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     if (QSharedPointer<DataSourceAdapter> dataSource = baseConcept.dynamicCast<DataSourceAdapter>()) {
       // here we magically create a mutirow column of any type that was constructed
+      //
+      // The details need to be fleshed out. The ideas all work, and it's rendering as expected,
+      // however the placeHolder isn't doing its job, it might need to be a QSpacer of some kind.
+      // The spacing around the list is a little awkward. The padding might need to be set to 0
+      // all the way around.
 
       auto layout = new QVBoxLayout();
 
       // we have a data source that provides multiple rows.
+      // This should be working and doing what you want
       for (auto &item : dataSource->source().items(mo))
       {
         layout->addWidget(makeWidget(item.cast<model::ModelObject>(), dataSource->innerConcept()));
@@ -419,6 +425,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         // use this space to put in a blank placeholder of some kind to make sure the 
         // widget is evenly laid out relative to its friends in the adjacent columns
+        // Fix this.
         layout->addWidget(new QWidget());
       } 
 
@@ -426,6 +433,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
       {
         // it makes sense to me that the drop zone would need a reference to the parent containing object
         // not an object the rest in the list was derived from
+        // this should also be working and doing what you want
         layout->addWidget(makeWidget(mo, dataSource->source().dropZoneConcept()));
       }
 
@@ -433,9 +441,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
       // right here you probably want some kind of container that's smart enough to know how to grow
       // and shrink as the contained items change. But I don't know enough about the model
       // to know how you'd want to do that. For now we make a fixed list that's got a VBoxLayout
+      //
+      // And think about this.
       widget = new QWidget();
       widget->setLayout(layout);
     } else {
+      // This case is exactly what it used to do before the DataSource idea was added.
+
       // just the one
       widget = makeWidget(mo, baseConcept);
     }
