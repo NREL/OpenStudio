@@ -28,6 +28,47 @@
 
 namespace openstudio {
 
+// Proxy with optional<> default values
+template<typename RetType, typename FromDataType, typename ToDataType>
+RetType ZeroParamOptionalProxy(FromDataType *t_from, const boost::function<RetType (ToDataType *)> &t_outter, const boost::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
+{
+  boost::optional<ToDataType> t(t_inner(t_from));
+  return t ? t_outter(t.get_ptr()) : t_defaultValue;
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const boost::function<RetType (ToDataType *, Param1)> &t_outter, const boost::function<boost::optional<ToDataType> (FromDataType *)> t_inner, const RetType &t_defaultValue)
+{
+  boost::optional<ToDataType> t(t_inner(t_from));
+  return t ? t_outter(t.get_ptr(), t_param1) : t_defaultValue;
+}
+
+template<typename RetType, typename FromDataType, typename ToDataType>
+boost::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  boost::function<RetType (ToDataType *)> outter(t_func);
+  boost::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  return std::bind(&ZeroParamOptionalProxy<RetType,FromDataType,ToDataType>, std::placeholders::_1, outter, inner, t_defaultValue);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  boost::function<RetType (ToDataType *, Param1)> outter(t_func);
+  boost::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+boost::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1) const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  boost::function<RetType (ToDataType *, Param1)> outter(t_func);
+  boost::function<boost::optional<ToDataType> (FromDataType *)> inner(t_proxyFunc);
+  return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
+}
+
+
+// Proxies which do not deal with optionals
 template<typename RetType, typename FromDataType, typename ToDataType>
 RetType ZeroParamProxy(FromDataType *t_from, const boost::function<RetType (ToDataType *)> &t_outter, const boost::function<ToDataType (FromDataType *)> t_inner)
 {
@@ -740,6 +781,7 @@ class NameLineEditConcept : public BaseConcept
 
   virtual boost::optional<std::string> get(const ConceptProxy & obj, bool) = 0;
   virtual boost::optional<std::string> set(const ConceptProxy & obj, const std::string &) = 0;
+  virtual bool readOnly() const = 0;
 };
 
 template<typename DataSourceType>
@@ -767,7 +809,17 @@ class NameLineEditConceptImpl : public NameLineEditConcept
   virtual boost::optional<std::string> set(const ConceptProxy & t_obj, const std::string & value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
-    return m_setter(&obj,value);
+    if (!m_setter.empty())
+    {
+      return m_setter(&obj,value);
+    } else {
+      return boost::optional<std::string>();
+    }
+  }
+
+  virtual bool readOnly() const
+  {
+    return m_setter.empty();
   }
 
   private:
