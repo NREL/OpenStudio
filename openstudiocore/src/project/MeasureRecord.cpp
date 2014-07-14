@@ -17,25 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <project/MeasureRecord.hpp>
-#include <project/MeasureRecord_Impl.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/RubyMeasureRecord_Impl.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/NullMeasureRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/JoinRecord.hpp>
+#include "MeasureRecord.hpp"
+#include "MeasureRecord_Impl.hpp"
+#include "MeasureGroupRecord.hpp"
+#include "RubyMeasureRecord.hpp"
+#include "RubyMeasureRecord_Impl.hpp"
+#include "NullMeasureRecord.hpp"
+#include "NullMeasureRecord_Impl.hpp"
+#include "ProjectDatabase.hpp"
+#include "JoinRecord.hpp"
 
-#include <analysis/Measure.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
+#include "../analysis/Measure.hpp"
+#include "../analysis/NullMeasure.hpp"
+#include "../analysis/NullMeasure_Impl.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <sstream>
 
@@ -286,7 +284,7 @@ UpdateByIdQueryData MeasureRecord::updateByIdQueryData() {
     std::stringstream ss;
     ss << "UPDATE " << databaseTableName() << " SET ";
     int expectedValue = 0;
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
+    for (auto it = result.columnValues.begin(),
          itend = result.columnValues.end(); it != itend; ++it)
     {
       // require 0 based columns, don't skip any
@@ -294,7 +292,7 @@ UpdateByIdQueryData MeasureRecord::updateByIdQueryData() {
       // column name is name, type is description
       ss << ColumnsType::valueName(*it) << "=:" << ColumnsType::valueName(*it);
       // is this the last column?
-      std::set<int>::const_iterator nextIt = it;
+      auto nextIt = it;
       ++nextIt;
       if (nextIt == itend) {
         ss << " ";
@@ -308,11 +306,10 @@ UpdateByIdQueryData MeasureRecord::updateByIdQueryData() {
     result.queryString = ss.str();
 
     // null values
-    for (std::set<int>::const_iterator it = result.columnValues.begin(),
-         itend = result.columnValues.end(); it != itend; ++it)
+    for (const auto & columnValue : result.columnValues)
     {
       // bind all values to avoid parameter mismatch error
-      if (istringEqual(ColumnsType::valueDescription(*it), "INTEGER")) {
+      if (istringEqual(ColumnsType::valueDescription(columnValue), "INTEGER")) {
         result.nulls.push_back(QVariant(QVariant::Int));
       }
       else {
@@ -328,13 +325,13 @@ void MeasureRecord::updatePathData(ProjectDatabase database,
                                                 const openstudio::path& newBase)
 {}
 
-MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
+MeasureRecord::MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl, ProjectDatabase database)
   : ObjectRecord(impl, database)
 {
   OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
 }
 
-MeasureRecord::MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl> impl)
+MeasureRecord::MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl> impl)
   : ObjectRecord(impl)
 {
   OS_ASSERT(getImpl<detail::MeasureRecord_Impl>());
@@ -375,16 +372,16 @@ boost::optional<MeasureRecord> MeasureRecord::getMeasureRecord(int id, ProjectDa
 
 boost::optional<MeasureRecord> MeasureRecord::factoryFromQuery(const QSqlQuery& query, ProjectDatabase& database)
 {
-  boost::shared_ptr<detail::MeasureRecord_Impl> impl;
+  std::shared_ptr<detail::MeasureRecord_Impl> impl;
 
   int measureRecordType = query.value(MeasureRecordColumns::measureRecordType).toInt();
 
   switch (measureRecordType){
     case MeasureRecordType::RubyMeasureRecord:
-      impl = boost::shared_ptr<detail::RubyMeasureRecord_Impl>(new detail::RubyMeasureRecord_Impl(query, database));
+      impl = std::shared_ptr<detail::RubyMeasureRecord_Impl>(new detail::RubyMeasureRecord_Impl(query, database));
       break;
     case MeasureRecordType::NullMeasureRecord:
-      impl = boost::shared_ptr<detail::NullMeasureRecord_Impl>(new detail::NullMeasureRecord_Impl(query, database));
+      impl = std::shared_ptr<detail::NullMeasureRecord_Impl>(new detail::NullMeasureRecord_Impl(query, database));
       break;
     default:
       LOG(Error, "Unknown measureRecordType " << measureRecordType);
@@ -411,7 +408,7 @@ MeasureRecord MeasureRecord::factoryFromMeasure(
   }
 
   OS_ASSERT(false);
-  return MeasureRecord(boost::shared_ptr<detail::MeasureRecord_Impl>());
+  return MeasureRecord(std::shared_ptr<detail::MeasureRecord_Impl>());
 }
 
 boost::optional<int> MeasureRecord::variableRecordId() const {

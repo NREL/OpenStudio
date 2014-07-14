@@ -20,8 +20,8 @@
 #ifndef MODEL_INFRAREDTRANSPARENTMATERIAL_HPP
 #define MODEL_INFRAREDTRANSPARENTMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelPartitionMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "ModelPartitionMaterial.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,7 +62,7 @@ class MODEL_API InfraredTransparentMaterial : public ModelPartitionMaterial {
   /// @cond
   typedef detail::InfraredTransparentMaterial_Impl ImplType;
 
-  explicit InfraredTransparentMaterial(boost::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
+  explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
 
   friend class detail::InfraredTransparentMaterial_Impl;
   friend class Model;

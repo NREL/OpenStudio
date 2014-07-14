@@ -20,8 +20,8 @@
 #ifndef MODEL_RENDERINGCOLOR_HPP
 #define MODEL_RENDERINGCOLOR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 class QColor;
 
@@ -88,7 +88,7 @@ class MODEL_API RenderingColor : public ResourceObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit RenderingColor(boost::shared_ptr<detail::RenderingColor_Impl> impl);
+  explicit RenderingColor(std::shared_ptr<detail::RenderingColor_Impl> impl);
 
   /// @endcond
  private:

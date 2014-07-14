@@ -18,42 +18,41 @@
  **********************************************************************/
 
 
-#include <pat_app/ExportXML.hpp>
+#include "ExportXML.hpp"
 #include <QFile>
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
-#include <pat_app/ExportXMLDialog.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/PatMainWindow.hpp>
+#include "ExportXMLDialog.hpp"
+#include "PatApp.hpp"
+#include "PatMainWindow.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/InputVariable.hpp>
-#include <analysis/InputVariable_Impl.hpp>
-#include <analysis/Measure.hpp>
-#include <analysis/DataPoint.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/InputVariable.hpp"
+#include "../analysis/InputVariable_Impl.hpp"
+#include "../analysis/Measure.hpp"
+#include "../analysis/RubyMeasure.hpp"
+#include "../analysis/RubyMeasure_Impl.hpp"
+#include "../analysis/MeasureGroup.hpp"
+#include "../analysis/MeasureGroup_Impl.hpp"
+#include "../analysis/WorkflowStep.hpp"
 
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/Job_Impl.hpp>
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/Job_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Building.hpp>
+#include "../model/Model.hpp"
+#include "../model/Building.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/UnitFactory.hpp"
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -80,7 +79,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   //get all the alternatives
   DataPointVector dataPoints = analysis.dataPoints();
   std::vector<std::string> alternativeNames;
-  Q_FOREACH(const DataPoint& datapoint, dataPoints) {
+  for (const DataPoint& datapoint : dataPoints) {
     alternativeNames.push_back(datapoint.name());
   } 
 
@@ -128,7 +127,7 @@ bool ExportXML::exportXML(const analysisdriver::SimpleProject project, QString x
   QString errors;
   QDomElement alternativesElem = doc.createElement("alternatives");
   analysisElem.appendChild(alternativesElem);
-  Q_FOREACH(const DataPoint& datapoint, dataPoints) {
+  for (const DataPoint& datapoint : dataPoints) {
     //export the alternative if it has the necessary results
     if ( boost::optional<Attribute> reportAttr = datapoint.getOutputAttribute("report")) {
       std::vector<WorkflowStepJob> jobs = problem.getJobsByWorkflowStep(datapoint, true);
@@ -233,7 +232,7 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
     //measures
     QDomElement measuresElem = doc.createElement("measures");
     alternative.appendChild(measuresElem);
-    Q_FOREACH(const WorkflowStepJob& job, jobs) {
+    for (const WorkflowStepJob& job : jobs) {
       //record the details of the measure in the xml.
       if (boost::optional<QDomElement> measureElem = exportMeasure(doc, job)){
         measuresElem.appendChild(*measureElem);
@@ -261,7 +260,7 @@ boost::optional<QDomElement> ExportXML::exportAlternative(QDomDocument& doc,
     QDomElement cashFlowsElem = doc.createElement("cash_flows");
     resultsElem.appendChild(cashFlowsElem);
     if ( boost::optional<Attribute> cashFlowsAttr = resultsAttr.findChildByName("cash_flows") ) {
-      Q_FOREACH( const Attribute & cashFlowAttr, cashFlowsAttr->valueAsAttributeVector()) {
+      for ( const Attribute & cashFlowAttr : cashFlowsAttr->valueAsAttributeVector()) {
         if ( boost::optional<QDomElement> cashFlowElem = exportCashFlow(doc, cashFlowAttr) ){
           cashFlowsElem.appendChild(*cashFlowElem);
         }       
@@ -384,7 +383,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
       //initial_condition
       std::string initCondMsg = "";
       std::vector<std::string> initConds =  jobErrs.initialConditions();
-      Q_FOREACH(std::string initCond, initConds) {
+      for (std::string initCond : initConds) {
         boost::regex re("^\\[.*\\]");
         initCond = boost::regex_replace(initCond,re,"");
         initCondMsg += initCond;
@@ -396,7 +395,7 @@ boost::optional<QDomElement> ExportXML::exportMeasure(QDomDocument& doc,
       //final_condition
       std::string finCondMsg = "";
       std::vector<std::string> finConds =  jobErrs.finalConditions();
-      Q_FOREACH(std::string finCond, finConds) {
+      for (std::string finCond : finConds) {
         boost::regex re("^\\[.*\\]");
         finCond = boost::regex_replace(finCond,re,"");
         finCondMsg += finCond;
@@ -421,7 +420,7 @@ boost::optional<QDomElement> ExportXML::exportCashFlow(QDomDocument& doc,
     
     //values
     QDomElement valuesElem = doc.createElement("values");
-    Q_FOREACH( const Attribute & cashFlowValAttr, cashFlowAttr.valueAsAttributeVector()) {
+    for ( const Attribute & cashFlowValAttr : cashFlowAttr.valueAsAttributeVector()) {
       if ( cashFlowValAttr.name() == "type" ) {
         //cash flow type
         QDomElement cashFlowTypeElem = doc.createElement("type");
@@ -454,7 +453,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
     QDomElement consumptionElem = doc.createElement("consumption");
     annualElem.appendChild(consumptionElem);
 
-    Q_FOREACH( const Attribute & consumptionAttrVal, consumptionAttr->valueAsAttributeVector()) {
+    for ( const Attribute & consumptionAttrVal : consumptionAttr->valueAsAttributeVector()) {
 
       //gas
       if ( consumptionAttrVal.name() == "gas" ) {
@@ -507,7 +506,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
     QDomElement demandElem = doc.createElement("demand");
     annualElem.appendChild(demandElem);
 
-    Q_FOREACH( const Attribute & demandAttrVal, demandAttr->valueAsAttributeVector()) {
+    for ( const Attribute & demandAttrVal : demandAttr->valueAsAttributeVector()) {
 
       //electricity_peak_demand
       if ( demandAttrVal.name() == "electricity_peak_demand" ) {
@@ -539,7 +538,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
     QDomElement utilityCostElem = doc.createElement("utility_cost");
     annualElem.appendChild(utilityCostElem);
 
-    Q_FOREACH( const Attribute & utilityCostAttrVal, utilityCostAttr->valueAsAttributeVector()) {
+    for ( const Attribute & utilityCostAttrVal : utilityCostAttr->valueAsAttributeVector()) {
 
       //electricity
       if ( utilityCostAttrVal.name() == "electricity" ) {
@@ -609,7 +608,7 @@ boost::optional<QDomElement> ExportXML::exportAnnual(QDomDocument& doc,
         QDomElement endUsesElem = doc.createElement("end_uses");
         utilityCostElem.appendChild(endUsesElem);
 
-        Q_FOREACH( const Attribute & endUsesAttrVal, utilityCostAttrVal.valueAsAttributeVector()) {
+        for ( const Attribute & endUsesAttrVal : utilityCostAttrVal.valueAsAttributeVector()) {
           QDomElement endUseElem = doc.createElement(toQString(endUsesAttrVal.name()));
           endUsesElem.appendChild(endUseElem);
           endUseElem.appendChild(doc.createTextNode(QString::number(endUsesAttrVal.valueAsDouble())));
@@ -635,15 +634,15 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
     QDomElement consumptionElem = doc.createElement("consumption");
     monthlyElem.appendChild(consumptionElem);
     //loop through all end uses
-    Q_FOREACH( const Attribute & endUseAttr, consumptionAttr->valueAsAttributeVector()) {
+    for ( const Attribute & endUseAttr : consumptionAttr->valueAsAttributeVector()) {
       QDomElement endUseElem = doc.createElement(toQString(endUseAttr.name()));
       consumptionElem.appendChild(endUseElem);
       //loop through all fuel types in this end use
-      Q_FOREACH( const Attribute & fuelTypeAttr, endUseAttr.valueAsAttributeVector()) {
+      for ( const Attribute & fuelTypeAttr : endUseAttr.valueAsAttributeVector()) {
         QDomElement fuelTypeElem = doc.createElement(toQString(fuelTypeAttr.name()));          
         endUseElem.appendChild(fuelTypeElem);
         //loop through all months in this fuel type in this end use
-        Q_FOREACH( const Attribute & monthAttr, fuelTypeAttr.valueAsAttributeVector()) {
+        for ( const Attribute & monthAttr : fuelTypeAttr.valueAsAttributeVector()) {
           QDomElement monthElem = doc.createElement(toQString(monthAttr.name()));          
           fuelTypeElem.appendChild(monthElem);
           monthElem.appendChild(doc.createTextNode(QString::number(monthAttr.valueAsDouble())));
@@ -657,15 +656,15 @@ boost::optional<QDomElement> ExportXML::exportMonthly(QDomDocument& doc,
     QDomElement demandElem = doc.createElement("demand");
     monthlyElem.appendChild(demandElem);
     //loop through all end uses
-    Q_FOREACH( const Attribute & endUseAttr, demandAttr->valueAsAttributeVector()) {
+    for ( const Attribute & endUseAttr : demandAttr->valueAsAttributeVector()) {
       QDomElement endUseElem = doc.createElement(toQString(endUseAttr.name()));
       demandElem.appendChild(endUseElem);
       //loop through all fuel types in this end use
-      Q_FOREACH( const Attribute & fuelTypeAttr, endUseAttr.valueAsAttributeVector()) {
+      for ( const Attribute & fuelTypeAttr : endUseAttr.valueAsAttributeVector()) {
         QDomElement fuelTypeElem = doc.createElement(toQString(fuelTypeAttr.name()));          
         endUseElem.appendChild(fuelTypeElem);
         //loop through all months in this fuel type in this end use
-        Q_FOREACH( const Attribute & monthAttr, fuelTypeAttr.valueAsAttributeVector()) {
+        for ( const Attribute & monthAttr : fuelTypeAttr.valueAsAttributeVector()) {
           QDomElement monthElem = doc.createElement(toQString(monthAttr.name()));          
           fuelTypeElem.appendChild(monthElem);
           monthElem.appendChild(doc.createTextNode(QString::number(monthAttr.valueAsDouble())));
@@ -683,11 +682,11 @@ boost::optional<QDomElement> ExportXML::exportChecks(QDomDocument& doc,
       
   //checks
   QDomElement checksElem = doc.createElement("checks");
-  Q_FOREACH( const Attribute & checkAttr, checksAttr.valueAsAttributeVector()) {
+  for ( const Attribute & checkAttr : checksAttr.valueAsAttributeVector()) {
     if ( checkAttr.name() == "check" ) {
       QDomElement checkElem = doc.createElement("check");
       checksElem.appendChild(checkElem);
-      Q_FOREACH( const Attribute & checkValAttr, checkAttr.valueAsAttributeVector()) {
+      for ( const Attribute & checkValAttr : checkAttr.valueAsAttributeVector()) {
         if ( checkValAttr.name() == "name" ) {
           QDomElement elem = doc.createElement("name");
           checkElem.appendChild(elem);

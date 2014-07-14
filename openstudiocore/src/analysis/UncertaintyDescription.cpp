@@ -17,17 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/UncertaintyDescription.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "UncertaintyDescription.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <analysis/GenericUncertaintyDescription.hpp>
+#include "GenericUncertaintyDescription.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -66,7 +63,7 @@ namespace detail {
   std::vector<Attribute> UncertaintyDescription_Impl::attributes(bool clones) const {
     if (clones) {
       AttributeVector result;
-      BOOST_FOREACH(const Attribute& attribute,m_attributes) {
+      for (const Attribute& attribute : m_attributes) {
         result.push_back(attribute.clone());
       }            
       return result;
@@ -106,7 +103,7 @@ namespace detail {
   }
 
   bool UncertaintyDescription_Impl::isComplete() const {
-    BOOST_FOREACH(const AttributeDescription& desc,attributeDescriptions()) {
+    for (const AttributeDescription& desc : attributeDescriptions()) {
       if (desc.required && !isSet(desc.name)) {
         return false;
       }
@@ -149,7 +146,7 @@ namespace detail {
         return false;
       }
     }   
-    AttributeVector::iterator it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
+    auto it = findIteratorByName<Attribute>(m_attributes,attributeName,true);
     if (it == m_attributes.end()) {
       return false;
     }
@@ -532,7 +529,7 @@ namespace detail {
 } // detail
 
 UncertaintyDescription UncertaintyDescription::clone() const {
-  boost::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
+  std::shared_ptr<detail::UncertaintyDescription_Impl> cloneImpl(
       new detail::UncertaintyDescription_Impl(*impl()));
   return UncertaintyDescription(cloneImpl);
 }
@@ -606,11 +603,11 @@ void UncertaintyDescription::restoreDefaults() {
   return impl()->restoreDefaults();
 }
 
-UncertaintyDescription::UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
+UncertaintyDescription::UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl> impl) 
   : m_impl(impl)
 {}
 
-boost::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
+std::shared_ptr<detail::UncertaintyDescription_Impl> UncertaintyDescription::impl() const {
   return m_impl;
 }
 
@@ -623,7 +620,7 @@ namespace detail {
     udescMap["type"] = toQString(generic.actualType().valueName());
     if (!generic.attributes().empty()) {
       QVariantList attributesList;
-      Q_FOREACH(const Attribute& attribute,generic.attributes()) {
+      for (const Attribute& attribute : generic.attributes()) {
         attributesList.push_back(openstudio::detail::toVariant(attribute));
       }
       udescMap["attributes"] = QVariant(attributesList);
@@ -639,7 +636,7 @@ namespace detail {
 
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
 
     GenericUncertaintyDescription result(UncertaintyDescriptionType(map["type"].toString().toStdString()),
                                          attributes);

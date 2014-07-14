@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/FFactorGroundFloorConstruction.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../../model/FFactorGroundFloorConstruction.hpp"
+#include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_Construction_FfactorGroundFloor_FieldEnums.hxx>
 
@@ -38,7 +38,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFFactorGroundFloorConstru
   IdfObject idfObject( openstudio::IddObjectType::Construction_FfactorGroundFloor);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

@@ -17,15 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/AlgorithmOptions.hpp>
-#include <analysis/AlgorithmOptions_Impl.hpp>
+#include "AlgorithmOptions.hpp"
+#include "AlgorithmOptions_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -41,14 +39,14 @@ namespace detail {
 
   AlgorithmOptions_Impl::AlgorithmOptions_Impl(const AlgorithmOptions_Impl& other)
   {
-    BOOST_FOREACH(const Attribute& option,other.m_options) {
+    for (const Attribute& option : other.m_options) {
       Attribute optionClone = option.clone();
       m_options.push_back(optionClone);
     }
   }
 
   AlgorithmOptions AlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
+    std::shared_ptr<AlgorithmOptions_Impl> impl(new AlgorithmOptions_Impl(*this));
     return AlgorithmOptions(impl);
   }
 
@@ -130,7 +128,7 @@ namespace detail {
   }
 
   void AlgorithmOptions_Impl::clearOption(const std::string& name) {
-    std::vector<Attribute>::iterator it = findIteratorByName(m_options,name,true);
+    auto it = findIteratorByName(m_options,name,true);
     if (it != m_options.end()) {
       m_options.erase(it);
     }
@@ -148,7 +146,7 @@ namespace detail {
     QVariantMap map;
 
     QVariantList attributesList;
-    Q_FOREACH(const Attribute& option,options()) {
+    for (const Attribute& option : options()) {
       attributesList.push_back(openstudio::detail::toVariant(option));
     }
     map["attributes"] = attributesList;
@@ -159,7 +157,7 @@ namespace detail {
 } // detail
 
 AlgorithmOptions::AlgorithmOptions()
-  : m_impl(boost::shared_ptr<detail::AlgorithmOptions_Impl>(
+  : m_impl(std::shared_ptr<detail::AlgorithmOptions_Impl>(
         new detail::AlgorithmOptions_Impl()))
 {}
 
@@ -196,7 +194,7 @@ void AlgorithmOptions::clearMaxSims() {
 }
 
 /// @cond
-AlgorithmOptions::AlgorithmOptions(boost::shared_ptr<detail::AlgorithmOptions_Impl> impl)
+AlgorithmOptions::AlgorithmOptions(std::shared_ptr<detail::AlgorithmOptions_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

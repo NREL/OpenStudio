@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACETYPE_HPP
 #define MODEL_SPACETYPE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ResourceObject.hpp>
+#include "ModelAPI.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -356,7 +356,7 @@ class MODEL_API SpaceType : public ResourceObject {
   friend class openstudio::detail::IdfObject_Impl;
   friend class detail::SpaceType_Impl;
 
-  explicit SpaceType(boost::shared_ptr<detail::SpaceType_Impl> impl);
+  explicit SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl);
 
   /// @endcond
  private:

@@ -19,15 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/SteamEquipmentDefinition.hpp>
-#include <model/SteamEquipmentDefinition_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../SteamEquipment.hpp"
+#include "../SteamEquipment_Impl.hpp"
+#include "../SteamEquipmentDefinition.hpp"
+#include "../SteamEquipmentDefinition_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP
 #define MODEL_CURVEDOUBLEEXPONENTIALDECAY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
 namespace openstudio {
 namespace model {
@@ -125,7 +125,7 @@ class MODEL_API CurveDoubleExponentialDecay : public Curve {
   /// @cond
   typedef detail::CurveDoubleExponentialDecay_Impl ImplType;
 
-  explicit CurveDoubleExponentialDecay(boost::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl);
+  explicit CurveDoubleExponentialDecay(std::shared_ptr<detail::CurveDoubleExponentialDecay_Impl> impl);
 
   friend class detail::CurveDoubleExponentialDecay_Impl;
   friend class Model;

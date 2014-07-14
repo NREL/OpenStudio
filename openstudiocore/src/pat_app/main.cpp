@@ -1,5 +1,5 @@
 /**********************************************************************
-*  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
 *  This library is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/PatApp.hpp>
+#include "PatApp.hpp"
 
-#include <ruleset/OSArgument.hpp>
+#include "../ruleset/OSArgument.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/FileLogSink.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/idf/Workspace_Impl.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/idf/Workspace_Impl.hpp"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -38,9 +38,9 @@ static const char *logfilepath = "/var/log/openstudio_pat.log";
 #endif
 
 #define WSAAPI
-#include <utilities/core/Path.hpp>
-#include <utilities/core/RubyInterpreter.hpp>
-#include <ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp>
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/RubyInterpreter.hpp"
+#include "../ruleset/EmbeddedRubyUserScriptArgumentGetter.hpp"
 
 #ifdef HAVE_RUBY_VERSION_H
 #include <ruby/version.h>
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     cont = false;
 
     // Initialize the embedded Ruby interpreter
-    boost::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
+    std::shared_ptr<openstudio::detail::RubyInterpreter> rubyInterpreter(
         new openstudio::detail::RubyInterpreter(openstudio::getOpenStudioRubyPath(),
           openstudio::getOpenStudioRubyScriptsPath(),
           modules));

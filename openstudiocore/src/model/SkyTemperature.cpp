@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SkyTemperature.hpp>
-#include <model/SkyTemperature_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
+#include "SkyTemperature.hpp"
+#include "SkyTemperature_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/OS_WeatherProperty_SkyTemperature_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {
@@ -111,7 +111,7 @@ SkyTemperature::SkyTemperature(const Model& model)
 }
 
 // constructor
-SkyTemperature::SkyTemperature(boost::shared_ptr<detail::SkyTemperature_Impl> impl)
+SkyTemperature::SkyTemperature(std::shared_ptr<detail::SkyTemperature_Impl> impl)
   : ModelObject(impl)
 {}
 

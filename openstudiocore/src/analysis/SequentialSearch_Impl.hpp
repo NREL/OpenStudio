@@ -20,12 +20,10 @@
 #ifndef ANALYSIS_SEQUENTIALSEARCH_IMPL_HPP
 #define ANALYSIS_SEQUENTIALSEARCH_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
 
 namespace openstudio {
-
-class Table;
 
 namespace analysis {
 
@@ -92,8 +90,6 @@ namespace detail {
     /** Get the Pareto front (set of non-dominated points). Throws an openstudio::Exception if
      *  analysis.algorithm() != *this. */
     std::vector<OptimizationDataPoint> getParetoFront(Analysis& analysis) const;
-
-    Table getSummaryTable(Analysis& analysis) const;
 
     std::vector< std::vector<QVariant> > getCandidateCombinations(const DataPoint& dataPoint) const;
 

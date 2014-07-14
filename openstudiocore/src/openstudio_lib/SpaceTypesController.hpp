@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SPACETYPESCONTROLLER_H
-#define OPENSTUDIO_SPACETYPESCONTROLLER_H
+#ifndef OPENSTUDIO_SPACETYPESCONTROLLER_HPP
+#define OPENSTUDIO_SPACETYPESCONTROLLER_HPP
 
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -53,4 +53,4 @@ class SpaceTypesController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_SPACETYPESCONTROLLER_H
+#endif // OPENSTUDIO_SPACETYPESCONTROLLER_HPP

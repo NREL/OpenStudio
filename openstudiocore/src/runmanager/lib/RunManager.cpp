@@ -25,23 +25,23 @@
 #include "RunManager_Impl.hpp"
 #include <map>
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Application.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/Application.hpp"
 
-#include <model/Model.hpp>
-#include <model/ShadowCalculation.hpp>
-#include <model/ConvergenceLimits.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/Timestep.hpp>
-#include <model/ShadowCalculation_Impl.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ShadowCalculation.hpp"
+#include "../../model/ConvergenceLimits.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/Timestep.hpp"
+#include "../../model/ShadowCalculation_Impl.hpp"
+#include "../../model/ConvergenceLimits_Impl.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/Timestep_Impl.hpp"
+#include "../../model/DesignDay.hpp"
+#include "../../model/DesignDay_Impl.hpp"
 
 
 #include <QThread>
@@ -49,8 +49,6 @@
 #include <QMutex>
 #include <QMutexLocker>
 
-#include <boost/weak_ptr.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/filesystem.hpp>
 
 namespace openstudio {
@@ -60,7 +58,7 @@ namespace runmanager {
   /// \todo may need to make this thread save soon it was designed so only one mutex would be needed for that
   struct RunManager::DB_Handler
   {
-    typedef std::map<openstudio::path, boost::weak_ptr<detail::RunManager_Impl> > DB_Map;
+    typedef std::map<openstudio::path, std::weak_ptr<detail::RunManager_Impl> > DB_Map;
 
     DB_Map m_dbs;
     QMutex m_mutex;
@@ -68,15 +66,15 @@ namespace runmanager {
     void cull_dbs()
     {
       QMutexLocker l(&m_mutex);
-      DB_Map::iterator itr = m_dbs.begin();
-      DB_Map::iterator end = m_dbs.end();
+      auto itr = m_dbs.begin();
+      auto end = m_dbs.end();
 
       while (itr != end)
       {
         // If it's expired, we don't need to keep a reference to it
         if (itr->second.expired())
         {
-          DB_Map::iterator to_erase = itr;
+          auto to_erase = itr;
           ++itr; // skip to the next before erasing the current
           m_dbs.erase(to_erase);
         } else {
@@ -85,7 +83,7 @@ namespace runmanager {
       }
     }
 
-    boost::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
+    std::shared_ptr<detail::RunManager_Impl> get_impl(const openstudio::path &DB, bool t_new, bool t_paused, bool t_initui, bool t_tempdb, bool t_useStatusGUI)
     {
       // use complete path
       openstudio::path wDB = completeAndNormalize(DB);
@@ -96,19 +94,19 @@ namespace runmanager {
       // it may be premature to implement this, but it seems to make sense,
       // this way anyone in the same application with the same db file open
       // will be looking at the same list of queue items and such
-      DB_Map::iterator itr = m_dbs.find(wDB);
+      auto itr = m_dbs.find(wDB);
 
       if (itr != m_dbs.end())
       {
         try {
-          boost::shared_ptr<detail::RunManager_Impl> founddb = boost::shared_ptr<detail::RunManager_Impl>(itr->second);
+          std::shared_ptr<detail::RunManager_Impl> founddb = std::shared_ptr<detail::RunManager_Impl>(itr->second);
           if (t_new)
           {
             throw std::runtime_error("Unable to make new DB " + toString(wDB) + " file is already open");
           }
 
           return founddb;
-        } catch ( const boost::bad_weak_ptr & ) {
+        } catch ( const std::bad_weak_ptr & ) {
           m_dbs.erase(itr); // the current one is bad
           itr = m_dbs.end();
         }
@@ -121,15 +119,15 @@ namespace runmanager {
           {
             boost::filesystem::remove(wDB);
           }
-        } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
+        } catch (const boost::filesystem::filesystem_error &) {
           throw std::runtime_error("Unable to delete database file: " + toString(wDB));
         }
       }
 
       // We were unable to construct a valid shared_ptr from what we
       // did or did not have, so make a new one
-      boost::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb, t_useStatusGUI));
-      m_dbs.insert(std::make_pair(wDB, boost::weak_ptr<detail::RunManager_Impl>(impl)));
+      std::shared_ptr<detail::RunManager_Impl> impl(new detail::RunManager_Impl(wDB, t_paused, t_initui, t_tempdb, t_useStatusGUI));
+      m_dbs.insert(std::make_pair(wDB, std::weak_ptr<detail::RunManager_Impl>(impl)));
       return impl;
 
     }
@@ -363,14 +361,12 @@ namespace runmanager {
 
     std::vector<Job> currentJobs = getJobs();
 
-    for (std::vector<Job>::const_iterator itr = currentJobs.begin();
-         itr != currentJobs.end();
-         ++itr)
+    for (const auto & job : currentJobs)
     {
       // only parent jobs get saved
-      if (!itr->parent())
+      if (!job.parent())
       {
-        retval.push_back(*itr);
+        retval.push_back(job);
       }
     }
 
@@ -418,7 +414,7 @@ namespace runmanager {
 
   void RunManager::showConfigGui()
   {
-    m_impl->showConfigGui(0);
+    m_impl->showConfigGui(nullptr);
   }
 
   RunManager::DB_Handler &RunManager::get_db_handler()
@@ -427,10 +423,10 @@ namespace runmanager {
     return m;
   }
 
-  void RunManager::setSLURMPassword(const std::string &t_password)
-  {
-    m_impl->setSLURMPassword(t_password);
-  }
+//  void RunManager::setSLURMPassword(const std::string &t_password)
+//  {
+//    m_impl->setSLURMPassword(t_password);
+//  }
 
 
   std::map<std::string, double> RunManager::statistics() const
@@ -487,19 +483,17 @@ namespace runmanager {
     // reset windows with wwr bands to simplify geometry
     std::vector<openstudio::model::Surface> surfaces = t_model.getConcreteModelObjects<openstudio::model::Surface>();
 
-    for (std::vector<openstudio::model::Surface>::iterator itr = surfaces.begin();
-         itr != surfaces.end();
-         ++itr)
+    for (auto & surface : surfaces)
     {
-      if (itr->outsideBoundaryCondition() == "Outdoors"
-          && itr->surfaceType() == "Wall")
+      if (surface.outsideBoundaryCondition() == "Outdoors"
+          && surface.surfaceType() == "Wall")
       {
-        double wwr = itr->windowToWallRatio();
+        double wwr = surface.windowToWallRatio();
         LOG(Debug, "Existing WWR: " << wwr);
 
         if (wwr > 0)
         {
-          if (!itr->setWindowToWallRatio(wwr))
+          if (!surface.setWindowToWallRatio(wwr))
           {
             LOG(Warn, "Error setting WWR");
           }
@@ -544,7 +538,7 @@ namespace runmanager {
 
     bool unknownDay = false;
 
-    BOOST_FOREACH(model::DesignDay designDay, t_model.getConcreteModelObjects<model::DesignDay>()) {
+    for (model::DesignDay designDay : t_model.getConcreteModelObjects<model::DesignDay>()) {
       boost::optional<std::string> name;
       name = designDay.name();
 
@@ -575,7 +569,7 @@ namespace runmanager {
         }
         else
         {
-          LOG(Info, "Unkown day found: " << *name);
+          LOG(Info, "Unknown day found: " << *name);
           unknownDay = true;
         }
       }
@@ -588,7 +582,7 @@ namespace runmanager {
       if( days99_6.size() > 0 )
       {
         LOG(Debug, "removing 99% days: " << days99.size());
-        BOOST_FOREACH(model::DesignDay designDay, days99) {
+        for (model::DesignDay designDay : days99) {
           designDay.remove();
         }
       }
@@ -596,18 +590,18 @@ namespace runmanager {
       if( days0_4.size() > 0 )
       {
         LOG(Debug, "removing 1% days: " << days1.size());
-        BOOST_FOREACH(model::DesignDay designDay, days1) {
+        for (model::DesignDay designDay : days1) {
           designDay.remove();
         }
         LOG(Debug, "removing 2% days: " << days2.size());
-        BOOST_FOREACH(model::DesignDay designDay, days2) {
+        for (model::DesignDay designDay : days2) {
           designDay.remove();
         }
       }
       else if( days1.size() > 0 )
       {
         LOG(Debug, "removing 2% days: " << days2.size());
-        BOOST_FOREACH(model::DesignDay designDay, days2) {
+        for (model::DesignDay designDay : days2) {
           designDay.remove();
         }
       }

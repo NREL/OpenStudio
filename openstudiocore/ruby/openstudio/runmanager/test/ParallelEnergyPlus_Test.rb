@@ -19,9 +19,9 @@
 
 require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
-require 'test/unit'
+require 'minitest/autorun'
 
-class ParallelEnergyPlus_Test < Test::Unit::TestCase
+class ParallelEnergyPlus_Test < MiniTest::Unit::TestCase
 
   def test_ParallelEnergyPlus1
   

@@ -19,21 +19,19 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../ResourceObject.hpp"
+#include "../ResourceObject_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/StandardsInformationConstruction_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../StandardsInformationConstruction.hpp"
+#include "../StandardsInformationConstruction_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
 
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/core/Optional.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -55,7 +53,7 @@ TEST_F(ModelFixture, ResourceObject_Daylighting_School_1)
   ASSERT_FALSE(resources.empty());
   LOG(Info,"List of ResourceObjects in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const ResourceObject& resource,resources) {
+  for (const ResourceObject& resource : resources) {
     unsigned absCount = resource.directUseCount();
     unsigned mainCount = resource.nonResourceObjectUseCount();
     OptionalString oName = resource.name();
@@ -74,7 +72,7 @@ TEST_F(ModelFixture, ResourceObject_Daylighting_School_1)
   ResourceObjectVector reducedResources = model.getModelObjects<ResourceObject>();
   ASSERT_TRUE(reducedResources.size() <= resources.size());
   EXPECT_TRUE(removedObjects.size() >= resources.size() - reducedResources.size());
-  BOOST_FOREACH(const ResourceObject& resource,reducedResources) {
+  for (const ResourceObject& resource : reducedResources) {
     unsigned absCount = resource.directUseCount();
     unsigned mainCount = resource.nonResourceObjectUseCount();
     EXPECT_TRUE(absCount > 0);

@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/RefractionExtinctionGlazing.hpp"
 #include <utilities/idd/OS_WindowMaterial_Glazing_RefractionExtinctionMethod_FieldEnums.hxx>
 
 #include <utilities/idd/WindowMaterial_Glazing_RefractionExtinctionMethod_FieldEnums.hxx>

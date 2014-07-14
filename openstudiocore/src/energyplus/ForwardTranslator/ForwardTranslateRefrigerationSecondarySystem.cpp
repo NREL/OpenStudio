@@ -17,16 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
-#include <model/RefrigerationSecondarySystem.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/CurveCubic.hpp>
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationCase.hpp>
-#include <model/RefrigerationWalkIn.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/RefrigerationSecondarySystem.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/CurveCubic.hpp"
+#include "../../model/RefrigerationAirChiller.hpp"
+#include "../../model/RefrigerationCase.hpp"
+#include "../../model/RefrigerationWalkIn.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Refrigeration_SecondarySystem_FieldEnums.hxx>
 #include <utilities/idd/Refrigeration_CaseAndWalkInList_FieldEnums.hxx>
@@ -71,11 +71,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
 
     _caseAndWalkinList.setName(refrigerationSecondarySystem.name().get() + name);
 
-    for( std::vector<RefrigerationCase>::iterator it = cases.begin();
-       it != cases.end();
-       ++it )
+    for( auto & elem : cases )
     {
-      boost::optional<IdfObject> _case = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _case = translateAndMapModelObject(elem);
 
       if( _case )
       {
@@ -85,11 +83,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
       }
     }
 
-    for( std::vector<RefrigerationWalkIn>::iterator it = walkins.begin();
-       it != walkins.end();
-       ++it )
+    for( auto & elem : walkins )
     {
-      boost::optional<IdfObject> _walkin = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _walkin = translateAndMapModelObject(elem);
 
       if( _walkin )
       {
@@ -99,11 +95,9 @@ boost::optional<IdfObject> ForwardTranslator::translateRefrigerationSecondarySys
       }
     }
 
-    for( std::vector<RefrigerationAirChiller>::iterator it = airChillers.begin();
-       it != airChillers.end();
-       it++ )
+    for( auto & elem : airChillers )
     {
-      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(*it);
+      boost::optional<IdfObject> _airChiller = translateAndMapModelObject(elem);
 
       if( _airChiller )
       {

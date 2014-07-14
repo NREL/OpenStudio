@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_COMPONENTLIST_H
-#define OPENSTUDIO_COMPONENTLIST_H
+#ifndef SHAREDGUICOMPONENTS_COMPONENTLIST_HPP
+#define SHAREDGUICOMPONENTS_COMPONENTLIST_HPP
 
 #include <QWidget>
 
@@ -34,9 +34,9 @@ class ComponentList : public QWidget {
   Q_OBJECT
 
 public:
-  ComponentList(QWidget * parent = 0);
+  ComponentList(QWidget * parent = nullptr);
   ComponentList(const std::vector<Component *> & components,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~ComponentList() {}
   // return the checked component in the list, NULL if list is empty
   Component * checkedComponent() const;
@@ -71,5 +71,5 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_COMPONENTLIST_H
+#endif // SHAREDGUICOMPONENTS_COMPONENTLIST_HPP
 

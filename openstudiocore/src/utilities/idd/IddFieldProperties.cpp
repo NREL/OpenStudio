@@ -17,12 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idd/IddFieldProperties.hpp>
+#include "IddFieldProperties.hpp"
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../core/Optional.hpp"
+#include "../core/Containers.hpp"
 
 #include <sstream>
 
@@ -190,17 +188,17 @@ std::ostream& IddFieldProperties::print(std::ostream& os) const
     os << "       \\default " << *stringDefault << std::endl;
   }
   if (!objectLists.empty()){
-    BOOST_FOREACH(const std::string& objectList, objectLists) {
+    for (const std::string& objectList : objectLists) {
       os << "       \\object-list " << objectList << std::endl;
     }
   }
   if (!references.empty()){
-    BOOST_FOREACH(const std::string& reference, references){
+    for (const std::string& reference : references){
       os << "       \\reference " << reference << std::endl;
     }
   }
   if (!externalLists.empty()) {
-    BOOST_FOREACH(const std::string& externalList, externalLists) {
+    for (const std::string& externalList : externalLists) {
       os << "       \\external-list " << externalList << std::endl;
     }
   }

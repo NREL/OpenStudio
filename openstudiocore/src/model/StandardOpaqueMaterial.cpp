@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
+#include "StandardOpaqueMaterial.hpp"
+#include "StandardOpaqueMaterial_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -717,7 +717,7 @@ void StandardOpaqueMaterial::resetVisibleAbsorptance() {
 }
 
 /// @cond
-StandardOpaqueMaterial::StandardOpaqueMaterial(boost::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl)
+StandardOpaqueMaterial::StandardOpaqueMaterial(std::shared_ptr<detail::StandardOpaqueMaterial_Impl> impl)
   : OpaqueMaterial(impl)
 {}
 /// @endcond

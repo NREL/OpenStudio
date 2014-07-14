@@ -20,8 +20,8 @@
 #ifndef MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP
 #define MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -209,7 +209,7 @@ class MODEL_API EvaporativeFluidCoolerSingleSpeed : public StraightComponent {
   /// @cond
   typedef detail::EvaporativeFluidCoolerSingleSpeed_Impl ImplType;
 
-  explicit EvaporativeFluidCoolerSingleSpeed(boost::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl);
+  explicit EvaporativeFluidCoolerSingleSpeed(std::shared_ptr<detail::EvaporativeFluidCoolerSingleSpeed_Impl> impl);
 
   friend class detail::EvaporativeFluidCoolerSingleSpeed_Impl;
   friend class Model;

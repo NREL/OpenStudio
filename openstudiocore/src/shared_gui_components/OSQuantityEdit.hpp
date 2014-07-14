@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSQUANTITYEDIT_HPP
-#define OPENSTUDIO_OSQUANTITYEDIT_HPP
+#ifndef SHAREDGUICOMPONENTS_OSQUANTITYEDIT_HPP
+#define SHAREDGUICOMPONENTS_OSQUANTITYEDIT_HPP
 
-#include <shared_gui_components/FieldMethodTypedefs.hpp>
+#include "FieldMethodTypedefs.hpp"
 
-#include <model/ModelObject.hpp>
+#include "../model/ModelObject.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QLineEdit>
 #include <QLabel>
@@ -39,7 +39,7 @@ class OSQuantityEdit2: public QWidget {
  public:
 
   OSQuantityEdit2(const std::string& modelUnits, const std::string& siUnits, 
-                  const std::string& ipUnits, bool isIP, QWidget * parent = 0);
+                  const std::string& ipUnits, bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit2() {}
 
@@ -145,7 +145,7 @@ class OSQuantityEdit: public QWidget {
 
  public:
 
-  OSQuantityEdit(bool isIP, QWidget * parent = 0);
+  OSQuantityEdit(bool isIP, QWidget * parent = nullptr);
 
   virtual ~OSQuantityEdit() {}
 
@@ -194,5 +194,5 @@ class OSQuantityEdit: public QWidget {
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSQUANTITYEDIT_HPP
+#endif // SHAREDGUICOMPONENTS_OSQUANTITYEDIT_HPP
 

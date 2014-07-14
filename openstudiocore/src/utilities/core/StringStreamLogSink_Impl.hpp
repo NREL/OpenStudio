@@ -20,9 +20,9 @@
 #ifndef UTILITIES_CORE_STRINGSTREAMLOGSINK_IMPL_HPP
 #define UTILITIES_CORE_STRINGSTREAMLOGSINK_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/LogSink_Impl.hpp>
+#include "LogSink_Impl.hpp"
 
 namespace openstudio{
 

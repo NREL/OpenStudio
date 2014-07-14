@@ -17,19 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/SpaceLoadInstance.hpp>
-#include <model/SpaceLoadInstance_Impl.hpp>
+#include "SpaceLoadInstance.hpp"
+#include "SpaceLoadInstance_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/SpaceLoadDefinition.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "SpaceLoadDefinition.hpp"
+#include "SpaceLoadDefinition_Impl.hpp"
+#include "Space.hpp"
+#include "SpaceType.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -98,7 +96,7 @@ namespace detail {
     if (space){
       result = this->multiplier()*space->multiplier();
     }else if (spaceType){
-      BOOST_FOREACH(const Space& space, spaceType->spaces()){
+      for (const Space& space : spaceType->spaces()){
         result += this->multiplier()*space.multiplier();
       }
     }
@@ -115,7 +113,7 @@ SpaceLoadInstance::SpaceLoadInstance(IddObjectType type,const SpaceLoadDefinitio
   OS_ASSERT(this->setPointer(getImpl<detail::SpaceLoadInstance_Impl>()->definitionIndex(), definition.handle()));
 }
 
-SpaceLoadInstance::SpaceLoadInstance(boost::shared_ptr<detail::SpaceLoadInstance_Impl> impl)
+SpaceLoadInstance::SpaceLoadInstance(std::shared_ptr<detail::SpaceLoadInstance_Impl> impl)
   : SpaceLoad(impl)
 {}
 

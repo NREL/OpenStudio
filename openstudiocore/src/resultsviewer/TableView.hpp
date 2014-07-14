@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_TABLEVIEW_H
-#define  RESULTSVIEWER_TABLEVIEW_H
+#ifndef RESULTSVIEWER_TABLEVIEW_HPP
+#define RESULTSVIEWER_TABLEVIEW_HPP
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/plot/LinePlot.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <resultsviewer/ResultsViewerData.hpp>
+#include "../utilities/plot/Plot2D.hpp"
+#include "../utilities/plot/LinePlot.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "ResultsViewerData.hpp"
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QTableWidget>
 #include <string>
 #include <QApplication>
@@ -40,7 +40,7 @@ class TableView : public QTableWidget
   Q_OBJECT
 public:
 
-  TableView( QWidget* parent=0);
+  TableView( QWidget* parent=nullptr);
   bool addFile(const QString& alias, openstudio::SqlFile sqlFile);
   void removeFile(const QString& filename);
   bool updateFileAlias(const QString& alias, const QString& filename);
@@ -101,4 +101,4 @@ private:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_TABLEVIEW_H
+#endif // RESULTSVIEWER_TABLEVIEW_HPP

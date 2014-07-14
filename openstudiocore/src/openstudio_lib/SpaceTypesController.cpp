@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SpaceTypesController.hpp>
-#include <openstudio_lib/SpaceTypesView.hpp>
+#include "SpaceTypesController.hpp"
+#include "SpaceTypesView.hpp"
 
-#include <model/Model.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Component.hpp>
-#include <model/Component_Impl.hpp>
-#include <model/ComponentData.hpp>
-#include <model/ComponentData_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Component.hpp"
+#include "../model/Component_Impl.hpp"
+#include "../model/ComponentData.hpp"
+#include "../model/ComponentData_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -62,7 +62,7 @@ void SpaceTypesController::onReplaceObject(openstudio::model::ModelObject modelO
 
 void SpaceTypesController::onPurgeObjects(const openstudio::IddObjectType& iddObjectType)
 {
-  BOOST_FOREACH(model::SpaceType spaceType, this->model().getConcreteModelObjects<model::SpaceType>()){
+  for (model::SpaceType spaceType : this->model().getConcreteModelObjects<model::SpaceType>()){
     if (spaceType.spaces().empty()){
       spaceType.remove();
     }

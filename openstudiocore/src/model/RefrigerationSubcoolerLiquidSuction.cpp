@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationSubcoolerLiquidSuction.hpp>
-#include <model/RefrigerationSubcoolerLiquidSuction_Impl.hpp>
+#include "RefrigerationSubcoolerLiquidSuction.hpp"
+#include "RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 
 #include <utilities/idd/OS_Refrigeration_Subcooler_LiquidSuction_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -186,7 +186,7 @@ void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
 }
 
 /// @cond
-RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(boost::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
+RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

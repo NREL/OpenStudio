@@ -20,8 +20,8 @@
 #ifndef UTILITIES_CORE_UPDATEMANAGER_HPP
 #define UTILITIES_CORE_UPDATEMANAGER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Logger.hpp"
 
 #include <string>
 #include <vector>
@@ -58,7 +58,7 @@ namespace openstudio {
     /// returns true when the manager is finished checking for updates
     bool finished() const;
 
-    /// returns true if an error occured while checking for updates,
+    /// returns true if an error occurred while checking for updates,
     /// must call after update manager is finished
     bool error() const;
 

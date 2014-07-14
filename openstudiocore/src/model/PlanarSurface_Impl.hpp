@@ -20,11 +20,11 @@
 #ifndef MODEL_PLANARSURFACE_IMPL_HPP
 #define MODEL_PLANARSURFACE_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
-#include <utilities/geometry/Plane.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../utilities/geometry/Plane.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
 namespace openstudio {
 
@@ -52,9 +52,9 @@ namespace detail {
     Q_PROPERTY(boost::optional<double> heatCapacity READ heatCapacity);
 
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> interiorVisibleAbsorbtance READ interiorVisibleAbsorbtance);
+    Q_PROPERTY(boost::optional<double> interiorVisibleAbsorptance READ interiorVisibleAbsorptance);
     // may require simulation results.
-    Q_PROPERTY(boost::optional<double> exteriorVisibleAbsorbtance READ exteriorVisibleAbsorbtance);
+    Q_PROPERTY(boost::optional<double> exteriorVisibleAbsorptance READ exteriorVisibleAbsorptance);
     // may require simulation results.
     Q_PROPERTY(boost::optional<double> visibleTransmittance READ visibleTransmittance);
 
@@ -171,11 +171,11 @@ namespace detail {
     /** Get the heat capacity of this surface in J/m^2*K, if available. */
     boost::optional<double> heatCapacity() const;
 
-    /// get interior visible absorbtance (unitless)
-    boost::optional<double> interiorVisibleAbsorbtance() const;
+    /// get interior visible absorptance (unitless)
+    boost::optional<double> interiorVisibleAbsorptance() const;
 
-    /// get exterior visible absorbtance (unitless)
-    boost::optional<double> exteriorVisibleAbsorbtance() const;
+    /// get exterior visible absorptance (unitless)
+    boost::optional<double> exteriorVisibleAbsorptance() const;
 
     /// get visible transmittance (unitless)
     /// requires 'EnvelopeSummary' summary table

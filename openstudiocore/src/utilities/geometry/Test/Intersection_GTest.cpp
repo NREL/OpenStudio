@@ -18,10 +18,8 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
-
-#include <boost/foreach.hpp>
+#include "../Intersection.hpp"
+#include "GeometryFixture.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
@@ -60,7 +58,7 @@ std::string printPolygon(const BoostPolygon& polygon)
     }
   }
 
-  BOOST_FOREACH(const BoostRing& inner, polygon.inners()){
+  for (const BoostRing& inner : polygon.inners()){
     if (!inner.empty()){
       ss << "], [";
       // inner loop already in reverse order
@@ -127,7 +125,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 
   int i = 0;
   std::cout << "yellow - blue:" << std::endl;
-  BOOST_FOREACH(BoostPolygon const& p, output)
+  for (BoostPolygon const& p : output)
   {
     std::cout << i++ << ": " << printPolygon(p) << std::endl;
   }
@@ -138,7 +136,7 @@ TEST_F(GeometryFixture, BoostGeometry_Polygon1)
 
   i = 0;
   std::cout << "blue - yellow:" << std::endl;
-  BOOST_FOREACH(BoostPolygon const& p, output)
+  for (BoostPolygon const& p : output)
   {
     std::cout << i++ << ": " << printPolygon(p) << std::endl;
   }
@@ -625,4 +623,71 @@ TEST_F(GeometryFixture, JoinAll)
   }
   EXPECT_TRUE(found1);
   EXPECT_TRUE(found2);
+}
+
+
+TEST_F(GeometryFixture, RemoveSpikes)
+{
+  double tol = 0.01;
+
+  std::vector<Point3d> points;
+  std::vector<Point3d> expected;
+  std::vector<Point3d> result;
+
+  // spike at beginning
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 10, 0)); // the spike
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+    points.push_back(Point3d(10, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike at beginning 2
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(10, 10, 0)); // the spike
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
+
+  // spike in middle
+  { 
+    points.clear();
+    points.push_back(Point3d(10, 5, 0));
+    points.push_back(Point3d(10, 0, 0));
+    points.push_back(Point3d(-5, 0, 0)); // the spike
+    points.push_back(Point3d(0, 0, 0));
+    points.push_back(Point3d(0, 5, 0));
+
+    expected.clear();
+    expected.push_back(Point3d(10, 5, 0)); 
+    expected.push_back(Point3d(10, 0, 0));
+    expected.push_back(Point3d(0, 0, 0));
+    expected.push_back(Point3d(0, 5, 0));
+
+    result = removeSpikes(points, tol);
+    EXPECT_TRUE(circularEqual(expected, result)) << result;
+  }
 }

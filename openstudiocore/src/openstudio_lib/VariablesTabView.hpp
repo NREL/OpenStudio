@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_VARIABLESTABVIEW_H
-#define OPENSTUDIO_VARIABLESTABVIEW_H
+#ifndef OPENSTUDIO_VARIABLESTABVIEW_HPP
+#define OPENSTUDIO_VARIABLESTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
-#include <model/Model.hpp>
-#include <model/OutputVariable.hpp>
+#include "MainTabView.hpp"
+#include "../model/Model.hpp"
+#include "../model/OutputVariable.hpp"
 #include <boost/optional.hpp>
 
 class QComboBox;
@@ -107,4 +107,4 @@ namespace openstudio {
 
 } // openstudio
 
-#endif // OPENSTUDIO_VARIABLESTABVIEW_H
+#endif // OPENSTUDIO_VARIABLESTABVIEW_HPP

@@ -17,25 +17,25 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <pat_app/ResultsTabController.hpp>
+#include "ResultsTabController.hpp"
 
-#include <pat_app/CloudMonitor.hpp>
-#include <pat_app/PatApp.hpp>
-#include <pat_app/ResultsView.hpp>
+#include "CloudMonitor.hpp"
+#include "PatApp.hpp"
+#include "ResultsView.hpp"
 
-#include <analysis/DataPoint.hpp>
+#include "../analysis/DataPoint.hpp"
 
-#include <analysisdriver/CloudAnalysisDriver.hpp>
-#include <analysisdriver/CloudAnalysisDriver_Impl.hpp>
+#include "../analysisdriver/CloudAnalysisDriver.hpp"
+#include "../analysisdriver/CloudAnalysisDriver_Impl.hpp"
 
-#include <model/UtilityBill.hpp>
+#include "../model/UtilityBill.hpp"
 
-#include <runmanager/lib/FileInfo.hpp>
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/FileInfo.hpp"
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/FileReference.hpp"
 
 #include <QDesktopServices>
 #include <QDir>
@@ -468,7 +468,7 @@ QWidget * DataPointResultItemDelegate::view(QSharedPointer<OSListItem> dataSourc
   openstudio::analysis::DataPoint baselineDataPoint = dataPointResultListItem->baselineDataPoint();
   bool alternateRow = dataPointResultListItem->alternateRow();
 
-  DataPointResultsView* result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
+  auto result = new DataPointResultsView(dataPoint, baselineDataPoint, alternateRow);
   result->setHasEmphasis(dataPointResultListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointResultListItem.data(),SLOT(toggleSelected()));
@@ -493,7 +493,7 @@ QWidget * DataPointCalibrationItemDelegate::view(QSharedPointer<OSListItem> data
   openstudio::analysis::DataPoint baselineDataPoint = dataPointCalibrationListItem->baselineDataPoint();
   bool alternateRow = dataPointCalibrationListItem->alternateRow();
 
-  DataPointCalibrationView* result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
+  auto result = new DataPointCalibrationView(dataPoint, baselineDataPoint, alternateRow, m_calibrationMaxNMBE, m_calibrationMaxCVRMSE);
   result->setHasEmphasis(dataPointCalibrationListItem->isSelected());
 
   bool test = connect(result,SIGNAL(clicked()),dataPointCalibrationListItem.data(),SLOT(toggleSelected()));
@@ -577,7 +577,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointResultsListController::dat
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  for (const analysis::DataPoint& dataPoint : m_analysis.dataPoints()) {
     if (dataPoint.uuid() != baselineDataPoint.uuid()){
       result.push_back(dataPoint);
     }
@@ -622,7 +622,7 @@ std::vector<openstudio::analysis::DataPoint> DataPointCalibrationListController:
   }
 
   analysis::DataPoint baselineDataPoint = project.get().baselineDataPoint();
-  Q_FOREACH(const analysis::DataPoint& dataPoint, m_analysis.dataPoints()){
+  for (const analysis::DataPoint& dataPoint : m_analysis.dataPoints()) {
     result.push_back(dataPoint);
   }
 

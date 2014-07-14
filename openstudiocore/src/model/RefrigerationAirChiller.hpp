@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONAIRCHILLER_HPP
 #define MODEL_REFRIGERATIONAIRCHILLER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -252,7 +252,7 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
   /// @cond
   typedef detail::RefrigerationAirChiller_Impl ImplType;
 
-  explicit RefrigerationAirChiller(boost::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
+  explicit RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl);
 
   friend class detail::RefrigerationAirChiller_Impl;
   friend class Model;

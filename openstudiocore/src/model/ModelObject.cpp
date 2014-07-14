@@ -17,42 +17,41 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/LifeCycleCost.hpp>
-#include <model/LifeCycleCost_Impl.hpp>
-#include <model/Relationship.hpp>
-#include <model/ParentObject.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Connection.hpp>
-#include <model/Connection_Impl.hpp>
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "Model_Impl.hpp"
+#include "Component.hpp"
+#include "LifeCycleCost.hpp"
+#include "LifeCycleCost_Impl.hpp"
+#include "Relationship.hpp"
+#include "ParentObject.hpp"
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
+#include "Connection.hpp"
+#include "Connection_Impl.hpp"
 
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
+#include "ScheduleTypeRegistry.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
 
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
+#include "OutputVariable.hpp"
+#include "OutputVariable_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
-#include <utilities/sql/SqlFileTimeSeriesQuery.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/sql/SqlFileEnums.hpp"
+#include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/idf/ValidityReport.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/TimeSeries.hpp"
 
-#include <QtCore/QMetaProperty>
+#include <QMetaProperty>
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
 using openstudio::Handle;
@@ -99,7 +98,7 @@ namespace detail {
   {
     std::vector<IdfObject> removedCosts;
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
-    BOOST_FOREACH(LifeCycleCost& lifeCycleCost, lifeCycleCosts){
+    for (LifeCycleCost& lifeCycleCost : lifeCycleCosts){
       std::vector<IdfObject> tmp = lifeCycleCost.remove();
       removedCosts.insert(removedCosts.end(), tmp.begin(), tmp.end());
     }
@@ -501,14 +500,14 @@ namespace detail {
     OptionalParentObject opo = parent();
     std::set<Handle> uniqueResourceHandles;
     ResourceObjectVector result;
-    BOOST_FOREACH(const ResourceObject& resourceObject, resourceObjects){
+    for (const ResourceObject& resourceObject : resourceObjects){
 
       Handle handle = resourceObject.handle();
       if (opo && (opo->handle() == handle)){
         continue;
       }
 
-      std::set<Handle>::const_iterator it = uniqueResourceHandles.find(handle);
+      auto it = uniqueResourceHandles.find(handle);
       if (it != uniqueResourceHandles.end()){
         continue;
       }
@@ -527,7 +526,7 @@ namespace detail {
     std::vector<std::string> variableNames = this->outputVariableNames();
     OptionalString name = this->name();
 
-    BOOST_FOREACH(const OutputVariable& variable, this->model().getConcreteModelObjects<OutputVariable>()){
+    for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()){
       std::string keyValue = variable.keyValue();
       std::string variableName = variable.variableName();
 
@@ -630,7 +629,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getSourceModelObject())
   //    {
@@ -657,7 +656,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getSourceModelObject())
   //    {
@@ -679,7 +678,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getTargetModelObject())
   //    {
@@ -706,7 +705,7 @@ namespace detail {
   //  connectionVector = Connection::getConnection(model());
   //  OptionalConnection connection;
   //
-  //  BOOST_FOREACH(connection, connectionVector)
+  //  for (connection : connectionVector)
   //  {
   //    if(connection->getTargetModelObject())
   //    {
@@ -835,7 +834,7 @@ namespace detail {
     std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
     toAdd.insert(toAdd.end(), lifeCycleCosts.begin(), lifeCycleCosts.end());
 
-    // If same model, non-recursive insert of resources should be sufficienct.
+    // If same model, non-recursive insert of resources should be sufficient.
     Model m = this->model();
     if (model == m) {
       ResourceObjectVector resources = this->resources();
@@ -845,7 +844,7 @@ namespace detail {
       OS_ASSERT(result.size() == 1u + lifeCycleCosts.size() + resources.size());
       // inserting resources better have worked
       unsigned i = 1 + lifeCycleCosts.size();
-      BOOST_FOREACH(const ResourceObject& resource,resources) {
+      for (const ResourceObject& resource : resources) {
         OS_ASSERT(result[i] == resource);
         ++i;
       }
@@ -951,7 +950,7 @@ namespace detail {
       ModelObject me = getObject<ModelObject>();
 
       ScheduleVector schedules = me.getModelObjectTargets<Schedule>();
-      BOOST_FOREACH(const Schedule& schedule,schedules) {
+      for (const Schedule& schedule : schedules) {
         std::vector<ScheduleTypeKey> keys = getScheduleTypeKeys(schedule);
         for (int i = 0, n = keys.size(); i < n; ++i) {
           OptionalScheduleTypeLimits limits = schedule.scheduleTypeLimits();
@@ -1200,7 +1199,7 @@ ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)
   }
 }
 
-ModelObject::ModelObject(boost::shared_ptr<detail::ModelObject_Impl> p)
+ModelObject::ModelObject(std::shared_ptr<detail::ModelObject_Impl> p)
   : WorkspaceObject(p)
 {}
 

@@ -17,22 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/StraightComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
+#include "StraightComponent.hpp"
+#include "StraightComponent_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,21 +92,19 @@ namespace detail {
     {
       AirLoopHVACVector airLoops = this->model().getConcreteModelObjects<AirLoopHVAC>();
 
-      for( AirLoopHVACVector::iterator it = airLoops.begin(),itEnd=airLoops.end();
-      it != itEnd;
-      ++it )
+      for( auto & airLoop : airLoops)
       {
-        if( it->component(this->handle()) )
+        if( airLoop.component(this->handle()) )
         {
-          m_airLoopHVAC = *it;
-          return *it;
+          m_airLoopHVAC = airLoop;
+          return airLoop;
         }
-        if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = it->airLoopHVACOutdoorAirSystem() )
+        if( OptionalAirLoopHVACOutdoorAirSystem oaSystem = airLoop.airLoopHVACOutdoorAirSystem() )
         {
           if( oaSystem->component(this->handle()) )
           {
-            m_airLoopHVAC = *it;
-            return *it;
+            m_airLoopHVAC = airLoop;
+            return airLoop;
           }
         }
       }
@@ -125,14 +123,12 @@ namespace detail {
     {
       AirLoopHVACOutdoorAirSystemVector oaLoops = this->model().getConcreteModelObjects<AirLoopHVACOutdoorAirSystem>();
 
-      for( AirLoopHVACOutdoorAirSystemVector::iterator it = oaLoops.begin(),itEnd=oaLoops.end();
-      it != itEnd;
-      ++it )
+      for(auto & oaLoop : oaLoops)
       {
-        if( it->component(this->handle()) )
+        if( oaLoop.component(this->handle()) )
         {
-          m_airLoopHVACOutdoorAirSystem = *it;
-          return *it;
+          m_airLoopHVACOutdoorAirSystem = oaLoop;
+          return oaLoop;
         }
       }
     }
@@ -150,14 +146,12 @@ namespace detail {
     {
       std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-      for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-      it != itEnd;
-      ++it )
+      for( auto & plantLoop : plantLoops )
       {
-        if( it->component(this->handle()) )
+        if( plantLoop.component(this->handle()) )
         {
-          m_plantLoop = *it;
-          return *it;
+          m_plantLoop = plantLoop;
+          return plantLoop;
         }
       }
     }
@@ -278,7 +272,7 @@ namespace detail {
 
 } // detail
 
-HVACComponent::HVACComponent(boost::shared_ptr<detail::HVACComponent_Impl> p)
+HVACComponent::HVACComponent(std::shared_ptr<detail::HVACComponent_Impl> p)
   : ParentObject(p)
 {}
 

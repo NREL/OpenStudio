@@ -18,16 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/ImfFile.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Logger.hpp>
+#include "IdfFixture.hpp"
+#include "../ImfFile.hpp"
+#include "../../core/Path.hpp"
+#include "../../core/Optional.hpp"
+#include "../../core/Logger.hpp"
 
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;
@@ -39,7 +38,7 @@ TEST_F(IdfFixture, ImfFile)
   StringVector sectionNames = imfFile.sectionNames();
   unsigned i = 1;
   LOG(Info,"Sections in the IdfFixture ImfFile:");
-  BOOST_FOREACH(const std::string& name, sectionNames) {
+  for (const std::string& name : sectionNames) {
     LOG(Info,"  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
     ++i;
   }

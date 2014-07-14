@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DesignDay.hpp>
-#include <model/DesignDay_Impl.hpp>
-#include <model/ScheduleDay.hpp>
-#include <model/ScheduleDay_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "DesignDay.hpp"
+#include "DesignDay_Impl.hpp"
+#include "ScheduleDay.hpp"
+#include "ScheduleDay_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/OS_SizingPeriod_DesignDay_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -667,7 +667,7 @@ DesignDay::DesignDay(const Model& model)
 }
 
 // constructor
-DesignDay::DesignDay(boost::shared_ptr<detail::DesignDay_Impl> impl)
+DesignDay::DesignDay(std::shared_ptr<detail::DesignDay_Impl> impl)
   : SizingPeriod(impl)
 {}
 

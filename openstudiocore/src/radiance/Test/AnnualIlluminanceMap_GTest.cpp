@@ -19,12 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <radiance/AnnualIlluminanceMap.hpp>
+#include "../AnnualIlluminanceMap.hpp"
 
 #include <resources.hxx>
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;
@@ -38,13 +37,13 @@ using openstudio::toPath;
 class RadAnnualIlluminanceMapFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp() {}
 
   // tear down after for each test
   virtual void TearDown() {}
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase()
   {
     openstudio::path path = resourcesPath() / toPath("radiance/Daylighting/annual_day.ill");

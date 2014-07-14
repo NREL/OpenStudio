@@ -21,9 +21,9 @@ require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class TimeDependentValuation_Test < Test::Unit::TestCase
+class TimeDependentValuation_Test < MiniTest::Unit::TestCase
   
   def test_TimeDependentValuation_Construction
   

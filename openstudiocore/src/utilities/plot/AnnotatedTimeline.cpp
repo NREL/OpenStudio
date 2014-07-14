@@ -17,14 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/plot/AnnotatedTimeline.hpp>
+#include "AnnotatedTimeline.hpp"
 
 #include <iostream>
 #include <set>
 #include <limits>
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <math.h>
 
 using namespace boost::filesystem;
@@ -106,7 +105,7 @@ namespace openstudio{
     os << "      data.addColumn('date', 'Date');" << endl;
 
     unsigned number = 1;
-    BOOST_FOREACH(const ValueType& value, m_storage){
+    for (const ValueType& value : m_storage){
       os << "      data.addColumn('number', '" << value.first << "');" << endl;
       os << "      data.addColumn('string', 'title" << number << "');" << endl;
       os << "      data.addColumn('string', 'text" << number << "');" << endl;
@@ -120,12 +119,12 @@ namespace openstudio{
     std::set<DateTime> dateTimes;
 
     // loop over each time series and insert date times
-    BOOST_FOREACH(const ValueType& value, m_storage){
-/*      BOOST_FOREACH(const DateTime& dateTime, value.second.dateTimes()){
+    for (const ValueType& value : m_storage){
+/*      for (const DateTime& dateTime : value.second.dateTimes()){
         dateTimes.insert(dateTime);
       }
  */
-    BOOST_FOREACH(const double& fracDays, value.second.daysFromFirstReport()){
+    for (const double& fracDays : value.second.daysFromFirstReport()){
         dateTimes.insert(value.second.firstReportDateTime()+Time(fracDays));
       }
     }
@@ -135,14 +134,14 @@ namespace openstudio{
 
     // loop over each time series and insert date times
     double outOfRangeValue = std::numeric_limits<double>::max();
-    BOOST_FOREACH(const ValueType& value, m_storage){
+    for (const ValueType& value : m_storage){
       TimeSeries timeSeries = value.second;
       timeSeries.setOutOfRangeValue(outOfRangeValue);
     }
 
     // write out each row
     unsigned row = 0;
-    BOOST_FOREACH(const DateTime& dateTime, dateTimes){
+    for (const DateTime& dateTime : dateTimes){
 
       if (!os.good()) {
         LOG_AND_THROW("ostream in AnnotatedTimeline::writeData no longer good after writing row " << row - 1 << ".");
@@ -156,7 +155,7 @@ namespace openstudio{
 
       // loop over each time series and insert date times
       unsigned column = 1;
-      BOOST_FOREACH(const ValueType& value, m_storage){
+      for (const ValueType& value : m_storage){
         TimeSeries timeSeries = value.second;
         double v = timeSeries.value(dateTime);
         if (v != outOfRangeValue){

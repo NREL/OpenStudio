@@ -19,12 +19,12 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "../RenderingColor.hpp"
+#include "../RenderingColor_Impl.hpp"
 
-#include <utilities/idf/WorkspaceWatcher.hpp>
+#include "../../utilities/idf/WorkspaceWatcher.hpp"
 
 #include <utilities/idd/OS_Rendering_Color_FieldEnums.hxx>
 

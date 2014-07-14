@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CoilWaterHeatingDesuperheater.hpp>
-#include <model/CoilWaterHeatingDesuperheater_Impl.hpp>
+#include "CoilWaterHeatingDesuperheater.hpp"
+#include "CoilWaterHeatingDesuperheater_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/CurveBiquadratic.hpp>
-#include <model/CurveBiquadratic_Impl.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/WaterHeaterMixed.hpp>
-#include <model/WaterHeaterMixed_Impl.hpp>
-#include <model/WaterToWaterComponent.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "CurveBiquadratic.hpp"
+#include "CurveBiquadratic_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
+#include "WaterHeaterMixed.hpp"
+#include "WaterHeaterMixed_Impl.hpp"
+#include "WaterToWaterComponent.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/OS_Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -511,9 +511,8 @@ CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(const Model& model,
 {
   OS_ASSERT(getImpl<detail::CoilWaterHeatingDesuperheater_Impl>());
 
-  bool ok = true;
   Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
-  ok = setAvailabilitySchedule(availabilitySchedule);
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
   OS_ASSERT(ok);
   ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
   OS_ASSERT(ok);
@@ -729,7 +728,7 @@ void CoilWaterHeatingDesuperheater::resetOffCycleParasiticElectricLoad() {
 }
 
 /// @cond
-CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(boost::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl)
+CoilWaterHeatingDesuperheater::CoilWaterHeatingDesuperheater(std::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

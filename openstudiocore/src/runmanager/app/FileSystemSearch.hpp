@@ -1,14 +1,32 @@
-#ifndef __runmanager_filesystemsearch_hpp__
-#define __runmanager_filesystemsearch_hpp__
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef RUNMANAGER_APP_FILESYSTEMSEARCH_HPP
+#define RUNMANAGER_APP_FILESYSTEMSEARCH_HPP
 
 
 #include <vector>
 #include <string>
-#include <utilities/core/Path.hpp>
+#include "../../utilities/core/Path.hpp"
 #include <QStandardItemModel>
 #include <boost/regex.hpp>
-#include <utilities/core/Logger.hpp>
-#include <boost/bind.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include <QThread>
 #include <boost/filesystem.hpp>
 
@@ -28,7 +46,7 @@ namespace runmanager {
               const InItr &end,
               const QRegExp &regex, const std::string &extension)
             : m_canceled(false),
-              m_fileBuilder(boost::bind(&FileSystemSearchThread::buildFileList<InItr>,
+              m_fileBuilder(std::bind(&FileSystemSearchThread::buildFileList<InItr>,
                   this, rootpath, begin, end, regex, extension))
           {
           }
@@ -49,34 +67,34 @@ namespace runmanager {
       private:
         REGISTER_LOGGER("openstudio.runmanager.detail.FileSystemSearchThread");
 
-        void no_push(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        void no_push(boost::filesystem::recursive_directory_iterator &i)
         {
           i.no_push();
         }
 
-        void no_push(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        void no_push(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have nopush - only recursive has it
         }
 
-        void pop(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        void pop(boost::filesystem::recursive_directory_iterator &i)
         {
           i.pop();
         }
 
-        void pop(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        void pop(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have pop - only recursive has it
           // but calling it on non-recursive will not help us here
           throw std::runtime_error("Invalid call of pop on non-recursive directory iterator");
         }
 
-        int level(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> &i)
+        int level(boost::filesystem::recursive_directory_iterator &i)
         {
           return i.level();
         }
 
-        int level(boost::filesystem::basic_directory_iterator<openstudio::path> &)
+        int level(boost::filesystem::directory_iterator &)
         {
           // the simple iterator does not have level - return 0
           return 0;
@@ -133,7 +151,7 @@ namespace runmanager {
                     ++pathbegin;
                   }
 
-                  QString filestring = toQString(p.external_file_string());
+                  QString filestring = toQString(p.native());
 
                   if (   (extension.empty() || toString(p.extension()) == extension)
                       && (regex.isEmpty() || regex.exactMatch(filestring))
@@ -150,14 +168,14 @@ namespace runmanager {
 
                   }
                 }
-              } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &e) {
+              } catch (const boost::filesystem::filesystem_error &e) {
                 //Ignore FS errors
                 LOG(Debug, "FileSystem Error: " << e.what());
               }
 
               try {
                 ++begin;
-              } catch (const boost::filesystem::basic_filesystem_error<openstudio::path> &) {
+              } catch (const boost::filesystem::filesystem_error &) {
                 no_push(begin);
                 ++begin;
               }
@@ -165,7 +183,7 @@ namespace runmanager {
           }
 
         volatile bool m_canceled;
-        boost::function<void ()> m_fileBuilder;
+        std::function<void ()> m_fileBuilder;
     };
   }
 
@@ -252,7 +270,7 @@ namespace runmanager {
       openstudio::path m_rootPath;
       bool m_recursive;
       std::string m_fileExtension;
-      boost::shared_ptr<detail::FileSystemSearchThread> m_thread;
+      std::shared_ptr<detail::FileSystemSearchThread> m_thread;
 
       QRegExp m_regex;
 
@@ -266,4 +284,4 @@ namespace runmanager {
 }
 
 
-#endif
+#endif // RUNMANAGER_APP_FILESYSTEMSEARCH_HPP

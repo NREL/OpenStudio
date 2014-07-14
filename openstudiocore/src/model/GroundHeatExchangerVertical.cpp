@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GroundHeatExchangerVertical.hpp>
-#include <model/GroundHeatExchangerVertical_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "GroundHeatExchangerVertical.hpp"
+#include "GroundHeatExchangerVertical_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_GroundHeatExchanger_Vertical_FieldEnums.hxx>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -455,12 +455,10 @@ namespace detail {
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for( std::vector<IdfExtensibleGroup>::iterator it = groups.begin();
-         it != groups.end();
-         ++it )
+    for( const auto & group : groups )
     {
-      boost::optional<double> gFunctionLN = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value);
-      boost::optional<double> gFunctionGValue = it->cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue);
+      boost::optional<double> gFunctionLN = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionLn_T_Ts_Value);
+      boost::optional<double> gFunctionGValue = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_GroundHeatExchanger_VerticalExtensibleFields::GFunctionGValue);
 
       if(gFunctionLN && gFunctionGValue) {
         result.push_back( std::make_pair(gFunctionLN.get(), gFunctionGValue.get()) );
@@ -735,7 +733,7 @@ void GroundHeatExchangerVertical::resetGFunctionReferenceRatio() {
 }
 
 /// @cond
-GroundHeatExchangerVertical::GroundHeatExchangerVertical(boost::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl)
+GroundHeatExchangerVertical::GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl)
   : StraightComponent(impl)
 {}
 /// @endcond

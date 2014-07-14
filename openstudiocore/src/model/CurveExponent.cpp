@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveExponent.hpp>
-#include <model/CurveExponent_Impl.hpp>
+#include "CurveExponent.hpp"
+#include "CurveExponent_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Exponent_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -335,7 +335,7 @@ void CurveExponent::resetOutputUnitType() {
 }
 
 /// @cond
-CurveExponent::CurveExponent(boost::shared_ptr<detail::CurveExponent_Impl> impl)
+CurveExponent::CurveExponent(std::shared_ptr<detail::CurveExponent_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

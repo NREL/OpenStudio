@@ -36,22 +36,20 @@
 #include <QTextStream>
 #include <QToolBar>
 
-#include <boost/foreach.hpp>
-
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Model.hpp>
+#include "../energyplus/ForwardTranslator.hpp"
+#include "../model/Model.hpp"
 #include <model_editor/AboutBox.hpp>
-#include <model_editor/ModelExplorer.hpp>
-#include <model_editor/InspectorGadget.hpp>
+#include "ModelExplorer.hpp"
+#include "InspectorGadget.hpp"
 #include <model_editor/tablemodel.h>
 #include <model_editor/treemodel.h>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
-#include <model_editor/EditorFrame.hpp>
+#include "EditorFrame.hpp"
 #include <boost/filesystem/fstream.hpp>
 
 namespace modeleditor
@@ -59,37 +57,37 @@ namespace modeleditor
 
 EditorFrame::EditorFrame(QWidget * parent)
   : QMainWindow(parent),
-    mModelExplorer(NULL),
-    mTableModel(NULL),
-    mTreeModel(NULL),
-    mStatusBar(NULL),
-    mSearchViews(NULL),
-    mCompleter(NULL),
-    mAboutAction(NULL),
-    mAddAction(NULL),
-    mCopyAction(NULL),
-    mExitAction(NULL),
-    mExportIdfAction(NULL),
-    mImportIdfAction(NULL),
-    mNewIdkAction(NULL),
-    mOpenIdkAction(NULL),
-    mPasteAction(NULL),
-    mRemoveAction(NULL),
-    mSaveIdkAction(NULL),
-    mSaveIdkAsAction(NULL),
-    mExpandAllNodesAction(NULL),
-    mToggleGUIDsAction(NULL),
-    mSearchViewsAction(NULL),
-    mToggleCommentsAction(NULL),
-    mTogglePrecisionAction(NULL),
-    mToggleUnitsAction(NULL),
-    mFileMenu(NULL),
-    mHelpMenu(NULL),
-    mContextMenu(NULL),
-    mFileToolBar(NULL),
-    mEditToolBar(NULL),
-    mPrefToolBar(NULL),
-    mSearchToolBar(NULL),
+    mModelExplorer(nullptr),
+    mTableModel(nullptr),
+    mTreeModel(nullptr),
+    mStatusBar(nullptr),
+    mSearchViews(nullptr),
+    mCompleter(nullptr),
+    mAboutAction(nullptr),
+    mAddAction(nullptr),
+    mCopyAction(nullptr),
+    mExitAction(nullptr),
+    mExportIdfAction(nullptr),
+    mImportIdfAction(nullptr),
+    mNewIdkAction(nullptr),
+    mOpenIdkAction(nullptr),
+    mPasteAction(nullptr),
+    mRemoveAction(nullptr),
+    mSaveIdkAction(nullptr),
+    mSaveIdkAsAction(nullptr),
+    mExpandAllNodesAction(nullptr),
+    mToggleGUIDsAction(nullptr),
+    mSearchViewsAction(nullptr),
+    mToggleCommentsAction(nullptr),
+    mTogglePrecisionAction(nullptr),
+    mToggleUnitsAction(nullptr),
+    mFileMenu(nullptr),
+    mHelpMenu(nullptr),
+    mContextMenu(nullptr),
+    mFileToolBar(nullptr),
+    mEditToolBar(nullptr),
+    mPrefToolBar(nullptr),
+    mSearchToolBar(nullptr),
     mActionDescriptionPrefix(QString("Add ")),
     mLastPathOpened(QApplication::applicationDirPath()),
     mShowGUIDs(true),
@@ -110,7 +108,7 @@ EditorFrame::EditorFrame(QWidget * parent)
   openstudio::model::Model model = mModelExplorer->getModel();
   openstudio::WorkspaceObjectVector objects = model.objects();
   QStringList strings;
-  BOOST_FOREACH(const openstudio::WorkspaceObject& object, objects){
+  for (const openstudio::WorkspaceObject& object : objects){
     strings << object.iddObject().name().c_str();
   }
   mCompleter = new QCompleter(strings,this);
@@ -380,10 +378,10 @@ bool EditorFrame::addClassViewContextMenuAddActions(bool clearMenu)
   openstudio::IddObject object;
   std::vector<openstudio::IddObject> objects;
 
-  QAction * newAddAction = NULL;
+  QAction * newAddAction = nullptr;
   QString name;
   QString string;
-  QMenu * addSubMenu = NULL;
+  QMenu * addSubMenu = nullptr;
 
   for(unsigned i=0 ; i<groups.size(); i++){
     group = groups.at(i);
@@ -434,12 +432,12 @@ bool EditorFrame::addTreeViewContextMenuAddActions(bool clearMenu)
 
   mAllowableChildTypes.clear();
   mAllowableChildTypes = mModelExplorer->getAllowableChildTypes();
-  QMenu * addSubMenu = NULL;
+  QMenu * addSubMenu = nullptr;
   //bool connected = false;
   QString name;
   QString string;
   for(unsigned i=0 ; i<mAllowableChildTypes.size(); i++){
-    if(addSubMenu == NULL){
+    if(addSubMenu == nullptr){
       addSubMenu = new QMenu(tr("Add"));
       addSubMenu->setIcon(QIcon(":/images/edit_add.png"));
       OS_ASSERT(addSubMenu);
@@ -632,7 +630,7 @@ bool EditorFrame::saveFileAs(const QString& action, const QString& extension)
   fileTypes += extension.toLower();
   fileTypes += ")";
 
-  QString fileName = QFileDialog::getSaveFileName(NULL,msg,"",fileTypes);
+  QString fileName = QFileDialog::getSaveFileName(nullptr,msg,"",fileTypes);
   if(!fileName.isEmpty()){
     success = saveFile(fileName, extension);
   }

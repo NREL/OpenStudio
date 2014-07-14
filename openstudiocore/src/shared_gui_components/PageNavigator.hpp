@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef PAGENAVIGATOR_H
-#define PAGENAVIGATOR_H
+#ifndef SHAREDGUICOMPONENTS_PAGENAVIGATOR_HPP
+#define SHAREDGUICOMPONENTS_PAGENAVIGATOR_HPP
 
 #include <QWidget>
 
@@ -36,7 +36,7 @@ class PageNavigator : public QWidget
 public:
   PageNavigator(int numPages,
     int numPagesListed = 5,
-    QWidget * parent = 0);
+    QWidget * parent = nullptr);
   virtual ~PageNavigator();
   void setNumPages(int numPages);
   void setNumPagesListed(int numPagesListed = 5);
@@ -72,4 +72,4 @@ signals:
 
 } // namespace openstudio
 
-#endif // PAGENAVIGATOR_H
+#endif // SHAREDGUICOMPONENTS_PAGENAVIGATOR_HPP

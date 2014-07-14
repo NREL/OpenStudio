@@ -19,7 +19,7 @@
 
 
 
-#include <utilities/core/System.hpp>
+#include "System.hpp"
 #include "Application.hpp"
 
 #include <boost/lexical_cast.hpp>
@@ -39,8 +39,6 @@ namespace openstudio{
 #ifdef _WINDOWS
 
   #define _WIN32_WINNT 0x0500
-
-  #define NOMINMAX
 
   #include <windows.h>
 

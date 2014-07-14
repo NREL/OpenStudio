@@ -17,25 +17,23 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ScheduleInterval.hpp>
-#include <model/ScheduleInterval_Impl.hpp>
-#include <model/ScheduleFixedInterval.hpp>
-#include <model/ScheduleFixedInterval_Impl.hpp>
-#include <model/ScheduleVariableInterval.hpp>
-#include <model/ScheduleVariableInterval_Impl.hpp>
-#include <model/Model.hpp>
+#include "ScheduleInterval.hpp"
+#include "ScheduleInterval_Impl.hpp"
+#include "ScheduleFixedInterval.hpp"
+#include "ScheduleFixedInterval_Impl.hpp"
+#include "ScheduleVariableInterval.hpp"
+#include "ScheduleVariableInterval_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/data/TimeSeries.hpp"
+#include "../utilities/core/Assert.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -131,7 +129,7 @@ ScheduleInterval::ScheduleInterval(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());
 }
 
-ScheduleInterval::ScheduleInterval(boost::shared_ptr<detail::ScheduleInterval_Impl> impl)
+ScheduleInterval::ScheduleInterval(std::shared_ptr<detail::ScheduleInterval_Impl> impl)
   : Schedule(impl)
 {
   OS_ASSERT(getImpl<detail::ScheduleInterval_Impl>());

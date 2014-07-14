@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/CelsiusUnit_Impl.hpp>
+#include "CelsiusUnit.hpp"
+#include "CelsiusUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -41,12 +41,12 @@ namespace detail {
 
   Unit CelsiusUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::Celsius);
-    boost::shared_ptr<CelsiusUnit_Impl> impl(new CelsiusUnit_Impl(*this));
+    std::shared_ptr<CelsiusUnit_Impl> impl(new CelsiusUnit_Impl(*this));
     return CelsiusUnit(impl).cast<Unit>();
   }
 
   void CelsiusUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -58,19 +58,19 @@ namespace detail {
 } // detail
 
 CelsiusUnit::CelsiusUnit(int CExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
                         new detail::CelsiusUnit_Impl(CExp,scaleExponent,prettyString)))
 {}
 
 CelsiusUnit::CelsiusUnit(const std::string& scaleAbbreviation,
                          int CExp,
                          const std::string& prettyString)
-  : TemperatureUnit(boost::shared_ptr<detail::CelsiusUnit_Impl>(
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
                         new detail::CelsiusUnit_Impl(scaleAbbreviation,CExp,prettyString)))
 {}
 
 /// @cond
-CelsiusUnit::CelsiusUnit(boost::shared_ptr<detail::CelsiusUnit_Impl> impl)
+CelsiusUnit::CelsiusUnit(std::shared_ptr<detail::CelsiusUnit_Impl> impl)
   : TemperatureUnit(impl)
 {}
 /// @endcond

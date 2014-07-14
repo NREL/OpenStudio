@@ -17,11 +17,11 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_LOCATIONTABCONTROLLER_H
-#define OPENSTUDIO_LOCATIONTABCONTROLLER_H
+#ifndef OPENSTUDIO_LOCATIONTABCONTROLLER_HPP
+#define OPENSTUDIO_LOCATIONTABCONTROLLER_HPP
 
-#include <model/Model.hpp>
-#include <openstudio_lib/MainTabController.hpp>
+#include "../model/Model.hpp"
+#include "MainTabController.hpp"
 #include <boost/smart_ptr.hpp>
 #include <QDir>
 #include <QObject>
@@ -58,7 +58,7 @@ public:
   };
 
 private:
-  boost::shared_ptr<UtilityBillsController> m_utilityBillsController;
+  std::shared_ptr<UtilityBillsController> m_utilityBillsController;
   QStackedWidget * m_utilityBillsStackedWidget;
   int m_warningWidgetIndex;
   int m_visibleWidgetIndex;
@@ -70,4 +70,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_LOCATIONTABCONTROLLER_H
+#endif // OPENSTUDIO_LOCATIONTABCONTROLLER_HPP

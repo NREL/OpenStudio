@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Node.hpp>
-#include <model/SetpointManager.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/SetpointManager.hpp"
 
 using namespace openstudio::model;
 
@@ -30,11 +30,9 @@ namespace energyplus {
 boost::optional<IdfObject> ForwardTranslator::translateNode( Node & modelObject )
 {
   std::vector<SetpointManager> _setpointManagers = modelObject.setpointManagers();
-  for(std::vector<SetpointManager>::iterator it = _setpointManagers.begin();
-      it != _setpointManagers.end();
-      ++it)
+  for(auto _setpointManager : _setpointManagers )
   {
-    translateAndMapModelObject( *it );
+    translateAndMapModelObject( _setpointManager );
   }
 
   return boost::optional<IdfObject>();

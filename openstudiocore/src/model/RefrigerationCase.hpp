@@ -20,9 +20,9 @@
 #ifndef MODEL_REFRIGERATIONCASE_HPP
 #define MODEL_REFRIGERATIONCASE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <model/RefrigerationSystem.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "RefrigerationSystem.hpp"
 
 namespace openstudio {
 
@@ -467,7 +467,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
   /// @cond
   typedef detail::RefrigerationCase_Impl ImplType;
 
-  explicit RefrigerationCase(boost::shared_ptr<detail::RefrigerationCase_Impl> impl);
+  explicit RefrigerationCase(std::shared_ptr<detail::RefrigerationCase_Impl> impl);
 
   friend class detail::RefrigerationCase_Impl;
   friend class Model;

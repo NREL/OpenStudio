@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_HPP
 #define MODEL_SPACEINFILTRATIONDESIGNFLOWRATE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoad.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoad.hpp"
 
 namespace openstudio {
 namespace model {
@@ -181,7 +181,7 @@ class MODEL_API SpaceInfiltrationDesignFlowRate : public SpaceLoad {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit SpaceInfiltrationDesignFlowRate(boost::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
+  explicit SpaceInfiltrationDesignFlowRate(std::shared_ptr<detail::SpaceInfiltrationDesignFlowRate_Impl> impl);
 
   /// @endcond
  private:

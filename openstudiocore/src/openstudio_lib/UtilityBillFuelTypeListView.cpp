@@ -17,17 +17,17 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/UtilityBillFuelTypeListView.hpp>
+#include "UtilityBillFuelTypeListView.hpp"
 
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSItemList.hpp>
+#include "ModelObjectItem.hpp"
+#include "OSItemList.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/UtilityBill.hpp>
-#include <model/UtilityBill_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/UtilityBill.hpp"
+#include "../model/UtilityBill_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <iostream>
 
@@ -35,20 +35,20 @@ namespace openstudio {
 
 UtilityBillFuelTypeListController::UtilityBillFuelTypeListController(const model::Model& model,
   openstudio::FuelType fuelType)
-  : m_iddObjectType(model::UtilityBill::iddObjectType()), m_model(model), m_fuelType(fuelType)
+  : m_iddObjectType(model::UtilityBill::iddObjectType()), m_fuelType(fuelType), m_model(model)
 {
   bool isConnected = false;
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(addWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(addWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
   isConnected = connect(model.getImpl<model::detail::Model_Impl>().get(), 
-                        SIGNAL(removeWorkspaceObject(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SIGNAL(removeWorkspaceObject(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         this,
-                        SLOT(objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
+                        SLOT(objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         Qt::QueuedConnection);
   OS_ASSERT(isConnected);
 
@@ -64,18 +64,18 @@ FuelType UtilityBillFuelTypeListController::fuelType() const
   return m_fuelType;
 }
 
-void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
     // however, in this case we need to also check the fuel type
-    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
-      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
+    if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
 
         std::vector<OSItemId> ids = this->makeVector();
         emit itemIds(ids);
 
-        BOOST_FOREACH(const OSItemId& id, ids){
+        for (const OSItemId& id : ids){
           if (id.itemId() == impl->handle().toString()){
             emit selectedItemId(id);
             break;
@@ -86,13 +86,13 @@ void UtilityBillFuelTypeListController::objectAdded(boost::shared_ptr<openstudio
   }
 }
 
-void UtilityBillFuelTypeListController::objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+void UtilityBillFuelTypeListController::objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> impl, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
 {
   if (iddObjectType == m_iddObjectType){
     // in a ModelObjectTypeListView this is sufficient to say that a new item has been added to our list
     // however, in this case we need to also check the fuel type
-    if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
-      if (boost::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
+    if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)){
+      if (std::dynamic_pointer_cast<model::detail::UtilityBill_Impl>(impl)->fuelType() == m_fuelType){
 
         emit itemIds(makeVector());
       }
@@ -110,13 +110,13 @@ std::vector<OSItemId> UtilityBillFuelTypeListController::makeVector()
   // sort by name
   std::sort(workspaceObjects.begin(), workspaceObjects.end(), WorkspaceObjectNameGreater());
 
-  BOOST_FOREACH(WorkspaceObject workspaceObject,workspaceObjects){
+  for (WorkspaceObject workspaceObject : workspaceObjects){
     if (!workspaceObject.handle().isNull()){
       openstudio::model::ModelObject modelObject = workspaceObject.cast<openstudio::model::ModelObject>();
       if(boost::optional<model::UtilityBill> utilityBill = modelObject.optionalCast<model::UtilityBill>()){
         if(utilityBill.get().fuelType() == m_fuelType){
           result.push_back(modelObjectToItemId(modelObject, false));
-          // becasue there is no more than 1 utility bill per fuel type...
+          // because there is no more than 1 utility bill per fuel type...
           // TODO break;
         }
       }

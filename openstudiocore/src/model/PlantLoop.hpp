@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANTLOOP_HPP
 #define MODEL_PLANTLOOP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Loop.hpp>
+#include "ModelAPI.hpp"
+#include "Loop.hpp"
 
 namespace openstudio {
 
@@ -198,7 +198,7 @@ class MODEL_API PlantLoop : public Loop {
 
   typedef detail::PlantLoop_Impl ImplType;
 
-  explicit PlantLoop(boost::shared_ptr<ImplType> impl);
+  explicit PlantLoop(std::shared_ptr<ImplType> impl);
 
   private:
 

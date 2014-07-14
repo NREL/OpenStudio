@@ -22,11 +22,11 @@
 
 #include "EnergyPlusAPI.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Enum.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Point3d.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Enum.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Point3d.hpp"
 
 namespace openstudio {
 namespace energyplus {

@@ -1,17 +1,17 @@
-SET( target_name zkqwt )
+set(target_name zkqwt)
 
-IF(UNIX)
-  STRING(REGEX REPLACE "\\-Werror" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  STRING(REGEX REPLACE "\\-Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  STRING(REGEX REPLACE "\\-Weffc\\+\\+" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
-ELSEIF(CMAKE_CL_64)
+if(UNIX)
+  string(REGEX REPLACE "\\-Werror" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  string(REGEX REPLACE "\\-Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  string(REGEX REPLACE "\\-Weffc\\+\\+" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+elseif(CMAKE_CL_64)
   # Disable warnings as errors for qwt since we are trying to not modify it too much
-  STRING(REGEX REPLACE "\\/WX" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-ENDIF(UNIX)
+  string(REGEX REPLACE "\\/WX" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+endif()
 
 # source files
-SET( ${target_name}_src
+set(${target_name}_src
   qwt.h
   qwt_abstract_scale.cpp
   qwt_abstract_scale.h
@@ -152,7 +152,7 @@ SET( ${target_name}_src
 )
 
 # moc files
-SET( ${target_name}_moc
+set(${target_name}_moc
   qwt_abstract_slider.h
   qwt_analog_clock.h
   qwt_compass.h
@@ -178,22 +178,21 @@ SET( ${target_name}_moc
   qwt_wheel.h
 )
 
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
-ADD_DEFINITIONS(-DQWT_DLL)
-ADD_LIBRARY( ${target_name} SHARED
+add_definitions(-DQWT_DLL)
+add_library(${target_name} SHARED
   ${${target_name}_src}
   ${${target_name}_moc_src}
 )
 
-TARGET_LINK_LIBRARIES(${target_name}
+target_link_libraries(${target_name}
   ${QT_LIBS}
 )
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin 
-  LIBRARY DESTINATION lib )
-ENDIF()
-
-
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin 
+    LIBRARY DESTINATION lib
+  )
+endif()

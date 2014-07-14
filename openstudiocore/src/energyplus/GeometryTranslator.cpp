@@ -17,19 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <energyplus/GeometryTranslator.hpp>
-#include <energyplus/MapFields.hpp>
+#include "GeometryTranslator.hpp"
+#include "MapFields.hpp"
 
-#include <model/Building.hpp>
-#include <model/Space.hpp>
-#include <model/Surface.hpp>
-#include <model/SubSurface.hpp>
-#include <model/ShadingSurface.hpp>
+#include "../model/Building.hpp"
+#include "../model/Space.hpp"
+#include "../model/Surface.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/ShadingSurface.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Containers.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Containers.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
@@ -68,10 +68,9 @@
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Zone_Detailed_FieldEnums.hxx>
 
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../utilities/idf/WorkspaceObject.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 
 using openstudio::IddObjectType;
@@ -298,7 +297,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Shading::Site
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Site)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Site)){
 
       // get simple params
       OptionalDouble azimuth = oldObject.getDouble(Shading_SiteFields::AzimuthAngle, true);
@@ -346,7 +345,7 @@ namespace energyplus {
     }
 
     // Shading::Building
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Building)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Building)){
 
       // get transformation
       Transformation t;
@@ -402,7 +401,7 @@ namespace energyplus {
     }
 
     // Shading:Overhang
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang)){
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_OverhangFields::WindoworDoorName);
@@ -427,9 +426,9 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -505,7 +504,7 @@ namespace energyplus {
     }
 
     // Shading:Overhang:Projection
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Overhang_Projection)){
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Overhang_ProjectionFields::WindoworDoorName);
@@ -530,9 +529,9 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -607,7 +606,7 @@ namespace energyplus {
     }
 
     // Shading:Fin
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Fin)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin)){
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_FinFields::WindoworDoorName);
@@ -632,9 +631,9 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -735,7 +734,7 @@ namespace energyplus {
     }
 
     // Shading:Fin:Projection
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Shading_Fin_Projection)){
 
       // find subSurface
       OptionalWorkspaceObject subSurface = oldObject.getTarget(Shading_Fin_ProjectionFields::WindoworDoorName);
@@ -760,9 +759,9 @@ namespace energyplus {
       OptionalDouble xMax;
       OptionalDouble yMin;
       OptionalDouble yMax;
-      BOOST_FOREACH(const Point3d& faceVert, t.inverse()*subSurfaceVerts){
+      for (const Point3d& faceVert : t.inverse()*subSurfaceVerts){
 
-        OS_ASSERT(abs(faceVert.z()) < 0.001);
+        OS_ASSERT(std::abs(faceVert.z()) < 0.001);
 
         if (!xMin || (faceVert.x() < *xMin)){
           xMin = faceVert.x();
@@ -880,7 +879,7 @@ namespace energyplus {
   bool GeometryTranslator::convertSimpleSubSurfaces()
   {
     // Window
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Window)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(WindowFields::BuildingSurfaceName);
@@ -946,7 +945,7 @@ namespace energyplus {
     }
 
     // Door
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Door)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(DoorFields::BuildingSurfaceName);
@@ -1010,7 +1009,7 @@ namespace energyplus {
     }
 
     // GlazedDoor
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::GlazedDoor)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoorFields::BuildingSurfaceName);
@@ -1076,7 +1075,7 @@ namespace energyplus {
     }
 
     // Window:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Window_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Window_Interzone)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Window_InterzoneFields::BuildingSurfaceName);
@@ -1140,7 +1139,7 @@ namespace energyplus {
     }
 
     // Door:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Door_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Door_Interzone)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(Door_InterzoneFields::BuildingSurfaceName);
@@ -1204,7 +1203,7 @@ namespace energyplus {
     }
 
     // GlazedDoor:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::GlazedDoor_Interzone)){
 
       // find surface
       OptionalWorkspaceObject surface = oldObject.getTarget(GlazedDoor_InterzoneFields::BuildingSurfaceName);
@@ -1277,7 +1276,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // Wall::Detailed
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
@@ -1336,7 +1335,7 @@ namespace energyplus {
     }
 
     // RoofCeiling::Detailed
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_DetailedFields::ZoneName);
@@ -1395,7 +1394,7 @@ namespace energyplus {
     }
 
     // Floor::Detailed
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_DetailedFields::ZoneName);
@@ -1454,7 +1453,7 @@ namespace energyplus {
     }
 
     // Wall:Exterior
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Exterior)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_ExteriorFields::ZoneName);
@@ -1527,7 +1526,7 @@ namespace energyplus {
     }
 
     // Wall:Adiabatic
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Adiabatic)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_AdiabaticFields::ZoneName);
@@ -1600,7 +1599,7 @@ namespace energyplus {
     }
 
     // Wall:Underground
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Wall_Underground)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Underground)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_UndergroundFields::ZoneName);
@@ -1673,7 +1672,7 @@ namespace energyplus {
     }
 
     // Wall:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Wall_Interzone)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Wall_InterzoneFields::ZoneName);
@@ -1746,7 +1745,7 @@ namespace energyplus {
     }
 
     // Roof
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Roof)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Roof)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(RoofFields::ZoneName);
@@ -1820,7 +1819,7 @@ namespace energyplus {
     }
 
     // Ceiling:Adiabatic
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Adiabatic)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_AdiabaticFields::ZoneName);
@@ -1893,7 +1892,7 @@ namespace energyplus {
     }
 
     // Ceiling:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Ceiling_Interzone)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Ceiling_InterzoneFields::ZoneName);
@@ -1966,7 +1965,7 @@ namespace energyplus {
     }
 
     // Floor:GroundContact
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_GroundContact)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_GroundContactFields::ZoneName);
@@ -2039,7 +2038,7 @@ namespace energyplus {
     }
 
     // Floor:Adiabatic
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Adiabatic)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_AdiabaticFields::ZoneName);
@@ -2112,7 +2111,7 @@ namespace energyplus {
     }
 
     // Floor:Interzone
-    BOOST_FOREACH(WorkspaceObject oldObject, m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)){
+    for (WorkspaceObject oldObject : m_workspace.getObjectsByType(IddObjectType::Floor_Interzone)){
 
       // find zone
       OptionalWorkspaceObject zone = oldObject.getTarget(Floor_InterzoneFields::ZoneName);
@@ -2195,7 +2194,7 @@ namespace energyplus {
     Transformation buildingTransformation = this->buildingTransformation();
 
     // daylighting controls
-    BOOST_FOREACH(WorkspaceObject daylightingControl, m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)){
+    for (WorkspaceObject daylightingControl : m_workspace.getObjectsByType(IddObjectType::Daylighting_Controls)){
       if (daylightingCoordChange != CoordinateChange::NoChange){
         OptionalWorkspaceObject zone = daylightingControl.getTarget(Daylighting_ControlsFields::ZoneName);
         if (!zone){
@@ -2241,7 +2240,7 @@ namespace energyplus {
     }
 
     // output illuminance map
-    BOOST_FOREACH(WorkspaceObject illuminanceMap, m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)){
+    for (WorkspaceObject illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)){
       if (daylightingCoordChange != CoordinateChange::NoChange){
         OptionalWorkspaceObject zone = illuminanceMap.getTarget(Output_IlluminanceMapFields::ZoneName);
         if (!zone){
@@ -2300,7 +2299,7 @@ namespace energyplus {
 
     Transformation buildingTransformation = this->buildingTransformation();
 
-    BOOST_FOREACH(WorkspaceObject surface, m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject surface : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, surface);
       surface.setString(BuildingSurface_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange){
@@ -2322,7 +2321,7 @@ namespace energyplus {
       }
     }
 
-    BOOST_FOREACH(WorkspaceObject subsurface, m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject subsurface : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, subsurface);
       subsurface.setString(FenestrationSurface_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange){
@@ -2347,7 +2346,7 @@ namespace energyplus {
       }
     }
 
-    BOOST_FOREACH(WorkspaceObject zoneShading, m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject zoneShading : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, zoneShading);
       zoneShading.setString(Shading_Zone_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange){
@@ -2374,7 +2373,7 @@ namespace energyplus {
       }
     }
 
-    BOOST_FOREACH(WorkspaceObject buildingShading, m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject buildingShading : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, buildingShading);
       buildingShading.setString(Shading_Building_DetailedFields::NumberofVertices, "Autocalculate");
       if (detailedCoordChange != CoordinateChange::NoChange){
@@ -2388,7 +2387,7 @@ namespace energyplus {
       }
     }
 
-    BOOST_FOREACH(WorkspaceObject siteShading, m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject siteShading : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
       siteShading.setString(Shading_Site_DetailedFields::NumberofVertices, "Autocalculate");
     }
 
@@ -2471,56 +2470,56 @@ namespace energyplus {
   bool GeometryTranslator::reverseAllDetailedVertices()
   {
     // BuildingSurface:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Wall:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // RoofCeiling:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Floor:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // FenestrationSurface:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Site:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Building:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, vertices);
     }
 
     // Shading:Zone:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       std::reverse(vertices.begin(), vertices.end());
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, vertices);
@@ -2533,49 +2532,49 @@ namespace energyplus {
   bool GeometryTranslator::applyUpperLeftCornerRule()
   {
     // BuildingSurface:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)){
       Point3dVector vertices = getVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(BuildingSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Wall:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Wall_Detailed)){
       Point3dVector vertices = getVertices(Wall_DetailedFields::NumberofVertices + 1, object);
       setVertices(Wall_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // RoofCeiling:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::RoofCeiling_Detailed)){
       Point3dVector vertices = getVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object);
       setVertices(RoofCeiling_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Floor:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Floor_Detailed)){
       Point3dVector vertices = getVertices(Floor_DetailedFields::NumberofVertices + 1, object);
       setVertices(Floor_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // FenestrationSurface:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed)){
       Point3dVector vertices = getVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object);
       setVertices(FenestrationSurface_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Site:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Site_Detailed)){
       Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Site_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Building:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Building_Detailed)){
       Point3dVector vertices = getVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Building_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
 
     // Shading:Zone:Detailed
-    BOOST_FOREACH(WorkspaceObject object, m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
+    for (WorkspaceObject object : m_workspace.getObjectsByType(IddObjectType::Shading_Zone_Detailed)){
       Point3dVector vertices = getVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object);
       setVertices(Shading_Zone_DetailedFields::NumberofVertices + 1, object, reorderULC(vertices));
     }
@@ -2584,7 +2583,7 @@ namespace energyplus {
   }
 
   // convert azimuth, tilt, starting x, y, z, length, and width to vertices
-  // azimith and tilt are in degrees
+  // azimuth and tilt are in degrees
   openstudio::Point3dVector verticesForAzimuthTiltXYZLengthWidthOrHeight(double azimuth, double tilt, double x0, double y0, double z0, double length, double widthOrHeight)
   {
     openstudio::Point3dVector result(4);

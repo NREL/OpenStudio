@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/TemperatureUnit.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
+#include "TemperatureUnit.hpp"
+#include "TemperatureUnit_Impl.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -82,8 +82,8 @@ void TemperatureUnit::setAsRelative() {
 }
 
 /// @cond
-TemperatureUnit::TemperatureUnit(boost::shared_ptr<detail::TemperatureUnit_Impl> impl)
-  : Unit(impl)
+TemperatureUnit::TemperatureUnit(std::shared_ptr<detail::TemperatureUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

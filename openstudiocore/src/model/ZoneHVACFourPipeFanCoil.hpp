@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACFOURPIPEFANCOIL_HPP
 #define MODEL_ZONEHVACFOURPIPEFANCOIL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -240,7 +240,7 @@ class MODEL_API ZoneHVACFourPipeFanCoil : public ZoneHVACComponent
   /// @cond
   typedef detail::ZoneHVACFourPipeFanCoil_Impl ImplType;
 
-  explicit ZoneHVACFourPipeFanCoil(boost::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
+  explicit ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVACFourPipeFanCoil_Impl> impl);
 
   friend class detail::ZoneHVACFourPipeFanCoil_Impl;
   friend class Model;

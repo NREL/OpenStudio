@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef TABLEWIDGET_H
-#define TABLEWIDGET_H
+#ifndef MODELEDITOR_TABLEWIDGET_HPP
+#define MODELEDITOR_TABLEWIDGET_HPP
 
 #include <QTableWidget>
 
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
 
 namespace modeleditor
 {
@@ -33,7 +33,7 @@ class MODELEDITOR_API TableWidget : public QTableWidget
   Q_OBJECT
 
 public:
-  TableWidget(QWidget *parent = 0);
+  TableWidget(QWidget *parent = nullptr);
   virtual ~TableWidget();
   void populateTable(const openstudio::WorkspaceObject& obj);
 
@@ -49,4 +49,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // TABLEWIDGET_H
+#endif // MODELEDITOR_TABLEWIDGET_HPP

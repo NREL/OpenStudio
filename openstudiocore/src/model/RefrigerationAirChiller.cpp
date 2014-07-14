@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/RefrigerationAirChiller.hpp>
-#include <model/RefrigerationAirChiller_Impl.hpp>
+#include "RefrigerationAirChiller.hpp"
+#include "RefrigerationAirChiller_Impl.hpp"
 
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-// #include <model/CurveLinear.hpp>
-// #include <model/CurveLinear_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
-#include <model/Model.hpp>
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+// #include "CurveLinear.hpp"
+// #include "CurveLinear_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Refrigeration_AirChiller_FieldEnums.hxx>
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -135,15 +135,13 @@ namespace detail {
     Model m = this->model();
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = m.getModelObjects<ThermalZone>();
-    for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
-         it != thermalZones.end();
-         it++ )
+    for( const auto & thermalZone : thermalZones )
     {
-      std::vector<ModelObject> equipment = it->equipment();
+      std::vector<ModelObject> equipment = thermalZone.equipment();
 
       if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
       {
-        return *it;
+        return thermalZone;
       }
     }
     return boost::none;
@@ -671,8 +669,7 @@ RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& d
 {
   OS_ASSERT(getImpl<detail::RefrigerationAirChiller_Impl>());
 
-  bool ok = true;
-  ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
+  bool ok = setCapacityRatingType("UnitLoadFactorSensibleOnly");
   OS_ASSERT(ok);
   setRatedUnitLoadFactor(15000.0);
   ok = setRatedCoolingSourceTemperature(-30.0);
@@ -1090,7 +1087,7 @@ void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
 }
 
 /// @cond
-RefrigerationAirChiller::RefrigerationAirChiller(boost::shared_ptr<detail::RefrigerationAirChiller_Impl> impl)
+RefrigerationAirChiller::RefrigerationAirChiller(std::shared_ptr<detail::RefrigerationAirChiller_Impl> impl)
   : ZoneHVACComponent(impl)
 {}
 /// @endcond

@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleCompact.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../DefaultScheduleSet.hpp"
+#include "../DefaultScheduleSet_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleCompact.hpp"
 
 #include <utilities/idd/OS_DefaultScheduleSet_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;

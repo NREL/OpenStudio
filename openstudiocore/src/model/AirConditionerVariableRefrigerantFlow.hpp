@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP
 #define MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -534,7 +534,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   /// @cond
   typedef detail::AirConditionerVariableRefrigerantFlow_Impl ImplType;
 
-  explicit AirConditionerVariableRefrigerantFlow(boost::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl);
+  explicit AirConditionerVariableRefrigerantFlow(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::AirConditionerVariableRefrigerantFlow_Impl;
   friend class Model;

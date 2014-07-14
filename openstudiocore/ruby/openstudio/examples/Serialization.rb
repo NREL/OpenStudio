@@ -45,7 +45,7 @@ end
 idfFile = oIdfFile.get()
 
 # save idf
-File.open(idfPath.replace_extension(OpenStudio::Path.new('newidf').string).to_s, 'w') do |file|
+File.open(idfPath.replace_extension('newidf').to_s, 'w') do |file|
   file << idfFile.to_s
 end
 
@@ -59,7 +59,7 @@ translator = OpenStudio::EnergyPlus::ReverseTranslator.new()
 model = translator.translateWorkspace(workspace)
 
 # save as osm
-osmPath = idfPath.replace_extension(OpenStudio::Path.new('osm').string)
+osmPath = idfPath.replace_extension('osm')
 model.toIdfFile().save(osmPath,true)
 
 # load from osm

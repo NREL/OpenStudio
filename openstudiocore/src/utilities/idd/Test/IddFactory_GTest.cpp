@@ -19,20 +19,18 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/idd/Test/IddFixture.hpp>
+#include "IddFixture.hpp"
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/IddFieldProperties.hpp>
-#include <utilities/idd/IddKey.hpp>
+#include "../IddFieldProperties.hpp"
+#include "../IddKey.hpp"
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Quantity.hpp>
+#include "../../units/QuantityConverter.hpp"
+#include "../../units/Quantity.hpp"
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../core/Containers.hpp"
+#include "../../core/Compare.hpp"
 
 #include <OpenStudio.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 
@@ -172,7 +170,7 @@ TEST_F(IddFixture,IddFactory_ObjectFinder) {
     bool operator()(const IddObject& object) {
       // fields that are \autocalculatable with no default, or a default other than 'autocalculate',
       // or fields that are \autosizable with no default or a default other than 'autosize'.
-      BOOST_FOREACH(const IddField& iddField, object.nonextensibleFields()) {
+      for (const IddField& iddField : object.nonextensibleFields()) {
         if (iddField.properties().autocalculatable && (!iddField.properties().stringDefault ||
             !istringEqual("autocalculate",iddField.properties().stringDefault.get()))) 
         {
@@ -192,7 +190,7 @@ TEST_F(IddFixture,IddFactory_ObjectFinder) {
   IddObjectVector objects = iddFile.objects();
   LOG(Info,"IddObjects that satisfy DesiredCharacteristics:");
   DesiredCharacteristics tester;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     if (tester(object)) {
       LOG(Info,"  " << object.name());
     }
@@ -217,11 +215,11 @@ TEST_F(IddFixture,IddFactory_Units) {
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;
   StringSet badUnits;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     IddFieldVector fields = object.nonextensibleFields();
     IddFieldVector temp = object.extensibleGroup();
     fields.insert(fields.end(),temp.begin(),temp.end());
-    BOOST_FOREACH(const IddField& field,fields) {
+    for (const IddField& field : fields) {
       OptionalString iddUnits = field.properties().units;
       OptionalUnit siUnit;
       if (iddUnits) {
@@ -235,7 +233,7 @@ TEST_F(IddFixture,IddFactory_Units) {
         }
 
         // screen for unsupported units
-        BOOST_FOREACH(const boost::regex& re,unsupported) {
+        for (const boost::regex& re : unsupported) {
           if (boost::regex_search(*iddUnits,re)) {
             iddUnits = boost::none;
             break;
@@ -304,11 +302,11 @@ TEST_F(IddFixture,IddFactory_Units) {
     }
   }
   LOG(Info,"IddUnitStrings not handled properly by the Factories and Converter:");
-  BOOST_FOREACH(const std::string& str,badUnits) {
+  for (const std::string& str : badUnits) {
     LOG(Info,"  " << str);
   }
   LOG(Info,"IddUnitStrings handled properly by the Factories and Converter:");
-  BOOST_FOREACH(const std::string& str,goodUnits) {
+  for (const std::string& str : goodUnits) {
     LOG(Info,"  " << str);
   }
 }
@@ -316,11 +314,11 @@ TEST_F(IddFixture,IddFactory_Units) {
 TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest1) {
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
   bool found = false;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     IddFieldVector fields = object.nonextensibleFields();
     IddFieldVector temp = object.extensibleGroup();
     fields.insert(fields.end(),temp.begin(),temp.end());
-    BOOST_FOREACH(const IddField& field,fields) {
+    for (const IddField& field : fields) {
       if (OptionalString iddUnits = field.properties().ipUnits) {
         if (*iddUnits == "Btu/h-ft-F") {
           found = true;
@@ -348,11 +346,11 @@ TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest1) {
 TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest2) {
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
   bool found = false;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     IddFieldVector fields = object.nonextensibleFields();
     IddFieldVector temp = object.extensibleGroup();
     fields.insert(fields.end(),temp.begin(),temp.end());
-    BOOST_FOREACH(const IddField& field,fields) {
+    for (const IddField& field : fields) {
       if (OptionalString iddUnits = field.properties().units) {
         if (*iddUnits == "kg-H2O/kg-Air") {
           found = true;
@@ -375,11 +373,11 @@ TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest2) {
 TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest3) {
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
   bool found = false;
-  BOOST_FOREACH(const IddObject& object,objects) {
+  for (const IddObject& object : objects) {
     IddFieldVector fields = object.nonextensibleFields();
     IddFieldVector temp = object.extensibleGroup();
     fields.insert(fields.end(),temp.begin(),temp.end());
-    BOOST_FOREACH(const IddField& field,fields) {
+    for (const IddField& field : fields) {
       if (OptionalString iddUnits = field.properties().ipUnits) {
         if (*iddUnits == "gal/min") {
           if (object.type() == IddObjectType::OS_AirTerminal_SingleDuct_ParallelPIU_Reheat) {

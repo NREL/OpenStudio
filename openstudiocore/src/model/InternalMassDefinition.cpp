@@ -17,18 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
+#include "InternalMassDefinition.hpp"
+#include "InternalMassDefinition_Impl.hpp"
 
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_InternalMass_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -393,7 +393,7 @@ bool InternalMassDefinition::setDesignLevelCalculationMethod(const std::string& 
 }
 
 /// @cond
-InternalMassDefinition::InternalMassDefinition(boost::shared_ptr<detail::InternalMassDefinition_Impl> impl)
+InternalMassDefinition::InternalMassDefinition(std::shared_ptr<detail::InternalMassDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

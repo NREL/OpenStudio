@@ -20,8 +20,8 @@
 #ifndef MODEL_CURVE_HPP
 #define MODEL_CURVE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -71,7 +71,7 @@ class MODEL_API Curve : public ModelObject {
 
   Curve(IddObjectType type, const Model& model);
 
-  explicit Curve(boost::shared_ptr<detail::Curve_Impl> impl);
+  explicit Curve(std::shared_ptr<detail::Curve_Impl> impl);
 
   friend class detail::Curve_Impl;
   friend class Model;

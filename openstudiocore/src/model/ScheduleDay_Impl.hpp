@@ -20,10 +20,10 @@
 #ifndef MODEL_SCHEDULEDAY_IMPL_HPP
 #define MODEL_SCHEDULEDAY_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ScheduleBase_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ScheduleBase_Impl.hpp"
 
-#include <utilities/time/Time.hpp>
+#include "../utilities/time/Time.hpp"
 
 namespace openstudio {
 

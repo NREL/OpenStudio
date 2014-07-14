@@ -20,10 +20,10 @@
 #ifndef MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP
 #define MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {

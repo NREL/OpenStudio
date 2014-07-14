@@ -35,7 +35,7 @@ namespace openstudio{
  *
  *  WorkspaceWatcher an atypical QObject because it is designed to be stack allocated.  In many cases it 
  *  would be preferred to connect your own heap allocated QObject to the Workspace signals directly rather
- *  than using this convienience class.
+ *  than using this convenience class.
  **/
 class UTILITIES_API WorkspaceWatcher : public QObject {
   Q_OBJECT;

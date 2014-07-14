@@ -21,11 +21,10 @@
 #define PROJECT_NULLMEASURERECORD_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/MeasureRecord.hpp>
+#include "MeasureRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 namespace openstudio {
@@ -87,11 +86,11 @@ class PROJECT_API NullMeasureRecord : public MeasureRecord {
   friend class detail::NullMeasureRecord_Impl;
 
   /** Construct from impl. */
-  NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl,
+  NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl,
                     ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit NullMeasureRecord(boost::shared_ptr<detail::NullMeasureRecord_Impl> impl);
+  explicit NullMeasureRecord(std::shared_ptr<detail::NullMeasureRecord_Impl> impl);
 
   /// @endcond
  private:

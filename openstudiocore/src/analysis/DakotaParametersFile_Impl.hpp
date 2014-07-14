@@ -20,12 +20,10 @@
 #ifndef ANALYSIS_DAKOTAPARAMETERSFILE_IMPL_HPP
 #define ANALYSIS_DAKOTAPARAMETERSFILE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
+#include "AnalysisAPI.hpp"
 
-#include <analysis/DakotaParametersFile.hpp>
+#include "DakotaParametersFile.hpp"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/regex.hpp>
 
 namespace openstudio {
@@ -36,7 +34,7 @@ class DakotaParametersFile;
 namespace detail {
 
   /** DakotaParametersFile_Impl is the implementation class for DakotaParametersFile. */
-  class ANALYSIS_API DakotaParametersFile_Impl : public boost::enable_shared_from_this<DakotaParametersFile_Impl> {
+  class ANALYSIS_API DakotaParametersFile_Impl : public std::enable_shared_from_this<DakotaParametersFile_Impl> {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -108,8 +106,8 @@ namespace detail {
     /** Get a public object that wraps this impl.*/
     template<typename T>
     T getPublicObject() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<DakotaParametersFile_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<DakotaParametersFile_Impl>(shared_from_this())));
       return result;
     }
 

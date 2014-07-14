@@ -17,18 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Vector.hpp>
+#include "Vector.hpp"
 
 #include <algorithm>
+#include <random>
 
 // this should all be moved to a utilities/core/Random.h
-#include <boost/random/linear_congruential.hpp>
-#include <boost/random/uniform_int.hpp>
 #include <boost/random/uniform_real.hpp>
 #include <boost/random/variate_generator.hpp>
-
-using namespace std;
-using namespace boost;
 
 namespace openstudio{
 
@@ -177,13 +173,13 @@ namespace openstudio{
   Vector randVector(double a, double b, unsigned N)
   {
     // seed random number generator
-    static minstd_rand generator(42u);
+    static std::minstd_rand generator(42u);
     
     // define distribution
-    uniform_real<> dist(a,b);
+    boost::uniform_real<> dist(a,b);
 
     // create a generator
-    variate_generator<minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
+    boost::variate_generator<std::minstd_rand&, boost::uniform_real<> > uniformGenerator(generator, dist);
 
     Vector result(N);
     for (unsigned n = 0; n < N; ++n){
@@ -219,7 +215,7 @@ namespace openstudio{
     return result;
   }
 
-  /// generates a Vector of N points logorithmically spaced between and including base^a and base^b.
+  /// generates a Vector of N points logarithmically spaced between and including base^a and base^b.
   Vector logspace(double a, double b, unsigned N, double base)
   {
     Vector powers = linspace(a,b,N);
@@ -329,31 +325,31 @@ namespace openstudio{
     return sqrt(variance(vector));
   }
 
-  boost::function<double (const Vector&)> sumVectorFunctor() { 
-    return boost::function<double (const Vector&)> (&sum); 
+  std::function<double (const Vector&)> sumVectorFunctor() { 
+    return std::function<double (const Vector&)> (&sum); 
   }
 
-  boost::function<double (const Vector&)> maximumVectorFunctor() {
-    return boost::function<double (const Vector&)> (&maximum);
+  std::function<double (const Vector&)> maximumVectorFunctor() {
+    return std::function<double (const Vector&)> (&maximum);
   }
 
-  boost::function<double (const Vector&)> minimumVectorFunctor() {
-    return boost::function<double (const Vector&)> (&minimum);
+  std::function<double (const Vector&)> minimumVectorFunctor() {
+    return std::function<double (const Vector&)> (&minimum);
   }
 
-  boost::function<double (const Vector&)> meanVectorFunctor() {
-    return boost::function<double (const Vector&)> (&mean);
+  std::function<double (const Vector&)> meanVectorFunctor() {
+    return std::function<double (const Vector&)> (&mean);
   }
 
-  boost::function<double (const Vector&)> varianceVectorFunctor() {
-    return boost::function<double (const Vector&)> (&variance);
+  std::function<double (const Vector&)> varianceVectorFunctor() {
+    return std::function<double (const Vector&)> (&variance);
   }
 
-  boost::function<double (const Vector&)> stdDevVectorFunctor() {
-    return boost::function<double (const Vector&)> (&stdDev);
+  std::function<double (const Vector&)> stdDevVectorFunctor() {
+    return std::function<double (const Vector&)> (&stdDev);
   }
 
-  double evaluateDoubleFromVectorFunctor(const boost::function<double (const Vector&)>& functor,
+  double evaluateDoubleFromVectorFunctor(const std::function<double (const Vector&)>& functor,
                                          const Vector& vector)
   {
     return functor(vector);

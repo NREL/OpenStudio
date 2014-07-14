@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_LIB_TEST_OPENSTUDIOLIBFIXTURE_HPP
-#define OPENSTUDIO_LIB_TEST_OPENSTUDIOLIBFIXTURE_HPP
+#ifndef OPENSTUDIO_LIB_TEST_OPENSTUDIOAPPFIXTURE_HPP
+#define OPENSTUDIO_LIB_TEST_OPENSTUDIOAPPFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
 class OpenStudioLibFixture : public ::testing::Test {
  protected:
@@ -33,7 +33,7 @@ class OpenStudioLibFixture : public ::testing::Test {
   // tear down after each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -43,4 +43,4 @@ class OpenStudioLibFixture : public ::testing::Test {
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // OPENSTUDIO_LIB_TEST_OPENSTUDIOLIBFIXTURE_HPP
+#endif // OPENSTUDIO_LIB_TEST_OPENSTUDIOAPPFIXTURE_HPP

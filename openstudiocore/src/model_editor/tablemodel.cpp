@@ -1,58 +1,34 @@
-/****************************************************************************
-**
-** Copyright (C) 2009 Nokia Corporation and/or its subsidiary(-ies).
-** All rights reserved.
-** Contact: Nokia Corporation (qt-info@nokia.com)
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:LGPL$
-** Commercial Usage
-** Licensees holding valid Qt Commercial licenses may use this file in
-** accordance with the Qt Commercial License Agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and Nokia.
-**
-** GNU Lesser General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU Lesser
-** General Public License version 2.1 as published by the Free Software
-** Foundation and appearing in the file LICENSE.LGPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU Lesser General Public License version 2.1 requirements
-** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Nokia gives you certain additional
-** rights.  These rights are described in the Nokia Qt LGPL Exception
-** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3.0 as published by the Free Software
-** Foundation and appearing in the file LICENSE.GPL included in the
-** packaging of this file.  Please review the following information to
-** ensure the GNU General Public License version 3.0 requirements will be
-** met: http://www.gnu.org/copyleft/gpl.html.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-** $QT_END_LICENSE$
-**
-****************************************************************************/
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
 #include <QMimeData>
 
 #include <vector>
 #include <algorithm>
 
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
-#include <model_editor/ClassViewWidget.hpp>
-#include <model_editor/TableView.hpp>
-#include <model/Model.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
+#include "ClassViewWidget.hpp"
+#include "TableView.hpp"
+#include "../model/Model.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <model_editor/tablemodel.h>
 
@@ -119,27 +95,27 @@ void TableModel::sort(openstudio::WorkspaceObjectVector& objects, int column, Qt
   {
     case 0:
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIddName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIddName,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIddName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIddName,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
     case 1:
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIdfName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIdfName,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIdfName,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIdfName,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
     case 2:
       mModel = mClassViewWidget->getModel();
       if(sortOrder == Qt::AscendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpAscendIndex,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpAscendIndex,this,std::placeholders::_1,std::placeholders::_2));
       }
       else if(sortOrder == Qt::DescendingOrder){
-        std::sort(objects.begin(), objects.end(), boost::bind(&modeleditor::TableModel::cmpDescendIndex,this,_1,_2));
+        std::sort(objects.begin(), objects.end(), std::bind(&modeleditor::TableModel::cmpDescendIndex,this,std::placeholders::_1,std::placeholders::_2));
       }
       break;
   }
@@ -345,7 +321,7 @@ bool TableModel::insertRows(std::vector<openstudio::WorkspaceObject> wsObjects, 
 {
   beginInsertRows(QModelIndex(), position+1, position+rows);
 
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+position+1;
+  auto it = mObjects.begin()+position+1;
   mObjects.insert(it,wsObjects.begin(),wsObjects.end());
 
   endInsertRows();
@@ -375,7 +351,7 @@ bool TableModel::moveRows(const QModelIndex& row, const QModelIndexList& rowList
   beginMoveRows(QModelIndex(), position, position+rows-1, QModelIndex(), row.row());
 
   ///! std::list could use splice, but we are working with a vector
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+row.row();
+  auto it = mObjects.begin()+row.row();
   mObjects.insert(it,temp.begin(),temp.end());
 
   if(position > row.row()){
@@ -405,7 +381,7 @@ bool TableModel::removeRows(int position, int rows, const QModelIndex &index)
   Q_UNUSED(index);    
   beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-  std::vector<openstudio::WorkspaceObject>::iterator it = mObjects.begin()+position;
+  auto it = mObjects.begin()+position;
   mObjects.erase(it,it+rows);
 
   endRemoveRows();
@@ -442,14 +418,14 @@ Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
   if (index.isValid())
     return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
   else
-    return 0;
+    return nullptr;
 }
 //! [7]
 
 void TableModel::setupModelData(openstudio::WorkspaceObjectVector& objects)
 {
   // loop through each object
-  BOOST_FOREACH(const openstudio::WorkspaceObject& object, objects){
+  for (const openstudio::WorkspaceObject& object : objects){
     // get the idd object type
     openstudio::IddObject iddObject = object.iddObject();
     QString iddName(iddObject.name().c_str());

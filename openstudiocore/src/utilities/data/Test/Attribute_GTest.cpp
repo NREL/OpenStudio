@@ -18,15 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../Attribute.hpp"
 
-#include <utilities/core/Json.hpp>
+#include "../../core/Json.hpp"
 
 #include <QDomDocument>
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 #include <limits>
@@ -408,7 +407,7 @@ TEST_F(DataFixture, Attribute_Source) {
   ASSERT_TRUE(containerCopy);
   AttributeVector attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_TRUE(attributeCopy.source().empty());
   }
 
@@ -417,12 +416,12 @@ TEST_F(DataFixture, Attribute_Source) {
   int n = variant.toMap().size();
   attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_TRUE(attributeCopy.source().empty());
   }
 
-  // appy same source to all attributes
-  BOOST_FOREACH(Attribute& attribute,attributes) {
+  // apply same source to all attributes
+  for (Attribute& attribute : attributes) {
     attribute.setSource("big data set");
   }
 
@@ -432,7 +431,7 @@ TEST_F(DataFixture, Attribute_Source) {
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_EQ("big data set",attributeCopy.source());
   }
 
@@ -441,7 +440,7 @@ TEST_F(DataFixture, Attribute_Source) {
   EXPECT_EQ(n+1,variant.toMap().size());
   attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_EQ("big data set",attributeCopy.source());
   }
 
@@ -454,7 +453,7 @@ TEST_F(DataFixture, Attribute_Source) {
   ASSERT_TRUE(containerCopy);
   attributesCopy = containerCopy.get().valueAsAttributeVector();
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_FALSE(attributeCopy.source().empty());
   }
   EXPECT_EQ("a wiki",attributesCopy[2].source());
@@ -464,7 +463,7 @@ TEST_F(DataFixture, Attribute_Source) {
   EXPECT_EQ(n+attributes.size(),variant.toMap().size());
   attributesCopy = detail::toVectorOfAttribute(variant,VersionString(openStudioVersion()));
   EXPECT_EQ(attributes.size(),attributesCopy.size());
-  BOOST_FOREACH(const Attribute& attributeCopy,attributesCopy) {
+  for (const Attribute& attributeCopy : attributesCopy) {
     EXPECT_FALSE(attributeCopy.source().empty());
   }
   // order is not guaranteed

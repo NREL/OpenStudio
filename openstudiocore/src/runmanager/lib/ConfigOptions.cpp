@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/ToolFinder.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
+#include "ConfigOptions.hpp"
+#include "ToolFinder.hpp"
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -30,15 +30,12 @@
 #include <QIcon>
 #include <QMessageBox>
 #include <QSettings>
-#include <QtGlobal>
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #include <Windows.h>
-// Undefine "max" defined by microsoft which conflicts with std::max
-#undef max
 #endif
 
 
@@ -245,7 +242,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRTraceToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -263,7 +260,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toExpandObjectsToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -287,7 +284,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toBasementToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -325,7 +322,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toSlabToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -362,7 +359,7 @@ namespace runmanager {
   openstudio::runmanager::ToolInfo 
     ConfigOptions::toXMLPreprocessorToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -379,7 +376,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toEPlusToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -404,7 +401,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toIES2RadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -421,7 +418,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRaImageToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
     static const char exename[] = "ra_bmp";
 #else
@@ -442,7 +439,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRadToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -477,7 +474,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toRubyToolInfo(const std::pair<ToolVersion, ToolLocationInfo> &eplus)
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";
@@ -494,7 +491,7 @@ namespace runmanager {
 
   openstudio::runmanager::ToolInfo ConfigOptions::toDakotaToolInfo(const std::pair<ToolVersion, ToolLocationInfo>& dakota) 
   {
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     static const wchar_t exeext[] = L".exe";
 #else
     static const char exeext[] = "";

@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperimentsOptions.hpp>
+#include "../DesignOfExperiments.hpp"
+#include "../DesignOfExperimentsOptions.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

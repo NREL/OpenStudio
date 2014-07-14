@@ -18,17 +18,17 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/units/IddUnitString.hpp>
-#include <utilities/units/UnitFactory.hpp>
-#include <utilities/units/ScaleFactory.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../OSOptionalQuantity.hpp"
+#include "../IddUnitString.hpp"
+#include "../UnitFactory.hpp"
+#include "../ScaleFactory.hpp"
+#include "../Quantity.hpp"
+#include "../QuantityConverter.hpp"
 
-#include <utilities/idd/IddObject.hpp>
-#include <utilities/idf/IdfObject.hpp>
+#include "../../idd/IddObject.hpp"
+#include "../../idf/IdfObject.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 

@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_CONFIGOPTIONS_HPP__
-#define OPENSTUDIO_RUNMANAGER_CONFIGOPTIONS_HPP__
+#ifndef RUNMANAGER_LIB_CONFIGOPTIONS_HPP
+#define RUNMANAGER_LIB_CONFIGOPTIONS_HPP
 
 #include "RunManagerAPI.hpp"
 #include "ToolInfo.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Enum.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -207,7 +207,7 @@ namespace runmanager {
                                                      const openstudio::path &t_remove_dakota);
 
       //! Construct a ToolInfo object from the set of information
-      //! used as a convienience function
+      //! used as a convenience function
       //! \param[in] t_type Type of tool to create
       //! \param[in] t_local Path to local binaries for tool
       //! \param[in] t_remote Path to binaries for tool for remote execution
@@ -355,4 +355,4 @@ namespace runmanager {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_CONFIGOPTIONS_HPP

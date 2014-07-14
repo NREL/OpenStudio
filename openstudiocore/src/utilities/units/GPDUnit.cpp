@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/units/GPDUnit.hpp>
-#include <utilities/units/GPDUnit_Impl.hpp>
+#include "GPDUnit.hpp"
+#include "GPDUnit_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../core/Assert.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -63,13 +63,13 @@ namespace detail {
 
   Unit GPDUnit_Impl::clone() const {
     OS_ASSERT(system() == UnitSystem::GPD);
-    boost::shared_ptr<GPDUnit_Impl> impl(new GPDUnit_Impl(*this));
+    std::shared_ptr<GPDUnit_Impl> impl(new GPDUnit_Impl(*this));
     return GPDUnit(impl).cast<Unit>();
   }
 
   void GPDUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent)
   {
-    std::vector<UnitElement>::iterator loc = findBaseUnit(baseUnit);
+    auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
     }
@@ -83,20 +83,20 @@ namespace detail {
 GPDUnit::GPDUnit(const GPDExpnt& exponents,
                  int scaleExponent,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::GPDUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::GPDUnit_Impl(exponents,scaleExponent,prettyString)))
 {}
 
 GPDUnit::GPDUnit(const std::string& scaleAbbreviation,
                  const GPDExpnt& exponents,
                  const std::string& prettyString)
-  : Unit(boost::shared_ptr<detail::GPDUnit_Impl>(
+  : Unit(std::shared_ptr<detail::Unit_Impl>(
              new detail::GPDUnit_Impl(scaleAbbreviation,exponents,prettyString)))
 {}
 
 /// @cond
-GPDUnit::GPDUnit(boost::shared_ptr<detail::GPDUnit_Impl> impl)
-  : Unit(impl)
+GPDUnit::GPDUnit(std::shared_ptr<detail::GPDUnit_Impl> impl)
+  : Unit(std::dynamic_pointer_cast<detail::Unit_Impl>(impl))
 {}
 /// @endcond
 

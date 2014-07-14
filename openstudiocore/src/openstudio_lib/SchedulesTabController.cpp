@@ -17,39 +17,38 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/SchedulesTabController.hpp>
+#include "SchedulesTabController.hpp"
 
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/ScheduleDialog.hpp>
-#include <openstudio_lib/ScheduleSetsController.hpp>
-#include <openstudio_lib/SchedulesTabView.hpp>
-#include <openstudio_lib/SchedulesView.hpp>
-#include <openstudio_lib/SubTabView.hpp>
-#include <openstudio_lib/YearSettingsWidget.hpp>
+#include "MainTabView.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
+#include "ScheduleDialog.hpp"
+#include "ScheduleSetsController.hpp"
+#include "SchedulesTabView.hpp"
+#include "SchedulesView.hpp"
+#include "SubTabView.hpp"
+#include "YearSettingsWidget.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/RunPeriodControlDaylightSavingTime.hpp>
-#include <model/RunPeriodControlDaylightSavingTime_Impl.hpp>
-#include <model/ScheduleRule.hpp>
-#include <model/ScheduleRuleset.hpp>
-#include <model/ScheduleRuleset_Impl.hpp>
-#include <model/ScheduleRule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime.hpp"
+#include "../model/RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
+#include "../model/ScheduleTypeLimits.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/time/Date.hpp"
+#include "../utilities/time/Time.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
 #include <QApplication>
 #include <QDateTime>
@@ -72,7 +71,7 @@ SchedulesTabController::SchedulesTabController(bool isIP, const model::Model & m
   addQObject(m_yearSettingsWidget);
   this->mainContentWidget()->addSubTab("Year Settings",m_yearSettingsWidget,YEAR_SETTINGS);
 
-  m_scheduleSetsController = boost::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
+  m_scheduleSetsController = std::shared_ptr<ScheduleSetsController>( new ScheduleSetsController(m_model) );
   this->mainContentWidget()->addSubTab("Schedule Sets",m_scheduleSetsController->subTabView(),SCHEDULE_SETS);
 
   m_schedulesView = new SchedulesView(m_isIP,m_model);

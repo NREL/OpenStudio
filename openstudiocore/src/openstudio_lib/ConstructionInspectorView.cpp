@@ -17,26 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ConstructionInspectorView.hpp>
+#include "ConstructionInspectorView.hpp"
 
-#include <openstudio_lib/ConstructionObjectVectorController.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSDropZone.hpp>
+#include "ConstructionObjectVectorController.hpp"
+#include "ModelObjectItem.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSDropZone.hpp"
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
+#include "../model/StandardsInformationConstruction.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
-
-#include <boost/bind.hpp>
 
 #include <QGridLayout>
 #include <QLabel>
@@ -225,8 +223,8 @@ void ConstructionInspectorView::populateStandardsConstructionType()
   if (m_standardsInformation){
     m_standardsConstructionType->addItem("");
     std::vector<std::string> suggestedStandardsConstructionTypes = m_standardsInformation->suggestedStandardsConstructionTypes();
-    Q_FOREACH(const std::string& standardsConstructionType, suggestedStandardsConstructionTypes){
-        m_standardsConstructionType->addItem(toQString(standardsConstructionType));
+    for (const std::string& standardsConstructionType : suggestedStandardsConstructionTypes) {
+      m_standardsConstructionType->addItem(toQString(standardsConstructionType));
     }
     boost::optional<std::string> standardsConstructionType = m_standardsInformation->standardsConstructionType();
     if (standardsConstructionType){
@@ -256,10 +254,10 @@ void ConstructionInspectorView::attach(openstudio::model::Construction & constru
   m_intendedSurfaceType->bind<std::string>(
       *m_standardsInformation,
       static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
-      boost::function<boost::optional<std::string> ()>(boost::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
-      boost::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),_1),
-      NoFailAction(boost::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
+      std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceTypeValues),
+      std::function<boost::optional<std::string> ()>(std::bind(&openstudio::model::StandardsInformationConstruction::intendedSurfaceType,m_standardsInformation.get_ptr())),
+      std::bind(&openstudio::model::StandardsInformationConstruction::setIntendedSurfaceType,m_standardsInformation.get_ptr(),std::placeholders::_1),
+      NoFailAction(std::bind(&model::StandardsInformationConstruction::resetIntendedSurfaceType,m_standardsInformation.get_ptr())));
 
   bool test = connect(m_standardsInformation->getImpl<openstudio::model::detail::ModelObject_Impl>().get(), SIGNAL(onChange()), this, SLOT(populateStandardsConstructionType()));
   OS_ASSERT(test);

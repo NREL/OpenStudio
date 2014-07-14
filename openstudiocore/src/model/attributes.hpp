@@ -1,7 +1,29 @@
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
+#ifndef MODEL_ATTRIBUTES_HPP
+#define MODEL_ATTRIBUTES_HPP
+
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/optional.hpp>
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 //ATTRIBUTE_DEFINITION(IS_OPTIONAL,IS_AUTOSIZEABLE,HAS_DEFAULT,ATTRIBUTE_NAME,ACCESSOR_BASE_NAME)
 //ATTRIBUTE_IMPLEMENTATION(IS_OPTIONAL,HAS_DEFAULT,IS_AUTOSIZEABLE,
@@ -165,3 +187,4 @@ bool CLASS_NAME##_Impl::is##ACCESSOR_BASE_NAME##Defaulted() const { \
 ,) \
 )
 
+#endif // MODEL_ATTRIBUTES_HPP

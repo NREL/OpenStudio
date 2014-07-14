@@ -1,13 +1,13 @@
-SET( target_name openstudio_modeleditor )
+set(target_name openstudio_modeleditor)
 
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #--------------------------------------------------------------------------------
 # First the library
 #--------------------------------------------------------------------------------
 
 # lib files
-SET(${target_name}_src
+set(${target_name}_src
   BridgeClasses.hpp
   BridgeClasses.cpp
   ClassViewWidget.hpp
@@ -55,7 +55,7 @@ SET(${target_name}_src
 )
 
 # lib moc files
-SET( ${target_name}_moc
+set(${target_name}_moc
   ClassViewWidget.hpp
   EditorFrame.hpp
   InspectorDialog.hpp
@@ -80,30 +80,30 @@ SET( ${target_name}_moc
 )
 
 # lib ui files
-SET( ${target_name}_ui
+set(${target_name}_ui
   precisiondialog.ui
 )
 
 # lib resource files
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   modeleditorlib.qrc
 )
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
-CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 ## Qt MOC generation
-qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
+qt5_wrap_cpp_minimally(${target_name}_mocs ${${target_name}_moc})
 
 ## Qt UI Generation
-qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
+qt5_wrap_ui(${target_name}_uis ${${target_name}_ui})
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 # make the shared library
-ADD_LIBRARY( ${target_name} SHARED
+add_library(${target_name} SHARED
   ${${target_name}_src}
   ${${target_name}_moc}
   ${${target_name}_mocs}
@@ -114,190 +114,191 @@ ADD_LIBRARY( ${target_name} SHARED
 )
 
 # lib dependencies
-SET( ${target_name}_depends
+set(${target_name}_depends
   openstudio_energyplus
   openstudio_model
 )
 
-ADD_DEPENDENCIES( ${target_name}  ${${target_name}_depends} )
-TARGET_LINK_LIBRARIES( ${target_name}  ${${target_name}_depends} )
+add_dependencies(${target_name} ${${target_name}_depends})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
-IF( NOT APPLE )
-INSTALL(TARGETS ${target_name}
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-)
-ENDIF()
+if(NOT APPLE)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+  )
+endif()
 
-SET( ${target_name}_test_src
+set(${target_name}_test_src
   test/ModelEditorFixture.hpp
   test/ModelEditorFixture.cpp
   test/InspectorDialog_GTest.cpp
   test/ModalDialogs_GTest.cpp
 )
 
-SET (${target_name}_test_depends
+set(${target_name}_test_depends
   ${${target_name}_depends}
 )
 
-CREATE_TEST_TARGETS( ${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}" )
-CREATE_SRC_GROUPS( "${${target_name}_test_src}" )
-IF( BUILD_TESTING )
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
+CREATE_SRC_GROUPS("${${target_name}_test_src}")
+if(BUILD_TESTING)
 
-  ADD_DEPENDENCIES("${target_name}_tests"
-    openstudio_modeleditor_resources 
+  add_dependencies("${target_name}_tests"
+    openstudio_modeleditor_resources
   )
 
-ENDIF()
+endif()
 
 
 # lib swig files
-SET( ${target_name}_swig_src
+set(${target_name}_swig_src
   ModelEditor.i
 )
 
-MAKE_SWIG_TARGET( OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus )
-ADD_DEPENDENCIES( ruby_OpenStudioModelEditor ruby_OpenStudioModel )
+MAKE_SWIG_TARGET(OpenStudioModelEditor modeleditor "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
+add_dependencies(ruby_OpenStudioModelEditor ruby_OpenStudioModel)
 
-#--------------------------------------------------------------------------------
-# Now the ModelEditor.exe stuff below
-#--------------------------------------------------------------------------------
-
-SET( target_name ModelEditor )
-
-MAKE_LITE_SQL_TARGET(ModelEditor.xml modelobjectdatabase)
-MAKE_LITE_SQL_TARGET(ProjectModel.xml projectmodeldatabase)
-
-# source files
-SET(${target_name}_src
-  main.cpp
-  mainpage.hpp
-  ModelEditor.hpp
-  ModelEditor.cpp
-  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.cxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.hxx"
-  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.cxx"
-)
-
-# moc files
-SET( ${target_name}_moc
-  ModelEditor.hpp
-)
-
-# lib ui files
-SET( ${target_name}_ui
-)
-
-# resource files
-SET( ${target_name}_qrc
-  application.qrc
-)
-
+##--------------------------------------------------------------------------------
+## Now the ModelEditor.exe stuff below
+##--------------------------------------------------------------------------------
+#
+#set(target_name ModelEditor)
+#
+#MAKE_LITE_SQL_TARGET(ModelEditor.xml modelobjectdatabase)
+#MAKE_LITE_SQL_TARGET(ProjectModel.xml projectmodeldatabase)
+#
+## source files
+#set(${target_name}_src
+#  main.cpp
+#  mainpage.hpp
+#  ModelEditor.hpp
+#  ModelEditor.cpp
+#  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.hxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/modelobjectdatabase.cxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.hxx"
+#  "${CMAKE_CURRENT_BINARY_DIR}/projectmodeldatabase.cxx"
+#)
+#
+## moc files
+#set(${target_name}_moc
+#  ModelEditor.hpp
+#)
+#
+## lib ui files
+#set(${target_name}_ui
+#)
+#
+## resource files
+#set(${target_name}_qrc
+#  application.qrc
+#)
+#
 ## Qt MOC generation
-qt4_wrap_cpp( ${target_name}_mocs ${${target_name}_moc} )
-
+#qt5_wrap_cpp_minimally(${target_name}_mocs ${${target_name}_moc})
+#
 ## Qt UI generation
-qt4_wrap_ui( ${target_name}_uis ${${target_name}_ui} )
-
-# generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
-
-# configure the AboutBox.hpp file
-# this needs to be configured to embed the build number
-CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
-
-#--------------------------------------------------------------------------------
-# Icons
-#--------------------------------------------------------------------------------
-# For Windows set the rc file pointing to the icon file
-IF( WIN32 )
-  SET(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.rc")
-ENDIF()
-# For Apple set the icns file containing icons
-IF(APPLE)
-  # set how it shows up in the Info.plist file
-  SET(MACOSX_BUNDLE_ICON_FILE me.icns)
-  # set where in the bundle to put the icns file
-  SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns
-      PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  # include the icns file in the target
-  SET(ICON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns)
-ENDIF(APPLE)
-
-ADD_EXECUTABLE( ${target_name}
-  WIN32
-  MACOSX_BUNDLE
-  ${${target_name}_src}
-  ${${target_name}_ui}
-  ${${target_name}_uis}
-  ${${target_name}_moc}
-  ${${target_name}_mocs}
-  ${${target_name}_qrc}
-  ${${target_name}_qrcs}
-  ${ICON_SRC}
-)
-
-SET( ${target_name}_depends
-  openstudio_modeleditor
-)
-
-TARGET_LINK_LIBRARIES( ${target_name} ${${target_name}_depends} )
-AddPCH(${target_name})
-
+#qt5_wrap_ui(${target_name}_uis ${${target_name}_ui})
+#
+## generate rules for building source files from the resources
+#qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
+#
+## configure the AboutBox.hpp file
+## this needs to be configured to embed the build number
+#configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+#
+##--------------------------------------------------------------------------------
+## Icons
+##--------------------------------------------------------------------------------
+## For Windows set the rc file pointing to the icon file
+#if(WIN32)
+#  set(ICON_SRC "${CMAKE_CURRENT_SOURCE_DIR}/ModelEditor.rc")
+#endif()
+## For Apple set the icns file containing icons
+#if(APPLE)
+#  # set how it shows up in the Info.plist file
+#  set(MACOSX_BUNDLE_ICON_FILE me.icns)
+#  # set where in the bundle to put the icns file
+#  set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns
+#    PROPERTIES MACOSX_PACKAGE_LOCATION Resources
+#  )
+#  # include the icns file in the target
+#  set(ICON_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../icons/me.icns)
+#endif()
+#
+#add_executable(${target_name}
+#  WIN32
+#  MACOSX_BUNDLE
+#  ${${target_name}_src}
+#  ${${target_name}_ui}
+#  ${${target_name}_uis}
+#  ${${target_name}_moc}
+#  ${${target_name}_mocs}
+#  ${${target_name}_qrc}
+#  ${${target_name}_qrcs}
+#  ${ICON_SRC}
+#)
+#
+#set(${target_name}_depends
+#  openstudio_modeleditor
+#)
+#
+#target_link_libraries(${target_name} ${${target_name}_depends})
+#AddPCH(${target_name})
+#
 ##--------------------------------------------------------------------------------
 ## Now the installation stuff below
 ##--------------------------------------------------------------------------------
-#SET(plugin_dest_dir bin)
-#SET(qtconf_dest_dir bin)
-#SET(rvdoc_dest_dir doc)
-#SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ModelEditor")
-#IF(APPLE)
-#  SET(plugin_dest_dir ModelEditor.app/Contents/MacOS)
-#  SET(qtconf_dest_dir ModelEditor.app/Contents/Resources)
-#  SET(APPS "\${CMAKE_INSTALL_PREFIX}/ModelEditor.app")
-#  SET(rvdoc_dest_dir ModelEditor.app/Contents/doc)
-#ENDIF(APPLE)
-#IF(WIN32)
-#  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ModelEditor.exe")
-#ENDIF(WIN32)
+#set(plugin_dest_dir bin)
+#set(qtconf_dest_dir bin)
+#set(rvdoc_dest_dir doc)
+#set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ModelEditor")
+#if(APPLE)
+#  set(plugin_dest_dir ModelEditor.app/Contents/MacOS)
+#  set(qtconf_dest_dir ModelEditor.app/Contents/Resources)
+#  set(APPS "\${CMAKE_INSTALL_PREFIX}/ModelEditor.app")
+#  set(rvdoc_dest_dir ModelEditor.app/Contents/doc)
+#endif()
+#if(WIN32)
+#  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/ModelEditor.exe")
+#endif()
 #
 ## NOTE: is there a Linux version that needs to be installed
 #
 ##--------------------------------------------------------------------------------
 ## Install the QtTest application, on Apple, the bundle is at the root of the
 ## install tree, and on other platforms it'll go into the bin directory.
-#INSTALL(TARGETS ModelEditor
-#    BUNDLE DESTINATION .
-#    RUNTIME DESTINATION bin
-#    )
+#install(TARGETS ModelEditor
+#  BUNDLE DESTINATION .
+#  RUNTIME DESTINATION bin
+#)
 #
 ##--------------------------------------------------------------------------------
 ## Install the documentation
-##INSTALL(FILES "doc/ReadMe.txt"
-##      DESTINATION ${rvdoc_dest_dir}/
-##  )
+##install(FILES "doc/ReadMe.txt"
+##  DESTINATION ${rvdoc_dest_dir}/
+##)
 #
 ##--------------------------------------------------------------------------------
 ## Install needed Qt plugins by copying directories from the qt installation
 ## One can cull what gets copied by using 'REGEX "..." EXCLUDE'
-##INSTALL(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${plugin_dest_dir}/plugins )
+##install(DIRECTORY "${QT_PLUGINS_DIR}/imageformats" DESTINATION ${plugin_dest_dir}/plugins)
 #
 ##--------------------------------------------------------------------------------
 ## install a qt.conf file
 ## this inserts some cmake code into the install script to write the file
-#IF( APPLE )
-#  INSTALL(CODE "
-#      file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
-#      DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/\")
-#      " )
-#ENDIF()
+#if(APPLE)
+#  install(CODE "
+#    file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
+#    DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/\")
+#  ")
+#endif()
 #
-#IF( APPLE OR WIN32 )
-#  INSTALL(CODE "
-#      file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
-#      " )
-#ENDIF()
+#if(APPLE OR WIN32)
+#  install(CODE "
+#    file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
+#  ")
+#endif()
 #
 ##--------------------------------------------------------------------------------
 ## Use BundleUtilities to get all other dependencies for the application to work.
@@ -305,18 +306,18 @@ AddPCH(${target_name})
 ## for dependencies.  If they are not system dependencies, they are copied.
 #
 ## directories to look for dependencies
-#SET(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
+#set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 #
 ## Now the work of copying dependencies into the bundle/package
 ## The quotes are escaped and variables to use at install time have their $ escaped
 ## An alternative is the do a configure_file() on a script and use install(SCRIPT  ...).
 ## Note that the image plugins depend on QtSvg and QtXml, and it got those copied
 ## over.
-#IF( WIN32 OR APPLE )
-#  INSTALL(CODE "
-#      file(GLOB_RECURSE QTPLUGINS
-#        \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
-#      include(BundleUtilities)
-#      fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
-#      " )
-#ENDIF()
+#if(WIN32 OR APPLE)
+#  install(CODE "
+#    file(GLOB_RECURSE QTPLUGINS
+#      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\")
+#    include(BundleUtilities)
+#    fixup_bundle(\"${APPS}\" \"\${QTPLUGINS}\" \"${DIRS}\")
+#  ")
+#endif()

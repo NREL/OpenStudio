@@ -20,14 +20,13 @@
 #ifndef UTILITIES_DATA_TIMESERIES_HPP
 #define UTILITIES_DATA_TIMESERIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/time/Date.hpp>
-#include <utilities/time/Time.hpp>
-#include <utilities/time/DateTime.hpp>
+#include "Vector.hpp"
+#include "../time/Date.hpp"
+#include "../time/Time.hpp"
+#include "../time/DateTime.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 #include <boost/function.hpp>
 
@@ -84,19 +83,19 @@ namespace openstudio{
         /// time in days from end of the first reporting interval
         openstudio::Vector daysFromFirstReport() const;
 
-        /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+        /// time in days from end of the first reporting interval at index i to prevent implicit vector copy for single value
         double daysFromFirstReport(const unsigned& i) const;
 
         /// time in seconds from end of the first reporting interval
         std::vector<long> secondsFromFirstReport() const;
 
-        /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+        /// time in seconds from end of the first reporting interval at index i to prevent implicit vector copy for single value
         long secondsFromFirstReport(const unsigned& i) const;
 
         /// values
         openstudio::Vector values() const;
 
-        /// values at index i to prevent inplicit vector copy for single value
+        /// values at index i to prevent implicit vector copy for single value
         double values(const unsigned& i) const;
 
         /// units
@@ -127,13 +126,13 @@ namespace openstudio{
         void setOutOfRangeValue(double value);
 
         /// add timeseries
-        boost::shared_ptr<TimeSeries_Impl> operator+(const TimeSeries_Impl& other) const;
+        std::shared_ptr<TimeSeries_Impl> operator+(const TimeSeries_Impl& other) const;
 
         /// subtract timeseries
-        boost::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
+        std::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
 
         /** TimeSeries * double */
-        boost::shared_ptr<TimeSeries_Impl> operator*(double d) const;
+        std::shared_ptr<TimeSeries_Impl> operator*(double d) const;
 
       private:
 
@@ -218,19 +217,19 @@ namespace openstudio{
       /// time in days from end of the first reporting interval
       openstudio::Vector daysFromFirstReport() const;
 
-      /// time in days from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+      /// time in days from end of the first reporting interval at index i to prevent implicit vector copy for single value
       double daysFromFirstReport(const unsigned& i) const;
 
       /// time in seconds from end of the first reporting interval
       std::vector<long> secondsFromFirstReport() const;
 
-      /// time in seconds from end of the first reporting interval at index i to prevent inplicit vector copy for single value
+      /// time in seconds from end of the first reporting interval at index i to prevent implicit vector copy for single value
       long secondsFromFirstReport(const unsigned& i) const;
 
       /// values
       openstudio::Vector values() const;
       
-      /// values at index i to prevent inplicit vector copy for single value
+      /// values at index i to prevent implicit vector copy for single value
       double values(const unsigned& i) const;
 
       /// units
@@ -279,10 +278,10 @@ namespace openstudio{
 
       REGISTER_LOGGER("utilities.TimeSeries");
       // constructor from impl
-      TimeSeries(boost::shared_ptr<detail::TimeSeries_Impl> impl);
+      TimeSeries(std::shared_ptr<detail::TimeSeries_Impl> impl);
 
       // pointer to impl
-      boost::shared_ptr<detail::TimeSeries_Impl> m_impl;
+      std::shared_ptr<detail::TimeSeries_Impl> m_impl;
   };
 
   // optional TimeSeries
@@ -301,7 +300,7 @@ namespace openstudio{
   // Helper function to add up all the TimeSeries in timeSeriesVector.
   UTILITIES_API TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector);
 
-  /** Returns boost::function pointer to sum(const std::vector<TimeSeries>&). */
+  /** Returns std::function pointer to sum(const std::vector<TimeSeries>&). */
   UTILITIES_API boost::function1<TimeSeries, const std::vector<TimeSeries>&> sumTimeSeriesFunctor();
 
   /** Evaluates functor(timeSeriesVector). For use in SWIG bindings. */

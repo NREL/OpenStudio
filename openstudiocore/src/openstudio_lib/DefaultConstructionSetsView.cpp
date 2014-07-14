@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/DefaultConstructionSetsView.hpp>
-#include <openstudio_lib/DefaultConstructionSetInspectorView.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
+#include "DefaultConstructionSetsView.hpp"
+#include "DefaultConstructionSetInspectorView.hpp"
+#include "ModelObjectListView.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>

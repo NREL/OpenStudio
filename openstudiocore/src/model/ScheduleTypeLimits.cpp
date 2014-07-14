@@ -17,25 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeLimits_Impl.hpp>
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeLimits_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ScheduleTypeLimits_FieldEnums.hxx>
 
-#include <utilities/units/QuantityConverter.hpp>
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/SIUnit.hpp>
-#include <utilities/units/IPUnit.hpp>
-#include <utilities/units/BTUUnit.hpp>
-#include <utilities/units/CFMUnit.hpp>
-#include <utilities/units/WhUnit.hpp>
-#include <utilities/units/CelsiusUnit.hpp>
-#include <utilities/units/FahrenheitUnit.hpp>
-#include <utilities/units/TemperatureUnit_Impl.hpp>
-#include <utilities/units/UnitFactory.hpp>
+#include "../utilities/units/QuantityConverter.hpp"
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/units/SIUnit.hpp"
+#include "../utilities/units/IPUnit.hpp"
+#include "../utilities/units/BTUUnit.hpp"
+#include "../utilities/units/CFMUnit.hpp"
+#include "../utilities/units/WhUnit.hpp"
+#include "../utilities/units/CelsiusUnit.hpp"
+#include "../utilities/units/FahrenheitUnit.hpp"
+#include "../utilities/units/TemperatureUnit_Impl.hpp"
+#include "../utilities/units/UnitFactory.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -526,7 +526,7 @@ void ScheduleTypeLimits::resetUnitType() {
 }
 
 /// @cond
-ScheduleTypeLimits::ScheduleTypeLimits(boost::shared_ptr<detail::ScheduleTypeLimits_Impl> impl)
+ScheduleTypeLimits::ScheduleTypeLimits(std::shared_ptr<detail::ScheduleTypeLimits_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

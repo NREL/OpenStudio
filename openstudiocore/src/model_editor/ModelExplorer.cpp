@@ -33,22 +33,21 @@
 #include <QToolBar>
 
 #include <resources.hxx>
-#include <boost/foreach.hpp>
-#include <energyplus/ReverseTranslator.hpp>
-#include <model/Model.hpp>
-#include <model_editor/ClassViewWidget.hpp>
-#include <model_editor/ObjectExplorer.hpp>
-#include <model_editor/TreeViewWidget.hpp>
-#include <model_editor/ViewWidget.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
+#include "../model/Model.hpp"
+#include "ClassViewWidget.hpp"
+#include "ObjectExplorer.hpp"
+#include "TreeViewWidget.hpp"
+#include "ViewWidget.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Compare.hpp"
 
-#include <model_editor/ModelExplorer.hpp>
+#include "ModelExplorer.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -58,20 +57,20 @@ namespace modeleditor
 
   ModelExplorer::ModelExplorer(QWidget * parent)
     : QWidget(parent),
-      mClassViewWidget(NULL),
-      mTreeViewWidget(NULL),
-      mObjectExplorer(NULL),
+      mClassViewWidget(nullptr),
+      mTreeViewWidget(nullptr),
+      mObjectExplorer(nullptr),
       mClassViewUnderMouse(false),
       mTreeViewUnderMouse(false),
-      mProgressBarLbl(NULL),
-      mSplitter(NULL),
-      mDlg(NULL),
-      mProgressBar(NULL),
-      mQProgressBar(NULL),
-      mClassAction(NULL),
-      mTreeAction(NULL),
-      mStackedWidget(NULL),
-      mToolBar(NULL),
+      mProgressBarLbl(nullptr),
+      mSplitter(nullptr),
+      mDlg(nullptr),
+      mProgressBar(nullptr),
+      mQProgressBar(nullptr),
+      mClassAction(nullptr),
+      mTreeAction(nullptr),
+      mStackedWidget(nullptr),
+      mToolBar(nullptr),
       mModel(openstudio::model::Model()),
       mIddFile(mModel.iddFile())
   {
@@ -117,7 +116,7 @@ namespace modeleditor
     mQProgressBar = new QProgressBar(this);
     mProgressBar = new openstudio::ProgressBar(mQProgressBar);
 
-    QVBoxLayout * layout = new QVBoxLayout();
+    auto layout = new QVBoxLayout();
     layout->addWidget(mProgressBarLbl);
     layout->addWidget(mQProgressBar);
     mDlg->setLayout(layout);
@@ -161,7 +160,7 @@ namespace modeleditor
   void ModelExplorer::createLayout()
   {
     QPixmap  pixmap(":/systemOutliner.JPG");
-    QLabel * systemOutlinerLabel = new QLabel(this);
+    auto systemOutlinerLabel = new QLabel(this);
     systemOutlinerLabel->setPixmap(pixmap);
     systemOutlinerLabel->setScaledContents(true);
 
@@ -169,7 +168,7 @@ namespace modeleditor
     /* int classIdx = */ mStackedWidget->addWidget(mClassViewWidget);
     /* int systemOutlinerIdx = */ mStackedWidget->addWidget(systemOutlinerLabel);
 
-    QVBoxLayout * mainLayout = new QVBoxLayout();
+    auto mainLayout = new QVBoxLayout();
     mainLayout->addWidget(mToolBar);
     mainLayout->addWidget(mSplitter);
 
@@ -231,7 +230,7 @@ namespace modeleditor
 
   void ModelExplorer::showComments(const bool showComments)
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->showComments(showComments);
@@ -240,7 +239,7 @@ namespace modeleditor
 
   void ModelExplorer::showPrecision(const bool showPrecision)
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->showPrecisionDlg(showPrecision);
@@ -254,7 +253,7 @@ namespace modeleditor
 
   void ModelExplorer::addObjects(openstudio::IddObjectType type)
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->addObjects(type);
@@ -263,7 +262,7 @@ namespace modeleditor
 
   void ModelExplorer::removeObjects()
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->removeObjects();
@@ -272,7 +271,7 @@ namespace modeleditor
 
   void ModelExplorer::copyObjects()
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->copyObjects();
@@ -281,7 +280,7 @@ namespace modeleditor
 
   void ModelExplorer::pasteObjects()
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->pasteObjects();
@@ -315,7 +314,7 @@ namespace modeleditor
         // START DEBUG CODE
         openstudio::WorkspaceObjectVector wsObjects = workspace.objects();
         openstudio::WorkspaceObjectOrder order = workspace.order();
-        BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
+        for (const openstudio::WorkspaceObject wso : wsObjects){
           OS_ASSERT(order.inOrder(wso.handle()));
         }
         // END DEBUG CODE
@@ -326,7 +325,7 @@ namespace modeleditor
         if(optionalModel){
           order = optionalModel->order();
           wsObjects = optionalModel->objects();
-          BOOST_FOREACH(const openstudio::WorkspaceObject wso,wsObjects){
+          for (const openstudio::WorkspaceObject wso : wsObjects){
             OS_ASSERT(order.inOrder(wso.handle()));
           }
         }
@@ -507,7 +506,7 @@ namespace modeleditor
   }
   void ModelExplorer::showAllFields(bool state)
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->showAllFields(state);
@@ -516,7 +515,7 @@ namespace modeleditor
 
   void ModelExplorer::createAllFields()
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->createAllFields();
@@ -525,7 +524,7 @@ namespace modeleditor
 
   void ModelExplorer::setRecursive(bool state)
   {
-    ViewWidget * widget = NULL;
+    ViewWidget * widget = nullptr;
     widget = static_cast<ViewWidget *>(mStackedWidget->currentWidget());
     if(widget){
       widget->setRecursive(state);

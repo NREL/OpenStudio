@@ -24,7 +24,7 @@
 #include <QStyleOption>
 #include <QPainter>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 namespace openstudio{
   
@@ -77,7 +77,7 @@ DarkGradientHeader::DarkGradientHeader(QWidget * parent)
   style.append("} ");
   setStyleSheet(style);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,0,5,0);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);
@@ -107,7 +107,7 @@ LightGradientHeader::LightGradientHeader(QWidget * parent)
   style.append("} ");
   setStyleSheet(style);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,0,5,0);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);
@@ -158,7 +158,7 @@ LightHeader::LightHeader(QWidget * parent)
   style.append("} ");
   setStyleSheet(style);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,0,5,0);
   setLayout(mainHLayout);
 

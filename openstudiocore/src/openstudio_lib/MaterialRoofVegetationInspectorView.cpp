@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/MaterialRoofVegetationInspectorView.hpp>
+#include "MaterialRoofVegetationInspectorView.hpp"
 
 #include "../shared_gui_components/OSComboBox.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
+#include "../model/RoofVegetation.hpp"
+#include "../model/RoofVegetation_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>

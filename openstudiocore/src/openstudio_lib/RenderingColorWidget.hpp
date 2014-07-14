@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_RENDERINGCOLORWIDGET_H
-#define OPENSTUDIO_RENDERINGCOLORWIDGET_H
+#ifndef OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
+#define OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 
-#include <model/RenderingColor.hpp>
+#include "../model/RenderingColor.hpp"
 
 #include <QWidget>
 
@@ -59,5 +59,5 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_RENDERINGCOLORWIDGET_H
+#endif // OPENSTUDIO_RENDERINGCOLORWIDGET_HPP
 

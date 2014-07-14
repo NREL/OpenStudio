@@ -20,7 +20,7 @@
 #ifndef UTILITIES_CLOUD_AWSPROVIDER_HPP
 #define UTILITIES_CLOUD_AWSPROVIDER_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "CloudProvider.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -132,7 +132,7 @@ namespace detail {
     //@}
    protected:
 
-    AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl);
+    AWSSettings(const std::shared_ptr<detail::AWSSettings_Impl>& impl);
 
     typedef detail::AWSSettings_Impl ImplType;
 
@@ -228,7 +228,7 @@ namespace detail {
 
    protected:
 
-    AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl);
+    AWSSession(const std::shared_ptr<detail::AWSSession_Impl>& impl);
 
     typedef detail::AWSSession_Impl ImplType;
 
@@ -356,7 +356,7 @@ namespace detail {
     //@}
   protected:
 
-    AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl);
+    AWSProvider(const std::shared_ptr<detail::AWSProvider_Impl>& impl);
 
     typedef detail::AWSProvider_Impl ImplType;
 

@@ -17,15 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef ECONOMICS_H
-#define ECONOMICS_H
+#ifndef UTILITIES_ECONOMICS_ECONOMICS_HPP
+#define UTILITIES_ECONOMICS_ECONOMICS_HPP
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Optional.hpp"
 
 namespace openstudio{
 
@@ -67,7 +66,7 @@ public:
   void cashFlowsCapitalInflation( BuildingType buildingType, std::vector< double >& resArray );
 
   double firstCosts( BuildingType buildingType );
-  boost::shared_ptr<openstudio::CostObject> getBuildingObject( BuildingType buildingType );
+  std::shared_ptr<openstudio::CostObject> getBuildingObject( BuildingType buildingType );
   double getCapitalAnalysisEnergyCost( BuildingType buildingType );
   double getCapitalCost( BuildingType buildingType );
   void getDistrictCool( BuildingType buildingType, double& use, double& cost );
@@ -105,9 +104,9 @@ public:
   void setAnalysisPeriod( OptionalInt analysisPeriod );
   void setAnalysisPeriod( const int analysisPeriod = 30 );
 
-  // This function addopts Excel spreadsheet methodology
+  // This function adopts Excel spreadsheet methodology
   double getNPV(const double rate, const std::vector<double>& cashFlows);
-  // This function addopts Excel spreadsheet methodology
+  // This function adopts Excel spreadsheet methodology
   double getPayBack(const std::vector< double >& cashFlowSavings);
   std::vector<double> getCashFlows(const bool includeEnergySavings);
   void setVariables(const bool stdRetrofit,
@@ -163,8 +162,8 @@ private:
   double m_LCOE_Cost; // Levelized Cost of Electricity Cost
   double m_LCOE_Energy; // Levelized Cost of Electricity Energy
   double m_margIncomeTaxRate;
-  ///!  Mdified IRR assumes postive cash flows are reinvested at the cost of capital,
-  ///! and that intial outlays are financed at the cost of financing 
+  ///!  Modified IRR assumes positive cash flows are reinvested at the cost of capital,
+  ///! and that initial outlays are financed at the cost of financing 
   double m_NPV; // Net Present Value
   double m_SPB; // Simple Payback
   double m_TLCC_Savings; // Total Life-Cycle Cost
@@ -244,8 +243,8 @@ private:
   // Have the above variables been set by the user?
   bool m_variablesSet;
 
-  boost::shared_ptr<CostObject> m_refBuilding;
-  boost::shared_ptr<CostObject> m_selBuilding;
+  std::shared_ptr<CostObject> m_refBuilding;
+  std::shared_ptr<CostObject> m_selBuilding;
   std::vector< double > m_cashFlowSavings;
   std::vector< double > m_discountedCashFlowSavings;
   
@@ -315,4 +314,4 @@ private:
 
 }
 
-#endif // ECONOMICS_H
+#endif // UTILITIES_ECONOMICS_ECONOMICS_HPP

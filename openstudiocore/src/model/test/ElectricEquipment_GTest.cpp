@@ -19,22 +19,20 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../SpaceType.hpp"
+#include "../ThermalZone.hpp"
+#include "../ElectricEquipment.hpp"
+#include "../ElectricEquipment_Impl.hpp"
+#include "../ElectricEquipmentDefinition.hpp"
+#include "../ElectricEquipmentDefinition_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../LifeCycleCost.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

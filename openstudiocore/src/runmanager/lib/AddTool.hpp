@@ -1,4 +1,4 @@
-/**********************************************************************
+  /**********************************************************************
 *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
 *  All rights reserved.
 *  
@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_ADDTOOL_HPP__
-#define OPENSTUDIO_RUNMANAGER_ADDTOOL_HPP__
+#ifndef RUNMANAGER_LIB_ADDTOOL_HPP
+#define RUNMANAGER_LIB_ADDTOOL_HPP
 
 #include <string>
 #include <QTimer>
 #include <boost/optional.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_AddTool.hxx>
-#include <runmanager/lib/Job.hpp>
+#include "RunManager.hpp"
+#include <runmanager/lib/ui_AddTool.h>
+#include "Job.hpp"
 
 
 namespace openstudio {
@@ -39,7 +39,7 @@ namespace runmanager {
 
   public:
     //! Create a AddTool dialog for setting ConfigOptions
-    AddTool(QWidget *parent = 0, Qt::WFlags flags = 0);
+    AddTool(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     virtual ~AddTool();
 
     //! Returns the tool created during execution of the dialog
@@ -60,4 +60,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_ADDTOOL_HPP_
+#endif // RUNMANAGER_LIB_ADDTOOL_HPP

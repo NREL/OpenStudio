@@ -20,12 +20,12 @@
 #ifndef UTILITIES_TIME_CALENDAR_HPP
 #define UTILITIES_TIME_CALENDAR_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/time/Date.hpp>
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Logger.hpp>
+#include "Date.hpp"
+#include "../core/Macro.hpp"
+#include "../core/String.hpp"
+#include "../core/Logger.hpp"
 
 #include <map>
 
@@ -92,7 +92,7 @@ namespace openstudio{
     Date startDate() const;
 
 
-    /// get the last date in the clanedar
+    /// get the last date in the calendar
     Date endDate() const;
 
     

@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Lights_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -556,7 +556,7 @@ bool LightsDefinition::setDesignLevelCalculationMethod(const std::string& method
 }
 
 /// @cond
-LightsDefinition::LightsDefinition(boost::shared_ptr<detail::LightsDefinition_Impl> impl)
+LightsDefinition::LightsDefinition(std::shared_ptr<detail::LightsDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

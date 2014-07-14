@@ -18,13 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysisdriver/test/AnalysisDriverFixture.hpp>
+#include "AnalysisDriverFixture.hpp"
 
-#include <analysisdriver/AnalysisDriver.hpp>
-#include <analysisdriver/CurrentAnalysis.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../AnalysisDriver.hpp"
+#include "../CurrentAnalysis.hpp"
+#include "../AnalysisRunOptions.hpp"
 
-#include <project/ProjectDatabase.hpp>
+#include "../../project/ProjectDatabase.hpp"
 
 #include <runmanager/Test/ToolBin.hxx>
 

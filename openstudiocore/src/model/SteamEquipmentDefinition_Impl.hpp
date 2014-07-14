@@ -20,9 +20,9 @@
 #ifndef MODEL_STEAMEQUIPMENTDEFINITION_IMPL_HPP
 #define MODEL_STEAMEQUIPMENTDEFINITION_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadDefinition_Impl.hpp>
-#include <model/attributes.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadDefinition_Impl.hpp"
+#include "attributes.hpp"
 
 namespace openstudio {
 namespace model {

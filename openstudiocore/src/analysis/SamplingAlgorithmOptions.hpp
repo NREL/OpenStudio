@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_SAMPLINGALGORITHMOPTIONS_HPP
 #define ANALYSIS_SAMPLINGALGORITHMOPTIONS_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DakotaAlgorithmOptions.hpp>
+#include "AnalysisAPI.hpp"
+#include "DakotaAlgorithmOptions.hpp"
 
-#include <utilities/core/Enum.hpp>
+#include "../utilities/core/Enum.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -166,7 +166,7 @@ class ANALYSIS_API SamplingAlgorithmOptions : public DakotaAlgorithmOptions {
   /// @cond
   typedef detail::SamplingAlgorithmOptions_Impl ImplType;
 
-  explicit SamplingAlgorithmOptions(boost::shared_ptr<detail::SamplingAlgorithmOptions_Impl> impl);
+  explicit SamplingAlgorithmOptions(std::shared_ptr<detail::SamplingAlgorithmOptions_Impl> impl);
 
   friend class detail::SamplingAlgorithmOptions_Impl;
   friend class AnalysisObject;

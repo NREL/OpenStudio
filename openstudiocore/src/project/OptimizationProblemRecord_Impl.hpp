@@ -20,8 +20,8 @@
 #ifndef PROJECT_OPTIMIZATIONPROBLEMRECORD_IMPL_HPP
 #define PROJECT_OPTIMIZATIONPROBLEMRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ProblemRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "ProblemRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -57,7 +57,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> children() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Problem problem() const;
 

@@ -20,8 +20,8 @@
 #ifndef PROJECT_FUNCTIONRECORD_HPP
 #define PROJECT_FUNCTIONRECORD_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/ObjectRecord.hpp>
+#include "ProjectAPI.hpp"
+#include "ObjectRecord.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -133,11 +133,11 @@ class PROJECT_API FunctionRecord : public ObjectRecord {
   //@{
 
   /** Construct from impl. */
-  FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl,
+  FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl,
                  ProjectDatabase database);
 
   /// Construct from impl. Does not register in the database, so use with caution.
-  explicit FunctionRecord(boost::shared_ptr<detail::FunctionRecord_Impl> impl);
+  explicit FunctionRecord(std::shared_ptr<detail::FunctionRecord_Impl> impl);
 
   /// @endcond
  private:

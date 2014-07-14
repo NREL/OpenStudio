@@ -2,7 +2,7 @@
 #define UTILITIES_V8_LANGUAGESPECIFIC_I
 
 #ifdef BUILD_NODE_MODULE
-%include <node.i>
+//%include <node.i>
 #endif
 
 %header %{
@@ -35,6 +35,15 @@ namespace boost {
 
 };
 
+// std::shared_ptr wrapper, the current macros in shared_ptr.i are not defined for v8
+// minimal implementation to get it compiling.
+namespace std {
+
+    template <class T>
+    class shared_ptr {
+    };
+}
+ 
 // Provide some basic operator renaming for V8 to make sure that the
 // functions are at least available.
 %rename(Equal) operator =;

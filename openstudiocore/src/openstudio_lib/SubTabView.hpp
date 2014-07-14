@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SUBTABVIEW_H
-#define OPENSTUDIO_SUBTABVIEW_H
+#ifndef OPENSTUDIO_SUBTABVIEW_HPP
+#define OPENSTUDIO_SUBTABVIEW_HPP
 
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/OSInspectorView.hpp>
+#include "MainTabView.hpp"
+#include "OSInspectorView.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 //#include <QWidget>
 #include <QSplitter>
@@ -107,5 +107,5 @@ class SubTabView : public QSplitter
 
 } // openstudio
 
-#endif // OPENSTUDIO_SUBTABVIEW_H
+#endif // OPENSTUDIO_SUBTABVIEW_HPP
 

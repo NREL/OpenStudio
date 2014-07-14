@@ -17,15 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
-#include <analysis/PSUADEDaceAlgorithmOptions_Impl.hpp>
+#include "PSUADEDaceAlgorithmOptions.hpp"
+#include "PSUADEDaceAlgorithmOptions_Impl.hpp"
 
-#include <runmanager/lib/JSON.hpp>
+#include "../runmanager/lib/JSON.hpp"
 
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/bind.hpp>
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -42,7 +40,7 @@ namespace detail {
   {}
 
   AlgorithmOptions PSUADEDaceAlgorithmOptions_Impl::clone() const {
-    boost::shared_ptr<PSUADEDaceAlgorithmOptions_Impl> impl(new PSUADEDaceAlgorithmOptions_Impl(*this));
+    std::shared_ptr<PSUADEDaceAlgorithmOptions_Impl> impl(new PSUADEDaceAlgorithmOptions_Impl(*this));
     return PSUADEDaceAlgorithmOptions(impl);
   }
 
@@ -136,19 +134,19 @@ namespace detail {
     QVariantMap map = variant.toMap();
     AttributeVector attributes = deserializeUnorderedVector(
           map["attributes"].toList(),
-          boost::function<Attribute (const QVariant&)>(boost::bind(openstudio::detail::toAttribute,_1,version)));
+          std::function<Attribute (const QVariant&)>(std::bind(openstudio::detail::toAttribute,std::placeholders::_1,version)));
     return PSUADEDaceAlgorithmOptions(attributes);
   }
 
 } // detail
 
 PSUADEDaceAlgorithmOptions::PSUADEDaceAlgorithmOptions()
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl>(
         new detail::PSUADEDaceAlgorithmOptions_Impl()))
 {}
 
 PSUADEDaceAlgorithmOptions::PSUADEDaceAlgorithmOptions(const std::vector<Attribute>& options)
-  : DakotaAlgorithmOptions(boost::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl>(
+  : DakotaAlgorithmOptions(std::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl>(
         new detail::PSUADEDaceAlgorithmOptions_Impl(options)))
 {}
 
@@ -189,7 +187,7 @@ void PSUADEDaceAlgorithmOptions::clearPartitions() {
 }
 
 /// @cond
-PSUADEDaceAlgorithmOptions::PSUADEDaceAlgorithmOptions(boost::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl> impl)
+PSUADEDaceAlgorithmOptions::PSUADEDaceAlgorithmOptions(std::shared_ptr<detail::PSUADEDaceAlgorithmOptions_Impl> impl)
   : DakotaAlgorithmOptions(impl)
 {}
 

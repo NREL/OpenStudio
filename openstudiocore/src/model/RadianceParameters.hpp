@@ -20,8 +20,8 @@
 #ifndef MODEL_RADIANCEPARAMETERS_HPP
 #define MODEL_RADIANCEPARAMETERS_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -200,7 +200,7 @@ class MODEL_API RadianceParameters : public ModelObject {
   /// @cond
   typedef detail::RadianceParameters_Impl ImplType;
 
-  explicit RadianceParameters(boost::shared_ptr<detail::RadianceParameters_Impl> impl);
+  explicit RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl);
 
   friend class detail::RadianceParameters_Impl;
   friend class Model;

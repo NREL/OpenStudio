@@ -18,17 +18,17 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/Model.hpp>
+#include "ModelFixture.hpp"
+#include "../Model.hpp"
 //#include <model/Node.hpp>
 //#include <model/Node_Impl.hpp>
-#include <model/ZoneHVACComponent.hpp>
-#include <model/ZoneHVACComponent_Impl.hpp>
+#include "../ZoneHVACComponent.hpp"
+#include "../ZoneHVACComponent_Impl.hpp"
 
-#include <model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp>
-#include <model/CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp>
+#include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "../CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

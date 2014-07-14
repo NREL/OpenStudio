@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_FUNCTION_HPP
 #define ANALYSIS_FUNCTION_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -66,7 +66,7 @@ class ANALYSIS_API Function : public AnalysisObject {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit Function(boost::shared_ptr<detail::Function_Impl> impl);
+  explicit Function(std::shared_ptr<detail::Function_Impl> impl);
 
   friend class Problem; // to call setParent
   friend class OptimizationProblem; // to call setParent

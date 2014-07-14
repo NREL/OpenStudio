@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
-#include <model/ModelExtensibleGroup.hpp>
+#include "ThermochromicGlazing.hpp"
+#include "ThermochromicGlazing_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/OS_WindowMaterial_GlazingGroup_Thermochromic_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/math/FloatCompare.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,13 +62,13 @@ namespace detail {
     double result = 0.0;         // running average
     unsigned n = 0;
     bool warned = false;
-    BOOST_FOREACH(const Glazing& glazing,glazings) {
+    for (const Glazing& glazing : glazings) {
       double glazingThickness = glazing.thickness();
       if (n == 0) {
         result = glazingThickness;
       }
       else {
-        // keep runnning average
+        // keep running average
         if (!warned && ! equal(glazingThickness,result)) {
           LOG(Warn,"Thermochromic group '" << name().get() << "' contains glazings of different "
               << "thicknesses.");
@@ -219,7 +219,7 @@ namespace detail {
 
   std::vector<Glazing> ThermochromicGlazing_Impl::mf_glazings() const {
     GlazingVector result;
-    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+    for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       OptionalWorkspaceObject owo = group.getTarget(OS_WindowMaterial_GlazingGroup_ThermochromicExtensibleFields::WindowMaterialGlazingName);
       if (owo) {
@@ -257,7 +257,7 @@ IddObjectType ThermochromicGlazing::iddObjectType() {
 }
 
 /// @cond
-ThermochromicGlazing::ThermochromicGlazing(boost::shared_ptr<detail::ThermochromicGlazing_Impl> impl)
+ThermochromicGlazing::ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl)
   : Glazing(impl)
 {}
 /// @endcond

@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/LuminaireInspectorView.hpp>
+#include "LuminaireInspectorView.hpp"
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
-#include <openstudio_lib/OSDropZone.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "OSDropZone.hpp"
+#include "../model/LuminaireDefinition.hpp"
+#include "../model/LuminaireDefinition_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>

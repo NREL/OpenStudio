@@ -17,13 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/idd/IddFileAndFactoryWrapper.hpp>
+#include "IddFileAndFactoryWrapper.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-
-#include <boost/foreach.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Containers.hpp"
 
 namespace openstudio {
 

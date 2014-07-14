@@ -18,15 +18,13 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
-#include <utilities/idf/WorkspaceWatcher.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "IdfFixture.hpp"
+#include "../WorkspaceWatcher.hpp"
+#include "../Workspace.hpp"
+#include "../WorkspaceObject.hpp"
+#include "../IdfExtensibleGroup.hpp"
 
 #include <resources.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace std;
 using namespace boost;

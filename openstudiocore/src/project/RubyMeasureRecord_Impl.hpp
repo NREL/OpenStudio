@@ -21,12 +21,11 @@
 #define PROJECT_RUBYMEASURERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/MeasureRecord_Impl.hpp>
+#include "MeasureRecord_Impl.hpp"
 
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Logger.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
 
 namespace openstudio {
@@ -74,7 +73,7 @@ namespace detail {
     virtual std::vector<ObjectRecord> resources() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     //@}
     /** @name Getters */

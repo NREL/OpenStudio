@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <shared_gui_components/CollapsibleComponent.hpp>
-#include <shared_gui_components/CollapsibleComponentHeader.hpp>
-#include <shared_gui_components/ComponentList.hpp>
+#include "CollapsibleComponent.hpp"
+#include "CollapsibleComponentHeader.hpp"
+#include "ComponentList.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -38,7 +38,7 @@ CollapsibleComponent::CollapsibleComponent(CollapsibleComponentHeader * collapsi
   : QAbstractButton(parent),
     m_collapsibleComponentHeader(collapsibleComponentHeader),
     m_componentList(componentList),
-    m_mainLayout(NULL)
+    m_mainLayout(nullptr)
 {
 
   OS_ASSERT(m_collapsibleComponentHeader);

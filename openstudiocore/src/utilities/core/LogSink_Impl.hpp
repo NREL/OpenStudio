@@ -20,10 +20,12 @@
 #ifndef UTILITIES_CORE_LOGSINK_IMPL_HPP
 #define UTILITIES_CORE_LOGSINK_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/LogMessage.hpp>
-#include <utilities/core/LogSink.hpp>
+#include "LogMessage.hpp"
+#include "LogSink.hpp"
+
+#include <boost/optional.hpp>
 
 class QReadWriteLock;
 class QWriteLocker;

@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_INPUTVARIABLE_HPP
 #define ANALYSIS_INPUTVARIABLE_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Variable.hpp>
+#include "AnalysisAPI.hpp"
+#include "Variable.hpp"
 
-#include <utilities/core/Path.hpp>
+#include "../utilities/core/Path.hpp"
 
 #include <QVariant>
 
@@ -100,7 +100,7 @@ class ANALYSIS_API InputVariable : public Variable {
   friend class AnalysisObject;
   friend class detail::AnalysisObject_Impl;
 
-  explicit InputVariable(boost::shared_ptr<detail::InputVariable_Impl> impl);
+  explicit InputVariable(std::shared_ptr<detail::InputVariable_Impl> impl);
 
   friend class detail::InputVariable_Impl; // calls setParent
   friend class WorkflowStep; // calls setParent

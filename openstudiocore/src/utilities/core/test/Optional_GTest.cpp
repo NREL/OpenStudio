@@ -19,7 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Optional.hpp>
+#include "../Optional.hpp"
 
 #include <sstream>
 

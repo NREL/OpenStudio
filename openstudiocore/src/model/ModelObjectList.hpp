@@ -20,8 +20,8 @@
 #ifndef MODEL_MODELOBJECTLIST_HPP
 #define MODEL_MODELOBJECTLIST_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -62,7 +62,7 @@ class MODEL_API ModelObjectList : public ModelObject {
   /// @cond
   typedef detail::ModelObjectList_Impl ImplType;
 
-  explicit ModelObjectList(boost::shared_ptr<detail::ModelObjectList_Impl> impl);
+  explicit ModelObjectList(std::shared_ptr<detail::ModelObjectList_Impl> impl);
 
   friend class detail::ModelObjectList_Impl;
   friend class Model;

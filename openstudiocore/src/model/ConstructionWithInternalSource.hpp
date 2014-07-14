@@ -20,8 +20,8 @@
 #ifndef MODEL_CONSTRUCTIONWITHINTERNALSOURCE_HPP
 #define MODEL_CONSTRUCTIONWITHINTERNALSOURCE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/LayeredConstruction.hpp>
+#include "ModelAPI.hpp"
+#include "LayeredConstruction.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,7 +92,7 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   friend class detail::ConstructionWithInternalSource_Impl;
 
   explicit ConstructionWithInternalSource(
-      boost::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);  
+      std::shared_ptr<detail::ConstructionWithInternalSource_Impl> impl);  
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.ConstructionWithInternalSource");

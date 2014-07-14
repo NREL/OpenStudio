@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveExponentialSkewNormal.hpp>
-#include <model/CurveExponentialSkewNormal_Impl.hpp>
+#include "CurveExponentialSkewNormal.hpp"
+#include "CurveExponentialSkewNormal_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_ExponentialSkewNormal_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 #include <boost/math/special_functions/erf.hpp>
@@ -362,7 +362,7 @@ void CurveExponentialSkewNormal::resetOutputUnitType() {
 }
 
 /// @cond
-CurveExponentialSkewNormal::CurveExponentialSkewNormal(boost::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl)
+CurveExponentialSkewNormal::CurveExponentialSkewNormal(std::shared_ptr<detail::CurveExponentialSkewNormal_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

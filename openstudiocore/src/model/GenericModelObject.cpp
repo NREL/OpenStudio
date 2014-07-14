@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GenericModelObject.hpp>
-#include <model/GenericModelObject_Impl.hpp>
+#include "GenericModelObject.hpp"
+#include "GenericModelObject_Impl.hpp"
 
 
 namespace openstudio {
@@ -59,7 +59,7 @@ IddObjectType GenericModelObject_Impl::iddObjectType() const
 
 }// detail
 
-GenericModelObject::GenericModelObject(boost::shared_ptr<detail::GenericModelObject_Impl> p)
+GenericModelObject::GenericModelObject(std::shared_ptr<detail::GenericModelObject_Impl> p)
   :  ModelObject(p)
 {}
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRWALLMATERIAL_IMPL_HPP
 #define MODEL_AIRWALLMATERIAL_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ModelPartitionMaterial_Impl.hpp"
 
 namespace openstudio {
 namespace model {

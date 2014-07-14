@@ -19,17 +19,17 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/ZoneHVACLowTemperatureRadiantElectric.hpp>
-#include <model/ZoneHVACLowTemperatureRadiantElectric_Impl.hpp>
+#include "../ZoneHVACLowTemperatureRadiantElectric.hpp"
+#include "../ZoneHVACLowTemperatureRadiantElectric_Impl.hpp"
 
-#include <model/ScheduleConstant.hpp>
-#include <model/ScheduleConstant_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -20,11 +20,11 @@
 #ifndef MODEL_AIRGAP_IMPL_HPP
 #define MODEL_AIRGAP_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
-#include <utilities/units/OSOptionalQuantity.hpp>
+#include "../utilities/units/Quantity.hpp"
+#include "../utilities/units/OSOptionalQuantity.hpp"
 
 namespace openstudio {
 namespace model {
@@ -78,15 +78,15 @@ namespace detail {
 
     virtual double thickness() const;
 
-    /** The conductivitiy of the material in W/m*K. Always throws becuase no real thickness, which
+    /** The conductivitiy of the material in W/m*K. Always throws because no real thickness, which
      *  is needed for conversion. */
     virtual double thermalConductivity() const;
 
-    /** The conductance of the material in W/m^2*K. Always throws becuase no real thickness, which
+    /** The conductance of the material in W/m^2*K. Always throws because no real thickness, which
      *  is needed for conversion. */
     virtual double thermalConductance() const;
 
-    /** The resistivity of the material in m*K/W. Always throws becuase no real thickness, which
+    /** The resistivity of the material in m*K/W. Always throws because no real thickness, which
      *  is needed for conversion. */
     virtual double thermalResistivity() const;
 

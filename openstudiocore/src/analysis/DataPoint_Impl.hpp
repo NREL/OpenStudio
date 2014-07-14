@@ -20,22 +20,22 @@
 #ifndef ANALYSIS_DATAPOINT_IMPL_HPP
 #define ANALYSIS_DATAPOINT_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Problem.hpp>
+#include "DataPoint.hpp"
+#include "Problem.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
-#include <runmanager/lib/Job.hpp>
+#include "../runmanager/lib/Job.hpp"
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/data/Tag.hpp>
+#include "../utilities/idf/Workspace.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/Attribute.hpp"
+#include "../utilities/data/Tag.hpp"
 
-#include <utilities/core/FileReference.hpp>
+#include "../utilities/core/FileReference.hpp"
 
 #include <QVariant>
 

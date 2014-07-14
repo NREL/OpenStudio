@@ -20,17 +20,17 @@
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/LocalProcessCreator.hpp>
+#include "../JobFactory.hpp"
+#include "../RunManager.hpp"
+#include "../LocalProcessCreator.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
+#include "../../../model/Model.hpp"
+#include "../../../model/WeatherFile.hpp"
 
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../../../utilities/filetypes/EpwFile.hpp"
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/Workspace.hpp"
+#include "../../../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/OS_TimeDependentValuation_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
@@ -243,7 +243,7 @@ TEST_F(RunManagerTestFixture, JobCreateTest)
     epw,
     outdir);
 
-  boost::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
+  std::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
   
   j.start(lpc);
   j.waitForFinished();
@@ -282,7 +282,7 @@ TEST_F(RunManagerTestFixture, GenericJobCreateTest)
       params,
       files);
 
-  boost::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
+  std::shared_ptr<openstudio::runmanager::ProcessCreator> lpc(new openstudio::runmanager::LocalProcessCreator());
 
   j.start(lpc);
   j.waitForFinished();

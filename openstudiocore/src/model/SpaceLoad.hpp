@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACELOAD_HPP
 #define MODEL_SPACELOAD_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceItem.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceItem.hpp"
 
 namespace openstudio {
 namespace model {
@@ -73,7 +73,7 @@ class MODEL_API SpaceLoad : public SpaceItem {
   friend class openstudio::IdfObject;
   friend class detail::SpaceLoad_Impl;
 
-  explicit SpaceLoad(boost::shared_ptr<detail::SpaceLoad_Impl> impl);
+  explicit SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl);
 
  private:
 

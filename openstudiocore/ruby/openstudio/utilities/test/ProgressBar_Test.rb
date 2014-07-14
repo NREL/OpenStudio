@@ -19,7 +19,7 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 module OpenStudio
   class MyProgressBar < ProgressBar
@@ -41,7 +41,7 @@ module OpenStudio
   end
 end
 
-class ProgressBar_Test < Test::Unit::TestCase
+class ProgressBar_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

@@ -19,19 +19,17 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
-#include <model/InfraredTransparentMaterial.hpp>
-#include <model/InfraredTransparentMaterial_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "../AirWallMaterial.hpp"
+#include "../AirWallMaterial_Impl.hpp"
+#include "../InfraredTransparentMaterial.hpp"
+#include "../InfraredTransparentMaterial_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

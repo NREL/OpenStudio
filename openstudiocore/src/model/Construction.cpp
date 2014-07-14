@@ -17,24 +17,22 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Model.hpp>
+#include "Construction.hpp"
+#include "Construction_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelExtensibleGroup.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
+#include "Material.hpp"
+#include "Material_Impl.hpp"
+#include "OpaqueMaterial.hpp"
+#include "FenestrationMaterial.hpp"
+#include "ModelPartitionMaterial.hpp"
+#include "ModelExtensibleGroup.hpp"
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
 
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -88,7 +86,7 @@ namespace detail {
     std::reverse(reverseLayers.begin(), reverseLayers.end());
 
     Model model = this->model();
-    BOOST_FOREACH(const Construction& other, model.getConcreteModelObjects<Construction>()) {
+    for (const Construction& other : model.getConcreteModelObjects<Construction>()) {
       
       MaterialVector layers = other.layers();
       if (layers.size() != reverseLayers.size()){
@@ -159,7 +157,7 @@ IddObjectType Construction::iddObjectType() {
 }
 
 /// @cond
-Construction::Construction(boost::shared_ptr<detail::Construction_Impl> impl)
+Construction::Construction(std::shared_ptr<detail::Construction_Impl> impl)
   : LayeredConstruction(impl)
 {}
 /// @endcond

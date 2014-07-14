@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/DesignSpecificationZoneAirDistribution.hpp>
-#include <model/DesignSpecificationZoneAirDistribution_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "DesignSpecificationZoneAirDistribution.hpp"
+#include "DesignSpecificationZoneAirDistribution_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
-#include <utilities/units/Unit.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -348,7 +348,7 @@ void DesignSpecificationZoneAirDistribution::resetZoneSecondaryRecirculationFrac
 }
 
 /// @cond
-DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(boost::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl)
+DesignSpecificationZoneAirDistribution::DesignSpecificationZoneAirDistribution(std::shared_ptr<detail::DesignSpecificationZoneAirDistribution_Impl> impl)
   : ModelObject(impl)
 {}
 /// @endcond

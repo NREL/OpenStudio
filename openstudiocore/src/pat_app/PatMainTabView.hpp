@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PATMAINTABVIEW_H
-#define OPENSTUDIO_PATMAINTABVIEW_H
+#ifndef PATAPP_PATMAINTABVIEW_HPP
+#define PATAPP_PATMAINTABVIEW_HPP
 
 #include <QSharedPointer>
 #include <QWidget>
@@ -62,4 +62,4 @@ private:
 
 }
 
-#endif // OPENSTUDIO_PATMAINTABVIEW_H
+#endif // PATAPP_PATMAINTABVIEW_HPP

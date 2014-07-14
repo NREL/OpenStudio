@@ -19,28 +19,26 @@
 
 #include <gtest/gtest.h>
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/Problem_Impl.hpp>
-#include <analysis/RubyMeasure.hpp>
-#include <analysis/RubyMeasure_Impl.hpp>
-#include <project/MeasureGroupRecord.hpp>
-#include <project/FileReferenceRecord.hpp>
-#include <project/NullMeasureRecord.hpp>
-#include <project/ProblemRecord.hpp>
-#include <project/ProblemRecord_Impl.hpp>
-#include <project/ProjectDatabase.hpp>
-#include <project/RubyMeasureRecord.hpp>
-#include <project/Test/ProjectFixture.hpp>
+#include "../../analysis/MeasureGroup.hpp"
+#include "../../analysis/MeasureGroup_Impl.hpp"
+#include "../../analysis/NullMeasure.hpp"
+#include "../../analysis/Problem.hpp"
+#include "../../analysis/Problem_Impl.hpp"
+#include "../../analysis/RubyMeasure.hpp"
+#include "../../analysis/RubyMeasure_Impl.hpp"
+#include "../MeasureGroupRecord.hpp"
+#include "../FileReferenceRecord.hpp"
+#include "../NullMeasureRecord.hpp"
+#include "../ProblemRecord.hpp"
+#include "../ProblemRecord_Impl.hpp"
+#include "../ProjectDatabase.hpp"
+#include "../RubyMeasureRecord.hpp"
+#include "ProjectFixture.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Workflow.hpp"
 
 #include <resources.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::analysis;

@@ -26,14 +26,12 @@
 #include "FileInfo.hpp"
 #include "JobOutputCleanup.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 #include <QDir>
 #include <QDateTime>
-
-#include <boost/bind.hpp>
 
 namespace openstudio {
 namespace runmanager {
@@ -81,10 +79,6 @@ namespace detail {
       boost::optional<LogMessage> initialCondition;
       boost::optional<LogMessage> finalCondition;
 
-      std::vector<LogMessage> errors;
-      std::vector<LogMessage> warnings;
-      std::vector<LogMessage> info;
-
 
       openstudio::ruleset::OSResultValue value = openstudio::ruleset::OSResultValue::NA;
 
@@ -116,31 +110,25 @@ namespace detail {
           finalCondition = LogMessage(rfinalCondition->logLevel(), rfinalCondition->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + rfinalCondition->logMessage());
         }
 
-        for (std::vector<LogMessage>::const_iterator itr = rerrors.begin();
-             itr != rerrors.end();
-             ++itr)
+        for (const auto & rerror : rerrors)
         {
-          result.addError(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+          result.addError(rerror.logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + rerror.logMessage());
         }
 
-        for (std::vector<LogMessage>::const_iterator itr = rwarnings.begin();
-             itr != rwarnings.end();
-             ++itr)
+        for (const auto & rwarning : rwarnings)
         {
-          result.addWarning(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+          result.addWarning(rwarning.logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + rwarning.logMessage());
         }
 
-        for (std::vector<LogMessage>::const_iterator itr = rinfo.begin();
-             itr != rinfo.end();
-             ++itr)
+        for (const auto & info : rinfo)
         {
-          result.addInfo(itr->logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + itr->logMessage());
+          result.addInfo(info.logChannel(), "Script: " + boost::lexical_cast<std::string>(i+1) + " " + info.logMessage());
         }
 
         if (value == openstudio::ruleset::OSResultValue::Fail || rvalue == openstudio::ruleset::OSResultValue::Fail)
         {
           value = openstudio::ruleset::OSResultValue::Fail;
-        } else if (value == openstudio::ruleset::OSResultValue::Success|| rvalue == openstudio::ruleset::OSResultValue::Success) {
+        } else if (value == openstudio::ruleset::OSResultValue::Success || rvalue == openstudio::ruleset::OSResultValue::Success) {
           value = openstudio::ruleset::OSResultValue::Success;
         }
       }
@@ -165,11 +153,9 @@ namespace detail {
   void ToolBasedJob::ErrorInfo::addLogMessages(openstudio::runmanager::ErrorType t_type, 
       const std::vector<openstudio::LogMessage> &t_msgs, std::vector<std::pair<ErrorType, std::string> > &t_errors)
   {
-    for (std::vector<openstudio::LogMessage>::const_iterator itr = t_msgs.begin();
-         itr != t_msgs.end();
-         ++itr)
+    for (const auto & msg : t_msgs)
     {
-      addLogMessage(t_type, *itr, t_errors);
+      addLogMessage(t_type, msg, t_errors);
     }
   }
 
@@ -292,25 +278,19 @@ namespace detail {
       std::vector<std::string> efsevereErrors = m_error_file->severeErrors();
       std::vector<std::string> effatalErrors = m_error_file->fatalErrors();
 
-      for (std::vector<std::string>::const_iterator itr = efwarnings.begin();
-           itr != efwarnings.end();
-           ++itr)
+      for (const auto & efwarning : efwarnings)
       {
-        errors.push_back(std::make_pair(ErrorType::Warning, *itr));
+        errors.push_back(std::make_pair(ErrorType::Warning, efwarning));
       }
 
-      for (std::vector<std::string>::const_iterator itr = efsevereErrors.begin();
-           itr != efsevereErrors.end();
-           ++itr)
+      for (const auto & efsevereError : efsevereErrors)
       {
-        errors.push_back(std::make_pair(ErrorType::Error, *itr));
+        errors.push_back(std::make_pair(ErrorType::Error, efsevereError));
       }
 
-      for (std::vector<std::string>::const_iterator itr = effatalErrors.begin();
-           itr != effatalErrors.end();
-           ++itr)
+      for (const auto & effatalError : effatalErrors)
       {
-        errors.push_back(std::make_pair(ErrorType::Error, *itr));
+        errors.push_back(std::make_pair(ErrorType::Error, effatalError));
       }
 
     }
@@ -397,34 +377,28 @@ namespace detail {
 
     std::set<std::string> filteredfiles;
 
-    for (std::map<ToolInfo, boost::shared_ptr<Process> >::iterator itr = m_processes.begin();
-         itr != m_processes.end();
-         ++itr)
+    for (const auto & process : m_processes)
     {
-      std::vector<FileInfo> files = itr->second->outputFiles();
+      std::vector<FileInfo> files = process.second->outputFiles();
 
-      for(std::vector<FileInfo>::const_iterator itr2 = files.begin();
-          itr2 != files.end();
-          ++itr2)
+      for(const auto & file : files)
       {
-        if (boost::regex_match(itr2->filename, itr->first.outFileFilter))
+        if (boost::regex_match(file.filename, process.first.outFileFilter))
         {
-          filteredfiles.insert(itr2->filename);
+          filteredfiles.insert(file.filename);
         }
       }
     }
 
-    JobOutputCleanup joc(0,0,std::vector<std::string>(filteredfiles.begin(), filteredfiles.end()));
+    JobOutputCleanup joc(nullptr,nullptr,std::vector<std::string>(filteredfiles.begin(), filteredfiles.end()));
 
     if (joc.exec() == QDialog::Accepted)
     {
       std::vector<std::string> result = joc.getSelectedFiles();
 
-      for (std::map<ToolInfo, boost::shared_ptr<Process> >::iterator itr = m_processes.begin();
-          itr != m_processes.end();
-          ++itr)
+      for (const auto & process : m_processes)
       {
-        itr->second->cleanup(result);
+        process.second->cleanup(result);
       }
     }
   }
@@ -448,7 +422,7 @@ namespace detail {
   void ToolBasedJob::addRequiredFile(const openstudio::path &t_from, const openstudio::path &t_local)
   { 
     QWriteLocker l(&m_mutex);
-    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.native_file_string())), t_local);
+    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.native())), t_local);
   }
 
   void ToolBasedJob::addRequiredFile(const QUrl &t_from, const openstudio::path &t_local)
@@ -460,18 +434,16 @@ namespace detail {
   void ToolBasedJob::addRequiredFile(const FileInfo &t_from, const openstudio::path &t_local)
   { 
     QWriteLocker l(&m_mutex);
-    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.fullPath.native_file_string())), t_local);
+    pushBackRequiredFile(QUrl::fromLocalFile(toQString(t_from.fullPath.native())), t_local);
 
     std::vector<std::pair<QUrl, openstudio::path> > filereqs = t_from.requiredFiles;
 //    m_inputfile_watcher.addPath(toQString(t_from.fullPath));
 
     l.unlock();
 
-    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = filereqs.begin();
-         itr != filereqs.end();
-         ++itr)
+    for (const auto & filereq : filereqs)
     {
-      addRequiredFile(itr->first, itr->second);
+      addRequiredFile(filereq.first, filereq.second);
     }
   }
 
@@ -487,15 +459,13 @@ namespace detail {
 
     openstudio::path dir = outdir();
 
-    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = m_required_files.begin();
-         itr != m_required_files.end();
-         ++itr)
+    for (const auto & requiredFile : m_required_files)
     {
-      if (itr->second.is_complete())
+      if (requiredFile.second.is_complete())
       {
-        LOG(Debug, "Not completeing required file " << openstudio::toString(itr->second) << " it is already complete");
+        LOG(Debug, "Not completing required file " << openstudio::toString(requiredFile.second) << " it is already complete");
       } else {
-        ret.push_back(std::make_pair(itr->first, dir / itr->second));
+        ret.push_back(std::make_pair(requiredFile.first, dir / requiredFile.second));
       }
     }
 
@@ -552,13 +522,11 @@ namespace detail {
 
     std::vector<std::pair<openstudio::path, openstudio::path> > retval;
 
-    for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr = t_urls.begin();
-         itr != t_urls.end();
-         ++itr)
+    for (const auto & url : t_urls)
     {
-      if (itr->first.scheme() == "file")
+      if (url.first.scheme() == "file")
       {
-        openstudio::path file = openstudio::toPath(itr->first.toLocalFile());
+        openstudio::path file = openstudio::toPath(url.first.toLocalFile());
 
         
         if (openstudio::toString(file.extension()) == ".osm")
@@ -598,8 +566,8 @@ namespace detail {
               && boost::filesystem::is_directory(filespath))
           {
             // it's an OSM file, we want to also bring along its reqs
-            for(boost::filesystem::basic_recursive_directory_iterator<openstudio::path> pitr(filespath);
-                pitr != boost::filesystem::basic_recursive_directory_iterator<openstudio::path>();
+            for(boost::filesystem::recursive_directory_iterator pitr(filespath);
+                pitr != boost::filesystem::recursive_directory_iterator();
                 ++pitr)
             {
               openstudio::path p = pitr->path();
@@ -630,13 +598,13 @@ namespace detail {
                     relative = addfolder / relative;
                   }
 
-                  if (rfc.addFile(p, itr->second.parent_path() / relative))
+                  if (rfc.addFile(p, url.second.parent_path() / relative))
                   {
                     m_addedRequiredFiles.insert(std::make_pair(p, relative));
 
-                    LOG(Info, "Adding OSM requesite file: " << openstudio::toString(p) 
+                    LOG(Info, "Adding OSM requisite file: " << openstudio::toString(p) 
                         << " to be installed at: " << openstudio::toString(relative));
-                    retval.push_back(std::make_pair(p, itr->second.parent_path() / relative));
+                    retval.push_back(std::make_pair(p, url.second.parent_path() / relative));
                   }
                 }
               }
@@ -644,13 +612,13 @@ namespace detail {
           }
         }
 
-        if (rfc.addFile(file, itr->second))
+        if (rfc.addFile(file, url.second))
         {
-          retval.push_back(std::make_pair(file, itr->second));
+          retval.push_back(std::make_pair(file, url.second));
         }
 
       } else {
-        throw std::runtime_error("Unsupported file scheme: " + toString(itr->first.scheme()));
+        throw std::runtime_error("Unsupported file scheme: " + toString(url.first.scheme()));
       }
     }
 
@@ -666,9 +634,9 @@ namespace detail {
     openstudio::path outpath = outdir();
 
     QWriteLocker l(&m_mutex);
-	std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
-	//m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
-    boost::shared_ptr<Process> process = m_process_creator->createProcess(ti,
+  std::vector<std::pair<openstudio::path, openstudio::path> > requiredFiles = acquireRequiredFiles(complete_required_files());
+  //m_copiedRequiredFiles.insert(requiredFiles.begin(), requiredFiles.end());
+    std::shared_ptr<Process> process = m_process_creator->createProcess(ti,
         requiredFiles, m_parameters[t_toolName],
         outpath, std::vector<openstudio::path>(m_expectedOutputFiles.begin(), m_expectedOutputFiles.end()), "\n\n",
         getBasePath(),
@@ -738,7 +706,7 @@ namespace detail {
     startTool(nextToolName);
   }
 
-  void ToolBasedJob::startImpl(const boost::shared_ptr<ProcessCreator> &t_pc)
+  void ToolBasedJob::startImpl(const std::shared_ptr<ProcessCreator> &t_pc)
   {
     // This means there's no reason to start up
     if (stopRequested())
@@ -804,13 +772,11 @@ namespace detail {
 
     l.relock();
 
-    for (std::map<openstudio::runmanager::ToolInfo, boost::shared_ptr<Process> >::iterator itr = m_processes.begin();
-         itr != m_processes.end();
-         ++itr)
+    for (const auto & process : m_processes)
     {
-      itr->second->stop();
-      itr->second->waitForFinished();
-//      itr->second->disconnect();
+      process.second->stop();
+      process.second->waitForFinished();
+//      process.second->disconnect();
     }
 
     l.unlock();
@@ -904,11 +870,9 @@ namespace detail {
     
     QReadLocker l(&m_mutex);
 
-    for (std::map<ToolInfo, boost::shared_ptr<Process> >::iterator itr = m_processes.begin();
-         itr != m_processes.end();
-         ++itr)
+    for (const auto & process : m_processes)
     {
-      itr->second->cleanUpRequiredFiles();
+      process.second->cleanUpRequiredFiles();
     }  
     
   }
@@ -916,7 +880,7 @@ namespace detail {
   void ToolBasedJob::copyRequiredFiles(const FileInfo &infile, const std::string &extin, const openstudio::path &filename)
   {
     QWriteLocker l(&m_mutex);
-    m_copyRequiredFiles.push_back(boost::make_tuple(infile, extin, filename));
+    m_copyRequiredFiles.push_back(std::make_tuple(infile, extin, filename));
   }
 
   Files ToolBasedJob::outputFilesImpl() const
@@ -925,56 +889,45 @@ namespace detail {
 
     Files f = outputFilesHandlerImpl();
 
-    for (std::map<ToolInfo, boost::shared_ptr<Process> >::const_iterator itr = m_processes.begin();
-         itr != m_processes.end();
-         ++itr)
+    for (const auto & process : m_processes)
     {
-      std::vector<FileInfo> v = itr->second->outputFiles();
+      std::vector<FileInfo> v = process.second->outputFiles();
       f.append(v.begin(), v.end());
 
-      for (std::vector<boost::tuple<FileInfo, std::string, openstudio::path> >::const_iterator itr 
-              = m_copyRequiredFiles.begin();
-           itr != m_copyRequiredFiles.end();
-           ++itr)
+      for (const auto copyRequiredFile : m_copyRequiredFiles)
       {
         std::vector<FileInfo> &fileinfos = f.files();
 
-        for (std::vector<FileInfo>::iterator fi = fileinfos.begin();
-             fi != fileinfos.end();
-             ++fi)
+        for (auto & fi : fileinfos)
         {
-          if (openstudio::toString(fi->fullPath.extension()) == "." + itr->get<1>())
+          if (openstudio::toString(fi.fullPath.extension()) == "." + std::get<1>(copyRequiredFile))
           {
 
             // Copy the required files inherited from the input file to this found output file
 
-            if (openstudio::toString(fi->fullPath.extension()) == ".osm")
+            if (openstudio::toString(fi.fullPath.extension()) == ".osm")
             {
               //we manually handled some reqs already probably
-              for (std::set<std::pair<openstudio::path, openstudio::path> >::const_iterator itr = m_addedRequiredFiles.begin();
-                   itr != m_addedRequiredFiles.end();
-                   ++itr)
+              for (const auto & addedRequiredFile : m_addedRequiredFiles)
               {
-                LOG(Debug, "Copying over required OSM file " << openstudio::toString(itr->first) << " to " << openstudio::toString(itr->second));
+                LOG(Debug, "Copying over required OSM file " << openstudio::toString(addedRequiredFile.first) << " to " << openstudio::toString(addedRequiredFile.second));
 
                 try {
-                  fi->addRequiredFile(itr->first, itr->second);
+                  fi.addRequiredFile(addedRequiredFile.first, addedRequiredFile.second);
                 } catch (const std::exception &e) {
-                  LOG(Info, "Requird file already existed, that's OK: " << e.what());
+                  LOG(Info, "Required file already existed, that's OK: " << e.what());
                 }
               }
             }
 
             std::vector<std::pair<QUrl, openstudio::path> > requiredFiles 
-              = itr->get<0>().requiredFiles;
+              = std::get<0>(copyRequiredFile).requiredFiles;
 
-            for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr2 = requiredFiles.begin();
-                itr2 != requiredFiles.end();
-                ++itr2)
+            for (const auto & requiredFile : requiredFiles)
             {
-              if (itr2->second == itr->get<2>() || itr->get<2>().empty())
+              if (requiredFile.second == std::get<2>(copyRequiredFile) || std::get<2>(copyRequiredFile).empty())
               {
-                fi->requiredFiles.push_back(*itr2);
+                fi.requiredFiles.push_back(requiredFile);
               }
             }
           }
@@ -988,8 +941,8 @@ namespace detail {
     // so that they show up with higher priority in lists
     // (in the "findLast" sense)
     std::vector<FileInfo> &files = f.files();
-    std::vector<FileInfo>::reverse_iterator enditr = files.rbegin();
-    for (std::vector<FileInfo>::iterator itr = files.begin();
+    auto enditr = files.rbegin();
+    for (auto itr = files.begin();
          itr != files.end();
          ++itr)
     {
@@ -1064,11 +1017,9 @@ namespace detail {
     if (!resultpaths.empty())
     {
       std::vector<openstudio::ruleset::OSResult> results;
-      for (std::vector<FileInfo>::const_iterator itr = resultpaths.begin();
-           itr != resultpaths.end();
-           ++itr)
+      for (const auto & resultPath : resultpaths)
       {
-        openstudio::path p = itr->fullPath;
+        openstudio::path p = resultPath.fullPath;
         std::string parent_path = openstudio::toString(p.parent_path().filename());
         size_t numpos = parent_path.find("mergedjob-");
         int num = 0;
@@ -1135,11 +1086,9 @@ namespace detail {
     if (result == ruleset::OSResultValue::Fail)
     {
       std::vector<std::pair<ErrorType, std::string> > errors = e.allErrors;
-      for (std::vector<std::pair<ErrorType, std::string> >::const_iterator itr = errors.begin();
-           itr != errors.end();
-           ++itr)
+      for (const auto & error : errors)
       {
-        LOG(Debug, "ToolBasedJob " << itr->first.valueName() << ": " << itr->second);
+        LOG(Debug, "ToolBasedJob " << error.first.valueName() << ": " << error.second);
       }
     }
 

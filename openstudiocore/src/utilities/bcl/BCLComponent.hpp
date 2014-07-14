@@ -20,13 +20,12 @@
 #ifndef UTILITIES_BCL_BCLCOMPONENT_HPP
 #define UTILITIES_BCL_BCLCOMPONENT_HPP
 
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/UtilitiesAPI.hpp>
+#include "../core/Optional.hpp"
+#include "../core/Path.hpp"
+#include "../core/UUID.hpp"
+#include "../data/Attribute.hpp"
+#include "../UtilitiesAPI.hpp"
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
 // Add more methods for editing components, opening local component constructor

@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
 
 using openstudio::Logger;
 using openstudio::FileLogSink;
@@ -55,7 +55,7 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
   return diff.length() <= 0.0001;
 }
 
-// initiallize for each test
+// initialize for each test
 void GeometryFixture::SetUp() {
 }
 
@@ -63,7 +63,7 @@ void GeometryFixture::SetUp() {
 void GeometryFixture::TearDown() {
 }
 
-// initiallize static members
+// initialize static members
 void GeometryFixture::SetUpTestCase() 
 {
   logFile = FileLogSink(toPath("./GeometryFixture.log"));

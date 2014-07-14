@@ -20,8 +20,8 @@
 #ifndef MODEL_COILHEATINGELECTRIC_HPP
 #define MODEL_COILHEATINGELECTRIC_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -100,7 +100,7 @@ class MODEL_API CoilHeatingElectric : public StraightComponent {
 
   friend class openstudio::IdfObject;
 
-  explicit CoilHeatingElectric(boost::shared_ptr<detail::CoilHeatingElectric_Impl> impl);
+  explicit CoilHeatingElectric(std::shared_ptr<detail::CoilHeatingElectric_Impl> impl);
 
   /// @endcond
 

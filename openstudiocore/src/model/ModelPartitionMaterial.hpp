@@ -20,8 +20,8 @@
 #ifndef MODEL_MODELPARTITIONMATERIAL_HPP
 #define MODEL_MODELPARTITIONMATERIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Material.hpp>
+#include "ModelAPI.hpp"
+#include "Material.hpp"
 
 namespace openstudio {
 namespace model {
@@ -54,7 +54,7 @@ class MODEL_API ModelPartitionMaterial : public Material {
 
   ModelPartitionMaterial(IddObjectType type, const Model& model);
 
-  explicit ModelPartitionMaterial(boost::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);  
+  explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);  
 
   /// @endcond
  private:

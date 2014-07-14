@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/SiteGroundTemperatureBuildingSurface.hpp>
-#include <model/SiteGroundTemperatureBuildingSurface_Impl.hpp>
+#include "../../model/SiteGroundTemperatureBuildingSurface.hpp"
+#include "../../model/SiteGroundTemperatureBuildingSurface_Impl.hpp"
 
 #include <utilities/idd/Site_GroundTemperature_BuildingSurface_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

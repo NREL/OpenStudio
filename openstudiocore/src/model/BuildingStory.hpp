@@ -20,8 +20,8 @@
 #ifndef MODEL_BUILDINGSTORY_HPP
 #define MODEL_BUILDINGSTORY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {  
 
@@ -125,7 +125,7 @@ class MODEL_API BuildingStory : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit BuildingStory(boost::shared_ptr<detail::BuildingStory_Impl> impl);
+  explicit BuildingStory(std::shared_ptr<detail::BuildingStory_Impl> impl);
 
   /// @endcond
  private:

@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/CurveQuartic.hpp>
-#include <model/CurveQuartic_Impl.hpp>
+#include "CurveQuartic.hpp"
+#include "CurveQuartic_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Curve_Quartic_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <cmath>
 
@@ -378,7 +378,7 @@ void CurveQuartic::resetOutputUnitType() {
 }
 
 /// @cond
-CurveQuartic::CurveQuartic(boost::shared_ptr<detail::CurveQuartic_Impl> impl)
+CurveQuartic::CurveQuartic(std::shared_ptr<detail::CurveQuartic_Impl> impl)
   : Curve(impl)
 {}
 /// @endcond

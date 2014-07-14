@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_OSQOBJECTCONTROLLER_H
-#define OPENSTUDIO_OSQOBJECTCONTROLLER_H
+#ifndef SHAREDGUICOMPONENTS_OSQOBJECTCONTROLLER_HPP
+#define SHAREDGUICOMPONENTS_OSQOBJECTCONTROLLER_HPP
 
 #include <QObject>
 
@@ -50,7 +50,7 @@ class OSQObjectController : public QObject
 
   private slots:
 
-  void onObjectDestroyed(QObject * object = 0);
+  void onObjectDestroyed(QObject * object = nullptr);
 
   private:
 
@@ -60,5 +60,5 @@ class OSQObjectController : public QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_OSQOBJECTCONTROLLER_H
+#endif // SHAREDGUICOMPONENTS_OSQOBJECTCONTROLLER_HPP
 

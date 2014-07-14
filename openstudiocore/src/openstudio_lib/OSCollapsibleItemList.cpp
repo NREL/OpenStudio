@@ -17,15 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/OSCollapsibleItemList.hpp>
-#include <openstudio_lib/OSItem.hpp>
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSCollapsibleItem.hpp>
-#include <openstudio_lib/OSCollapsibleItemHeader.hpp>
+#include "OSCollapsibleItemList.hpp"
+#include "OSItem.hpp"
+#include "OSItemList.hpp"
+#include "OSCollapsibleItem.hpp"
+#include "OSCollapsibleItemHeader.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -96,7 +94,7 @@ bool OSCollapsibleItemList::itemsDraggable() const
 void OSCollapsibleItemList::setItemsDraggable(bool itemsDraggable)
 {
   m_itemsDraggable = itemsDraggable;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsDraggable(itemsDraggable);
   }
 }
@@ -109,7 +107,7 @@ bool OSCollapsibleItemList::itemsRemoveable() const
 void OSCollapsibleItemList::setItemsRemoveable(bool itemsRemoveable)
 {
   m_itemsRemoveable = itemsRemoveable;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsRemoveable(itemsRemoveable);
   }
 }
@@ -122,7 +120,7 @@ OSItemType OSCollapsibleItemList::itemsType() const
 void OSCollapsibleItemList::setItemsType(OSItemType type)
 {
   m_itemsType = type;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setItemsType(type);
   }
 }
@@ -135,7 +133,7 @@ bool OSCollapsibleItemList::showFilterLayout() const
 void OSCollapsibleItemList::setShowFilterLayout(const bool showFilterLayout)
 {
   m_showFilterLayout = showFilterLayout;
-  BOOST_FOREACH(OSCollapsibleItem* collapsibleItem, m_collapsibleItems){
+  for (OSCollapsibleItem* collapsibleItem : m_collapsibleItems){
     collapsibleItem->setShowFilterLayout(showFilterLayout);
   }
 }

@@ -1,14 +1,32 @@
-#ifndef RUNMANAGER_PARALLELENERGYPLUS_HPP_
-#define RUNMANAGER_PARALLELENERGYPLUS_HPP_
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
-#include <utilities/core/Path.hpp>
+#ifndef RUNMANAGER_LIB_PARALLELENERGYPLUS_PARALLELENERGYPLUS_HPP
+#define RUNMANAGER_LIB_PARALLELENERGYPLUS_PARALLELENERGYPLUS_HPP
+
+#include "../../../utilities/core/Path.hpp"
 
 #include <boost/filesystem.hpp>
 #include <boost/date_time/gregorian/gregorian.hpp>
-#include <boost/shared_ptr.hpp>
 
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../../../utilities/idf/Workspace.hpp"
+#include "../../../utilities/idf/WorkspaceObject.hpp"
 
 
 class ParallelEnergyPlus {
@@ -56,4 +74,4 @@ class ParallelEnergyPlus {
 
 };
 
-#endif
+#endif // RUNMANAGER_LIB_PARALLELENERGYPLUS_PARALLELENERGYPLUS_HPP

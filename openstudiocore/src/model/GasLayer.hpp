@@ -20,8 +20,8 @@
 #ifndef MODEL_GASLAYER_HPP
 #define MODEL_GASLAYER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/FenestrationMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "FenestrationMaterial.hpp"
 
 namespace openstudio {
 namespace model {
@@ -52,7 +52,7 @@ class MODEL_API GasLayer : public FenestrationMaterial {
 
   GasLayer(IddObjectType type,const Model& model);
 
-  explicit GasLayer(boost::shared_ptr<detail::GasLayer_Impl> impl);  
+  explicit GasLayer(std::shared_ptr<detail::GasLayer_Impl> impl);  
 
   /// @endcond
  private:

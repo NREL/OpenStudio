@@ -20,7 +20,7 @@
 #ifndef UTILITIES_IDD_IDDKEYPROPERTIES_HPP
 #define UTILITIES_IDD_IDDKEYPROPERTIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <string>
 

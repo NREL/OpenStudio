@@ -17,68 +17,69 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
 
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
+#include "People.hpp"
+#include "People_Impl.hpp"
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
+#include "Lights.hpp"
+#include "Lights_Impl.hpp"
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
+#include "Luminaire.hpp"
+#include "Luminaire_Impl.hpp"
+#include "ElectricEquipment.hpp"
+#include "ElectricEquipment_Impl.hpp"
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "GasEquipment.hpp"
+#include "GasEquipment_Impl.hpp"
+#include "GasEquipmentDefinition.hpp"
+#include "GasEquipmentDefinition_Impl.hpp"
+#include "HotWaterEquipment.hpp"
+#include "HotWaterEquipment_Impl.hpp"
+#include "SteamEquipment.hpp"
+#include "SteamEquipment_Impl.hpp"
+#include "OtherEquipment.hpp"
+#include "OtherEquipment_Impl.hpp"
+#include "SpaceInfiltrationDesignFlowRate.hpp"
+#include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "DesignSpecificationOutdoorAir.hpp"
+#include "DesignSpecificationOutdoorAir_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SpaceType_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QFile>
-#include <qjson/parser.h>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
 namespace openstudio {
 namespace model {
@@ -273,19 +274,13 @@ namespace detail {
     parseStandardsMap();
 
     QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-    Q_FOREACH(QString template_name, templates.uniqueKeys()){
-      std::string t = toString(template_name);
-
+    for (QString template_name : templates.uniqueKeys()) {
       QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-      Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
+      for (QString climate_set_name : climate_sets.uniqueKeys()) {
 
-        std::string c = toString(climate_set_name);
-        
         QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
-        Q_FOREACH(QString building_type_name, building_types.uniqueKeys()){
+        for (QString building_type_name : building_types.uniqueKeys()) {
           
-          std::string b = toString(building_type_name);
-
           result.push_back(toString(building_type_name));
 
         }
@@ -300,7 +295,7 @@ namespace detail {
       buildingStandardsBuildingType = building->standardsBuildingType();
     }
 
-    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
       if (other.handle() == this->handle()){
         continue;
       }
@@ -318,7 +313,7 @@ namespace detail {
     if (standardsBuildingType){
       finder.addTarget(*standardsBuildingType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -372,19 +367,13 @@ namespace detail {
       parseStandardsMap();
 
       QMap<QString, QVariant> templates = m_standardsMap["space_types"].toMap();
-      Q_FOREACH(QString template_name, templates.uniqueKeys()){
-        std::string t = toString(template_name);
-
+      for (QString template_name : templates.uniqueKeys()) {
         QMap<QString, QVariant> climate_sets = templates[template_name].toMap();
-        Q_FOREACH(QString climate_set_name, climate_sets.uniqueKeys()){
+        for (QString climate_set_name : climate_sets.uniqueKeys()) {
 
-          std::string c = toString(climate_set_name);
-          
           QMap<QString, QVariant> building_types = climate_sets[climate_set_name].toMap();
           QMap<QString, QVariant> specific_types = building_types[toQString(*standardsBuildingType)].toMap();
-          Q_FOREACH(QString specific_type_name, specific_types.uniqueKeys()){
-            std::string s = toString(specific_type_name);
-
+          for (QString specific_type_name : specific_types.uniqueKeys()) {
             result.push_back(toString(specific_type_name));
 
           }
@@ -397,7 +386,7 @@ namespace detail {
     result.push_back("Plenum");
 
     // include values from model
-    BOOST_FOREACH(const SpaceType& other, this->model().getConcreteModelObjects<SpaceType>()){
+    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
       if (other.handle() == this->handle()){
         continue;
       }
@@ -426,7 +415,7 @@ namespace detail {
     if (standardsSpaceType){
       finder.addTarget(*standardsSpaceType);
     }
-    std::vector<std::string>::iterator it = std::remove_if(result.begin(), result.end(), finder); 
+    auto it = std::remove_if(result.begin(), result.end(), finder); 
     result.resize( std::distance(result.begin(),it) ); 
 
     // sort
@@ -463,7 +452,7 @@ namespace detail {
     std::vector<Space> result;
 
     Handle handle = this->handle();
-    BOOST_FOREACH(const Space& space, this->model().getConcreteModelObjects<Space>()){
+    for (const Space& space : this->model().getConcreteModelObjects<Space>()){
       OptionalSpaceType spaceType = space.spaceType();
       if (spaceType){
         if (spaceType->handle() == handle){
@@ -562,7 +551,7 @@ namespace detail {
 
   void SpaceType_Impl::hardApplySpaceLoadSchedules()
   {
-    BOOST_FOREACH(ModelObject child, this->children()){
+    for (ModelObject child : this->children()){
       if (child.optionalCast<SpaceLoad>()){
         child.cast<SpaceLoad>().hardApplySchedules();
       }
@@ -571,7 +560,7 @@ namespace detail {
 
   boost::optional<double> SpaceType_Impl::peoplePerFloorArea() const {
     double result(0.0);
-    BOOST_FOREACH(const People& peopleObject,people()) {
+    for (const People& peopleObject : people()) {
       OptionalDouble temp = peopleObject.peoplePerFloorArea();
       if (temp) {
         result += temp.get();
@@ -682,7 +671,7 @@ namespace detail {
 
   double SpaceType_Impl::getNumberOfPeople(double floorArea) const {
     double result(0.0);
-    BOOST_FOREACH(const People& peopleObject, people()) {
+    for (const People& peopleObject : people()) {
       result += peopleObject.getNumberOfPeople(floorArea);
     }
     return result;
@@ -690,7 +679,7 @@ namespace detail {
 
   double SpaceType_Impl::getPeoplePerFloorArea(double floorArea) const {
     double result(0.0);
-    BOOST_FOREACH(const People& peopleObject,people()) {
+    for (const People& peopleObject : people()) {
       result += peopleObject.getPeoplePerFloorArea(floorArea);
     }
     return result;
@@ -706,7 +695,7 @@ namespace detail {
     }
 
     double result(0.0);
-    BOOST_FOREACH(const Lights& lightsObject, lights()) {
+    for (const Lights& lightsObject : lights()) {
       OptionalDouble temp = lightsObject.powerPerFloorArea();
       if (temp) {
         result += temp.get();
@@ -763,7 +752,7 @@ namespace detail {
 
     // remove all luminaires
     LuminaireVector myLuminaires = luminaires();
-    BOOST_FOREACH(Luminaire& luminaire,myLuminaires) {
+    for (Luminaire& luminaire : myLuminaires) {
       luminaire.remove();
     }
 
@@ -776,7 +765,7 @@ namespace detail {
     }
 
     double result(0.0);
-    BOOST_FOREACH(const Lights& lightsObject, lights()) {
+    for (const Lights& lightsObject : lights()) {
       OptionalDouble temp = lightsObject.powerPerPerson();
       if (temp) {
         result += temp.get();
@@ -831,7 +820,7 @@ namespace detail {
 
     // remove all luminaires
     LuminaireVector myLuminaires = luminaires();
-    BOOST_FOREACH(Luminaire& luminaire,myLuminaires) {
+    for (Luminaire& luminaire : myLuminaires) {
       luminaire.remove();
     }
 
@@ -840,10 +829,10 @@ namespace detail {
 
   double SpaceType_Impl::getLightingPower(double floorArea, double numPeople) const {
     double result(0.0);
-    BOOST_FOREACH(const Lights& lightsObject, lights()) {
+    for (const Lights& lightsObject : lights()) {
       result += lightsObject.getLightingPower(floorArea,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.lightingPower();
     }
     return result;
@@ -853,10 +842,10 @@ namespace detail {
                                                            double numPeople) const 
   {
     double result(0.0);
-    BOOST_FOREACH(const Lights& lightsObject, lights()) {
+    for (const Lights& lightsObject : lights()) {
       result += lightsObject.getPowerPerFloorArea(floorArea,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.getPowerPerFloorArea(floorArea);
     }
     return result;
@@ -864,10 +853,10 @@ namespace detail {
 
   double SpaceType_Impl::getLightingPowerPerPerson(double floorArea, double numPeople) const {
     double result(0.0); 
-    BOOST_FOREACH(const Lights& lightsObject, lights()) {
+    for (const Lights& lightsObject : lights()) {
       result += lightsObject.getPowerPerPerson(floorArea,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.getPowerPerPerson(numPeople);
     }
     return result;
@@ -875,7 +864,7 @@ namespace detail {
 
   boost::optional<double> SpaceType_Impl::electricEquipmentPowerPerFloorArea() const {
     double result(0.0);
-    BOOST_FOREACH(const ElectricEquipment& equipment, electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       OptionalDouble temp = equipment.powerPerFloorArea();
       if (temp) {
         result += temp.get();
@@ -938,7 +927,7 @@ namespace detail {
 
   boost::optional<double> SpaceType_Impl::electricEquipmentPowerPerPerson() const {
     double result(0.0);
-    BOOST_FOREACH(const ElectricEquipment& equipment, electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       OptionalDouble temp = equipment.powerPerPerson();
       if (temp) {
         result += temp.get();
@@ -1001,7 +990,7 @@ namespace detail {
 
   double SpaceType_Impl::getElectricEquipmentDesignLevel(double floorArea, double numPeople) const {
     double result(0.0);
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getDesignLevel(floorArea,numPeople);
     }
     return result;
@@ -1011,7 +1000,7 @@ namespace detail {
                                                                     double numPeople) const
   {
     double result(0.0);
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getPowerPerFloorArea(floorArea,numPeople);
     }
     return result;
@@ -1021,7 +1010,7 @@ namespace detail {
                                                             double numPeople) const
   {
     double result(0.0);
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getPowerPerPerson(floorArea,numPeople);
     }
     return result;
@@ -1029,7 +1018,7 @@ namespace detail {
 
   boost::optional<double> SpaceType_Impl::gasEquipmentPowerPerFloorArea() const {
     double result(0.0);
-    BOOST_FOREACH(const GasEquipment& equipment, gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       OptionalDouble temp = equipment.powerPerFloorArea();
       if (temp) {
         result += temp.get();
@@ -1092,7 +1081,7 @@ namespace detail {
 
   boost::optional<double> SpaceType_Impl::gasEquipmentPowerPerPerson() const {
     double result(0.0);
-    BOOST_FOREACH(const GasEquipment& equipment, gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       OptionalDouble temp = equipment.powerPerPerson();
       if (temp) {
         result += temp.get();
@@ -1154,7 +1143,7 @@ namespace detail {
 
   double SpaceType_Impl::getGasEquipmentDesignLevel(double floorArea, double numPeople) const {
     double result(0.0);
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getDesignLevel(floorArea,numPeople);
     }
     return result;
@@ -1164,7 +1153,7 @@ namespace detail {
                                                                double numPeople) const
   {
     double result(0.0);
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getPowerPerFloorArea(floorArea,numPeople);
     }
     return result;
@@ -1172,7 +1161,7 @@ namespace detail {
 
   double SpaceType_Impl::getGasEquipmentPowerPerPerson(double floorArea, double numPeople) const {
     double result(0.0);
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getPowerPerPerson(floorArea,numPeople);
     }
     return result;
@@ -1181,7 +1170,7 @@ namespace detail {
   double SpaceType_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const Space& space, this->model().getConcreteModelObjects<Space>()){
+    for (const Space& space : this->model().getConcreteModelObjects<Space>()){
       boost::optional<SpaceType> spaceType = space.spaceType();
       if (spaceType && spaceType->handle() == this->handle()){
         result += space.multiplier()*space.floorArea();
@@ -1351,14 +1340,13 @@ namespace detail {
   template <typename T>
   void SpaceType_Impl::removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep) {
     int count(0);
-    for (typename std::vector<T>::iterator it = instances.begin(), itEnd = instances.end();
-         it != itEnd; ++it)
+    for (auto & instance : instances)
     {
-      if (*it == instanceToKeep) {
+      if (instance == instanceToKeep) {
         ++count;
         continue;
       }
-      it->remove();
+      instance.remove();
     }
     OS_ASSERT(count == 1);
   }
@@ -1368,12 +1356,12 @@ namespace detail {
     if (m_standardsMap.empty()){
       QFile file(":/resources/standards/OpenStudio_Standards.json");
       if (file.open(QFile::ReadOnly)) {
-        QJson::Parser parser;
-        bool ok(false);
-        QVariant variant = parser.parse(&file,&ok);
-        OS_ASSERT(ok);
+        QJsonParseError parseError;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
         file.close();
-        m_standardsMap = variant.toMap();
+        if( QJsonParseError::NoError == parseError.error) {
+          m_standardsMap = jsonDoc.object().toVariantMap();
+        }
       }
     }
   }
@@ -1718,7 +1706,7 @@ double SpaceType::floorArea() const
 }
 
 /// @cond
-SpaceType::SpaceType(boost::shared_ptr<detail::SpaceType_Impl> impl)
+SpaceType::SpaceType(std::shared_ptr<detail::SpaceType_Impl> impl)
   : ResourceObject(impl)
 {}
 /// @endcond

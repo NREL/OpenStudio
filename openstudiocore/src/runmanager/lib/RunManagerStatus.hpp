@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP__
-#define OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP__
+#ifndef RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP
+#define RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP
 
 #include <string>
 #include <QTimer>
 #include "RunManager.hpp"
-#include <ui_RunManagerStatus.hxx>
+#include <ui_RunManagerStatus.h>
 #include "JobErrors.hpp"
 #include "JobStatusWidget.hpp"
 
@@ -41,7 +41,7 @@ namespace runmanager {
   public:
     //! Create a RunManagerStatus dialog for displaying job status
     //! \param[in] errors The errors to display
-    RunManagerStatus(QWidget *parent, Qt::WFlags flags, const RunManager &t_runmanager);
+    RunManagerStatus(QWidget *parent, Qt::WindowFlags flags, const RunManager &t_runmanager);
     virtual ~RunManagerStatus();
 
   private:
@@ -56,4 +56,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_RUNMANAGERSTATUS_HPP_
+#endif // RUNMANAGER_LIB_RUNMANAGERSTATUS_HPP

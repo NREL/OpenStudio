@@ -19,11 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/StringHelpers.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Serialization.hpp>
+#include "../Containers.hpp"
+#include "../String.hpp"
+#include "../StringHelpers.hpp"
+#include "../Path.hpp"
 
 #include <boost/regex.hpp>
 
@@ -33,7 +32,6 @@
 
 using std::string;
 using namespace openstudio;
-using boost::serialization::make_nvp;
 using std::ios;
 using boost::regex;
 using boost::regex_match;

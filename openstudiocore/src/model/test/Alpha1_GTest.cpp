@@ -19,42 +19,41 @@
 
 #include <gtest/gtest.h>
 /*
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Zone.hpp>
-#include <model/Zone_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../Model_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../Zone.hpp"
+#include "../Zone_Impl.hpp"
+#include "../Lights.hpp"
+#include "../Lights_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleCompact_Impl.hpp"
+#include "../WeatherFile.hpp"
+#include "../WeatherFile_Impl.hpp"
 
-#include <energyplus/ErrorFile.hpp>
-#include <energyplus/ReverseTranslator.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <energyplus/ResultsTranslator.hpp>
+#include "../../energyplus/ErrorFile.hpp"
+#include "../../energyplus/ReverseTranslator.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../energyplus/ResultsTranslator.hpp"
 
 #include <runmanager/Test/EnergyPlusBin.hxx>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/RunManager.hpp>
+#include "../../runmanager/lib/Job.hpp"
+#include "../../runmanager/lib/JobFactory.hpp"
+#include "../../runmanager/lib/RunManager.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/filetypes/EpwFile.hpp"
+#include "../../utilities/core/UUID.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Compare.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace openstudio::model;
@@ -103,7 +102,7 @@ TEST_F(ModelFixture, Alpha1)
   double grossArea = 0;
   EXPECT_EQ(static_cast<size_t>(6), model.getModelObjects<Zone>().size());
   EXPECT_EQ(static_cast<size_t>(6), building.zones().size());
-  BOOST_FOREACH(const Zone& zone, model.getModelObjects<Zone>()){
+  for (const Zone& zone : model.getModelObjects<Zone>()){
 
     OptionalString name = zone.name();
     ASSERT_TRUE(name);
@@ -143,7 +142,7 @@ TEST_F(ModelFixture, Alpha1)
 
   // should be 5 lights to start with
   EXPECT_EQ(static_cast<size_t>(5), model.getModelObjects<Lights>().size());
-  BOOST_FOREACH(const Lights& light, model.getModelObjects<Lights>()){
+  for (const Lights& light : model.getModelObjects<Lights>()){
 
     OptionalString name = light.name();
     ASSERT_TRUE(name);
@@ -215,9 +214,9 @@ TEST_F(ModelFixture, Alpha1)
   ASSERT_EQ(static_cast<size_t>(2),idfObjectVector.size());
 
   // go through each zone
-  BOOST_FOREACH(Zone zone, building.zones()){
+  for (Zone zone : building.zones()){
 
-    // pretend a rule has cehcked space type and given us lpd and idfObjectVector
+    // pretend a rule has checked space type and given us lpd and idfObjectVector
     double lpd = 1.0;
 
     // insert schedule and schedule type limits to full model
@@ -228,7 +227,7 @@ TEST_F(ModelFixture, Alpha1)
     // DLM@20100719: would be great if we could know something about order of these handles
     // that way we would not have to loop through and test each one
     OptionalSchedule schedule;
-    BOOST_FOREACH(Handle h, handles){
+    for (Handle h : handles){
       schedule = model.getModelObject<Schedule>(h);
       if (schedule){
         break;
@@ -303,7 +302,7 @@ TEST_F(ModelFixture, Alpha1)
   openstudio::runmanager::RunManager runManager(openstudio::tempDir() / openstudio::toPath("runmanagerTempDB"), true);
   EXPECT_FALSE(runManager.workPending());
 
-  // start simulation by queueing job
+  // start simulation by queuing job
   std::cout << "Starting simulation " << job.description() << std::endl;
   runManager.enqueue(job, true);
 
@@ -312,7 +311,7 @@ TEST_F(ModelFixture, Alpha1)
 
   EXPECT_EQ(static_cast<size_t>(1), runManager.getJobs().size());
   unsigned index = 0;
-  BOOST_FOREACH(const openstudio::runmanager::Job& j,runManager.getJobs()) {
+  for (const openstudio::runmanager::Job& j : runManager.getJobs()) {
     LOG(Debug,"Run manager job " << index << ": '" << j.description() << "'");
     ++index;
   }
@@ -326,7 +325,7 @@ TEST_F(ModelFixture, Alpha1)
 
   EXPECT_EQ(job.errors().succeeded, true);
   if (!job.errors().succeeded) {
-    BOOST_FOREACH(const std::string& error,job.errors().errors) {
+    for (const std::string& error : job.errors().errors) {
       LOG(Error,"Error returned from Alpha1 simulation job: " << error);
     }
   }

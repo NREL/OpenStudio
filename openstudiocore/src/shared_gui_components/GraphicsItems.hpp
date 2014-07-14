@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_GRAPHICSITEMS_H
-#define OPENSTUDIO_GRAPHICSITEMS_H
+#ifndef SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
+#define SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 
 #include <QGraphicsObject>
 #include <QSizeF>
@@ -38,7 +38,7 @@ class AbstractButtonItem : public QGraphicsObject
 
   public:
 
-  AbstractButtonItem(QGraphicsItem * parent = 0);
+  AbstractButtonItem(QGraphicsItem * parent = nullptr);
 
   virtual ~AbstractButtonItem() {}
 
@@ -70,7 +70,7 @@ class ButtonItem : public QGraphicsObject
   public:
 
   ButtonItem(const QPixmap & image, const QPixmap & downImage, 
-             const QPixmap & hoverImage, QGraphicsItem * parent = 0);
+             const QPixmap & hoverImage, QGraphicsItem * parent = nullptr);
 
   virtual ~ButtonItem() {}
 
@@ -92,7 +92,7 @@ class ButtonItem : public QGraphicsObject
 
   void paint(QPainter *painter, 
              const QStyleOptionGraphicsItem *option, 
-             QWidget *widget = 0);
+             QWidget *widget = nullptr);
 
   private:
 
@@ -111,21 +111,21 @@ class RemoveButtonItem : public ButtonItem
 {
   public:
 
-  RemoveButtonItem(QGraphicsItem * parent = 0);
+  RemoveButtonItem(QGraphicsItem * parent = nullptr);
 };
 
 class ZoomInButtonItem : public ButtonItem
 {
   public:
 
-  ZoomInButtonItem(QGraphicsItem * parent = 0);
+  ZoomInButtonItem(QGraphicsItem * parent = nullptr);
 };
 
 class ZoomOutButtonItem : public ButtonItem
 {
   public:
 
-  ZoomOutButtonItem(QGraphicsItem * parent = 0);
+  ZoomOutButtonItem(QGraphicsItem * parent = nullptr);
 };
 
 class GridLayoutItem : public QGraphicsObject
@@ -162,7 +162,7 @@ class GridLayoutItem : public QGraphicsObject
 
   void paint( QPainter *painter, 
               const QStyleOptionGraphicsItem *option, 
-              QWidget *widget = 0 ) {}
+              QWidget *widget = nullptr ) {}
 
   private slots:
 
@@ -208,5 +208,5 @@ class GridLayoutItem : public QGraphicsObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_GRAPHICSITEMS_H
+#endif // SHAREDGUICOMPONENTS_GRAPHICSITEMS_HPP
 

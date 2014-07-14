@@ -20,10 +20,10 @@
 require 'openstudio'
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 
-class CreateScheduleLibrary_Test < Test::Unit::TestCase
+class CreateScheduleLibrary_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

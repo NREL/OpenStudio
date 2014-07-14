@@ -18,7 +18,7 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
@@ -26,13 +26,13 @@
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
 
-#include <utilities/idf/WorkspaceExtensibleGroup.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObject.hpp>
+#include "../WorkspaceExtensibleGroup.hpp"
+#include "../IdfFile.hpp"
+#include "../IdfObject.hpp"
+#include "../Workspace.hpp"
+#include "../WorkspaceObject.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../../core/Optional.hpp"
 
 using namespace openstudio;
 

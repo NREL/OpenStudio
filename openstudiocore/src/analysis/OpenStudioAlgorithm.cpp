@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/OpenStudioAlgorithm.hpp>
-#include <analysis/OpenStudioAlgorithm_Impl.hpp>
+#include "OpenStudioAlgorithm.hpp"
+#include "OpenStudioAlgorithm_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -53,7 +53,7 @@ int OpenStudioAlgorithm::createNextIteration(Analysis& analysis) {
 }
 
 /// @cond
-OpenStudioAlgorithm::OpenStudioAlgorithm(boost::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl)
+OpenStudioAlgorithm::OpenStudioAlgorithm(std::shared_ptr<detail::OpenStudioAlgorithm_Impl> impl)
   : Algorithm(impl)
 {}
 /// @endcond

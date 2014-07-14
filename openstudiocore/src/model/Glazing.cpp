@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/Glazing.hpp>
-#include <model/Glazing_Impl.hpp>
+#include "Glazing.hpp"
+#include "Glazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -50,7 +50,7 @@ Glazing::Glazing(IddObjectType type,const Model& model)
 }
 
 /// @cond
-Glazing::Glazing(boost::shared_ptr<detail::Glazing_Impl> impl)
+Glazing::Glazing(std::shared_ptr<detail::Glazing_Impl> impl)
   : FenestrationMaterial(impl)
 {}
 /// @endcond

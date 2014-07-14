@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <osversion/test/OSVersionFixture.hpp>
+#include "OSVersionFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Component.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/Component.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/core/Compare.hpp>
+#include "../../utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>

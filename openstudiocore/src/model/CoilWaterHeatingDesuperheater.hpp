@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #ifndef MODEL_COILWATERHEATINGDESUPERHEATER_HPP
 #define MODEL_COILWATERHEATINGDESUPERHEATER_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -179,7 +179,7 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
   /// @cond
   typedef detail::CoilWaterHeatingDesuperheater_Impl ImplType;
 
-  explicit CoilWaterHeatingDesuperheater(boost::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl);
+  explicit CoilWaterHeatingDesuperheater(std::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl);
 
   friend class detail::CoilWaterHeatingDesuperheater_Impl;
   friend class Model;

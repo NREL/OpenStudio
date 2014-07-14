@@ -17,45 +17,44 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Component.hpp>
-#include <model/ComponentWatcher_Impl.hpp>
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/ResourceObject.hpp>
-#include <model/ResourceObject_Impl.hpp>
-#include <model/Connection.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Component.hpp"
+#include "ComponentWatcher_Impl.hpp"
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
+#include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
+#include "Connection.hpp"
 
 // central list of all concrete ModelObject header files (_Impl and non-_Impl)
 // needed here for ::createObject
-#include <model/ConcreteModelObjects.hpp>
+#include "ConcreteModelObjects.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
+#include "../utilities/idf/IdfFile.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idf/Workspace_Impl.hpp> // needed for serialization
-#include <utilities/idd/IddObject_Impl.hpp>
-#include <utilities/idd/IddField_Impl.hpp>
-#include <utilities/idd/IddFile_Impl.hpp>
+#include "../utilities/idd/IddObject_Impl.hpp"
+#include "../utilities/idd/IddField_Impl.hpp"
+#include "../utilities/idd/IddFile_Impl.hpp"
 
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/plot/ProgressBar.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 using openstudio::IddObjectType;
 using openstudio::detail::WorkspaceObject_Impl;
 
-using boost::dynamic_pointer_cast;
+using std::dynamic_pointer_cast;
 
 namespace openstudio {
 namespace model {
@@ -95,7 +94,7 @@ namespace detail {
   // copy constructor, used for clone
   Model_Impl::Model_Impl(const Model_Impl& other, bool keepHandles)
     : Workspace_Impl(other, keepHandles),
-      m_sqlFile((other.m_sqlFile)?(boost::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
     // notice we are cloning the sqlfile too, if necessary
     // careful not to call anything that calls shared_from_this here, this is not yet constructed
@@ -107,13 +106,13 @@ namespace detail {
                          bool keepHandles,
                          StrictnessLevel level)
     : Workspace_Impl(other,hs,keepHandles,level),
-      m_sqlFile((other.m_sqlFile)?(boost::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
+      m_sqlFile((other.m_sqlFile)?(std::shared_ptr<SqlFile>(new SqlFile(*other.m_sqlFile))):(other.m_sqlFile))
   {
     // notice we are cloning the sqlfile too, if necessary
   }
   Workspace Model_Impl::clone(bool keepHandles) const {
     // copy everything but objects
-    boost::shared_ptr<Model_Impl> cloneImpl(new Model_Impl(*this,keepHandles));
+    std::shared_ptr<Model_Impl> cloneImpl(new Model_Impl(*this,keepHandles));
     // clone objects
     createAndAddClonedObjects(model().getImpl<Model_Impl>(),cloneImpl,keepHandles);
     cloneImpl->createComponentWatchers();
@@ -127,7 +126,7 @@ namespace detail {
                                     StrictnessLevel level) const
   {
     // copy everything but objects
-    boost::shared_ptr<Model_Impl> cloneImpl(new Model_Impl(*this,handles,keepHandles,level));
+    std::shared_ptr<Model_Impl> cloneImpl(new Model_Impl(*this,handles,keepHandles,level));
     // clone objects
     createAndAddSubsetClonedObjects(model().getImpl<Model_Impl>(),cloneImpl,handles,keepHandles);
     // wrap impl and return
@@ -142,9 +141,9 @@ namespace detail {
     openstudio::detail::Workspace_Impl::swap(other);
 
     // swap Model-level data
-    boost::shared_ptr<Model_Impl> otherImpl = other.getImpl<detail::Model_Impl>();
+    std::shared_ptr<Model_Impl> otherImpl = other.getImpl<detail::Model_Impl>();
 
-    boost::shared_ptr<SqlFile> tsf = m_sqlFile;
+    std::shared_ptr<SqlFile> tsf = m_sqlFile;
     m_sqlFile = otherImpl->m_sqlFile;
     otherImpl->m_sqlFile = tsf;
 
@@ -167,23 +166,23 @@ namespace detail {
       OS_ASSERT(m_componentWatchers.size() == componentDataObjects.size());
       return;
     }
-    BOOST_FOREACH(ComponentData& object,componentDataObjects) {
+    for (ComponentData& object : componentDataObjects) {
       mf_createComponentWatcher(object);
     }
   }
 
   // Overriding this from WorkspaceObject_Impl is how all objects in the model end up
   // as model objects
-  boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> Model_Impl::createObject(
+  std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> Model_Impl::createObject(
       const IdfObject& object,
       bool keepHandle)
   {
-    boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> result;
+    std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> result;
     IddObjectType typeToCreate = object.iddObject().type();
 
 #define REGISTER_CONSTRUCTOR(_className) \
 if (_className::iddObjectType() == typeToCreate) { \
-  result = boost::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
+  result = std::shared_ptr<_className##_Impl>(new _className##_Impl(object,this,keepHandle)); \
 }
 
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
@@ -370,8 +369,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_CONSTRUCTOR(Screen);
     REGISTER_CONSTRUCTOR(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_CONSTRUCTOR(SetpointManagerMixedAir);
+    REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirPretreat);
     REGISTER_CONSTRUCTOR(SetpointManagerOutdoorAirReset);
     REGISTER_CONSTRUCTOR(SetpointManagerScheduled);
+    REGISTER_CONSTRUCTOR(SetpointManagerScheduledDualSetpoint);
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(Shade);
@@ -446,20 +447,20 @@ if (_className::iddObjectType() == typeToCreate) { \
     if (!result) {
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
           << object.iddObject().type().valueName() << "'.");
-      result = boost::shared_ptr<GenericModelObject_Impl>(new GenericModelObject_Impl(object, this, keepHandle));
+      result = std::shared_ptr<GenericModelObject_Impl>(new GenericModelObject_Impl(object, this, keepHandle));
     }
 
     return result;
   }
 
-  boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> Model_Impl::createObject(
-      const boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
+  std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> Model_Impl::createObject(
+      const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& originalObjectImplPtr,
       bool keepHandle) {
 
     OS_ASSERT(originalObjectImplPtr);
     // perhaps also assert that originalObjectImplPtr is initialized?
 
-    boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl> result;
+    std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> result;
     IddObjectType typeToCreate = originalObjectImplPtr->iddObject().type();
 
 
@@ -467,12 +468,12 @@ if (_className::iddObjectType() == typeToCreate) { \
 #define REGISTER_COPYCONSTRUCTORS(_className) \
 if (_className::iddObjectType() == typeToCreate) { \
   if (dynamic_pointer_cast<_className##_Impl>(originalObjectImplPtr)) { \
-    result = boost::shared_ptr<_className##_Impl>(new _className##_Impl( \
+    result = std::shared_ptr<_className##_Impl>(new _className##_Impl( \
         *dynamic_pointer_cast<_className##_Impl>(originalObjectImplPtr),this,keepHandle)); \
   } \
   else { \
     OS_ASSERT(!dynamic_pointer_cast<ModelObject_Impl>(originalObjectImplPtr)); \
-    result = boost::shared_ptr<_className##_Impl>(new _className##_Impl( \
+    result = std::shared_ptr<_className##_Impl>(new _className##_Impl( \
         *originalObjectImplPtr,this,keepHandle)); \
   } \
 }
@@ -661,8 +662,10 @@ if (_className::iddObjectType() == typeToCreate) { \
     REGISTER_COPYCONSTRUCTORS(Screen);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerFollowOutdoorAirTemperature);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerMixedAir);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirPretreat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerOutdoorAirReset);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduled);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerScheduledDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(Shade);
@@ -738,7 +741,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       LOG(Warn,"Creating GenericModelObject for IddObjectType '"
           << originalObjectImplPtr->iddObject().type().valueName() << "'.");
       if (dynamic_pointer_cast<GenericModelObject_Impl>(originalObjectImplPtr)) {
-        result = boost::shared_ptr<GenericModelObject_Impl>(new GenericModelObject_Impl(
+        result = std::shared_ptr<GenericModelObject_Impl>(new GenericModelObject_Impl(
             *dynamic_pointer_cast<GenericModelObject_Impl>(originalObjectImplPtr), this, keepHandle));
       }
       else {
@@ -749,7 +752,7 @@ if (_className::iddObjectType() == typeToCreate) { \
               << "registered for IddObjectType '"
               << originalObjectImplPtr->iddObject().type().valueName() << "'.");
         }
-        result = boost::shared_ptr<GenericModelObject_Impl>(
+        result = std::shared_ptr<GenericModelObject_Impl>(
             new GenericModelObject_Impl(*originalObjectImplPtr,this,keepHandle));
       }
     }
@@ -761,7 +764,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     // const cast looks pretty bad but is justified here as this operation does not
     // modify the model, this is similar to a copy constructor, don't abuse it though
-    return Model(boost::dynamic_pointer_cast<Model_Impl>(boost::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this())));
+    return Model(std::dynamic_pointer_cast<Model_Impl>(std::const_pointer_cast<openstudio::detail::Workspace_Impl>(this->shared_from_this())));
   }
 
   bool Model_Impl::setIddFile(IddFileType iddFileType) {
@@ -870,23 +873,21 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     std::vector<ScheduleConstant> schedules = model().getConcreteModelObjects<ScheduleConstant>();
 
-    for( std::vector<ScheduleConstant>::iterator it = schedules.begin();
-         it != schedules.end();
-         ++it )
+    for( const auto & schedule : schedules )
     {
-      if( boost::optional<std::string> name = it->name() )
+      if( boost::optional<std::string> name = schedule.name() )
       {
         if( istringEqual(name.get(),alwaysOnName) )
         {
-          if( equal<double>(it->value(),1.0) )
+          if( equal<double>(schedule.value(),1.0) )
           {
-            if( boost::optional<ScheduleTypeLimits> limits = it->scheduleTypeLimits() )
+            if( boost::optional<ScheduleTypeLimits> limits = schedule.scheduleTypeLimits() )
             {
               if( boost::optional<std::string> type = limits->numericType() )
               {
                 if( istringEqual(type.get(),"Discrete") )
                 {
-                  return *it;
+                  return schedule;
                 }
               }
             }
@@ -922,15 +923,13 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     std::vector<SpaceType> spaceTypes = model().getConcreteModelObjects<SpaceType>();
 
-    for( std::vector<SpaceType>::iterator it = spaceTypes.begin();
-         it != spaceTypes.end();
-         ++it )
+    for( const auto & spaceType : spaceTypes )
     {
-      if( boost::optional<std::string> name = it->name() )
+      if( boost::optional<std::string> name = spaceType.name() )
       {
         if( istringEqual(name.get(),plenumSpaceTypeName) )
         {
-          return *it;
+          return spaceType;
         }
       }
     }
@@ -957,7 +956,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   bool Model_Impl::setSqlFile(const openstudio::SqlFile& sqlFile)
   {
     bool result = true;
-    m_sqlFile = boost::shared_ptr<openstudio::SqlFile>(new openstudio::SqlFile(sqlFile));
+    m_sqlFile = std::shared_ptr<openstudio::SqlFile>(new openstudio::SqlFile(sqlFile));
     return result;
   }
 
@@ -971,7 +970,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   boost::optional<ComponentData> Model_Impl::insertComponent(const Component& component) {
     ComponentData newComponentData = component.componentData();
-    BOOST_FOREACH(const ComponentWatcher& cw,m_componentWatchers) {
+    for (const ComponentWatcher& cw : m_componentWatchers) {
       ComponentData candidate = cw.componentData();
       if (candidate.uuid() == newComponentData.uuid())
       {
@@ -987,7 +986,7 @@ if (_className::iddObjectType() == typeToCreate) { \
     WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
     if (resultingObjects.empty()) { return boost::none; }
     OS_ASSERT(resultingObjects.size() == component.numObjects());
-    BOOST_FOREACH(const WorkspaceObject& wo,resultingObjects) {
+    for (const WorkspaceObject& wo : resultingObjects) {
       OptionalComponentData ocd = wo.optionalCast<ComponentData>();
       if (ocd) {
         ComponentData componentDataObject = *ocd;
@@ -1002,7 +1001,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   std::vector<openstudio::IdfObject> Model_Impl::purgeUnusedResourceObjects() {
     ResourceObjectVector resources = model().getModelObjects<ResourceObject>();
     IdfObjectVector removedObjects;
-    BOOST_FOREACH(ResourceObject& resource,resources) {
+    for (ResourceObject& resource : resources) {
       // test for initialized first in case earlier .remove() got this one already
       if ((resource.initialized()) && (resource.nonResourceObjectUseCount() == 0)) {
         IdfObjectVector thisCallRemoved = resource.remove();
@@ -1014,7 +1013,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   std::vector<openstudio::IdfObject> Model_Impl::purgeUnusedResourceObjects(IddObjectType iddObjectType) {
     IdfObjectVector removedObjects;
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject, getObjectsByType(iddObjectType)) {
+    for (const WorkspaceObject& workspaceObject : getObjectsByType(iddObjectType)) {
       boost::optional<ResourceObject> resource = workspaceObject.optionalCast<ResourceObject>();
       if (resource){
         // test for initialized first in case earlier .remove() got this one already
@@ -1052,7 +1051,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   {
     if( boost::optional<HVACComponent> hvacComponent = object.optionalCast<HVACComponent>() )
     {
-      boost::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
+      std::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
       hvacComponentImpl = hvacComponent->getImpl<HVACComponent_Impl>();
       hvacComponentImpl->m_airLoopHVAC = boost::none;
       hvacComponentImpl->m_airLoopHVACOutdoorAirSystem = boost::none;
@@ -1061,7 +1060,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
     if( boost::optional<WaterToWaterComponent> waterToWaterComponent = object.optionalCast<WaterToWaterComponent>() )
     {
-      boost::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
+      std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
       waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
       waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
     }
@@ -1090,7 +1089,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( boost::optional<HVACComponent> hvacComponent = targetObject->optionalCast<HVACComponent>() )
         {
-          boost::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
+          std::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
           hvacComponentImpl = hvacComponent->getImpl<HVACComponent_Impl>();
           hvacComponentImpl->m_airLoopHVAC = boost::none;
           hvacComponentImpl->m_airLoopHVACOutdoorAirSystem = boost::none;
@@ -1099,7 +1098,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
         if( boost::optional<WaterToWaterComponent> waterToWaterComponent = targetObject->optionalCast<WaterToWaterComponent>() )
         {
-          boost::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
+          std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
           waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
           waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
         }
@@ -1122,7 +1121,7 @@ if (_className::iddObjectType() == typeToCreate) { \
       {
         if( boost::optional<HVACComponent> hvacComponent = sourceObject->optionalCast<HVACComponent>() )
         {
-          boost::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
+          std::shared_ptr<HVACComponent_Impl> hvacComponentImpl;
           hvacComponentImpl = hvacComponent->getImpl<HVACComponent_Impl>();
           hvacComponentImpl->m_airLoopHVAC = boost::none;
           hvacComponentImpl->m_airLoopHVACOutdoorAirSystem = boost::none;
@@ -1131,7 +1130,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
         if( boost::optional<WaterToWaterComponent> waterToWaterComponent = sourceObject->optionalCast<WaterToWaterComponent>() )
         {
-          boost::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
+          std::shared_ptr<WaterToWaterComponent_Impl> waterToWaterComponentImpl;
           waterToWaterComponentImpl = waterToWaterComponent->getImpl<WaterToWaterComponent_Impl>();
           waterToWaterComponentImpl->m_secondaryPlantLoop = boost::none;
         }
@@ -1154,7 +1153,7 @@ if (_className::iddObjectType() == typeToCreate) { \
   }
 
   void Model_Impl::obsoleteComponentWatcher(const ComponentWatcher& watcher) {
-    ComponentWatcherVector::iterator it = std::find(m_componentWatchers.begin(),
+    auto it = std::find(m_componentWatchers.begin(),
         m_componentWatchers.end(),watcher);
     OS_ASSERT(it != m_componentWatchers.end());
     m_componentWatchers.erase(it);
@@ -1162,7 +1161,7 @@ if (_className::iddObjectType() == typeToCreate) { \
 
   void Model_Impl::reportInitialModelObjects()
   {
-    BOOST_FOREACH(const WorkspaceObject& workspaceObject,this->objects()) {
+    for (const WorkspaceObject& workspaceObject : this->objects()) {
       emit initialModelObject(workspaceObject.getImpl<detail::ModelObject_Impl>().get(), workspaceObject.iddObject().type(), workspaceObject.handle());
     }
     emit initialReportComplete();
@@ -1212,20 +1211,20 @@ if (_className::iddObjectType() == typeToCreate) { \
 } // detail
 
 Model::Model()
-  : Workspace(boost::shared_ptr<detail::Model_Impl>(new detail::Model_Impl()))
+  : Workspace(std::shared_ptr<detail::Model_Impl>(new detail::Model_Impl()))
 {
   this->addVersionObject();
 }
 
 Model::Model(const openstudio::IdfFile& idfFile)
-  : Workspace(boost::shared_ptr<detail::Model_Impl>(new detail::Model_Impl(idfFile)))
+  : Workspace(std::shared_ptr<detail::Model_Impl>(new detail::Model_Impl(idfFile)))
 {
   // construct WorkspaceObject_ImplPtrs
   openstudio::detail::WorkspaceObject_ImplPtrVector objectImplPtrs;
   if (OptionalIdfObject vo = idfFile.versionObject()) {
     objectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(*vo,true));
   }
-  BOOST_FOREACH(const IdfObject& idfObject,idfFile.objects()) {
+  for (const IdfObject& idfObject : idfFile.objects()) {
     objectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(idfObject,true));
     LOG(Trace,"idfObject: " << toString(idfObject.handle()));
     LOG(Trace,"objectImplPtr: " << toString(objectImplPtrs.back()->handle()));
@@ -1237,7 +1236,7 @@ Model::Model(const openstudio::IdfFile& idfFile)
 }
 
 Model::Model(const openstudio::Workspace& workspace)
-  : Workspace(boost::shared_ptr<detail::Model_Impl>(new
+  : Workspace(std::shared_ptr<detail::Model_Impl>(new
     detail::Model_Impl(*(workspace.getImpl<openstudio::detail::Workspace_Impl>()),true)))
 {
   // construct WorkspaceObject_ImplPtrs
@@ -1247,7 +1246,7 @@ Model::Model(const openstudio::Workspace& workspace)
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
         vo->getImpl<openstudio::detail::WorkspaceObject_Impl>(),true));
   }
-  BOOST_FOREACH(const WorkspaceObject& object,
+  for (const WorkspaceObject& object :
                 workspace.getImpl<openstudio::detail::Workspace_Impl>()->objects())
   {
     newObjectImplPtrs.push_back(getImpl<detail::Model_Impl>()->createObject(
@@ -1271,7 +1270,7 @@ boost::optional<Model> Model::load(const path& p) {
   return result;
 }
 
-Model::Model(boost::shared_ptr<detail::Model_Impl> p)
+Model::Model(std::shared_ptr<detail::Model_Impl> p)
   : Workspace(p)
 {}
 
@@ -1334,7 +1333,7 @@ std::vector<ModelObject> Model::modelObjects(bool sorted) const
 {
   // can't use resize because ModelObject has no default ctor
   std::vector<ModelObject> result;
-  BOOST_FOREACH(WorkspaceObject object, this->objects(sorted)){
+  for (WorkspaceObject object : this->objects(sorted)){
     result.push_back(object.cast<ModelObject>());
   }
   return result;
@@ -1824,7 +1823,7 @@ void addExampleModelObjects(Model& model)
 
   // add some example variables
   int i = 1;
-  BOOST_FOREACH(const std::string& variableName, thermalZone.outputVariableNames()){
+  for (const std::string& variableName : thermalZone.outputVariableNames()){
     OutputVariable(variableName, model);
     if (++i > 2){
       break;
@@ -1833,8 +1832,8 @@ void addExampleModelObjects(Model& model)
 
   // add some example variables
   i = 1;
-  BOOST_FOREACH(const Surface& surface, model.getConcreteModelObjects<Surface>()){
-    BOOST_FOREACH(const std::string& variableName, surface.outputVariableNames()){
+  for (const Surface& surface : model.getConcreteModelObjects<Surface>()){
+    for (const std::string& variableName : surface.outputVariableNames()){
       OutputVariable(variableName, model);
       if (++i > 2){
         break;

@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGERSCHEDULED_HPP
 #define MODEL_SETPOINTMANAGERSCHEDULED_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
@@ -109,7 +109,7 @@ class MODEL_API SetpointManagerScheduled : public SetpointManager {
   /// @cond
   typedef detail::SetpointManagerScheduled_Impl ImplType;
 
-  explicit SetpointManagerScheduled(boost::shared_ptr<detail::SetpointManagerScheduled_Impl> impl);
+  explicit SetpointManagerScheduled(std::shared_ptr<detail::SetpointManagerScheduled_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.SetpointManagerScheduled");

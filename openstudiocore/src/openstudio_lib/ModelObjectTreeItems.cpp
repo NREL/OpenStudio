@@ -17,65 +17,65 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ModelObjectTreeItems.hpp>
-#include <openstudio_lib/ModelObjectItem.hpp>
-#include <openstudio_lib/IconLibrary.hpp>
+#include "ModelObjectTreeItems.hpp"
+#include "ModelObjectItem.hpp"
+#include "IconLibrary.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/DaylightingControl.hpp"
+#include "../model/DaylightingControl_Impl.hpp"
+#include "../model/GlareSensor.hpp"
+#include "../model/GlareSensor_Impl.hpp"
+#include "../model/IlluminanceMap.hpp"
+#include "../model/IlluminanceMap_Impl.hpp"
+#include "../model/InternalMass.hpp"
+#include "../model/InternalMass_Impl.hpp"
+#include "../model/People.hpp"
+#include "../model/People_Impl.hpp"
+#include "../model/Lights.hpp"
+#include "../model/Lights_Impl.hpp"
+#include "../model/Luminaire.hpp"
+#include "../model/Luminaire_Impl.hpp"
+#include "../model/ElectricEquipment.hpp"
+#include "../model/ElectricEquipment_Impl.hpp"
+#include "../model/GasEquipment.hpp"
+#include "../model/GasEquipment_Impl.hpp"
+#include "../model/HotWaterEquipment.hpp"
+#include "../model/HotWaterEquipment_Impl.hpp"
+#include "../model/SteamEquipment.hpp"
+#include "../model/SteamEquipment_Impl.hpp"
+#include "../model/OtherEquipment.hpp"
+#include "../model/OtherEquipment_Impl.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate.hpp"
+#include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "../model/DesignSpecificationOutdoorAir.hpp"
+#include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 
 #include <utilities/idd/OS_Building_FieldEnums.hxx>
 #include <utilities/idd/OS_BuildingStory_FieldEnums.hxx>
@@ -103,8 +103,8 @@
 #include <utilities/idd/OS_SpaceInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
 #include <utilities/idd/OS_DesignSpecification_OutdoorAir_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 #include <QStyleOption>
 #include <QPainter>
@@ -308,15 +308,15 @@ void ModelObjectTreeItem::refresh()
   std::vector<QTreeWidgetItem*> childrenToRemove;
 
   std::set<std::string> nonModelObjectChildrenSet;
-  BOOST_FOREACH(const std::string& child, nonModelObjectChildren){
+  for (const std::string& child : nonModelObjectChildren){
     nonModelObjectChildrenSet.insert(child);
   }
 
   std::set<openstudio::Handle> allModelObjectChildrenHandleSet;
-  BOOST_FOREACH(const model::ModelObject& child, defaultedModelObjectChildren){
+  for (const model::ModelObject& child : defaultedModelObjectChildren){
     allModelObjectChildrenHandleSet.insert(child.handle());
   }
-  BOOST_FOREACH(const model::ModelObject& child, modelObjectChildren){
+  for (const model::ModelObject& child : modelObjectChildren){
     allModelObjectChildrenHandleSet.insert(child.handle());
   }
 
@@ -356,28 +356,28 @@ void ModelObjectTreeItem::refresh()
     }
   }
 
-  BOOST_FOREACH(QTreeWidgetItem* child, childrenToRemove){
+  for (QTreeWidgetItem* child : childrenToRemove){
     this->removeChild(child);
     delete child;
   }
 
   // todo: insert in correct order
 
-  BOOST_FOREACH(const std::string& child, nonModelObjectChildren){
+  for (const std::string& child : nonModelObjectChildren){
     // still need this object
     if (nonModelObjectChildrenSet.find(child) != nonModelObjectChildrenSet.end()){
       nonModelObjectChildrenSet.erase(child);
       this->addNonModelObjectChild(child);
     }
   }
-  BOOST_FOREACH(const model::ModelObject& child, defaultedModelObjectChildren){
+  for (const model::ModelObject& child : defaultedModelObjectChildren){
     // still need this object
     if (allModelObjectChildrenHandleSet.find(child.handle()) != allModelObjectChildrenHandleSet.end()){
       allModelObjectChildrenHandleSet.erase(child.handle());
       this->addModelObjectChild(child, true);
     }
   }
-  BOOST_FOREACH(const model::ModelObject& child, modelObjectChildren){
+  for (const model::ModelObject& child : modelObjectChildren){
     // still need this object
     if (allModelObjectChildrenHandleSet.find(child.handle()) != allModelObjectChildrenHandleSet.end()){
       allModelObjectChildrenHandleSet.erase(child.handle());
@@ -562,13 +562,13 @@ void ModelObjectTreeItem::changeRelationship(int index, Handle newHandle, Handle
 
 void ModelObjectTreeItem::makeChildren()
 {
-  BOOST_FOREACH(const std::string& child, this->nonModelObjectChildren()){
+  for (const std::string& child : this->nonModelObjectChildren()){
     this->addNonModelObjectChild(child);
   }
-  BOOST_FOREACH(const model::ModelObject& child, this->defaultedModelObjectChildren()){
+  for (const model::ModelObject& child : this->defaultedModelObjectChildren()){
     this->addModelObjectChild(child, true);
   }
-  BOOST_FOREACH(const model::ModelObject& child, this->modelObjectChildren()){
+  for (const model::ModelObject& child : this->modelObjectChildren()){
     this->addModelObjectChild(child, false);
   }
 
@@ -635,7 +635,7 @@ std::string SiteShadingTreeItem::itemName()
 std::vector<model::ModelObject> SiteShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Site", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -788,7 +788,7 @@ std::string BuildingShadingTreeItem::itemName()
 std::vector<model::ModelObject> BuildingShadingTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::ShadingSurfaceGroup& shadingSurfaceGroup, this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
+  for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : this->model().getConcreteModelObjects<model::ShadingSurfaceGroup>()){
     if (openstudio::istringEqual("Building", shadingSurfaceGroup.shadingSurfaceType())){
       result.push_back(shadingSurfaceGroup);
     }
@@ -854,7 +854,7 @@ std::vector<model::ModelObject> NoBuildingStoryTreeItem::modelObjectChildren() c
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.buildingStory()){
       result.push_back(space);
     }
@@ -935,7 +935,7 @@ std::vector<model::ModelObject> NoThermalZoneTreeItem::modelObjectChildren() con
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.thermalZone()){
       result.push_back(space);
     }
@@ -996,7 +996,7 @@ std::vector<model::ModelObject> SpaceTypeTreeItem::defaultedModelObjectChildren(
   model::SpaceType spaceType = modelObject->cast<model::SpaceType>();
   
   // get spaces that inherit this space type as default
-  BOOST_FOREACH(const model::Space& space, spaceType.spaces()){
+  for (const model::Space& space : spaceType.spaces()){
     if (space.isSpaceTypeDefaulted()){
       result.push_back(space);
     }
@@ -1034,7 +1034,7 @@ std::vector<model::ModelObject> NoSpaceTypeTreeItem::modelObjectChildren() const
 {
   model::Model model = this->model();
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Space& space, model.getConcreteModelObjects<model::Space>()){
+  for (const model::Space& space : model.getConcreteModelObjects<model::Space>()){
     if (!space.spaceType()){
       result.push_back(space);
     }
@@ -1136,7 +1136,7 @@ std::string RoofsTreeItem::itemName()
 std::vector<model::ModelObject> RoofsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("RoofCeiling", surface.surfaceType())){
       result.push_back(surface);
     }
@@ -1171,7 +1171,7 @@ std::string WallsTreeItem::itemName()
 std::vector<model::ModelObject> WallsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("Wall", surface.surfaceType())){
       result.push_back(surface);
     }
@@ -1206,7 +1206,7 @@ std::string FloorsTreeItem::itemName()
 std::vector<model::ModelObject> FloorsTreeItem::modelObjectChildren() const
 {
   std::vector<model::ModelObject> result;
-  BOOST_FOREACH(const model::Surface& surface, m_space.surfaces()){
+  for (const model::Surface& surface : m_space.surfaces()){
     if (istringEqual("Floor", surface.surfaceType())){
       result.push_back(surface);
     }

@@ -20,19 +20,18 @@
 #ifndef UTILITIES_UNITS_UNIT_IMPL_HPP
 #define UTILITIES_UNITS_UNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Scale.hpp>
+#include "Unit.hpp"
+#include "Scale.hpp"
 
 #include <boost/smart_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
 
 namespace openstudio {
 namespace detail {
 
   /** Unit_Impl is the implementation class for Unit.*/
-  class UTILITIES_API Unit_Impl : public boost::enable_shared_from_this<Unit_Impl> {
+  class UTILITIES_API Unit_Impl : public std::enable_shared_from_this<Unit_Impl> {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -164,8 +163,8 @@ namespace detail {
     /** Get a public object that wraps this impl.*/
     template<typename T>
     T getPublicObject() const {
-      T result(boost::dynamic_pointer_cast<typename T::ImplType>(
-                 boost::const_pointer_cast<Unit_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(
+                 std::const_pointer_cast<Unit_Impl>(shared_from_this())));
       return result;
     }
 

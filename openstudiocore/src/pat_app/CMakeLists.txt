@@ -1,9 +1,9 @@
-SET( target_name Pat )
+set(target_name Pat)
 
-INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # source files
-SET( ${target_name}_SRC
+set(${target_name}_SRC
   CloudDialog.cpp
   CloudDialog.hpp
   CloudMonitor.cpp
@@ -13,7 +13,7 @@ SET( ${target_name}_SRC
   DesignAlternativesView.cpp
   DesignAlternativesView.hpp
   ExportSpreadsheet.cpp
-  ExportSpreadsheet.hpp  
+  ExportSpreadsheet.hpp
   ExportXML.cpp
   ExportXML.hpp
   ExportXMLDialog.cpp
@@ -141,12 +141,8 @@ SET( ${target_name}_SRC
   ../shared_gui_components/NetworkProxyDialog.hpp
 )
 
-## ui files
-#SET( ${target_name}_UI 
-#)
-
 # moc files
-SET( ${target_name}_moc
+set(${target_name}_moc
   CloudDialog.hpp
   CloudMonitor.hpp
   DesignAlternativesTabController.hpp
@@ -211,64 +207,61 @@ SET( ${target_name}_moc
 )
 
 ## resource files
-SET( ${target_name}_qrc
+set(${target_name}_qrc
   pat.qrc
 )
 
 ## Qt UI generation
-qt4_wrap_cpp( ${target_name}_moc_src ${${target_name}_moc} )
-
-#qt4_wrap_ui( ${target_name}_UIS ${${target_name}_UI} )
+qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
 # generate rules for building source files from the resources
-qt4_add_resources(${target_name}_qrcs ${${target_name}_qrc} )
+qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
-CONFIGURE_FILE(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
-# configure vagrant 
-SET(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
-SET(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
-CONFIGURE_FILE(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
+# configure vagrant
+set(VAGRANT_SERVER_PATH "" CACHE PATH "Pat to vagrant openstudio server")
+set(VAGRANT_WORKER_PATH "" CACHE PATH "Pat to vagrant openstudio worker")
+configure_file(VagrantConfiguration.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/VagrantConfiguration.hxx")
 
-IF( WIN32 )
-  SET(RC_BUILD_STR "0")
-  IF( NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)" )
-    SET(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
-  ENDIF()
-  CONFIGURE_FILE(PatApp.rc.in "${CMAKE_CURRENT_BINARY_DIR}/PatApp.rc")
-  SET(ICON_SRC "${CMAKE_CURRENT_BINARY_DIR}/PatApp.rc")
-ENDIF()
+if(WIN32)
+  set(RC_BUILD_STR "0")
+  if(NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)")
+    set(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
+  endif()
+  configure_file(PatApp.rc.in "${CMAKE_CURRENT_BINARY_DIR}/PatApp.rc")
+  set(ICON_SRC "${CMAKE_CURRENT_BINARY_DIR}/PatApp.rc")
+endif()
 # For Apple set the icns file containing icons
-IF(APPLE)
+if(APPLE)
   # set the name of the bundle icon
-  SET(MACOSX_BUNDLE_ICON_FILE pa.icns)
+  set(MACOSX_BUNDLE_ICON_FILE pa.icns)
   # set all icons
-  SET(ICON_SRC ../../icons/pa.icns ../../icons/osp.icns)
-  SET_SOURCE_FILES_PROPERTIES(${ICON_SRC}
-      PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  SET(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
-  SET(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.${CMAKE_VERSION_BUILD}.parametricanalysistool")
-  SET(MACOSX_BUNDLE_BUNDLE_NAME "ParametricAnalysisTool")
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
-ENDIF(APPLE)
+  set(ICON_SRC ../../icons/pa.icns ../../icons/osp.icns)
+  set_source_files_properties(${ICON_SRC}
+    PROPERTIES MACOSX_PACKAGE_LOCATION Resources
+  )
+  set(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
+  set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.${CMAKE_VERSION_BUILD}.parametricanalysistool")
+  set(MACOSX_BUNDLE_BUNDLE_NAME "ParametricAnalysisTool")
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+endif()
 
-INCLUDE_DIRECTORIES( ${RUBY_INCLUDE_DIRS} )
+include_directories(${RUBY_INCLUDE_DIRS})
 
-ADD_EXECUTABLE( ${target_name}
+add_executable(${target_name}
   WIN32
   MACOSX_BUNDLE
   ${${target_name}_SRC}
-  #${${target_name}_UI}
-  #${${target_name}_UIS}
   ${${target_name}_moc_src}
   ${${target_name}_moc}
   ${${target_name}_qrcs}
   ${ICON_SRC}
 )
 
-SET( depends
+set(depends
   openstudio_model
   openstudio_energyplus
   openstudio_modeleditor
@@ -282,156 +275,157 @@ SET( depends
   ${RUBY_LIBRARY}
 )
 
-ADD_DEPENDENCIES( "${target_name}"
-                  ruby_OpenStudioUtilitiesCore
-                  ruby_OpenStudioUtilitiesBCL
-                  ruby_OpenStudioUtilitiesIdd
-                  ruby_OpenStudioUtilitiesIdf
-                  ruby_OpenStudioUtilities
-                  ruby_OpenStudioModel
-                  ruby_OpenStudioModelCore
-                  ruby_OpenStudioModelSimulation
-                  ruby_OpenStudioModelResources
-                  ruby_OpenStudioModelGeometry
-                  ruby_OpenStudioModelHVAC
-                  ruby_OpenStudioEnergyPlus
-                  ruby_OpenStudioRuleset )
+add_dependencies("${target_name}"
+  ruby_OpenStudioUtilitiesCore
+  ruby_OpenStudioUtilitiesBCL
+  ruby_OpenStudioUtilitiesIdd
+  ruby_OpenStudioUtilitiesIdf
+  ruby_OpenStudioUtilities
+  ruby_OpenStudioModel
+  ruby_OpenStudioModelCore
+  ruby_OpenStudioModelSimulation
+  ruby_OpenStudioModelResources
+  ruby_OpenStudioModelGeometry
+  ruby_OpenStudioModelHVAC
+  ruby_OpenStudioEnergyPlus
+  ruby_OpenStudioRuleset
+)
 
-TARGET_LINK_LIBRARIES( ${target_name}  ${depends} )
+target_link_libraries(${target_name} ${depends})
 AddPCH(${target_name})
 
 #------------------------------------------------------------------------------
 # Installation
 #------------------------------------------------------------------------------
-IF(APPLE)
-  SET_TARGET_PROPERTIES(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
-  SET(plugin_dest_dir Pat.app/Contents/MacOS)
-  SET(qtconf_dest_dir Pat.app/Contents/Resources)
-  SET(APPS "\${CMAKE_INSTALL_PREFIX}/Pat.app")
-ELSEIF(WIN32)
-  SET(plugin_dest_dir bin)
-  SET(qtconf_dest_dir bin)
-  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/Pat.exe")
-ELSE()
-  SET(plugin_dest_dir bin)
-  SET(qtconf_dest_dir bin)
-  SET(APPS "\${CMAKE_INSTALL_PREFIX}/bin/Pat")
-ENDIF()
+if(APPLE)
+  set_target_properties(${target_name} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+  set(plugin_dest_dir Pat.app/Contents/MacOS)
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/Pat.app")
+elseif(WIN32)
+  set(plugin_dest_dir bin)
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/Pat.exe")
+else()
+  set(plugin_dest_dir bin)
+  set(APPS "\${CMAKE_INSTALL_PREFIX}/bin/Pat")
+endif()
 
-INSTALL(TARGETS Pat 
-    BUNDLE DESTINATION . 
-    RUNTIME DESTINATION bin 
-    )
+install(TARGETS Pat
+  BUNDLE DESTINATION .
+  RUNTIME DESTINATION bin
+)
 
-if( APPLE OR WIN32 )
+if(APPLE OR WIN32)
 
-  install( PROGRAMS "${QT_QSQLITE_PLUGIN_RELEASE}"
-           DESTINATION "${plugin_dest_dir}/sqldrivers/" 
-         )
+  get_target_property(QT_QSQLITE_PLUGIN Qt5::QSQLiteDriverPlugin LOCATION)
 
-  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN_RELEASE}" NAME)
+  install(PROGRAMS "${QT_QSQLITE_PLUGIN}"
+          DESTINATION "${plugin_dest_dir}/sqldrivers/"
+  )
 
-  SET(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
+  get_filename_component(QSQLITE_PLUGIN_NAME "${QT_QSQLITE_PLUGIN}" NAME)
+
+  set(QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/sqldrivers/${QSQLITE_PLUGIN_NAME}")
 
 endif()
 
-# Install qt_menu.nib on Apple
-IF( APPLE )
-  INSTALL(CODE "
-      file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\" 
-      DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/\") 
-      " )
-ENDIF()
+if(WIN32)
 
-# Install a qt.conf file
-IF( APPLE OR WIN32 )
-  INSTALL(CODE "
-      file(WRITE \"\${CMAKE_INSTALL_PREFIX}/${qtconf_dest_dir}/qt.conf\" \"\")
-      " )
-ENDIF()
+  get_target_property(QT_WINDOWS_PLUGIN Qt5::QWindowsIntegrationPlugin LOCATION)
+
+  install(PROGRAMS "${QT_WINDOWS_PLUGIN}"
+          DESTINATION "${plugin_dest_dir}/platforms/"
+  )
+
+  get_filename_component(QWINDOWS_PLUGIN_NAME "${QT_WINDOWS_PLUGIN}" NAME)
+
+  list(APPEND QTPLUGINS "\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/platforms/${QWINDOWS_PLUGIN_NAME}")
+
+endif()
 
 # Linux desktop integration
-IF (UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
+if(UNIX AND NOT APPLE AND "${CMAKE_INSTALL_PREFIX}" STREQUAL "/usr/local")
   # Install .desktop file
-  CONFIGURE_FILE(Pat.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/Pat.desktop)
-  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/Pat.desktop DESTINATION ../share/applications)
+  configure_file(Pat.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/Pat.desktop)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/Pat.desktop DESTINATION ../share/applications)
 
   # Declare mime types
-  INSTALL(FILES Pat.xml DESTINATION ../share/mime/packages)
+  install(FILES Pat.xml DESTINATION ../share/mime/packages)
 
   # Install icons
-  INSTALL(FILES ../../icons/pa_32.png DESTINATION ../share/pixmaps RENAME Pat.png)
+  install(FILES ../../icons/pa_32.png DESTINATION ../share/pixmaps RENAME Pat.png)
 
-  INSTALL(FILES ../../icons/pa_16.png DESTINATION ../share/icons/hicolor/16x16/apps RENAME Pat.png)
-  INSTALL(FILES ../../icons/pa_32.png DESTINATION ../share/icons/hicolor/32x32/apps RENAME Pat.png)
-  INSTALL(FILES ../../icons/pa_48.png DESTINATION ../share/icons/hicolor/48x48/apps RENAME Pat.png)
-  INSTALL(FILES ../../icons/pa_128.png DESTINATION ../share/icons/hicolor/128x128/apps RENAME Pat.png)
-  INSTALL(FILES ../../icons/pa_256.png DESTINATION ../share/icons/hicolor/256x256/apps RENAME Pat.png)
+  install(FILES ../../icons/pa_16.png DESTINATION ../share/icons/hicolor/16x16/apps RENAME Pat.png)
+  install(FILES ../../icons/pa_32.png DESTINATION ../share/icons/hicolor/32x32/apps RENAME Pat.png)
+  install(FILES ../../icons/pa_48.png DESTINATION ../share/icons/hicolor/48x48/apps RENAME Pat.png)
+  install(FILES ../../icons/pa_128.png DESTINATION ../share/icons/hicolor/128x128/apps RENAME Pat.png)
+  install(FILES ../../icons/pa_256.png DESTINATION ../share/icons/hicolor/256x256/apps RENAME Pat.png)
 
-  INSTALL(FILES ../../icons/osp_16.png DESTINATION ../share/icons/hicolor/16x16/mimetypes RENAME application-openstudio.osp.png)
-  INSTALL(FILES ../../icons/osp_32.png DESTINATION ../share/icons/hicolor/32x32/mimetypes RENAME application-openstudio.osp.png)
-  INSTALL(FILES ../../icons/osp_48.png DESTINATION ../share/icons/hicolor/48x48/mimetypes RENAME application-openstudio.osp.png)
-  INSTALL(FILES ../../icons/osp_128.png DESTINATION ../share/icons/hicolor/128x128/mimetypes RENAME application-openstudio.osp.png)
-  INSTALL(FILES ../../icons/osp_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.osp.png) 
-ENDIF()
-
-# directories to look for dependencies
-SET(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
-
-if (APPLE)  
-  install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
-           DESTINATION Pat.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
-         )
-else()
-  install( DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
-           DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/pat
-         ) 
+  install(FILES ../../icons/osp_16.png DESTINATION ../share/icons/hicolor/16x16/mimetypes RENAME application-openstudio.osp.png)
+  install(FILES ../../icons/osp_32.png DESTINATION ../share/icons/hicolor/32x32/mimetypes RENAME application-openstudio.osp.png)
+  install(FILES ../../icons/osp_48.png DESTINATION ../share/icons/hicolor/48x48/mimetypes RENAME application-openstudio.osp.png)
+  install(FILES ../../icons/osp_128.png DESTINATION ../share/icons/hicolor/128x128/mimetypes RENAME application-openstudio.osp.png)
+  install(FILES ../../icons/osp_256.png DESTINATION ../share/icons/hicolor/256x256/mimetypes RENAME application-openstudio.osp.png)
 endif()
 
-IF( WIN32 OR APPLE )
-  INSTALL(CODE "
-  include(BundleUtilities)
-  fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
-  " )
-ENDIF()
+# directories to look for dependencies
+set(DIRS ${QT_LIBRARY_DIR} ${LIBRARY_SEARCH_DIRECTORY})
 
-IF( WIN32 )
+if(APPLE)
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
+          DESTINATION Pat.app/Contents/share/openstudio-${OPENSTUDIO_VERSION}/pat
+  )
+else()
+  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/pat_app/Measures
+          DESTINATION share/openstudio-${OPENSTUDIO_VERSION}/pat
+  )
+endif()
+
+if(WIN32 OR APPLE)
+  install(CODE "
+    include(BundleUtilities)
+    fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
+  ")
+endif()
+
+if(WIN32)
   include(GetPrerequisites)
-    INSTALL(CODE "
+  install(CODE "
     include(GetPrerequisites)
-    GET_PREREQUISITES(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
-    FOREACH(PREREQ \${PREREQS})
+    get_prerequisites(\"${APPS}\" PREREQS 0 0 \"${APPS}\" \"${DIRS}\")
+    foreach(PREREQ \${PREREQS})
       #message(\"\${PREREQ}\")
-      IF( \"\${PREREQ}\" MATCHES \".*ruby.*\" )
+      if(\"\${PREREQ}\" MATCHES \".*ruby.*\")
         gp_resolve_item(\"${APPS}\" \"\${PREREQ}\" \"${APPS}\" \"${DIRS}\" FULL_PREREQ)
         execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${FULL_PREREQ}\" \"\${CMAKE_INSTALL_PREFIX}/bin/\")
-      ENDIF()
-    ENDFOREACH()
-    " )
-ENDIF()
+      endif()
+    endforeach()
+  ")
+endif()
 
 # Due to duplication of the Apple Qt framework inside of the OpenStudio application
 # we need to fix up and include the Ruby libraries inside of the application
 # bundle if we want to be able to load them... if we try to load them from the
 # Ruby install path, MacOS thinks we are loading two different sets of Qt dlls
 # at the same time and it causes static initialization problems and a crash
-IF( APPLE )
-  INSTALL(CODE "
+if(APPLE)
+  install(CODE "
 
     file(GLOB_RECURSE PLUGINS
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioutilities*.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudiomodel*.bundle\"
       \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioenergyplus*.bundle\"
-      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioruleset.bundle\")
+      \"${CMAKE_BINARY_DIR}/Products/ruby/openstudioruleset.bundle\"
+    )
 
-    file( COPY \${PLUGINS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}\" )
+    file(COPY \${PLUGINS} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}\")
 
     file(GLOB_RECURSE FIXUPPLUGINS
       \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/plugins/*${CMAKE_SHARED_LIBRARY_SUFFIX}\"
-      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.bundle\" )
+      \"\${CMAKE_INSTALL_PREFIX}/${plugin_dest_dir}/*.bundle\"
+    )
 
     include(BundleUtilities)
 
     fixup_bundle(\"${APPS}\" \"\${FIXUPPLUGINS}\" \"${DIRS}\")
-  " )
-ENDIF()
+  ")
+endif()

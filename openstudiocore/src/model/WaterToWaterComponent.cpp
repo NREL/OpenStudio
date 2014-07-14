@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2010, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,23 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WaterToWaterComponent.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/Mixer_Impl.hpp>
-#include <utilities/core/Assert.hpp>
+#include "WaterToWaterComponent.hpp"
+#include "WaterToWaterComponent_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Splitter.hpp"
+#include "Splitter_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 
@@ -257,11 +257,9 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const
   {
     std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-    for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-    it != itEnd;
-    ++it )
+    for(const auto & elem : plantLoops)
     {
-      OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
+      OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
       if(plantLoop)
       {
         if( plantLoop->supplyComponent(this->handle()) )
@@ -287,11 +285,9 @@ boost::optional<PlantLoop> WaterToWaterComponent_Impl::secondaryPlantLoop() cons
   {
     std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-    for( std::vector<PlantLoop>::iterator it = plantLoops.begin(),itEnd=plantLoops.end();
-    it != itEnd;
-    ++it )
+    for(const auto & elem : plantLoops)
     {
-      OptionalPlantLoop plantLoop = it->optionalCast<PlantLoop>();
+      OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
       if(plantLoop)
       {
         if( plantLoop->demandComponent(this->handle()) )
@@ -523,7 +519,7 @@ WaterToWaterComponent::WaterToWaterComponent(IddObjectType type,const Model& mod
   OS_ASSERT(getImpl<detail::WaterToWaterComponent_Impl>());
 }     
 
-WaterToWaterComponent::WaterToWaterComponent(boost::shared_ptr<detail::WaterToWaterComponent_Impl> p)
+WaterToWaterComponent::WaterToWaterComponent(std::shared_ptr<detail::WaterToWaterComponent_Impl> p)
   : HVACComponent(p)
 {}
 

@@ -20,9 +20,9 @@
 #ifndef UTILITIES_UNITS_SIUNIT_IMPL_HPP
 #define UTILITIES_UNITS_SIUNIT_IMPL_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit_Impl.hpp>
-#include <utilities/units/SIUnit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit_Impl.hpp"
+#include "SIUnit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -66,7 +66,7 @@ namespace detail {
     /** @name Base Units and Scale */
     //@{
 
-    /** Throws if baseUnit is not a vaild for SIUnit. */
+    /** Throws if baseUnit is not a valid for SIUnit. */
     virtual void setBaseUnitExponent(const std::string& baseUnit, int exponent);
 
     //@}

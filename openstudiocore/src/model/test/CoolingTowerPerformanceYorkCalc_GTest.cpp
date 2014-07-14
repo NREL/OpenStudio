@@ -19,10 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/CoolingTowerPerformanceYorkCalc.hpp>
-#include <model/CoolingTowerPerformanceYorkCalc_Impl.hpp>
+#include "../CoolingTowerPerformanceYorkCalc.hpp"
+#include "../CoolingTowerPerformanceYorkCalc_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

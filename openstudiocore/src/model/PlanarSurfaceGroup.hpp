@@ -20,8 +20,8 @@
 #ifndef MODEL_PLANARSURFACEGROUP_HPP
 #define MODEL_PLANARSURFACEGROUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/OpaqueMaterial.hpp>
+#include "ModelAPI.hpp"
+#include "OpaqueMaterial.hpp"
 
 namespace openstudio {
 
@@ -118,7 +118,7 @@ class MODEL_API PlanarSurfaceGroup : public ParentObject {
   friend class openstudio::IdfObject;
   friend class detail::PlanarSurfaceGroup_Impl;
 
-  explicit PlanarSurfaceGroup(boost::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl);
+  explicit PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl);
 
   /// @endcond
  private:

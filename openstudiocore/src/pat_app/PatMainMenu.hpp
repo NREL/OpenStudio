@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PATMAINMENU_H
-#define OPENSTUDIO_PATMAINMENU_H
+#ifndef PATAPP_PATMAINMENU_HPP
+#define PATAPP_PATMAINMENU_HPP
 
 #include <QMenuBar>
 
@@ -34,7 +34,7 @@ class PatMainMenu : public QMenuBar
 
   public:
 
-  PatMainMenu(QWidget *parent = 0);
+  PatMainMenu(QWidget *parent = nullptr);
 
   virtual ~PatMainMenu();
 
@@ -90,11 +90,11 @@ class PatMainMenu : public QMenuBar
 
   QMenu * m_helpMenu;
 
-  QAction *  m_openBclDlgAction;
+  QAction * m_openBclDlgAction;
 
-  QAction *  m_openCloudDlgAction;
+  QAction * m_openCloudDlgAction;
 
-  QAction *  m_openMonitorUseDlgAction;
+  QAction * m_openMonitorUseDlgAction;
 
   QAction * m_newAction;
   QAction * m_loadFileAction;
@@ -117,5 +117,5 @@ class PatMainMenu : public QMenuBar
 
 } // openstudio
 
-#endif // OPENSTUDIO_PATMAINMENU_H
+#endif // PATAPP_PATMAINMENU_HPP
 

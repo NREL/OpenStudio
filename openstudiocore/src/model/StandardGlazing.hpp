@@ -20,8 +20,8 @@
 #ifndef MODEL_STANDARDGLAZING_HPP
 #define MODEL_STANDARDGLAZING_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Glazing.hpp>
+#include "ModelAPI.hpp"
+#include "Glazing.hpp"
 
 namespace openstudio {
 
@@ -256,7 +256,7 @@ class MODEL_API StandardGlazing : public Glazing {
   /// @cond
   typedef detail::StandardGlazing_Impl ImplType;
 
-  explicit StandardGlazing(boost::shared_ptr<detail::StandardGlazing_Impl> impl);
+  explicit StandardGlazing(std::shared_ptr<detail::StandardGlazing_Impl> impl);
 
   friend class detail::StandardGlazing_Impl;
   friend class Model;

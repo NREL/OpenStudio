@@ -17,18 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_RUNMANAGER_HPP__
-#define OPENSTUDIO_RUNMANAGER_RUNMANAGER_HPP__
+#ifndef RUNMANAGER_LIB_RUNMANAGER_HPP
+#define RUNMANAGER_LIB_RUNMANAGER_HPP
 
-#include <runmanager/lib/ConfigOptions.hpp>
-#include <runmanager/lib/RunManagerAPI.hpp>
+#include "ConfigOptions.hpp"
+#include "RunManagerAPI.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/UUID.hpp>
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/UUID.hpp"
 
 #include <QAbstractItemModel>
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
   namespace model
@@ -61,12 +59,12 @@ namespace detail {
       }
 
     private:
-      RunManagerStatusHandle(const boost::shared_ptr<RunManagerStatus> &t_statusUI)
+      RunManagerStatusHandle(const std::shared_ptr<RunManagerStatus> &t_statusUI)
         : m_statusUI(t_statusUI)
       {
       }
 
-      boost::shared_ptr<RunManagerStatus> m_statusUI;
+      std::shared_ptr<RunManagerStatus> m_statusUI;
   };
 
   /// A handle to an underlying RunManager_Impl object, can be copied and passed
@@ -273,14 +271,14 @@ namespace detail {
           Qt::ConnectionType type = Qt::QueuedConnection) const;
 
       /// Disconnects signal or signals from the underlying RunManager_Impl object
-      bool disconnect( const char * signal = 0, const QObject * receiver = 0, const char * method = 0);
+      bool disconnect( const char * signal = nullptr, const QObject * receiver = nullptr, const char * method = nullptr);
 
       /// \returns a set of named statistics regarding the job queue
       std::map<std::string, double> statistics() const;
 
-      /// Sets the password to use when making a SLURM connection.
-      /// Passwords are not persisted.
-      void setSLURMPassword(const std::string &t_pass);
+//      /// Sets the password to use when making a SLURM connection.
+//      /// Passwords are not persisted.
+//      void setSLURMPassword(const std::string &t_pass);
 
       /// Persist a workflow to the database
       /// \returns the key the workflow is stored under
@@ -311,7 +309,7 @@ namespace detail {
     private:
       REGISTER_LOGGER("openstudio.runmanager.RunManager");
 
-      boost::shared_ptr<detail::RunManager_Impl> m_impl;
+      std::shared_ptr<detail::RunManager_Impl> m_impl;
       RunManagerStatusHandle m_handle;
 
       struct DB_Handler;
@@ -323,6 +321,6 @@ namespace detail {
 }
 }
 
-#endif
+#endif // RUNMANAGER_LIB_RUNMANAGER_HPP
 
 

@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_VARIABLE_IMPL_HPP
 #define ANALYSIS_VARIABLE_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AnalysisObject_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AnalysisObject_Impl.hpp"
 
 #include <QVariant>
 

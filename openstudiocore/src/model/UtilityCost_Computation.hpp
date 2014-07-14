@@ -20,9 +20,9 @@
 #ifndef MODEL_UTILITYCOST_COMPUTATION_HPP
 #define MODEL_UTILITYCOST_COMPUTATION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -91,7 +91,7 @@ class MODEL_API UtilityCost_Computation : public ParentObject{
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Computation(boost::shared_ptr<detail::UtilityCost_Computation_Impl> impl);
+  explicit UtilityCost_Computation(std::shared_ptr<detail::UtilityCost_Computation_Impl> impl);
 
 private:
 

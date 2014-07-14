@@ -19,9 +19,9 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/core/Macro.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Finder.hpp>
+#include "../Macro.hpp"
+#include "../Logger.hpp"
+#include "../Finder.hpp"
 
 using std::string;
 using openstudio::NameFinder;
@@ -205,13 +205,13 @@ TEST(Finder, findByName_Ptr)
 
   // found
   obj = findByName(haystack, "Billy");
-  ASSERT_TRUE(obj);
+  ASSERT_TRUE(obj.get());
   EXPECT_TRUE("Billy" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
 
   // found
   obj = findByName(haystack, "Mary");
-  ASSERT_TRUE(obj);
+  ASSERT_TRUE(obj.get());
   EXPECT_TRUE("Mary" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
  
@@ -225,7 +225,7 @@ TEST(Finder, findByName_Ptr)
 
   // found the first one, not the last
   obj = findByName(haystack, "Billy");
-  ASSERT_TRUE(obj);
+  ASSERT_TRUE(obj.get());
   EXPECT_TRUE("Billy" == obj->name());
   EXPECT_EQ(static_cast<unsigned int>(1), obj->number());
   

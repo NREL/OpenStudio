@@ -17,36 +17,36 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/DaylightingDeviceShelf.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurface.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "StandardsInformationConstruction.hpp"
+#include "DaylightingDeviceShelf.hpp"
+#include "ShadingSurface.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurface.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Intersection.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/sql/SqlFile.hpp"
 
 #include <QPolygon>
 
@@ -223,7 +223,7 @@ namespace detail {
 
     boost::optional<ConstructionBase> construction = getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_SurfaceFields::ConstructionName);
     if (construction){
-      return std::make_pair<ConstructionBase, int>(*construction, 0);
+      return std::make_pair(*construction, 0);
     }
     
     boost::optional<Space> space = this->space();
@@ -506,7 +506,7 @@ namespace detail {
     SubSurfaceVector result;
     ModelObject object = getObject<ModelObject>();
     WorkspaceObjectVector idfSubSurfaces = object.getSources(IddObjectType(IddObjectType::OS_SubSurface));
-    BOOST_FOREACH(const WorkspaceObject& idfSubSurface, idfSubSurfaces){
+    for (const WorkspaceObject& idfSubSurface : idfSubSurfaces){
       OptionalSubSurface subSurface = this->model().getModelObject<SubSurface>(idfSubSurface.handle());
       if (subSurface){
         result.push_back(*subSurface);
@@ -690,7 +690,7 @@ namespace detail {
     if (test){
 
       // clean all other surfaces pointing to this (unless it is surface)
-      BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_Surface)){
+      for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)){
         if (wo.handle() == surface.handle()){
           continue;
         }
@@ -702,14 +702,14 @@ namespace detail {
         otherSurface.assignDefaultSunExposure();
         otherSurface.assignDefaultWindExposure();
 
-        BOOST_FOREACH(SubSurface subSurface, otherSurface.subSurfaces()){
+        for (SubSurface subSurface : otherSurface.subSurfaces()){
           subSurface.resetAdjacentSubSurface();
         }
       }
 
       if (!isSameSurface){
         // clean all other surfaces pointing to surface (unless it is this)
-        BOOST_FOREACH(WorkspaceObject wo, surface.getSources(IddObjectType::OS_Surface)){
+        for (WorkspaceObject wo : surface.getSources(IddObjectType::OS_Surface)){
           if (wo.handle() == this->handle()){
             continue;
           }
@@ -721,7 +721,7 @@ namespace detail {
           otherSurface.assignDefaultSunExposure();
           otherSurface.assignDefaultWindExposure();
 
-          BOOST_FOREACH(SubSurface subSurface, otherSurface.subSurfaces()){
+          for (SubSurface subSurface : otherSurface.subSurfaces()){
             subSurface.resetAdjacentSubSurface();
           }
         }
@@ -729,11 +729,11 @@ namespace detail {
 
       // this and surface are newly pointing to each other, clean sub surfaces on both
       if (isNewMatch){
-        BOOST_FOREACH(SubSurface subSurface, this->subSurfaces()){
+        for (SubSurface subSurface : this->subSurfaces()){
           subSurface.resetAdjacentSubSurface();
         }
         if (!isSameSurface){
-          BOOST_FOREACH(SubSurface subSurface, surface.subSurfaces()){
+          for (SubSurface subSurface : surface.subSurfaces()){
             subSurface.resetAdjacentSubSurface();
           }
         }
@@ -775,12 +775,12 @@ namespace detail {
     }
 
     // unset all matched sub surfaces
-    BOOST_FOREACH(SubSurface subSurface, this->subSurfaces()){
+    for (SubSurface subSurface : this->subSurfaces()){
       subSurface.resetAdjacentSubSurface();
     }
 
     // clean all other surfaces pointing to this
-    BOOST_FOREACH(WorkspaceObject wo, this->getSources(IddObjectType::OS_Surface)){
+    for (WorkspaceObject wo : this->getSources(IddObjectType::OS_Surface)){
 
       Surface otherSurface = wo.cast<Surface>();
       test = otherSurface.setString(OS_SurfaceFields::OutsideBoundaryConditionObject, "");
@@ -789,7 +789,7 @@ namespace detail {
       otherSurface.assignDefaultSunExposure();
       otherSurface.assignDefaultWindExposure();
 
-      BOOST_FOREACH(SubSurface subSurface, otherSurface.subSurfaces()){
+      for (SubSurface subSurface : otherSurface.subSurfaces()){
         subSurface.resetAdjacentSubSurface();
       }
     }
@@ -876,7 +876,7 @@ namespace detail {
 
     // non-zero intersection
     // could match here but will save that for other discrete operation
-    Surface surface(boost::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
+    Surface surface(std::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
     std::vector<Surface> newSurfaces;
     std::vector<Surface> newOtherSurfaces;
 
@@ -942,10 +942,10 @@ namespace detail {
     //LOG(Debug, "After intersection");
     //LOG(Debug, surface);
     //LOG(Debug, otherSurface);
-    //BOOST_FOREACH(const Surface& s, newSurfaces){
+    //for (const Surface& s : newSurfaces){
     //  LOG(Debug, s);
     //}
-    //BOOST_FOREACH(const Surface& s, newOtherSurfaces){
+    //for (const Surface& s : newOtherSurfaces){
     //  LOG(Debug, s);
     //}
 
@@ -986,7 +986,7 @@ namespace detail {
 
     this->setAdjacentSurface(otherSurface);
 
-    BOOST_FOREACH(SubSurface subSurface, this->subSurfaces()){
+    for (SubSurface subSurface : this->subSurfaces()){
       vertices = transformation * subSurface.vertices();
       std::reverse(vertices.begin(), vertices.end());
 
@@ -1158,7 +1158,7 @@ namespace detail {
     }
 
     double windowArea = 0.0;
-    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+    for (const SubSurface& subSurface : this->subSurfaces()){
       if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
           windowArea += subSurface.multiplier() * subSurface.netArea();
@@ -1185,7 +1185,7 @@ namespace detail {
     }
 
     double skylightArea = 0.0;
-    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+    for (const SubSurface& subSurface : this->subSurfaces()){
       if (istringEqual(subSurface.subSurfaceType(), "Skylight")){
           skylightArea += subSurface.multiplier() * subSurface.netArea();
       }
@@ -1215,7 +1215,7 @@ namespace detail {
     }
 
     double skylightArea = 0.0;
-    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+    for (const SubSurface& subSurface : this->subSurfaces()){
       if (istringEqual(subSurface.subSurfaceType(), "Skylight")){
           skylightArea += subSurface.multiplier() * subSurface.netArea();
       }
@@ -1280,7 +1280,7 @@ namespace detail {
     }
 
     // surface cannot have any non-window sub surfaces
-    BOOST_FOREACH(const SubSurface& subSurface, this->subSurfaces()){
+    for (const SubSurface& subSurface : this->subSurfaces()){
       if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
           istringEqual(subSurface.subSurfaceType(), "OperableWindow"))
       {
@@ -1325,7 +1325,7 @@ namespace detail {
     double xmax = std::numeric_limits<double>::min();
     double ymin = std::numeric_limits<double>::max();
     double ymax = std::numeric_limits<double>::min();
-    BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+    for (const Point3d& faceVertex : faceVertices){
       xmin = std::min(xmin, faceVertex.x());
       xmax = std::max(xmax, faceVertex.x());
       ymin = std::min(ymin, faceVertex.y());
@@ -1448,8 +1448,8 @@ namespace detail {
     }
 
     QPolygonF surfacePolygon;
-    BOOST_FOREACH(const Point3d& point, faceVertices){
-      if (abs(point.z()) > 0.001){
+    for (const Point3d& point : faceVertices){
+      if (std::abs(point.z()) > 0.001){
         LOG(Warn, "Surface point z not on plane, z =" << point.z());
       }
       surfacePolygon << QPointF(point.x(),point.y());
@@ -1465,8 +1465,8 @@ namespace detail {
       viewVertices.push_back(Point3d(viewMinX + viewWidth, viewMinY + viewHeight, 0)); 
 
       QPolygonF windowPolygon;
-      BOOST_FOREACH(const Point3d& point, viewVertices){
-        if (abs(point.z()) > 0.001){
+      for (const Point3d& point : viewVertices){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());
@@ -1475,7 +1475,7 @@ namespace detail {
       windowPolygon << QPointF(viewVertices[0].x(), viewVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      BOOST_FOREACH(const QPointF& point, windowPolygon){
+      for (const QPointF& point : windowPolygon){
         if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
           LOG(Debug, "Surface does not fully contain SubSurface");
           return result;
@@ -1491,8 +1491,8 @@ namespace detail {
       daylightingVertices.push_back(Point3d(daylightingMinX + daylightingWidth, daylightingMinY + daylightingHeight, 0)); 
     
       QPolygonF windowPolygon;
-      BOOST_FOREACH(const Point3d& point, daylightingVertices){
-        if (abs(point.z()) > 0.001){
+      for (const Point3d& point : daylightingVertices){
+        if (std::abs(point.z()) > 0.001){
           LOG(Warn, "Surface point z not on plane, z =" << point.z());
         }
         windowPolygon << QPointF(point.x(),point.y());
@@ -1501,7 +1501,7 @@ namespace detail {
       windowPolygon << QPointF(daylightingVertices[0].x(), daylightingVertices[0].y());
 
       // sub surface must be fully contained by base surface
-      BOOST_FOREACH(const QPointF& point, windowPolygon){
+      for (const QPointF& point : windowPolygon){
         if (!surfacePolygon.containsPoint(point, Qt::OddEvenFill)){
           LOG(Debug, "Surface does not fully contain SubSurface");
           return result;
@@ -1526,7 +1526,7 @@ namespace detail {
     }
 
     // everything ok, remove all windows
-    BOOST_FOREACH(SubSurface subSurface, this->subSurfaces()){
+    for (SubSurface subSurface : this->subSurfaces()){
       if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || 
         istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
         subSurface.remove();
@@ -1655,7 +1655,7 @@ namespace detail {
     //double xmax = std::numeric_limits<double>::min();
     double ymin = std::numeric_limits<double>::max();
     double ymax = std::numeric_limits<double>::min();
-    BOOST_FOREACH(const Point3d& faceVertex, faceVertices){
+    for (const Point3d& faceVertex : faceVertices){
       //xmin = std::min(xmin, faceVertex.x());
       //xmax = std::max(xmax, faceVertex.x());
       ymin = std::min(ymin, faceVertex.y());
@@ -1668,7 +1668,7 @@ namespace detail {
     // create a mask for each sub surface
     std::vector<Point3dVector> masks;
     std::map<Handle, Point3dVector> handleToFaceVertexMap;
-    BOOST_FOREACH(const SubSurface& subSurface, subSurfaces){
+    for (const SubSurface& subSurface : subSurfaces){
       
       Point3dVector subSurfaceFaceVertices = inverseTransformation * subSurface.vertices();
       if (subSurfaceFaceVertices.size() < 3){
@@ -1684,7 +1684,7 @@ namespace detail {
       double xmax = std::numeric_limits<double>::min();
       //double ymin = std::numeric_limits<double>::max();
       //double ymax = std::numeric_limits<double>::min();
-      BOOST_FOREACH(const Point3d& faceVertex, subSurfaceFaceVertices){
+      for (const Point3d& faceVertex : subSurfaceFaceVertices){
         xmin = std::min(xmin, faceVertex.x());
         xmax = std::max(xmax, faceVertex.x());
         //ymin = std::min(ymin, faceVertex.y());
@@ -1708,17 +1708,17 @@ namespace detail {
     // intersect masks with surface
     std::vector<Point3dVector> newFaces;
     newFaces.push_back(faceVertices);
-    BOOST_FOREACH(const Point3dVector& mask, joinedMasks){
+    for (const Point3dVector& mask : joinedMasks){
 
       std::vector<Point3dVector> tmpFaces;
       unsigned numIntersects = 0;
-      BOOST_FOREACH(const Point3dVector& face, newFaces){
+      for (const Point3dVector& face : newFaces){
         // each mask should intersect one and only one newFace
         boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, mask, tol);
         if (intersection){
           numIntersects += 1;
           tmpFaces.push_back(intersection->polygon1());
-          BOOST_FOREACH(const Point3dVector& tmpFace, intersection->newPolygons1()){
+          for (const Point3dVector& tmpFace : intersection->newPolygons1()){
             tmpFaces.push_back(tmpFace);
           }
         }else{
@@ -1742,7 +1742,7 @@ namespace detail {
     bool changedThis = false;
     unsigned numReparented = 0;
     Model model = this->model();
-    BOOST_FOREACH(const Point3dVector& newFace, newFaces){
+    for (const Point3dVector& newFace : newFaces){
       
       boost::optional<Surface> surface;
       if (!changedThis){
@@ -1754,7 +1754,7 @@ namespace detail {
         surface = object->optionalCast<Surface>();
         OS_ASSERT(surface);
         // remove cloned sub surfaces
-        BOOST_FOREACH(ModelObject child, surface->children()){
+        for (ModelObject child : surface->children()){
           child.remove();
         }
         result.push_back(*surface);
@@ -1768,7 +1768,7 @@ namespace detail {
 
       // loop over all sub surfaces and reparent 
       typedef std::pair<Handle, Point3dVector> MapType;
-      BOOST_FOREACH(const MapType& p, handleToFaceVertexMap){
+      for (const MapType& p : handleToFaceVertexMap){
         // if surface includes a single point it will include them all
         if (pointInPolygon(p.second[0], newFace, tol)){
           boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);
@@ -1820,7 +1820,7 @@ namespace detail {
 
     Model model = this->model();
     Surface surface = getObject<Surface>();
-    BOOST_FOREACH(const std::vector<Point3d>& face, faces){
+    for (const std::vector<Point3d>& face : faces){
       Point3dVector faceVertices = inverseTransformation*face;
 
       // boost polygon wants vertices in clockwise order, faceVertices must be reversed
@@ -1838,7 +1838,7 @@ namespace detail {
           allNewFaceVertices = computeTriangulation(intersectionVertices, holes, tol);
         } 
 
-        BOOST_FOREACH(Point3dVector newFaceVertices, allNewFaceVertices){
+        for (Point3dVector newFaceVertices : allNewFaceVertices){
 
           std::reverse(newFaceVertices.begin(), newFaceVertices.end());
 
@@ -2115,7 +2115,7 @@ std::vector<Surface> Surface::splitSurfaceForSubSurfaces()
 }
 
 /// @cond
-Surface::Surface(boost::shared_ptr<detail::Surface_Impl> impl)
+Surface::Surface(std::shared_ptr<detail::Surface_Impl> impl)
   : PlanarSurface(impl)
 {}
 /// @endcond

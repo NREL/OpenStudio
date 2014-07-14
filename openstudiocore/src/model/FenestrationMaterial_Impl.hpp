@@ -20,7 +20,7 @@
 #ifndef MODEL_FENESTRATIONMATERIAL_IMPL_HPP
 #define MODEL_FENESTRATIONMATERIAL_IMPL_HPP
 
-#include <model/Material_Impl.hpp>
+#include "Material_Impl.hpp"
 
 #include <QObject>
 

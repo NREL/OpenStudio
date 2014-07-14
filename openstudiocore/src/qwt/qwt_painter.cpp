@@ -34,7 +34,7 @@
 
 QwtMetricsMap QwtPainter::d_metricsMap;
 
-#if defined(Q_WS_X11)
+#if defined(Q_OS_X11)
 bool QwtPainter::d_deviceClipping = true;
 #else
 bool QwtPainter::d_deviceClipping = false;
@@ -263,7 +263,7 @@ void QwtPainter::fillRect(QPainter *painter,
 
     QRect r = d_metricsMap.layoutToDevice(rect, painter);
     if ( deviceClipping )
-        r = r.intersect(clipRect);
+        r = r.intersected(clipRect);
 
     if ( r.isValid() )
         painter->fillRect(r, brush);

@@ -1,38 +1,39 @@
 /**********************************************************************
-*  Copyright (c) 2014, Alliance for Sustainable Energy.
-*  All rights reserved.
-*
-*  This library is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU Lesser General Public
-*  License as published by the Free Software Foundation; either
-*  version 2.1 of the License, or (at your option) any later version.
-*
-*  This library is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-*  Lesser General Public License for more details.
-*
-*  You should have received a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-**********************************************************************/
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
+
 #include "PrjObjects.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 namespace contam {
 
 Zone::Zone()
 {
-  m_impl = boost::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl());
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl());
 }
 
 Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,std::string relHt,std::string Vol,std::string T0,std::string P0,
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,std::string X1,
   std::string Y1,std::string H1,std::string X2,std::string Y2,std::string H2,std::string celldx,std::string axialD,int u_aD,int u_L)
 {
-  m_impl = boost::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
     Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L));
 }
 
@@ -40,7 +41,7 @@ Zone::Zone(int nr,unsigned int flags,int ps,int pc,int pk,int pl,double relHt,do
   std::string name,int color,int u_Ht,int u_V,int u_T,int u_P,int cdaxis,int cfd,std::string cfdname,double X1,
   double Y1,double H1,double X2,double Y2,double H2,double celldx,double axialD,int u_aD,int u_L)
 {
-  m_impl = boost::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
+  m_impl = std::shared_ptr<detail::ZoneImpl>(new detail::ZoneImpl(nr,flags,ps,pc,pk,pl,relHt,Vol,T0,P0,name,color,u_Ht,u_V,u_T,u_P,cdaxis,cfd,cfdname,X1,
     Y1,H1,X2,Y2,H2,celldx,axialD,u_aD,u_L));
 }
 
@@ -488,19 +489,19 @@ bool Zone::setIc(std::vector<std::string> &ic)
 
 Species::Species()
 {
-  m_impl = boost::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl);
 }
 
 Species::Species(int nr,int sflag,int ntflag,std::string molwt,std::string mdiam,std::string edens,std::string decay,std::string Dm,
   std::string ccdef,std::string Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
 {
-  m_impl = boost::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
 }
 
 Species::Species(int nr,int sflag,int ntflag,double molwt,double mdiam,double edens,double decay,double Dm,
   double ccdef,double Cp,int ucc,int umd,int ued,int udm,int ucp,std::string name,std::string desc)
 {
-  m_impl = boost::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
+  m_impl = std::shared_ptr<detail::SpeciesImpl>(new detail::SpeciesImpl(nr,sflag,ntflag,molwt,mdiam,edens,decay,Dm,ccdef,Cp,ucc,umd,ued,udm,ucp,name,desc));
 }
 
 Species::Species(const Species &other) : m_impl(other.m_impl)
@@ -742,12 +743,12 @@ void Species::setDesc(const std::string &desc)
 
 Ahs::Ahs()
 {
-  m_impl = boost::shared_ptr<detail::AhsImpl>(new detail::AhsImpl);
+  m_impl = std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl);
 }
 
 Ahs::Ahs(int nr,int zone_r,int zone_s,int path_r,int path_s,int path_x,std::string name,std::string desc)
 {
-  m_impl = boost::shared_ptr<detail::AhsImpl>(new detail::AhsImpl(nr,zone_r,zone_s,path_r,path_s,path_x,name,desc));
+  m_impl = std::shared_ptr<detail::AhsImpl>(new detail::AhsImpl(nr,zone_r,zone_s,path_r,path_s,path_x,name,desc));
 }
 
 Ahs::Ahs(const Ahs &other) : m_impl(other.m_impl)
@@ -864,7 +865,7 @@ void Ahs::setDesc(const std::string &desc)
 
 AirflowPath::AirflowPath()
 {
-  m_impl = boost::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl);
 }
 
 AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,int pa,int ps,int pc,int pld,std::string X,
@@ -872,7 +873,7 @@ AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,i
   std::string Xmax,std::string Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,
   int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
 {
-  m_impl = boost::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
     Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp));
 }
 
@@ -881,7 +882,7 @@ AirflowPath::AirflowPath(int nr,int flags,int pzn,int pzm,int pe,int pf,int pw,i
   double Xmax,double Xmin,unsigned int icon,unsigned int dir,int u_Ht,int u_XY,int u_dP,
   int u_F,int cfd,std::string cfd_name,int cfd_ptype,int cfd_btype,int cfd_capp)
 {
-  m_impl = boost::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
+  m_impl = std::shared_ptr<detail::AirflowPathImpl>(new detail::AirflowPathImpl(nr,flags,pzn,pzm,pe,pf,pw,pa,ps,pc,pld,X,Y,relHt,mult,wPset,wPmod,wazm,Fahs,
     Xmax,Xmin,icon,dir,u_Ht,u_XY,u_dP,u_F,cfd,cfd_name,cfd_ptype,cfd_btype,cfd_capp));
 }
 
@@ -1339,7 +1340,7 @@ bool AirflowPath::outsideAir()
 
 RunControl::RunControl()
 {
-  m_impl = boost::shared_ptr<detail::RunControlImpl>(new detail::RunControlImpl());
+  m_impl = std::shared_ptr<detail::RunControlImpl>(new detail::RunControlImpl());
 }
 /*
 RunControl::RunControl(int sim_af,int afcalc,int afmaxi,double afrcnvg,double afacnvg,double afrelax,
@@ -2600,17 +2601,17 @@ void RunControl::setCfd_dtcmo(const int cfd_dtcmo)
 
 Level::Level()
 {
-  m_impl = boost::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl);
 }
 
 Level::Level(int nr,double refht,double delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
 {
-  m_impl = boost::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
 }
 
 Level::Level(int nr,std::string refht,std::string delht,int u_rfht,int u_dlht,std::string name,std::vector<Icon> icons)
 {
-  m_impl = boost::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
+  m_impl = std::shared_ptr<detail::LevelImpl>(new detail::LevelImpl(nr,refht,delht,u_rfht,u_dlht,name,icons));
 }
 
 Level::Level(const Level &other) : m_impl(other.m_impl)
@@ -2727,13 +2728,13 @@ void Level::setIcons(const std::vector<Icon> &icons)
 
 DaySchedule::DaySchedule()
 {
-  m_impl = boost::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl());
+  m_impl = std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl());
 }
 
 DaySchedule::DaySchedule(int nr,int shape,int utyp,int ucnv,std::string name,std::string desc,
   std::vector<SchedulePoint> points)
 {
-  m_impl = boost::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl(nr,shape,utyp,ucnv,name,desc,points));
+  m_impl = std::shared_ptr<detail::DayScheduleImpl>(new detail::DayScheduleImpl(nr,shape,utyp,ucnv,name,desc,points));
 }
 
 DaySchedule::DaySchedule(const DaySchedule &other) : m_impl(other.m_impl)
@@ -2840,12 +2841,12 @@ void DaySchedule::setPoints(const std::vector<SchedulePoint> &points)
 
 WeekSchedule::WeekSchedule()
 {
-  m_impl = boost::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl());
+  m_impl = std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl());
 }
 
 WeekSchedule::WeekSchedule(int nr,int utyp,int ucnv,std::string name,std::string desc,std::vector<int> j)
 {
-  m_impl = boost::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl(nr,utyp,ucnv,name,desc,j));
+  m_impl = std::shared_ptr<detail::WeekScheduleImpl>(new detail::WeekScheduleImpl(nr,utyp,ucnv,name,desc,j));
 }
 
 WeekSchedule::WeekSchedule(const WeekSchedule &other) : m_impl(other.m_impl)
@@ -2942,13 +2943,13 @@ void WeekSchedule::setJ(const std::vector<int> &j)
 
 WindPressureProfile::WindPressureProfile()
 {
-  m_impl = boost::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl());
+  m_impl = std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl());
 }
 
 WindPressureProfile::WindPressureProfile(int nr,int type,std::string name,std::string desc,
   std::vector<PressureCoefficientPoint> coeffs)
 {
-  m_impl = boost::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr,type,name,desc,coeffs));
+  m_impl = std::shared_ptr<detail::WindPressureProfileImpl>(new detail::WindPressureProfileImpl(nr,type,name,desc,coeffs));
 }
 
 WindPressureProfile::WindPressureProfile(const WindPressureProfile &other) : m_impl(other.m_impl)
@@ -3058,7 +3059,7 @@ ControlNode::Type ControlNode::convertTag(std::string string)
 
 ControlNode* ControlNode::readElement(Reader &input)
 {
-  ControlNode *out=NULL;
+  ControlNode *out=nullptr;
   int nr = input.read<int>();
   std::string dataType = input.readString();
   int seqnr = input.read<int>();
@@ -3134,18 +3135,18 @@ ControlNode* ControlNode::readElement(Reader &input)
 
 CdvDat::CdvDat()
 {
-  m_impl = boost::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl());
+  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl());
 }
 
 CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc)
 {
-  m_impl = boost::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc));
+  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc));
 }
 
 CdvDat::CdvDat(int nr,int seqnr,unsigned int flags,int inreq,int n1,int n2,std::string name,std::string desc,
   std::string valuename)
 {
-  m_impl = boost::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename));
+  m_impl = std::shared_ptr<detail::CdvDatImpl>(new detail::CdvDatImpl(nr,seqnr,flags,inreq,n1,n2,name,desc,valuename));
 }
 
 CdvDat::CdvDat(const CdvDat &other) : m_impl(other.m_impl)

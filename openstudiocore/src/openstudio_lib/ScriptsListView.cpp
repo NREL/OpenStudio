@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/ScriptsListView.hpp>
-#include <openstudio_lib/BuildingStoryInspectorView.hpp>
-#include <openstudio_lib/ModelObjectListView.hpp>
-#include <openstudio_lib/ScriptItem.hpp>
+#include "ScriptsListView.hpp"
+#include "BuildingStoryInspectorView.hpp"
+#include "ModelObjectListView.hpp"
+#include "ScriptItem.hpp"
 
-#include <utilities/core/PathHelpers.hpp>
+#include "../utilities/core/PathHelpers.hpp"
 
-#include <model/Model_Impl.hpp>
+#include "../model/Model_Impl.hpp"
 #include <QStyleOption>
 #include <QPainter>
 #include <QVBoxLayout>
@@ -38,7 +38,7 @@
 namespace openstudio {
 
   ScriptsVectorController::ScriptsVectorController(const openstudio::path &t_path,
-      const boost::shared_ptr<QFileSystemWatcher> &t_fswatcher)
+      const std::shared_ptr<QFileSystemWatcher> &t_fswatcher)
     : m_path(t_path), m_fswatcher(t_fswatcher)
   {
     connect(m_fswatcher.get(), SIGNAL(directoryChanged(const QString &)), this, SLOT(directoryChanged(const QString &)));
@@ -129,7 +129,7 @@ ScriptsListView::ScriptsListView(const openstudio::path &t_path,
       bool addScrollArea,
       bool draggable,
       bool removeable,
-      const boost::shared_ptr<QFileSystemWatcher> &t_fswatcher,
+      const std::shared_ptr<QFileSystemWatcher> &t_fswatcher,
       QWidget* parent )
   : OSItemList(new ScriptsVectorController(t_path, t_fswatcher), addScrollArea, parent)
 {
@@ -143,7 +143,7 @@ void ScriptsListView::updateData() {
 
 std::vector<ruleset::UserScriptInfo> ScriptsListView::userScripts() {
   std::vector<ruleset::UserScriptInfo> result;
-  BOOST_FOREACH(OSItem* item,items()) {
+  for (OSItem* item : items()) {
     ScriptItem* scriptItem = qobject_cast<ScriptItem*>(item);
     if (boost::optional<ruleset::UserScriptInfo> info = scriptItem->userScriptInfo()) {
       result.push_back(*info);

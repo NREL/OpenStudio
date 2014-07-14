@@ -20,10 +20,10 @@
 #ifndef ANALYSIS_OPTIMIZATIONPROBLEM_IMPL_HPP
 #define ANALYSIS_OPTIMIZATIONPROBLEM_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Problem_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Problem_Impl.hpp"
 
-#include <analysis/Function.hpp>
+#include "Function.hpp"
 
 namespace openstudio {
 namespace analysis {

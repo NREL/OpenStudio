@@ -21,15 +21,15 @@
 #define RESULTSVIEWER_PLOTVIEWPROPERTIES_HPP
 #define RESULTSVIEWER_API
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QTreeWidgetItem>
-#include <QtCore/QList>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QMdiSubWindow>
+#include <QMainWindow>
+#include <QTreeWidgetItem>
+#include <QList>
+#include <QAction>
+#include <QMenu>
+#include <QMdiSubWindow>
 #include <string>
-#include <resultsviewer/PlotView.hpp>
-#include <resultsviewer/ui_PlotViewProperties.hxx>
+#include "PlotView.hpp"
+#include <resultsviewer/ui_PlotViewProperties.h>
 #include <qwt/qwt_plot_curve.h>
 
 namespace resultsviewer{
@@ -43,7 +43,7 @@ class PlotViewProperties : public QDialog
   Q_OBJECT
 
 public:
-  PlotViewProperties(QWidget *parent = 0, Qt::WFlags flags = 0);
+  PlotViewProperties(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
   virtual ~PlotViewProperties();
 
   void setPlotView(PlotView *PlotViewItem);

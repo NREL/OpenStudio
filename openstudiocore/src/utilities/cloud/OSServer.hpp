@@ -20,11 +20,11 @@
 #ifndef UTILITIES_CLOUD_OSSERVER_HPP
 #define UTILITIES_CLOUD_OSSERVER_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/UUID.hpp"
+#include "../core/Path.hpp"
+#include "../core/Url.hpp"
+#include "../core/Logger.hpp"
 
 #include <string>
 
@@ -210,22 +210,22 @@ namespace openstudio{
                  Qt::ConnectionType type = Qt::AutoConnection) const;
 
     /** Disconnect signal from this OSServer to slot on receiver. */
-    bool disconnect(const char* signal=0,
-                    const QObject* receiver=0,
-                    const char* slot=0) const;
+    bool disconnect(const char* signal=nullptr,
+                    const QObject* receiver=nullptr,
+                    const char* slot=nullptr) const;
 
     //@}
     /** @name Type Casting */
     //@{
 
       template<typename T>
-        boost::shared_ptr<T> getImpl() const
-      {  return boost::dynamic_pointer_cast<T>(m_impl); }
+        std::shared_ptr<T> getImpl() const
+      {  return std::dynamic_pointer_cast<T>(m_impl); }
 
       /// cast to type T, can throw std::bad_cast
       template<typename T>
       T cast() const{
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+        std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
         if (!impl){
           throw(std::bad_cast());
         }
@@ -236,7 +236,7 @@ namespace openstudio{
       template<typename T>
       boost::optional<T> optionalCast() const{
         boost::optional<T> result;
-        boost::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
+        std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
         if (impl){
           result = T(impl);
         }
@@ -247,11 +247,11 @@ namespace openstudio{
 
   protected:
 
-    OSServer(const boost::shared_ptr<detail::OSServer_Impl>& impl);
+    OSServer(const std::shared_ptr<detail::OSServer_Impl>& impl);
 
   private:
 
-    boost::shared_ptr<detail::OSServer_Impl> m_impl;
+    std::shared_ptr<detail::OSServer_Impl> m_impl;
     
     // configure logging
     REGISTER_LOGGER("utilities.cloud.OSServer");

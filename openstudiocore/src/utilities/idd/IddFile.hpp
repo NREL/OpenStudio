@@ -20,18 +20,16 @@
 #ifndef UTILITIES_IDD_IDDFILE_HPP
 #define UTILITIES_IDD_IDDFILE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idd/IddObject.hpp>
+#include "IddObject.hpp"
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Path.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
 
 #include <string>
 #include <ostream>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 namespace openstudio{
 
@@ -134,9 +132,9 @@ class UTILITIES_API IddFile {
 
  private:
   // impl
-  boost::shared_ptr<detail::IddFile_Impl> m_impl;
+  std::shared_ptr<detail::IddFile_Impl> m_impl;
 
-  IddFile(const boost::shared_ptr<detail::IddFile_Impl>& impl);
+  IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl);
 
   // configure logging
   REGISTER_LOGGER("utilities.idd.IddFile");

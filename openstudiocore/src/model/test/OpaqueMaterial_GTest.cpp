@@ -19,24 +19,22 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../AirGap.hpp"
+#include "../AirGap_Impl.hpp"
+#include "../MasslessOpaqueMaterial.hpp"
+#include "../MasslessOpaqueMaterial_Impl.hpp"
+#include "../RoofVegetation.hpp"
+#include "../RoofVegetation_Impl.hpp"
+#include "../StandardOpaqueMaterial.hpp"
+#include "../StandardOpaqueMaterial_Impl.hpp"
+#include "../Model_Impl.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/data/Attribute.hpp>
+#include "../../utilities/data/Attribute.hpp"
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -57,7 +55,7 @@ TEST_F(ModelFixture, OpaqueMaterial_Daylighting_School_1)
   std::sort(opaqueMaterials.begin(),opaqueMaterials.end(),comparator);
   LOG(Info,"List of OpaqueMaterials in Daylighting School model, each "
       << "followed by their directUseCount(), nonResourceObjectUseCount().");
-  BOOST_FOREACH(const OpaqueMaterial& material,opaqueMaterials) {
+  for (const OpaqueMaterial& material : opaqueMaterials) {
     unsigned absCount = material.directUseCount();
     unsigned mainCount = material.nonResourceObjectUseCount();
     std::string name = material.name().get();

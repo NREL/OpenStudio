@@ -40,6 +40,10 @@
     }
     return 0;
   }
+  
+  long toEpochLong() const{
+    return static_cast<long>(self->toEpoch());
+  }
  
 };
 

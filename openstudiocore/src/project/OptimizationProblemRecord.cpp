@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/OptimizationProblemRecord.hpp>
-#include <project/OptimizationProblemRecord_Impl.hpp>
+#include "OptimizationProblemRecord.hpp"
+#include "OptimizationProblemRecord_Impl.hpp"
 
-#include <project/JoinRecord.hpp>
-#include <project/FunctionRecord.hpp>
+#include "JoinRecord.hpp"
+#include "FunctionRecord.hpp"
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
+#include "../analysis/OptimizationProblem.hpp"
+#include "../analysis/OptimizationProblem_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace project {
@@ -60,7 +60,7 @@ namespace detail {
     return result;
   }
 
-  void OptimizationProblemRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void OptimizationProblemRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<OptimizationProblemRecord>(query);
@@ -108,7 +108,7 @@ namespace detail {
   analysis::OptimizationProblem OptimizationProblemRecord_Impl::optimizationProblem() const {
     analysis::Problem prelim = ProblemRecord_Impl::problem();
     analysis::FunctionVector objectives;
-    BOOST_FOREACH(const FunctionRecord& functionRecord, objectiveRecords()) {
+    for (const FunctionRecord& functionRecord : objectiveRecords()) {
       objectives.push_back(functionRecord.function());
     }
     return analysis::OptimizationProblem(prelim.uuid(),
@@ -156,7 +156,7 @@ namespace detail {
 OptimizationProblemRecord::OptimizationProblemRecord(
     const analysis::OptimizationProblem& optimizationProblem,
     ProjectDatabase& database)
-  : ProblemRecord(boost::shared_ptr<detail::OptimizationProblemRecord_Impl>(
+  : ProblemRecord(std::shared_ptr<detail::OptimizationProblemRecord_Impl>(
         new detail::OptimizationProblemRecord_Impl(optimizationProblem, database)),
         database)
 {
@@ -169,7 +169,7 @@ OptimizationProblemRecord::OptimizationProblemRecord(
   // Save child objective functions
   int i = 0;
   std::vector<UUID> objectiveUUIDs;
-  BOOST_FOREACH(const analysis::Function& objective, optimizationProblem.objectives()) {
+  for (const analysis::Function& objective : optimizationProblem.objectives()) {
     objectiveUUIDs.push_back(objective.uuid());
     if (objective.isDirty() || isNew) {
       FunctionRecord newFunctionRecord = FunctionRecord::factoryFromFunction(
@@ -187,7 +187,7 @@ OptimizationProblemRecord::OptimizationProblemRecord(
 
 OptimizationProblemRecord::OptimizationProblemRecord(const QSqlQuery& query,
                                                      ProjectDatabase& database)
-  : ProblemRecord(boost::shared_ptr<detail::OptimizationProblemRecord_Impl>(
+  : ProblemRecord(std::shared_ptr<detail::OptimizationProblemRecord_Impl>(
         new detail::OptimizationProblemRecord_Impl(query, database)),
         database)
 {
@@ -195,7 +195,7 @@ OptimizationProblemRecord::OptimizationProblemRecord(const QSqlQuery& query,
 }
 
 OptimizationProblemRecord::OptimizationProblemRecord(
-    boost::shared_ptr<detail::OptimizationProblemRecord_Impl> impl,
+    std::shared_ptr<detail::OptimizationProblemRecord_Impl> impl,
     ProjectDatabase database)
   : ProblemRecord(impl, database)
 {
@@ -258,7 +258,7 @@ analysis::OptimizationProblem OptimizationProblemRecord::optimizationProblem() c
 }
 
 /// @cond
-OptimizationProblemRecord::OptimizationProblemRecord(boost::shared_ptr<detail::OptimizationProblemRecord_Impl> impl)
+OptimizationProblemRecord::OptimizationProblemRecord(std::shared_ptr<detail::OptimizationProblemRecord_Impl> impl)
   : ProblemRecord(impl)
 {}
 /// @endcond
@@ -272,7 +272,7 @@ void OptimizationProblemRecord::removeObjectiveRecords(const std::vector<UUID>& 
   ss << "(problemRecordId=:problemRecordId) AND (functionType=:functionType) AND ";
   ss << "(handle NOT IN (";
   std::string sep("");
-  BOOST_FOREACH(const UUID& handle,uuidsToKeep) {
+  for (const UUID& handle : uuidsToKeep) {
     ss << sep << "'" << toString(handle) << "'";
     sep = std::string(", ");
   }

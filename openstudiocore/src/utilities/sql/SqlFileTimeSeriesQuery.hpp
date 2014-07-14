@@ -20,10 +20,10 @@
 #ifndef UTILITIES_SQL_SQLFILETIMESERIESQUERY_HPP
 #define UTILITIES_SQL_SQLFILETIMESERIESQUERY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/sql/SqlFileEnums.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "SqlFileEnums.hpp"
 
-#include <utilities/core/Logger.hpp>
+#include "../core/Logger.hpp"
 
 #include <boost/optional.hpp>
 #include <boost/regex.hpp>

@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef MODEL_UTILITYCOST_QUALITY_HPP
-#define MODEL_UTILITYCOST_QUALITY_HPP
+#ifndef MODEL_UTILITYCOST_QUALIFY_HPP
+#define MODEL_UTILITYCOST_QUALIFY_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
-#include <utilities/core/Optional.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio{
 namespace model{
@@ -103,7 +103,7 @@ protected:
   friend class IdfObject;
 
   // constructor
-  explicit UtilityCost_Qualify(boost::shared_ptr<detail::UtilityCost_Qualify_Impl> impl);
+  explicit UtilityCost_Qualify(std::shared_ptr<detail::UtilityCost_Qualify_Impl> impl);
 
 private:
   REGISTER_LOGGER("openstudio.model.UtilityCost_Qualify");
@@ -121,4 +121,4 @@ typedef std::vector<UtilityCost_Qualify> UtilityCost_QualifyVector;
 } // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_QUALITY_HPP
+#endif // MODEL_UTILITYCOST_QUALIFY_HPP

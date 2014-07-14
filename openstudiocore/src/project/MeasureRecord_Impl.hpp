@@ -21,12 +21,10 @@
 #define PROJECT_MEASURERECORD_IMPL_HPP
 
 #include "ProjectAPI.hpp"
-#include <project/ObjectRecord_Impl.hpp>
-#include <project/MeasureRecord.hpp>
+#include "ObjectRecord_Impl.hpp"
+#include "MeasureRecord.hpp"
 
-#include <utilities/core/Logger.hpp>
-
-#include <boost/shared_ptr.hpp>
+#include "../utilities/core/Logger.hpp"
 
 #include <QVariant>
 

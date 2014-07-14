@@ -22,10 +22,8 @@
 
 #include "RubyJobUtils.hpp"
 
-#include <runmanager/lib/JSON.hpp>
-
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../utilities/core/FileReference.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -91,11 +89,11 @@ boost::optional<FileReferenceType> WorkItem::inputFileType() const {
     {
       // get extension of argument 3 in RubyJobBuilder::addInputFile
       RubyJobBuilder builder(*this);
-      std::vector< boost::tuple<FileSelection, FileSource, std::string, std::string> > inputFiles = builder.inputFiles();
-      for (std::vector< boost::tuple<FileSelection, FileSource, std::string, std::string> >::const_iterator it = inputFiles.begin(),
+      std::vector< std::tuple<FileSelection, FileSource, std::string, std::string> > inputFiles = builder.inputFiles();
+      for (std::vector< std::tuple<FileSelection, FileSource, std::string, std::string> >::const_iterator it = inputFiles.begin(),
            itEnd = inputFiles.end(); it != itEnd; ++it)
       {
-        std::string ext = getFileExtension(toPath(it->get<2>()));
+        std::string ext = getFileExtension(toPath(std::get<2>(*it)));
         try {
           result = FileReferenceType(ext);
           break;
@@ -150,11 +148,11 @@ boost::optional<FileReferenceType> WorkItem::outputFileType() const {
     {
       // get argument 2 in RubyJobBuilder::copyRequiredFiles
       RubyJobBuilder builder(*this);
-      std::vector< boost::tuple<std::string, std::string, std::string> > requiredFiles = builder.copyRequiredFiles();
-      for (std::vector< boost::tuple<std::string, std::string, std::string> >::const_iterator it = requiredFiles.begin(),
+      std::vector< std::tuple<std::string, std::string, std::string> > requiredFiles = builder.copyRequiredFiles();
+      for (std::vector< std::tuple<std::string, std::string, std::string> >::const_iterator it = requiredFiles.begin(),
            itEnd = requiredFiles.end(); it != itEnd; ++it)
       {
-        std::string ext = it->get<1>();
+        std::string ext = std::get<1>(*it);
         try {
           result = FileReferenceType(ext);
           break;

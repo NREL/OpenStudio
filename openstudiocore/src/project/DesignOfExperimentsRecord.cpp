@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <project/DesignOfExperimentsRecord.hpp>
-#include <project/DesignOfExperimentsRecord_Impl.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/JoinRecord.hpp>
+#include "DesignOfExperimentsRecord.hpp"
+#include "DesignOfExperimentsRecord_Impl.hpp"
+#include "AnalysisRecord.hpp"
+#include "JoinRecord.hpp"
 
-#include <analysis/DesignOfExperiments.hpp>
-#include <analysis/DesignOfExperiments_Impl.hpp>
+#include "../analysis/DesignOfExperiments.hpp"
+#include "../analysis/DesignOfExperiments_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Optional.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 namespace openstudio {
 namespace project {
@@ -69,7 +69,7 @@ namespace detail {
     return result;
   }
 
-  void DesignOfExperimentsRecord_Impl::saveRow(const boost::shared_ptr<QSqlDatabase> &database)
+  void DesignOfExperimentsRecord_Impl::saveRow(const std::shared_ptr<QSqlDatabase> &database)
   {
     QSqlQuery query(*database);
     this->makeUpdateByIdQuery<DesignOfExperimentsRecord>(query);
@@ -154,7 +154,7 @@ namespace detail {
 
 DesignOfExperimentsRecord::DesignOfExperimentsRecord(
     const analysis::DesignOfExperiments& designOfExperiments, AnalysisRecord& analysisRecord)
-  : OpenStudioAlgorithmRecord(boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl>(
+  : OpenStudioAlgorithmRecord(std::shared_ptr<detail::DesignOfExperimentsRecord_Impl>(
         new detail::DesignOfExperimentsRecord_Impl(designOfExperiments, analysisRecord)),
         analysisRecord.projectDatabase(),
         designOfExperiments)
@@ -164,7 +164,7 @@ DesignOfExperimentsRecord::DesignOfExperimentsRecord(
 
 DesignOfExperimentsRecord::DesignOfExperimentsRecord(const QSqlQuery& query, 
                                                      ProjectDatabase& database)
-  : OpenStudioAlgorithmRecord(boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl>(
+  : OpenStudioAlgorithmRecord(std::shared_ptr<detail::DesignOfExperimentsRecord_Impl>(
         new detail::DesignOfExperimentsRecord_Impl(query, database)),
         database,
         boost::optional<analysis::OpenStudioAlgorithm>())
@@ -173,7 +173,7 @@ DesignOfExperimentsRecord::DesignOfExperimentsRecord(const QSqlQuery& query,
 }
 
 DesignOfExperimentsRecord::DesignOfExperimentsRecord(
-    boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl,
+    std::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl,
     ProjectDatabase database)
     : OpenStudioAlgorithmRecord(impl, database, boost::optional<analysis::OpenStudioAlgorithm>())
 {
@@ -235,7 +235,7 @@ analysis::DesignOfExperiments DesignOfExperimentsRecord::designOfExperiments() c
 }
 
 /// @cond
-DesignOfExperimentsRecord::DesignOfExperimentsRecord(boost::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl)
+DesignOfExperimentsRecord::DesignOfExperimentsRecord(std::shared_ptr<detail::DesignOfExperimentsRecord_Impl> impl)
   : OpenStudioAlgorithmRecord(impl)
 {}
 /// @endcond

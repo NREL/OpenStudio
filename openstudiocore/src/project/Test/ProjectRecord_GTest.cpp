@@ -19,25 +19,25 @@
 
 #include <gtest/gtest.h>
 
-#include <project/ProjectDatabase.hpp>
-#include <project/ProjectRecord.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/SimpleAnalysisRecord.hpp>
-#include <project/SimpleAnalysisRecord_Impl.hpp>
-#include <project/WorkflowRecord.hpp>
-#include <project/ModelRecord.hpp>
-#include <project/BaselineModelRecord.hpp>
-#include <project/ModelAttributeRecord.hpp>
+#include "../ProjectDatabase.hpp"
+#include "../ProjectRecord.hpp"
+#include "../AnalysisRecord.hpp"
+#include "../SimpleAnalysisRecord.hpp"
+#include "../SimpleAnalysisRecord_Impl.hpp"
+#include "../WorkflowRecord.hpp"
+#include "../ModelRecord.hpp"
+#include "../BaselineModelRecord.hpp"
+#include "../ModelAttributeRecord.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/RubyJob.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
+#include "../../runmanager/lib/RunManager.hpp"
+#include "../../runmanager/lib/Workflow.hpp"
+#include "../../runmanager/lib/RubyJob.hpp"
+#include "../../runmanager/lib/RubyJobUtils.hpp"
 #include <runmanager/Test/EnergyPlusBin.hxx>
 
-#include <utilities/data/Attribute.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../../utilities/data/Attribute.hpp"
+#include "../../utilities/core/String.hpp"
+#include "../../utilities/core/Optional.hpp"
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -45,8 +45,6 @@
 #include <QFile>
 #include <QTextStream>
 #include <QSqlDatabase>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio;
 using namespace openstudio::project;

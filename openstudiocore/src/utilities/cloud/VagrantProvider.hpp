@@ -20,10 +20,10 @@
 #ifndef UTILITIES_CLOUD_VAGRANTPROVIDER_HPP
 #define UTILITIES_CLOUD_VAGRANTPROVIDER_HPP
 
-#include <utilities/cloud/CloudProvider.hpp>
+#include "CloudProvider.hpp"
 
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
+#include "../core/Path.hpp"
+#include "../core/Url.hpp"
 
 namespace openstudio{
 
@@ -110,7 +110,7 @@ namespace openstudio{
 
   protected:
     
-    VagrantSettings(const boost::shared_ptr<detail::VagrantSettings_Impl>& impl);
+    VagrantSettings(const std::shared_ptr<detail::VagrantSettings_Impl>& impl);
    
     typedef detail::VagrantSettings_Impl ImplType;
 
@@ -156,7 +156,7 @@ namespace openstudio{
 
   protected:
 
-    VagrantSession(const boost::shared_ptr<detail::VagrantSession_Impl>& impl);
+    VagrantSession(const std::shared_ptr<detail::VagrantSession_Impl>& impl);
     
     typedef detail::VagrantSession_Impl ImplType;
 
@@ -187,7 +187,7 @@ namespace openstudio{
 
   protected:
 
-    VagrantProvider(const boost::shared_ptr<detail::VagrantProvider_Impl>& impl);
+    VagrantProvider(const std::shared_ptr<detail::VagrantProvider_Impl>& impl);
     
     typedef detail::VagrantProvider_Impl ImplType;
 

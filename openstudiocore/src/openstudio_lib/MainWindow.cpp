@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/MainWindow.hpp>
-#include <openstudio_lib/HorizontalTabWidget.hpp>
-#include <openstudio_lib/LibraryTabWidget.hpp>
-#include <openstudio_lib/LoopLibraryDialog.hpp>
-#include <openstudio_lib/MainMenu.hpp>
-#include <openstudio_lib/MainTabView.hpp>
-#include <openstudio_lib/VerticalTabWidget.hpp>
+#include "MainWindow.hpp"
+#include "HorizontalTabWidget.hpp"
+#include "LibraryTabWidget.hpp"
+#include "LoopLibraryDialog.hpp"
+#include "MainMenu.hpp"
+#include "MainTabView.hpp"
+#include "VerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include "../shared_gui_components/NetworkProxyDialog.hpp"
 
@@ -39,6 +39,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QMenuBar>
+#include <QMimeData>
 #include <QScrollArea>
 #include <QSettings>
 #include <QSizePolicy>

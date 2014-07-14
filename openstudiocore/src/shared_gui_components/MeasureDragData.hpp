@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PAT_MEASUREDRAGDATA_H
-#define OPENSTUDIO_PAT_MEASUREDRAGDATA_H
+#ifndef SHAREDGUICOMPONENTS_MEASUREDRAGDATA_HPP
+#define SHAREDGUICOMPONENTS_MEASUREDRAGDATA_HPP
 
 #include "LocalLibrary.hpp"
-#include <utilities/core/UUID.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 #include <QObject>
 #include <QByteArray>
 
@@ -61,5 +61,5 @@ class MeasureDragData : QObject
 
 } // openstudio
 
-#endif // OPENSTUDIO_PAT_MEASUREDRAGDATA_H
+#endif // SHAREDGUICOMPONENTS_MEASUREDRAGDATA_HPP
 

@@ -19,10 +19,9 @@
 
 #include "RunManager_Impl.hpp"
 #include "Configuration.hpp"
-#include <utilities/core/Application.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <boost/bind.hpp>
+#include "../../utilities/core/Application.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include <runmanager/lib/runmanagerdatabase.hxx>
 #include "JobFactory.hpp"
 #include "Workflow.hpp"
@@ -31,21 +30,20 @@
 #include <QMessageBox>
 #include <QMutexLocker>
 #include <QElapsedTimer>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../../utilities/core/System.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/bcl/BCLMeasure.hpp"
 #include <QtConcurrentRun>
 #include <QFuture>
 #include <OpenStudio.hxx>
 
-#include <qjson/serializer.h>
-#include <qjson/parser.h>
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include "RubyJobUtils.hpp"
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
 #include "JobFactory.hpp"
-#include <ruleset/OSArgument.hpp>
-#include <boost/bind.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
 namespace openstudio {
 namespace runmanager {
@@ -150,7 +148,7 @@ namespace detail {
         setText(toQString(m_job.treeStatus().valueDescription()));
         break;
       case 6:
-        setText(toQString(m_job.outdir().external_file_string()));
+        setText(toQString(m_job.outdir().native()));
         break;
       case 7:
         {
@@ -192,7 +190,7 @@ namespace detail {
         // at worst its shared_ptr will be swapped out inside of
         // setConfigOptions. Therefore we can safely get our own copy of the shared_ptr
         // and return a copy of the object
-        boost::shared_ptr<ConfigOptions> co = m_configOptions;
+        std::shared_ptr<ConfigOptions> co = m_configOptions;
 
         return *m_configOptions;
       }
@@ -215,7 +213,7 @@ namespace detail {
         QMutexLocker l(&m_mutex);
         updateConfiguration(m_db, m_config, t_co);
         m_db.commit();
-        m_configOptions = boost::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
+        m_configOptions = std::shared_ptr<ConfigOptions>(new ConfigOptions(t_co));
       }
 
       void fixupData()
@@ -249,11 +247,9 @@ namespace detail {
         std::vector<RunManagerDB::RemoteJob> jobs
           = litesql::select<RunManagerDB::RemoteJob>(m_db,
               RunManagerDB::RemoteJob::Uuid == toString(t_uuid)).all();
-        for (std::vector<RunManagerDB::RemoteJob>::iterator itr = jobs.begin();
-            itr != jobs.end();
-            ++itr)
+        for (auto & remoteJob : jobs)
         {
-          itr->del();
+          remoteJob.del();
         }
         m_db.commit();
       }
@@ -265,14 +261,12 @@ namespace detail {
         std::vector<RunManagerDB::RemoteJob> remotejobs
           = litesql::select<RunManagerDB::RemoteJob>(m_db).all();
 
-        for (std::vector<RunManagerDB::RemoteJob>::iterator itr = remotejobs.begin();
-             itr != remotejobs.end();
-             ++itr)
+        for (const auto & remoteJob : remotejobs)
         {
-          std::string uuidstr = itr->uuid;
+          std::string uuidstr = remoteJob.uuid;
           openstudio::UUID uuid = toUUID(uuidstr);
-          int remoteId = itr->remoteId;
-          int remoteTaskId = itr->remoteTaskId;
+          int remoteId = remoteJob.remoteId;
+          int remoteTaskId = remoteJob.remoteTaskId;
 
           if (uuid.isNull())
           {
@@ -299,8 +293,8 @@ namespace detail {
         // ETH@20120216 - Workflow constructor is now explicit. Replacing
         // std::vector<openstudio::runmanager::Workflow> workflows(jobs.begin(), jobs.end());
         std::vector<runmanager::Workflow> workflows;
-        for (unsigned i = 0, n = jobs.size(); i < n; ++i) {
-          workflows.push_back(Workflow(jobs[i]));
+        for (const auto & job : jobs) {
+          workflows.push_back(Workflow(job));
         }
         return workflows;
       }
@@ -310,14 +304,12 @@ namespace detail {
         QMutexLocker l(&m_mutex);
         std::vector<openstudio::runmanager::Job> jobs = loadJobsImpl(true, "");
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
           try {
-            if (itr->jobParams().get("workflowname").children.at(0).value == t_name)
+            if (job.jobParams().get("workflowname").children.at(0).value == t_name)
             {
-              return Workflow(*itr);
+              return Workflow(job);
             }
           } catch (const std::exception &) {
             // continue
@@ -333,15 +325,13 @@ namespace detail {
         m_db.begin();
         std::vector<openstudio::runmanager::Job> jobs = loadJobsImpl(true, "");
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
           try {
-            if (itr->jobParams().get("workflowname").children.at(0).value == t_name)
+            if (job.jobParams().get("workflowname").children.at(0).value == t_name)
             {
-              LOG(Debug, "WorkflowFound " << t_name << " with uuid " << toString(itr->uuid()) << " deleting" );
-              deleteJobRecursiveInternal(*itr);
+              LOG(Debug, "WorkflowFound " << t_name << " with uuid " << toString(job.uuid()) << " deleting" );
+              deleteJobRecursiveInternal(job);
             }
           } catch (const std::exception &) {
             // continue
@@ -356,11 +346,9 @@ namespace detail {
         m_db.begin();
         std::vector<openstudio::runmanager::Job> jobs = loadJobsImpl(true, "");
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end(); 
-             ++itr)
+        for (const auto & job : jobs)
         {
-          deleteJobRecursiveInternal(*itr);
+          deleteJobRecursiveInternal(job);
         }
 
         m_db.commit();
@@ -378,11 +366,9 @@ namespace detail {
       {
         std::vector<openstudio::runmanager::Job> children = t_job.children();
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = children.begin();
-             itr != children.end();
-             ++itr)
+        for (const auto & child : children)
         {
-          deleteJobRecursiveInternal(*itr);
+          deleteJobRecursiveInternal(child);
         }
 
         if (t_job.finishedJob())
@@ -398,11 +384,9 @@ namespace detail {
         QMutexLocker l(&m_mutex);
         std::vector<openstudio::runmanager::Job> jobs = loadJobsImpl(true, t_key);
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
-          if (itr->jobParams().get("workflowkey").children.at(0).value == t_key)
+          if (job.jobParams().get("workflowkey").children.at(0).value == t_key)
           {
             return true;
           }
@@ -416,13 +400,11 @@ namespace detail {
         QMutexLocker l(&m_mutex);
         std::vector<openstudio::runmanager::Job> jobs = loadJobsImpl(true, t_key);
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
-          if (itr->jobParams().get("workflowkey").children.at(0).value == t_key)
+          if (job.jobParams().get("workflowkey").children.at(0).value == t_key)
           {
-            return openstudio::runmanager::Workflow(*itr);
+            return openstudio::runmanager::Workflow(job);
           }
         }
 
@@ -435,11 +417,9 @@ namespace detail {
         std::vector<RunManagerDB::Job> jobs
           = litesql::select<RunManagerDB::Job>(m_db,
               RunManagerDB::Job::Uuid == toString(t_job.uuid())).all();
-        for (std::vector<RunManagerDB::Job>::iterator itr = jobs.begin();
-            itr != jobs.end();
-            ++itr)
+        for (auto & job : jobs)
         {
-          itr->del();
+          job.del();
         }
 
         deleteJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(t_job);
@@ -470,11 +450,9 @@ namespace detail {
               = litesql::select<RunManagerDB::Job>(m_db,
                   RunManagerDB::Job::Uuid == toString(begin->uuid())).all();
 
-            for (std::vector<RunManagerDB::Job>::iterator itr = jobs.begin();
-                itr != jobs.end();
-                ++itr)
+            for (auto & job : jobs)
             {
-              itr->del();
+              job.del();
             }
 
             deleteJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>(*begin);
@@ -516,11 +494,9 @@ namespace detail {
       {
         m_db.begin();
 
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = t_jobs.begin();
-             itr != t_jobs.end();
-             ++itr)
+        for (const auto & job : t_jobs)
         {
-          persistJobRecursive(*itr, false);
+          persistJobRecursive(job, false);
         }
 
         m_db.commit();
@@ -536,11 +512,9 @@ namespace detail {
         }
 
         std::vector<openstudio::runmanager::Job> children = t_job.children();
-        for (std::vector<openstudio::runmanager::Job>::const_iterator itr = children.begin();
-             itr != children.end();
-             ++itr)
+        for (const auto & child : children)
         {
-          persistJobRecursive(*itr, isWorkflow);
+          persistJobRecursive(child, isWorkflow);
         }
 
       }
@@ -584,28 +558,24 @@ namespace detail {
       {
         std::map<openstudio::UUID, std::pair<openstudio::DateTime, JobErrors> > ret;
 
-        for (std::vector<RunManagerDB::JobStatus>::const_iterator itr = t_statuses.begin();
-             itr != t_statuses.end();
-             ++itr)
+        for (const auto & jobStatus : t_statuses)
         {
           JobErrors err;
-          std::string lastRun = itr->lastRun;
-          int resultValue = itr->result;
+          std::string lastRun = jobStatus.lastRun;
+          int resultValue = jobStatus.result;
           err.result = ruleset::OSResultValue(resultValue);
 
           if (err.result == ruleset::OSResultValue::NA) {
             err.numNAs = 1;
           }
           
-          ret[openstudio::toUUID(itr->jobUuid)] = std::make_pair(openstudio::DateTime(lastRun), err);
+          ret[openstudio::toUUID(jobStatus.jobUuid)] = std::make_pair(openstudio::DateTime(lastRun), err);
         }
 
-        for (std::vector<RunManagerDB::JobErrors>::const_iterator itr = t_errors.begin();
-             itr != t_errors.end();
-             ++itr)
+        for (const auto & error : t_errors)
         {
-          int errortype = itr->errorType;
-          ret[openstudio::toUUID(itr->jobUuid)].second.addError(ErrorType(errortype), itr->value);
+          int errortype = error.errorType;
+          ret[openstudio::toUUID(error.jobUuid)].second.addError(ErrorType(errortype), error.value);
         }
 
         return ret;
@@ -618,21 +588,17 @@ namespace detail {
         std::vector<RunManagerDB::JobErrors> errors 
           = litesql::select<RunManagerDB::JobErrors>(m_db,
               RunManagerDB::JobErrors::JobUuid == toString(t_uuid)).all();
-        for (std::vector<RunManagerDB::JobErrors>::iterator itr = errors.begin();
-            itr != errors.end();
-            ++itr)
+        for (auto & error : errors)
         {
-          itr->del();
+          error.del();
         }
 
         std::vector<RunManagerDB::JobStatus> status 
           = litesql::select<RunManagerDB::JobStatus>(m_db,
               RunManagerDB::JobStatus::JobUuid == toString(t_uuid)).all();
-        for (std::vector<RunManagerDB::JobStatus>::iterator itr = status.begin();
-            itr != status.end();
-            ++itr)
+        for (auto & jobStatus : status)
         {
-          itr->del();
+          jobStatus.del();
         }
       }
 
@@ -677,14 +643,12 @@ namespace detail {
 
         std::vector<std::pair<runmanager::ErrorType, std::string> > errors = t_errors.allErrors;
 
-        for (std::vector<std::pair<runmanager::ErrorType, std::string> >::const_iterator itr = errors.begin();
-             itr != errors.end();
-             ++itr)
+        for (const auto & error : errors)
         {
           RunManagerDB::JobErrors j(m_db);
           j.jobUuid = toString(t_uuid);
-          j.errorType = static_cast<int>(itr->first.value());
-          j.value = itr->second;
+          j.errorType = static_cast<int>(error.first.value());
+          j.value = error.second;
           j.update();
         }
 
@@ -708,7 +672,7 @@ namespace detail {
       RunManagerDB::ConfigOptions m_config;
       bool m_loading;
       openstudio::path m_dbPath;
-      boost::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
+      std::shared_ptr<openstudio::runmanager::ConfigOptions> m_configOptions;
 
       std::vector<openstudio::runmanager::Job> loadJobsImpl(bool isWorkflow, const std::string &workflowkey)
       {
@@ -724,11 +688,9 @@ namespace detail {
 
           std::deque<openstudio::UUID> parentstoscan;
 
-          for (std::vector<RunManagerDB::JobParam>::const_iterator itr = childparam.begin();
-               itr != childparam.end();
-               ++itr)
+          for (const auto & jobParam : childparam)
           {
-            std::string uuidstr = itr->jobUuid;
+            std::string uuidstr = jobParam.jobUuid;
             LOG(Trace, "Job with keyfound: " << workflowkey << " " << uuidstr);
             parentstoscan.push_back(openstudio::toUUID(uuidstr));
           }
@@ -743,11 +705,9 @@ namespace detail {
               = litesql::select<RunManagerDB::Job>(m_db,
                   RunManagerDB::Job::ParentUuid == toString(jobid)).all();
 
-            for (std::vector<RunManagerDB::Job>::const_iterator itr = jobs.begin();
-                 itr != jobs.end();
-                 ++itr)
+            for (const auto & job : jobs)
             {
-              std::string uuidstr = itr->uuid;
+              std::string uuidstr = job.uuid;
               parentstoscan.push_back(openstudio::toUUID(uuidstr));
             }
 
@@ -774,12 +734,12 @@ namespace detail {
           std::vector<RunManagerDB::JobFileInfo> files = litesql::select<RunManagerDB::JobFileInfo>(m_db).all();
           std::vector<RunManagerDB::RequiredFile> requiredfiles = litesql::select<RunManagerDB::RequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, boost::ref(files), boost::ref(requiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futurefiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::JobFileInfo, RunManagerDB::RequiredFile>, std::ref(files), std::ref(requiredfiles)));
 
           std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db).all();
           std::vector<RunManagerDB::JobParam> params = litesql::select<RunManagerDB::JobParam>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(boost::bind(&loadJobParams, boost::ref(params)));
+          QFuture<std::map<openstudio::UUID, JobParams> > futureparams = QtConcurrent::run(std::bind(&loadJobParams, std::ref(params)));
 
           std::vector<RunManagerDB::JobStatus> status = litesql::select<RunManagerDB::JobStatus>(m_db).all();
           std::vector<RunManagerDB::JobErrors> errors = litesql::select<RunManagerDB::JobErrors>(m_db).all();
@@ -787,7 +747,7 @@ namespace detail {
           std::vector<RunManagerDB::OutputFileInfo> outputfiles = litesql::select<RunManagerDB::OutputFileInfo>(m_db).all();
           std::vector<RunManagerDB::OutputRequiredFile> outputrequiredfiles = litesql::select<RunManagerDB::OutputRequiredFile>(m_db).all();
 
-          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(boost::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, boost::ref(outputfiles), boost::ref(outputrequiredfiles)));
+          QFuture<std::map<openstudio::UUID, Files> > futureoutputfiles = QtConcurrent::run(std::bind(&loadJobFiles<RunManagerDB::OutputFileInfo, RunManagerDB::OutputRequiredFile>, std::ref(outputfiles), std::ref(outputrequiredfiles)));
 
           LOG(Info, "Time to load all RunManager data: " << et.restart() << " sizes: " << tools.size() << " " << params.size() << " " << outputfiles.size() << " " << outputrequiredfiles.size() << " " << files.size() << " " << requiredfiles.size() << " " << jobs.size() << " " << status.size() << " " << errors.size());
 
@@ -806,12 +766,10 @@ namespace detail {
 //          allOutputFiles = loadJobFiles(outputfiles, outputrequiredfiles);
           LOG(Info, "Time to parse allOutputFiles: " << et.restart());
         } else {
-          for (std::vector<RunManagerDB::Job>::const_iterator itr = jobs.begin();
-               itr != jobs.end();
-               ++itr)
+          for (const auto & job : jobs)
           {
-            std::string uuidstr = itr->uuid;
-            openstudio::UUID uuid = openstudio::toUUID(itr->uuid);
+            std::string uuidstr = job.uuid;
+            openstudio::UUID uuid = openstudio::toUUID(job.uuid);
 
             std::vector<RunManagerDB::JobToolInfo> tools = litesql::select<RunManagerDB::JobToolInfo>(m_db,
               RunManagerDB::JobToolInfo::JobUuid == uuidstr).all();
@@ -823,12 +781,10 @@ namespace detail {
               RunManagerDB::JobFileInfo::JobUuid == uuidstr).all();
 
             std::vector<RunManagerDB::RequiredFile> requiredfiles;
-            for (std::vector<RunManagerDB::JobFileInfo>::const_iterator fileitr = files.begin();
-                 fileitr != files.end();
-                 ++fileitr)
+            for (const auto jobFileInfo : files)
             {
               std::vector<RunManagerDB::RequiredFile> part = litesql::select<RunManagerDB::RequiredFile>(m_db,
-                  RunManagerDB::RequiredFile::ParentId == fileitr->id).all();
+                  RunManagerDB::RequiredFile::ParentId == jobFileInfo.id).all();
               requiredfiles.insert(requiredfiles.end(), part.begin(), part.end());
             }
 
@@ -847,11 +803,9 @@ namespace detail {
         std::list<std::pair<RunManagerDB::Job, openstudio::runmanager::Job> > loadedjobs;
 
         int index = 0;
-        for (std::vector<RunManagerDB::Job>::iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
-          std::string uuidstr = itr->uuid;
+          std::string uuidstr = job.uuid;
           openstudio::UUID uuid = toUUID(uuidstr);
 
           if (uuid.isNull())
@@ -879,7 +833,7 @@ namespace detail {
 
               // only add the job if it's one that was found with our workflow key search
               Job j = JobFactory::createJob(
-                  JobType(itr->jobType),
+                  JobType(job.jobType),
                   allTools[uuid],
                   allJobParams[uuid],
                   allFiles[uuid],
@@ -889,7 +843,7 @@ namespace detail {
                   JobState(dt, e, f, AdvancedStatus(AdvancedStatusEnum::Idle), openstudio::path())
                   );
 
-              loadedjobs.push_back(std::make_pair(*itr, j));
+              loadedjobs.push_back(std::make_pair(job, j));
 
               j.setIndex(index);
               ++index;
@@ -925,7 +879,7 @@ namespace detail {
                 LOG(Error, "Error loading parent uuid: " << parentuuidstr);
               } else {
 
-                std::map<UUID,Job>::iterator itr2 = completedjobs.find(parentuuid);
+                auto itr2 = completedjobs.find(parentuuid);
                 if (itr2 != completedjobs.end()) {
                   if (itr->first.isFinishedJob.value())
                   {
@@ -967,23 +921,19 @@ namespace detail {
       {
         std::map<openstudio::UUID, std::list<std::pair<RunManagerDB::JobParam, JobParam> > > allloadedparams;
 
-        for (std::vector<RunManagerDB::JobParam>::const_iterator itr = t_params.begin();
-             itr != t_params.end();
-             ++itr)
+        for (const auto & jobParam : t_params)
         {
-          JobParam param(itr->value);
+          JobParam param(jobParam.value);
           param.value = fixupPath(param.value);
-          allloadedparams[openstudio::toUUID(itr->jobUuid)].push_back(std::make_pair(*itr, JobParam(param)));
+          allloadedparams[openstudio::toUUID(jobParam.jobUuid)].push_back(std::make_pair(jobParam, JobParam(param)));
         }
 
         std::map<openstudio::UUID, JobParams> retval;
 
-        for (std::map<openstudio::UUID, std::list<std::pair<RunManagerDB::JobParam, JobParam> > >::iterator allitr = allloadedparams.begin();
-             allitr != allloadedparams.end();
-             ++allitr)
+        for (auto & allitr : allloadedparams)
         {
           std::list<std::pair<RunManagerDB::JobParam, JobParam> > completedparams;
-          std::list<std::pair<RunManagerDB::JobParam, JobParam> > &loadedparams(allitr->second);
+          std::list<std::pair<RunManagerDB::JobParam, JobParam> > &loadedparams(allitr.second);
 
           std::vector<std::pair<int, JobParam*> > paramlookup; // yes I'm using a pointer for this temporary storage where I don't want a copy
 
@@ -1006,14 +956,12 @@ namespace detail {
                 loadedparams.erase(itr);
               } else {
                 // look for parent
-                for (std::vector<std::pair<int, JobParam*> >::iterator itr2 = paramlookup.begin();
-                    itr2 != paramlookup.end();
-                    ++itr2)
+                for (const auto & param : paramlookup)
                 {
-                  if (itr2->first == itr->first.parentId)
+                  if (param.first == itr->first.parentId)
                   {
-                    itr2->second->children.push_back(itr->second);
-                    paramlookup.push_back(std::make_pair(itr->first.id, &itr2->second->children.back()));
+                    param.second->children.push_back(itr->second);
+                    paramlookup.push_back(std::make_pair(itr->first.id, &param.second->children.back()));
                     didsomething = true;
                     loadedparams.erase(itr);
                     break; // break out of find parent loop
@@ -1038,14 +986,12 @@ namespace detail {
 
           JobParams params;
 
-          for (std::list<std::pair<RunManagerDB::JobParam, JobParam> >::iterator itr2 = completedparams.begin();
-              itr2 != completedparams.end();
-              ++itr2)
+          for (const auto & completedParam : completedparams)
           {
-            params.append(itr2->second);
+            params.append(completedParam.second);
           }
 
-          retval[allitr->first] = params;
+          retval[allitr.first] = params;
         }
 
         return retval;
@@ -1057,11 +1003,9 @@ namespace detail {
         std::vector<RunManagerDB::JobParam> tools
           = litesql::select<RunManagerDB::JobParam>(m_db,
               RunManagerDB::JobParam::JobUuid == toString(t_job.uuid())).all();
-        for (std::vector<RunManagerDB::JobParam>::iterator itr = tools.begin();
-            itr != tools.end();
-            ++itr)
+        for (auto & tool : tools)
         {
-          itr->del();
+          tool.del();
         }
       }
 
@@ -1081,11 +1025,9 @@ namespace detail {
           params = jps.params();
         }
 
-        for (std::vector<JobParam>::const_iterator itr = params.begin();
-            itr != params.end();
-            ++itr)
+        for (const auto & jobParam : params)
         {
-          persistJobParamsImpl(t_job, *itr);
+          persistJobParamsImpl(t_job, jobParam);
         }
       }
 
@@ -1105,11 +1047,9 @@ namespace detail {
         p.update();
 
 
-        for (std::vector<JobParam>::const_iterator itr = t_param.children.begin();
-             itr != t_param.children.end();
-             ++itr)
+        for (const auto & jobParam : t_param.children)
         {
-          persistJobParamsImpl(t_job, *itr, boost::optional<int>(p.id));
+          persistJobParamsImpl(t_job, jobParam, boost::optional<int>(p.id));
         }
       }
 
@@ -1117,44 +1057,42 @@ namespace detail {
       {
         std::map<openstudio::UUID, Tools> foundTools;
 
-        for (std::vector<RunManagerDB::JobToolInfo>::const_iterator itr = t_tools.begin();
-             itr != t_tools.end();
-             ++itr)
+        for (const auto & tool : t_tools)
         {
           boost::optional<int> major;
           boost::optional<int> minor;
           boost::optional<int> build;
 
-          if (itr->majorVersion >= 0)
+          if (tool.majorVersion >= 0)
           {
-            major = itr->majorVersion;
+            major = tool.majorVersion;
           }
 
-          if (itr->minorVersion >= 0)
+          if (tool.minorVersion >= 0)
           {
-            minor = itr->minorVersion;
+            minor = tool.minorVersion;
           }
 
-          if (itr->buildVersion >= 0)
+          if (tool.buildVersion >= 0)
           {
-            build = itr->buildVersion;
+            build = tool.buildVersion;
           }
 
           ToolVersion tv(major,minor,build);
 
-          std::string regexstr = itr->outFileFilter;
+          std::string regexstr = tool.outFileFilter;
 
           ToolInfo ti(
-              itr->name,
+              tool.name,
               tv,
-              toPath(itr->localBinPath),
-              toPath(itr->remoteArchive),
-              toPath(itr->remoteExe),
+              toPath(tool.localBinPath),
+              toPath(tool.remoteArchive),
+              toPath(tool.remoteExe),
               boost::regex(regexstr)
               );
 
 
-          foundTools[openstudio::toUUID(itr->jobUuid)].append(ti);
+          foundTools[openstudio::toUUID(tool.jobUuid)].append(ti);
         }
 
         return foundTools;
@@ -1167,11 +1105,9 @@ namespace detail {
         std::vector<RunManagerDB::JobToolInfo> tools
           = litesql::select<RunManagerDB::JobToolInfo>(m_db,
               RunManagerDB::JobToolInfo::JobUuid == toString(t_job.uuid())).all();
-        for (std::vector<RunManagerDB::JobToolInfo>::iterator itr = tools.begin();
-            itr != tools.end();
-            ++itr)
+        for (auto & tool : tools)
         {
-          itr->del();
+          tool.del();
         }
       }
 
@@ -1180,36 +1116,34 @@ namespace detail {
         // Add the new
         std::vector<ToolInfo> jobTools = t_job.tools();
 
-        for (std::vector<ToolInfo>::const_iterator itr = jobTools.begin();
-             itr != jobTools.end();
-             ++itr)
+        for (const auto & toolInfo : jobTools)
         {
           RunManagerDB::JobToolInfo j(m_db);
           j.jobUuid = toString(t_job.uuid());
-          j.name = itr->name;
-          j.localBinPath = toString(itr->localBinPath);
-          j.remoteArchive = toString(itr->remoteArchive);
-          j.remoteExe = toString(itr->remoteExe);
-          j.outFileFilter = boost::lexical_cast<std::string>(itr->outFileFilter);
+          j.name = toolInfo.name;
+          j.localBinPath = toString(toolInfo.localBinPath);
+          j.remoteArchive = toString(toolInfo.remoteArchive);
+          j.remoteExe = toString(toolInfo.remoteExe);
+          j.outFileFilter = boost::lexical_cast<std::string>(toolInfo.outFileFilter);
 
-          if (itr->version.getMajor())
+          if (toolInfo.version.getMajor())
           {
-            j.majorVersion = *itr->version.getMajor();
+            j.majorVersion = *toolInfo.version.getMajor();
           } else {
             j.majorVersion = -1;
           }
 
-          if (itr->version.getMinor())
+          if (toolInfo.version.getMinor())
           {
-            j.minorVersion = *itr->version.getMinor();
+            j.minorVersion = *toolInfo.version.getMinor();
           } else {
             j.minorVersion = -1;
           }
 
 
-          if (itr->version.getBuild())
+          if (toolInfo.version.getBuild())
           {
-            j.buildVersion = *itr->version.getBuild();
+            j.buildVersion = *toolInfo.version.getBuild();
           } else {
             j.buildVersion = -1;
           }
@@ -1297,20 +1231,16 @@ namespace detail {
       {
         std::map<int, std::list<std::pair<QUrl, openstudio::path> > > requiredFiles;
 
-        for (typename std::vector<RequiredFileType>::const_iterator itr = t_requiredFiles.begin();
-             itr != t_requiredFiles.end();
-             ++itr)
+        for (const auto & requiredFile : t_requiredFiles)
         {
-          requiredFiles[itr->parentId].push_back(std::make_pair(QUrl::fromUserInput(toQString(itr->from)), toPath(itr->to)));
+          requiredFiles[requiredFile.parentId].push_back(std::make_pair(QUrl::fromUserInput(toQString(requiredFile.from)), toPath(requiredFile.to)));
         }
 
         std::map<openstudio::UUID, Files> ret;
 
-        for (typename std::vector<JobFileType>::const_iterator itr = t_files.begin();
-             itr != t_files.end();
-             ++itr)
+        for (const auto & file : t_files)
         {
-          openstudio::path fullpath = itr->fullPath.value().empty()?openstudio::path():toPath(itr->fullPath);
+          openstudio::path fullpath = file.fullPath.value().empty()?openstudio::path():toPath(file.fullPath);
           fullpath = fixupPath(fullpath);
 
           DateTime dt;
@@ -1321,34 +1251,32 @@ namespace detail {
           }
 
           FileInfo f(
-              itr->fileName,
+              file.fileName,
               dt,
-              itr->key,
+              file.key,
               fullpath
               );
 
-          const std::list<std::pair<QUrl, openstudio::path> > &theseRequiredFiles = requiredFiles[itr->id];
+          const std::list<std::pair<QUrl, openstudio::path> > &theseRequiredFiles = requiredFiles[file.id];
 
-          for (typename std::list<std::pair<QUrl, openstudio::path> >::const_iterator itr2 = theseRequiredFiles.begin();
-               itr2 != theseRequiredFiles.end();
-               ++itr2)
+          for (const auto & requiredFile : theseRequiredFiles)
           {
             try {
-              QUrl url = itr2->first;
-              if (itr2->first.scheme() == "file")
+              QUrl url = requiredFile.first;
+              if (requiredFile.first.scheme() == "file")
               {
                 openstudio::path p = fixupPath(openstudio::toPath(url.toLocalFile()));
                 url = QUrl::fromLocalFile(openstudio::toQString(p));
               }
 
-              f.addRequiredFile(url, itr2->second);
+              f.addRequiredFile(url, requiredFile.second);
             } catch (const std::runtime_error &) {
-              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(itr2->first.toString()) << "' to '" << openstudio::toString(itr2->second));
+              LOG(Error, "Error loading runmanager database, db was imported from a previous version and has a required file conflict: '" << openstudio::toString(requiredFile.first.toString()) << "' to '" << openstudio::toString(requiredFile.second));
               throw;
             }
           }
 
-          ret[openstudio::toUUID(itr->jobUuid)].append(f);
+          ret[openstudio::toUUID(file.jobUuid)].append(f);
         }
 
         return ret;
@@ -1368,21 +1296,17 @@ namespace detail {
           = litesql::select<JobFileType>(m_db,
               JobFileType::JobUuid == toString(t_uuid)).all();
 
-        for (typename std::vector<JobFileType>::iterator itr = files.begin();
-            itr != files.end();
-            ++itr)
+        for (auto & file : files)
         {
           std::vector<RequiredFileType> requiredFiles
-            = litesql::select<RequiredFileType>(m_db, RequiredFileType::ParentId == itr->id).all();
+            = litesql::select<RequiredFileType>(m_db, RequiredFileType::ParentId == file.id).all();
 
-          for (typename std::vector<RequiredFileType>::iterator itr2 = requiredFiles.begin();
-               itr2 != requiredFiles.end();
-               ++itr2)
+          for (auto & requiredFile : requiredFiles)
           {
-            itr2->del();
+            requiredFile.del();
           }
 
-          itr->del();
+          file.del();
         }
       }
 
@@ -1396,35 +1320,30 @@ namespace detail {
       void persistJobFiles(const openstudio::UUID &t_uuid, const std::vector<FileInfo> &t_files)
       {
         // Add the new
-        for (std::vector<FileInfo>::const_iterator itr = t_files.begin();
-             itr != t_files.end();
-             ++itr)
+        for (const auto & file : t_files)
         {
           JobFileType f(m_db);
-          LOG(Debug, "Persisting JobFile " << toString(itr->fullPath));
+          LOG(Debug, "Persisting JobFile " << toString(file.fullPath));
           f.jobUuid = toString(t_uuid);
-          if (!itr->fullPath.empty())
+          if (!file.fullPath.empty())
           {
-            f.fullPath = toString(itr->fullPath);
+            f.fullPath = toString(file.fullPath);
           }
-          f.fileName = itr->filename;
-          f.lastModified = boost::lexical_cast<std::string>(itr->lastModified);
-          f.key = itr->key;
+          f.fileName = file.filename;
+          f.lastModified = boost::lexical_cast<std::string>(file.lastModified);
+          f.key = file.key;
           f.update();
 
-          std::vector<std::pair<QUrl, openstudio::path> > jobRequiredFiles = itr->requiredFiles;
+          std::vector<std::pair<QUrl, openstudio::path> > jobRequiredFiles = file.requiredFiles;
 
-          for (std::vector<std::pair<QUrl, openstudio::path> >::const_iterator itr2 =
-                   jobRequiredFiles.begin();
-               itr2 != jobRequiredFiles.end();
-               ++itr2)
+          for (const auto & jobRequiredFile : jobRequiredFiles)
           {
-            LOG(Debug, "Persisting RequiredFile " << toString(itr2->first.toString()) << " to " << toString(itr2->second));
+            LOG(Debug, "Persisting RequiredFile " << toString(jobRequiredFile.first.toString()) << " to " << toString(jobRequiredFile.second));
             RequiredFileType rf(m_db);
             int id = f.id;
             rf.parentId = id;
-            rf.from = toString(itr2->first.toString());
-            rf.to = toString(itr2->second);
+            rf.from = toString(jobRequiredFile.first.toString());
+            rf.to = toString(jobRequiredFile.second);
             rf.update();
           }
         }
@@ -1456,31 +1375,29 @@ namespace detail {
 
         std::vector<RunManagerDB::ToolLocations> vers = litesql::select<RunManagerDB::ToolLocations>(t_db).all();
 
-        for (std::vector<RunManagerDB::ToolLocations>::const_iterator itr = vers.begin();
-             itr != vers.end();
-             ++itr)
+        for (const auto & toolLocations : vers)
         {
           boost::optional<int> major;
           boost::optional<int> minor;
           boost::optional<int> build;
 
-          if (itr->majorVer > -1)
+          if (toolLocations.majorVer > -1)
           {
-            major = itr->majorVer;
+            major = toolLocations.majorVer;
           }
 
-          if (itr->minorVer > -1)
+          if (toolLocations.minorVer > -1)
           {
-            minor = itr->minorVer;
+            minor = toolLocations.minorVer;
           }
 
-          if (itr->buildVer > -1)
+          if (toolLocations.buildVer > -1)
           {
-            build = itr->buildVer;
+            build = toolLocations.buildVer;
           }
 
           co.setToolLocation(ToolVersion(major, minor, build),
-              ToolLocationInfo(ToolType(itr->toolType), toPath(itr->path), toPath(itr->linuxBinaryArchive)));
+              ToolLocationInfo(ToolType(toolLocations.toolType), toPath(toolLocations.path), toPath(toolLocations.linuxBinaryArchive)));
         }
 
         return co;
@@ -1489,28 +1406,24 @@ namespace detail {
       static void updateConfiguration(RunManagerDB::RunManagerDatabase &t_db, RunManagerDB::ConfigOptions &db_co, const ConfigOptions &t_co)
       {
         std::vector<RunManagerDB::ToolLocations> dbvers = litesql::select<RunManagerDB::ToolLocations>(t_db).all();
-        for (std::vector<RunManagerDB::ToolLocations>::iterator itr = dbvers.begin();
-             itr != dbvers.end();
-             ++itr)
+        for (auto & toolLocations : dbvers)
         {
-          itr->del();
+          toolLocations.del();
         }
 
 
         std::vector<std::pair<ToolVersion, ToolLocationInfo> > vers =
           t_co.getToolLocations();
 
-        for (std::vector<std::pair<ToolVersion, ToolLocationInfo> >::const_iterator itr = vers.begin();
-             itr != vers.end();
-             ++itr)
+        for (const auto & toolLocationInfo : vers)
         {
           RunManagerDB::ToolLocations v(t_db);
-          v.toolType = itr->second.toolType.valueName();
-          v.path = toString(itr->second.binaryDir);
-          v.majorVer = itr->first.getMajor()?itr->first.getMajor().get():-1;
-          v.minorVer = itr->first.getMinor()?itr->first.getMinor().get():-1;
-          v.buildVer = itr->first.getBuild()?itr->first.getBuild().get():-1;
-          v.linuxBinaryArchive = toString(itr->second.linuxBinaryArchive);
+          v.toolType = toolLocationInfo.second.toolType.valueName();
+          v.path = toString(toolLocationInfo.second.binaryDir);
+          v.majorVer = toolLocationInfo.first.getMajor()?toolLocationInfo.first.getMajor().get():-1;
+          v.minorVer = toolLocationInfo.first.getMinor()?toolLocationInfo.first.getMinor().get():-1;
+          v.buildVer = toolLocationInfo.first.getBuild()?toolLocationInfo.first.getBuild().get():-1;
+          v.linuxBinaryArchive = toString(toolLocationInfo.second.linuxBinaryArchive);
           v.update();
         }
 
@@ -1582,7 +1495,7 @@ namespace detail {
       m_processingQueue(false),
       m_workPending(false), m_paused(t_paused), m_continue(true),
       m_localProcessCreator(new LocalProcessCreator()),
-      m_remoteProcessCreator(new SLURMManager()),
+      //m_remoteProcessCreator(new SLURMManager()),
       m_temporaryDB(t_temporaryDB),
       m_lastRunning(0),
       m_lastRunningRemotely(0),
@@ -1600,17 +1513,6 @@ namespace detail {
     LOG(Info, "Loading config options");
     ConfigOptions co = m_dbholder->getConfigOptions();
 
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
-
     m_dbholder->fixupData();
 
     // make sure a QApplication exists, it is required for the
@@ -1627,21 +1529,19 @@ namespace detail {
     m_dbholder->setLoading(true);
 
     enqueue(loadedjobs, false, m_dbfile.parent_path());
-    for (std::vector<Job>::iterator itr = loadedjobs.begin();
-         itr != loadedjobs.end();
-         ++itr)
-    {
-      std::map<openstudio::UUID, std::pair<int, int> >::const_iterator itr2 = remotejobs.find(itr->uuid());
-      if (itr2 != remotejobs.end())
-      {
-        try {
-          m_remoteProcessCreator->activate(); // make sure we have an active connection
-          itr->start(m_remoteProcessCreator, itr2->second.first, itr2->second.second);
-        } catch (const std::exception &e) {
-          QMessageBox::information(0, "Error loading remote job", toQString(std::string("Error: ") + e.what() + " could not restore remote job: " + itr->description()));
-        }
-      }
-    }
+    //for (auto & job : loadedjobs)
+    //{
+      //std::map<openstudio::UUID, std::pair<int, int> >::const_iterator itr2 = remotejobs.find(job.uuid());
+      //if (itr2 != remotejobs.end())
+      //{
+      //  try {
+      //    m_remoteProcessCreator->activate(); // make sure we have an active connection
+      //    job.start(m_remoteProcessCreator, itr2->second.first, itr2->second.second);
+      //  } catch (const std::exception &e) {
+      //    QMessageBox::information(0, "Error loading remote job", toQString(std::string("Error: ") + e.what() + " could not restore remote job: " + job.description()));
+      //  }
+      //}
+    //}
 
     m_dbholder->setLoading(false);
 
@@ -1669,28 +1569,22 @@ namespace detail {
     QMutexLocker lock(&m_mutex);
     std::deque<Job> q = m_queue;
     m_queue.clear();
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->setCanceled(true);
+      job.setCanceled(true);
     }
 
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->requestStop();
+      job.requestStop();
     }
 
 
     lock.unlock();
 
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->waitForFinished();
+      job.waitForFinished();
     }
     q.clear();
 
@@ -1753,8 +1647,8 @@ namespace detail {
   void RunManager_Impl::setOutOfDateRunnable()
   {
     QMutexLocker lock(&m_mutex);
-    std::deque<Job>::iterator itr = m_queue.begin();
-    std::deque<Job>::iterator end = m_queue.end();
+    auto itr = m_queue.begin();
+    auto end = m_queue.end();
 
     while (itr != end)
     {
@@ -1776,13 +1670,11 @@ namespace detail {
     std::deque<openstudio::runmanager::Job> queue = m_queue;
     lock.unlock();
 
-    for (std::deque<openstudio::runmanager::Job>::const_iterator itr = queue.begin();
-         itr != queue.end();
-         ++itr)
+    for (const auto & job : queue)
     {
-      if (itr->running() || itr->runnable())
+      if (job.running() || job.runnable())
       {
-//        LOG(Debug, "workPending true: " << itr->running() << " " << itr->runnable());
+//        LOG(Debug, "workPending true: " << job.running() << " " << job.runnable());
         return true;
       }
     }
@@ -1808,15 +1700,15 @@ namespace detail {
     processQueue();
   }
 
-  boost::shared_ptr<RunManagerStatus> RunManager_Impl::getStatusDialog(const RunManager &t_rm)
+  std::shared_ptr<RunManagerStatus> RunManager_Impl::getStatusDialog(const RunManager &t_rm)
   {
     LOG(Info, "Getting status dialog");
 
-    boost::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
+    std::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
 
     if (!ui)
     {
-      ui = boost::shared_ptr<RunManagerStatus>(new RunManagerStatus(0,0,t_rm));
+      ui = std::shared_ptr<RunManagerStatus>(new RunManagerStatus(nullptr,nullptr,t_rm));
     }
 
     ui->open();
@@ -1831,7 +1723,7 @@ namespace detail {
   {
     LOG(Info, "Hiding status dialog");
 
-    boost::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
+    std::shared_ptr<RunManagerStatus> ui = m_statusUI.lock();
 
     if (ui)
     {
@@ -1883,7 +1775,7 @@ namespace detail {
 
   bool setArgValue(std::map<std::string, ruleset::OSArgument> &argument_map, const std::string &wf_arg_name, const QVariant &wf_arg_value)
   {
-    std::map<std::string, ruleset::OSArgument>::iterator itr = argument_map.find(wf_arg_name);
+    auto itr = argument_map.find(wf_arg_name);
 
     ruleset::OSArgument arg = makeArg(wf_arg_name, wf_arg_value);
 
@@ -1900,13 +1792,13 @@ namespace detail {
   openstudio::runmanager::Job RunManager_Impl::runWorkflow(const std::string &t_json, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
       const openstudio::runmanager::Tools &t_tools, const openstudio::runmanager::JSONWorkflowOptions &t_options)
   {
-    QJson::Parser parser;
-    bool ok = false;
-    QVariant variant = parser.parse(toQString(t_json).toUtf8(), &ok);
-    if (!ok) {
-      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+    QJsonParseError parseError;
+    QByteArray byteArray(t_json.c_str(), t_json.length());
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(byteArray, &parseError);
+    if( QJsonParseError::NoError != parseError.error) {
+      LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parseError.errorString()));
     }
-    return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+    return runWorkflow(jsonDoc.toVariant(), t_basePath, t_runPath, t_tools, t_options);
   }
 
   openstudio::runmanager::Job RunManager_Impl::runWorkflow(const openstudio::path &t_jsonPath, const openstudio::path &t_basePath, const openstudio::path &t_runPath,
@@ -1914,14 +1806,13 @@ namespace detail {
   {
     QFile file(toQString(t_jsonPath));
     if (file.open(QFile::ReadOnly)) {
-      QJson::Parser parser;
-      bool ok(false);
-      QVariant variant = parser.parse(&file,&ok);
+      QJsonParseError parseError;
+      QJsonDocument jsonDoc = QJsonDocument::fromJson(file.readAll(), &parseError);
       file.close();
-      if (!ok) {
-        LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parser.errorString()));
+      if( QJsonParseError::NoError != parseError.error) {
+        LOG_FREE_AND_THROW("openstudio.Json","Error parsing JSON: " + toString(parseError.errorString()));
       }
-      return runWorkflow(variant, t_basePath, t_runPath, t_tools, t_options);
+      return runWorkflow(jsonDoc.toVariant(), t_basePath, t_runPath, t_tools, t_options);
     }
 
     LOG_FREE_AND_THROW("openstudio.Json","Could not open file " << toString(t_jsonPath) << " for reading.");
@@ -1992,12 +1883,10 @@ namespace detail {
 
         QVariantList workflows = analysis_problem_json["workflow"].toList();
 
-        for (QVariantList::const_iterator wfitr = workflows.begin();
-             wfitr != workflows.end();
-             ++wfitr)
+        for (const auto & wfitr : workflows)
         {
 
-          QVariantMap wf = wfitr->toMap();
+          QVariantMap wf = wfitr.toMap();
           // process the measure
 
           openstudio::path measure_path = openstudio::completeAndNormalize(t_basePath / toPath(wf["bcl_measure_directory"].toString()));
@@ -2022,11 +1911,9 @@ namespace detail {
           std::map<std::string, ruleset::OSArgument> argument_map;
 
 
-          for (QVariantList::const_iterator wf_arg_itr = wf_arguments.begin();
-               wf_arg_itr != wf_arguments.end();
-               ++wf_arg_itr)
+          for (const auto & wf_arg_itr : wf_arguments)
           {
-            QVariantMap wf_arg = wf_arg_itr->toMap();
+            QVariantMap wf_arg = wf_arg_itr.toMap();
             QVariant wf_arg_value = wf_arg["value"];
             std::string wf_arg_name = openstudio::toString(wf_arg["name"].toString());
 
@@ -2055,11 +1942,9 @@ namespace detail {
 
           QVariantList wf_variables = wf["variables"].toList();
 
-          for (QVariantList::const_iterator wf_var_itr = wf_variables.begin();
-               wf_var_itr != wf_variables.end();
-               ++wf_var_itr)
+          for (const auto & wf_var_itr : wf_variables)
           {
-            QVariantMap wf_var = wf_var_itr->toMap();
+            QVariantMap wf_var = wf_var_itr.toMap();
             QString variable_uuid = wf_var["uuid"].toString(); // this is what the variable value is set to
 
             if (!wf_var["argument"].isNull()) 
@@ -2122,23 +2007,19 @@ namespace detail {
 
         Workflow wf;
 
-        for (std::vector<RubyJobBuilder>::iterator itr = measures.begin();
-             itr != measures.end();
-             ++itr)
+        for (auto & measure : measures)
         {
-          itr->setIncludeDir(getOpenStudioRubyIncludePath());
-          wf.addJob(itr->toWorkItem());
+          measure.setIncludeDir(getOpenStudioRubyIncludePath());
+          wf.addJob(measure.toWorkItem());
         }
 
         wf.addJob(openstudio::runmanager::JobType::ModelToIdf);
         wf.addJob(openstudio::runmanager::JobType::ExpandObjects);
 
-        for (std::vector<RubyJobBuilder>::iterator itr = energyplusmeasures.begin();
-             itr != energyplusmeasures.end();
-             ++itr)
+        for (auto & energyplusMeasure : energyplusmeasures)
         {
-          itr->setIncludeDir(getOpenStudioRubyIncludePath());
-          wf.addJob(itr->toWorkItem());
+          energyplusMeasure.setIncludeDir(getOpenStudioRubyIncludePath());
+          wf.addJob(energyplusMeasure.toWorkItem());
         }
 
         if (t_options.flatOutDir)
@@ -2198,22 +2079,20 @@ namespace detail {
 
   bool RunManager_Impl::enqueue(const std::vector<openstudio::runmanager::Job> &t_jobs, bool force, const openstudio::path &t_basePath)
   {
-    std::vector<openstudio::runmanager::Job> successfullJobs;
+    std::vector<openstudio::runmanager::Job> successfulJobs;
 
-    for(std::vector<openstudio::runmanager::Job>::const_iterator itr = t_jobs.begin();
-        itr != t_jobs.end();
-        ++itr)
+    for(const auto & job : t_jobs)
     {
-      if (enqueueImpl(*itr, force, t_basePath))
+      if (enqueueImpl(job, force, t_basePath))
       {
-        successfullJobs.push_back(*itr);
+        successfulJobs.push_back(job);
       }
     }
 
-    m_dbholder->persistJobTrees(successfullJobs);
+    m_dbholder->persistJobTrees(successfulJobs);
     processQueue();
 
-    return successfullJobs.size() == t_jobs.size();
+    return successfulJobs.size() == t_jobs.size();
   }
 
 
@@ -2223,7 +2102,7 @@ namespace detail {
     bool addedSignal = false;
 
     UUID uuid = job.uuid();
-    LOG(Info, "Enqueing Job: " << toString(uuid) << " " << job.description());
+    LOG(Info, "Enqueuing Job: " << toString(uuid) << " " << job.description());
 
     if (job.getBasePath().empty() || job.getBasePath() == boost::filesystem::initial_path<openstudio::path>())
     {
@@ -2241,16 +2120,14 @@ namespace detail {
       if (!key.empty() && m_workflowkeys.find(key) != m_workflowkeys.end())
       {
         // ETH@20121107 - This seems like an inefficient search. Is the most-parental job in the queue
-        // with the same workflow key guranteed to have the same uuid as job? If so, could just search
+        // with the same workflow key guaranteed to have the same uuid as job? If so, could just search
         // in m_queue for uuid.
-        for(std::deque<openstudio::runmanager::Job>::iterator itr = m_queue.begin();
-            itr != m_queue.end();
-            ++itr)
+        for(auto & job : m_queue)
         {
-          if (!itr->parent())
+          if (!job.parent())
           {
             // only try if it doesn't have a parent - if it's a top level job
-            JobParams params2 = itr->jobParams();
+            JobParams params2 = job.jobParams();
             if (params2.has("workflowkey") && !params2.get("workflowkey").children.empty())
             {
               std::string queuekey = params2.get("workflowkey").children.at(0).value;
@@ -2259,9 +2136,9 @@ namespace detail {
                 //Hey look, we found a workflow with the same key, so this is the one we need to
                 //restart and *not* add the passed in one
                 LOG(Info, "An existing job with the workflowkey of " << key << " exists in the queue, not adding new job, restarting existing job");
-                itr->setTreeRunnable(false);
-                itr->setRunnable(force);
-                result = *itr;
+                job.setTreeRunnable(false);
+                job.setRunnable(force);
+                result = job;
                 return result;
               }
 
@@ -2387,11 +2264,9 @@ namespace detail {
 
     std::vector<Job> children = job.children();
 
-    for (std::vector<Job>::const_iterator itr = children.begin();
-         itr != children.end();
-         ++itr)
+    for (const auto & child : children)
     {
-      toremove.push_back(*itr);
+      toremove.push_back(child);
     }
 
     if (job.finishedJob())
@@ -2399,8 +2274,7 @@ namespace detail {
       toremove.push_back(*job.finishedJob());
     }
 
-    std::deque<openstudio::runmanager::Job>::iterator itr =
-      std::find(m_queue.begin(), m_queue.end(), job);
+    auto itr = std::find(m_queue.begin(), m_queue.end(), job);
 
     if (itr != m_queue.end())
     {
@@ -2421,11 +2295,9 @@ namespace detail {
 
     job.waitForFinished();
 
-    for (std::vector<Job>::const_iterator itr = toremove.begin();
-         itr != toremove.end();
-         ++itr)
+    for (const auto & removeJob : toremove)
     {
-      remove(*itr);
+      remove(removeJob);
     }
   }
 
@@ -2484,7 +2356,7 @@ namespace detail {
       }
     }
 
-    return 0;
+    return nullptr;
   }
 
   int RunManager_Impl::getRow(const Job &t_job) const
@@ -2505,9 +2377,9 @@ namespace detail {
   {
     QMutexLocker lock(&m_mutex);
 
-    std::deque<Job>::const_iterator itr = std::find_if(m_queue.begin(),
-                                                       m_queue.end(),
-                                                       boost::bind(uuidEquals<Job,UUID>,_1,t_uuid));
+    auto itr = std::find_if(m_queue.begin(),
+                            m_queue.end(),
+                            std::bind(uuidEquals<Job,UUID>,std::placeholders::_1,t_uuid));
     if (itr != m_queue.end()) {
       return *itr;
     }
@@ -2518,7 +2390,7 @@ namespace detail {
   void RunManager_Impl::print_queue() const
   {
     QMutexLocker lock(&m_mutex);
-    std::deque<openstudio::runmanager::Job>::const_iterator itr = m_queue.begin(), end = m_queue.end();
+    auto itr = m_queue.begin(), end = m_queue.end();
 
     std::cout << "--- queue ---" << std::endl;
     while (itr != end)
@@ -2568,7 +2440,7 @@ namespace detail {
 
     // now we need to sort them based on index()
     std::sort(ret.begin(), ret.end(),
-      boost::function<bool (const Job &, const Job &)>(&RunManager_Impl::jobIndexLessThan));
+      std::function<bool (const Job &, const Job &)>(&RunManager_Impl::jobIndexLessThan));
 
     return ret;
   }
@@ -2584,11 +2456,11 @@ namespace detail {
   void RunManager_Impl::raisePriorityInternal(const openstudio::runmanager::Job &t_job)
   {
     /* me */
-    std::deque<openstudio::runmanager::Job>::iterator itr = std::find(m_queue.begin(), m_queue.end(), t_job);
+    auto itr = std::find(m_queue.begin(), m_queue.end(), t_job);
 
     if (itr != m_queue.end() && itr != m_queue.begin())
     {
-      std::deque<openstudio::runmanager::Job>::iterator toswap(itr);
+      auto toswap(itr);
       --toswap;
 
       int itrindex = itr->index();
@@ -2604,11 +2476,9 @@ namespace detail {
 
 
     std::vector<openstudio::runmanager::Job> vec = t_job.children();
-    for (std::vector<openstudio::runmanager::Job>::const_iterator itr = vec.begin();
-         itr != vec.end();
-         ++itr)
+    for (const auto & job : vec)
     {
-      raisePriorityInternal(*itr);
+      raisePriorityInternal(job);
     }
 
     if (t_job.finishedJob())
@@ -2636,7 +2506,7 @@ namespace detail {
     std::vector<openstudio::runmanager::Job> vec = t_job.children();
     std::vector<openstudio::runmanager::Job>::const_reverse_iterator vecend
       = vec.rend();
-    for (std::vector<openstudio::runmanager::Job>::const_reverse_iterator itr = vec.rbegin();
+    for (auto itr = vec.rbegin();
          itr != vecend;
          ++itr)
     {
@@ -2644,11 +2514,11 @@ namespace detail {
     }
 
     /* then me */
-    std::deque<openstudio::runmanager::Job>::iterator itr = std::find(m_queue.begin(), m_queue.end(), t_job);
+    auto itr = std::find(m_queue.begin(), m_queue.end(), t_job);
 
     if (itr != m_queue.end())
     {
-      std::deque<openstudio::runmanager::Job>::iterator toswap(itr);
+      auto toswap(itr);
       ++toswap;
       if (toswap != m_queue.end())
       {
@@ -2676,16 +2546,16 @@ namespace detail {
     QMutexLocker lock(&m_mutex);
     m_dbholder->setConfigOptions(co);
 
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
+//    if (!m_SLURMPassword.empty())
+//    {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    } else {
+//      m_remoteProcessCreator->setConfiguration(
+//       SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    }
 
   }
 
@@ -2707,11 +2577,9 @@ namespace detail {
     {
       if (t_jobs.front().index() > 0)
       {
-        for (std::vector<Job>::const_iterator itr = t_jobs.begin();
-             itr != t_jobs.end();
-             ++itr)
+        for (const auto & job : t_jobs)
         {
-          raisePriorityInternal(*itr);
+          raisePriorityInternal(job);
         }
       }
     }
@@ -2725,7 +2593,7 @@ namespace detail {
     {
       if (t_jobs.back().index() < static_cast<int>(m_queue.size()))
       {
-        for (std::vector<Job>::const_reverse_iterator itr = t_jobs.rbegin();
+        for (auto itr = t_jobs.rbegin();
              itr != t_jobs.rend();
              ++itr)
         {
@@ -2759,25 +2627,22 @@ namespace detail {
 
         bool remoterunnable = false;
 
-        for (std::deque<runmanager::Job>::const_iterator itr = jobs.begin();
-             itr != jobs.end();
-             ++itr)
+        for (const auto & job : jobs)
         {
-          if (itr->remoteRunnable())
+          if (job.remoteRunnable())
           {
             remoterunnable = true;
             break;
           }
         }
 
-        if (remoterunnable)
-        {
-          try {
-            m_remoteProcessCreator->activate(); // make sure we have an active connection
-          } catch (...) {
-          }
-
-        }
+//        if (remoterunnable)
+//        {
+//          try {
+//            m_remoteProcessCreator->activate(); // make sure we have an active connection
+//          } catch (...) {
+//          }
+//        }
       }
 
       m_activate_mutex.unlock();
@@ -2801,24 +2666,22 @@ namespace detail {
     int failedjobs = 0;
     int successfuljobs = 0;
 
-    for (std::deque<runmanager::Job>::const_iterator itr = t_jobs.begin();
-         itr != t_jobs.end();
-         ++itr)
+    for (const auto & job : t_jobs)
     {
       ++totaljobs;
-      if (!itr->parent())
+      if (!job.parent())
       {
         ++totalworkflows;
-        if (itr->childrenRunning())
+        if (job.childrenRunning())
         {
           ++runningworkflows;
         }
       }
 
 
-      if (itr->running())
+      if (job.running())
       {
-        if (itr->runningRemotely())
+        if (job.runningRemotely())
         {
           ++remotelyrunningjobs;
         } else {
@@ -2827,14 +2690,14 @@ namespace detail {
 
         ++runningjobs;
       } else {
-        boost::optional<openstudio::DateTime> start = itr->startTime();
-        boost::optional<openstudio::DateTime> end = itr->endTime();
+        boost::optional<openstudio::DateTime> start = job.startTime();
+        boost::optional<openstudio::DateTime> end = job.endTime();
         if (end && start
             && *end >= *start)
         {
           ++completedjobs;
 
-          openstudio::runmanager::JobErrors errors = itr->errors();
+          openstudio::runmanager::JobErrors errors = job.errors();
           if (errors.result != ruleset::OSResultValue::Fail)
           {
             ++successfuljobs;
@@ -2873,21 +2736,21 @@ namespace detail {
     return m_statistics;
   }
 
-  void RunManager_Impl::setSLURMPassword(const std::string &t_pass)
-  {
-    m_SLURMPassword = t_pass;
-    ConfigOptions co = m_dbholder->getConfigOptions();
-    if (!m_SLURMPassword.empty())
-    {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    } else {
-      m_remoteProcessCreator->setConfiguration(
-        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-    }
-  }
+//  void RunManager_Impl::setSLURMPassword(const std::string &t_pass)
+//  {
+//    m_SLURMPassword = t_pass;
+//    ConfigOptions co = m_dbholder->getConfigOptions();
+//    if (!m_SLURMPassword.empty())
+//    {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    } else {
+//      m_remoteProcessCreator->setConfiguration(
+//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
+//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
+//    }
+//  }
 
   std::string RunManager_Impl::persistWorkflow(const Workflow &t_wf)
   {
@@ -2938,14 +2801,12 @@ namespace detail {
 
     std::vector<openstudio::runmanager::Job> jobs = db.loadJobs();
 
-    for (std::vector<openstudio::runmanager::Job>::const_iterator itr = jobs.begin();
-         itr != jobs.end();
-         ++itr)
+    for (const auto & job : jobs)
     {
       // add top level jobs, children will get added automatically
-      if (!itr->parent())
+      if (!job.parent())
       {
-        enqueue(*itr, true, t_path.parent_path());
+        enqueue(job, true, t_path.parent_path());
       }
     }
   }
@@ -3000,11 +2861,9 @@ namespace detail {
   void RunManager_Impl::updateJobs(const std::vector<Job> &t_jobTrees)
   {
     LOG(Info, "Updating jobs: " << t_jobTrees.size());
-    for (std::vector<Job>::const_iterator itr = t_jobTrees.begin();
-         itr != t_jobTrees.end();
-         ++itr)
+    for (auto & job : t_jobTrees)
     {
-      updateJob(*itr);
+      updateJob(job);
     }
   }
 
@@ -3016,29 +2875,23 @@ namespace detail {
 
     std::deque<Job> q = m_queue;
     m_queue.clear();
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->setCanceled(true);
+      job.setCanceled(true);
     }
 
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->requestStop();
+      job.requestStop();
     }
 
     m_dbholder->deleteJobs(q.begin(), q.end());
     m_model.removeRows(0, m_model.rowCount());
     lock.unlock();
 
-    for (std::deque<Job>::iterator itr = q.begin();
-         itr != q.end();
-         ++itr)
+    for (auto & job : q)
     {
-      itr->waitForFinished();
+      job.waitForFinished();
     }
     openstudio::Application::instance().processEvents(1);
   }
@@ -3075,15 +2928,15 @@ namespace detail {
         m_processingQueue = true;
 
 
-        int running = std::count_if(queue.begin(), queue.end(), boost::bind(&openstudio::runmanager::Job::running, _1));
+        int running = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::running, std::placeholders::_1));
         int runningRemotely
-          = std::count_if(queue.begin(), queue.end(), boost::bind(&openstudio::runmanager::Job::runningRemotely, _1));
+          = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::runningRemotely, std::placeholders::_1));
         int runningLocally = running - runningRemotely;
 
         //LOG(Info, boost::posix_time::microsec_clock::local_time() << " kicking off new jobs runningremotely: " << runningRemotely << " runningLocally " << runningLocally);
 
-        std::deque<Job>::iterator itr = queue.begin();
-        std::deque<Job>::iterator end = queue.end();
+        auto itr = queue.begin();
+        auto end = queue.end();
 
 
         ConfigOptions config = getConfigOptions();
@@ -3098,12 +2951,13 @@ namespace detail {
 
           if (itr->runnable())
           {
-            if (runningRemotely < maxremotejobs && m_remoteProcessCreator->hasConnection() && itr->remoteRunnable())
-            {
-              LOG(Info, "Starting job remotely: " << toString(itr->uuid()) << " " << itr->description() );
-              itr->start(m_remoteProcessCreator);
-              ++runningRemotely;
-            } else if (runningLocally < maxlocaljobs) {
+//            if (runningRemotely < maxremotejobs && m_remoteProcessCreator->hasConnection() && itr->remoteRunnable())
+//            {
+//              LOG(Info, "Starting job remotely: " << toString(itr->uuid()) << " " << itr->description() );
+//              itr->start(m_remoteProcessCreator);
+//              ++runningRemotely;
+//            } else if (runningLocally < maxlocaljobs) {
+            if (runningLocally < maxlocaljobs) {
               LOG(Info, "Starting job locally: " << toString(itr->uuid()) << " " << itr->description() );
               itr->start(m_localProcessCreator);
               ++runningLocally;

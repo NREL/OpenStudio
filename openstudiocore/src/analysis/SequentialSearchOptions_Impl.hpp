@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_SEQUENTIALSEARCHOPTIONS_IMPL_HPP
 #define ANALYSIS_SEQUENTIALSEARCHOPTIONS_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/AlgorithmOptions_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "AlgorithmOptions_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

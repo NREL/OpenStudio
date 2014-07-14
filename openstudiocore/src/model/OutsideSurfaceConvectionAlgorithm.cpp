@@ -17,17 +17,17 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/OutsideSurfaceConvectionAlgorithm.hpp>
-#include <model/OutsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "OutsideSurfaceConvectionAlgorithm.hpp"
+#include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "SimulationControl.hpp"
+#include "SimulationControl_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_SurfaceConvectionAlgorithm_Outside_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {
@@ -116,7 +116,7 @@ OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(const Model
 
 // constructor
 OutsideSurfaceConvectionAlgorithm::OutsideSurfaceConvectionAlgorithm(
-    boost::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl)
+    std::shared_ptr<detail::OutsideSurfaceConvectionAlgorithm_Impl> impl)
   : ModelObject(impl)
 {}
 

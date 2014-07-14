@@ -19,18 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../SpaceType.hpp"
+#include "../ThermalZone.hpp"
+#include "../GasEquipment.hpp"
+#include "../GasEquipment_Impl.hpp"
+#include "../GasEquipmentDefinition.hpp"
+#include "../GasEquipmentDefinition_Impl.hpp"
+#include "../LifeCycleCost.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

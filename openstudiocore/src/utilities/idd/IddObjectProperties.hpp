@@ -12,18 +12,17 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
  *
- *  You should have recei
-ved a copy of the GNU Lesser General Public
-*  License along with this library; if not, write to the Free Software
-*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
 #ifndef UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP
 #define UTILITIES_IDD_IDDOBJECTPROPERTIES_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/core/Optional.hpp>
+#include "../core/Optional.hpp"
 
 #include <string>
 
@@ -79,7 +78,7 @@ struct UTILITIES_API IddObjectProperties{
    *  allowable extensible groups. */
   boost::optional<unsigned> maxFields;
 
-  /** Print object-level IDD flags to os. Includes indendation for IDD file readability. */
+  /** Print object-level IDD flags to os. Includes indentation for IDD file readability. */
   std::ostream& print(std::ostream& os) const;
 };
 

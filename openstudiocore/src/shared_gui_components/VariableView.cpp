@@ -25,6 +25,7 @@
 #include "LocalLibraryController.hpp"
 #include <QLabel>
 #include <QLineEdit>
+#include <QMimeData>
 #include <QPainter>
 #include <QPushButton>
 #include <QScrollArea>
@@ -45,17 +46,17 @@ NewGroupView::NewGroupView(bool t_fixed, bool t_fixedOnly)
   setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
   setMaximumWidth(660);
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(5,5,5,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
 
-  QHBoxLayout * newGroupHLayout = new QHBoxLayout();
+  auto newGroupHLayout = new QHBoxLayout();
   newGroupHLayout->setContentsMargins(0,0,0,0);
   newGroupHLayout->setSpacing(5);
   mainVLayout->addLayout(newGroupHLayout);
 
-  QLabel * addIconLabel = new QLabel();
+  auto addIconLabel = new QLabel();
   addIconLabel->setPixmap(QPixmap(":/shared_gui_components/images/gray_add_icon.png"));
   addIconLabel->setFixedSize(16,16);
   newGroupHLayout->addWidget(addIconLabel);
@@ -94,7 +95,7 @@ RectangularDropZone::RectangularDropZone(bool t_fixed)
     setStyleSheet("openstudio--measuretab--RectangularDropZone {background: #E0E0E0; border: 2px dashed gray;}");
   }
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);
@@ -142,12 +143,12 @@ NewGroupDropZone::NewGroupDropZone(bool t_fixed)
 }
 
 VariableHeaderView::VariableHeaderView(bool t_fixed)
-  : OSHeader(new HeaderToggleButton()), measureListView(0), m_fixed(t_fixed)
+  : OSHeader(new HeaderToggleButton()), measureListView(nullptr), m_fixed(t_fixed)
 {
   setFixedHeight(40);
 
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,0,5,0);
   mainHLayout->setSpacing(5);
   mainHLayout->setAlignment(Qt::AlignLeft);
@@ -156,7 +157,7 @@ VariableHeaderView::VariableHeaderView(bool t_fixed)
   mainHLayout->addWidget(toggleButton);
   
   QRegExp nameRegex("^\\S.*");
-  QRegExpValidator* validator = new QRegExpValidator(nameRegex, this);
+  auto validator = new QRegExpValidator(nameRegex, this);
 
   variableNameEdit = new QLineEdit();
   variableNameEdit->setStyleSheet("font:italic");
@@ -191,7 +192,7 @@ VariableHeaderView::VariableHeaderView(bool t_fixed)
 
 
 VariableGroupItemView::VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureType measureType)
-  : OSCollapsibleView(0)
+  : OSCollapsibleView(nullptr)
 {
   variableGroupHeader = new LightGradientHeader();
   variableGroupHeader->setMeasureType(measureType);
@@ -205,10 +206,10 @@ VariableGroupItemView::VariableGroupItemView(bool t_fixedMeasuresOnly, MeasureTy
 
 VariableGroupContentView::VariableGroupContentView(bool t_fixedMeasuresOnly)
   : QWidget(),
-    newGroupView(0),
-    newFixedGroupView(0)
+    newGroupView(nullptr),
+    newFixedGroupView(nullptr)
 {
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(0,10,0,10);
   mainVLayout->setSpacing(0);
   setLayout(mainVLayout);
@@ -235,7 +236,7 @@ VariableContentView::VariableContentView(bool t_fixed)
 {
   setStyleSheet("openstudio--measuretab--VariableContentView { background: #D5D5D5; }");
 
-  QVBoxLayout * mainVLayout = new QVBoxLayout();
+  auto mainVLayout = new QVBoxLayout();
   mainVLayout->setContentsMargins(40,0,132,5);
   mainVLayout->setSpacing(5);
   setLayout(mainVLayout);
@@ -268,7 +269,7 @@ void VariableItemView::paintEvent(QPaintEvent *)
 
 
 VariableItemView::VariableItemView(bool t_fixed)
-  : OSCollapsibleView(0)
+  : OSCollapsibleView(nullptr)
 {
   setMaximumWidth(650);
 
@@ -302,7 +303,7 @@ MeasureItemButton::MeasureItemButton(bool t_fixed)
 
   setHasEmphasis(false);
 
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(5,5,5,5);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);
@@ -346,7 +347,7 @@ void MeasureItemButton::paintEvent(QPaintEvent * e)
 MeasureItemView::MeasureItemView(bool t_fixed)
   : QWidget()
 {
-  QHBoxLayout * mainHLayout = new QHBoxLayout();
+  auto mainHLayout = new QHBoxLayout();
   mainHLayout->setContentsMargins(0,0,0,0);
   mainHLayout->setSpacing(5);
   setLayout(mainHLayout);

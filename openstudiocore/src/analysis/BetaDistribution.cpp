@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/BetaDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "BetaDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 BetaDistribution::BetaDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(BetaDistribution::type())))
 {}
 
 BetaDistribution::BetaDistribution(double alpha, double beta, double lowerBound, double upperBound) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(BetaDistribution::type())))
 {
   setAlpha(alpha);
@@ -76,7 +76,7 @@ void BetaDistribution::setUpperBound(double value) {
   impl()->setAttribute(Attribute("upper_bounds",value),false);
 }
 
-BetaDistribution::BetaDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+BetaDistribution::BetaDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == BetaDistribution::type());

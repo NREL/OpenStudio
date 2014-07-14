@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SIMSETTINGSVIEW_H
-#define OPENSTUDIO_SIMSETTINGSVIEW_H
+#ifndef OPENSTUDIO_SIMSETTINGSVIEW_HPP
+#define OPENSTUDIO_SIMSETTINGSVIEW_HPP
 
 #include <QWidget>
 
-#include <model/Model.hpp>
-#include <model/ShadowCalculation.hpp>
-#include <model/SimulationControl.hpp>
+#include "../model/Model.hpp"
+#include "../model/ShadowCalculation.hpp"
+#include "../model/SimulationControl.hpp"
 
 class QButtonGroup;
 class QCheckBox;
@@ -351,4 +351,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SIMSETTINGSVIEW_H
+#endif // OPENSTUDIO_SIMSETTINGSVIEW_HPP

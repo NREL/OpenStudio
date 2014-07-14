@@ -17,13 +17,13 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSDoubleEdit.hpp>
+#include "OSDoubleEdit.hpp"
 
-#include <model/ModelObject_Impl.hpp>
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/data/Attribute.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/data/Attribute.hpp"
 
 #include <iomanip>
 

@@ -19,14 +19,14 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/RefrigerationCondenserEvaporativeCooled.hpp>
-#include <model/RefrigerationCondenserEvaporativeCooled_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/ScheduleTypeRegistry.hpp>
+#include "../RefrigerationCondenserEvaporativeCooled.hpp"
+#include "../RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeRegistry.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

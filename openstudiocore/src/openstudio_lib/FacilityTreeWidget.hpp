@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_FACILITYTREEWIDGET_H
-#define OPENSTUDIO_FACILITYTREEWIDGET_H
+#ifndef OPENSTUDIO_FACILITYTREEWIDGET_HPP
+#define OPENSTUDIO_FACILITYTREEWIDGET_HPP
 
-#include <openstudio_lib/ModelObjectTreeWidget.hpp>
+#include "ModelObjectTreeWidget.hpp"
 
 class QString;
 class QTreeWidgetItem;
@@ -70,5 +70,5 @@ class FacilityTreeWidget : public ModelObjectTreeWidget
 
 } // openstudio
 
-#endif // OPENSTUDIO_FACILITYTREEWIDGET_H
+#endif // OPENSTUDIO_FACILITYTREEWIDGET_HPP
 

@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysisdriver/AnalysisDriverWatcher.hpp>
-#include <analysisdriver/AnalysisDriver_Impl.hpp>
+#include "AnalysisDriverWatcher.hpp"
+#include "AnalysisDriver_Impl.hpp"
 
-#include <project/ProjectDatabase.hpp>
-#include <project/AnalysisRecord.hpp>
-#include <project/AnalysisRecord_Impl.hpp>
-#include <project/DataPointRecord.hpp>
-#include <project/DataPointRecord_Impl.hpp>
+#include "../project/ProjectDatabase.hpp"
+#include "../project/AnalysisRecord.hpp"
+#include "../project/AnalysisRecord_Impl.hpp"
+#include "../project/DataPointRecord.hpp"
+#include "../project/DataPointRecord_Impl.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Application.hpp"
+#include "../utilities/core/System.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysisdriver {
@@ -108,7 +108,7 @@ void AnalysisDriverWatcher::analysisComplete(const openstudio::UUID& analysis) {
     if (watching(analysis)) {
       LOG(Debug,"Calling on AnalysisComplete.");
       this->onAnalysisComplete(analysis);
-      std::vector<openstudio::UUID>::iterator it = std::find(m_analyses.begin(),m_analyses.end(),analysis);
+      auto it = std::find(m_analyses.begin(),m_analyses.end(),analysis);
       m_analyses.erase(it);
     }
   } catch (const std::exception &e) {

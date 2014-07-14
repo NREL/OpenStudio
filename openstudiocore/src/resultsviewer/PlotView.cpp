@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <resultsviewer/PlotView.hpp>
-#include <resultsviewer/PlotViewProperties.hpp>
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/data/Vector.hpp>
+#include "PlotView.hpp"
+#include "PlotViewProperties.hpp"
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/data/Vector.hpp"
 
 #include <qwt/qwt_symbol.h>
 #include <qwt/qwt_data.h>
@@ -122,7 +122,7 @@ namespace resultsviewer{
   void PlotLegend::clearLegend(QLayout *li)
   {
     QLayoutItem *child;
-    while ((child = li->takeAt(0)) != 0)
+    while ((child = li->takeAt(0)) != nullptr)
     {
       if (child->widget())
         delete child->widget();
@@ -169,8 +169,8 @@ namespace resultsviewer{
   void PlotLegend::addLegendItem(resultsviewer::LinePlotCurve *curve)
   {
     // update with paint event and curve styles
-    QLabel *curveStyle = new QLabel(this);
-    QLabel *curveLabel = new QLabel(this);
+    auto curveStyle = new QLabel(this);
+    auto curveLabel = new QLabel(this);
     QPen pen(curve->pen());
     QPalette p(curveStyle->palette());
     p.setColor(QPalette::WindowText, pen.color());
@@ -182,7 +182,7 @@ namespace resultsviewer{
     curveLabel->setText(curve->title().text());
     int titleWidth = curveStyle->width() + curveLabel->width();
     if (titleWidth > m_width) m_width = titleWidth;
-    QHBoxLayout *legendItem = new QHBoxLayout;
+    auto legendItem = new QHBoxLayout;
     legendItem->addWidget(curveStyle);
     legendItem->addWidget(curveLabel);
     m_mainLayout->addLayout(legendItem);
@@ -227,59 +227,59 @@ namespace resultsviewer{
 
   /// PlotView - results viewer container for plots
   PlotView::PlotView(int plotType, QWidget* parent): QWidget(parent),
-    m_illuminanceMapRefPt1(0),
-    m_illuminanceMapRefPt2(0),
+    m_illuminanceMapRefPt1(nullptr),
+    m_illuminanceMapRefPt2(nullptr),
     m_lastImageSavedPath(QApplication::applicationDirPath()),
-    m_plot(0),
-    m_menuBar(0),
-    m_toolBar(0),
-    m_centerSlider(0),
-    m_centerDate(0),
-    m_spanSlider(0),
-    m_centerSpinBox(0),
-    m_spanSpinBox(0),
+    m_plot(nullptr),
+    m_menuBar(nullptr),
+    m_toolBar(nullptr),
+    m_centerSlider(nullptr),
+    m_centerDate(nullptr),
+    m_spanSlider(nullptr),
+    m_centerSpinBox(nullptr),
+    m_spanSpinBox(nullptr),
     m_plotType(plotType),
-    m_picker(0),
-    m_valueInfo(0),
-    m_valueInfoMarker(0),
-    m_panner(0),
-    m_plotViewTimeAxis(0),
-    m_grid(0),
-    m_legend(0),
-    m_spectrogram(0),
-    m_rightAxis(0),
-    m_spinDay(0),
-    m_spinHour(0),
-    m_noData(0)
+    m_picker(nullptr),
+    m_valueInfo(nullptr),
+    m_valueInfoMarker(nullptr),
+    m_panner(nullptr),
+    m_plotViewTimeAxis(nullptr),
+    m_grid(nullptr),
+    m_legend(nullptr),
+    m_spectrogram(nullptr),
+    m_rightAxis(nullptr),
+    m_spinDay(nullptr),
+    m_spinHour(nullptr),
+    m_noData(nullptr)
   {
     init();
   }
 
   PlotView::PlotView(QString& path, int plotType, QWidget* parent): QWidget(parent),
-    m_illuminanceMapRefPt1(0),
-    m_illuminanceMapRefPt2(0),
+    m_illuminanceMapRefPt1(nullptr),
+    m_illuminanceMapRefPt2(nullptr),
     m_lastImageSavedPath(path.isEmpty()?QApplication::applicationDirPath():path),
-    m_plot(0),
-    m_menuBar(0),
-    m_toolBar(0),
-    m_centerSlider(0),
-    m_centerDate(0),
-    m_spanSlider(0),
-    m_centerSpinBox(0),
-    m_spanSpinBox(0),
+    m_plot(nullptr),
+    m_menuBar(nullptr),
+    m_toolBar(nullptr),
+    m_centerSlider(nullptr),
+    m_centerDate(nullptr),
+    m_spanSlider(nullptr),
+    m_centerSpinBox(nullptr),
+    m_spanSpinBox(nullptr),
     m_plotType(plotType),
-    m_picker(0),
-    m_valueInfo(0),
-    m_valueInfoMarker(0),
-    m_panner(0),
-    m_plotViewTimeAxis(0),
-    m_grid(0),
-    m_legend(0),
-    m_spectrogram(0),
-    m_rightAxis(0),
-    m_spinDay(0),
-    m_spinHour(0),
-    m_noData(0)
+    m_picker(nullptr),
+    m_valueInfo(nullptr),
+    m_valueInfoMarker(nullptr),
+    m_panner(nullptr),
+    m_plotViewTimeAxis(nullptr),
+    m_grid(nullptr),
+    m_legend(nullptr),
+    m_spectrogram(nullptr),
+    m_rightAxis(nullptr),
+    m_spinDay(nullptr),
+    m_spinHour(nullptr),
+    m_noData(nullptr)
   {
     init();
   }
@@ -297,7 +297,7 @@ namespace resultsviewer{
 
     createLayout();
 
-    m_plotViewTimeAxis = NULL;
+    m_plotViewTimeAxis = nullptr;
 
     m_leftAxisUnits = "NONE SPECIFIED";
     m_rightAxisUnits = "NONE SPECIFIED";
@@ -379,10 +379,10 @@ namespace resultsviewer{
 
     connect(m_toolBar, SIGNAL(signalDoubleClick()), this, SLOT(slotFloatOrDock()));
 
-    QButtonGroup *exclusiveButtons = new QButtonGroup(this);
+    auto exclusiveButtons = new QButtonGroup(this);
     exclusiveButtons->setExclusive(true);
 
-    QToolButton *pointer = new QToolButton(this);
+    auto pointer = new QToolButton(this);
     pointer->setIcon(QIcon(":/images/select_tool.png"));
     pointer->setText("Select Mode");
     pointer->setToolTip("Select Mode");
@@ -393,7 +393,7 @@ namespace resultsviewer{
 
     m_selectCursor = QCursor(Qt::ArrowCursor);
 
-    QToolButton *pan = new QToolButton(this);
+    auto pan = new QToolButton(this);
     pan->setIcon(QIcon(":/images/pan.png"));
     pan->setText("Pan Mode");
     pan->setToolTip("Pan Mode");
@@ -404,7 +404,7 @@ namespace resultsviewer{
 
     m_panCursor = QCursor(Qt::OpenHandCursor);
 
-    QToolButton *valueInfo = new QToolButton(this);
+    auto valueInfo = new QToolButton(this);
     valueInfo->setIcon(QIcon(":/images/value_info.png"));
     valueInfo->setText("Value Info Mode");
     valueInfo->setToolTip("Value Info Mode");
@@ -415,7 +415,7 @@ namespace resultsviewer{
 
     m_valueInfoCursor = QCursor(Qt::ArrowCursor);
 
-    QToolButton *zoom = new QToolButton(this);
+    auto zoom = new QToolButton(this);
     zoom->setIcon(QIcon(":/images/rubberband_zoom.png"));
     zoom->setText("Zoom Mode");
     zoom->setToolTip("Zoom Mode");
@@ -437,7 +437,7 @@ namespace resultsviewer{
     connect(zoomOut, SIGNAL(triggered()), this, SLOT(slotZoomOut()));
 
 
-    QMenu *saveMenu = new QMenu(this);
+    auto saveMenu = new QMenu(this);
     QAction *saveImageScreenSize = new QAction(tr("Save Image (Screen Size)"), this);
     connect(saveImageScreenSize, SIGNAL(triggered()), this, SLOT(slotSaveImageScreenSize()));
     QAction *saveImage800x600 = new QAction(tr("Save Image (800x600)"), this);
@@ -447,7 +447,7 @@ namespace resultsviewer{
     saveMenu->addAction(saveImageScreenSize);
     saveMenu->addAction(saveImage800x600);
     saveMenu->addAction(saveImage400x300);
-    QToolButton *save = new QToolButton(this);
+    auto save = new QToolButton(this);
     save->setIcon(QIcon(":/images/save_plot_image.png"));
     save->setText("Save Image");
     save->setToolTip("Save Image");
@@ -497,7 +497,7 @@ namespace resultsviewer{
     m_zoomer[0]->setTrackerMode(QwtPicker::ActiveOnly);
     m_zoomer[0]->setTrackerPen(QColor(Qt::blue));
 
-    // trac 349 - zommer double zooms when second zoomer created
+    // trac 349 - zoomer double zooms when second zoomer created
     m_zoomer[1] = new Zoomer(QwtPlot::xTop, QwtPlot::yRight, m_plot->canvas());
     m_zoomer[1]->setEnabled(false);
 
@@ -555,7 +555,7 @@ namespace resultsviewer{
 
   void PlotView::createLayout()
   {
-    QVBoxLayout *mainLayout =  new QVBoxLayout;
+    auto mainLayout = new QVBoxLayout;
 
     mainLayout->addWidget(m_toolBar);
 
@@ -573,7 +573,7 @@ namespace resultsviewer{
 
     if (m_plotType == RVPV_ILLUMINANCEPLOT)
     {
-      QHBoxLayout *centerBoxLayout = new QHBoxLayout;
+      auto centerBoxLayout = new QHBoxLayout;
       QLabel *centerLabel = new QLabel(tr("Center:"), this);
       m_centerSlider = new QSlider(Qt::Horizontal, this);
       m_centerDate = new QLineEdit(tr("00/00 00:00:00"),this);
@@ -609,7 +609,7 @@ namespace resultsviewer{
     }
     else
     {
-      QHBoxLayout *centerBoxLayout = new QHBoxLayout;
+      auto centerBoxLayout = new QHBoxLayout;
       QLabel *centerLabel = new QLabel(tr("Center:"), this);
       m_centerSlider = new QSlider(Qt::Horizontal, this);
       m_centerSpinBox = new QDoubleSpinBox(this);
@@ -624,7 +624,7 @@ namespace resultsviewer{
       connect(m_centerSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotCenterSpinBoxToInt(double)));
       connect(m_centerSpinBox, SIGNAL(valueChanged(double)), this, SLOT(slotCenterValue(double)));
 
-      QHBoxLayout *spanBoxLayout = new QHBoxLayout;
+      auto spanBoxLayout = new QHBoxLayout;
 
       QLabel *spanLabel = new QLabel(tr("Span:"), this);
       m_spanSlider = new QSlider(Qt::Horizontal, this);
@@ -653,7 +653,7 @@ namespace resultsviewer{
   }
 
 
-  void PlotView::plotViewData(PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::plotViewData(PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled)
   {
     switch(m_plotType)
     {
@@ -935,7 +935,7 @@ namespace resultsviewer{
     m_endDateTime = _plotViewData.ts->firstReportDateTime() + Time(_plotViewData.ts->daysFromFirstReport(_plotViewData.ts->daysFromFirstReport().size()-1));
     m_xAxisMin = m_startDateTime.date().dayOfYear();
     m_xAxisMax = m_xAxisMin + (m_endDateTime - m_startDateTime).totalDays();
-    if (m_plotViewTimeAxis == NULL)
+    if (m_plotViewTimeAxis == nullptr)
     {
       m_plotViewTimeAxis = new PlotViewTimeAxis(RVPV_FLOODPLOT);
       m_plot->setAxisTitle(QwtPlot::xBottom, " Simulation Time");
@@ -1106,9 +1106,9 @@ namespace resultsviewer{
 
 
 
-  void PlotView::linePlotItem(resultsviewer::PlotViewData &_plotViewData, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::linePlotItem(resultsviewer::PlotViewData &_plotViewData, const std::function<bool ()> &t_workCanceled)
   {
-    if (m_plotViewTimeAxis == NULL)
+    if (m_plotViewTimeAxis == nullptr)
     {
       m_startDateTime = _plotViewData.ts->firstReportDateTime();
       m_endDateTime = _plotViewData.ts->firstReportDateTime() + Time(_plotViewData.ts->daysFromFirstReport(_plotViewData.ts->daysFromFirstReport().size()-1));
@@ -1153,7 +1153,7 @@ namespace resultsviewer{
 
 
       QString legendLabel = updateLabelString(_plotViewData.legendName, _plotViewData.alias, _plotViewData.plotSource);
-      LinePlotCurve *curve = new LinePlotCurve(legendLabel,*data);
+      auto curve = new LinePlotCurve(legendLabel,*data);
       curve->setLegend(_plotViewData.legendName);
       curve->setAlias(_plotViewData.alias);
       curve->setPlotSource(_plotViewData.plotSource);
@@ -1210,7 +1210,7 @@ namespace resultsviewer{
 
   QColor PlotView::curveColor(QColor &lastColor)
   {
-    std::vector<QColor>::iterator colorIt = std::find(m_colorVec.begin(), m_colorVec.end(), lastColor);
+    auto colorIt = std::find(m_colorVec.begin(), m_colorVec.end(), lastColor);
     if ( (colorIt == m_colorVec.end()) ||  (*colorIt == m_colorVec.back()) ) {
       return (m_colorVec.at(0));
     } else {
@@ -1264,7 +1264,7 @@ namespace resultsviewer{
   }
 
 
-  void PlotView::scaleCurves(LinePlotCurve *curve, const boost::function<bool ()> &t_workCanceled)
+  void PlotView::scaleCurves(LinePlotCurve *curve, const std::function<bool ()> &t_workCanceled)
   {
 
     /// multiple curves based on units
@@ -1453,13 +1453,13 @@ namespace resultsviewer{
         case RVPV_LINEPLOT:
           for (plotViewDataVecIt = plotViewDataVec.begin(); plotViewDataVecIt != plotViewDataVec.end(); ++plotViewDataVecIt)
           {
-            plotViewData((*plotViewDataVecIt), boost::function<bool ()>());
+            plotViewData((*plotViewDataVecIt), std::function<bool ()>());
           }
           m_legend->update();
           break;
         case RVPV_FLOODPLOT:
           // replace floodplot data with last selected
-          plotViewData(plotViewDataVec.back(), boost::function<bool()>());
+          plotViewData(plotViewDataVec.back(), std::function<bool()>());
           break;
         }
       }
@@ -1609,7 +1609,7 @@ namespace resultsviewer{
       m_plot->print(&p, rect());
       printLegend(&p, rect());
       p.end();
-      pixmap.save(file, 0, -1);
+      pixmap.save(file, nullptr, -1);
     }
     else
     {
@@ -1620,7 +1620,7 @@ namespace resultsviewer{
       m_plot->print(&p, r);
       printLegend(&p, r);
       p.end();
-      pixmap.save(file, 0, -1);
+      pixmap.save(file, nullptr, -1);
     }
   }
 
@@ -1690,7 +1690,7 @@ namespace resultsviewer{
     double dist;
     int minIndex = -1;
     int index;
-    LinePlotCurve *minCurve=NULL;
+    LinePlotCurve *minCurve=nullptr;
     for (itPlotItem = listPlotItem.begin();itPlotItem!=listPlotItem.end();++itPlotItem)
     {
       QwtPlotItem *plotItem = *itPlotItem;

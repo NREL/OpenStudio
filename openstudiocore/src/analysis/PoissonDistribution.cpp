@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/PoissonDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "PoissonDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 PoissonDistribution::PoissonDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(PoissonDistribution::type())))
 {}
   
 PoissonDistribution::PoissonDistribution(double lambda) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(PoissonDistribution::type())))
 {
   setLambda(lambda);
@@ -56,7 +56,7 @@ bool PoissonDistribution::setLambda(double value) {
   }
 }
 
-PoissonDistribution::PoissonDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+PoissonDistribution::PoissonDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == PoissonDistribution::type());

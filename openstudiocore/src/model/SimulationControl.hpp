@@ -19,8 +19,8 @@
 #ifndef MODEL_SIMULATIONCONTROL_HPP
 #define MODEL_SIMULATIONCONTROL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -232,7 +232,7 @@ class MODEL_API SimulationControl : public ParentObject {
 
   typedef detail::SimulationControl_Impl ImplType;
 
-  explicit SimulationControl(boost::shared_ptr<ImplType> impl);
+  explicit SimulationControl(std::shared_ptr<ImplType> impl);
 
  private:
 

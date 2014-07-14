@@ -137,6 +137,38 @@ namespace detail{
     return clonedObject;
   }
 
+  boost::optional<Loop> SetpointManager_Impl::loop() const
+  {
+    if( boost::optional<Node> node = setpointNode() ) {
+      return node->loop();
+    }
+    return boost::none;
+  }
+
+  boost::optional<AirLoopHVAC> SetpointManager_Impl::airLoopHVAC() const
+  {
+    if( boost::optional<Node> node = setpointNode() ) {
+      return node->airLoopHVAC();
+    }
+    return boost::none;
+  }
+
+  boost::optional<AirLoopHVACOutdoorAirSystem> SetpointManager_Impl::airLoopHVACOutdoorAirSystem() const
+  {
+    if( boost::optional<Node> node = setpointNode() ) {
+      return node->airLoopHVACOutdoorAirSystem();
+    }
+    return boost::none;
+  }
+
+  boost::optional<PlantLoop> SetpointManager_Impl::plantLoop() const
+  {
+    if( boost::optional<Node> node = setpointNode() ) {
+      return node->plantLoop();
+    }
+    return boost::none;
+  }
+
 } // detail
   
 SetpointManager::SetpointManager(IddObjectType type, const Model& model)
@@ -145,7 +177,7 @@ SetpointManager::SetpointManager(IddObjectType type, const Model& model)
   OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
 }
 
-SetpointManager::SetpointManager(boost::shared_ptr<detail::SetpointManager_Impl> p)
+SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p)
   : HVACComponent(p)
 {
 }

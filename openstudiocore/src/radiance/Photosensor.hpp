@@ -22,9 +22,9 @@
 
 #include "RadianceAPI.hpp"
 
-#include <utilities/data/Vector.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/data/TimeSeries.hpp>
+#include "../utilities/data/Vector.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 #include <vector>
 
 namespace openstudio{

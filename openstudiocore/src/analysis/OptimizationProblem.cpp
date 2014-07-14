@@ -17,21 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/OptimizationProblem.hpp>
-#include <analysis/OptimizationProblem_Impl.hpp>
+#include "OptimizationProblem.hpp"
+#include "OptimizationProblem_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/Function_Impl.hpp>
-#include <analysis/OptimizationDataPoint.hpp>
-#include <analysis/OptimizationDataPoint_Impl.hpp>
-#include <analysis/WorkflowStep.hpp>
+#include "DataPoint.hpp"
+#include "Function_Impl.hpp"
+#include "OptimizationDataPoint.hpp"
+#include "OptimizationDataPoint_Impl.hpp"
+#include "WorkflowStep.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/Finder.hpp>
-#include <utilities/core/Json.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/Finder.hpp"
+#include "../utilities/core/Json.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -44,7 +42,7 @@ namespace detail {
     : Problem_Impl(name,workflow),
       m_objectives(objectives)
   {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       objective.onChange();
       connectChild(objective,false);
     }
@@ -58,7 +56,7 @@ namespace detail {
     : Problem_Impl(name,workflow,responses),
       m_objectives(objectives)
   {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       objective.onChange();
       connectChild(objective,false);
     }
@@ -73,7 +71,7 @@ namespace detail {
     : Problem_Impl(name,variables,responses,simulationWorkflow),
       m_objectives(objectives)
   {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       objective.onChange();
       connectChild(objective,false);
     }
@@ -87,7 +85,7 @@ namespace detail {
     : Problem_Impl(name,variables,simulationWorkflow),
       m_objectives(objectives)
   {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       objective.onChange();
       connectChild(objective,false);
     }
@@ -111,7 +109,7 @@ namespace detail {
                    responses),
       m_objectives(objectives)
   {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       connectChild(objective,false);
     }
   }
@@ -119,17 +117,17 @@ namespace detail {
   OptimizationProblem_Impl::OptimizationProblem_Impl(const OptimizationProblem_Impl &other)
     : Problem_Impl(other)
   {
-    BOOST_FOREACH(const Function& function,other.objectives()) {
+    for (const Function& function : other.objectives()) {
       m_objectives.push_back(function.clone().cast<Function>());
       connectChild(m_objectives.back(),false);
     }
   }
 
   AnalysisObject OptimizationProblem_Impl::clone() const {
-    boost::shared_ptr<OptimizationProblem_Impl> impl(new OptimizationProblem_Impl(*this));
+    std::shared_ptr<OptimizationProblem_Impl> impl(new OptimizationProblem_Impl(*this));
     OptimizationProblem result(impl);
     FunctionVector objectives = result.objectives();
-    BOOST_FOREACH(Function& objective,objectives) {
+    for (Function& objective : objectives) {
       objective.setParent(result);
     }
     return result;
@@ -180,7 +178,7 @@ namespace detail {
   {
     Problem_Impl::updateDataPoint(dataPoint,completedJob);
     DoubleVector objectiveFunctionValues;
-    BOOST_FOREACH(const Function& objectiveFunction,objectives()) {
+    for (const Function& objectiveFunction : objectives()) {
       objectiveFunctionValues.push_back(objectiveFunction.getValue(dataPoint));
     }
     dataPoint.cast<OptimizationDataPoint>().setObjectiveValues(objectiveFunctionValues);
@@ -211,7 +209,7 @@ namespace detail {
     if ((index < 0) || (index >= numObjectives())) {
       return false;
     }
-    FunctionVector::iterator it = m_objectives.begin();
+    auto it = m_objectives.begin();
     for (int count = 0; count < index; ++count, ++it);
     it = m_objectives.insert(it,objective);
     for (int i = index, n = int(m_objectives.size()); i < n; ++i) {
@@ -223,10 +221,10 @@ namespace detail {
   }
 
   bool OptimizationProblem_Impl::eraseObjective(const Function& objective) {
-    FunctionVector::iterator it = std::find_if(
+    auto it = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective));
     if (it == m_objectives.end()) {
       return false;
     }
@@ -243,14 +241,14 @@ namespace detail {
   bool OptimizationProblem_Impl::swapObjectives(const Function& objective1,
                                                 const Function& objective2)
   {
-    FunctionVector::iterator it1 = std::find_if(
+    auto it1 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective1));
-    FunctionVector::iterator it2 = std::find_if(
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective1));
+    auto it2 = std::find_if(
           m_objectives.begin(),
           m_objectives.end(),
-          boost::bind(uuidsEqual<Function,Function>,_1,objective2));
+          std::bind(uuidsEqual<Function,Function>,std::placeholders::_1,objective2));
     if ((it1 == m_objectives.end()) || it2 == m_objectives.end()) {
       return false;
     }
@@ -266,11 +264,11 @@ namespace detail {
   }
 
   void OptimizationProblem_Impl::setObjectiveFunctions(const std::vector<Function>& objectives) {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       disconnectChild(objective);
     }
     m_objectives = objectives;
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       objective.onChange();
       connectChild(objective,true);
     }
@@ -278,7 +276,7 @@ namespace detail {
   }
 
   void OptimizationProblem_Impl::clearObjectiveFunctions() {
-    BOOST_FOREACH(Function& objective,m_objectives) {
+    for (Function& objective : m_objectives) {
       disconnectChild(objective);
     }
     m_objectives.clear();
@@ -293,7 +291,7 @@ namespace detail {
     if (!objectives().empty()) {
       QVariantList objectivesList;
       int index(0);
-      Q_FOREACH(const Function& objective,objectives()) {
+      for (const Function& objective : objectives()) {
         QVariantMap objectiveMap = objective.toVariant().toMap();
         objectiveMap["objective_index"] = QVariant(index);
         objectivesList.push_back(objectiveMap);
@@ -314,7 +312,7 @@ namespace detail {
       objectives = deserializeOrderedVector(
             map["objectives"].toList(),
             "objective_index",
-            boost::function<Function (const QVariant&)>(boost::bind(analysis::detail::Function_Impl::factoryFromVariant,_1,version)));
+            std::function<Function (const QVariant&)>(std::bind(analysis::detail::Function_Impl::factoryFromVariant,std::placeholders::_1,version)));
     }
 
     return OptimizationProblem(slice.uuid(),
@@ -338,7 +336,7 @@ namespace detail {
     // input variables, and any of those used by an objective should also be in workflow().
     //
     FunctionVector functions = objectives();
-    BOOST_FOREACH(Function& func,functions) {
+    for (Function& func : functions) {
       func.getImpl<detail::Function_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
@@ -348,16 +346,16 @@ namespace detail {
 OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      workflow)))
 {
   OptimizationProblem copyOfThis(getImpl<detail::OptimizationProblem_Impl>());
-  BOOST_FOREACH(const Function& objective,objectives) {
+  for (const Function& objective : objectives) {
     objective.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const WorkflowStep& step,workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
 }
@@ -366,20 +364,20 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow,
                                          const std::vector<Function>& responses)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      workflow,
                                                      responses)))
 {
   OptimizationProblem copyOfThis(getImpl<detail::OptimizationProblem_Impl>());
-  BOOST_FOREACH(const Function& objective,objectives) {
+  for (const Function& objective : objectives) {
     objective.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const WorkflowStep& step,workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }
@@ -389,7 +387,7 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Variable>& variables,
                                          const std::vector<Function>& responses,
                                          const runmanager::Workflow& simulationWorkflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      variables,
@@ -397,13 +395,13 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                                      simulationWorkflow)))
 {
   OptimizationProblem copyOfThis(getImpl<detail::OptimizationProblem_Impl>());
-  BOOST_FOREACH(const Function& objective,objectives) {
+  for (const Function& objective : objectives) {
     objective.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+  for (const WorkflowStep& step : workflow()) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }
@@ -412,17 +410,17 @@ OptimizationProblem::OptimizationProblem(const std::string& name,
                                          const std::vector<Function>& objectives,
                                          const std::vector<Variable>& variables,
                                          const runmanager::Workflow& simulationWorkflow)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(name,
                                                      objectives,
                                                      variables,
                                                      simulationWorkflow)))
 {
   OptimizationProblem copyOfThis(getImpl<detail::OptimizationProblem_Impl>());
-  BOOST_FOREACH(const Function& objective,objectives) {
+  for (const Function& objective : objectives) {
     objective.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const WorkflowStep& step,workflow()) {
+  for (const WorkflowStep& step : workflow()) {
     step.setParent(copyOfThis);
   }
 }
@@ -435,7 +433,7 @@ OptimizationProblem::OptimizationProblem(const UUID& uuid,
                                          const std::vector<Function>& objectives,
                                          const std::vector<WorkflowStep>& workflow,
                                          const std::vector<Function>& responses)
-  : Problem(boost::shared_ptr<detail::OptimizationProblem_Impl>(
+  : Problem(std::shared_ptr<detail::OptimizationProblem_Impl>(
                 new detail::OptimizationProblem_Impl(uuid,
                                                      versionUUID,
                                                      name,
@@ -446,13 +444,13 @@ OptimizationProblem::OptimizationProblem(const UUID& uuid,
                                                      responses)))
 {
   OptimizationProblem copyOfThis(getImpl<detail::OptimizationProblem_Impl>());
-  BOOST_FOREACH(const Function& objective,objectives) {
+  for (const Function& objective : objectives) {
     objective.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const WorkflowStep& step,workflow) {
+  for (const WorkflowStep& step : workflow) {
     step.setParent(copyOfThis);
   }
-  BOOST_FOREACH(const Function& response,responses) {
+  for (const Function& response : responses) {
     response.setParent(copyOfThis);
   }
 }
@@ -492,7 +490,7 @@ void OptimizationProblem::clearObjectiveFunctions() {
 }
 
 /// @cond
-OptimizationProblem::OptimizationProblem(boost::shared_ptr<detail::OptimizationProblem_Impl> impl)
+OptimizationProblem::OptimizationProblem(std::shared_ptr<detail::OptimizationProblem_Impl> impl)
   : Problem(impl)
 {}
 /// @endcond

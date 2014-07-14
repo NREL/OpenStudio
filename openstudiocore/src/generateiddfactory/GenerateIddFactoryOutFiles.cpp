@@ -17,12 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <generateiddfactory/GenerateIddFactoryOutFiles.hpp>
-#include <generateiddfactory/IddFileFactoryData.hpp>
+#include "GenerateIddFactoryOutFiles.hpp"
+#include "IddFileFactoryData.hpp"
 
-#include <utilities/core/Checksum.hpp>
+#include "../utilities/core/Checksum.hpp"
 
-#include <boost/foreach.hpp>
 #include <boost/regex.hpp>
 
 #include <sstream>
@@ -33,13 +32,13 @@ IddFactoryOutFile::IddFactoryOutFile(const std::string& filename,
                                      const openstudio::path& outPath,
                                      const std::string& outFileHeader) 
   : filename(filename), 
-    finalPath(outPath / toPath(filename)), 
-    tempPath(outPath / toPath(filename + ".temp"))
+    finalPath(outPath / path(filename)), 
+    tempPath(outPath / path(filename + ".temp"))
 {
   std::stringstream ss;
   tempFile.open(tempPath);
   if (!tempFile) {
-    ss << "Unable to open '" << toString(tempPath) << "' for writing.";
+    ss << "Unable to open '" << tempPath.string() << "' for writing.";
     throw std::runtime_error(ss.str().c_str());
   }
   tempFile << outFileHeader << std::endl;
@@ -70,10 +69,10 @@ GenerateIddFactoryOutFiles::GenerateIddFactoryOutFiles(
     iddFieldEnumsIxx("IddFieldEnums.ixx",outPath,outFileHeader),
     iddFactoryHxx("IddFactory.hxx",outPath,outFileHeader),
     iddFactoryCxx("IddFactory.cxx",outPath,outFileHeader),
-    m_fileIndexPath(outPath / toPath("IddFactoryFileIndex.hxx"))
+    m_fileIndexPath(outPath / path("IddFactoryFileIndex.hxx"))
 {
-  BOOST_FOREACH(const IddFileFactoryData& iddFile,iddFiles) {
-    boost::shared_ptr<IddFactoryOutFile> cxxFile(new 
+  for (const IddFileFactoryData& iddFile : iddFiles) {
+    std::shared_ptr<IddFactoryOutFile> cxxFile(new 
         IddFactoryOutFile("IddFactory_" + iddFile.fileName() + ".cxx",
                           outPath,
                           outFileHeader));
@@ -89,7 +88,7 @@ void GenerateIddFactoryOutFiles::finalize() {
   finalizeIddFactoryOutFile(iddFieldEnumsIxx);
   finalizeIddFactoryOutFile(iddFactoryHxx);
   finalizeIddFactoryOutFile(iddFactoryCxx);
-  BOOST_FOREACH(boost::shared_ptr<IddFactoryOutFile>& cxxFile,iddFactoryIddFileCxxs) {
+  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : iddFactoryIddFileCxxs) {
     finalizeIddFactoryOutFile(*cxxFile);
   }
 

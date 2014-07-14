@@ -16,24 +16,23 @@
 *  License along with this library; if not, write to the Free Software
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
-#include <utilities/cloud/AWSProvider.hpp>
-#include <utilities/cloud/AWSProvider_Impl.hpp>
+#include "AWSProvider.hpp"
+#include "AWSProvider_Impl.hpp"
 
-#include <utilities/core/Application.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/String.hpp>
-#include <utilities/core/System.hpp>
+#include "../core/Application.hpp"
+#include "../core/ApplicationPathHelpers.hpp"
+#include "../core/Assert.hpp"
+#include "../core/Path.hpp"
+#include "../core/String.hpp"
+#include "../core/System.hpp"
 
 #include <OpenStudio.hxx>
-
-#include <qjson/parser.h>
-#include <qjson/serializer.h>
-
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QList>
 #include <QProcess>
 #include <QSettings>
@@ -41,8 +40,6 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QUrl>
-
-#include <boost/bind.hpp>
 
 #include <algorithm>
 
@@ -486,18 +483,18 @@ namespace openstudio{
       : CloudProvider_Impl(),
         m_awsSettings(),
         m_awsSession(toString(createUUID()),boost::none,std::vector<Url>()),
-        m_checkInternetProcess(0),
-        m_checkServiceProcess(0),
-        m_checkValidateProcess(0),
-        m_checkResourcesProcess(0),
-        m_startServerProcess(0),
-        m_startWorkerProcess(0),
-        m_checkServerRunningProcess(0),
-        m_checkWorkerRunningProcess(0),
-        m_stopInstancesProcess(0),
-        m_checkTerminatedProcess(0),
-        m_checkEstimatedChargesProcess(0),
-        m_checkTotalInstancesProcess(0),
+        m_checkInternetProcess(nullptr),
+        m_checkServiceProcess(nullptr),
+        m_checkValidateProcess(nullptr),
+        m_checkResourcesProcess(nullptr),
+        m_startServerProcess(nullptr),
+        m_startWorkerProcess(nullptr),
+        m_checkServerRunningProcess(nullptr),
+        m_checkWorkerRunningProcess(nullptr),
+        m_stopInstancesProcess(nullptr),
+        m_checkTerminatedProcess(nullptr),
+        m_checkEstimatedChargesProcess(nullptr),
+        m_checkTotalInstancesProcess(nullptr),
         m_lastInternetAvailable(false),
         m_lastServiceAvailable(false),
         m_lastValidateCredentials(false),
@@ -563,7 +560,7 @@ namespace openstudio{
       static std::vector<std::string> instanceTypes;
       if (!instanceTypes.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           instanceTypes.push_back(awsComputerInformation.instanceType);
         }
       }
@@ -578,7 +575,7 @@ namespace openstudio{
       static std::vector<std::string> instanceTypes;
       if (!instanceTypes.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           instanceTypes.push_back(awsComputerInformation.instanceType);
         }
       }
@@ -593,7 +590,7 @@ namespace openstudio{
       static std::vector<unsigned> processorCounts;
       if (!processorCounts.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           processorCounts.push_back(awsComputerInformation.processorCount);
         }
       }
@@ -604,7 +601,7 @@ namespace openstudio{
       static std::vector<unsigned> processorCounts;
       if (!processorCounts.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           processorCounts.push_back(awsComputerInformation.processorCount);
         }
       }
@@ -615,7 +612,7 @@ namespace openstudio{
       static std::vector<std::string> prettyNames;
       if (!prettyNames.size()) {
         std::vector<AWSComputerInformation> info = serverInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           prettyNames.push_back(awsComputerInformation.prettyName);
         }
       }
@@ -626,7 +623,7 @@ namespace openstudio{
       static std::vector<std::string> prettyNames;
       if (!prettyNames.size()) {
         std::vector<AWSComputerInformation> info = workerInformation();
-        Q_FOREACH(AWSComputerInformation awsComputerInformation, info){
+        for (const AWSComputerInformation& awsComputerInformation : info) {
           prettyNames.push_back(awsComputerInformation.prettyName);
         }
       }
@@ -909,14 +906,14 @@ namespace openstudio{
     bool AWSProvider_Impl::internetAvailable(int msec)
     {
       if (requestInternetAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestInternetAvailableFinished, this))){
           return lastInternetAvailable();
         }
       }
       if (m_checkInternetProcess){
-        m_checkInternetProcess->disconnect(this, 0);
+        m_checkInternetProcess->disconnect(this, nullptr);
         m_checkInternetProcess->kill();
-        m_checkInternetProcess = 0;
+        m_checkInternetProcess = nullptr;
       }
       return false;
     }
@@ -924,14 +921,14 @@ namespace openstudio{
     bool AWSProvider_Impl::serviceAvailable(int msec)
     {
       if (requestServiceAvailable()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServiceAvailableFinished, this))){
           return lastServiceAvailable();
         }
       }
       if (m_checkServiceProcess){
-        m_checkServiceProcess->disconnect(this, 0);
+        m_checkServiceProcess->disconnect(this, nullptr);
         m_checkServiceProcess->kill();
-        m_checkServiceProcess = 0;
+        m_checkServiceProcess = nullptr;
       }
       return false;
     }
@@ -939,14 +936,14 @@ namespace openstudio{
     bool AWSProvider_Impl::validateCredentials(int msec)
     {
       if (requestValidateCredentials()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestValidateCredentialsFinished, this))){
           return lastValidateCredentials();
         }
       }
       if (m_checkValidateProcess){
-        m_checkValidateProcess->disconnect(this, 0);
+        m_checkValidateProcess->disconnect(this, nullptr);
         m_checkValidateProcess->kill();
-        m_checkValidateProcess = 0;
+        m_checkValidateProcess = nullptr;
       }
       return false;
     }
@@ -954,40 +951,40 @@ namespace openstudio{
     bool AWSProvider_Impl::resourcesAvailableToStart(int msec)
     {
       if (requestResourcesAvailableToStart()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestResourcesAvailableToStartFinished, this))){
           return lastResourcesAvailableToStart();
         }
       }
       if (m_checkResourcesProcess){
-        m_checkResourcesProcess->disconnect(this, 0);
+        m_checkResourcesProcess->disconnect(this, nullptr);
         m_checkResourcesProcess->kill();
-        m_checkResourcesProcess = 0;
+        m_checkResourcesProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForServer(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerStartedFinished, this))){
         return serverStarted();
       }
       if (m_startServerProcess){
-        m_startServerProcess->disconnect(this, 0);
+        m_startServerProcess->disconnect(this, nullptr);
         m_startServerProcess->kill();
-        m_startServerProcess = 0;
+        m_startServerProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForWorkers(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkerStartedFinished, this))){
         return workersStarted();
       }
       if (m_startWorkerProcess){
-        m_startWorkerProcess->disconnect(this, 0);
+        m_startWorkerProcess->disconnect(this, nullptr);
         m_startWorkerProcess->kill();
-        m_startWorkerProcess = 0;
+        m_startWorkerProcess = nullptr;
       }
       return false;
     }
@@ -995,14 +992,14 @@ namespace openstudio{
     bool AWSProvider_Impl::serverRunning(int msec)
     {
       if (requestServerRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestServerRunningFinished, this))){
           return lastServerRunning();
         }
       }
       if (m_checkServerRunningProcess){
-        m_checkServerRunningProcess->disconnect(this, 0);
+        m_checkServerRunningProcess->disconnect(this, nullptr);
         m_checkServerRunningProcess->kill();
-        m_checkServerRunningProcess = 0;
+        m_checkServerRunningProcess = nullptr;
       }
       return false;
     }
@@ -1010,27 +1007,27 @@ namespace openstudio{
     bool AWSProvider_Impl::workersRunning(int msec)
     {
       if (requestWorkersRunning()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestWorkersRunningFinished, this))){
           return lastWorkersRunning();
         }
       }
       if (m_checkWorkerRunningProcess){
-        m_checkWorkerRunningProcess->disconnect(this, 0);
+        m_checkWorkerRunningProcess->disconnect(this, nullptr);
         m_checkWorkerRunningProcess->kill();
-        m_checkWorkerRunningProcess = 0;
+        m_checkWorkerRunningProcess = nullptr;
       }
       return false;
     }
 
     bool AWSProvider_Impl::waitForTerminated(int msec)
     {
-      if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
+      if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateFinished, this))){
         return m_instancesStopped;
       }
       if (m_stopInstancesProcess){
-        m_stopInstancesProcess->disconnect(this, 0);
+        m_stopInstancesProcess->disconnect(this, nullptr);
         m_stopInstancesProcess->kill();
-        m_stopInstancesProcess = 0;
+        m_stopInstancesProcess = nullptr;
       }
       return false;
     }
@@ -1038,14 +1035,14 @@ namespace openstudio{
     bool AWSProvider_Impl::terminateCompleted(int msec)
     {
       if (requestTerminateCompleted()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTerminateCompletedFinished, this))){
           return lastTerminateCompleted();
         }
       }
       if (m_checkTerminatedProcess){
-        m_checkTerminatedProcess->disconnect(this, 0);
+        m_checkTerminatedProcess->disconnect(this, nullptr);
         m_checkTerminatedProcess->kill();
-        m_checkTerminatedProcess = 0;
+        m_checkTerminatedProcess = nullptr;
       }
       return false;
     }
@@ -1053,14 +1050,14 @@ namespace openstudio{
     double AWSProvider_Impl::estimatedCharges(int msec)
     {
       if (requestEstimatedCharges()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestEstimatedChargesFinished, this))){
           return lastEstimatedCharges();
         }
       }
       if (m_checkEstimatedChargesProcess){
-        m_checkEstimatedChargesProcess->disconnect(this, 0);
+        m_checkEstimatedChargesProcess->disconnect(this, nullptr);
         m_checkEstimatedChargesProcess->kill();
-        m_checkEstimatedChargesProcess = 0;
+        m_checkEstimatedChargesProcess = nullptr;
       }
       return 0.0;
     }
@@ -1068,14 +1065,14 @@ namespace openstudio{
     unsigned AWSProvider_Impl::totalInstances(int msec)
     {
       if (requestTotalInstances()){
-        if (waitForFinished(msec, boost::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
+        if (waitForFinished(msec, std::bind(&AWSProvider_Impl::requestTotalInstancesFinished, this))){
           return lastTotalInstances();
         }
       }
       if (m_checkTotalInstancesProcess){
-        m_checkTotalInstancesProcess->disconnect(this, 0);
+        m_checkTotalInstancesProcess->disconnect(this, nullptr);
         m_checkTotalInstancesProcess->kill();
-        m_checkTotalInstancesProcess = 0;
+        m_checkTotalInstancesProcess = nullptr;
       }
       return 0;
     }
@@ -1379,7 +1376,7 @@ namespace openstudio{
       args << toQString(m_awsSettings.region());
     }
 
-    bool AWSProvider_Impl::waitForFinished(int msec, const boost::function<bool ()>& f) {
+    bool AWSProvider_Impl::waitForFinished(int msec, const std::function<bool ()>& f) {
       int msecPerLoop = 20;
       int numTries = msec / msecPerLoop;
       int current = 0;
@@ -1405,62 +1402,62 @@ namespace openstudio{
 
     bool AWSProvider_Impl::requestInternetAvailableFinished() const
     {
-      return (m_checkInternetProcess == 0);
+      return (m_checkInternetProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServiceAvailableFinished() const
     {
-      return (m_checkServiceProcess == 0);
+      return (m_checkServiceProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestValidateCredentialsFinished() const
     {
-      return (m_checkValidateProcess == 0);
+      return (m_checkValidateProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServerStartedFinished() const
     {
-      return (m_startServerProcess == 0);
+      return (m_startServerProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestWorkerStartedFinished() const
     {
-      return (m_startWorkerProcess == 0);
+      return (m_startWorkerProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestResourcesAvailableToStartFinished() const
     {
-      return (m_checkResourcesProcess == 0);
+      return (m_checkResourcesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestServerRunningFinished() const
     {
-      return (m_checkServerRunningProcess == 0);
+      return (m_checkServerRunningProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestWorkersRunningFinished() const
     {
-      return (m_checkWorkerRunningProcess == 0);
+      return (m_checkWorkerRunningProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTerminateFinished() const
     {
-      return (m_stopInstancesProcess == 0);
+      return (m_stopInstancesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTerminateCompletedFinished() const
     {
-      return (m_checkTerminatedProcess == 0);
+      return (m_checkTerminatedProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestEstimatedChargesFinished() const
     {
-      return (m_checkEstimatedChargesProcess == 0);
+      return (m_checkEstimatedChargesProcess == nullptr);
     }
 
     bool AWSProvider_Impl::requestTotalInstancesFinished() const
     {
-      return (m_checkTotalInstancesProcess == 0);
+      return (m_checkTotalInstancesProcess == nullptr);
     }
 
     ProcessResults AWSProvider_Impl::handleProcessCompleted(QProcess * t_qp)
@@ -1477,7 +1474,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckInternetProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckInternetComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1493,7 +1490,7 @@ namespace openstudio{
     
     QProcess *AWSProvider_Impl::makeCheckServiceProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServiceComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1509,7 +1506,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckValidateProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckValidateComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1525,7 +1522,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckResourcesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckResourcesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1541,7 +1538,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStartServerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onServerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1555,11 +1552,9 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("launch_server");
       
-      QVariantMap options;
-      options.insert("instance_type", toQString(m_awsSettings.serverInstanceType()));
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      QJsonObject options;
+      options["instance_type"] = QJsonValue(toQString(m_awsSettings.serverInstanceType()));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1568,7 +1563,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStartWorkerProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onWorkerStarted(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1577,21 +1572,19 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("launch_workers");
       
-      QVariantMap options;
-      options.insert("instance_type", toQString(m_awsSettings.workerInstanceType()));
-      options.insert("num", m_awsSettings.numWorkers());
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("server_procs", m_awsSession.numServerProcessors());
-      options.insert("timestamp", toQString(m_awsSession.timestamp()));
+      QJsonObject options;
+      options["instance_type"] = QJsonValue(toQString(m_awsSettings.workerInstanceType()));
+      options["num"] = QJsonValue(static_cast<int>(m_awsSettings.numWorkers()));
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["server_procs"] = QJsonValue(static_cast<int>(m_awsSession.numServerProcessors()));
+      options["timestamp"] = QJsonValue(toQString(m_awsSession.timestamp()));
 
       if (m_privateKey.open()) {
         m_privateKey.write(m_awsSession.privateKey().c_str());
-        options.insert("private_key", m_privateKey.fileName());
+        options["private_key"] = QJsonValue(m_privateKey.fileName());
         m_privateKey.close();
       }
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1600,7 +1593,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckServerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckServerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1609,11 +1602,9 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("instance_status");
       
-      QVariantMap options;
-      options.insert("instance_id", toQString(m_awsSession.serverId()));
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      QJsonObject options;
+      options["instance_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1622,7 +1613,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckWorkerRunningProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckWorkerRunningComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1638,7 +1629,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeStopInstancesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onInstancesStopped(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1647,17 +1638,15 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("terminate_session");
       
-      QVariantMap options;
+      QJsonObject options;
       QStringList workerIds;
-      Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
+      for (const std::string& workerId : m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("worker_ids", workerIds);
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
       
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1666,7 +1655,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckTerminateProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckTerminatedComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1675,17 +1664,15 @@ namespace openstudio{
       args << QString("EC2");
       args << QString("termination_status");
       
-      QVariantMap options;
+      QJsonObject options;
       QStringList workerIds;
-      Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
+      for (const std::string& workerId : m_awsSession.workerIds()) {
         workerIds.push_back(toQString(workerId));
       }
-      options.insert("server_id", toQString(m_awsSession.serverId()));
-      options.insert("worker_ids", workerIds);
+      options["server_id"] = QJsonValue(toQString(m_awsSession.serverId()));
+      options["worker_ids"] = QJsonValue::fromVariant(workerIds);
       
-      QJson::Serializer serializer;
-      serializer.setIndentMode(QJson::IndentCompact);
-      args << QString(serializer.serialize(options));
+      args << QString(QJsonDocument(options).toJson(QJsonDocument::Compact));
       
       p->start(toQString(m_ruby), args);
 
@@ -1694,7 +1681,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckEstimatedChargesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1710,7 +1697,7 @@ namespace openstudio{
 
     QProcess *AWSProvider_Impl::makeCheckTotalInstancesProcess() const
     {
-      QProcess *p = new QProcess();
+      auto p = new QProcess();
       bool test = connect(p, SIGNAL(finished(int, QProcess::ExitStatus)), 
                           this, SLOT(onCheckTotalInstancesComplete(int, QProcess::ExitStatus)));
       OS_ASSERT(test);
@@ -1731,16 +1718,15 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) return true;
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) return true;
 
-        int code = map["error"].toMap()["code"].toInt();
+        int code = json.object()["error"].toObject()["code"].toInt();
         return (code != 503);
       } else {
-        logError("Error parsing serviceAvailable JSON: " + toString(parser.errorString()));
+        logError("Error parsing serviceAvailable JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1753,20 +1739,19 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) return true;
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) return true;
 
-        int code = map["error"].toMap()["code"].toInt();
+        int code = json.object()["error"].toObject()["code"].toInt();
         if (code == 401) {
           logError("Invalid Access Key");
         } else if (code == 403) {
           logError("Invalid Secret Key");
         }
       } else {
-        logError("Error parsing validateCredentials JSON: " + toString(parser.errorString()));
+        logError("Error parsing validateCredentials JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1779,18 +1764,17 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          m_lastTotalInstances = map["instances"].toUInt();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          m_lastTotalInstances = json.object()["instances"].toInt();
           if (m_awsSettings.numWorkers() + 1 + m_lastTotalInstances <= 20) return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing resourcesAvailableToStart JSON: " + toString(parser.errorString()));
+        logError("Error parsing resourcesAvailableToStart JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1803,25 +1787,24 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          m_awsSession.setTimestamp(map["timestamp"].toString().toStdString());
-          m_awsSession.setPrivateKey(map["private_key"].toString().toStdString());
-          m_awsSession.setServerUrl(Url(map["server"].toMap()["ip"].toString()));
-          m_awsSession.setServerId(map["server"].toMap()["id"].toString().toStdString());
-          m_awsSession.setNumServerProcessors(map["server"].toMap()["procs"].toUInt());
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          m_awsSession.setTimestamp(json.object()["timestamp"].toString().toStdString());
+          m_awsSession.setPrivateKey(json.object()["private_key"].toString().toStdString());
+          m_awsSession.setServerUrl(Url(json.object()["server"].toObject()["ip"].toString()));
+          m_awsSession.setServerId(json.object()["server"].toObject()["id"].toString().toStdString());
+          m_awsSession.setNumServerProcessors(json.object()["server"].toObject()["procs"].toInt());
 
-          emit CloudProvider_Impl::serverStarted(Url(map["server"].toMap()["ip"].toString()));
+          emit CloudProvider_Impl::serverStarted(Url(json.object()["server"].toObject()["ip"].toString()));
 
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing serverStarted JSON: " + toString(parser.errorString()));
+        logError("Error parsing serverStarted JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1835,18 +1818,17 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           unsigned numWorkerProcessors = 0;
-          Q_FOREACH(QVariant worker, map["workers"].toList()) {
-            m_awsSession.addWorkerUrl(Url(worker.toMap()["ip"].toString()));
-            m_awsSession.addWorkerId(worker.toMap()["id"].toString().toStdString());
-            if (numWorkerProcessors == 0) numWorkerProcessors = worker.toMap()["procs"].toUInt();
+          for (const QJsonValue& worker : json.object()["workers"].toArray()) {
+            m_awsSession.addWorkerUrl(Url(worker.toObject()["ip"].toString()));
+            m_awsSession.addWorkerId(worker.toObject()["id"].toString().toStdString());
+            if (numWorkerProcessors == 0) numWorkerProcessors = worker.toObject()["procs"].toInt();
 
-            emit CloudProvider_Impl::workerStarted(Url(worker.toMap()["ip"].toString()));
+            emit CloudProvider_Impl::workerStarted(Url(worker.toObject()["ip"].toString()));
           }
           m_awsSession.setNumWorkerProcessors(numWorkerProcessors);
 
@@ -1854,10 +1836,10 @@ namespace openstudio{
           
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing workerStarted JSON: " + toString(parser.errorString()));
+        logError("Error parsing workerStarted JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1870,19 +1852,18 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          std::string status = map[toQString(m_awsSession.serverId())].toString().toStdString();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          std::string status = json.object()[toQString(m_awsSession.serverId())].toString().toStdString();
           if (status == "running") return true;
           logError("Server is not running (" + m_awsSession.serverId() + ": " + status + ")");
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         }
       } else {
-        logError("Error parsing checkServerRunning JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkServerRunning JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1895,15 +1876,14 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           std::vector<std::string> running;
           std::vector<std::string> notRunning;
-          Q_FOREACH(std::string workerId, m_awsSession.workerIds()) {
-            std::string status = map[toQString(workerId)].toString().toStdString();
+          for (const std::string& workerId : m_awsSession.workerIds()) {
+            std::string status = json.object()[toQString(workerId)].toString().toStdString();
             if (status == "running") {
               running.push_back(workerId);
             } else {
@@ -1914,10 +1894,10 @@ namespace openstudio{
           QString output = QString::number(notRunning.size()) + "/" + QString::number(m_awsSession.workerIds().size()) + " workers are not running (" + toQString(boost::algorithm::join(notRunning, ", ")) + ")";
           logError(output.toStdString());
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing checkWorkerRunning JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkWorkerRunning JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1930,21 +1910,20 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
           m_lastTerminateCompleted = true;
 
           emit CloudProvider_Impl::terminated();
           
           return true;
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing instancesStopped JSON: " + toString(parser.errorString()));
+        logError("Error parsing instancesStopped JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1957,21 +1936,20 @@ namespace openstudio{
         return false;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          if (map["all_instances_terminated"].toBool()) {
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          if (json.object()["all_instances_terminated"].toBool()) {
             emit CloudProvider_Impl::terminated();
             
             return true;
           }
         } else {
-          logError(map["error"].toMap()["message"].toString().toStdString());
+          logError(json.object()["error"].toObject()["message"].toString().toStdString());
         } 
       } else {
-        logError("Error parsing checkTerminated JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkTerminated JSON: " + toString(err.errorString()));
       }
       
       return false;
@@ -1984,14 +1962,13 @@ namespace openstudio{
         return 0.0;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          return map["estimated_charges"].toDouble();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          return json.object()["estimated_charges"].toDouble();
         } else {
-          QString message = map["error"].toMap()["message"].toString();
+          QString message = json.object()["error"].toObject()["message"].toString();
           if (message == "InvalidClientTokenId") {
             logError("Invalid Access Key");
           } else if (message == "SignatureDoesNotMatch") {
@@ -2001,7 +1978,7 @@ namespace openstudio{
           }
         } 
       } else {
-        logError("Error parsing checkEstimatedCharges JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkEstimatedCharges JSON: " + toString(err.errorString()));
       }
       
       return 0.0;
@@ -2014,24 +1991,23 @@ namespace openstudio{
         return 0;
       }
       
-      QJson::Parser parser;
-      bool ok = false;
-      QVariantMap map = parser.parse(t_results.output.toUtf8(), &ok).toMap();
-      if (ok) {
-        if (!map.keys().contains("error")) {
-          return map["total_instances"].toUInt();
+      QJsonParseError err;
+      QJsonDocument json = QJsonDocument::fromJson(t_results.output.toUtf8(), &err);
+      if (!err.error) {
+        if (!json.object().contains("error")) {
+          return json.object()["total_instances"].toInt();
         } else {
-          int code = map["error"].toMap()["code"].toInt();
+          int code = json.object()["error"].toObject()["code"].toInt();
           if (code == 401) {
             logError("Invalid Access Key");
           } else if (code == 403) {
             logError("Invalid Secret Key");
           } else {
-            logError(map["error"].toMap()["message"].toString().toStdString());
+            logError(json.object()["error"].toObject()["message"].toString().toStdString());
           }
         } 
       } else {
-        logError("Error parsing checkTotalInstances JSON: " + toString(parser.errorString()));
+        logError("Error parsing checkTotalInstances JSON: " + toString(err.errorString()));
       }
       
       return 0;
@@ -2040,31 +2016,31 @@ namespace openstudio{
     void AWSProvider_Impl::onCheckInternetComplete(int, QProcess::ExitStatus)
     {
       m_lastInternetAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkInternetProcess));
-      m_checkInternetProcess = 0;
+      m_checkInternetProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckServiceComplete(int, QProcess::ExitStatus)
     {
       m_lastServiceAvailable = parseServiceAvailableResults(handleProcessCompleted(m_checkServiceProcess));
-      m_checkServiceProcess = 0;
+      m_checkServiceProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckValidateComplete(int, QProcess::ExitStatus)
     {
       m_lastValidateCredentials = parseValidateCredentialsResults(handleProcessCompleted(m_checkValidateProcess));
-      m_checkValidateProcess = 0;
+      m_checkValidateProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckResourcesComplete(int, QProcess::ExitStatus)
     {
       m_lastResourcesAvailableToStart = parseResourcesAvailableToStartResults(handleProcessCompleted(m_checkResourcesProcess));
-      m_checkResourcesProcess = 0;
+      m_checkResourcesProcess = nullptr;
     }
     
     void AWSProvider_Impl::onServerStarted(int, QProcess::ExitStatus)
     {
       m_serverStarted = parseServerStartedResults(handleProcessCompleted(m_startServerProcess));
-      m_startServerProcess = 0;
+      m_startServerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onServerStartedError(QProcess::ProcessError error)
@@ -2085,51 +2061,51 @@ namespace openstudio{
 
       m_serverStarted = false;
       m_startServerProcess->deleteLater();
-      m_startServerProcess = 0;
+      m_startServerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onWorkerStarted(int, QProcess::ExitStatus)
     {
       m_workerStarted = parseWorkerStartedResults(handleProcessCompleted(m_startWorkerProcess));
-      m_startWorkerProcess = 0;
+      m_startWorkerProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckServerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastServerRunning = parseCheckServerRunningResults(handleProcessCompleted(m_checkServerRunningProcess));
-      m_checkServerRunningProcess = 0;
+      m_checkServerRunningProcess = nullptr;
     }
     
     void AWSProvider_Impl::onCheckWorkerRunningComplete(int, QProcess::ExitStatus)
     {
       m_lastWorkerRunning = parseCheckWorkerRunningResults(handleProcessCompleted(m_checkWorkerRunningProcess));
-      m_checkWorkerRunningProcess = 0;
+      m_checkWorkerRunningProcess = nullptr;
     }
     
     void AWSProvider_Impl::onInstancesStopped(int, QProcess::ExitStatus)
     {
       m_instancesStopped = parseInstancesStoppedResults(handleProcessCompleted(m_stopInstancesProcess));
-      m_stopInstancesProcess = 0;
+      m_stopInstancesProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckTerminatedComplete(int, QProcess::ExitStatus)
     {
       m_lastTerminateCompleted = parseCheckTerminatedResults(handleProcessCompleted(m_checkTerminatedProcess));
-      m_checkTerminatedProcess = 0;
+      m_checkTerminatedProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckEstimatedChargesComplete(int, QProcess::ExitStatus)
     {
       m_lastEstimatedCharges = parseCheckEstimatedChargesResults(handleProcessCompleted(m_checkEstimatedChargesProcess));
       emit estimatedChargesAvailable();
-      m_checkEstimatedChargesProcess = 0;
+      m_checkEstimatedChargesProcess = nullptr;
     }
 
     void AWSProvider_Impl::onCheckTotalInstancesComplete(int, QProcess::ExitStatus)
     {
       m_lastTotalInstances = parseCheckTotalInstancesResults(handleProcessCompleted(m_checkTotalInstancesProcess));
       emit totalInstancesAvailable();
-      m_checkTotalInstancesProcess = 0;
+      m_checkTotalInstancesProcess = nullptr;
     }
 
     bool AWSProvider_Impl::userAgreementSigned() const {
@@ -2156,7 +2132,7 @@ namespace openstudio{
   } // detail
 
   AWSSettings::AWSSettings()
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl()))
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2171,7 +2147,7 @@ namespace openstudio{
                            std::string region,
                            std::string serverInstanceType,
                            std::string workerInstanceType)
-    : CloudSettings(boost::shared_ptr<detail::AWSSettings_Impl>(
+    : CloudSettings(std::shared_ptr<detail::AWSSettings_Impl>(
                       new detail::AWSSettings_Impl(uuid,
                                                    versionUUID,
                                                    userAgreementSigned,
@@ -2185,7 +2161,7 @@ namespace openstudio{
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
   }
 
-  AWSSettings::AWSSettings(const boost::shared_ptr<detail::AWSSettings_Impl>& impl)
+  AWSSettings::AWSSettings(const std::shared_ptr<detail::AWSSettings_Impl>& impl)
     : CloudSettings(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSettings_Impl>());
@@ -2279,7 +2255,7 @@ namespace openstudio{
   AWSSession::AWSSession(const std::string& sessionId,
                          const boost::optional<Url>& serverUrl,
                          const std::vector<Url>& workerUrls)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(sessionId,
                                                  serverUrl,
                                                  workerUrls)))
@@ -2301,7 +2277,7 @@ namespace openstudio{
                          const std::string& region,
                          const std::string& serverInstanceType,
                          const std::string& workerInstanceType)
-    : CloudSession(boost::shared_ptr<detail::AWSSession_Impl>(
+    : CloudSession(std::shared_ptr<detail::AWSSession_Impl>(
                      new detail::AWSSession_Impl(uuid,
                                                  versionUUID,
                                                  sessionId,
@@ -2320,7 +2296,7 @@ namespace openstudio{
       OS_ASSERT(getImpl<detail::AWSSession_Impl>());
     }
 
-  AWSSession::AWSSession(const boost::shared_ptr<detail::AWSSession_Impl>& impl)
+  AWSSession::AWSSession(const std::shared_ptr<detail::AWSSession_Impl>& impl)
     : CloudSession(impl)
   {
     OS_ASSERT(getImpl<detail::AWSSession_Impl>());
@@ -2412,11 +2388,11 @@ namespace openstudio{
 
 
   AWSProvider::AWSProvider()
-    : CloudProvider(boost::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
+    : CloudProvider(std::shared_ptr<detail::AWSProvider_Impl>(new detail::AWSProvider_Impl()))
   {
   }
 
-  AWSProvider::AWSProvider(const boost::shared_ptr<detail::AWSProvider_Impl>& impl)
+  AWSProvider::AWSProvider(const std::shared_ptr<detail::AWSProvider_Impl>& impl)
     : CloudProvider(impl)
   {
     OS_ASSERT(getImpl<detail::AWSProvider_Impl>());

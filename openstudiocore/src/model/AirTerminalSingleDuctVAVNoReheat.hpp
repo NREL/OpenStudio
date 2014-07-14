@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -122,7 +122,7 @@ class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
   /// @cond
   typedef detail::AirTerminalSingleDuctVAVNoReheat_Impl ImplType;
 
-  explicit AirTerminalSingleDuctVAVNoReheat(boost::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
+  explicit AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
 
   friend class detail::AirTerminalSingleDuctVAVNoReheat_Impl;
   friend class Model;

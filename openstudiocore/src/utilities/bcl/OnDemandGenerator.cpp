@@ -17,16 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/bcl/OnDemandGenerator.hpp>
+#include "OnDemandGenerator.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../core/Assert.hpp"
+#include "../core/Compare.hpp"
 
 #include <QDomElement>
 #include <QDomDocument>
 #include <QFile>
-
-#include <boost/foreach.hpp>
 
 namespace openstudio{
 
@@ -63,7 +61,7 @@ namespace openstudio{
     
   bool OnDemandGeneratorValueRestriction::setArgumentValue(const std::string& name, const std::string& value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& nestedArgument, m_nestedArguments){
+    for (OnDemandGeneratorArgument& nestedArgument : m_nestedArguments){
       boost::optional<OnDemandGeneratorArgument> result = nestedArgument.getActiveArgument(name);
       if (result){
         return nestedArgument.setArgumentValue(name, value);
@@ -74,7 +72,7 @@ namespace openstudio{
 
   bool OnDemandGeneratorValueRestriction::setArgumentValue(const std::string& name, double value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& nestedArgument, m_nestedArguments){
+    for (OnDemandGeneratorArgument& nestedArgument : m_nestedArguments){
       boost::optional<OnDemandGeneratorArgument> result = nestedArgument.getActiveArgument(name);
       if (result){
         return nestedArgument.setArgumentValue(name, value);
@@ -85,7 +83,7 @@ namespace openstudio{
 
   bool OnDemandGeneratorValueRestriction::setArgumentValue(const std::string& name, int value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& nestedArgument, m_nestedArguments){
+    for (OnDemandGeneratorArgument& nestedArgument : m_nestedArguments){
       boost::optional<OnDemandGeneratorArgument> result = nestedArgument.getActiveArgument(name);
       if (result){
         return nestedArgument.setArgumentValue(name, value);
@@ -204,10 +202,10 @@ namespace openstudio{
       boost::optional<std::string> value = this->valueAsString();
       if (value){
         // find value restrictions with this value
-        BOOST_FOREACH(const OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (const OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*value == valueRestriction.name()){
             // add nested arguments from value restriction
-            BOOST_FOREACH(const OnDemandGeneratorArgument& nestedArgument, valueRestriction.nestedArguments()){
+            for (const OnDemandGeneratorArgument& nestedArgument : valueRestriction.nestedArguments()){
               std::vector<OnDemandGeneratorArgument> temp = nestedArgument.activeArguments();
               result.insert(result.end(), temp.begin(), temp.end());
             }
@@ -230,10 +228,10 @@ namespace openstudio{
       boost::optional<std::string> value = this->valueAsString();
       if (value){
         // find value restrictions with this value
-        BOOST_FOREACH(const OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (const OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*value == valueRestriction.name()){
             // add nested arguments from value restriction
-            BOOST_FOREACH(const OnDemandGeneratorArgument& nestedArgument, valueRestriction.nestedArguments()){
+            for (const OnDemandGeneratorArgument& nestedArgument : valueRestriction.nestedArguments()){
               std::vector<std::string> temp = nestedArgument.activeArgumentNames();
               result.insert(result.end(), temp.begin(), temp.end());
             }
@@ -256,10 +254,10 @@ namespace openstudio{
       boost::optional<std::string> value = this->valueAsString();
       if (value){
         // find value restrictions with this value
-        BOOST_FOREACH(const OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (const OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*value == valueRestriction.name()){
             // add nested arguments from value restriction
-            BOOST_FOREACH(const OnDemandGeneratorArgument& nestedArgument, valueRestriction.nestedArguments()){
+            for (const OnDemandGeneratorArgument& nestedArgument : valueRestriction.nestedArguments()){
               boost::optional<OnDemandGeneratorArgument> result = nestedArgument.getActiveArgument(name);
               if (result){
                 return result;
@@ -313,7 +311,7 @@ namespace openstudio{
     if (m_dataType == OnDemandGeneratorArgumentType::String){
       if (m_inputType == OnDemandGeneratorInputType::Select){
         // find value restrictions with this value
-        BOOST_FOREACH(const OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (const OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (value == valueRestriction.name()){
             m_value.setValue(value);
             return true;
@@ -356,7 +354,7 @@ namespace openstudio{
       boost::optional<std::string> thisValue = this->valueAsString();
       if (thisValue){
         // find value restrictions with this value
-        BOOST_FOREACH(OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*thisValue == valueRestriction.name()){
             return valueRestriction.setArgumentValue(name, value);
           }
@@ -377,7 +375,7 @@ namespace openstudio{
       boost::optional<std::string> thisValue = this->valueAsString();
       if (thisValue){
         // find value restrictions with this value
-        BOOST_FOREACH(OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*thisValue == valueRestriction.name()){
             return valueRestriction.setArgumentValue(name, value);
           }
@@ -398,7 +396,7 @@ namespace openstudio{
       boost::optional<std::string> thisValue = this->valueAsString();
       if (thisValue){
         // find value restrictions with this value
-        BOOST_FOREACH(OnDemandGeneratorValueRestriction& valueRestriction, m_valueRestrictions){
+        for (OnDemandGeneratorValueRestriction& valueRestriction : m_valueRestrictions){
           if (*thisValue == valueRestriction.name()){
             return valueRestriction.setArgumentValue(name, value);
           }
@@ -501,7 +499,7 @@ namespace openstudio{
   std::vector<OnDemandGeneratorArgument> OnDemandGenerator::activeArguments() const
   {
     std::vector<OnDemandGeneratorArgument> result;
-    BOOST_FOREACH(const OnDemandGeneratorArgument& argument, m_arguments){
+    for (const OnDemandGeneratorArgument& argument : m_arguments){
       std::vector<OnDemandGeneratorArgument> temp = argument.activeArguments();
       result.insert(result.end(), temp.begin(), temp.end());
     }
@@ -512,7 +510,7 @@ namespace openstudio{
   std::vector<std::string> OnDemandGenerator::activeArgumentNames() const
   {
     std::vector<std::string> result;
-    BOOST_FOREACH(const OnDemandGeneratorArgument& argument, m_arguments){
+    for (const OnDemandGeneratorArgument& argument : m_arguments){
       std::vector<std::string> temp = argument.activeArgumentNames();
       result.insert(result.end(), temp.begin(), temp.end());
     }
@@ -522,7 +520,7 @@ namespace openstudio{
 
   boost::optional<OnDemandGeneratorArgument> OnDemandGenerator::getActiveArgument(const std::string& name) const
   {
-    BOOST_FOREACH(const OnDemandGeneratorArgument& argument, m_arguments){
+    for (const OnDemandGeneratorArgument& argument : m_arguments){
       boost::optional<OnDemandGeneratorArgument> result = argument.getActiveArgument(name);
       if (result){
         return result;
@@ -533,7 +531,7 @@ namespace openstudio{
 
   bool OnDemandGenerator::setArgumentValue(const std::string& name, const std::string& value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& argument, m_arguments){
+    for (OnDemandGeneratorArgument& argument : m_arguments){
       boost::optional<OnDemandGeneratorArgument> result = argument.getActiveArgument(name);
       if (result){
         return argument.setArgumentValue(name, value);
@@ -544,7 +542,7 @@ namespace openstudio{
 
   bool OnDemandGenerator::setArgumentValue(const std::string& name, double value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& argument, m_arguments){
+    for (OnDemandGeneratorArgument& argument : m_arguments){
       boost::optional<OnDemandGeneratorArgument> result = argument.getActiveArgument(name);
       if (result){
         return argument.setArgumentValue(name, value);
@@ -555,7 +553,7 @@ namespace openstudio{
 
   bool OnDemandGenerator::setArgumentValue(const std::string& name, int value)
   {
-    BOOST_FOREACH(OnDemandGeneratorArgument& argument, m_arguments){
+    for (OnDemandGeneratorArgument& argument : m_arguments){
       boost::optional<OnDemandGeneratorArgument> result = argument.getActiveArgument(name);
       if (result){
         return argument.setArgumentValue(name, value);
@@ -567,7 +565,7 @@ namespace openstudio{
   bool OnDemandGenerator::checkArgumentValues() const
   {
     // check that each active argument has a value
-    BOOST_FOREACH(const std::string& activeArgumentName, this->activeArgumentNames()){
+    for (const std::string& activeArgumentName : this->activeArgumentNames()){
       boost::optional<OnDemandGeneratorArgument> activeArgument = this->getActiveArgument(activeArgumentName);
       OS_ASSERT(activeArgument);
       if (!activeArgument->hasValue()){

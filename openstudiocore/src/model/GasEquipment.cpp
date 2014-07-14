@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
+#include "GasEquipment.hpp"
+#include "GasEquipment_Impl.hpp"
 
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "GasEquipmentDefinition.hpp"
+#include "GasEquipmentDefinition_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "LifeCycleCost.hpp"
 
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -95,7 +95,7 @@ namespace detail {
     this->makeUnique();
 
     GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
-    BOOST_FOREACH(LifeCycleCost cost, gasEquipmentDefinition.lifeCycleCosts()){
+    for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()){
       cost.convertToCostPerEach();
     }
 
@@ -399,7 +399,7 @@ double GasEquipment::getPowerPerPerson(double floorArea, double numPeople) const
 }
 
 /// @cond
-GasEquipment::GasEquipment(boost::shared_ptr<detail::GasEquipment_Impl> impl)
+GasEquipment::GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl)
   : SpaceLoadInstance(impl)
 {}
 /// @endcond

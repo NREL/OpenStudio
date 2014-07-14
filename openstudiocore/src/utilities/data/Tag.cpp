@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <utilities/data/Tag.hpp>
+#include "Tag.hpp"
 
-#include <utilities/core/String.hpp>
-#include <utilities/core/Compare.hpp>
+#include "../core/String.hpp"
+#include "../core/Compare.hpp"
 
 namespace openstudio {
 

@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef TREEVIEWWIDGET_H
-#define TREEVIEWWIDGET_H
+#ifndef MODELEDITOR_TREEVIEWWIDGET_HPP
+#define MODELEDITOR_TREEVIEWWIDGET_HPP
 
 #include <QModelIndex>
 
-#include <model/Building.hpp>
-#include <model_editor/ModelEditorAPI.hpp>
-#include <model_editor/ViewWidget.hpp>
+#include "../model/Building.hpp"
+#include "ModelEditorAPI.hpp"
+#include "ViewWidget.hpp"
 
 namespace modeleditor
 {
@@ -37,8 +37,8 @@ class TreeViewWidget : public ViewWidget
   Q_OBJECT
 
 public:
-  TreeViewWidget(openstudio::model::Model& model, QWidget *parent = 0);
-  TreeViewWidget(QWidget *parent = 0);
+  TreeViewWidget(openstudio::model::Model& model, QWidget *parent = nullptr);
+  TreeViewWidget(QWidget *parent = nullptr);
   virtual ~TreeViewWidget();
   virtual void addObjects(openstudio::IddObjectType type = openstudio::IddObjectType::UserCustom);
   virtual void loadModel();
@@ -84,4 +84,4 @@ private:
 
 } // namespace modeleditor
 
-#endif // TREEVIEWWIDGET_H
+#endif // MODELEDITOR_TREEVIEWWIDGET_HPP

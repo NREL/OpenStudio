@@ -17,21 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <analysis/NegativeBinomialDistribution.hpp>
-#include <analysis/UncertaintyDescription_Impl.hpp>
+#include "NegativeBinomialDistribution.hpp"
+#include "UncertaintyDescription_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace analysis {
 
 NegativeBinomialDistribution::NegativeBinomialDistribution() 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(NegativeBinomialDistribution::type())))
 {}
 
 NegativeBinomialDistribution::NegativeBinomialDistribution(double probabilityPerTrial, int numTrials) 
-  : UncertaintyDescription(boost::shared_ptr<detail::UncertaintyDescription_Impl>(
+  : UncertaintyDescription(std::shared_ptr<detail::UncertaintyDescription_Impl>(
         new detail::UncertaintyDescription_Impl(NegativeBinomialDistribution::type())))
 {
   setProbabilityPerTrial(probabilityPerTrial);
@@ -72,7 +72,7 @@ bool NegativeBinomialDistribution::setNumTrials(int value) {
   }
 }
 
-NegativeBinomialDistribution::NegativeBinomialDistribution(boost::shared_ptr<detail::UncertaintyDescription_Impl> impl)
+NegativeBinomialDistribution::NegativeBinomialDistribution(std::shared_ptr<detail::UncertaintyDescription_Impl> impl)
   : UncertaintyDescription(impl)
 {
   OS_ASSERT(type() == NegativeBinomialDistribution::type());

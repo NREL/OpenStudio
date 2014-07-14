@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SIMSETTINGSTABCONTROLLER_H
-#define OPENSTUDIO_SIMSETTINGSTABCONTROLLER_H
+#ifndef OPENSTUDIO_SIMSETTINGSTABCONTROLLER_HPP
+#define OPENSTUDIO_SIMSETTINGSTABCONTROLLER_HPP
 
-#include <openstudio_lib/MainTabController.hpp>
+#include "MainTabController.hpp"
 
 namespace openstudio {
 
@@ -48,4 +48,4 @@ public slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_SIMSETTINGSTABCONTROLLER_H
+#endif // OPENSTUDIO_SIMSETTINGSTABCONTROLLER_HPP

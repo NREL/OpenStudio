@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef RUBYJOB_UTILS_HPP
-#define RUBYJOB_UTILS_HPP
+#ifndef RUNMANAGER_LIB_RUBYJOBUTILS_HPP
+#define RUNMANAGER_LIB_RUBYJOBUTILS_HPP
 
 #include "RunManagerAPI.hpp"
 #include "Workflow.hpp"
-#include <ruleset/OSArgument.hpp>
+#include "../../ruleset/OSArgument.hpp"
 
 namespace openstudio {
   class BCLMeasure;
@@ -209,10 +209,10 @@ namespace runmanager {
       std::vector<std::string> getToolParameters() const;
 
       /// Returns the collection of input files specified for this job
-      std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > inputFiles() const;
+      std::vector<std::tuple<FileSelection, FileSource, std::string, std::string> > inputFiles() const;
 
       /// Returns the collection of required files to copy for this job
-      std::vector<boost::tuple<std::string, std::string, std::string> > copyRequiredFiles() const;
+      std::vector<std::tuple<std::string, std::string, std::string> > copyRequiredFiles() const;
 
 
       const std::vector<RubyJobBuilder> &mergedJobs() const;
@@ -252,8 +252,8 @@ namespace runmanager {
 
     private:
       REGISTER_LOGGER("openstudio.runmanager.RubyJobUtils");
-      std::vector<boost::tuple<FileSelection, FileSource, std::string, std::string> > m_inputfiles;
-      std::vector<boost::tuple<std::string, std::string, std::string> > m_copyRequiredFiles;
+      std::vector<std::tuple<FileSelection, FileSource, std::string, std::string> > m_inputfiles;
+      std::vector<std::tuple<std::string, std::string, std::string> > m_copyRequiredFiles;
       // required files to add to m_script. .first is current path, .second is path for copy
       std::vector< std::pair<openstudio::path, openstudio::path> > m_requiredFiles;
       std::vector<std::string> m_params;
@@ -288,6 +288,6 @@ namespace runmanager {
 } // runmanager
 } // openstudio
 
-#endif
+#endif // RUNMANAGER_LIB_RUBYJOBUTILS_HPP
 
 

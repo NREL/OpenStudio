@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2013, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <shared_gui_components/OSGridController.hpp>
+#include "OSGridController.hpp"
 
-#include <shared_gui_components/OSCheckBox.hpp>
-#include <shared_gui_components/OSComboBox.hpp>
-#include <shared_gui_components/OSDoubleEdit.hpp>
-#include <shared_gui_components/OSGridView.hpp>
-#include <shared_gui_components/OSIntegerEdit.hpp>
-#include <shared_gui_components/OSLineEdit.hpp>
-#include <shared_gui_components/OSQuantityEdit.hpp>
-#include <shared_gui_components/OSUnsignedEdit.hpp>
+#include "OSCheckBox.hpp"
+#include "OSComboBox.hpp"
+#include "OSDoubleEdit.hpp"
+#include "OSGridView.hpp"
+#include "OSIntegerEdit.hpp"
+#include "OSLineEdit.hpp"
+#include "OSQuantityEdit.hpp"
+#include "OSUnsignedEdit.hpp"
 
-#include <openstudio_lib/OSDropZone.hpp>
-#include <openstudio_lib/SchedulesView.hpp>
+#include "../openstudio_lib/OSDropZone.hpp"
+#include "../openstudio_lib/SchedulesView.hpp"
 
-#include <model/Model_Impl.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "../model/Model_Impl.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QButtonGroup>
@@ -68,7 +68,7 @@ OSGridController::OSGridController(bool isIP,
     m_model(model),
     m_isIP(isIP),
     m_modelObjects(modelObjects),
-    m_horizontalHeaderBtnGrp(0),
+    m_horizontalHeaderBtnGrp(nullptr),
     m_headerText(headerText)
 {
   loadQSettings();
@@ -138,7 +138,7 @@ void OSGridController::setHorizontalHeader()
 {
   m_horizontalHeader.clear();
 
-  if(m_horizontalHeaderBtnGrp == 0){
+  if(m_horizontalHeaderBtnGrp == nullptr){
     m_horizontalHeaderBtnGrp = new QButtonGroup();
     m_horizontalHeaderBtnGrp->setExclusive(false);
 
@@ -159,9 +159,8 @@ void OSGridController::setHorizontalHeader()
   QList<QAbstractButton *> buttons = m_horizontalHeaderBtnGrp->buttons();
   OS_ASSERT(buttons.size() == 0);
 
-  HorizontalHeaderWidget * horizontalHeaderWidget = 0;
-  Q_FOREACH(QString field, m_currentFields){
-    horizontalHeaderWidget = new HorizontalHeaderWidget(field);
+  for (const QString& field : m_currentFields) {
+    auto horizontalHeaderWidget = new HorizontalHeaderWidget(field);
     m_horizontalHeaderBtnGrp->addButton(horizontalHeaderWidget->m_checkBox,m_horizontalHeaderBtnGrp->buttons().size());
     m_horizontalHeader.push_back(horizontalHeaderWidget);
   }
@@ -180,7 +179,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   OS_ASSERT(static_cast<int>(m_modelObjects.size()) > modelObjectRow);
   OS_ASSERT(static_cast<int>(m_baseConcepts.size()) > column);
 
-  QWidget * widget = 0;
+  QWidget * widget = nullptr;
 
   bool isConnected = false;
 
@@ -203,17 +202,17 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     if(QSharedPointer<CheckBoxConcept> checkBoxConcept = baseConcept.dynamicCast<CheckBoxConcept>()){
 
-      OSCheckBox2 * checkBox = new OSCheckBox2();
+      auto checkBox = new OSCheckBox2();
 
       checkBox->bind(mo,
-                     boost::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
-                     boost::optional<BoolSetter>(boost::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,_1)));
+                     std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),mo),
+                     boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set,checkBoxConcept.data(),mo,std::placeholders::_1)));
 
       widget = checkBox;
 
     } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = baseConcept.dynamicCast<ComboBoxConcept>()) {
 
-        OSComboBox2 * comboBox = new OSComboBox2();
+        auto comboBox = new OSComboBox2();
 
         comboBox->bind(mo,
                        comboBoxConcept->choiceConcept(mo));
@@ -226,71 +225,71 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = baseConcept.dynamicCast<ValueEditConcept<double> >()) {
 
-        OSDoubleEdit2 * doubleEdit = new OSDoubleEdit2();
+        auto doubleEdit = new OSDoubleEdit2();
 
         doubleEdit->bind(mo,
-                         DoubleGetter(boost::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),mo)),
-                         boost::optional<DoubleSetter>(boost::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),mo,_1)));
+                         DoubleGetter(std::bind(&ValueEditConcept<double>::get,doubleEditConcept.data(),mo)),
+                         boost::optional<DoubleSetter>(std::bind(&ValueEditConcept<double>::set,doubleEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = doubleEdit;
 
     } else if(QSharedPointer<OptionalValueEditConcept<double> > optionalDoubleEditConcept = baseConcept.dynamicCast<OptionalValueEditConcept<double> >()) {
 
-        OSDoubleEdit2 * optionalDoubleEdit = new OSDoubleEdit2();
+        auto optionalDoubleEdit = new OSDoubleEdit2();
 
         optionalDoubleEdit->bind(mo,
-                                 OptionalDoubleGetter(boost::bind(&OptionalValueEditConcept<double>::get,optionalDoubleEditConcept.data(),mo)),
-                                 boost::optional<DoubleSetter>(boost::bind(&OptionalValueEditConcept<double>::set,optionalDoubleEditConcept.data(),mo,_1)));
+                                 OptionalDoubleGetter(std::bind(&OptionalValueEditConcept<double>::get,optionalDoubleEditConcept.data(),mo)),
+                                 boost::optional<DoubleSetter>(std::bind(&OptionalValueEditConcept<double>::set,optionalDoubleEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = optionalDoubleEdit;
 
     } else if(QSharedPointer<ValueEditVoidReturnConcept<double> > doubleEditVoidReturnConcept = baseConcept.dynamicCast<ValueEditVoidReturnConcept<double> >()) {
 
-        OSDoubleEdit2 * doubleEditVoidReturn = new OSDoubleEdit2();
+        auto doubleEditVoidReturn = new OSDoubleEdit2();
 
         doubleEditVoidReturn->bind(mo,
-                                   DoubleGetter(boost::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),mo)),
-                                   DoubleSetterVoidReturn(boost::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),mo,_1)));
+                                   DoubleGetter(std::bind(&ValueEditVoidReturnConcept<double>::get,doubleEditVoidReturnConcept.data(),mo)),
+                                   DoubleSetterVoidReturn(std::bind(&ValueEditVoidReturnConcept<double>::set,doubleEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
         widget = doubleEditVoidReturn;
 
     } else if(QSharedPointer<OptionalValueEditVoidReturnConcept<double> > optionalDoubleEditVoidReturnConcept = baseConcept.dynamicCast<OptionalValueEditVoidReturnConcept<double> >()) {
 
-        OSDoubleEdit2 * optionalDoubleEditVoidReturn = new OSDoubleEdit2();
+        auto optionalDoubleEditVoidReturn = new OSDoubleEdit2();
 
         optionalDoubleEditVoidReturn->bind(mo,
-                                           OptionalDoubleGetter(boost::bind(&OptionalValueEditVoidReturnConcept<double>::get,optionalDoubleEditVoidReturnConcept.data(),mo)),
-                                           DoubleSetterVoidReturn(boost::bind(&OptionalValueEditVoidReturnConcept<double>::set,optionalDoubleEditVoidReturnConcept.data(),mo,_1)));
+                                           OptionalDoubleGetter(std::bind(&OptionalValueEditVoidReturnConcept<double>::get,optionalDoubleEditVoidReturnConcept.data(),mo)),
+                                           DoubleSetterVoidReturn(std::bind(&OptionalValueEditVoidReturnConcept<double>::set,optionalDoubleEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
         widget = optionalDoubleEditVoidReturn;
 
     } else if(QSharedPointer<ValueEditConcept<int> > integerEditConcept = baseConcept.dynamicCast<ValueEditConcept<int> >()) {
 
-        OSIntegerEdit2 * integerEdit = new OSIntegerEdit2();
+        auto integerEdit = new OSIntegerEdit2();
 
         integerEdit->bind(mo,
-                          IntGetter(boost::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),mo)),
-                          boost::optional<IntSetter>(boost::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),mo,_1)));
+                          IntGetter(std::bind(&ValueEditConcept<int>::get,integerEditConcept.data(),mo)),
+                          boost::optional<IntSetter>(std::bind(&ValueEditConcept<int>::set,integerEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = integerEdit;
 
     } else if(QSharedPointer<ValueEditConcept<std::string> > lineEditConcept = baseConcept.dynamicCast<ValueEditConcept<std::string> >()) {
 
-        OSLineEdit2 * lineEdit = new OSLineEdit2();
+        auto lineEdit = new OSLineEdit2();
 
         lineEdit->bind(mo,
-                       StringGetter(boost::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),mo)),
-                       boost::optional<StringSetter>(boost::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),mo,_1)));
+                       StringGetter(std::bind(&ValueEditConcept<std::string>::get,lineEditConcept.data(),mo)),
+                       boost::optional<StringSetter>(std::bind(&ValueEditConcept<std::string>::set,lineEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = lineEdit;
 
     } else if(QSharedPointer<NameLineEditConcept> nameLineEditConcept = baseConcept.dynamicCast<NameLineEditConcept>()) {
 
-        OSLineEdit2 * nameLineEdit = new OSLineEdit2();
+        auto nameLineEdit = new OSLineEdit2();
 
         nameLineEdit->bind(mo,
-                           OptionalStringGetter(boost::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,true)),
-                           boost::optional<StringSetter>(boost::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,_1)));
+                           OptionalStringGetter(std::bind(&NameLineEditConcept::get,nameLineEditConcept.data(),mo,true)),
+                           boost::optional<StringSetter>(std::bind(&NameLineEditConcept::set,nameLineEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = nameLineEdit;
 
@@ -304,8 +303,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         quantityEdit->bind(m_isIP,
                            mo,
-                           DoubleGetter(boost::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo)),
-                           boost::optional<DoubleSetter>(boost::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,_1)));
+                           DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),mo)),
+                           boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),mo,std::placeholders::_1)));
 
         isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
           quantityEdit, SLOT(onUnitSystemChange(bool)));
@@ -323,8 +322,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         optionalQuantityEdit->bind(m_isIP,
                                    mo,
-                                   OptionalDoubleGetter(boost::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo)),
-                                   boost::optional<DoubleSetter>(boost::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,_1)));
+                                   OptionalDoubleGetter(std::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),mo)),
+                                   boost::optional<DoubleSetter>(std::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),mo,std::placeholders::_1)));
 
         isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
           optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
@@ -342,8 +341,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         quantityEditVoidReturn->bind(m_isIP,
                                      mo,
-                                     DoubleGetter(boost::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo)),
-                                     DoubleSetterVoidReturn(boost::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,_1)));
+                                     DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),mo)),
+                                     DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
         isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
           quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
@@ -361,8 +360,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
         optionalQuantityEditVoidReturn->bind(m_isIP,
                                              mo,
-                                             OptionalDoubleGetter(boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo)),
-                                             DoubleSetterVoidReturn(boost::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,_1)));
+                                             OptionalDoubleGetter(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),mo)),
+                                             DoubleSetterVoidReturn(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),mo,std::placeholders::_1)));
 
         isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
           optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
@@ -372,11 +371,11 @@ QWidget * OSGridController::widgetAt(int row, int column)
 
     } else if(QSharedPointer<ValueEditConcept<unsigned> > unsignedEditConcept = baseConcept.dynamicCast<ValueEditConcept<unsigned> >()) {
 
-        OSUnsignedEdit2 * unsignedEdit = new OSUnsignedEdit2();
+        auto unsignedEdit = new OSUnsignedEdit2();
 
         unsignedEdit->bind(mo,
-                           UnsignedGetter(boost::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),mo)),
-                           boost::optional<UnsignedSetter>(boost::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),mo,_1)));
+                           UnsignedGetter(std::bind(&ValueEditConcept<unsigned>::get,unsignedEditConcept.data(),mo)),
+                           boost::optional<UnsignedSetter>(std::bind(&ValueEditConcept<unsigned>::set,unsignedEditConcept.data(),mo,std::placeholders::_1)));
 
         widget = unsignedEdit;
 
@@ -387,8 +386,8 @@ QWidget * OSGridController::widgetAt(int row, int column)
         //OSDropZone2 * dropZone = new OSDropZone2(vectorController);
 
         //dropZone->bind(mo,
-        //          boost::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
-        //          boost::optional<ModelObjectSetter>(boost::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,_1)),
+        //          std::bind(&DropZoneConcept::get,dropZoneConcept.data(),mo),
+        //          boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept::set,dropZoneConcept.data(),mo,std::placeholders::_1)),
         //          boost::none,
         //          boost::none);
 
@@ -399,7 +398,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     }
   }
 
-  QWidget * wrapper = new QWidget();
+  auto wrapper = new QWidget();
   wrapper->setObjectName("TableCell");
   if(row == 0){
     wrapper->setMinimumSize(QSize(140,50));
@@ -423,7 +422,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
   style.append("}");
   wrapper->setStyleSheet(style);
 
-  QVBoxLayout * layout = new QVBoxLayout();
+  auto layout = new QVBoxLayout();
   layout->setSpacing(0);
   if(row == 0){
     layout->setContentsMargins(0,0,0,0);
@@ -523,7 +522,7 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
   m_label(new QLabel(fieldName)),
   m_checkBox(new QCheckBox())
 {
-  QHBoxLayout * layout = new QHBoxLayout();
+  auto layout = new QHBoxLayout();
   setLayout(layout);
 
   m_label->setWordWrap(true);
@@ -538,7 +537,7 @@ BulkSelectionWidget::BulkSelectionWidget(QWidget * parent)
   m_comboBox(new OSComboBox()),
   m_checkBox(new QCheckBox())
 {
-  QHBoxLayout * layout = new QHBoxLayout();
+  auto layout = new QHBoxLayout();
   setLayout(layout);
 
   layout->addWidget(m_checkBox);

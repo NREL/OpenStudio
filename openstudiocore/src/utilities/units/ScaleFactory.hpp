@@ -20,11 +20,11 @@
 #ifndef UTILITIES_UNITS_SCALEFACTORY_HPP
 #define UTILITIES_UNITS_SCALEFACTORY_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Singleton.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/Singleton.hpp"
+#include "../core/Logger.hpp"
 
-#include <utilities/units/Scale.hpp>
+#include "Scale.hpp"
 
 #include <ostream>
 #include <set>

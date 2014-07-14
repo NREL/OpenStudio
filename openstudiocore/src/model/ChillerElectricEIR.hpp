@@ -20,8 +20,8 @@
 #ifndef MODEL_CHILLERELECTRICEIR_HPP
 #define MODEL_CHILLERELECTRICEIR_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/WaterToWaterComponent.hpp>
+#include "ModelAPI.hpp"
+#include "WaterToWaterComponent.hpp"
 
 namespace openstudio {
 
@@ -296,7 +296,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit ChillerElectricEIR(boost::shared_ptr<detail::ChillerElectricEIR_Impl> impl);
+  explicit ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl);
 
   /// @endcond
  private:

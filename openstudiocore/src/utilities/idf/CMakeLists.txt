@@ -1,4 +1,4 @@
-SET( idf_src
+set(idf_src
   idf/page.hpp
   idf/Handle.hpp
   idf/Handle.cpp
@@ -46,7 +46,7 @@ SET( idf_src
   idf/WorkspaceWatcher.cpp
 )
 
-SET( idf_test_src
+set(idf_test_src
   idf/Test/IdfFixture.hpp
   idf/Test/IdfFixture.cpp
   idf/Test/IdfFile_GTest.cpp
@@ -64,12 +64,12 @@ SET( idf_test_src
   idf/Test/Validity_GTest.cpp
 )
 
-SET( idf_test_moc
+set(idf_test_moc
   idf/Test/IdfTestQObjects.hpp
 )
 
-qt4_wrap_cpp( idf_test_moc_src ${idf_test_moc} )
+qt5_wrap_cpp_minimally(idf_test_moc_src ${idf_test_moc})
 
-SET( idf_swig_src
+SET(idf_swig_src
   idf/Idf.i
 )

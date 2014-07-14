@@ -20,8 +20,8 @@
 #ifndef MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_HPP
 #define MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/HVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 
@@ -88,7 +88,7 @@ class MODEL_API CoilCoolingDXVariableRefrigerantFlow : public HVACComponent {
   /// @cond
   typedef detail::CoilCoolingDXVariableRefrigerantFlow_Impl ImplType;
 
-  explicit CoilCoolingDXVariableRefrigerantFlow(boost::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
+  explicit CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
 
   friend class detail::CoilCoolingDXVariableRefrigerantFlow_Impl;
   friend class Model;

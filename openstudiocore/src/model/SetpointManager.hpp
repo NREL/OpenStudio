@@ -80,7 +80,7 @@ class MODEL_API SetpointManager : public HVACComponent {
   /// @cond
   typedef detail::SetpointManager_Impl ImplType;
 
-  explicit SetpointManager(boost::shared_ptr<detail::SetpointManager_Impl> impl);
+  explicit SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl);
 
  private:
   REGISTER_LOGGER("openstudio.model.SetpointManager");

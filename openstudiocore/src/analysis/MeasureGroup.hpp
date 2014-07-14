@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_MEASUREGROUP_HPP
 #define ANALYSIS_MEASUREGROUP_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DiscreteVariable.hpp>
+#include "AnalysisAPI.hpp"
+#include "DiscreteVariable.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -131,7 +131,7 @@ class ANALYSIS_API MeasureGroup : public DiscreteVariable {
   friend class detail::AnalysisObject_Impl;
   friend class detail::MeasureGroup_Impl;
 
-  explicit MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl);
+  explicit MeasureGroup(std::shared_ptr<detail::MeasureGroup_Impl> impl);
 
   friend class detail::Measure_Impl;
   friend class detail::RubyMeasure_Impl;

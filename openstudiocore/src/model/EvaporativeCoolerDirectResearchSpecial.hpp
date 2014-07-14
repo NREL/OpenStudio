@@ -20,10 +20,10 @@
 #ifndef MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_HPP
 #define MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
-#include <model/StraightComponent.hpp>
-#include <model/Connection.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
+#include "StraightComponent.hpp"
+#include "Connection.hpp"
 
 namespace openstudio {
 namespace model {
@@ -105,7 +105,7 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   /// @cond
   typedef detail::EvaporativeCoolerDirectResearchSpecial_Impl ImplType;
 
-  explicit EvaporativeCoolerDirectResearchSpecial(boost::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> impl);
+  explicit EvaporativeCoolerDirectResearchSpecial(std::shared_ptr<detail::EvaporativeCoolerDirectResearchSpecial_Impl> impl);
  private:
   REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");
   /// @endcond

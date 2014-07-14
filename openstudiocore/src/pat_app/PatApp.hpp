@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.  
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.  
  *  All rights reserved.
  *  
  *  This library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_PATAPP_HPP
-#define OPENSTUDIO_PATAPP_HPP
+#ifndef PATAPP_PATAPP_HPP
+#define PATAPP_PATAPP_HPP
 
 #include <QApplication>
 #include <QObject>
@@ -27,10 +27,10 @@
 #include <QSharedPointer>
 #include <QWidget>
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisDriverEnums.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../analysisdriver/AnalysisDriverEnums.hpp"
 
-#include <model/Model.hpp>
+#include "../model/Model.hpp"
 
 #include "../shared_gui_components/BaseApp.hpp"
 #include "../shared_gui_components/BuildingComponentDialog.hpp"
@@ -40,11 +40,11 @@
 #include "CloudDialog.hpp"
 #include "MonitorUseDialog.hpp"
 
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/core/Path.hpp>
-#include <utilities/core/Url.hpp>
-#include <utilities/core/UUID.hpp>
-#include <utilities/plot/ProgressBar.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Url.hpp"
+#include "../utilities/core/UUID.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
 
 #include <map>
 #include <vector>
@@ -113,20 +113,20 @@ class PatApp : public QApplication, public BaseApp
   // ensure that we set the seed on this project not a copy, will also cached the seed models
   bool setSeed(const FileReference& currentSeedLocation);
 
-  // Request to save the current project, will prompt user as neccessary.
+  // Request to save the current project, will prompt user as necessary.
   // Will return true if the path can be opened.
   bool userInteractiveOpenProject(QString path);
   
-  // Request to close the current project, will prompt user as neccessary.
+  // Request to close the current project, will prompt user as necessary.
   // Will return true if there is no current project.  Otherwise returns true
   // if the current project was closed.
   bool userInteractiveCloseProject();
 
-  // Request to save the current project, will prompt user as neccessary.
+  // Request to save the current project, will prompt user as necessary.
   // Will return false if there is no current project to save.
   bool userInteractiveSaveProject(bool allowCancel);
 
-  // Request to save the current project to a new location, will prompt user as neccessary.
+  // Request to save the current project to a new location, will prompt user as necessary.
   // Will return false if there is no current project to save.
   bool userInteractiveSaveAsProject();
 
@@ -299,7 +299,7 @@ class NewProjectDialog : public OSDialog
 
 public:
 
-  NewProjectDialog(QWidget * parent = 0);
+  NewProjectDialog(QWidget * parent = nullptr);
 
   QLineEdit * m_projectNameLineEdit;
 
@@ -313,4 +313,4 @@ private slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_PATAPP_H
+#endif // PATAPP_PATAPP_HPP

@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_GRIDSCENE_H
-#define OPENSTUDIO_GRIDSCENE_H
+#ifndef OPENSTUDIO_GRIDSCENE_HPP
+#define OPENSTUDIO_GRIDSCENE_HPP
 
 #include <QGraphicsScene>
-#include <model/ModelObject.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "../model/ModelObject.hpp"
+#include "OSItem.hpp"
 
 namespace openstudio {
 
@@ -61,5 +61,5 @@ class GridScene : public QGraphicsScene
 
 } // openstudio
 
-#endif // OPENSTUDIO_GRIDSCENE_H
+#endif // OPENSTUDIO_GRIDSCENE_HPP
 

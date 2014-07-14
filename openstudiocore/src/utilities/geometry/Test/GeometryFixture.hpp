@@ -17,13 +17,13 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef GEOMETRYFIXTURE_H
-#define GEOMETRYFIXTURE_H
+#ifndef UTILITIES_GEOMETRY_TEST_GEOMETRYFIXTURE_HPP
+#define UTILITIES_GEOMETRY_TEST_GEOMETRYFIXTURE_HPP
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/FileLogSink.hpp>
+#include "../Geometry.hpp"
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
 namespace openstudio{
   class Point3d;
@@ -39,13 +39,13 @@ bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b);
 class GeometryFixture : public ::testing::Test {
 protected:
 
-  // initiallize for each test
+  // initialize for each test
   virtual void SetUp();
 
   // tear down after for each test
   virtual void TearDown();
 
-  // initiallize static members
+  // initialize static members
   static void SetUpTestCase();
 
   // tear down static members
@@ -59,4 +59,4 @@ public:
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // GEOMETRYFIXTURE_H
+#endif // UTILITIES_GEOMETRY_TEST_GEOMETRYFIXTURE_HPP

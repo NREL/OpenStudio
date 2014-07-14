@@ -17,9 +17,9 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <openstudio_lib/VerticalTabWidget.hpp>
+#include "VerticalTabWidget.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QHBoxLayout>
 #include <QKeySequence>
@@ -101,7 +101,7 @@ void VerticalTabWidget::addTab( QWidget * widget,
 
 void VerticalTabWidget::deleteAllTabs()
 {
-  Q_FOREACH(QPushButton * button, m_tabButtons){
+  for (QPushButton * button : m_tabButtons){
     delete button;
     button = 0;
   }

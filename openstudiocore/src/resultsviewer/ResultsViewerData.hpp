@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_RESULTSVIEWERDATA_H
-#define  RESULTSVIEWER_RESULTSVIEWERDATA_H
+#ifndef RESULTSVIEWER_RESULTSVIEWERDATA_HPP
+#define RESULTSVIEWER_RESULTSVIEWERDATA_HPP
 
-#include <utilities/plot/Plot2D.hpp>
-#include <utilities/plot/LinePlot.hpp>
-#include <utilities/plot/FloodPlot.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../utilities/plot/Plot2D.hpp"
+#include "../utilities/plot/LinePlot.hpp"
+#include "../utilities/plot/FloodPlot.hpp"
+#include "../utilities/sql/SqlFile.hpp"
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QTableWidget>
 #include <string>
 #include <QApplication>
@@ -95,4 +95,4 @@ private:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_RESULTSVIEWERDATA_H
+#endif // RESULTSVIEWER_RESULTSVIEWERDATA_HPP

@@ -27,23 +27,22 @@
 #include "JobOutputCleanup.hpp"
 #include "RunManager_Util.hpp"
 
-#include <utilities/time/DateTime.hpp>
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <energyplus/ForwardTranslator.hpp>
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/URLHelpers.hpp>
+#include "../../utilities/time/DateTime.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Model_Impl.hpp"
+#include "../../model/WeatherFile.hpp"
+#include "../../model/WeatherFile_Impl.hpp"
+#include "../../energyplus/ForwardTranslator.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/URLHelpers.hpp"
 #include <utilities/idd/OS_WeatherFile_FieldEnums.hxx>
-#include <osversion/VersionTranslator.hpp>
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <QDir>
 #include <QDateTime>
 
-#include <boost/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 namespace openstudio {
@@ -118,7 +117,7 @@ namespace detail {
     return m_description;
   }
 
-  void ModelToIdfJob::startImpl(const boost::shared_ptr<ProcessCreator> &)
+  void ModelToIdfJob::startImpl(const std::shared_ptr<ProcessCreator> &)
   {
     openstudio::path outpath = outdir(true);
 
@@ -366,7 +365,7 @@ namespace detail {
         if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
           LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
         }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native()));
         }
       }
 
@@ -377,7 +376,7 @@ namespace detail {
         if (weatherFilePath && (checksum(*weatherFilePath) != checksum(existingWeatherFilePath))){
           LOG(Warn, "Possible conflicting weather files found, using '" << toString(weatherFilePath->toString()) << "'");
         }else{
-          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native_file_string()));
+          weatherFilePath = QUrl::fromLocalFile(toQString(existingWeatherFilePath.native()));
         }
       }
 

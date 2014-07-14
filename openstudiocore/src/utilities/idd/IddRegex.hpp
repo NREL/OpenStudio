@@ -17,11 +17,11 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef UTILITIES_IDD_IDDREGEXP_HPP
-#define UTILITIES_IDD_IDDREGEXP_HPP
+#ifndef UTILITIES_IDD_IDDREGEX_HPP
+#define UTILITIES_IDD_IDDREGEX_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/StaticInitializer.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "../core/StaticInitializer.hpp"
 #include <boost/regex.hpp>
 
 namespace openstudio{
@@ -291,4 +291,4 @@ namespace iddRegex{
 } // iddRegex
 } // openstudio
 
-#endif // UTILITIES_IDD_IDDREGEXP_HPP
+#endif // UTILITIES_IDD_IDDREGEX_HPP

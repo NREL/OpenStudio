@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Version.hpp>
-#include <model/Version_Impl.hpp>
+#include "Version.hpp"
+#include "Version_Impl.hpp"
 
-#include <model/ParentObject.hpp>
+#include "ParentObject.hpp"
 
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -101,7 +101,7 @@ Version::Version(const Model& model)
 }
 
 // constructor
-Version::Version(boost::shared_ptr<detail::Version_Impl> impl)
+Version::Version(std::shared_ptr<detail::Version_Impl> impl)
   : ModelObject(impl)
 {}
 

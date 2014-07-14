@@ -17,18 +17,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../ReverseTranslator.hpp"
 
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleCompact_Impl.hpp>
+#include "../../model/ScheduleCompact.hpp"
+#include "../../model/ScheduleCompact_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include <boost/foreach.hpp>
 
 using namespace openstudio::model;
 
@@ -58,7 +56,7 @@ OptionalModelObject ReverseTranslator::translateScheduleCompact( const Workspace
     scheduleCompact.setName(*os);
   }
 
-  BOOST_FOREACH(const IdfExtensibleGroup& eg, workspaceObject.extensibleGroups()) {
+  for (const IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
     scheduleCompact.pushExtensibleGroup(eg.fields());
   }
 

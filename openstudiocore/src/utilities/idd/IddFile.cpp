@@ -17,19 +17,18 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <utilities/idd/IddFile.hpp>
-#include <utilities/idd/IddFile_Impl.hpp>
+#include "IddFile.hpp"
+#include "IddFile_Impl.hpp"
 
-#include <utilities/idd/IddRegex.hpp>
+#include "IddRegex.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../core/PathHelpers.hpp"
+#include "../core/Assert.hpp"
 
-#include <utilities/core/Containers.hpp>
+#include "../core/Containers.hpp"
 #include <boost/filesystem/fstream.hpp>
 
-#include <boost/foreach.hpp> 
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -60,7 +59,7 @@ namespace detail {
 
   std::vector<std::string> IddFile_Impl::groups() const {
     StringSet result;
-    BOOST_FOREACH(const IddObject& object,objects()) {
+    for (const IddObject& object : objects()) {
       result.insert(object.group());
     }
     return StringVector(result.begin(),result.end());
@@ -68,7 +67,7 @@ namespace detail {
 
   std::vector<IddObject> IddFile_Impl::getObjectsInGroup(const std::string& group) const {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(istringEqual(object.group(), group)){
         result.push_back(object);
       }
@@ -79,7 +78,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::getObjects(const boost::regex &objectRegex) const {
     IddObjectVector result;
 
-    BOOST_FOREACH(const IddObject& object, m_objects) {
+    for (const IddObject& object : m_objects) {
       if (boost::regex_match(object.name(),objectRegex)) {
         result.push_back(object);
       }
@@ -105,7 +104,7 @@ namespace detail {
   boost::optional<IddObject> IddFile_Impl::getObject(const std::string& objectName) const
   {
     OptionalIddObject result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(istringEqual(object.name(), objectName)){
         result = object;
         break;
@@ -126,7 +125,7 @@ namespace detail {
       return result;
     }
 
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if (object.type() == objectType) {
         result = object;
         break;
@@ -139,7 +138,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::requiredObjects() const
   {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(object.properties().required){
         result.push_back(object);
       }
@@ -150,7 +149,7 @@ namespace detail {
   std::vector<IddObject> IddFile_Impl::uniqueObjects() const
   {
     IddObjectVector result;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if(object.properties().unique){
         result.push_back(object);
       }
@@ -177,8 +176,8 @@ namespace detail {
 
   // SERIALIZATION
 
-  boost::shared_ptr<IddFile_Impl> IddFile_Impl::load(std::istream& is) {
-    boost::shared_ptr<IddFile_Impl> result;
+  std::shared_ptr<IddFile_Impl> IddFile_Impl::load(std::istream& is) {
+    std::shared_ptr<IddFile_Impl> result;
     IddFile_Impl iddFileImpl;
     
     try {
@@ -186,7 +185,7 @@ namespace detail {
     }
     catch (...) { return result; }
 
-    result = boost::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl)); 
+    result = std::shared_ptr<IddFile_Impl>(new IddFile_Impl(iddFileImpl)); 
     return result;
 
   }
@@ -195,7 +194,7 @@ namespace detail {
   {
     os << m_header << std::endl;
     std::string groupName;
-    BOOST_FOREACH(const IddObject& object, m_objects){
+    for (const IddObject& object : m_objects){
       if (object.group() != groupName) {
         groupName = object.group();
         os << "\\group " << groupName << std::endl << std::endl;
@@ -366,7 +365,7 @@ namespace detail {
 
 IddFile::IddFile()
 {
-  m_impl = boost::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
+  m_impl = std::shared_ptr<detail::IddFile_Impl>(new detail::IddFile_Impl());
 }
 
 IddFile::IddFile(const IddFile& other)
@@ -438,7 +437,7 @@ std::vector<IddObject> IddFile::uniqueObjects() const
 
 OptionalIddFile IddFile::load(std::istream& is)
 {
-  boost::shared_ptr<detail::IddFile_Impl> p = detail::IddFile_Impl::load(is);
+  std::shared_ptr<detail::IddFile_Impl> p = detail::IddFile_Impl::load(is);
   if (p) { return IddFile(p); }
   return boost::none;
 }
@@ -502,7 +501,7 @@ void IddFile::addObject(const IddObject& object)
 
 // PRIVATE
 
-IddFile::IddFile(const boost::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(impl) {}
+IddFile::IddFile(const std::shared_ptr<detail::IddFile_Impl>& impl) : m_impl(impl) {}
 
 // NON-MEMBER FUNCTIONS
 

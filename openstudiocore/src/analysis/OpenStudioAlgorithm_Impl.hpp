@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPENSTUDIOALGORITHM_IMPL_HPP
 #define ANALYSIS_OPENSTUDIOALGORITHM_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/Algorithm_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "Algorithm_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

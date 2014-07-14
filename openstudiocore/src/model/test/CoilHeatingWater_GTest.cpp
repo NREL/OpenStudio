@@ -18,14 +18,14 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilHeatingWater_Impl.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilHeatingWater_Impl.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 using namespace openstudio::model;
 

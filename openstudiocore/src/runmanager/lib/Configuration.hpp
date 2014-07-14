@@ -17,16 +17,16 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP__
-#define OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP__
+#ifndef RUNMANAGER_LIB_CONFIGURATION_HPP
+#define RUNMANAGER_LIB_CONFIGURATION_HPP
 
 #include <string>
 #include <QTimer>
 #include <QItemDelegate>
 #include <boost/optional.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/ui_Configuration.hxx>
-#include <runmanager/lib/Job.hpp>
+#include "RunManager.hpp"
+#include <runmanager/lib/ui_Configuration.h>
+#include "Job.hpp"
 #include <QStandardItemModel>
 
 class QFileDialog;
@@ -40,7 +40,7 @@ namespace runmanager {
     Q_OBJECT
 
     public:
-      SpinBoxDelegate(QObject *parent = 0);
+      SpinBoxDelegate(QObject *parent = nullptr);
       virtual ~SpinBoxDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -60,7 +60,7 @@ namespace runmanager {
     Q_OBJECT
 
     public:
-      ToolNameDelegate(QObject *parent = 0);
+      ToolNameDelegate(QObject *parent = nullptr);
       virtual ~ToolNameDelegate() {}
 
       QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -83,8 +83,8 @@ namespace runmanager {
 
   public:
     //! Create a Configuration dialog for setting ConfigOptions
-    Configuration(QWidget *parent = 0, 
-                  Qt::WFlags flags = Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint), 
+    Configuration(QWidget *parent = nullptr, 
+                  Qt::WindowFlags flags = Qt::WindowFlags(Qt::Dialog | Qt::WindowTitleHint), 
                   const ConfigOptions &co = ConfigOptions());
     virtual ~Configuration();
 
@@ -128,4 +128,4 @@ namespace runmanager {
 } // openstudio namespace
 
 
-#endif // OPENSTUDIO_RUNMANAGER_CONFIGURATION_HPP_
+#endif // RUNMANAGER_LIB_CONFIGURATION_HPP

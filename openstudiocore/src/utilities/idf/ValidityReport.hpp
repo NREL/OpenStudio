@@ -20,10 +20,10 @@
 #ifndef UTILITIES_IDF_VALIDITYREPORT_HPP
 #define UTILITIES_IDF_VALIDITYREPORT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
-#include <utilities/idf/DataError.hpp>
-#include <utilities/idf/ValidityEnums.hpp>
+#include "DataError.hpp"
+#include "ValidityEnums.hpp"
 
 #include <boost/optional.hpp>
 

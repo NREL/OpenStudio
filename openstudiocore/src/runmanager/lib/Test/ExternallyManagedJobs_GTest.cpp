@@ -22,18 +22,18 @@
 #include "SignalListener.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../JobFactory.hpp"
 #include <boost/filesystem/path.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/JSON.hpp>
-#include <model/Model.hpp>
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
+#include "../WorkItem.hpp"
+#include "../JSON.hpp"
+#include "../../../model/Model.hpp"
 
 #include <QDir>
-#include <utilities/core/Application.hpp>
-#include <utilities/core/System.hpp>
-#include <utilities/core/PathHelpers.hpp>
+#include "../../../utilities/core/Application.hpp"
+#include "../../../utilities/core/System.hpp"
+#include "../../../utilities/core/PathHelpers.hpp"
 #include <boost/filesystem.hpp>
 
 #ifdef _MSC_VER

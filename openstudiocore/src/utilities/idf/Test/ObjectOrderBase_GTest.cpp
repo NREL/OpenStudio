@@ -18,9 +18,9 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/idf/Test/IdfFixture.hpp>
+#include "IdfFixture.hpp"
 
-#include <utilities/idf/ObjectOrderBase.hpp>
+#include "../ObjectOrderBase.hpp"
 
 using openstudio::ObjectOrderBase;
 using openstudio::IddObjectTypeVector;

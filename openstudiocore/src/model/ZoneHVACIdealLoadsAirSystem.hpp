@@ -20,8 +20,8 @@
 #ifndef MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_HPP
 #define MODEL_ZONEHVACIDEALLOADSAIRSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ZoneHVACComponent.hpp>
+#include "ModelAPI.hpp"
+#include "ZoneHVACComponent.hpp"
 
 namespace openstudio {
 
@@ -304,7 +304,7 @@ class MODEL_API ZoneHVACIdealLoadsAirSystem : public ZoneHVACComponent {
   /// @cond
   typedef detail::ZoneHVACIdealLoadsAirSystem_Impl ImplType;
 
-  explicit ZoneHVACIdealLoadsAirSystem(boost::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl);
+  explicit ZoneHVACIdealLoadsAirSystem(std::shared_ptr<detail::ZoneHVACIdealLoadsAirSystem_Impl> impl);
 
   friend class detail::ZoneHVACIdealLoadsAirSystem_Impl;
   friend class Model;

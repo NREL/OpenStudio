@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_EXPORTSPREADSHEET_H
-#define OPENSTUDIO_EXPORTSPREADSHEET_H
+#ifndef PATAPP_EXPORTSPREADSHEET_HPP
+#define PATAPP_EXPORTSPREADSHEET_HPP
 
 
 namespace openstudio {
@@ -43,4 +43,4 @@ namespace pat {
 } // pat
 } // openstudio
 
-#endif // OPENSTUDIO_EXPORTSPREADSHEET_H
+#endif // PATAPP_EXPORTSPREADSHEET_HPP

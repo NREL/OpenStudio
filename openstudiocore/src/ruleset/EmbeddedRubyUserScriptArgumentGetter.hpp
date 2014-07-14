@@ -1,5 +1,5 @@
 /**********************************************************************
- *  Copyright (c) 2008-2012, Alliance for Sustainable Energy.
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
  *  All rights reserved.
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 #ifndef RULESET_EMBEDDEDRUBYUSERSCRIPTARGUMENTGETTER_HPP
 #define RULESET_EMBEDDEDRUBYUSERSCRIPTARGUMENTGETTER_HPP
 
-#include <ruleset/RubyUserScriptArgumentGetter.hpp>
+#include "RubyUserScriptArgumentGetter.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
 namespace openstudio {
 namespace ruleset {
@@ -33,7 +33,7 @@ namespace ruleset {
   template<typename RubyInterpreterType>
   class EmbeddedRubyUserScriptArgumentGetter : public RubyUserScriptArgumentGetter {
    public:
-    EmbeddedRubyUserScriptArgumentGetter(const boost::shared_ptr<RubyInterpreterType>& rubyInterpreter)
+    EmbeddedRubyUserScriptArgumentGetter(const std::shared_ptr<RubyInterpreterType>& rubyInterpreter)
       : m_rubyInterpreter(rubyInterpreter)
     {
       m_rubyInterpreter->template registerType<openstudio::BCLMeasure>("openstudio::BCLMeasure");
@@ -71,7 +71,7 @@ namespace ruleset {
     }
 
    private:
-    boost::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
+    std::shared_ptr<RubyInterpreterType> m_rubyInterpreter;
   };
 
 } // ruleset

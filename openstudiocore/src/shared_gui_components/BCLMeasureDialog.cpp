@@ -19,7 +19,7 @@
 
 #include "BCLMeasureDialog.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QLabel>
 #include <QLineEdit>
@@ -278,17 +278,17 @@ void BCLMeasureDialog::init()
   okButton->setText("Create Measure and \n Open for Editing");
   okButton->setMinimumHeight(btnHeight);
 
-  QVBoxLayout* vLayout = new QVBoxLayout;
+  auto vLayout = new QVBoxLayout;
   vLayout->setContentsMargins(QMargins(0,0,0,0));
 
-  QLabel* label = new QLabel;
+  auto label = new QLabel;
   label->setText("Name:");
   label->setObjectName("H2");
   vLayout->addWidget(label);
   m_nameLineEdit = new QLineEdit(this);
   vLayout->addWidget(m_nameLineEdit);
 
-  QHBoxLayout* tempHLayout = new QHBoxLayout;
+  auto tempHLayout = new QHBoxLayout;
   label = new QLabel;
   label->setText("Class Name:");
   label->setObjectName("H2");
@@ -319,7 +319,7 @@ void BCLMeasureDialog::init()
   vLayout->addWidget(m_modelerDescriptionTextEdit);
   vLayout->addSpacing(10);
 
-  QVBoxLayout* vLayout2 = new QVBoxLayout;
+  auto vLayout2 = new QVBoxLayout;
 
   label = new QLabel;
   label->setText("Measure Type:");
@@ -375,7 +375,7 @@ void BCLMeasureDialog::init()
   vLayout2->addSpacing(10);
   */
 
-  QHBoxLayout* hLayout = new QHBoxLayout;
+  auto hLayout = new QHBoxLayout;
   hLayout->addLayout(vLayout2);
   hLayout->addStretch();
   vLayout->addLayout(hLayout);
@@ -396,7 +396,7 @@ void BCLMeasureDialog::init()
   this->setWindowModality(Qt::ApplicationModal);
   //this->setSizeGripEnabled(true);
 
-  #ifdef Q_WS_MAC
+  #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
   #else
     setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);

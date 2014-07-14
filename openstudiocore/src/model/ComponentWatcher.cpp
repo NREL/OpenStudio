@@ -17,22 +17,19 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/ComponentWatcher.hpp>
-#include <model/ComponentWatcher_Impl.hpp>
+#include "ComponentWatcher.hpp"
+#include "ComponentWatcher_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 
-#include <model/ModelObject.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelObject.hpp"
+#include "ModelObject_Impl.hpp"
 
-#include <model/ComponentData_Impl.hpp>
+#include "ComponentData_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace model {
@@ -99,7 +96,7 @@ namespace detail {
       LOG_AND_THROW("Cannot connect onRemoveFromWorkspace() signal.");
     }
     // connect to addWorkspaceObject signal
-    boost::shared_ptr<Model_Impl> modelImplPtr = m_componentData.model().getImpl<Model_Impl>();
+    std::shared_ptr<Model_Impl> modelImplPtr = m_componentData.model().getImpl<Model_Impl>();
     connected = connect(modelImplPtr.get(),
                         SIGNAL(addWorkspaceObject(const WorkspaceObject&, const openstudio::IddObjectType&, const openstudio::UUID&)),
                         SLOT(objectAdd(const WorkspaceObject&)));
@@ -109,7 +106,7 @@ namespace detail {
   }
 
   ComponentWatcher ComponentWatcher_Impl::componentWatcher() const {
-    ComponentWatcher result(boost::const_pointer_cast<ComponentWatcher_Impl>(shared_from_this()));
+    ComponentWatcher result(std::const_pointer_cast<ComponentWatcher_Impl>(shared_from_this()));
     return result;
   }
 
@@ -157,8 +154,8 @@ namespace detail {
     }
     // if removedObject is a componentObject, remove from the vector and refresh
     // component contents
-    ModelObjectVector::iterator it = std::find_if(m_componentObjects.begin(),
-        m_componentObjects.end(),boost::bind(handleEquals<ModelObject,Handle>,_1,handleOfRemovedObject));
+    auto it = std::find_if(m_componentObjects.begin(),
+        m_componentObjects.end(),std::bind(handleEquals<ModelObject,Handle>,std::placeholders::_1,handleOfRemovedObject));
     if (it != m_componentObjects.end()) {
       OS_ASSERT(it != m_componentObjects.begin());
       m_componentObjects.erase(it);
@@ -175,7 +172,7 @@ namespace detail {
 
   void ComponentWatcher_Impl::mf_changeComponentVersion() {
     // disconnect componentDataChange slot to avoid endless loop
-    boost::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
+    std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
     bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
     OS_ASSERT(ok);
 
@@ -189,13 +186,13 @@ namespace detail {
 
   void ComponentWatcher_Impl::mf_refreshComponentContents(bool logWarnings) {
     // disconnect componentDataChange slot to avoid endless loop
-    boost::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
+    std::shared_ptr<ModelObject_Impl> implPtr = m_componentData.getImpl<ModelObject_Impl>();
     bool ok = disconnect(implPtr.get(),SIGNAL(onDataChange()),this,SLOT(componentDataChange()));
     OS_ASSERT(ok);
 
     // \todo logWarnings
     m_componentData.clearExtensibleGroups();
-    BOOST_FOREACH(const ModelObject& object,m_componentObjects) {
+    for (const ModelObject& object : m_componentObjects) {
       m_componentData.getImpl<ComponentData_Impl>()->registerObject(object);
     }
 
@@ -227,11 +224,11 @@ bool ComponentWatcher::operator!=(const ComponentWatcher& other) {
 }
 
 /// @cond
-boost::shared_ptr<detail::ComponentWatcher_Impl> ComponentWatcher::getImpl() const {
+std::shared_ptr<detail::ComponentWatcher_Impl> ComponentWatcher::getImpl() const {
   return m_impl;
 }
 
-ComponentWatcher::ComponentWatcher(boost::shared_ptr<detail::ComponentWatcher_Impl> impl)
+ComponentWatcher::ComponentWatcher(std::shared_ptr<detail::ComponentWatcher_Impl> impl)
   : m_impl(impl)
 {}
 /// @endcond

@@ -25,8 +25,8 @@
 !!! THIS FILE MUST BE INCLUDED BY ANY SOURCE FILE THAT USES BOOST_ASSERT!!!
 *****************************************************************************/
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Logger.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Logger.hpp"
 
 #include <sstream>
 
@@ -46,6 +46,15 @@ namespace boost {
   inline void assertion_failed(char const * expr, char const * function, char const * file, long line) {
     std::stringstream ss;
     ss << "Assertion " << expr << " failed on line " << line << " of " << function << " in file " << file << ".";
+    openstudio::Logger::instance().standardErrLogger().enable();
+    LOG_FREE(Fatal, "BOOST_ASSERT", ss.str());
+    assert(false);
+  }
+
+  inline void assertion_failed_msg(char const * expr, char const * msg, char const * function, char const * file, long line)
+  {
+    std::stringstream ss;
+    ss << "Assertion " << expr << " failed on line " << line << " of " << function << " in file " << file << "." << std::endl << msg;
     openstudio::Logger::instance().standardErrLogger().enable();
     LOG_FREE(Fatal, "BOOST_ASSERT", ss.str());
     assert(false);

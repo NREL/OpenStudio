@@ -19,23 +19,21 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Lights.hpp>
-#include <model/OutputVariable.hpp>
-#include <model/OutputVariable_Impl.hpp>
-#include <model/Model_Impl.hpp>
+#include "ModelFixture.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../Lights.hpp"
+#include "../OutputVariable.hpp"
+#include "../OutputVariable_Impl.hpp"
+#include "../Model_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idf/ValidityReport.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/data/TimeSeries.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
+#include "../../utilities/idf/ValidityReport.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/Optional.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -50,7 +48,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   ThermalZone zone1(model);
   ThermalZone zone2(model);
 
-  BOOST_FOREACH(const ThermalZone& zone, building.thermalZones()) {
+  for (const ThermalZone& zone : building.thermalZones()) {
 
     // all possible variables
     std::vector<std::string> variableNames = zone.outputVariableNames();
@@ -95,14 +93,14 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
   std::map<std::string, boost::optional<OutputVariable> > outputVariableMap;
 
   // get list of all variable names
-  BOOST_FOREACH(const ModelObject& modelObject, model.getModelObjects<ModelObject>()){
-    BOOST_FOREACH(const std::string& variableName, modelObject.outputVariableNames()){
+  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()){
+    for (const std::string& variableName : modelObject.outputVariableNames()){
       outputVariableMap[variableName] = boost::none;
     }
   }
 
   // add all variables to map, allow only one variable per variable name in this application 
-  BOOST_FOREACH(OutputVariable outputVariable, model.getModelObjects<OutputVariable>()){
+  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()){
     if (outputVariableMap[outputVariable.variableName()]){
       // already have output variable for this name, then remove this object
       outputVariable.remove();
@@ -117,7 +115,7 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
 
   // now make an output variable for each variable name
   typedef std::pair<std::string, boost::optional<OutputVariable> > MapType;
-  BOOST_FOREACH(MapType mapVal, outputVariableMap){
+  for (MapType mapVal : outputVariableMap){
     if (!mapVal.second){
       OutputVariable outputVariable(mapVal.first, model);
       outputVariable.setReportingFrequency("Hourly");

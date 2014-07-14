@@ -17,40 +17,38 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <model/LayeredConstruction.hpp>
-#include <model/LayeredConstruction_Impl.hpp>
-#include <model/Model.hpp>
+#include "LayeredConstruction.hpp"
+#include "LayeredConstruction_Impl.hpp"
+#include "Model.hpp"
 
-#include <model/StandardsInformationConstruction.hpp>
-#include <model/Material.hpp>
-#include <model/OpaqueMaterial.hpp>
-#include <model/OpaqueMaterial_Impl.hpp>
-#include <model/AirGap.hpp>
-#include <model/AirGap_Impl.hpp>
-#include <model/RoofVegetation.hpp>
-#include <model/RoofVegetation_Impl.hpp>
-#include <model/FenestrationMaterial.hpp>
-#include <model/FenestrationMaterial_Impl.hpp>
-#include <model/SimpleGlazing.hpp>
-#include <model/SimpleGlazing_Impl.hpp>
-#include <model/StandardGlazing.hpp>
-#include <model/StandardGlazing_Impl.hpp>
-#include <model/RefractionExtinctionGlazing.hpp>
-#include <model/RefractionExtinctionGlazing_Impl.hpp>
-#include <model/GasLayer.hpp>
-#include <model/GasLayer_Impl.hpp>
-#include <model/ShadingMaterial.hpp>
-#include <model/ShadingMaterial_Impl.hpp>
-#include <model/ModelPartitionMaterial.hpp>
-#include <model/ModelPartitionMaterial_Impl.hpp>
+#include "StandardsInformationConstruction.hpp"
+#include "Material.hpp"
+#include "OpaqueMaterial.hpp"
+#include "OpaqueMaterial_Impl.hpp"
+#include "AirGap.hpp"
+#include "AirGap_Impl.hpp"
+#include "RoofVegetation.hpp"
+#include "RoofVegetation_Impl.hpp"
+#include "FenestrationMaterial.hpp"
+#include "FenestrationMaterial_Impl.hpp"
+#include "SimpleGlazing.hpp"
+#include "SimpleGlazing_Impl.hpp"
+#include "StandardGlazing.hpp"
+#include "StandardGlazing_Impl.hpp"
+#include "RefractionExtinctionGlazing.hpp"
+#include "RefractionExtinctionGlazing_Impl.hpp"
+#include "GasLayer.hpp"
+#include "GasLayer_Impl.hpp"
+#include "ShadingMaterial.hpp"
+#include "ShadingMaterial_Impl.hpp"
+#include "ModelPartitionMaterial.hpp"
+#include "ModelPartitionMaterial_Impl.hpp"
 
-#include <model/ModelExtensibleGroup.hpp>
+#include "ModelExtensibleGroup.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
-#include <utilities/core/Assert.hpp>
-
-#include <boost/foreach.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -76,7 +74,7 @@ namespace detail {
     MaterialVector result;
 
     // loop through extensible groups
-    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+    for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       // get object pointed to by extensible group
       // unit test checks that both layered constructions have extensible groups of size 1
@@ -116,8 +114,8 @@ namespace detail {
 
     MaterialVector layers = this->layers();
     if (!(layerIndex < layers.size())) { return false; }
-    MaterialVector::iterator layersBegin = layers.begin();
-    MaterialVector::iterator toEraseIt = layersBegin;
+    auto layersBegin = layers.begin();
+    auto toEraseIt = layersBegin;
     while (static_cast<unsigned>(toEraseIt - layersBegin) < layerIndex) { ++toEraseIt; }
     layers.erase(toEraseIt);
 
@@ -137,9 +135,9 @@ namespace detail {
 
     unsigned n = numLayers();
     MaterialVector layers = this->layers();
-    MaterialVector::iterator layersBegin = layers.begin();
-    MaterialVector::iterator layersEnd = layers.end();
-    MaterialVector::iterator insertAtIt = layersBegin;
+    auto layersBegin = layers.begin();
+    auto layersEnd = layers.end();
+    auto insertAtIt = layersBegin;
     while ((static_cast<unsigned>(insertAtIt - layersBegin) < layerIndex) &&
            (insertAtIt != layersEnd)) 
     { ++insertAtIt; }
@@ -190,7 +188,7 @@ namespace detail {
         LayeredConstruction::layersAreValid(materials)) 
     {
       clearExtensibleGroups();
-      BOOST_FOREACH(const Material& material, materials) {
+      for (const Material& material : materials) {
         OS_ASSERT(material.model() == model());
         ModelExtensibleGroup group = pushExtensibleGroup(StringVector()).cast<ModelExtensibleGroup>();
         OS_ASSERT(!group.empty());
@@ -324,7 +322,7 @@ namespace detail {
 
   bool LayeredConstruction_Impl::isOpaque() const {
     MaterialVector layers = this->layers();
-    BOOST_FOREACH(const Material& layer,layers) {
+    for (const Material& layer : layers) {
       if (!layer.optionalCast<OpaqueMaterial>()) { return false; }
     }
     return true;
@@ -332,7 +330,7 @@ namespace detail {
 
   bool LayeredConstruction_Impl::isFenestration() const {
     MaterialVector layers = this->layers();
-    BOOST_FOREACH(const Material& layer,layers) {
+    for (const Material& layer : layers) {
       if (!layer.optionalCast<FenestrationMaterial>()) { return false; }
     }
     return true;
@@ -352,7 +350,7 @@ namespace detail {
     }
 
     // return true if any layer is solar diffusing
-    BOOST_FOREACH(const Material& layer,layers) {
+    for (const Material& layer : layers) {
       if (layer.optionalCast<StandardGlazing>()) { 
         if (layer.cast<StandardGlazing>().solarDiffusing()){
           return true;
@@ -373,7 +371,7 @@ namespace detail {
 
   bool LayeredConstruction_Impl::isModelPartition() const {
     MaterialVector layers = this->layers();
-    BOOST_FOREACH(const Material& layer,layers) {
+    for (const Material& layer : layers) {
       if (!layer.optionalCast<ModelPartitionMaterial>()) { return false; }
     }
     return true;
@@ -442,7 +440,7 @@ namespace detail {
     UnsignedVector result;
 
     // loop through extensible groups
-    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+    for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
       if (!oMaterial) {
@@ -460,7 +458,7 @@ namespace detail {
   std::vector<unsigned> LayeredConstruction_Impl::getLayerIndices(const Material& material) const 
   {
     UnsignedVector result;
-    BOOST_FOREACH(const ModelExtensibleGroup& group,
+    for (const ModelExtensibleGroup& group :
                   castVector<ModelExtensibleGroup>(extensibleGroups())) 
     {
       OptionalMaterial oMaterial = group.getModelObjectTarget<Material>(0);
@@ -499,7 +497,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double thermalResistance(0.0);
-      BOOST_FOREACH(const OpaqueMaterial layer,opaqueLayers) {
+      for (const OpaqueMaterial layer : opaqueLayers) {
         thermalResistance += layer.thermalResistance();
       }
       return 1.0/thermalResistance;
@@ -522,7 +520,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double heatCapacity(0.0);
-      BOOST_FOREACH(const OpaqueMaterial layer,opaqueLayers) {
+      for (const OpaqueMaterial layer : opaqueLayers) {
         OptionalDouble temp = layer.heatCapacity();
         if (temp) { heatCapacity += *temp; }
       }
@@ -531,7 +529,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<double> LayeredConstruction_Impl::interiorVisibleAbsorbtance() const {
+  boost::optional<double> LayeredConstruction_Impl::interiorVisibleAbsorptance() const {
     MaterialVector layers = this->layers();
     if (layers.size() > 0) {
       return layers.back().interiorVisibleAbsorptance();
@@ -539,7 +537,7 @@ namespace detail {
     return boost::none;
   }
 
-  boost::optional<double> LayeredConstruction_Impl::exteriorVisibleAbsorbtance() const {
+  boost::optional<double> LayeredConstruction_Impl::exteriorVisibleAbsorptance() const {
     MaterialVector layers = this->layers();
     if (layers.size() > 0) {
       return layers.front().exteriorVisibleAbsorptance();
@@ -606,7 +604,7 @@ namespace detail {
   void LayeredConstruction_Impl::ensureUniqueLayers()
   {
     // loop through extensible groups
-    BOOST_FOREACH(const IdfExtensibleGroup& idfGroup,extensibleGroups()) {
+    for (const IdfExtensibleGroup& idfGroup : extensibleGroups()) {
       ModelExtensibleGroup group = idfGroup.cast<ModelExtensibleGroup>();
       // get object pointed to by extensible group
       // unit test checks that both layered constructions have extensible groups of size 1
@@ -647,7 +645,7 @@ namespace detail {
         report.insertError(DataError(getObject<LayeredConstruction>(),DataErrorType::DataType));
       }
       // there should be no nullLayers()
-      BOOST_FOREACH(unsigned layerIndex,nullLayers()) {
+      for (unsigned layerIndex : nullLayers()) {
         report.insertError(DataError(iddObject().index(ExtensibleIndex(layerIndex,0)),
                                      getObject<LayeredConstruction>(),
                                      DataErrorType::NullAndRequired));
@@ -699,7 +697,7 @@ LayeredConstruction::LayeredConstruction(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::LayeredConstruction_Impl>());
 }
 
-LayeredConstruction::LayeredConstruction(boost::shared_ptr<detail::LayeredConstruction_Impl> impl)
+LayeredConstruction::LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl)
   : ConstructionBase(impl)
 {}
 
@@ -779,7 +777,7 @@ bool LayeredConstruction::layersAreValid(const std::vector<Material>& materials)
 
   if (materials[0].optionalCast<OpaqueMaterial>()){
     std::vector<OpaqueMaterial> opaqueMaterials;
-    BOOST_FOREACH(const Material& material, materials){
+    for (const Material& material : materials){
       if (!material.optionalCast<OpaqueMaterial>()){
         LOG(Info,"Not all materials can be converted to OpaqueMaterial.");
         return false;
@@ -791,7 +789,7 @@ bool LayeredConstruction::layersAreValid(const std::vector<Material>& materials)
 
   if (materials[0].optionalCast<FenestrationMaterial>()){
     std::vector<FenestrationMaterial> fenestrationMaterials;
-    BOOST_FOREACH(const Material& material, materials){
+    for (const Material& material : materials){
       if (!material.optionalCast<FenestrationMaterial>()){
         LOG(Info,"Not all materials can be converted to FenestrationMaterial.");
         return false;
@@ -858,10 +856,10 @@ bool LayeredConstruction::layersAreValid(const std::vector<FenestrationMaterial>
   bool hasGasLayer = false;
   bool previousWasNonGasLayer = false;
   bool gasLayerEnclosed = true;
-  for (unsigned i = 0, n = fenestrationMaterials.size(); i < n; ++i) {
-    bool isGlazing = fenestrationMaterials[i].optionalCast<Glazing>();
-    bool isSimpleGlazing = fenestrationMaterials[i].optionalCast<SimpleGlazing>();
-    bool isGasLayer = fenestrationMaterials[i].optionalCast<GasLayer>();
+  for (const auto & fenestrationMaterial : fenestrationMaterials) {
+    bool isGlazing = fenestrationMaterial.optionalCast<Glazing>();
+    bool isSimpleGlazing = fenestrationMaterial.optionalCast<SimpleGlazing>();
+    bool isGasLayer = fenestrationMaterial.optionalCast<GasLayer>();
     // Rule 1
     if (isSimpleGlazing) {
       if (hasGlazing) { return false; }

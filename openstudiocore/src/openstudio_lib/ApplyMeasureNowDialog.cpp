@@ -679,18 +679,18 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
   m_dataPointJobContentView->clear();
 
   std::vector<std::string> initialConditions = jobErrors.initialConditions();
-  Q_FOREACH(const std::string& initialCondition, initialConditions){
+  for (const std::string& initialCondition : initialConditions){
     m_dataPointJobContentView->addInitialConditionMessage(initialCondition);
   }
 
   std::vector<std::string> finalConditions = jobErrors.finalConditions();
-  Q_FOREACH(const std::string& finalCondition, finalConditions){
+  for (const std::string& finalCondition : finalConditions){
     m_dataPointJobContentView->addFinalConditionMessage(finalCondition);
   }
 
   std::vector<std::string> errors = jobErrors.errors();
   m_dataPointJobHeaderView->setNumErrors(errors.size());
-  Q_FOREACH(const std::string& errorMessage, errors){
+  for (const std::string& errorMessage : errors){
     m_dataPointJobContentView->addErrorMessage(errorMessage);
   }
 
@@ -713,12 +713,12 @@ void DataPointJobItemView::update(analysis::RubyMeasure & rubyMeasure, BCLMeasur
 
   std::vector<std::string> warnings = jobErrors.warnings();
   m_dataPointJobHeaderView->setNumWarnings(warnings.size());
-  Q_FOREACH(const std::string& warningMessage, warnings){
+  for (const std::string& warningMessage : warnings){
     m_dataPointJobContentView->addWarningMessage(warningMessage);
   }
 
   std::vector<std::string> infos = jobErrors.infos();
-  Q_FOREACH(const std::string& infoMessage, infos){
+  for (const std::string& infoMessage : infos){
     m_dataPointJobContentView->addInfoMessage(infoMessage);
   }
 

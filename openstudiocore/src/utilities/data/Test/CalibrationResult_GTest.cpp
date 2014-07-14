@@ -18,12 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/data/Test/DataFixture.hpp>
+#include "DataFixture.hpp"
 
-#include <utilities/data/CalibrationResult.hpp>
-#include <utilities/time/Date.hpp>
-
-#include <boost/foreach.hpp>
+#include "../CalibrationResult.hpp"
+#include "../../time/Date.hpp"
 
 using namespace openstudio;
 

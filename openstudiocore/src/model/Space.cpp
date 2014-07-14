@@ -17,101 +17,99 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
+#include "Space.hpp"
+#include "Space_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/SpaceType.hpp>
-#include <model/SpaceType_Impl.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/DefaultConstructionSet.hpp>
-#include <model/DefaultConstructionSet_Impl.hpp>
-#include <model/DefaultScheduleSet.hpp>
-#include <model/DefaultScheduleSet_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
-#include <model/BuildingStory.hpp>
-#include <model/BuildingStory_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/InteriorPartitionSurfaceGroup.hpp>
-#include <model/InteriorPartitionSurfaceGroup_Impl.hpp>
-#include <model/InteriorPartitionSurface.hpp>
-#include <model/InteriorPartitionSurface_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/SubSurface.hpp>
-#include <model/SubSurface_Impl.hpp>
-#include <model/ConstructionBase.hpp>
-#include <model/ConstructionBase_Impl.hpp>
-#include <model/InternalMass.hpp>
-#include <model/InternalMass_Impl.hpp>
-#include <model/InternalMassDefinition.hpp>
-#include <model/InternalMassDefinition_Impl.hpp>
-#include <model/People.hpp>
-#include <model/People_Impl.hpp>
-#include <model/PeopleDefinition.hpp>
-#include <model/PeopleDefinition_Impl.hpp>
-#include <model/Lights.hpp>
-#include <model/Lights_Impl.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/LightsDefinition_Impl.hpp>
-#include <model/Luminaire.hpp>
-#include <model/Luminaire_Impl.hpp>
-#include <model/LuminaireDefinition.hpp>
-#include <model/LuminaireDefinition_Impl.hpp>
-#include <model/ElectricEquipment.hpp>
-#include <model/ElectricEquipment_Impl.hpp>
-#include <model/ElectricEquipmentDefinition.hpp>
-#include <model/ElectricEquipmentDefinition_Impl.hpp>
-#include <model/GasEquipment.hpp>
-#include <model/GasEquipment_Impl.hpp>
-#include <model/GasEquipmentDefinition.hpp>
-#include <model/GasEquipmentDefinition_Impl.hpp>
-#include <model/HotWaterEquipment.hpp>
-#include <model/HotWaterEquipment_Impl.hpp>
-#include <model/SteamEquipment.hpp>
-#include <model/SteamEquipment_Impl.hpp>
-#include <model/OtherEquipment.hpp>
-#include <model/OtherEquipment_Impl.hpp>
-#include <model/WaterUseEquipment.hpp>
-#include <model/WaterUseEquipment_Impl.hpp>
-#include <model/DaylightingControl.hpp>
-#include <model/DaylightingControl_Impl.hpp>
-#include <model/IlluminanceMap.hpp>
-#include <model/IlluminanceMap_Impl.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea.hpp>
-#include <model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp>
-#include <model/DesignSpecificationOutdoorAir.hpp>
-#include <model/DesignSpecificationOutdoorAir_Impl.hpp>
-#include <model/GlareSensor.hpp>
-#include <model/GlareSensor_Impl.hpp>
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
+#include "RenderingColor.hpp"
+#include "RenderingColor_Impl.hpp"
+#include "ConstructionBase.hpp"
+#include "ConstructionBase_Impl.hpp"
+#include "DefaultConstructionSet.hpp"
+#include "DefaultConstructionSet_Impl.hpp"
+#include "DefaultScheduleSet.hpp"
+#include "DefaultScheduleSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "ShadingSurfaceGroup.hpp"
+#include "ShadingSurfaceGroup_Impl.hpp"
+#include "ShadingSurface.hpp"
+#include "ShadingSurface_Impl.hpp"
+#include "InteriorPartitionSurfaceGroup.hpp"
+#include "InteriorPartitionSurfaceGroup_Impl.hpp"
+#include "InteriorPartitionSurface.hpp"
+#include "InteriorPartitionSurface_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
+#include "InternalMassDefinition.hpp"
+#include "InternalMassDefinition_Impl.hpp"
+#include "People.hpp"
+#include "People_Impl.hpp"
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
+#include "Lights.hpp"
+#include "Lights_Impl.hpp"
+#include "LightsDefinition.hpp"
+#include "LightsDefinition_Impl.hpp"
+#include "Luminaire.hpp"
+#include "Luminaire_Impl.hpp"
+#include "LuminaireDefinition.hpp"
+#include "LuminaireDefinition_Impl.hpp"
+#include "ElectricEquipment.hpp"
+#include "ElectricEquipment_Impl.hpp"
+#include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentDefinition_Impl.hpp"
+#include "GasEquipment.hpp"
+#include "GasEquipment_Impl.hpp"
+#include "GasEquipmentDefinition.hpp"
+#include "GasEquipmentDefinition_Impl.hpp"
+#include "HotWaterEquipment.hpp"
+#include "HotWaterEquipment_Impl.hpp"
+#include "SteamEquipment.hpp"
+#include "SteamEquipment_Impl.hpp"
+#include "OtherEquipment.hpp"
+#include "OtherEquipment_Impl.hpp"
+#include "WaterUseEquipment.hpp"
+#include "WaterUseEquipment_Impl.hpp"
+#include "DaylightingControl.hpp"
+#include "DaylightingControl_Impl.hpp"
+#include "IlluminanceMap.hpp"
+#include "IlluminanceMap_Impl.hpp"
+#include "SpaceInfiltrationDesignFlowRate.hpp"
+#include "SpaceInfiltrationDesignFlowRate_Impl.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea.hpp"
+#include "SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
+#include "DesignSpecificationOutdoorAir.hpp"
+#include "DesignSpecificationOutdoorAir_Impl.hpp"
+#include "GlareSensor.hpp"
+#include "GlareSensor_Impl.hpp"
 
 
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
-#include <utilities/geometry/EulerAngles.hpp>
-#include <utilities/geometry/BoundingBox.hpp>
+#include "../utilities/geometry/Geometry.hpp"
+#include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
+#include "../utilities/geometry/EulerAngles.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #include <boost/geometry/geometry.hpp>
@@ -296,12 +294,12 @@ namespace detail {
 
     Transformation childTransformation = transformation.inverse() * oldTransformation;
 
-    BOOST_FOREACH(Surface surface, this->surfaces()){
+    for (Surface surface : this->surfaces()){
       bool test = surface.setVertices(childTransformation * surface.vertices());
       if(!test){
         LOG(Error, "Could not transform vertices for Surface '" << surface.name().get() << "'.");
       }
-      BOOST_FOREACH(SubSurface subSurface, surface.subSurfaces()){
+      for (SubSurface subSurface : surface.subSurfaces()){
         test = subSurface.setVertices(childTransformation * subSurface.vertices());
         if(!test){
           LOG(Error, "Could not transform vertices for SubSurface '" << subSurface.name().get() << "'.");
@@ -309,27 +307,27 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(ShadingSurfaceGroup shadingSurfaceGroup, this->shadingSurfaceGroups()){
+    for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()){
       bool test = shadingSurfaceGroup.setTransformation(childTransformation*shadingSurfaceGroup.transformation());
       OS_ASSERT(test);
     }
 
-    BOOST_FOREACH(InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup, this->interiorPartitionSurfaceGroups()){
+    for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()){
       bool test = interiorPartitionSurfaceGroup.setTransformation(childTransformation*interiorPartitionSurfaceGroup.transformation());
       OS_ASSERT(test);
     }
 
-    BOOST_FOREACH(Luminaire luminaire, this->luminaires()){
+    for (Luminaire luminaire : this->luminaires()){
       bool test = luminaire.setTransformation(childTransformation*luminaire.transformation());
       OS_ASSERT(test);
     }
 
-    BOOST_FOREACH(DaylightingControl daylightingControl, this->daylightingControls()){
+    for (DaylightingControl daylightingControl : this->daylightingControls()){
       bool test = daylightingControl.setTransformation(childTransformation*daylightingControl.transformation());
       OS_ASSERT(test);
     }
 
-    BOOST_FOREACH(IlluminanceMap illuminanceMap, this->illuminanceMaps()){
+    for (IlluminanceMap illuminanceMap : this->illuminanceMaps()){
       bool test = illuminanceMap.setTransformation(childTransformation*illuminanceMap.transformation());
       OS_ASSERT(test);
     }
@@ -341,31 +339,31 @@ namespace detail {
   {
     BoundingBox result;
 
-    BOOST_FOREACH(Surface surface, this->surfaces()){
+    for (Surface surface : this->surfaces()){
       result.addPoints(surface.vertices());
     }
 
-    BOOST_FOREACH(ShadingSurfaceGroup shadingSurfaceGroup, this->shadingSurfaceGroups()){
+    for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()){
       result.addPoints(shadingSurfaceGroup.transformation() * shadingSurfaceGroup.boundingBox().corners());
     }
 
-    BOOST_FOREACH(InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup, this->interiorPartitionSurfaceGroups()){
+    for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()){
       result.addPoints(interiorPartitionSurfaceGroup.transformation() * interiorPartitionSurfaceGroup.boundingBox().corners());
     }
 
-    BOOST_FOREACH(Luminaire luminaire, this->luminaires()){
+    for (Luminaire luminaire : this->luminaires()){
       result.addPoint(luminaire.position());
     }
 
-    BOOST_FOREACH(DaylightingControl daylightingControl, this->daylightingControls()){
+    for (DaylightingControl daylightingControl : this->daylightingControls()){
       result.addPoint(daylightingControl.position());
     }
 
-    BOOST_FOREACH(IlluminanceMap illuminanceMap, this->illuminanceMaps()){
+    for (IlluminanceMap illuminanceMap : this->illuminanceMaps()){
       result.addPoints(illuminanceMap.transformation() * illuminanceMap.corners());
     }
 
-    BOOST_FOREACH(GlareSensor glareSensor, this->glareSensors()){
+    for (GlareSensor glareSensor : this->glareSensors()){
       result.addPoint(glareSensor.position());
     }
   
@@ -542,7 +540,7 @@ namespace detail {
     if (defaultConstructionSet){
       result = defaultConstructionSet->getDefaultConstruction(planarSurface);
       if (result){
-        return std::make_pair<ConstructionBase, int>(*result, 1);
+        return std::make_pair(*result, 1);
       }
     }
 
@@ -553,7 +551,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 2);
+          return std::make_pair(*result, 2);
         }
       }
     }
@@ -565,7 +563,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 3);
+          return std::make_pair(*result, 3);
         }
       }
     }
@@ -577,7 +575,7 @@ namespace detail {
       if (defaultConstructionSet){
         result = defaultConstructionSet->getDefaultConstruction(planarSurface);
         if (result){
-          return std::make_pair<ConstructionBase, int>(*result, 4);
+          return std::make_pair(*result, 4);
         }
       }
 
@@ -588,7 +586,7 @@ namespace detail {
         if (defaultConstructionSet){
           result = defaultConstructionSet->getDefaultConstruction(planarSurface);
           if (result){
-            return std::make_pair<ConstructionBase, int>(*result, 5);
+            return std::make_pair(*result, 5);
           }
         }
       }
@@ -871,7 +869,7 @@ namespace detail {
   double Space_Impl::floorArea() const
   {
     double result = 0;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+    for (const Surface& surface : this->surfaces()) {
       if (istringEqual(surface.surfaceType(), "Floor"))
       {
         result += surface.grossArea();
@@ -882,7 +880,7 @@ namespace detail {
 
   double Space_Impl::exteriorArea() const {
     double result = 0;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+    for (const Surface& surface : this->surfaces()) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
       {
         result += surface.grossArea();
@@ -893,7 +891,7 @@ namespace detail {
 
   double Space_Impl::exteriorWallArea() const {
     double result = 0;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+    for (const Surface& surface : this->surfaces()) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors"))
       {
         if (istringEqual(surface.surfaceType(), "Wall"))
@@ -913,14 +911,14 @@ namespace detail {
     int numRoof = 0;
     double floorHeight = 0;
     int numFloor = 0;
-    BOOST_FOREACH(const Surface& surface, this->surfaces()) {
+    for (const Surface& surface : this->surfaces()) {
       if (istringEqual(surface.surfaceType(), "Floor")){
-        BOOST_FOREACH(const Point3d& point, surface.vertices()) {
+        for (const Point3d& point : surface.vertices()) {
           floorHeight += point.z();
           ++numFloor;
         }
       }else if (istringEqual(surface.surfaceType(), "RoofCeiling")){
-        BOOST_FOREACH(const Point3d& point, surface.vertices()) {
+        for (const Point3d& point : surface.vertices()) {
           roofHeight += point.z();
           ++numRoof;
         }
@@ -940,12 +938,12 @@ namespace detail {
     double result = 0.0;
     double area = floorArea();
 
-    BOOST_FOREACH(const People& person, this->people()) {
+    for (const People& person : this->people()) {
       result += person.getNumberOfPeople(area);
     }
 
     if (OptionalSpaceType st = spaceType()){
-      BOOST_FOREACH(const People& person, st->people()) {
+      for (const People& person : st->people()) {
         result += person.getNumberOfPeople(area);
       }
     }
@@ -1004,7 +1002,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyPeople = spaceType->people();
-        BOOST_FOREACH(People& peopleObject,allMyPeople) {
+        for (People& peopleObject : allMyPeople) {
           peopleObject.remove();
         }
       }
@@ -1018,12 +1016,12 @@ namespace detail {
     double result = 0.0;
     double area = floorArea();
 
-    BOOST_FOREACH(const People& person, this->people()) {
+    for (const People& person : this->people()) {
       result += person.getPeoplePerFloorArea(area);
     }
 
     if (OptionalSpaceType st = spaceType()){
-      BOOST_FOREACH(const People& person, st->people()) {
+      for (const People& person : st->people()) {
         result += person.getPeoplePerFloorArea(area);
       }
     }
@@ -1083,7 +1081,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyPeople = spaceType->people();
-        BOOST_FOREACH(People& peopleObject,allMyPeople) {
+        for (People& peopleObject : allMyPeople) {
           peopleObject.remove();
         }
       }
@@ -1148,7 +1146,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyPeople = spaceType->people();
-        BOOST_FOREACH(People& peopleObject,allMyPeople) {
+        for (People& peopleObject : allMyPeople) {
           peopleObject.remove();
         }
       }
@@ -1162,18 +1160,18 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const Lights& light,lights()) {
+    for (const Lights& light : lights()) {
       result += light.getLightingPower(area,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.lightingPower();
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const Lights& light, spaceType->lights()) {
+      for (const Lights& light : spaceType->lights()) {
         result += light.getLightingPower(area,numPeople);
       }
-      BOOST_FOREACH(const Luminaire& luminaire, spaceType->luminaires()) {
+      for (const Luminaire& luminaire : spaceType->luminaires()) {
         result += luminaire.lightingPower();
       }
     }
@@ -1223,7 +1221,7 @@ namespace detail {
     removeAllButOneSpaceLoadInstance<Lights>(allMyLights,*myLights);
     // remove all luminaires from space
     LuminaireVector allMyLuminaires = luminaires();
-    BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+    for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
     
@@ -1237,11 +1235,11 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyLights = spaceType->lights();
-        BOOST_FOREACH(Lights& light, allMyLights) {
+        for (Lights& light : allMyLights) {
           light.remove();
         }
         allMyLuminaires = spaceType->luminaires();
-        BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+        for (Luminaire& luminaire : allMyLuminaires) {
           luminaire.remove();
         }
       }
@@ -1255,18 +1253,18 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const Lights& light,lights()) {
+    for (const Lights& light : lights()) {
       result += light.getPowerPerFloorArea(area,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.getPowerPerFloorArea(area);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const Lights& light, spaceType->lights()) {
+      for (const Lights& light : spaceType->lights()) {
         result += light.getPowerPerFloorArea(area,numPeople);
       }
-      BOOST_FOREACH(const Luminaire& luminaire, spaceType->luminaires()) {
+      for (const Luminaire& luminaire : spaceType->luminaires()) {
         result += luminaire.getPowerPerFloorArea(area);
       }
     }
@@ -1317,7 +1315,7 @@ namespace detail {
     removeAllButOneSpaceLoadInstance<Lights>(allMyLights,*myLights);
     // remove all luminaires from space
     LuminaireVector allMyLuminaires = luminaires();
-    BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+    for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
     
@@ -1331,11 +1329,11 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyLights = spaceType->lights();
-        BOOST_FOREACH(Lights& light, allMyLights) {
+        for (Lights& light : allMyLights) {
           light.remove();
         }
         allMyLuminaires = spaceType->luminaires();
-        BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+        for (Luminaire& luminaire : allMyLuminaires) {
           luminaire.remove();
         }
       }
@@ -1349,18 +1347,18 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const Lights& light,lights()) {
+    for (const Lights& light : lights()) {
       result += light.getPowerPerPerson(area,numPeople);
     }
-    BOOST_FOREACH(const Luminaire& luminaire, luminaires()) {
+    for (const Luminaire& luminaire : luminaires()) {
       result += luminaire.getPowerPerPerson(numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const Lights& light, spaceType->lights()) {
+      for (const Lights& light : spaceType->lights()) {
         result += light.getPowerPerPerson(area,numPeople);
       }
-      BOOST_FOREACH(const Luminaire& luminaire, spaceType->luminaires()) {
+      for (const Luminaire& luminaire : spaceType->luminaires()) {
         result += luminaire.getPowerPerPerson(numPeople);
       }
     }
@@ -1411,7 +1409,7 @@ namespace detail {
     removeAllButOneSpaceLoadInstance<Lights>(allMyLights,*myLights);
     // remove all luminaires from space
     LuminaireVector allMyLuminaires = luminaires();
-    BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+    for (Luminaire& luminaire : allMyLuminaires) {
       luminaire.remove();
     }
     
@@ -1425,11 +1423,11 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyLights = spaceType->lights();
-        BOOST_FOREACH(Lights& light, allMyLights) {
+        for (Lights& light : allMyLights) {
           light.remove();
         }
         allMyLuminaires = spaceType->luminaires();
-        BOOST_FOREACH(Luminaire& luminaire, allMyLuminaires) {
+        for (Luminaire& luminaire : allMyLuminaires) {
           luminaire.remove();
         }
       }
@@ -1443,12 +1441,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getDesignLevel(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const ElectricEquipment& equipment,spaceType->electricEquipment()) {
+      for (const ElectricEquipment& equipment : spaceType->electricEquipment()) {
         result += equipment.getDesignLevel(area,numPeople);
       }
     }
@@ -1510,7 +1508,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->electricEquipment();
-        BOOST_FOREACH(ElectricEquipment& equipment, allMyEquipment) {
+        for (ElectricEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1524,12 +1522,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getPowerPerFloorArea(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const ElectricEquipment& equipment,spaceType->electricEquipment()) {
+      for (const ElectricEquipment& equipment : spaceType->electricEquipment()) {
         result += equipment.getPowerPerFloorArea(area,numPeople);
       }
     }
@@ -1592,7 +1590,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->electricEquipment();
-        BOOST_FOREACH(ElectricEquipment& equipment, allMyEquipment) {
+        for (ElectricEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1606,12 +1604,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const ElectricEquipment& equipment,electricEquipment()) {
+    for (const ElectricEquipment& equipment : electricEquipment()) {
       result += equipment.getPowerPerPerson(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const ElectricEquipment& equipment,spaceType->electricEquipment()) {
+      for (const ElectricEquipment& equipment : spaceType->electricEquipment()) {
         result += equipment.getPowerPerPerson(area,numPeople);
       }
     }
@@ -1674,7 +1672,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->electricEquipment();
-        BOOST_FOREACH(ElectricEquipment& equipment, allMyEquipment) {
+        for (ElectricEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1688,12 +1686,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getDesignLevel(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const GasEquipment& equipment,spaceType->gasEquipment()) {
+      for (const GasEquipment& equipment : spaceType->gasEquipment()) {
         result += equipment.getDesignLevel(area,numPeople);
       }
     }
@@ -1755,7 +1753,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->gasEquipment();
-        BOOST_FOREACH(GasEquipment& equipment, allMyEquipment) {
+        for (GasEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1769,12 +1767,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getPowerPerFloorArea(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const GasEquipment& equipment,spaceType->gasEquipment()) {
+      for (const GasEquipment& equipment : spaceType->gasEquipment()) {
         result += equipment.getPowerPerFloorArea(area,numPeople);
       }
     }
@@ -1837,7 +1835,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->gasEquipment();
-        BOOST_FOREACH(GasEquipment& equipment, allMyEquipment) {
+        for (GasEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1851,12 +1849,12 @@ namespace detail {
     double area = floorArea();
     double numPeople = numberOfPeople();
 
-    BOOST_FOREACH(const GasEquipment& equipment,gasEquipment()) {
+    for (const GasEquipment& equipment : gasEquipment()) {
       result += equipment.getPowerPerPerson(area,numPeople);
     }
 
     if (OptionalSpaceType spaceType = this->spaceType()) {
-      BOOST_FOREACH(const GasEquipment& equipment,spaceType->gasEquipment()) {
+      for (const GasEquipment& equipment : spaceType->gasEquipment()) {
         result += equipment.getPowerPerPerson(area,numPeople);
       }
     }
@@ -1919,7 +1917,7 @@ namespace detail {
           setSpaceType(*spaceType);
         }
         allMyEquipment = spaceType->gasEquipment();
-        BOOST_FOREACH(GasEquipment& equipment, allMyEquipment) {
+        for (GasEquipment& equipment : allMyEquipment) {
           equipment.remove();
         }
       }
@@ -1935,7 +1933,7 @@ namespace detail {
     double exteriorWallArea = this->exteriorWallArea();
     double airVolume = volume();
 
-    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+    for (const SpaceInfiltrationDesignFlowRate& idfr : spaceInfiltrationDesignFlowRates()) {
       result += idfr.getDesignFlowRate(floorArea,
                                        exteriorSurfaceArea,
                                        exteriorWallArea,
@@ -1943,7 +1941,7 @@ namespace detail {
     }
 
     if (OptionalSpaceType st = spaceType()) {
-      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+      for (const SpaceInfiltrationDesignFlowRate& idfr : st->spaceInfiltrationDesignFlowRates()) {
         result += idfr.getDesignFlowRate(floorArea,
                                          exteriorSurfaceArea,
                                          exteriorWallArea,
@@ -1961,7 +1959,7 @@ namespace detail {
     double exteriorWallArea = this->exteriorWallArea();
     double airVolume = volume();
 
-    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+    for (const SpaceInfiltrationDesignFlowRate& idfr : spaceInfiltrationDesignFlowRates()) {
       result += idfr.getFlowPerSpaceFloorArea(floorArea,
                                               exteriorSurfaceArea,
                                               exteriorWallArea,
@@ -1969,7 +1967,7 @@ namespace detail {
     }
 
     if (OptionalSpaceType st = spaceType()) {
-      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+      for (const SpaceInfiltrationDesignFlowRate& idfr : st->spaceInfiltrationDesignFlowRates()) {
         result += idfr.getFlowPerSpaceFloorArea(floorArea,
                                                 exteriorSurfaceArea,
                                                 exteriorWallArea,
@@ -1987,7 +1985,7 @@ namespace detail {
     double exteriorWallArea = this->exteriorWallArea();
     double airVolume = volume();
 
-    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+    for (const SpaceInfiltrationDesignFlowRate& idfr : spaceInfiltrationDesignFlowRates()) {
       result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
                                                    exteriorSurfaceArea,
                                                    exteriorWallArea,
@@ -1995,7 +1993,7 @@ namespace detail {
     }
 
     if (OptionalSpaceType st = spaceType()) {
-      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+      for (const SpaceInfiltrationDesignFlowRate& idfr : st->spaceInfiltrationDesignFlowRates()) {
         result += idfr.getFlowPerExteriorSurfaceArea(floorArea,
                                                      exteriorSurfaceArea,
                                                      exteriorWallArea,
@@ -2013,7 +2011,7 @@ namespace detail {
     double exteriorWallArea = this->exteriorWallArea();
     double airVolume = volume();
 
-    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+    for (const SpaceInfiltrationDesignFlowRate& idfr : spaceInfiltrationDesignFlowRates()) {
       result += idfr.getFlowPerExteriorWallArea(floorArea,
                                                 exteriorSurfaceArea,
                                                 exteriorWallArea,
@@ -2021,7 +2019,7 @@ namespace detail {
     }
 
     if (OptionalSpaceType st = spaceType()) {
-      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+      for (const SpaceInfiltrationDesignFlowRate& idfr : st->spaceInfiltrationDesignFlowRates()) {
         result += idfr.getFlowPerExteriorWallArea(floorArea,
                                                   exteriorSurfaceArea,
                                                   exteriorWallArea,
@@ -2039,7 +2037,7 @@ namespace detail {
     double exteriorWallArea = this->exteriorWallArea();
     double airVolume = volume();
 
-    BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,spaceInfiltrationDesignFlowRates()) {
+    for (const SpaceInfiltrationDesignFlowRate& idfr : spaceInfiltrationDesignFlowRates()) {
       result += idfr.getAirChangesPerHour(floorArea,
                                           exteriorSurfaceArea,
                                           exteriorWallArea,
@@ -2047,7 +2045,7 @@ namespace detail {
     }
 
     if (OptionalSpaceType st = spaceType()) {
-      BOOST_FOREACH(const SpaceInfiltrationDesignFlowRate& idfr,st->spaceInfiltrationDesignFlowRates()) {
+      for (const SpaceInfiltrationDesignFlowRate& idfr : st->spaceInfiltrationDesignFlowRates()) {
         result += idfr.getAirChangesPerHour(floorArea,
                                             exteriorSurfaceArea,
                                             exteriorWallArea,
@@ -2073,7 +2071,7 @@ namespace detail {
       spaceType->hardApplySpaceLoadSchedules();
 
       // Move space loads from space type to space if there is a space type
-      BOOST_FOREACH(ModelObject child, spaceType->children()){
+      for (ModelObject child : spaceType->children()){
         if (child.optionalCast<SpaceLoad>()){
           bool test = child.cast<SpaceLoad>().setSpace(space);
           OS_ASSERT(test);
@@ -2104,7 +2102,7 @@ namespace detail {
 
     // If hard sizing loads, make each space load refer to unique definition and hard size it
     if (hardSizeLoads){
-      BOOST_FOREACH(ModelObject child, this->children()){
+      for (ModelObject child : this->children()){
         if (child.optionalCast<SpaceLoad>()){
           child.cast<SpaceLoad>().hardSize();
         }
@@ -2119,7 +2117,7 @@ namespace detail {
 
   void Space_Impl::hardApplySpaceLoadSchedules()
   {
-    BOOST_FOREACH(ModelObject child, this->children()){
+    for (ModelObject child : this->children()){
       if (child.optionalCast<SpaceLoad>()){
         child.cast<SpaceLoad>().hardApplySchedules();
       }
@@ -2128,8 +2126,8 @@ namespace detail {
 
   void Space_Impl::hardApplyConstructions() {
 
-    BOOST_FOREACH(ShadingSurfaceGroup shadingSurfaceGroup, this->shadingSurfaceGroups()){
-      BOOST_FOREACH(ShadingSurface shadingSurface, shadingSurfaceGroup.shadingSurfaces()){
+    for (ShadingSurfaceGroup shadingSurfaceGroup : this->shadingSurfaceGroups()){
+      for (ShadingSurface shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
         boost::optional<ConstructionBase> construction = shadingSurface.construction();
         if (construction){
           shadingSurface.setConstruction(*construction);
@@ -2137,8 +2135,8 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup, this->interiorPartitionSurfaceGroups()){
-      BOOST_FOREACH(InteriorPartitionSurface interiorPartitionSurface, interiorPartitionSurfaceGroup.interiorPartitionSurfaces()){
+    for (InteriorPartitionSurfaceGroup interiorPartitionSurfaceGroup : this->interiorPartitionSurfaceGroups()){
+      for (InteriorPartitionSurface interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()){
         boost::optional<ConstructionBase> construction = interiorPartitionSurface.construction();
         if (construction){
           interiorPartitionSurface.setConstruction(*construction);
@@ -2146,7 +2144,7 @@ namespace detail {
       }
     }
 
-    BOOST_FOREACH(Surface surface, this->surfaces()){
+    for (Surface surface : this->surfaces()){
       boost::optional<ConstructionBase> construction = surface.construction();
       if (construction){
         surface.setConstruction(*construction);
@@ -2160,7 +2158,7 @@ namespace detail {
         }
       }
 
-      BOOST_FOREACH(SubSurface subSurface, surface.subSurfaces()){
+      for (SubSurface subSurface : surface.subSurfaces()){
         boost::optional<ConstructionBase> construction = subSurface.construction();
         if (construction){
           subSurface.setConstruction(*construction);
@@ -2179,14 +2177,14 @@ namespace detail {
 
   void Space_Impl::unmatchSurfaces()
   {
-    BOOST_FOREACH(Surface surface, this->surfaces()){
+    for (Surface surface : this->surfaces()){
       boost::optional<Surface> adjacentSurface = surface.adjacentSurface();
       if (adjacentSurface){
         surface.resetAdjacentSurface();
         adjacentSurface->resetAdjacentSurface();
       }
 
-      BOOST_FOREACH(SubSurface subSurface, surface.subSurfaces()){
+      for (SubSurface subSurface : surface.subSurfaces()){
         boost::optional<SubSurface> adjacentSubSurface = subSurface.adjacentSubSurface();
         if (adjacentSubSurface){
           subSurface.resetAdjacentSubSurface();
@@ -2207,7 +2205,7 @@ namespace detail {
     // transform from other to this coordinates
     Transformation transformation = this->transformation().inverse()*other.transformation();
 
-    BOOST_FOREACH(Surface surface, this->surfaces()){
+    for (Surface surface : this->surfaces()){
 
       std::vector<Point3d> vertices = surface.vertices();
 
@@ -2216,7 +2214,7 @@ namespace detail {
         continue;
       }
 
-      BOOST_FOREACH(Surface otherSurface, other.surfaces()){
+      for (Surface otherSurface : other.surfaces()){
 
         std::vector<Point3d> otherVertices = transformation*otherSurface.vertices();
 
@@ -2240,11 +2238,11 @@ namespace detail {
           otherSurface.setAdjacentSurface(surface);
 
           // once surfaces are matched, check subsurfaces
-          BOOST_FOREACH(SubSurface subSurface, surface.subSurfaces()){
+          for (SubSurface subSurface : surface.subSurfaces()){
 
             vertices = subSurface.vertices();
 
-            BOOST_FOREACH(SubSurface otherSubSurface, otherSurface.subSurfaces()){
+            for (SubSurface otherSubSurface : otherSurface.subSurfaces()){
 
               otherVertices = transformation*otherSubSurface.vertices();
               std::reverse(otherVertices.begin(), otherVertices.end());
@@ -2282,7 +2280,7 @@ namespace detail {
       std::vector<Surface> newSurfaces;
       std::vector<Surface> newOtherSurfaces;
 
-      BOOST_FOREACH(Surface surface, surfaces){
+      for (Surface surface : surfaces){
         std::string surfaceHandle = toString(surface.handle());
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
@@ -2293,7 +2291,7 @@ namespace detail {
           continue;
         }
 
-        BOOST_FOREACH(Surface otherSurface, otherSurfaces){
+        for (Surface otherSurface : otherSurfaces){
           std::string otherSurfaceHandle = toString(otherSurface.handle());
           if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()){
             hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
@@ -2346,13 +2344,13 @@ namespace detail {
     std::vector<Surface> result;
     std::vector<PlanarSurface> planarSurfaces;
 
-    BOOST_FOREACH(const Surface& surface, this->surfaces()){
+    for (const Surface& surface : this->surfaces()){
       planarSurfaces.push_back(surface);
     }
 
     planarSurfaces = PlanarSurface::findPlanarSurfaces(planarSurfaces, minDegreesFromNorth, maxDegreesFromNorth, minDegreesTilt, maxDegreesTilt, tol);
 
-    BOOST_FOREACH(const PlanarSurface& planarSurface, planarSurfaces){
+    for (const PlanarSurface& planarSurface : planarSurfaces){
       result.push_back(planarSurface.cast<Surface>());
     }
 
@@ -2668,14 +2666,13 @@ namespace detail {
                                                     const T& instanceToKeep) 
   {
     int count(0);
-    for (typename std::vector<T>::iterator it = instances.begin(), itEnd = instances.end();
-         it != itEnd; ++it)
+    for (auto & instance : instances)
     {
-      if (*it == instanceToKeep) {
+      if (instance == instanceToKeep) {
         ++count;
         continue;
       }
-      it->remove();
+      instance.remove();
     }
     OS_ASSERT(count == 1);
   }
@@ -2691,14 +2688,14 @@ namespace detail {
     // find all floors
     boost::optional<double> z;
     std::vector<Surface> floors;
-    BOOST_FOREACH(const Surface& surface, surfaces){
+    for (const Surface& surface : surfaces){
       if (surface.vertices().size() < 3){
         LOG(Warn, "Skipping floor with fewer than 3 vertices");
         continue;
       }
       if (istringEqual("Floor", surface.surfaceType())){
         floors.push_back(surface);
-        BOOST_FOREACH(const Point3d& point, surface.vertices()){
+        for (const Point3d& point : surface.vertices()){
           if (!z){
             z = point.z();
           }else if (std::abs(z.get()-point.z()) > tol){
@@ -2720,14 +2717,14 @@ namespace detail {
       // just return this floors vertices
       result = floors[0].vertices();
 
-      // remove colinear points
-      result = removeColinear(result);
+      // remove collinear points
+      result = removeCollinear(result);
 
       // reorder the points 
       result = reorderULC(result);
       
-      // remove additional colinear points that occur after reordering
-      result = removeColinear(result);
+      // remove additional collinear points that occur after reordering
+      result = removeCollinear(result);
 
     }else{
 
@@ -2741,10 +2738,10 @@ namespace detail {
       BoostMultiPolygon boostResult;
 
       try{
-        BOOST_FOREACH(const Surface& floor, floors){
+        for (const Surface& floor : floors){
           BoostPolygon boostPolygon;
           std::vector<Point3d> vertices = floor.vertices();
-          BOOST_FOREACH(const Point3d& point, vertices){
+          for (const Point3d& point : vertices){
             boost::geometry::append(boostPolygon, point3dToTuple(point, allPoints, tol));
           }
           boost::geometry::append(boostPolygon, point3dToTuple(vertices[0], allPoints, tol));
@@ -2762,39 +2759,42 @@ namespace detail {
         return std::vector<Point3d>();
       }
 
-      BOOST_FOREACH(const BoostPoint& boostPoint, boostResult[0].outer()){
+      for (const BoostPoint& boostPoint : boostResult[0].outer()){
         Point3d point(boostPoint.x(), boostPoint.y(), *z);
         result.push_back(point);
       }
       result.pop_back();
 
-      // remove colinear points
-      result = removeColinear(result);
+      // remove collinear points
+      result = removeCollinear(result);
 
       // reorder the points 
       result = reorderULC(result);
       
-      // remove additional colinear points that occur after reordering
-      result = removeColinear(result);
+      // remove additional collinear points that occur after reordering
+      result = removeCollinear(result);
 
       Point3d lastOuterVertex = result.back();
 
-      BOOST_FOREACH(const BoostRing& boostInner, boostResult[0].inners()){
+      for (const BoostRing& boostInner : boostResult[0].inners()){
 
         std::vector<Point3d> innerLoop;
-        BOOST_REVERSE_FOREACH(const BoostPoint& boostPoint, boostInner){
-          Point3d point(boostPoint.x(), boostPoint.y(), *z);
+        for (auto boostPoint = boostInner.rbegin();
+             boostPoint != boostInner.rend();
+             ++boostPoint)
+        {
+          Point3d point(boostPoint->x(), boostPoint->y(), *z);
           innerLoop.push_back(point);
         }
 
-        // remove colinear points
-        innerLoop = removeColinear(innerLoop);
+        // remove collinear points
+        innerLoop = removeCollinear(innerLoop);
 
         // reorder the points 
         innerLoop = reorderULC(innerLoop);
         
-        // remove additional colinear points that occur after reordering
-        innerLoop = removeColinear(innerLoop);
+        // remove additional collinear points that occur after reordering
+        innerLoop = removeCollinear(innerLoop);
 
         // reverse the inner loop
         std::reverse(innerLoop.begin(), innerLoop.end());
@@ -2810,14 +2810,14 @@ namespace detail {
       }
     }
 
-    // remove colinear points
-    result = removeColinear(result);
+    // remove collinear points
+    result = removeCollinear(result);
 
     // reorder the points 
     result = reorderULC(result);
     
-    // remove additional colinear points that occur after reordering
-    result = removeColinear(result);
+    // remove additional collinear points that occur after reordering
+    result = removeCollinear(result);
 
     return result;
   }
@@ -2839,7 +2839,7 @@ namespace detail {
     //return boost::make_tuple(point3d.x(), point3d.y());
 
     // detailed method, try to combine points within tolerance
-    BOOST_FOREACH(const Point3d& otherPoint, allPoints){
+    for (const Point3d& otherPoint : allPoints){
       if (std::sqrt(std::pow(point3d.x()-otherPoint.x(), 2) + std::pow(point3d.y()-otherPoint.y(), 2)) < tol){
         return boost::make_tuple(otherPoint.x(), otherPoint.y());
       }
@@ -2878,8 +2878,8 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   double z = floorPrint[0].z();
   double tol = 0.000001;
-  BOOST_FOREACH(const Point3d& point, floorPrint){
-    if (abs(point.z()-z) > tol){
+  for (const Point3d& point : floorPrint){
+    if (std::abs(point.z()-z) > tol){
       LOG(Error, "Inconsistent z height in floorPrint.");
       return boost::none;
     }
@@ -2901,8 +2901,8 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   // create the floor
   std::vector<Point3d> points;
-  for (std::vector<Point3d>::const_iterator it = floorPrint.begin(), itend = floorPrint.end(); it != itend; ++it){
-    points.push_back(Point3d(it->x(), it->y(), z));
+  for (const auto & elem : floorPrint){
+    points.push_back(Point3d(elem.x(), elem.y(), z));
   }
   Surface floor(points, model);
   floor.setSpace(space);
@@ -2921,7 +2921,7 @@ boost::optional<Space> Space::fromFloorPrint(const std::vector<Point3d>& floorPr
 
   // create the roofCeiling
   points.clear();
-  for (std::vector<Point3d>::const_reverse_iterator rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
+  for (auto  rit = floorPrint.rbegin(), ritend = floorPrint.rend(); rit != ritend; ++rit){
     points.push_back(Point3d(rit->x(), rit->y(), z + floorHeight));
   }
   Surface roofCeiling(points, model);
@@ -3372,7 +3372,7 @@ bool Space::isPlenum() const
 }
 
 /// @cond
-Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
+Space::Space(std::shared_ptr<detail::Space_Impl> impl)
   : PlanarSurfaceGroup(impl)
 {}
 /// @endcond
@@ -3380,7 +3380,7 @@ Space::Space(boost::shared_ptr<detail::Space_Impl> impl)
 void intersectSurfaces(std::vector<Space>& spaces)
 {
   std::vector<BoundingBox> bounds;
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());
   }
 
@@ -3397,7 +3397,7 @@ void intersectSurfaces(std::vector<Space>& spaces)
 void matchSurfaces(std::vector<Space>& spaces)
 {
   std::vector<BoundingBox> bounds;
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());
   }
 
@@ -3413,7 +3413,7 @@ void matchSurfaces(std::vector<Space>& spaces)
 
 void unmatchSurfaces(std::vector<Space>& spaces)
 {
-  BOOST_FOREACH(Space& space, spaces){
+  for (Space& space : spaces){
     space.unmatchSurfaces();
   }
 }
@@ -3454,14 +3454,14 @@ std::vector<std::vector<Point3d> > generateSkylightPattern(const std::vector<Spa
   double xmax = std::numeric_limits<double>::min();
   double ymin = std::numeric_limits<double>::max();
   double ymax = std::numeric_limits<double>::min();
-  BOOST_FOREACH(const Space& space, spaces){
+  for (const Space& space : spaces){
     Transformation spaceToBuildingTransformation = space.buildingTransformation();
     Transformation transformation = buildingToGridTransformation*spaceToBuildingTransformation;
-    BOOST_FOREACH(const Surface& surface, space.surfaces()){
+    for (const Surface& surface : space.surfaces()){
       if (istringEqual("RoofCeiling", surface.surfaceType()) &&
           istringEqual("Outdoors", surface.outsideBoundaryCondition())){
         std::vector<Point3d> vertices = transformation*surface.vertices();
-        BOOST_FOREACH(const Point3d& vertex, vertices){
+        for (const Point3d& vertex : vertices){
           xmin = std::min(xmin, vertex.x());
           xmax = std::max(xmax, vertex.x());
           ymin = std::min(ymin, vertex.y());

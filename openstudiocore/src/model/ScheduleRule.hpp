@@ -20,8 +20,8 @@
 #ifndef MODEL_SCHEDULERULE_HPP
 #define MODEL_SCHEDULERULE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ParentObject.hpp>
+#include "ModelAPI.hpp"
+#include "ParentObject.hpp"
 
 namespace openstudio {
 
@@ -152,7 +152,7 @@ class MODEL_API ScheduleRule : public ParentObject {
   /// @cond
   typedef detail::ScheduleRule_Impl ImplType;
 
-  explicit ScheduleRule(boost::shared_ptr<detail::ScheduleRule_Impl> impl);
+  explicit ScheduleRule(std::shared_ptr<detail::ScheduleRule_Impl> impl);
 
   friend class detail::ScheduleRule_Impl;
   friend class Model;

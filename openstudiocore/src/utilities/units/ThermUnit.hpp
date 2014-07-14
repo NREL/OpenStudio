@@ -20,8 +20,8 @@
 #ifndef UTILITIES_UNITS_THERMUNIT_HPP
 #define UTILITIES_UNITS_THERMUNIT_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Unit.hpp"
 
 namespace openstudio {
 namespace detail {
@@ -34,7 +34,7 @@ namespace detail {
 struct UTILITIES_API ThermExpnt {
  public:
   ThermExpnt(int therm=0,
-             int in=0,
+             int t_in=0,
              int yr=0,
              int R=0,
              int A=0,
@@ -45,7 +45,7 @@ struct UTILITIES_API ThermExpnt {
              int people=0,
              int cycle=0)
   : m_therm(therm),
-    m_in(in),
+    m_in(t_in),
     m_yr(yr),
     m_R(R),
     m_A(A),
@@ -109,7 +109,7 @@ class UTILITIES_API ThermUnit : public Unit {
   /// @cond
   typedef detail::ThermUnit_Impl ImplType;
 
-  explicit ThermUnit(boost::shared_ptr<detail::ThermUnit_Impl> impl);
+  explicit ThermUnit(std::shared_ptr<detail::ThermUnit_Impl> impl);
 
   friend class Unit;
   friend class detail::ThermUnit_Impl;

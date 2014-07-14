@@ -19,13 +19,11 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate.hpp>
-#include <model/SpaceInfiltrationDesignFlowRate_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "ModelFixture.hpp"
+#include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../SpaceInfiltrationDesignFlowRate.hpp"
+#include "../SpaceInfiltrationDesignFlowRate_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

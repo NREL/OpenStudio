@@ -17,14 +17,14 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/BCLComponentItem.hpp>
+#include "BCLComponentItem.hpp"
 
-#include <openstudio_lib/OSItem.hpp>
+#include "OSItem.hpp"
 
-#include <shared_gui_components/MeasureBadge.hpp>
+#include "../shared_gui_components/MeasureBadge.hpp"
 
-#include <utilities/bcl/BCLComponent.hpp>
-#include <utilities/bcl/LocalBCL.hpp>
+#include "../utilities/bcl/BCLComponent.hpp"
+#include "../utilities/bcl/LocalBCL.hpp"
 
 #include <QLabel>
 

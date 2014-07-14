@@ -20,8 +20,8 @@
 #ifndef MODEL_SPACEITEM_HPP
 #define MODEL_SPACEITEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -65,7 +65,7 @@ class MODEL_API SpaceItem : public ModelObject {
   friend class openstudio::IdfObject;
   friend class detail::SpaceItem_Impl;
 
-  explicit SpaceItem(boost::shared_ptr<detail::SpaceItem_Impl> impl);
+  explicit SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl);
 
  private:
 

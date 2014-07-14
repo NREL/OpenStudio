@@ -17,31 +17,31 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
-#include <model/ShadingSurface.hpp>
-#include <model/ShadingSurface_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/ShadingSurfaceGroup_Impl.hpp>
-#include <model/Space.hpp>
-#include <model/Space_Impl.hpp>
-#include <model/Surface.hpp>
-#include <model/Surface_Impl.hpp>
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Schedule.hpp>
-#include <model/Schedule_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/StandardOpaqueMaterial.hpp>
-#include <model/StandardOpaqueMaterial_Impl.hpp>
-#include <model/MasslessOpaqueMaterial.hpp>
-#include <model/MasslessOpaqueMaterial_Impl.hpp>
+#include "../../model/Model.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/ShadingSurfaceGroup_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/MasslessOpaqueMaterial.hpp"
+#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/geometry/Transformation.hpp>
-#include <utilities/geometry/Geometry.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/geometry/Transformation.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
 
 #include <utilities/idd/Shading_Site_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Shading_Building_Detailed_FieldEnums.hxx>
@@ -51,7 +51,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -87,11 +87,11 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
         double minDistance = std::numeric_limits<double>::max();
 
         // at this point zone has one space and internal surfaces have already been combined
-        BOOST_FOREACH(const Surface& surface, space->surfaces()){
+        for (const Surface& surface : space->surfaces()){
           if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")){
             Point3dVector surfaceVertices = surface.vertices();
-            BOOST_FOREACH(const Point3d& point, points){
-              BOOST_FOREACH(const Point3d& surfaceVertex, surfaceVertices){
+            for (const Point3d& point : points){
+              for (const Point3d& surfaceVertex : surfaceVertices){
                 double distance = getDistance(point, surfaceVertex);
                 if (distance < minDistance){
                   baseSurface = surface;
@@ -151,7 +151,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::Sh
 
   idfObject->clearExtensibleGroups();
 
-  BOOST_FOREACH(const Point3d& point, points){
+  for (const Point3d& point : points){
     IdfExtensibleGroup group = idfObject->pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 3);
     group.setDouble(0, point.x());

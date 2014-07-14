@@ -20,8 +20,8 @@
 #ifndef MODEL_SIZINGSYSTEM_HPP
 #define MODEL_SIZINGSYSTEM_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -194,7 +194,7 @@ class MODEL_API SizingSystem : public ModelObject
 
   typedef detail::SizingSystem_Impl ImplType;
 
-  explicit SizingSystem(boost::shared_ptr<detail::SizingSystem_Impl> impl);
+  explicit SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl);
 
   friend class detail::SizingSystem_Impl;
   friend class Model;

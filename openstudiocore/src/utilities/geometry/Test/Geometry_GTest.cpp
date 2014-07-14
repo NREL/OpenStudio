@@ -18,11 +18,11 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/geometry/Test/GeometryFixture.hpp>
+#include "GeometryFixture.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
-#include <utilities/geometry/Point3d.hpp>
-#include <utilities/geometry/Vector3d.hpp>
+#include "../Geometry.hpp"
+#include "../Point3d.hpp"
+#include "../Vector3d.hpp"
 
 using namespace std;
 using namespace boost;
@@ -75,7 +75,7 @@ TEST_F(GeometryFixture, Newall_Vector)
   EXPECT_EQ(1, normal->z());
   EXPECT_EQ(1, normal->length());
 
-  // u shape (concave) with 5 unit area, includes colinear points
+  // u shape (concave) with 5 unit area, includes collinear points
   points.clear();
   points.push_back(Point3d(0, 0, 2));
   points.push_back(Point3d(0, 0, 1));
@@ -104,7 +104,7 @@ TEST_F(GeometryFixture, Newall_Vector)
   EXPECT_EQ(0, normal->z());
   EXPECT_EQ(1, normal->length());
 
-  // u shape (concave) with 5 unit area, does not includes colinear points
+  // u shape (concave) with 5 unit area, does not includes collinear points
   points.clear();
   points.push_back(Point3d(0, 0, 2));
   points.push_back(Point3d(0, 0, 0));
@@ -487,14 +487,14 @@ TEST_F(GeometryFixture, ReorderULC2)
   EXPECT_EQ(points1[2], points2[3]);
 }
 
-TEST_F(GeometryFixture, RemoveColinear)
+TEST_F(GeometryFixture, RemoveCollinear)
 {
   Point3dVector points;
   points.push_back(Point3d(0,0,0));
   points.push_back(Point3d(0,0,0));
   points.push_back(Point3d(0,0,0));
 
-  Point3dVector testPoints = removeColinear(points);
+  Point3dVector testPoints = removeCollinear(points);
   ASSERT_EQ(1u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
 
@@ -503,7 +503,7 @@ TEST_F(GeometryFixture, RemoveColinear)
   points.push_back(Point3d(1,0,0));
   points.push_back(Point3d(2,0,0));
 
-  testPoints = removeColinear(points);
+  testPoints = removeCollinear(points);
   ASSERT_EQ(2u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));
@@ -518,7 +518,7 @@ TEST_F(GeometryFixture, RemoveColinear)
   points.push_back(Point3d(0,2,0));
   points.push_back(Point3d(0,1,0));
 
-  testPoints = removeColinear(points);
+  testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));
@@ -531,7 +531,7 @@ TEST_F(GeometryFixture, RemoveColinear)
   points.push_back(Point3d(2,2,0));
   points.push_back(Point3d(0,2,0));
 
-  testPoints = removeColinear(points);
+  testPoints = removeCollinear(points);
   ASSERT_EQ(4u, testPoints.size());
   EXPECT_TRUE(pointEqual(Point3d(0,0,0), testPoints[0]));
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[1]));

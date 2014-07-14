@@ -1,31 +1,27 @@
-/****************************************************************************
-**
-** Copyright (C) 2007 Trolltech ASA. All rights reserved.
-**
-** This file is part of the Qt Concurrent project on Trolltech Labs.
-**
-** This file may be used under the terms of the GNU General Public
-** License version 2.0 as published by the Free Software Foundation
-** and appearing in the file LICENSE.GPL included in the packaging of
-** this file.  Please review the following information to ensure GNU
-** General Public Licensing requirements will be met:
-** http://www.trolltech.com/products/qt/opensource.html
-**
-** If you are unsure which license is appropriate for your use, please
-** review the following information:
-** http://www.trolltech.com/products/qt/licensing.html or contact the
-** sales department at sales@trolltech.com.
-**
-** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
-** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
-**
-****************************************************************************/
+/**********************************************************************
+ *  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+ *  All rights reserved.
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ **********************************************************************/
 
-#include <QtGui/QtGui>
+#include <QtGui>
 
 #include "modeltest.h"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 Q_DECLARE_METATYPE(QModelIndex)
 
@@ -396,27 +392,27 @@ void ModelTest::data()
     // General Purpose roles that should return a QString
     QVariant variant = model->data(model->index(0, 0), Qt::ToolTipRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
     variant = model->data(model->index(0, 0), Qt::StatusTipRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
     variant = model->data(model->index(0, 0), Qt::WhatsThisRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QString>(variant));
+        OS_ASSERT(variant.canConvert<QString>());
     }
 
     // General Purpose roles that should return a QSize
     variant = model->data(model->index(0, 0), Qt::SizeHintRole);
     if (variant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QSize>(variant));
+        OS_ASSERT(variant.canConvert<QSize>());
     }
 
     // General Purpose roles that should return a QFont
     QVariant fontVariant = model->data(model->index(0, 0), Qt::FontRole);
     if (fontVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QFont>(fontVariant));
+        OS_ASSERT(fontVariant.canConvert<QFont>());
     }
 
     // Check that the alignment is one we know about
@@ -439,12 +435,12 @@ void ModelTest::data()
     // General Purpose roles that should return a QColor
     QVariant colorVariant = model->data(model->index(0, 0), Qt::BackgroundColorRole);
     if (colorVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QColor>(colorVariant));
+        OS_ASSERT(colorVariant.canConvert<QColor>());
     }
 
     colorVariant = model->data(model->index(0, 0), Qt::TextColorRole);
     if (colorVariant.isValid()) {
-        OS_ASSERT(qVariantCanConvert<QColor>(colorVariant));
+        OS_ASSERT(colorVariant.canConvert<QColor>());
     }
 
     // Check that the "check state" is one we know about.

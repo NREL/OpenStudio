@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef COSTLINEITEM_H
-#define COSTLINEITEM_H
+#ifndef UTILITIES_ECONOMICS_COSTLINEITEM_HPP
+#define UTILITIES_ECONOMICS_COSTLINEITEM_HPP
 
 #include <string>
 #include <vector>
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 namespace openstudio{
 
@@ -69,4 +69,4 @@ private:
 
 }
 
-#endif // COSTLINEITEM_H
+#endif // UTILITIES_ECONOMICS_COSTLINEITEM_HPP

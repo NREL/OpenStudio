@@ -17,19 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/GasMixture.hpp>
-#include <model/GasMixture_Impl.hpp>
+#include "GasMixture.hpp"
+#include "GasMixture_Impl.hpp"
 
-#include <utilities/idf/ValidityReport.hpp>
+#include "../utilities/idf/ValidityReport.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WindowMaterial_GasMixture_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/units/Unit.hpp>
+#include "../utilities/units/Unit.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 #include <math.h>
 
 namespace openstudio {
@@ -1032,7 +1032,7 @@ void GasMixture::resetGas4Fraction() {
 }
 
 /// @cond
-GasMixture::GasMixture(boost::shared_ptr<detail::GasMixture_Impl> impl)
+GasMixture::GasMixture(std::shared_ptr<detail::GasMixture_Impl> impl)
   : GasLayer(impl)
 {}
 /// @endcond

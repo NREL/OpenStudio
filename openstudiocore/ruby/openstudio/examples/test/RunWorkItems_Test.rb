@@ -21,9 +21,9 @@ require 'openstudio'
 require 'openstudio/energyplus/find_energyplus'
 require 'fileutils'
 
-require 'test/unit'
+require 'minitest/autorun'
 
-class RunWorkItems_Test < Test::Unit::TestCase
+class RunWorkItems_Test < MiniTest::Unit::TestCase
 
   # def setup
   # end

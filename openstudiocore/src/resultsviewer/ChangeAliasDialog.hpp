@@ -17,8 +17,8 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef  RESULTSVIEWER_CHANGEALIASDIALOG_H
-#define  RESULTSVIEWER_CHANGEALIASDIALOG_H
+#ifndef RESULTSVIEWER_CHANGEALIASDIALOG_HPP
+#define RESULTSVIEWER_CHANGEALIASDIALOG_HPP
 
 #include <QDialog>
 #include <QLabel>
@@ -34,7 +34,7 @@ class ChangeAliasDialog : public QDialog
 {
   Q_OBJECT
 public:
-  ChangeAliasDialog(const QString& oldAlias, const QString& filename, QWidget* parent=0);
+  ChangeAliasDialog(const QString& oldAlias, const QString& filename, QWidget* parent=nullptr);
   const QString& newAlias() {return m_newAlias;}
 
 private slots:
@@ -49,4 +49,4 @@ private:
 
 }; // resultsviewer namespace
 
-#endif // RESULTSVIEWER_CHANGEALIASDIALOG_H
+#endif // RESULTSVIEWER_CHANGEALIASDIALOG_HPP

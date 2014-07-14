@@ -20,8 +20,8 @@
 #ifndef MODEL_LIGHTINGSIMULATIONZONE_HPP
 #define MODEL_LIGHTINGSIMULATIONZONE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -89,7 +89,7 @@ class MODEL_API LightingSimulationZone : public ModelObject {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit LightingSimulationZone(boost::shared_ptr<detail::LightingSimulationZone_Impl> impl);
+  explicit LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl);
 
   /// @endcond
  private:

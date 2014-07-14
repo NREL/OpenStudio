@@ -20,8 +20,8 @@
 #ifndef PROJECT_SEQUENTIALSEARCHRECORD_IMPL_HPP
 #define PROJECT_SEQUENTIALSEARCHRECORD_IMPL_HPP
 
-#include <project/ProjectAPI.hpp>
-#include <project/OpenStudioAlgorithmRecord_Impl.hpp>
+#include "ProjectAPI.hpp"
+#include "OpenStudioAlgorithmRecord_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -57,7 +57,7 @@ namespace detail {
     virtual std::vector<JoinRecord> joinRecords() const;
 
     /** Save the row that corresponds to this record in projectDatabase. */
-    virtual void saveRow(const boost::shared_ptr<QSqlDatabase> &database);
+    virtual void saveRow(const std::shared_ptr<QSqlDatabase> &database);
 
     virtual analysis::Algorithm algorithm() const;
 

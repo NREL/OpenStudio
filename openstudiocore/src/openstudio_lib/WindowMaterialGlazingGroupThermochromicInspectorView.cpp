@@ -17,15 +17,15 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/WindowMaterialGlazingGroupThermochromicInspectorView.hpp>
+#include "WindowMaterialGlazingGroupThermochromicInspectorView.hpp"
 
 #include "../shared_gui_components/OSLineEdit.hpp"
 #include "../shared_gui_components/OSQuantityEdit.hpp"
 
-#include <model/ThermochromicGlazing.hpp>
-#include <model/ThermochromicGlazing_Impl.hpp>
+#include "../model/ThermochromicGlazing.hpp"
+#include "../model/ThermochromicGlazing_Impl.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -122,8 +122,8 @@ void WindowMaterialGlazingGroupThermochromicInspectorView::attach(openstudio::mo
   //m_opticalDataTemperature->bind( // TODO
   //  m_isIP,
   //  thermochromicGlazing,
-  //  DoubleGetter(boost::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
-  //  DoubleSetterVoidReturn(boost::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
+  //  DoubleGetter(std::bind(&model::ThermochromicGlazing::opticalDataTemperature,thermochromicGlazing)),
+  //  DoubleSetterVoidReturn(std::bind(&model::ThermochromicGlazing::setOpticalDataTemperature,thermochromicGlazing,_1)));
 
   m_windowMaterialGlazingName->bind(thermochromicGlazing,"windowMaterialGlazingName");
 

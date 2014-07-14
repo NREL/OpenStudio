@@ -20,8 +20,8 @@
 #ifndef MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP
 #define MODEL_AIRTERMINALSINGLEDUCTPARALLELPIUREHEAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/StraightComponent.hpp>
+#include "ModelAPI.hpp"
+#include "StraightComponent.hpp"
 
 namespace openstudio {
 
@@ -145,7 +145,7 @@ class MODEL_API AirTerminalSingleDuctParallelPIUReheat : public StraightComponen
 
   friend class detail::AirTerminalSingleDuctParallelPIUReheat_Impl;
 
-  explicit AirTerminalSingleDuctParallelPIUReheat(boost::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
+  explicit AirTerminalSingleDuctParallelPIUReheat(std::shared_ptr<detail::AirTerminalSingleDuctParallelPIUReheat_Impl> impl);
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctParallelPIUReheat");

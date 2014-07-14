@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_MODELOBJECTLISTVIEW_H
-#define OPENSTUDIO_MODELOBJECTLISTVIEW_H
+#ifndef OPENSTUDIO_MODELOBJECTLISTVIEW_HPP
+#define OPENSTUDIO_MODELOBJECTLISTVIEW_HPP
 
-#include <openstudio_lib/OSItemList.hpp>
-#include <openstudio_lib/OSVectorController.hpp>
+#include "OSItemList.hpp"
+#include "OSVectorController.hpp"
 
-#include <model/Model.hpp>
-#include <model/ModelObject.hpp>
+#include "../model/Model.hpp"
+#include "../model/ModelObject.hpp"
 
 namespace openstudio {
 
@@ -43,8 +43,8 @@ public:
   IddObjectType iddObjectType() const;
 
 private slots:
-  void objectAdded(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
-  void objectRemoved(boost::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectAdded(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
+  void objectRemoved(std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>, const openstudio::IddObjectType&, const openstudio::UUID&);
 
 protected:
   virtual std::vector<OSItemId> makeVector();
@@ -78,5 +78,5 @@ public:
 
 } // openstudio
 
-#endif // OPENSTUDIO_MODELOBJECTLISTVIEW_H
+#endif // OPENSTUDIO_MODELOBJECTLISTVIEW_HPP
 

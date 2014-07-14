@@ -20,12 +20,12 @@
 #ifndef UTILITIES_IDF_OBJECTORDERBASE_HPP
 #define UTILITIES_IDF_OBJECTORDERBASE_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
+#include "../UtilitiesAPI.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Optional.hpp>
+#include "../core/Logger.hpp"
+#include "../core/Optional.hpp"
 
 /** \file ObjectOrderBase.hpp 
  *  

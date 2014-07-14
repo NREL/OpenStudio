@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_H
-#define OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_H
+#ifndef OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_HPP
+#define OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_HPP
 
-#include <openstudio_lib/ModelObjectInspectorView.hpp>
+#include "ModelObjectInspectorView.hpp"
 
 namespace openstudio {
 
@@ -71,5 +71,5 @@ class ShadingSurfaceGroupInspectorView : public ModelObjectInspectorView
 
 } // openstudio
 
-#endif // OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_H
+#endif // OPENSTUDIO_SHADINGSURFACEGROUPINSPECTORVIEW_HPP
 

@@ -19,11 +19,10 @@
 
 #include <gtest/gtest.h>
 
-#include <project/Test/ProjectVersioningFixture.hpp>
-#include <project/ProjectDatabase.hpp>
+#include "ProjectVersioningFixture.hpp"
+#include "../ProjectDatabase.hpp"
 
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 
 #include <OpenStudio.hxx>
 
@@ -34,7 +33,7 @@ TEST_F(ProjectVersioningFixture,Versioning_OnOpen) {
   // create separate copy of databases
   std::vector<openstudio::path> testPaths = copyProjectDatabases("open_update");
 
-  BOOST_FOREACH(const openstudio::path& testPath,testPaths) {
+  for (const openstudio::path& testPath : testPaths) {
     {
       OptionalProjectDatabase database = ProjectDatabase::open(testPath);
       if (!database){
@@ -70,7 +69,7 @@ TEST_F(ProjectVersioningFixture,Versioning_OnConstruction) {
   // create separate copy of databases
   std::vector<openstudio::path> testPaths = copyProjectDatabases("constructor_update");
 
-  BOOST_FOREACH(const openstudio::path& testPath,testPaths) {
+  for (const openstudio::path& testPath : testPaths) {
     {
       try{
         ProjectDatabase database(testPath);

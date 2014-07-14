@@ -18,12 +18,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/AirWallMaterial.hpp>
-#include <model/AirWallMaterial_Impl.hpp>
+#include "AirWallMaterial.hpp"
+#include "AirWallMaterial_Impl.hpp"
 
 #include <utilities/idd/OS_Material_AirWall_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -82,7 +82,7 @@ IddObjectType AirWallMaterial::iddObjectType() {
 }
 
 /// @cond
-AirWallMaterial::AirWallMaterial(boost::shared_ptr<detail::AirWallMaterial_Impl> impl)
+AirWallMaterial::AirWallMaterial(std::shared_ptr<detail::AirWallMaterial_Impl> impl)
   : ModelPartitionMaterial(impl)
 {}
 /// @endcond

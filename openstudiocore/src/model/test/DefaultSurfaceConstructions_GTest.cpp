@@ -19,18 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
-#include <model/DefaultSurfaceConstructions.hpp>
-#include <model/DefaultSurfaceConstructions_Impl.hpp>
-#include <model/Construction.hpp>
-#include <model/Construction_Impl.hpp>
-#include <model/Material.hpp>
-#include <model/Material_Impl.hpp>
-
-#include <boost/foreach.hpp>
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+#include "../DefaultSurfaceConstructions.hpp"
+#include "../DefaultSurfaceConstructions_Impl.hpp"
+#include "../Construction.hpp"
+#include "../Construction_Impl.hpp"
+#include "../Material.hpp"
+#include "../Material_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -71,9 +69,9 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
   
   unsigned numConstructions(0);
   unsigned numMaterials(0);
-  BOOST_FOREACH(const DefaultSurfaceConstructions& object, exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {
+  for (const DefaultSurfaceConstructions& object : exampleModel.getModelObjects<DefaultSurfaceConstructions>()) {
     object.clone(model);
-    BOOST_FOREACH(const ResourceObject& construction, object.resources()) {
+    for (const ResourceObject& construction : object.resources()) {
       EXPECT_TRUE(construction.optionalCast<ConstructionBase>());
       ++numConstructions;
       numMaterials += construction.resources().size();

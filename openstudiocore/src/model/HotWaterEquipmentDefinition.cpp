@@ -17,15 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/HotWaterEquipmentDefinition.hpp>
-#include <model/HotWaterEquipmentDefinition_Impl.hpp>
+#include "HotWaterEquipmentDefinition.hpp"
+#include "HotWaterEquipmentDefinition_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HotWaterEquipment_Definition_FieldEnums.hxx>
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model {
@@ -430,7 +430,7 @@ bool HotWaterEquipmentDefinition::setDesignLevelCalculationMethod(const std::str
 }
 
 /// @cond
-HotWaterEquipmentDefinition::HotWaterEquipmentDefinition(boost::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl)
+HotWaterEquipmentDefinition::HotWaterEquipmentDefinition(std::shared_ptr<detail::HotWaterEquipmentDefinition_Impl> impl)
   : SpaceLoadDefinition(impl)
 {}
 /// @endcond

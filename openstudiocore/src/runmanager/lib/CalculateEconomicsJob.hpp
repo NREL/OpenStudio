@@ -17,12 +17,12 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#ifndef OPENSTUDIO_CALCULATEECONOMICS_HPP__
-#define OPENSTUDIO_CALCULATEECONOMICS_HPP__
+#ifndef RUNMANAGER_LIB_CALCULATEECONOMICSJOB_HPP
+#define RUNMANAGER_LIB_CALCULATEECONOMICSJOB_HPP
 
 #include <boost/filesystem.hpp>
 #include <string>
-#include <utilities/core/Logger.hpp>
+#include "../../utilities/core/Logger.hpp"
 #include "Job_Impl.hpp"
 #include "JobParam.hpp"
 #include "JobFactory.hpp"
@@ -71,7 +71,7 @@ namespace detail {
       virtual void requestStop();
 
     protected:
-      virtual void startImpl(const boost::shared_ptr<ProcessCreator> &);
+      virtual void startImpl(const std::shared_ptr<ProcessCreator> &);
       virtual void basePathChanged();
       virtual void standardCleanImpl() { /* nothing to do for this job type */ }
 
@@ -83,4 +83,4 @@ namespace detail {
 }
 }
 }
-#endif
+#endif // RUNMANAGER_LIB_CALCULATEECONOMICSJOB_HPP

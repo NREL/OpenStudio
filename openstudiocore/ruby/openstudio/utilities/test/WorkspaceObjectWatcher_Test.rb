@@ -19,7 +19,7 @@
 
 require 'openstudio'
 
-require 'test/unit'
+require 'minitest/autorun'
 
 module OpenStudio
 
@@ -72,7 +72,7 @@ module OpenStudio
   end
 end
 
-class WorkspaceObjectWatcher_Test < Test::Unit::TestCase
+class WorkspaceObjectWatcher_Test < MiniTest::Unit::TestCase
   
   # def setup
   # end

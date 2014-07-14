@@ -18,36 +18,36 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/CoilHeatingWater.hpp>
-#include <model/CoilCoolingWater.hpp>
-#include <model/ControllerWaterCoil.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/ControllerOutdoorAir.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVACZoneMixer.hpp>
-#include <model/AirLoopHVACZoneMixer_Impl.hpp>
-#include <model/AirLoopHVACZoneSplitter.hpp>
-#include <model/AirLoopHVACZoneSplitter_Impl.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled.hpp>
-#include <model/AirTerminalSingleDuctUncontrolled_Impl.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ScheduleCompact.hpp>
-#include <model/ScheduleTypeLimits.hpp>
-#include <model/FanConstantVolume.hpp>
-#include <model/SizingSystem.hpp>
-#include <model/SizingSystem_Impl.hpp>
-#include <model/CoilHeatingElectric.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/HVACTemplates.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "ModelFixture.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../AirLoopHVACSupplyPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../ControllerWaterCoil.hpp"
+#include "../AirLoopHVACOutdoorAirSystem.hpp"
+#include "../ControllerOutdoorAir.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
+#include "../AirLoopHVACZoneMixer_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../AirTerminalSingleDuctUncontrolled.hpp"
+#include "../AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../SizingSystem.hpp"
+#include "../SizingSystem_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../SetpointManagerSingleZoneReheat.hpp"
+#include "../HVACComponent.hpp"
+#include "../HVACComponent_Impl.hpp"
+#include "../HVACTemplates.hpp"
+#include "../LifeCycleCost.hpp"
 
 using namespace openstudio::model;
 

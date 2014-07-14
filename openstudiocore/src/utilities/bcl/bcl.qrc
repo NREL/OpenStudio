@@ -8,10 +8,7 @@
     <file>templates/UtilityMeasure/tests/UtilityMeasure_Test.rb</file>
     <file>templates/ReportingMeasure/measure.rb</file>
     <file>templates/ReportingMeasure/tests/ExampleModel.osm</file>
-    <file>templates/ReportingMeasure/tests/ExampleModel/files/USA_CO_Golden-NREL.724666_TMY3.epw</file>
     <file>templates/ReportingMeasure/tests/ReportingMeasure_Test.rb</file>
     <file>templates/ReportingMeasure/resources/report.html.in</file>
   </qresource>
 </RCC>
-
-

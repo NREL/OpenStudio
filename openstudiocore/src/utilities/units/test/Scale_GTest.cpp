@@ -19,8 +19,8 @@
 
 #include <gtest/gtest.h>
 
-#include <utilities/units/test/UnitsFixture.hpp>
-#include <utilities/units/Scale.hpp>
+#include "UnitsFixture.hpp"
+#include "../Scale.hpp"
 
 using openstudio::notDefined;
 using openstudio::yotta;

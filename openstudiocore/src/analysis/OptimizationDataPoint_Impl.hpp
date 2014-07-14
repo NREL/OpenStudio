@@ -20,8 +20,8 @@
 #ifndef ANALYSIS_OPTIMIZATIONDATAPOINT_IMPL_HPP
 #define ANALYSIS_OPTIMIZATIONDATAPOINT_IMPL_HPP
 
-#include <analysis/AnalysisAPI.hpp>
-#include <analysis/DataPoint_Impl.hpp>
+#include "AnalysisAPI.hpp"
+#include "DataPoint_Impl.hpp"
 
 namespace openstudio {
 namespace analysis {

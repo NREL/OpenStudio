@@ -24,7 +24,7 @@
 #endif
 
 
-#if RUBY_API_VERSION_MAJOR && RUBY_API_VERSION_MAJOR==2
+#if RUBY_API_VERSION_MAJOR && (RUBY_API_VERSION_MAJOR==2 || (RUBY_API_VERSION_MAJOR==1 && RUBY_API_VERSION_MINOR==9))
 int main(int argc, char **argv)
 {
   ruby_sysinit(&argc, &argv);

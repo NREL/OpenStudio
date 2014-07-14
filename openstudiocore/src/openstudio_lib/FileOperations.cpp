@@ -17,40 +17,38 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <openstudio_lib/FileOperations.hpp>
+#include "FileOperations.hpp"
 
-#include <openstudio_lib/OSDocument.hpp>
+#include "OSDocument.hpp"
 
-#include <analysisdriver/SimpleProject.hpp>
-#include <analysisdriver/AnalysisRunOptions.hpp>
+#include "../analysisdriver/SimpleProject.hpp"
+#include "../analysisdriver/AnalysisRunOptions.hpp"
 
-#include <analysis/Analysis.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/DataPoint.hpp>
+#include "../analysis/Analysis.hpp"
+#include "../analysis/Problem.hpp"
+#include "../analysis/DataPoint.hpp"
 
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/WorkItem.hpp>
-#include <runmanager/lib/Workflow.hpp>
-#include <runmanager/lib/JobFactory.hpp>
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/WorkItem.hpp"
+#include "../runmanager/lib/Workflow.hpp"
+#include "../runmanager/lib/JobFactory.hpp"
 
-#include <model/Model.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/WeatherFile.hpp"
+#include "../model/WeatherFile_Impl.hpp"
 
-#include <osversion/VersionTranslator.hpp>
+#include "../osversion/VersionTranslator.hpp"
 
-#include <energyplus/ReverseTranslator.hpp>
+#include "../energyplus/ReverseTranslator.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-
-#include <utilities/filetypes/EpwFile.hpp>
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/bcl/BCLMeasure.hpp>
-#include <utilities/plot/ProgressBar.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../utilities/filetypes/EpwFile.hpp"
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Assert.hpp"
 #include <OpenStudio.hxx>
 
 #include <QDir>
@@ -74,7 +72,7 @@ namespace openstudio {
     if (dir.exists(dirName)) {
       bool test = true;
 
-      Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
+      for (const QFileInfo& info : dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst))
       {
         if (info.isDir()) {
           test = removeDir(info.absoluteFilePath());
@@ -125,7 +123,7 @@ namespace openstudio {
     LOG_FREE(Info, "synchDirStructures", "Synching destination '" << toString(dstPath) << "' with source '" << toString(srcPath) << "'");
 
     // remove all files in dst as well as any directories in dst that are not in src
-    Q_FOREACH(const QFileInfo &dstItemInfo, dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    for (const QFileInfo &dstItemInfo : dstDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
     {
       QString srcItemPath = srcPath + "/" + dstItemInfo.fileName();
       QString dstItemPath = dstPath + "/" + dstItemInfo.fileName();
@@ -203,7 +201,7 @@ namespace openstudio {
     }
     
     // copy all files in src to dst
-    Q_FOREACH(const QFileInfo &srcItemInfo, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
+    for (const QFileInfo &srcItemInfo : srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot))
     {
       QString srcItemPath = srcPath + "/" + srcItemInfo.fileName();
       QString dstItemPath = dstPath + "/" + srcItemInfo.fileName();
@@ -282,7 +280,7 @@ namespace openstudio {
       }
 
       // Copy all files from existing resources dir into temp dir when opening
-      openstudio::path sourceDir = osmPath.parent_path() / toPath(osmPath.stem());
+      openstudio::path sourceDir = osmPath.parent_path() / osmPath.stem();
       openstudio::path destDir = modelTempDir / toPath("resources");
       if (boost::filesystem::exists(sourceDir)){
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
@@ -334,7 +332,7 @@ namespace openstudio {
         if (epwPath->is_complete() || (!epwPath->empty() && toString(*epwPath->begin()) != "files"))
         {
           LOG_FREE(Debug, "updateModelTempDir", "existing weather file path is not relative to osmfolder: " << toString(modelTempDir));
-          openstudio::path newPath = modelTempDir / toPath("resources/files") / toPath(epwPath->filename());
+          openstudio::path newPath = modelTempDir / toPath("resources/files") / epwPath->filename();
           try {
             boost::filesystem::copy_file(*epwPath, newPath, boost::filesystem::copy_option::overwrite_if_exists);
             EpwFile epwFile(newPath);
@@ -376,7 +374,7 @@ namespace openstudio {
 
       // copy resources
       openstudio::path srcDir = modelTempDir / toPath("resources");
-      openstudio::path dstDir =  osmPath.parent_path() / toPath(osmPath.stem());
+      openstudio::path dstDir =  osmPath.parent_path() / osmPath.stem();
 
       openstudio::path srcproject = srcDir / toPath("project.osp");
       openstudio::path destproject = dstDir / toPath("project.osp");
@@ -651,7 +649,7 @@ namespace openstudio {
             OS_ASSERT(isConnected);
           }
 
-          boost::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
+          std::shared_ptr<OSDocument> currentDocument = OSAppBase::instance()->currentDocument();
           if (currentDocument){         
             bool isConnected = itr->connect(SIGNAL(treeChanged(const openstudio::UUID &)), 
               currentDocument.get(), SIGNAL(treeChanged(const openstudio::UUID &)));

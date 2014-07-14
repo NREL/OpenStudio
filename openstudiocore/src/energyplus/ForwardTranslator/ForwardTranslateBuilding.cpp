@@ -17,24 +17,24 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
+#include "../ForwardTranslator.hpp"
 
-#include <model/Model.hpp>
+#include "../../model/Model.hpp"
 
-#include <model/Building.hpp>
-#include <model/Building_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
-#include <model/SimulationControl.hpp>
-#include <model/SimulationControl_Impl.hpp>
-#include <model/ShadingSurfaceGroup.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Site.hpp"
+#include "../../model/Site_Impl.hpp"
+#include "../../model/SimulationControl.hpp"
+#include "../../model/SimulationControl_Impl.hpp"
+#include "../../model/ShadingSurfaceGroup.hpp"
+#include "../../model/LifeCycleCost.hpp"
 
-#include <utilities/idf/IdfExtensibleGroup.hpp>
-#include <utilities/idf/Workspace.hpp>
-#include <utilities/idf/WorkspaceObjectOrder.hpp>
-#include <utilities/core/Logger.hpp>
-#include <utilities/core/Assert.hpp>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Building_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -52,7 +52,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & mode
   IdfObject idfObject(IddObjectType::Building);
   m_idfObjects.push_back(idfObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
   
@@ -101,7 +101,7 @@ boost::optional<IdfObject> ForwardTranslator::translateBuilding( Building & mode
   // translate shading groups
   ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
   std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
-  BOOST_FOREACH(ShadingSurfaceGroup& shadingSurfaceGroup, shadingSurfaceGroups){
+  for (ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups){
     translateAndMapModelObject(shadingSurfaceGroup);
   }
 

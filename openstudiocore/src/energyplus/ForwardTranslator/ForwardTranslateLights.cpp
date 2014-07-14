@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <energyplus/ForwardTranslator.hpp>
-#include <model/Lights.hpp>
-#include <model/LightsDefinition.hpp>
-#include <model/Space.hpp>
-#include <model/SpaceType.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/Schedule.hpp>
-#include <model/LifeCycleCost.hpp>
+#include "../ForwardTranslator.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/LifeCycleCost.hpp"
 #include <utilities/idd/Lights_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -41,7 +41,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLights( Lights & modelObj
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights,
                                                        modelObject);
 
-  BOOST_FOREACH(LifeCycleCost lifeCycleCost, modelObject.lifeCycleCosts()){
+  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
     translateAndMapModelObject(lifeCycleCost);
   }
 

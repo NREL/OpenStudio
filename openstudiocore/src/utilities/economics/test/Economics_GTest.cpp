@@ -19,8 +19,7 @@
 
 #include <vector>
 #include <gtest/gtest.h>
-#include <boost/shared_ptr.hpp>
-#include <utilities/economics/Economics.hpp>
+#include "../Economics.hpp"
 
 using namespace openstudio;
 

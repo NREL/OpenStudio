@@ -20,8 +20,8 @@
 #ifndef MODEL_LUMINAIRE_HPP
 #define MODEL_LUMINAIRE_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SpaceLoadInstance.hpp>
+#include "ModelAPI.hpp"
+#include "SpaceLoadInstance.hpp"
 
 namespace openstudio {
 
@@ -198,7 +198,7 @@ class MODEL_API Luminaire : public SpaceLoadInstance {
   friend class Model;
   friend class openstudio::IdfObject;
 
-  explicit Luminaire(boost::shared_ptr<detail::Luminaire_Impl> impl);
+  explicit Luminaire(std::shared_ptr<detail::Luminaire_Impl> impl);
 
   /// @endcond
  private:

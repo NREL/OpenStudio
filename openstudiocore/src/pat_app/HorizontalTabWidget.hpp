@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_HORIZONTALTABWIDGET_H
-#define OPENSTUDIO_HORIZONTALTABWIDGET_H
+#ifndef PATAPP_HORIZONTALTABWIDGET_HPP
+#define PATAPP_HORIZONTALTABWIDGET_HPP
 
 #include <QSharedPointer>
 #include <QWidget>
@@ -43,7 +43,7 @@ class HorizontalTabWidget : public QWidget
 
   OSViewSwitcher * mainViewSwitcher;
 
-  HorizontalTabWidget(QWidget * parent = 0);
+  HorizontalTabWidget(QWidget * parent = nullptr);
   virtual ~HorizontalTabWidget() {}
 
   void addTab( int id,
@@ -89,5 +89,5 @@ class HorizontalTabWidget : public QWidget
 
 }
 
-#endif // OPENSTUDIO_HORIZONTALTABWIDGET_H
+#endif // PATAPP_HORIZONTALTABWIDGET_HPP
 

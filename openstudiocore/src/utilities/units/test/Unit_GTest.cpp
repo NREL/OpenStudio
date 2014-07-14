@@ -18,15 +18,15 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <utilities/units/test/UnitsFixture.hpp>
+#include "UnitsFixture.hpp"
 
-#include <utilities/units/Unit.hpp>
-#include <utilities/units/Scale.hpp>
+#include "../Unit.hpp"
+#include "../Scale.hpp"
 
-#include <utilities/core/Exception.hpp>
-#include <utilities/units/IddUnitString.hpp>
-#include <utilities/units/QuantityFactory.hpp>
-#include <utilities/units/QuantityConverter.hpp>
+#include "../../core/Exception.hpp"
+#include "../IddUnitString.hpp"
+#include "../QuantityFactory.hpp"
+#include "../QuantityConverter.hpp"
 
 #include <vector>
 #include <string>

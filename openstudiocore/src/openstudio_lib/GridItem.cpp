@@ -26,7 +26,7 @@
 #include "OSAppBase.hpp"
 #include "MainRightColumnController.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QPainter>
 #include <QMimeData>
@@ -37,42 +37,44 @@
 #include <QGraphicsView>
 #include <QApplication>
 #include <QMenu>
-#include <model/HVACComponent.hpp>
-#include <model/HVACComponent_Impl.hpp>
-#include <model/WaterUseConnections.hpp>
-#include <model/WaterUseConnections_Impl.hpp>
-#include <model/WaterToAirComponent.hpp>
-#include <model/WaterToAirComponent_Impl.hpp>
-#include <model/WaterToWaterComponent.hpp>
-#include <model/WaterToWaterComponent_Impl.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem.hpp>
-#include <model/AirLoopHVACOutdoorAirSystem_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/AirLoopHVAC_Impl.hpp>
-#include <model/AirLoopHVACSupplyPlenum.hpp>
-#include <model/AirLoopHVACSupplyPlenum_Impl.hpp>
-#include <model/AirLoopHVACReturnPlenum.hpp>
-#include <model/AirLoopHVACReturnPlenum_Impl.hpp>
-#include <model/AirToAirComponent.hpp>
-#include <model/AirToAirComponent_Impl.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/PlantLoop_Impl.hpp>
-#include <model/SetpointManager.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerOutdoorAirReset.hpp>
-#include <model/SetpointManagerSingleZoneReheat.hpp>
-#include <model/SetpointManagerScheduled.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerWarmest.hpp>
-#include <model/RenderingColor.hpp>
-#include <model/RenderingColor_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/Splitter.hpp>
-#include <model/Splitter_Impl.hpp>
-#include <model/Mixer.hpp>
-#include <model/ThermalZone.hpp>
-#include <model/ThermalZone_Impl.hpp>
+#include "../model/HVACComponent.hpp"
+#include "../model/HVACComponent_Impl.hpp"
+#include "../model/WaterUseConnections.hpp"
+#include "../model/WaterUseConnections_Impl.hpp"
+#include "../model/WaterToAirComponent.hpp"
+#include "../model/WaterToAirComponent_Impl.hpp"
+#include "../model/WaterToWaterComponent.hpp"
+#include "../model/WaterToWaterComponent_Impl.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/AirLoopHVACSupplyPlenum.hpp"
+#include "../model/AirLoopHVACSupplyPlenum_Impl.hpp"
+#include "../model/AirLoopHVACReturnPlenum.hpp"
+#include "../model/AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../model/AirToAirComponent.hpp"
+#include "../model/AirToAirComponent_Impl.hpp"
+#include "../model/PlantLoop.hpp"
+#include "../model/PlantLoop_Impl.hpp"
+#include "../model/SetpointManager.hpp"
+#include "../model/SetpointManagerMixedAir.hpp"
+#include "../model/SetpointManagerOutdoorAirReset.hpp"
+#include "../model/SetpointManagerSingleZoneReheat.hpp"
+#include "../model/SetpointManagerScheduled.hpp"
+#include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../model/SetpointManagerWarmest.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerOutdoorAirPretreat.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/RenderingColor_Impl.hpp"
+#include "../model/Node.hpp"
+#include "../model/Node_Impl.hpp"
+#include "../model/Splitter.hpp"
+#include "../model/Splitter_Impl.hpp"
+#include "../model/Mixer.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
 #include <algorithm>
 
 using namespace openstudio::model;
@@ -1046,8 +1048,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
     m_loop(loop),
     m_loopScene(loopScene)
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->registerSystemItem(m_loop.handle(),this);
 
   m_loopScene->addItem(this);
@@ -1072,10 +1074,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
     i++;
   }
 
@@ -1091,10 +1093,10 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
         color.setRed(rc->renderingRedValue());
         color.setBlue(rc->renderingBlueValue());
         color.setGreen(rc->renderingGreenValue());
-        m_plenumColorMap.insert(std::make_pair<Handle,QColor>(it->handle(),color));
+        m_plenumColorMap.insert(std::make_pair(it->handle(),color));
       }
     }
-    m_plenumIndexMap.insert(std::make_pair<Handle,int>(it->handle(),i));
+    m_plenumIndexMap.insert(std::make_pair(it->handle(),i));
     i++;
   }
 
@@ -1146,8 +1148,8 @@ SystemItem::SystemItem( model::Loop loop, LoopScene * loopScene )
 
 SystemItem::~SystemItem()
 {
-  boost::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
-  boost::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+  std::shared_ptr<MainRightColumnController> mrc = doc->mainRightColumnController(); 
   mrc->unregisterSystemItem(m_loop.handle());
 }
 
@@ -2094,6 +2096,14 @@ void OneThreeNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
           {
             painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_warmest.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(37,13,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
           break;
         }
       }
@@ -2241,6 +2251,14 @@ void TwoFourNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest_right.png"));
           }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
           break;
         }
       }
@@ -2336,6 +2354,14 @@ void OAStraightNodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem
           else if( it->iddObjectType() == SetpointManagerWarmest::iddObjectType() )
           {
             painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_warmest.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerOutdoorAirPretreat::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_pretreat.png"));
+          }
+          else if( it->iddObjectType() == SetpointManagerScheduledDualSetpoint::iddObjectType() )
+          {
+            painter->drawPixmap(62,37,25,25,QPixmap(":/images/setpoint_dual.png"));
           }
           break;
         }

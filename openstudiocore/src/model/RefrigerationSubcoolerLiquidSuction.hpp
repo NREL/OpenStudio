@@ -20,8 +20,8 @@
 #ifndef MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP
 #define MODEL_REFRIGERATIONSUBCOOLERLIQUIDSUCTION_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
@@ -81,7 +81,7 @@ class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject {
   /// @cond
   typedef detail::RefrigerationSubcoolerLiquidSuction_Impl ImplType;
 
-  explicit RefrigerationSubcoolerLiquidSuction(boost::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
+  explicit RefrigerationSubcoolerLiquidSuction(std::shared_ptr<detail::RefrigerationSubcoolerLiquidSuction_Impl> impl);
 
   friend class detail::RefrigerationSubcoolerLiquidSuction_Impl;
   friend class Model;

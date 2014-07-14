@@ -17,14 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#include <model/WeatherFileDays.hpp>
-#include <model/WeatherFileDays_Impl.hpp>
-#include <model/Site.hpp>
-#include <model/Site_Impl.hpp>
+#include "WeatherFileDays.hpp"
+#include "WeatherFileDays_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
 
 #include <utilities/idd/OS_SizingPeriod_WeatherFileDays_FieldEnums.hxx>
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
 namespace model  {
@@ -97,7 +97,7 @@ WeatherFileDays::WeatherFileDays(const Model& model)
 }
 
 // constructor
-WeatherFileDays::WeatherFileDays(boost::shared_ptr<detail::WeatherFileDays_Impl> impl)
+WeatherFileDays::WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl)
   : SizingPeriod(impl)
 {}
 

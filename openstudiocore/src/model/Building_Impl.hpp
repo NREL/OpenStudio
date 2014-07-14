@@ -20,9 +20,9 @@
 #ifndef MODEL_BUILDING_IMPL_HPP
 #define MODEL_BUILDING_IMPL_HPP
 
-#include <model/ParentObject_Impl.hpp>
+#include "ParentObject_Impl.hpp"
 
-#include <utilities/units/Quantity.hpp>
+#include "../utilities/units/Quantity.hpp"
 
 namespace openstudio {
 

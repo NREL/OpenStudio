@@ -21,7 +21,7 @@
 
 #include "CloudMonitor.hpp"
 
-#include <utilities/core/Assert.hpp>
+#include "../utilities/core/Assert.hpp"
 
 #include <QBoxLayout>
 #include <QDesktopServices>
@@ -64,14 +64,14 @@ MonitorUseDialog::~MonitorUseDialog()
 
 void MonitorUseDialog::createWidgets()
 {
-  QVBoxLayout * layout = new QVBoxLayout;
+  auto layout = new QVBoxLayout;
   layout->setContentsMargins(QMargins(0,0,0,0));
   layout->setSpacing(5);
   upperLayout()->addLayout(layout);
 
-  QHBoxLayout * hlayout = 0;
+  QHBoxLayout * hlayout = nullptr;
 
-  QLabel * label = 0;
+  QLabel * label = nullptr;
 
   /////
 

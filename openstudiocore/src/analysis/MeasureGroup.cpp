@@ -17,27 +17,24 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <analysis/MeasureGroup.hpp>
-#include <analysis/MeasureGroup_Impl.hpp>
+#include "MeasureGroup.hpp"
+#include "MeasureGroup_Impl.hpp"
 
-#include <analysis/DataPoint.hpp>
-#include <analysis/NullMeasure.hpp>
-#include <analysis/NullMeasure_Impl.hpp>
-#include <analysis/Problem.hpp>
-#include <analysis/WorkflowStep.hpp>
-#include <analysis/WorkflowStep_Impl.hpp>
+#include "DataPoint.hpp"
+#include "NullMeasure.hpp"
+#include "NullMeasure_Impl.hpp"
+#include "Problem.hpp"
+#include "WorkflowStep.hpp"
+#include "WorkflowStep_Impl.hpp"
 
-#include <runmanager/lib/WorkItem.hpp>
+#include "../runmanager/lib/WorkItem.hpp"
 
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/core/Containers.hpp>
-#include <utilities/core/FileReference.hpp>
-#include <utilities/core/Json.hpp>
-#include <utilities/core/Optional.hpp>
-
-#include <boost/foreach.hpp>
-#include <boost/bind.hpp>
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/FileReference.hpp"
+#include "../utilities/core/Json.hpp"
+#include "../utilities/core/Optional.hpp"
 
 namespace openstudio {
 namespace analysis {
@@ -52,7 +49,7 @@ namespace detail {
     // get null measures straightened out
     bool hasNull(false);
     bool isSelected(false);
-    MeasureVector::iterator it = m_measures.begin();
+    auto it = m_measures.begin();
     while (it != m_measures.end()) {
       if (OptionalNullMeasure oNull = it->optionalCast<NullMeasure>()) {
         if (isSelected && oNull->isSelected()) {
@@ -84,7 +81,7 @@ namespace detail {
                     "', because at least one measure changes the file type between input and " <<
                     "output, and there is also a NullMeasure (which cannot change the file type).");
     }
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       measure.onChange();
       connectChild(measure,false);
     }
@@ -101,7 +98,7 @@ namespace detail {
     : DiscreteVariable_Impl(uuid,versionUUID,name,displayName,description,udesc),
       m_measures(measures)
   {
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       connectChild(measure,false);
     }
   }
@@ -109,17 +106,17 @@ namespace detail {
   MeasureGroup_Impl::MeasureGroup_Impl(const MeasureGroup_Impl &other)
     : DiscreteVariable_Impl(other)
   {
-    BOOST_FOREACH(const Measure& pert,other.measures(false)) {
+    for (const Measure& pert : other.measures(false)) {
       m_measures.push_back(pert.clone().cast<Measure>());
       connectChild(m_measures.back(),false);
     }
   }
 
   AnalysisObject MeasureGroup_Impl::clone() const {
-    boost::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
+    std::shared_ptr<MeasureGroup_Impl> impl(new MeasureGroup_Impl(*this));
     MeasureGroup result(impl);
     MeasureVector measures = result.measures(false);
-    BOOST_FOREACH(Measure& measure,measures) {
+    for (Measure& measure : measures) {
       measure.setParent(result);
     }
     return result;
@@ -174,7 +171,7 @@ namespace detail {
 
     if (selectedOnly) {
       int index(0);
-      Q_FOREACH(const Measure& measure, measures(false)) {
+      for (const Measure& measure : measures(false)) {
         if (measure.isSelected()) {
           result.push_back(index);
         }
@@ -195,7 +192,7 @@ namespace detail {
   {
     if (selectedMeasuresOnly) {
       MeasureVector result;
-      BOOST_FOREACH(const Measure& measure,m_measures) {
+      for (const Measure& measure : m_measures) {
         if (measure.isSelected()) {
           result.push_back(measure);
         }
@@ -219,10 +216,10 @@ namespace detail {
       const UUID& uuid) const
   {
     OptionalMeasure result;
-    MeasureVector::const_iterator it = std::find_if(
+    auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidEquals<Measure,UUID>,_1,uuid));
+        std::bind(uuidEquals<Measure,UUID>,std::placeholders::_1,uuid));
     if (it != m_measures.end()) {
       result = *it;
     }
@@ -237,10 +234,10 @@ namespace detail {
       const Measure& measure) const
   {
     OptionalInt result;
-    MeasureVector::const_iterator it = std::find_if(
+    auto it = std::find_if(
           m_measures.begin(),
           m_measures.end(),
-          boost::bind(uuidEquals<Measure,UUID>,_1,measure.uuid()));
+          std::bind(uuidEquals<Measure,UUID>,std::placeholders::_1,measure.uuid()));
     if (it != m_measures.end()) {
       result = int(it - m_measures.begin());
     }
@@ -283,7 +280,7 @@ namespace detail {
       return false;
     }
 
-    MeasureVector::iterator it = m_measures.begin();
+    auto it = m_measures.begin();
     for (int count = 0; count < index; ++count, ++it);
     it = m_measures.insert(it,measure);
     for (int i = index, n = int(m_measures.size()); i < n; ++i) {
@@ -295,10 +292,10 @@ namespace detail {
   }
 
   bool MeasureGroup_Impl::erase(const Measure& measure) {
-    MeasureVector::iterator it = std::find_if(
+    auto it = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure));
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure));
     if (it == m_measures.end()) {
       return false;
     }
@@ -315,14 +312,14 @@ namespace detail {
   bool MeasureGroup_Impl::swap(const Measure& measure1,
                                    const Measure& measure2)
   {
-    MeasureVector::iterator it1 = std::find_if(
+    auto it1 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure1));
-    MeasureVector::iterator it2 = std::find_if(
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure1));
+    auto it2 = std::find_if(
         m_measures.begin(),
         m_measures.end(),
-        boost::bind(uuidsEqual<Measure,Measure>,_1,measure2));
+        std::bind(uuidsEqual<Measure,Measure>,std::placeholders::_1,measure2));
     if ((it1 == m_measures.end()) || (it2 == m_measures.end())) {
       return false;
     }
@@ -342,11 +339,11 @@ namespace detail {
       return false;
     }
 
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       disconnectChild(measure);
     }
     m_measures = measures;
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       measure.onChange();
       connectChild(measure,true);
     }
@@ -355,7 +352,7 @@ namespace detail {
   }
 
   void MeasureGroup_Impl::clearMeasures() {
-    BOOST_FOREACH(Measure& measure,m_measures) {
+    for (Measure& measure : m_measures) {
       disconnectChild(measure);
     }
     m_measures.clear();
@@ -377,7 +374,7 @@ namespace detail {
 
     // check proposals against file types of other measures
     MeasureVector pv = measures(false);
-    MeasureVector::iterator it = std::find(pv.begin(),pv.end(),childMeasure);
+    auto it = std::find(pv.begin(),pv.end(),childMeasure);
     OS_ASSERT(it != pv.end());
     pv.erase(it);
 
@@ -450,7 +447,7 @@ namespace detail {
 
     int index(0);
     QVariantList measuresList;
-    Q_FOREACH(const Measure& measure, measures(false)) {
+    for (const Measure& measure : measures(false)) {
       QVariantMap measureData = measure.toVariant().toMap();
       measureData["measure_group_index"] = index;
       measuresList.push_back(measureData);
@@ -467,7 +464,7 @@ namespace detail {
     MeasureVector measures = deserializeOrderedVector(
           map["measures"].toList(),
           "measure_group_index",
-          boost::function<Measure (const QVariant&)>(boost::bind(Measure_Impl::factoryFromVariant,_1,version)));
+          std::function<Measure (const QVariant&)>(std::bind(Measure_Impl::factoryFromVariant,std::placeholders::_1,version)));
 
     return MeasureGroup(toUUID(map["uuid"].toString().toStdString()),
                         toUUID(map["version_uuid"].toString().toStdString()),
@@ -482,7 +479,7 @@ namespace detail {
                                               const openstudio::path& newBase)
   {
     MeasureVector measures = this->measures(false);
-    BOOST_FOREACH(Measure& measure,measures) {
+    for (Measure& measure : measures) {
       measure.getImpl<detail::Measure_Impl>()->updateInputPathData(originalBase,newBase);
     }
   }
@@ -491,7 +488,7 @@ namespace detail {
       const std::vector<Measure>& measures)
   {
     std::pair<bool,OptionalFileReferenceType> result(true,boost::none);
-    BOOST_FOREACH(const Measure& measure,measures) {
+    for (const Measure& measure : measures) {
       OptionalFileReferenceType temp = measure.inputFileType();
       if (temp) {
         if (result.second && (*temp != *(result.second))) {
@@ -508,7 +505,7 @@ namespace detail {
       const std::vector<Measure>& measures)
   {
     std::pair<bool,OptionalFileReferenceType> result(true,boost::none);
-    BOOST_FOREACH(const Measure& measure,measures) {
+    for (const Measure& measure : measures) {
       OptionalFileReferenceType temp = measure.outputFileType();
       if (temp) {
         if (result.second && (*temp != *(result.second))) {
@@ -525,11 +522,11 @@ namespace detail {
 
 MeasureGroup::MeasureGroup(const std::string& name,
                                    const std::vector<Measure>& measures)
-  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+  : DiscreteVariable(std::shared_ptr<detail::MeasureGroup_Impl>(
         new detail::MeasureGroup_Impl(name,measures)))
 {
   MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
-  BOOST_FOREACH(const Measure& measure,measures) {
+  for (const Measure& measure : measures) {
     measure.setParent(copyOfThis);
   }
 }
@@ -541,7 +538,7 @@ MeasureGroup::MeasureGroup(const UUID& uuid,
                                    const std::string& description,
                                    const boost::optional<UncertaintyDescription>& udesc,
                                    const std::vector<Measure>& measures)
-  : DiscreteVariable(boost::shared_ptr<detail::MeasureGroup_Impl>(
+  : DiscreteVariable(std::shared_ptr<detail::MeasureGroup_Impl>(
         new detail::MeasureGroup_Impl(uuid,
                                       versionUUID,
                                       name,
@@ -551,7 +548,7 @@ MeasureGroup::MeasureGroup(const UUID& uuid,
                                       measures)))
 {
   MeasureGroup copyOfThis(getImpl<detail::MeasureGroup_Impl>());
-  BOOST_FOREACH(const Measure& measure,measures) {
+  for (const Measure& measure : measures) {
     measure.setParent(copyOfThis);
   }
 }
@@ -636,7 +633,7 @@ void MeasureGroup::clearPerturbations() {
 }
 
 /// @cond
-MeasureGroup::MeasureGroup(boost::shared_ptr<detail::MeasureGroup_Impl> impl)
+MeasureGroup::MeasureGroup(std::shared_ptr<detail::MeasureGroup_Impl> impl)
   : DiscreteVariable(impl)
 {}
 

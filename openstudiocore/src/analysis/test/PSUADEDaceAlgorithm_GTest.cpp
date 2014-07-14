@@ -18,10 +18,10 @@
 **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <analysis/test/AnalysisFixture.hpp>
+#include "AnalysisFixture.hpp"
 
-#include <analysis/PSUADEDaceAlgorithmOptions.hpp>
-#include <analysis/PSUADEDaceAlgorithm.hpp>
+#include "../PSUADEDaceAlgorithmOptions.hpp"
+#include "../PSUADEDaceAlgorithm.hpp"
 
 using namespace openstudio;
 using namespace openstudio::analysis;

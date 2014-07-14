@@ -17,10 +17,10 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_BUILDINGSTORIESCONTROLLER_H
-#define OPENSTUDIO_BUILDINGSTORIESCONTROLLER_H
+#ifndef OPENSTUDIO_BUILDINGSTORIESCONTROLLER_HPP
+#define OPENSTUDIO_BUILDINGSTORIESCONTROLLER_HPP
 
-#include <openstudio_lib/ModelSubTabController.hpp>
+#include "ModelSubTabController.hpp"
 
 namespace openstudio {
 
@@ -53,4 +53,4 @@ class BuildingStoriesController : public ModelSubTabController
 
 } // openstudio
 
-#endif // OPENSTUDIO_BUILDINGSTORIESCONTROLLER_H
+#endif // OPENSTUDIO_BUILDINGSTORIESCONTROLLER_HPP

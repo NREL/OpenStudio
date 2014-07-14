@@ -20,12 +20,11 @@
 #ifndef UTILITIES_CORE_APPLICATION_HPP
 #define UTILITIES_CORE_APPLICATION_HPP
 
-#include <utilities/UtilitiesAPI.hpp>
-#include <utilities/core/Singleton.hpp>
+#include "../UtilitiesAPI.hpp"
+#include "Singleton.hpp"
 
-#include <QtGui/QApplication>
+#include <QApplication>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
 namespace openstudio{
