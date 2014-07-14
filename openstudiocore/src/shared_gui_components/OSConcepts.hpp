@@ -143,7 +143,7 @@ std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_fu
 template<typename RetType, typename DataType, typename Param1>
 std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) const)
 {
-  return std::function<RetType (DataType *, Param1)>(t_func);
+  return std::function<RetType (DataType *, Param1)>([t_func] ( DataType *obj, Param1 p1) { return (obj->*t_func)(p1); } );
 }
 
 class ConceptProxy
