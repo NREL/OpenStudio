@@ -134,7 +134,10 @@ if(MSVC)
 endif()
 
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
+if(NOT ${EnergyPlus_FOUND})
+  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
+endif()
 mark_as_advanced(
   ENERGYPLUS_EXE
   ENERGYPLUS_IDD

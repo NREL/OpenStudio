@@ -267,7 +267,10 @@ endif()
 # Dependencies
 
 # EnergyPlus
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}")
+if(NOT ${EnergyPlus_FOUND})
+  message(FATAL_ERROR "EnergyPlus ${ENERGYPLUS_VERSION} could not be found")
+endif()
 mark_as_advanced(
   ENERGYPLUS_EXE
   ENERGYPLUS_IDD
@@ -291,11 +294,6 @@ if(WIN32)
   if(NOT "${RUBY_VERSION_MAJOR}" EQUAL "2")
     message(SEND_ERROR "64bit Windows support requires Ruby >= 2.0.0")
   endif()
-endif()
-
-# Adding math.h definitions to avoid "inconsistent dll linkage" from Ruby 1.8 and VS2013
-if(${MSVC} AND ${MSVC_VERSION} EQUAL 1800 AND RUBY_VERSION_MAJOR EQUAL 1 AND RUBY_VERSION_MINOR EQUAL 8)
-  add_definitions(-DHAVE_ACOSH -DHAVE_ERF)
 endif()
 
 
@@ -326,9 +324,7 @@ if(BUILD_WITH_OPENSSL)
   find_package(OpenSSL)
   if(NOT ${OPENSSL_FOUND})
     message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-    if(WIN32)
-      message(SEND_ERROR "You can install OpenSSL for windows by visiting http://www.slproweb.com/products/Win32OpenSSL.html and installing the latest recommended full installation package")
-    else()
+    if(UNIX)
       message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
     endif()
   elseif(WIN32)
