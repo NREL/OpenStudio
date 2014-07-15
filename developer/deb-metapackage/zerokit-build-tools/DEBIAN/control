@@ -1,9 +1,0 @@
-Package: zerokit-build-tools
-Version: 0.1
-Section: devel
-Priority: optional
-Architecture: all
-Depends: swig (>=1.3.40), cmake (>=2.8.0), radiance, dpkg-dev, libqt4-dev, qt4-designer, libboost-all-dev (>=1.40.0), ruby (>=1.8.0), libruby1.8, irb, doxygen, graphviz, subversion, rdoc, rake, rubygems, ruby-dev
-Installed-Size:
-Maintainer: Jason Turner <jason@emptycrate.com>
-Description: A metapackage for installing all tools necessary for building and using ZeroKit

@@ -13,13 +13,16 @@ Additionally, OpenStudio requires that the following packages be installed
 
  * Official build of Qt. http://qt-project.org/downloads
  * PackageMaker - Almost impossible to find, have fun
+ * Official release of EnergyPlus 8.1, installed in the standard location
 
 ## Windows
 
  * Official build of Qt. Both 32bit and 64bit versions: http://qt-project.org/downloads
  * Visual Studio 2013
  * nsis
+ * Official release of EnergyPlus 8.1, installed in the standard location
 
 ## Linux 
 
- * Official builds of Qt, openssl and Boost: `sudo apt-get install libboost-all-dev qtbase5-dev libssl-dev`
+ * Official builds of Qt, openssl and Boost: `sudo apt-get install libboost-all-dev qtbase5-dev libssl-dev libqt5webkit5-dev ruby-dev irb`
+ * Official release of EnergyPlus 8.1, installed in the standard location

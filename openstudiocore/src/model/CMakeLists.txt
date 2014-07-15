@@ -649,12 +649,18 @@ set(${target_name}_src
   SetpointManagerMixedAir.hpp
   SetpointManagerMixedAir_Impl.hpp
   SetpointManagerMixedAir.cpp
+  SetpointManagerOutdoorAirPretreat.hpp
+  SetpointManagerOutdoorAirPretreat_Impl.hpp
+  SetpointManagerOutdoorAirPretreat.cpp
   SetpointManagerOutdoorAirReset.hpp
   SetpointManagerOutdoorAirReset_Impl.hpp
   SetpointManagerOutdoorAirReset.cpp
   SetpointManagerScheduled.hpp
   SetpointManagerScheduled_Impl.hpp
   SetpointManagerScheduled.cpp
+  SetpointManagerScheduledDualSetpoint.hpp
+  SetpointManagerScheduledDualSetpoint_Impl.hpp
+  SetpointManagerScheduledDualSetpoint.cpp
   SetpointManagerSingleZoneReheat.hpp
   SetpointManagerSingleZoneReheat_Impl.hpp
   SetpointManagerSingleZoneReheat.cpp
@@ -1263,8 +1269,10 @@ set(${target_name}_test_src
   test/RunPeriodControlSpecialDays_GTest.cpp
   test/SetpointManagerFollowOutdoorAirTemperature_GTest.cpp
   test/SetpointManagerMixedAir_GTest.cpp
+  test/SetpointManagerOutdoorAirPretreat_GTest.cpp
   test/SetpointManagerOutdoorAirReset_GTest.cpp
   test/SetpointManagerScheduled_GTest.cpp
+  test/SetpointManagerScheduledDualSetpoint_GTest.cpp
   test/SetpointManagerSingleZoneReheat_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/ScheduleDay_GTest.cpp
