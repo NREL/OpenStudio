@@ -783,7 +783,7 @@ if(BUILD_QT AND MSVC)
   endforeach()
 endif()
 
-if(BUILD_RUBY AND MSVC)
+if(MSVC)
   ExternalProject_Add_Step(OpenStudioCore MakeRubyReleaseFolder
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OpenStudioCore-prefix/src/OpenStudioCore-build/Products/Release
     DEPENDERS configure
