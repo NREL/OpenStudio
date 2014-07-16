@@ -263,8 +263,16 @@ if(APPLE)
 
   if(NOT CMAKE_OSX_SYSROOT)
     message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(NOT CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-    message(FATAL_ERROR "OSX Sysroot must use the 10.9 SDK")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+  	set(OSX_SDK "10.8")
+  	set(OSX_STD "c++11")
+  	set(OSX_STDLIB "libstdc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+  	set(OSX_SDK "10.9")
+  	set(OSX_STD "c++11")
+  	set(OSX_STDLIB "libstdc++")
+  else()
+    message(FATAL_ERROR "OSX Sysroot must use the 10.8 or 10.9 SDK")
   endif()
 
 endif()
@@ -275,30 +283,32 @@ include(ProcessorCount)
 # set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parralel
 ProcessorCount(CPUCOUNT)
 if(CPUCOUNT EQUAL 0)
-  set(CPUCOUNT "1")
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")
-elseif(CPUCOUNT EQUAL 1)
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")
-elseif(CPUCOUNT EQUAL 2)
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")  
-elseif(CPUCOUNT EQUAL 4)
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "3")  
-elseif(CPUCOUNT EQUAL 8)
-  set(BOOST_CPUCOUNT "2")
-  set(QT_CPUCOUNT "6")
-elseif(CPUCOUNT EQUAL 12)
-  set(BOOST_CPUCOUNT "3")
-  set(QT_CPUCOUNT "9")    
-elseif(CPUCOUNT EQUAL 16)
-  set(BOOST_CPUCOUNT "4")
-  set(QT_CPUCOUNT "12")    
-else()
-  set(BOOST_CPUCOUNT "1")
-  set(QT_CPUCOUNT "1")    
+  set(CPUCOUNT 1)
+endif()
+  
+if(UNIX)
+	if(CPUCOUNT EQUAL 1)
+		set(BOOST_CPUCOUNT "1")
+		set(QT_CPUCOUNT "1")
+	elseif(CPUCOUNT EQUAL 2)
+		set(BOOST_CPUCOUNT "1")
+		set(QT_CPUCOUNT "1")  
+	elseif(CPUCOUNT EQUAL 4)
+		set(BOOST_CPUCOUNT "1")
+		set(QT_CPUCOUNT "3")  
+	elseif(CPUCOUNT EQUAL 8)
+		set(BOOST_CPUCOUNT "2")
+		set(QT_CPUCOUNT "6")
+	elseif(CPUCOUNT EQUAL 12)
+		set(BOOST_CPUCOUNT "3")
+		set(QT_CPUCOUNT "9")    
+	elseif(CPUCOUNT EQUAL 16)
+		set(BOOST_CPUCOUNT "4")
+		set(QT_CPUCOUNT "12")    
+	else()
+		set(BOOST_CPUCOUNT "1")
+		set(QT_CPUCOUNT "1")    
+	endif()
 endif()
 
 mark_as_advanced(
@@ -384,7 +394,10 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
   message(WARNING "Treat Warnings As Errors is disabled for 64-bit Windows builds")
 endif()
 
-if(UNIX)
+if(APPLE)
+	# default to build Ruby for compatibility with SketchUp
+	option(BUILD_RUBY "Build Ruby" ON)
+elseif(UNIX)
   if(RUBY_FOUND)
     option(BUILD_RUBY "Build Ruby" OFF)
   else()
@@ -443,16 +456,30 @@ if(BUILD_V8)
   set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
 endif()
 
-if(BUILD_RUBY AND UNIX AND NOT APPLE)
-  # but linux cannot, it has a double free when unloading a ruby module
-  ExternalProject_Add(Ruby
-    URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
-    URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
-  )
-  set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+if(BUILD_RUBY AND UNIX)
+  if(APPLE)
+    # OSX can work with a static ruby library
+    ExternalProject_Add(Ruby
+      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+      URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk  CFLAGS=\"-arch i386 -arch x86_64 -fPIC\" LDFLAGS=\"-arch i386 -arch x86_64\""
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+      )
+    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+	else()
+		# but linux cannot, it has a double free when unloading a ruby module
+		ExternalProject_Add(Ruby
+			URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+			URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+			CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
+			BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+			INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+		)
+		set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+		set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+	endif()
 endif()
 
 # Always build Ruby on Windows
@@ -545,7 +572,7 @@ endif()
 
 if(BUILD_BOOST)
   if(APPLE)
-    set(apple-flags "-std=c++11 -arch i386 -arch x86_64")
+    set(apple-flags "-std=${OSX_STD} -stdlib=${OSX_STDLIB} -arch i386 -arch x86_64")
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
@@ -624,7 +651,7 @@ if(BUILD_QT)
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
     #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
-    set(APPLE_SDK_COMMAND "-sdk macosx10.9")
+    set(APPLE_SDK_COMMAND "-sdk macosx${OSX_SDK}")
 
     # At the moment we are building all of debug,release,x86 and x86_64
     # it would appear that calling "make" in some way that CMake can detect that we are calling
