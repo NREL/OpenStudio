@@ -39,7 +39,7 @@ if(MSVC)
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "MSBuild ${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"
+    COMMAND "MSBuild" "${CMAKE_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"
     DEPENDS ${ALL_CSHARP_BINDING_TARGETS}
   )
 
