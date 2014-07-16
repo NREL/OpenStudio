@@ -197,18 +197,12 @@ void OSLineEdit::onEditingFinished()
   {
     std::string stdstring = this->text().toStdString();
 
-    QVariant var;
-    var.setValue<std::string>(stdstring);
+    boost::optional<std::string> ostring(stdstring);
 
-    if( ! m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),var) )
-    {
-      boost::optional<std::string> ostring(stdstring);
+    QVariant ovar;
+    ovar.setValue<boost::optional<std::string> >(ostring);
 
-      QVariant ovar;
-      ovar.setValue<boost::optional<std::string> >(ostring);
-
-      m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),ovar);
-    }
+    m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>()->setProperty(m_property.c_str(),ovar);
     
   }
 }
