@@ -462,12 +462,12 @@ if(BUILD_RUBY AND UNIX)
     ExternalProject_Add(Ruby
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
       URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk  --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk --disable-install-doc --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
       )
     set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
 	else()
 		# but linux cannot, it has a double free when unloading a ruby module
 		ExternalProject_Add(Ruby
@@ -478,7 +478,7 @@ if(BUILD_RUBY AND UNIX)
 			INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
 		)
 		set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-		set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+		set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.so)
 	endif()
 endif()
 
@@ -572,7 +572,7 @@ endif()
 
 if(BUILD_BOOST)
   if(APPLE)
-    set(apple-flags "-std=${OSX_STD} -stdlib=${OSX_STDLIB} -arch i386 -arch x86_64")
+    set(apple-flags "-arch i386 -arch x86_64")
     ExternalProject_Add(Boost
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/boost_1_55_0.tar.gz
       URL_MD5 93780777cfbf999a600f62883bd54b17
