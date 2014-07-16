@@ -352,8 +352,7 @@ def calculateDaylightCoeffecients(t_outPath, t_options, t_space_names_to_calcula
     puts "#{Time.now.getutc}: creating model_dc_skyonly.oct"
     system("oconv \"#{t_outPath}/skies/dc.sky\" > model_dc_skyonly.oct")
     #compute illuminance map(s)
-    puts "#{Time.now.getutc}: computing daylight coefficients..."
-    puts "#{Time.now.getutc}: computing daylight matrix ONLY (single phase)."
+    puts "#{Time.now.getutc}: computing sky-to-point daylight coefficients (single phase)..."
 
     # do map
     exec_statement("#{t_catCommand} \"#{t_outPath}/numeric/merged_space.map\" \
