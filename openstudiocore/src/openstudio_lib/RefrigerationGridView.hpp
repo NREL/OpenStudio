@@ -45,7 +45,7 @@ private:
 
 signals:
 
-  void toggleUnitsClicked(bool displayIP);
+  void dropZoneItemClicked(OSItem* item);
 
 };
 

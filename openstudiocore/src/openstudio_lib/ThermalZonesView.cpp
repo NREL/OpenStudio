@@ -107,7 +107,10 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
     m_isIP(isIP),
     m_dirty(false)
 {
-  connect(this,SIGNAL(toggleUnitsClicked(bool)),this,SLOT(onToggleUnitsClicked(bool)));
+  bool isConnected = false;
+
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), this, SLOT(onToggleUnitsClicked(bool)));
+  OS_ASSERT(isConnected);
 
   QWidget* emptyWidget = new QWidget();
   this->stackedWidget()->insertWidget(0, emptyWidget);
@@ -129,6 +132,9 @@ ThermalZoneView::ThermalZoneView(bool isIP, const model::Model & model,
 
   ThermalZonesGridView * thermalZonesGridView = new ThermalZonesGridView(this->m_isIP,this->m_model,this);
   vLayout->addWidget(thermalZonesGridView);
+
+  isConnected = connect(thermalZonesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 
   // Name
 

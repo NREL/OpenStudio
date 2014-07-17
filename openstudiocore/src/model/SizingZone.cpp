@@ -68,7 +68,7 @@ namespace detail {
   ThermalZone SizingZone_Impl::thermalZone() const {
     boost::optional<ThermalZone> value = optionalThermalZone();
     if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Zoneor Zone List attached.");
+      LOG_AND_THROW(briefDescription() << " does not have an Zone or Zone List attached.");
     }
     return value.get();
   }

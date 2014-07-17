@@ -106,20 +106,22 @@ ThermalZonesGridView::ThermalZonesGridView(bool isIP, const model::Model & model
 
   ThermalZonesGridController * thermalZonesGridController  = new ThermalZonesGridController(m_isIP, "Thermal Zones", model, thermalZoneModelObjects);
   OSGridView * gridView = new OSGridView(thermalZonesGridController, "Thermal Zones", "Drop\nZone", parent);
+
+  bool isConnected = false;
+
+  isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   gridView->m_dropZone->hide();
 
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
 
-  bool isConnected = false;
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        thermalZonesGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), thermalZonesGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::ThermalZone> thermalZone = model.getModelObjects<model::ThermalZone>(); // NOTE for horizontal system lists

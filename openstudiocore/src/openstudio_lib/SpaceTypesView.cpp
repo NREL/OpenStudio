@@ -48,6 +48,9 @@ SpaceTypesView::SpaceTypesView(const openstudio::model::Model& model,
   ModelObjectListView* modelObjectListView = qobject_cast<ModelObjectListView*>(this->itemSelector());
   OS_ASSERT(modelObjectListView);
   modelObjectListView->setItemsDraggable(false);
+
+  bool isConnected = connect(this, SIGNAL(dropZoneItemClicked(OSItem*)), modelObjectInspectorView(), SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
 }
 
 } // openstudio

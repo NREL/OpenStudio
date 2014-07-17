@@ -117,20 +117,22 @@ SpaceTypesGridView::SpaceTypesGridView(bool isIP, const model::Model & model, QW
 
   SpaceTypesGridController * spaceTypesGridController  = new SpaceTypesGridController(m_isIP, "Space Types", model, spaceTypeModelObjects);
   OSGridView * gridView = new OSGridView(spaceTypesGridController, "Space Types", "Drop\nZone", parent);
+
+  bool isConnected = false;
+
+  isConnected = connect(gridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   gridView->m_dropZone->hide();
  
   layout->addWidget(gridView,0,Qt::AlignTop);
 
   layout->addStretch(1);
 
-  bool isConnected = false;
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        spaceTypesGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        spaceTypesGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), spaceTypesGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::SpaceType> spaceType = model.getModelObjects<model::SpaceType>(); // NOTE for horizontal system lists

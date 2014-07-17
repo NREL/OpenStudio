@@ -143,8 +143,7 @@ void OSGridController::setHorizontalHeader()
     m_horizontalHeaderBtnGrp->setExclusive(false);
 
     bool isConnected = false;
-    isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)),
-      this, SLOT(horizontalHeaderChecked(int)));
+    isConnected = connect(m_horizontalHeaderBtnGrp, SIGNAL(buttonClicked(int)), this, SLOT(horizontalHeaderChecked(int)));
     OS_ASSERT(isConnected);
 
   } else {
@@ -181,7 +180,6 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                    BoolGetter(std::bind(&CheckBoxConcept::get,checkBoxConcept.data(),t_mo)),
                                        boost::optional<BoolSetter>(std::bind(&CheckBoxConcept::set, checkBoxConcept.data(), t_mo, std::placeholders::_1)));
 
-
     widget = checkBox;
 
   } else if(QSharedPointer<ComboBoxConcept> comboBoxConcept = t_baseConcept.dynamicCast<ComboBoxConcept>()) {
@@ -193,8 +191,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     widget = comboBox;
 
-    isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)),
-      this, SLOT(onComboBoxIndexChanged(int)));
+    isConnected = connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxIndexChanged(int)));
     OS_ASSERT(isConnected);
 
   } else if(QSharedPointer<ValueEditConcept<double> > doubleEditConcept = t_baseConcept.dynamicCast<ValueEditConcept<double> >()) {
@@ -281,8 +278,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                        DoubleGetter(std::bind(&QuantityEditConcept<double>::get,quantityEditConcept.data(),t_mo)),
                        boost::optional<DoubleSetter>(std::bind(&QuantityEditConcept<double>::set,quantityEditConcept.data(),t_mo,std::placeholders::_1)));
 
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-      quantityEdit, SLOT(onUnitSystemChange(bool)));
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), quantityEdit, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
 
     widget = quantityEdit;
@@ -300,8 +296,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                                OptionalDoubleGetter(std::bind(&OptionalQuantityEditConcept<double>::get,optionalQuantityEditConcept.data(),t_mo)),
                                boost::optional<DoubleSetter>(std::bind(&OptionalQuantityEditConcept<double>::set,optionalQuantityEditConcept.data(),t_mo,std::placeholders::_1)));
 
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-      optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), optionalQuantityEdit, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
 
     widget = optionalQuantityEdit;
@@ -319,8 +314,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                                  DoubleGetter(std::bind(&QuantityEditVoidReturnConcept<double>::get,quantityEditVoidReturnConcept.data(),t_mo)),
                                  DoubleSetterVoidReturn(std::bind(&QuantityEditVoidReturnConcept<double>::set,quantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
 
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-      quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), quantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
 
     widget = quantityEditVoidReturn;
@@ -338,8 +332,7 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
                                          OptionalDoubleGetter(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::get,optionalQuantityEditVoidReturnConcept.data(),t_mo)),
                                          DoubleSetterVoidReturn(std::bind(&OptionalQuantityEditVoidReturnConcept<double>::set,optionalQuantityEditVoidReturnConcept.data(),t_mo,std::placeholders::_1)));
 
-    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-      optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
+    isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), optionalQuantityEditVoidReturn, SLOT(onUnitSystemChange(bool)));
     OS_ASSERT(isConnected);
 
     widget = optionalQuantityEditVoidReturn;
@@ -360,6 +353,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
     dropZone->bind(t_mo,
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
       ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
+
+    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this->parent(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    OS_ASSERT(isConnected);
 
     widget = dropZone;
   } else {

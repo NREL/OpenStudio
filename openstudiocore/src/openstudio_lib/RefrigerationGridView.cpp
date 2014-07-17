@@ -167,6 +167,12 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   RefrigerationCaseGridController * refrigerationCaseGridController  = new RefrigerationCaseGridController(m_isIP, "Display Cases", model, caseModelObjects);
   OSGridView * caseGridView = new OSGridView(refrigerationCaseGridController, "Display Cases", "Drop\nCase", parent);
+
+  bool isConnected = false;
+
+  isConnected = connect(caseGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   scrollLayout->addWidget(caseGridView,0,Qt::AlignTop);
 
   std::vector<model::RefrigerationWalkIn> refrigerationWalkIns = model.getModelObjects<model::RefrigerationWalkIn>();
@@ -174,26 +180,24 @@ RefrigerationGridView::RefrigerationGridView(bool isIP, const model::Model & mod
 
   RefrigerationWalkInGridController * refrigerationWalkInGridController  = new RefrigerationWalkInGridController(m_isIP, "Walk Ins", model, walkInModelObjects);
   OSGridView * walkInView = new OSGridView(refrigerationWalkInGridController, "Walk Ins", "Drop\nWalk In", parent);
+
+  isConnected = connect(walkInView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   scrollLayout->addWidget(walkInView,0,Qt::AlignTop);
 
   scrollLayout->addStretch(1);
 
-  bool isConnected = false;
-
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationCaseGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), refrigerationCaseGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), refrigerationWalkInGridController, SIGNAL(toggleUnitsClicked(bool)));
   OS_ASSERT(isConnected);
   
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationCaseGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), refrigerationCaseGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
-  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)),
-                        refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
+  isConnected = connect(this, SIGNAL(toggleUnitsClicked(bool)), refrigerationWalkInGridController, SLOT(toggleUnits(bool)));
   OS_ASSERT(isConnected);
 
   std::vector<model::RefrigerationSystem> refrigerationSystems = model.getModelObjects<model::RefrigerationSystem>(); // NOTE for horizontal system list

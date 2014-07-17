@@ -556,6 +556,11 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   SpaceTypesGridView * spaceTypesGridView = new SpaceTypesGridView(true, this->m_model, this);
   mainGridLayout->addWidget(spaceTypesGridView, row, 0);
 
+  bool isConnected = false;
+
+  isConnected = connect(spaceTypesGridView, SIGNAL(dropZoneItemClicked(OSItem*)), this, SIGNAL(dropZoneItemClicked(OSItem*)));
+  OS_ASSERT(isConnected);
+
   ++row;
 
   mainGridLayout->addLayout(vLayout,row,0,1,2, Qt::AlignTop|Qt::AlignLeft);
@@ -676,10 +681,10 @@ SpaceTypeInspectorView::SpaceTypeInspectorView(const openstudio::model::Model& m
   m_designSpecificationOutdoorAirDropZone->showAddButton();
   vLayout->addWidget(m_designSpecificationOutdoorAirDropZone);
 
-  bool isConnected = connect(m_designSpecificationOutdoorAirDropZone, 
-                             SIGNAL(itemClicked(OSItem*)),
-                             this, 
-                             SIGNAL(dropZoneItemClicked(OSItem*)));
+  isConnected = connect(m_designSpecificationOutdoorAirDropZone,
+                        SIGNAL(itemClicked(OSItem*)),
+                        this,
+                        SIGNAL(dropZoneItemClicked(OSItem*)));
   OS_ASSERT(isConnected);
 
   mainGridLayout->addLayout(vLayout,row,0,1,2);

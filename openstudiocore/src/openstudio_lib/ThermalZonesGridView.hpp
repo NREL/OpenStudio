@@ -47,6 +47,8 @@ signals:
 
   void toggleUnitsClicked(bool displayIP);
 
+  void dropZoneItemClicked(OSItem* item);
+
 };
 
 class ThermalZonesGridController : public OSGridController

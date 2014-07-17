@@ -33,6 +33,7 @@ namespace openstudio{
 class OSCollapsibleView;
 class OSDropZone;
 class OSGridController;
+class OSItem;
 
 class OSGridView : public QWidget
 {
@@ -55,6 +56,8 @@ signals:
   void rowClicked(int row);
 
   void columnClicked(int column);
+
+  void dropZoneItemClicked(OSItem* item);
 
 private slots:
 
