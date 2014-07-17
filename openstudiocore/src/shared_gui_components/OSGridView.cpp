@@ -64,8 +64,8 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 
   auto buttonGroup = new QButtonGroup();
   bool isConnected = false;
-  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)),
-    this, SLOT(selectCategory(int)));
+
+  isConnected = connect(buttonGroup, SIGNAL(buttonClicked(int)), this, SLOT(selectCategory(int)));
   OS_ASSERT(isConnected);
 
   auto buttonLayout = new QHBoxLayout();
@@ -81,8 +81,7 @@ OSGridView::OSGridView(OSGridController * gridController, const QString & header
 #endif
   m_dropZone->setMaxItems(1);
 
-  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)),
-    m_gridController,SLOT(onItemDropped(const OSItemId&)));
+  isConnected = connect(m_dropZone,SIGNAL(itemDropped(const OSItemId&)), m_gridController,SLOT(onItemDropped(const OSItemId&)));
   OS_ASSERT(isConnected);
 
   buttonLayout->addWidget(m_dropZone,0,Qt::AlignLeft);

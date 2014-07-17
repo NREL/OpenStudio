@@ -48,6 +48,8 @@ class OSVectorController;
 // There is no use of VectorController like in OSDropZone2.
 class OSDropZone3 : public QWidget
 {
+  Q_OBJECT
+
 public:
 
   OSDropZone3();
@@ -62,6 +64,12 @@ public:
 protected:
 
   void paintEvent ( QPaintEvent * event );
+
+signals:
+
+  // TODO this is not yet wired in the implementation
+  // emitted if item is clicked
+  void itemClicked(OSItem* item);
 };
 
 class OSDropZone2 : public QWidget

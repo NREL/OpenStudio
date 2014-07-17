@@ -354,7 +354,9 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
       OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
       ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
 
-    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), this->parent(), SIGNAL(dropZoneItemClicked(OSItem*)));
+    auto gridView = qobject_cast<OSGridView *>(this->parent());
+    OS_ASSERT(gridView);
+    isConnected = connect(dropZone, SIGNAL(itemClicked(OSItem*)), gridView, SIGNAL(dropZoneItemClicked(OSItem*)));
     OS_ASSERT(isConnected);
 
     widget = dropZone;
