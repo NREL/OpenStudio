@@ -128,21 +128,6 @@ OSDropZone2::OSDropZone2(OSVectorController* vectorController,
   hideAddButton();
 }
 
-void OSDropZone2::bind(model::ModelObject & modelObject,
-                         ModelObjectGetter get,
-                         boost::optional<ModelObjectSetter> set,
-                         boost::optional<NoFailAction> reset,
-                         boost::optional<BasicQuery> isDefaulted)
-{
-  m_modelObject = modelObject;
-  m_get = get;
-  m_set = set;
-  m_reset = reset;
-  m_isDefaulted = isDefaulted;
-
-  completeBind();
-}
-
 void OSDropZone2::completeBind() {
 
   setEnabled(true);
@@ -187,19 +172,6 @@ void OSDropZone2::completeBind() {
   OS_ASSERT(isConnected);
 
   emit itemsRequested();
-}
-
-void OSDropZone2::unbind() {
-  if (m_modelObject){
-    this->disconnect(m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get());
-    m_modelObject.reset();
-    m_get.reset();
-    m_getOptional.reset();
-    m_set.reset();
-    m_reset.reset();
-    m_isDefaulted.reset();;
-    setEnabled(false);
-  }
 }
 
 void OSDropZone2::paintEvent( QPaintEvent * event )
@@ -964,6 +936,39 @@ void OSDropZoneItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
       emit mouseClicked();
     }
   }
+}
+
+OSDropZone3::OSDropZone3()
+  : QWidget()
+{
+  setObjectName("OSDropZone");
+
+  QString style("QWidget#OSDropZone {\
+    background: #CECECE;\
+    border: 2px dashed #808080;\
+    border-radius: 10px; }");
+  setStyleSheet(style);
+
+  setFixedSize(75,25);
+}
+
+void OSDropZone3::bind(
+  model::ModelObject & modelObject,
+  OptionalModelObjectGetter get,
+  ModelObjectSetter set)
+{
+}
+
+void OSDropZone3::unbind()
+{
+}
+
+void OSDropZone3::paintEvent( QPaintEvent * event )
+{
+  QStyleOption opt;
+  opt.init(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
 } // openstudio

@@ -42,6 +42,28 @@ namespace openstudio {
 
 class OSVectorController;
 
+// This is a "bindable" version of drop zone
+// that looks different because it is initially designed to go 
+// in a grid.  It also works differently because it binds to function pointers.
+// There is no use of VectorController like in OSDropZone2.
+class OSDropZone3 : public QWidget
+{
+public:
+
+  OSDropZone3();
+  ~OSDropZone3() {}
+
+  void bind(model::ModelObject & modelObject,
+            OptionalModelObjectGetter get,
+            ModelObjectSetter set);
+
+  void unbind();
+
+protected:
+
+  void paintEvent ( QPaintEvent * event );
+};
+
 class OSDropZone2 : public QWidget
 {
   Q_OBJECT
@@ -55,15 +77,6 @@ public:
              QWidget * parent = 0 );
 
   virtual ~OSDropZone2() {}
-
-  void bind(model::ModelObject & modelObject,
-            ModelObjectGetter get,
-            boost::optional<ModelObjectSetter> set=boost::none,
-            boost::optional<NoFailAction> reset=boost::none,
-            boost::optional<BasicQuery> isDefaulted=boost::none);
-
-
-  void unbind();
 
   int maxItems() const;
   bool setMaxItems(int max);
@@ -143,11 +156,10 @@ private:
   bool m_growsHorizontally;
   bool m_useLargeIcon;
   boost::optional<model::ModelObject> m_modelObject;
-  boost::optional<ModelObjectGetter> m_get;
-  boost::optional<OptionalModelObjectGetter> m_getOptional;
+  boost::optional<OptionalModelObjectGetter> m_get;
   boost::optional<ModelObjectSetter> m_set;
   boost::optional<NoFailAction> m_reset;
-  boost::optional<BasicQuery> m_isDefaulted;
+  BasicQuery m_isDefaulted;
   QString m_text;
   QSize m_size;
 };

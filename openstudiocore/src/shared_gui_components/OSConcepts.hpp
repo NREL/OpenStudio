@@ -60,6 +60,12 @@ std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_fu
   return std::function<RetType (DataType *, Param1)>([t_func](DataType *obj, Param1 p1) { return (obj->*t_func)(p1); });
 }
 
+template<typename DataType, typename RetType, typename Param1>
+std::function<RetType (DataType *, const Param1 &)> NullAdapter2(RetType (DataType::*t_func)(Param1 &) )
+{
+  return std::function<RetType (DataType *, const Param1 &)>([t_func](DataType *obj, const Param1 & p1) { Param1 t_p1(p1); return (obj->*t_func)(t_p1); });
+}
+
 
 template<typename DataType, typename RetType, typename Param1>
 std::function<RetType (DataType *, Param1)> NullAdapter(RetType (DataType::*t_func)(Param1) const)
@@ -123,6 +129,26 @@ RetType OneParamOptionalProxy(FromDataType *t_from, Param1 t_param1, const std::
   return t ? t_outter(t.get_ptr(), t_param1) : t_defaultValue;
 }
 
+// Consider the example
+// class B
+// {
+//  std::string foo()
+// };
+//
+// class A 
+// {
+//  B b();
+// };
+//
+// If you want to access foo from B via A
+// A is FromDataType
+// B is ToDataType
+// std::string is RetType
+// b is the t_proxyFunc
+// foo is the t_func
+//
+// Proxy adapters effectively give A a foo method
+//
 template<typename RetType, typename FromDataType, typename ToDataType>
 std::function<RetType (FromDataType *)> ProxyAdapter(RetType (ToDataType::*t_func)() const, boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
 {
@@ -137,6 +163,23 @@ std::function<RetType (FromDataType *, Param1)> ProxyAdapter(RetType (ToDataType
   std::function<RetType (ToDataType *, Param1)> outter(CastNullAdapter<ToDataType>(t_func));
   std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
   return std::bind(&OneParamOptionalProxy<RetType,FromDataType,Param1,ToDataType>, std::placeholders::_1, std::placeholders::_2, outter, inner, t_defaultValue);
+}
+
+template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
+std::function<RetType (FromDataType *, const Param1 &)> ProxyAdapter(RetType (ToDataType::*t_func)(Param1 &), boost::optional<ToDataType> (FromDataType:: *t_proxyFunc)() const, const RetType &t_defaultValue)
+{
+  std::function<RetType (ToDataType *, Param1 &)> outter(CastNullAdapter<ToDataType>(t_func));
+  std::function<boost::optional<ToDataType> (FromDataType *)> inner(CastNullAdapter<FromDataType>(t_proxyFunc));
+
+  return [&] (FromDataType * t_from, const Param1 & t_param1) {
+    boost::optional<ToDataType> t(inner(t_from));
+    if(t) {
+      Param1 param1Copy(t_param1);
+      return outter(t.get_ptr(),param1Copy);
+    } else {
+      return t_defaultValue;
+    }
+  };
 }
 
 template<typename RetType, typename FromDataType, typename Param1, typename ToDataType>
@@ -1205,7 +1248,6 @@ class OptionalQuantityEditVoidReturnConceptImpl : public OptionalQuantityEditVoi
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-template<typename ValueType>
 class DropZoneConcept : public BaseConcept
 {
   public:
@@ -1217,19 +1259,19 @@ class DropZoneConcept : public BaseConcept
 
   virtual ~DropZoneConcept() {}
 
-  virtual ValueType get(const ConceptProxy & obj) = 0;
-  virtual bool set(const ConceptProxy & obj, const ValueType &) = 0;
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj) = 0;
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject &) = 0;
 };
 
 template<typename ValueType, typename DataSourceType>
-class DropZoneConceptImpl : public DropZoneConcept<ValueType>
+class DropZoneConceptImpl : public DropZoneConcept 
 {
   public:
 
   DropZoneConceptImpl(QString t_headingLabel,
-    std::function<ValueType (DataSourceType *)>  t_getter,
+    std::function<boost::optional<ValueType> (DataSourceType *)>  t_getter,
     std::function<bool (DataSourceType *, const ValueType &)> t_setter)
-    : DropZoneConcept<ValueType>(t_headingLabel),
+    : DropZoneConcept(t_headingLabel),
       m_getter(t_getter),
       m_setter(t_setter)
   {
@@ -1237,14 +1279,27 @@ class DropZoneConceptImpl : public DropZoneConcept<ValueType>
 
   virtual ~DropZoneConceptImpl() {}
 
-  virtual ValueType get(const ConceptProxy & t_obj)
+  virtual boost::optional<model::ModelObject> get(const ConceptProxy & obj)
   {
-    DataSourceType obj = t_obj.cast<DataSourceType>();
-
-    return ValueType(m_getter(&obj));
+    if(boost::optional<ValueType> result = getImpl(obj)) {
+      return result->template optionalCast<model::ModelObject>();
+    } else {
+      return boost::optional<model::ModelObject>();
+    }
   }
 
-  virtual bool set(const ConceptProxy & t_obj, const ValueType & t_value)
+  virtual bool set(const ConceptProxy & obj, const model::ModelObject & value)
+  {
+    return setImpl(obj,value.cast<ValueType>());
+  }
+
+  virtual boost::optional<ValueType> getImpl(const ConceptProxy & t_obj)
+  {
+    DataSourceType obj = t_obj.cast<DataSourceType>();
+    return boost::optional<ValueType>(m_getter(&obj));
+  }
+
+  virtual bool setImpl(const ConceptProxy & t_obj, const ValueType & t_value)
   {
     DataSourceType obj = t_obj.cast<DataSourceType>();
     return m_setter(&obj,t_value);
@@ -1252,7 +1307,7 @@ class DropZoneConceptImpl : public DropZoneConcept<ValueType>
 
   private:
 
-  std::function<ValueType (DataSourceType *)>  m_getter;
+  std::function<boost::optional<ValueType> (DataSourceType *)>  m_getter;
   std::function<bool (DataSourceType *, const ValueType &)> m_setter;
 };
 

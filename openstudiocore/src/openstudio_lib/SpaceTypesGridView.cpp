@@ -188,7 +188,7 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
 {
   // always show name column
   fields.insert(fields.begin(), NAME);
-  fields.insert(fields.begin(), NAME_LOAD);
+  //fields.insert(fields.begin(), NAME_LOAD);
 
   m_baseConcepts.clear();
 
@@ -201,66 +201,66 @@ void SpaceTypesGridController::addColumns(std::vector<QString> & fields)
         getter,
         setter);
 
-    } else if (field == NAME_LOAD) {
-      // Create a lambda function that collates all of the loads in a space type 
-      // and returns them as an std::vector
-      std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
-        [] (const model::SpaceType &t_spaceType) {
-          std::vector<model::ModelObject> loads;
-          auto InternalMass = t_spaceType.internalMass();
-          auto People = t_spaceType.people();
-          auto Lights = t_spaceType.lights();
-          auto Luminaire = t_spaceType.luminaires();
-          auto ElectricEquipment = t_spaceType.electricEquipment();
-          auto GasEquipment = t_spaceType.gasEquipment();
-          auto HotWaterEquipment = t_spaceType.hotWaterEquipment();
-          auto SteamEquipment = t_spaceType.steamEquipment();
-          auto OtherEquipment = t_spaceType.otherEquipment();
-          auto SpaceInfiltrationDesignFlowRate = t_spaceType.spaceInfiltrationDesignFlowRates();
-          auto SpaceInfiltrationEffectiveLeakageArea = t_spaceType.spaceInfiltrationEffectiveLeakageAreas();
-
-          loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
-          loads.insert(loads.end(), People.begin(), People.end());
-          loads.insert(loads.end(), Lights.begin(), Lights.end());
-          loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
-          loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
-          loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
-          loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
-          loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
-          loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
-          loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
-          loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
-
-          return loads;
-        }
-      );
-
-      // Here we create a NameLineEdit column, but this one includes a "DataSource" object
-      // The DataSource object is used in OSGridController::widgetAt to make a list of NameLineEdit widgets
-      // for each SpaceType that is passed in.
-      //
-      // Notice that it takes the "allLoads" functor from above.
-      //
-      // Just as an implementation note, it would be possible to use the DataSource as an alternative
-      // to the ProxyAdapter function, if the DataSource were to return a vector of 1.
-      //
-      // The final argument to DataSource tells the system that we want an additional widget to be displayed
-      // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
-      addNameLineEditColumn(QString(NAME_LOAD),
-          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
-          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
-          DataSource(
-            allLoads,
-            false,
-            // I have *no idea* what this needs to actually be
-            makeDropZoneConcept(QString("Heading"),
-              std::function<model::ModelObject (model::ModelObject *)>([] (model::ModelObject *m) { return *m; }),
-              std::function<bool (model::ModelObject *, const model::ModelObject &)>([] (model::ModelObject *, const model::ModelObject &) { return false;  })
-            )
-          )
-          );
-
-
+//    } else if (field == NAME_LOAD) {
+//      // Create a lambda function that collates all of the loads in a space type 
+//      // and returns them as an std::vector
+//      std::function<std::vector<model::ModelObject> (const model::SpaceType &)> allLoads(
+//        [] (const model::SpaceType &t_spaceType) {
+//          std::vector<model::ModelObject> loads;
+//          auto InternalMass = t_spaceType.internalMass();
+//          auto People = t_spaceType.people();
+//          auto Lights = t_spaceType.lights();
+//          auto Luminaire = t_spaceType.luminaires();
+//          auto ElectricEquipment = t_spaceType.electricEquipment();
+//          auto GasEquipment = t_spaceType.gasEquipment();
+//          auto HotWaterEquipment = t_spaceType.hotWaterEquipment();
+//          auto SteamEquipment = t_spaceType.steamEquipment();
+//          auto OtherEquipment = t_spaceType.otherEquipment();
+//          auto SpaceInfiltrationDesignFlowRate = t_spaceType.spaceInfiltrationDesignFlowRates();
+//          auto SpaceInfiltrationEffectiveLeakageArea = t_spaceType.spaceInfiltrationEffectiveLeakageAreas();
+//
+//          loads.insert(loads.end(), InternalMass.begin(), InternalMass.end());
+//          loads.insert(loads.end(), People.begin(), People.end());
+//          loads.insert(loads.end(), Lights.begin(), Lights.end());
+//          loads.insert(loads.end(), Luminaire.begin(), Luminaire.end());
+//          loads.insert(loads.end(), ElectricEquipment.begin(), ElectricEquipment.end());
+//          loads.insert(loads.end(), GasEquipment.begin(), GasEquipment.end());
+//          loads.insert(loads.end(), HotWaterEquipment.begin(), HotWaterEquipment.end());
+//          loads.insert(loads.end(), SteamEquipment.begin(), SteamEquipment.end());
+//          loads.insert(loads.end(), OtherEquipment.begin(), OtherEquipment.end());
+//          loads.insert(loads.end(), SpaceInfiltrationDesignFlowRate.begin(), SpaceInfiltrationDesignFlowRate.end());
+//          loads.insert(loads.end(), SpaceInfiltrationEffectiveLeakageArea.begin(), SpaceInfiltrationEffectiveLeakageArea.end());
+//
+//          return loads;
+//        }
+//      );
+//
+//      // Here we create a NameLineEdit column, but this one includes a "DataSource" object
+//      // The DataSource object is used in OSGridController::widgetAt to make a list of NameLineEdit widgets
+//      // for each SpaceType that is passed in.
+//      //
+//      // Notice that it takes the "allLoads" functor from above.
+//      //
+//      // Just as an implementation note, it would be possible to use the DataSource as an alternative
+//      // to the ProxyAdapter function, if the DataSource were to return a vector of 1.
+//      //
+//      // The final argument to DataSource tells the system that we want an additional widget to be displayed
+//      // at the bottom of each list. In this case, it's a dropZone. Any type of BaseConcept would work.
+//      addNameLineEditColumn(QString(NAME_LOAD),
+//          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::name),
+//          CastNullAdapter<model::SpaceLoad>(&model::SpaceLoad::setName),
+//          DataSource(
+//            allLoads,
+//            false,
+//            // I have *no idea* what this needs to actually be
+//            makeDropZoneConcept(QString("Heading"),
+//              std::function<boost::optional<model::ModelObject> (model::ModelObject *)>([] (model::ModelObject *m) { return *m; }),
+//              std::function<bool (model::ModelObject *, const model::ModelObject &)>([] (model::ModelObject *, const model::ModelObject &) { return false;  })
+//            )
+//          )
+//          );
+//
+//
     }else{
       // unhandled
       //OS_ASSERT(false);

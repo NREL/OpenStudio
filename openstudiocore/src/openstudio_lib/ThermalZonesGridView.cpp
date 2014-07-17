@@ -36,6 +36,10 @@
 #include "../model/SizingZone_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermostatSetpointDualSetpoint.hpp"
+#include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
 
 #include "../utilities/idd/OS_ThermalZone_FieldEnums.hxx"
 
@@ -139,7 +143,7 @@ void ThermalZonesGridController::setCategoriesAndFields()
     fields.push_back(IDEALAIRLOADS);
     //fields.push_back(AIRLOOPNAME);                   // TODO LineEdit, but needs an optional AirLoopHVAC 
     //fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
-    //fields.push_back(COOLINGTHERMOSTATSCHEDULE);     // TODO DropZone
+    fields.push_back(COOLINGTHERMOSTATSCHEDULE);     // TODO DropZone
     //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
     //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
     //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
@@ -297,20 +301,20 @@ void ThermalZonesGridController::addColumns(std::vector<QString> & fields)
                         ProxyAdapter(static_cast<bool (model::SizingZone::*)(const std::string &)>(&model::SizingZone::setCoolingDesignAirFlowMethod),
                           &model::ThermalZone::sizingZone));
 
-    //}else if(field == COOLINGTHERMOSTATSCHEDULE){
-      //addDropZoneColumn<std::string,SizingZoneProxy>(QString(COOLINGTHERMOSTATSCHEDULE),
-      //                                               static_cast<std::string (*)(const std::string&)>(&openstudio::toString),
-      //                                               &SizingZoneProxy::coolingDesignAirFlowMethodValues,
-      //                                               std::function<std::string (SizingZoneProxy*)>(&SizingZoneProxy::coolingThermostatSchedule),
-      //                                               &SizingZoneProxy::setCoolingThermostatSchedule);
-      //                                               ProxyAdapter(&model::SizingZone::??, &model::ThermalZone::sizingZone),
-      //                                               ProxyAdapter(static_cast<void (model::SizingZone::*)(double)>(&model::SizingZone::??), 
-      //                                                 &model::ThermalZone::sizingZone));
+    }else if(field == COOLINGTHERMOSTATSCHEDULE){
+      addDropZoneColumn(QString(COOLINGTHERMOSTATSCHEDULE),
+                        ProxyAdapter(static_cast<boost::optional<model::Schedule> (model::ThermostatSetpointDualSetpoint::*)() const>(&model::ThermostatSetpointDualSetpoint::coolingSetpointTemperatureSchedule),
+                                     static_cast<boost::optional<model::ThermostatSetpointDualSetpoint> (model::ThermalZone::*)() const>(&model::ThermalZone::thermostatSetpointDualSetpoint),
+                                     boost::optional<model::Schedule>()),
+                        ProxyAdapter(&openstudio::model::ThermostatSetpointDualSetpoint::setCoolingSetpointTemperatureSchedule,
+                                     &model::ThermalZone::thermostatSetpointDualSetpoint,
+                                     false)
+                       );
 
-    //fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
-    //fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
-    //fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
-    //fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
+    //////fields.push_back(HEATINGTHERMOSTATSCHEDULE);     // TODO DropZone
+    //////fields.push_back(HUMIDIFYINGSETPOINTSCHEDULE);   // TODO DropZone
+    //////fields.push_back(DEHUMIDIFYINGSETPOINTSCHEDULE); // TODO DropZone
+    //////fields.push_back(ZONEEQUIPMENT);                 // TODO Extensible DropZone
 
     }else if(field == NAME){
       addNameLineEditColumn(QString(NAME),

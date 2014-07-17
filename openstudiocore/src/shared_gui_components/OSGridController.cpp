@@ -354,15 +354,12 @@ QWidget * OSGridController::makeWidget(model::ModelObject t_mo, const QSharedPoi
 
     widget = unsignedEdit;
 
-  } else if(QSharedPointer<DropZoneConcept<model::ModelObject> > dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept<model::ModelObject> >()) {
-    GridViewDropZoneVectorController * vectorController = new GridViewDropZoneVectorController();
-    OSDropZone2 * dropZone = new OSDropZone2(vectorController);
+  } else if(QSharedPointer<DropZoneConcept> dropZoneConcept = t_baseConcept.dynamicCast<DropZoneConcept>()) {
+    OSDropZone3 * dropZone = new OSDropZone3();
 
     dropZone->bind(t_mo,
-                   ModelObjectGetter(std::bind(&DropZoneConcept<model::ModelObject>::get,dropZoneConcept.data(),t_mo)),
-                                       boost::optional<ModelObjectSetter>(std::bind(&DropZoneConcept<model::ModelObject>::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)),
-                   boost::none,
-                   boost::none);
+      OptionalModelObjectGetter(std::bind(&DropZoneConcept::get,dropZoneConcept.data(),t_mo)),
+      ModelObjectSetter(std::bind(&DropZoneConcept::set, dropZoneConcept.data(), t_mo, std::placeholders::_1)));
 
     widget = dropZone;
   } else {
