@@ -591,19 +591,5 @@ HorizontalHeaderWidget::HorizontalHeaderWidget(const QString & fieldName, QWidge
 
 }
 
-BulkSelectionWidget::BulkSelectionWidget(QWidget * parent)
-  : QWidget(parent),
-  m_comboBox(new OSComboBox()),
-  m_checkBox(new QCheckBox())
-{
-  auto layout = new QHBoxLayout();
-  setLayout(layout);
-
-  layout->addWidget(m_checkBox);
-
-  layout->addWidget(m_comboBox);
-
-}
-
 } // openstudio
 

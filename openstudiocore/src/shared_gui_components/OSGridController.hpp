@@ -494,23 +494,6 @@ public:
 
 };
 
-// TODO Currently, this is a dead class
-class BulkSelectionWidget : public QWidget
-{
-  Q_OBJECT
-
-public:
-
-  BulkSelectionWidget(QWidget * parent = nullptr);
-
-  virtual ~BulkSelectionWidget() {}
-
-  OSComboBox * m_comboBox;
-
-  QCheckBox * m_checkBox;
-
-};
-
 class GridViewDropZoneVectorController : public OSVectorController
 {
   protected:
