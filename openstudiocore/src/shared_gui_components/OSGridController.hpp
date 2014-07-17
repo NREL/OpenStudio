@@ -49,7 +49,7 @@ class OSComboBox;
 ///
 /// Generally, Concepts take a ModelObject and display some field of it.
 ///
-/// This has been extended with the ProxyAdapter, which inserts itself betweeh the `getter`, `setter` 
+/// This has been extended with the ProxyAdapter, which inserts itself between the `getter`, `setter` 
 /// and the Concept. This ProxyAdapter allows you to not just display data with the ModelObject
 /// but to actually display data on something the ModelObject contains, for example, showing the name
 /// of a SizingZone which is associated with a ThermalZone
@@ -60,7 +60,7 @@ class OSComboBox;
 /// are abstracted via std::function objects, so the data you display can truly come from anywhere.
 ///
 ///
-/// Essentially, by using this class you are creating a stack of widets in the grid cell:
+/// Essentially, by using this class you are creating a stack of widgets in the grid cell:
 ///
 /// <widget for t_sourceFunc item 1>
 /// <widget for t_sourceFunc item 2>
@@ -76,7 +76,7 @@ class DataSource
     /// add.*Column functions.
     ///
     ///
-    /// \param[in] t_sourceFunc Takes an Input object (pratically speaking, a ModelObject derivation) and returns a vector 
+    /// \param[in] t_sourceFunc Takes an Input object (practically speaking, a ModelObject derivation) and returns a vector 
     ///                         of items (probably some derived class from ModelObject)
     /// \param[in] t_wantsPlaceHolder Informs the system to add a placeholder gap at the bottom of the list when it is 
     ///                         rendering the list of widgets. This is to help non-dropzone enabled stacks of widgets

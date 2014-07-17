@@ -534,7 +534,7 @@ void RefrigerationCaseGridController::addColumns(std::vector<QString> & fields)
           QString(THERMALZONE),
           &openstudio::objectName,
           std::bind(&openstudio::sortByObjectName<model::ThermalZone>,
-		  std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model)),
+      std::bind(&model::Model::getConcreteModelObjects<model::ThermalZone>, m_model)),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::thermalZone),
           CastNullAdapter<model::RefrigerationCase>(&model::RefrigerationCase::setThermalZone),
           NullAdapter(&model::RefrigerationCase::resetThermalZone));
