@@ -398,7 +398,7 @@ QWidget * OSGridController::widgetAt(int row, int column)
     QSharedPointer<BaseConcept> baseConcept = m_baseConcepts[column];
 
     if (QSharedPointer<DataSourceAdapter> dataSource = baseConcept.dynamicCast<DataSourceAdapter>()) {
-      // here we magically create a mutirow column of any type that was constructed
+      // here we magically create a multi-row column of any type that was constructed
       //
       // The details need to be fleshed out. The ideas all work, and it's rendering as expected,
       // however the placeHolder isn't doing its job, it might need to be a QSpacer of some kind.
