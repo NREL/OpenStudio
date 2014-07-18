@@ -3459,14 +3459,64 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   // Optional AirLoopHVAC
   boost::optional<model::AirLoopHVAC> airLoopHVAC;
 
-  // VentSysRef
+  QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PriAirCondgSysRef");
+  QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
 
+  // ThermalZoneVentilationSystem
+  if( ventSysRefElement.text() != primAirCondSysRefElement.text() )
+  {
+    airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().toStdString());
+
+    if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+    {
+      QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
+      if( ! trmlUnitElement.isNull() ) {
+        if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
+        {
+          airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+          QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
+          if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
+          {
+             if( tz->isPlenum() )
+             {
+               if( boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>() )
+               {
+                 piu->getImpl<model::detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+               }
+               else if( boost::optional<model::AirTerminalSingleDuctParallelPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>() )
+               {
+                 piu->getImpl<model::detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
+               }
+             }
+          }
+        }
+      }
+    }
+
+    // If the model has requested ventilation from the system,
+    // make sure the system has an OA system even if it wasn't asked for.
+    if( airLoopHVAC )
+    {
+      boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem();
+      if( ! oaSystem )
+      {
+        model::ControllerOutdoorAir oaController(model);
+
+        oaController.setName(airLoopHVAC->name().get() + " OA Controller");
+
+        model::AirLoopHVACOutdoorAirSystem newOASystem(model,oaController);
+
+        newOASystem.setName(airLoopHVAC->name().get() + " OA System");
+
+        model::Node supplyInletNode = airLoopHVAC->supplyInletNode(); 
+
+        newOASystem.addToNode(supplyInletNode);
+      }
+    }
+  }
+
   // PrimaryAirConditioningSystemReference
-  QDomElement primAirCondSysRefElement = thermalZoneElement.firstChildElement("PriAirCondgSysRef");
-
-  QDomElement znSysElement = findZnSysElement(primAirCondSysRefElement.text(),doc);
-
   if( ! znSysElement.isNull() )
   {
     boost::optional<model::ModelObject> mo = translateZnSys(znSysElement,doc,model);
@@ -3610,64 +3660,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
-  // ThermalZoneVentilationSystem
-  QDomElement thermalZoneVentilationSystemElement = thermalZoneElement.firstChildElement("VentSysRef");
-
-  if( thermalZoneVentilationSystemElement.text() != primAirCondSysRefElement.text() )
-  {
-    airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(thermalZoneVentilationSystemElement.text().toStdString());
-
-    if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
-    {
-      QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
-      if( ! trmlUnitElement.isNull() ) {
-        if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
-        {
-          airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
-          QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
-          if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
-          {
-             if( tz->isPlenum() )
-             {
-               if( boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>() )
-               {
-                 piu->getImpl<model::detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
-               }
-               else if( boost::optional<model::AirTerminalSingleDuctParallelPIUReheat> piu = trmlUnit->optionalCast<model::AirTerminalSingleDuctParallelPIUReheat>() )
-               {
-                 piu->getImpl<model::detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setInducedAirPlenumZone(tz.get()); 
-               }
-             }
-          }
-        }
-      }
-    }
-
-    // If the model has requested ventilation from the system,
-    // make sure the system has an OA system even if it wasn't asked for.
-    if( airLoopHVAC )
-    {
-      boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem();
-      if( ! oaSystem )
-      {
-        model::ControllerOutdoorAir oaController(model);
-
-        oaController.setName(airLoopHVAC->name().get() + " OA Controller");
-
-        model::AirLoopHVACOutdoorAirSystem newOASystem(model,oaController);
-
-        newOASystem.setName(airLoopHVAC->name().get() + " OA System");
-
-        model::Node supplyInletNode = airLoopHVAC->supplyInletNode(); 
-
-        newOASystem.addToNode(supplyInletNode);
-      }
-    }
-  }
-
   airLoopHVAC = thermalZone.airLoopHVAC();
-
-  QDomElement airSystemElement;
 
   // Connect to plenum(s) if required
   if( airLoopHVAC )
@@ -3693,19 +3686,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   if( airLoopHVAC )
   {
     model::Node supplyOutletNode = airLoopHVAC->supplyOutletNode();
-
     boost::optional<model::SetpointManagerSingleZoneReheat> spm;
-
     std::vector<model::SetpointManagerSingleZoneReheat> _setpointManagers = subsetCastVector<model::SetpointManagerSingleZoneReheat>(supplyOutletNode.setpointManagers());
     if( !_setpointManagers.empty() ) {
       spm = _setpointManagers.front();
     }
 
     // Only set the control zone if there is a SetpointManagerSingleZoneReheat on the supply outlet node
+    QDomElement airSystemElement = findAirSysElement(QString::fromStdString(airLoopHVAC->name().get()),doc);
     if( spm && ! airSystemElement.isNull() )
     {
       QDomElement ctrlZnRefElement = airSystemElement.firstChildElement("CtrlZnRef");
-
       if( istringEqual(ctrlZnRefElement.text().toStdString(),thermalZone.name().get()) )
       {
         spm->setControlZone(thermalZone);
@@ -6695,7 +6686,6 @@ QDomElement ReverseTranslator::findZnSysElement(const QString & znSysName,const 
 
 QDomElement ReverseTranslator::findTrmlUnitElementForZone(const QString & zoneName,const QDomDocument & doc)
 {
-  //QDomElement buildingElement = doc.documentElement().firstChildElement("Bldg");
   QDomNodeList airSystemElements = doc.documentElement().elementsByTagName("AirSys");
   
   for( int i = 0; i < airSystemElements.count(); i++ )
@@ -6711,6 +6701,24 @@ QDomElement ReverseTranslator::findTrmlUnitElementForZone(const QString & zoneNa
       {
         return terminalElement;
       }
+    }
+  }
+
+  return QDomElement();
+}
+
+QDomElement ReverseTranslator::findAirSysElement(const QString & airSysName,const QDomDocument & doc)
+{
+  QDomNodeList airSystemElements = doc.documentElement().elementsByTagName("AirSys");
+  
+  for( int i = 0; i < airSystemElements.count(); i++ )
+  {
+    QDomElement airSystemElement = airSystemElements.at(i).toElement();
+    QDomElement airSystemNameElement = airSystemElement.firstChildElement("Name");
+  
+    if(airSysName.compare(airSystemNameElement.text(),Qt::CaseInsensitive) == 0)
+    {
+      return airSystemElement;
     }
   }
 

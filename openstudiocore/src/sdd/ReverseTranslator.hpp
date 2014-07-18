@@ -127,6 +127,8 @@ namespace sdd {
     // Return the "ZnSys" element with the name znSysName.
     QDomElement findZnSysElement(const QString & znSysName,const QDomDocument & doc);
 
+    QDomElement findAirSysElement(const QString & airSysName,const QDomDocument & doc);
+
     // Return the "TrmlUnit" element serving zoneName
     QDomElement findTrmlUnitElementForZone(const QString & zoneName,const QDomDocument & doc);
 
