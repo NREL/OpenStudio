@@ -59,6 +59,12 @@ TEST_F(ModelFixture,EvaporativeCoolerIndirectResearchSpecial)
     EXPECT_FALSE(idec.addToNode(demandInletNode));
 
     EXPECT_EQ(3u,airLoopHVAC.supplyComponents().size());
+
+    Node node(m);
+    EXPECT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setReliefAirInletNode(node));
+
+    ASSERT_TRUE(idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode());
+    EXPECT_EQ(node,idec.getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->reliefAirInletNode().get());
   }
 
   {

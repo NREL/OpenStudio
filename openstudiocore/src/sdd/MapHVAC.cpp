@@ -727,6 +727,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     isFanDrawthrough = true;
   }
 
+  // Save Evap Cooler to draw from return air
+  boost::optional<model::EvaporativeCoolerIndirectResearchSpecial> indirectEvapUsingReturn;
+
   // Air Segments
   QDomNodeList airSegmentElements = airSystemElement.elementsByTagName("AirSeg");
 
@@ -902,6 +905,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
 
             hvacComponent.addToNode(dropNode.get());
+
+            if( boost::optional<model::EvaporativeCoolerIndirectResearchSpecial> evap = hvacComponent.optionalCast<model::EvaporativeCoolerIndirectResearchSpecial>() )
+            {
+              QDomElement secAirSrcElement = airSegmentChildElement.firstChildElement();
+              if(secAirSrcElement.text().compare("Return",Qt::CaseInsensitive) == 0)
+              {
+                indirectEvapUsingReturn = evap;
+              }
+            }
           }
         }
 
@@ -1063,6 +1075,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       else
       {
         oaController.resetEconomizerMinimumLimitDryBulbTemperature();
+      }
+      
+      oaSystem = newOASystem;
+    }
+    // Attach IDEC
+    if( indirectEvapUsingReturn )
+    {
+      if( boost::optional<model::Node> outboardReliefNode = oaSystem->outboardReliefNode() )
+      {
+        indirectEvapUsingReturn->getImpl<model::detail::EvaporativeCoolerIndirectResearchSpecial_Impl>()->setReliefAirInletNode(outboardReliefNode.get());
       }
     }
   }
@@ -2343,7 +2365,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateEvap
 
     evap.setBlowdownConcentrationRatio(3.0);
 
-    // TODO: SecAirSrc
+    QDomElement secAirSrcElement = element.firstChildElement("SecAirSrc");
 
     evap.resetDriftLossFraction();
 

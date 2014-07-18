@@ -127,6 +127,10 @@ namespace detail {
 
     bool addToNode(Node & node);
 
+    bool setReliefAirInletNode(const Node & node);
+
+    boost::optional<Node> reliefAirInletNode() const;
+
     //@}
    protected:
    private:

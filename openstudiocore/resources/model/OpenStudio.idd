@@ -13392,14 +13392,12 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \required-field
   A7 , \Field Secondary Air Inlet Node
        \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \object-list Node
   A8 , \Field Sensor Node Name
        \object-list Node
   A9 , \Field Relief Air Inlet Node
        \type object-list
-       \required-field
-       \object-list ConnectionNames
+       \object-list Node
   A9 , \Field Water Supply Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
