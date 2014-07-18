@@ -1,0 +1,9 @@
+results_repository : NREL/OpenStudioBuildResults
+results_path : _posts
+results_base_url : https://nrel.github.io/OpenStudioBuildResults
+tests_dir : OpenStudioCore-prefix/src/OpenStudioCore-build
+notification_recipients:
+  - lgentile
+aging_pull_requests_notification: true
+
+
