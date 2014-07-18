@@ -3752,6 +3752,10 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
   // Name
   QDomElement nameElement = trmlUnitElement.firstChildElement("Name");
 
+  // AvailSchRef
+  QDomElement availSchRefElement = trmlUnitElement.firstChildElement("AvailSchRef");
+  boost::optional<model::Schedule> availSch = model.getModelObjectByName<model::Schedule>(availSchRefElement.text().toStdString());
+
   // Type
   QDomElement typeElement = trmlUnitElement.firstChildElement("Type");
 
@@ -3852,6 +3856,17 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     OS_ASSERT(coil);
 
     model::AirTerminalSingleDuctVAVReheat terminal(model,schedule,coil.get());
+
+    QDomElement minAirFracSchRefElement = trmlUnitElement.firstChildElement("MinAirFracSchRef");
+    if( boost::optional<model::Schedule> minAirFracSch = model.getModelObjectByName<model::Schedule>(minAirFracSchRefElement.text().toStdString()) )
+    {
+      terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
+    }
+
+    if( availSch )
+    {
+      terminal.setAvailabilitySchedule(availSch.get());
+    }
 
     if( primaryAirFlow )
     {
@@ -4033,6 +4048,12 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
 
     // Terminal
     model::AirTerminalSingleDuctSeriesPIUReheat terminal(model,hvacComponentFan,hvacComponentCoil);
+
+    if( availSch )
+    {
+      terminal.setAvailabilitySchedule(availSch.get());
+    }
+
     if( primaryAirFlow )
     {
       terminal.setMaximumAirFlowRate(primaryAirFlow.get());
@@ -4111,6 +4132,11 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const Q
     // Terminal
 
     model::AirTerminalSingleDuctParallelPIUReheat terminal(model,schedule,hvacComponentFan,hvacComponentCoil);
+
+    if( availSch )
+    {
+      terminal.setAvailabilitySchedule(availSch.get());
+    }
 
     if( primaryAirFlow )
     {
