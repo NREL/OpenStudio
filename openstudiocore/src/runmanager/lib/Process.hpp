@@ -28,7 +28,7 @@
 namespace openstudio {
 namespace runmanager {
 
-  /// Base class for all types of processes (Local, Remote (SLURM) )
+  /// Base class for local processes
   class Process : public QObject
   {
     Q_OBJECT;
@@ -105,12 +105,6 @@ namespace runmanager {
 
       /// Emitted whenever the status changes
       void statusChanged(const openstudio::runmanager::AdvancedStatus &s);
-
-      /// Emitted when a process has started on a remote server
-      void remoteStarted(int t_remoteid, int t_remoteTaskNumber);
-
-      /// Emitted when a process has finished on a remote server
-      void remoteFinished(int t_remoteid, int t_remoteTaskNumber);
 
     private:
 

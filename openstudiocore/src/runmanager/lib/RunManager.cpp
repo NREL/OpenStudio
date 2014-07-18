@@ -422,13 +422,7 @@ namespace runmanager {
     static DB_Handler m;
     return m;
   }
-
-//  void RunManager::setSLURMPassword(const std::string &t_password)
-//  {
-//    m_impl->setSLURMPassword(t_password);
-//  }
-
-
+  
   std::map<std::string, double> RunManager::statistics() const
   {
     return m_impl->statistics();

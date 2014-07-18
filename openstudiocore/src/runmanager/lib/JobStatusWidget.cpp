@@ -373,7 +373,6 @@ namespace runmanager {
     std::map<std::string, double> stats = m_runmanager.statistics();
     ui.lblJobsInQueue->setText(QString::number(stats["Number of Jobs"]));
     ui.lblLocalJobsRunning->setText(QString::number(stats["Locally Running Jobs"]));
-    ui.lblRemoteJobsRunning->setText(QString::number(stats["Remotely Running Jobs"]));
     ui.lblFailedJobs->setText(QString::number(stats["Failed Jobs"]));
     ui.lblCompletedJobs->setText(QString::number(stats["Completed Jobs"]));
   }

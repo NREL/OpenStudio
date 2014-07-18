@@ -64,11 +64,6 @@ namespace detail {
       virtual std::string getOutput() const;
       virtual void cleanup();
 
-      virtual bool remoteRunnable() const
-      {
-        return false;
-      }
-
       virtual void requestStop();
 
       virtual void basePathChanged();

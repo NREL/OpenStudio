@@ -227,58 +227,6 @@ namespace detail {
         }
       }
 
-      void setRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
-      {
-        QMutexLocker l(&m_mutex);
-        if (m_loading) return; // we are currently loading, don't persist that which we are loading
-
-        RunManagerDB::RemoteJob rj(m_db);
-        rj.uuid = toString(t_uuid);
-        rj.remoteId = t_remoteId;
-        rj.remoteTaskId = t_remoteTaskId;
-        rj.update();
-        m_db.commit();
-
-      }
-
-      void clearRemoteProcessId(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
-      {
-        QMutexLocker l(&m_mutex);
-        std::vector<RunManagerDB::RemoteJob> jobs
-          = litesql::select<RunManagerDB::RemoteJob>(m_db,
-              RunManagerDB::RemoteJob::Uuid == toString(t_uuid)).all();
-        for (auto & remoteJob : jobs)
-        {
-          remoteJob.del();
-        }
-        m_db.commit();
-      }
-
-      std::map<openstudio::UUID, std::pair<int, int> > loadRemoteJobs()
-      {
-        std::map<openstudio::UUID, std::pair<int, int> > retvals;
-
-        std::vector<RunManagerDB::RemoteJob> remotejobs
-          = litesql::select<RunManagerDB::RemoteJob>(m_db).all();
-
-        for (const auto & remoteJob : remotejobs)
-        {
-          std::string uuidstr = remoteJob.uuid;
-          openstudio::UUID uuid = toUUID(uuidstr);
-          int remoteId = remoteJob.remoteId;
-          int remoteTaskId = remoteJob.remoteTaskId;
-
-          if (uuid.isNull())
-          {
-            LOG(Error, "Error loading job uuid: " << uuidstr);
-          } else {
-            retvals[uuid] = std::make_pair(remoteId, remoteTaskId);
-          }
-        }
-
-        return retvals;
-      }
-
       std::vector<openstudio::runmanager::Job> loadJobs()
       {
         QMutexLocker l(&m_mutex);
@@ -691,7 +639,7 @@ namespace detail {
           for (const auto & jobParam : childparam)
           {
             std::string uuidstr = jobParam.jobUuid;
-            LOG(Trace, "Job with keyfound: " << workflowkey << " " << uuidstr);
+            LOG(Trace, "Job with key found: " << workflowkey << " " << uuidstr);
             parentstoscan.push_back(openstudio::toUUID(uuidstr));
           }
 
@@ -1086,8 +1034,6 @@ namespace detail {
               tool.name,
               tv,
               toPath(tool.localBinPath),
-              toPath(tool.remoteArchive),
-              toPath(tool.remoteExe),
               boost::regex(regexstr)
               );
 
@@ -1122,8 +1068,6 @@ namespace detail {
           j.jobUuid = toString(t_job.uuid());
           j.name = toolInfo.name;
           j.localBinPath = toString(toolInfo.localBinPath);
-          j.remoteArchive = toString(toolInfo.remoteArchive);
-          j.remoteExe = toString(toolInfo.remoteExe);
           j.outFileFilter = boost::lexical_cast<std::string>(toolInfo.outFileFilter);
 
           if (toolInfo.version.getMajor())
@@ -1365,14 +1309,6 @@ namespace detail {
 
         co.setSimpleName(db_co.simpleName);
 
-        co.setMaxSLURMJobs(db_co.maxSLURMJobs);
-        co.setSLURMHost(db_co.slurmHost);
-        co.setSLURMUserName(db_co.slurmUserName);
-
-        co.setSLURMMaxTime(db_co.slurmMaxTime);
-        co.setSLURMPartition(db_co.slurmPartition);
-        co.setSLURMAccount(db_co.slurmAccount);
-
         std::vector<RunManagerDB::ToolLocations> vers = litesql::select<RunManagerDB::ToolLocations>(t_db).all();
 
         for (const auto & toolLocations : vers)
@@ -1397,7 +1333,7 @@ namespace detail {
           }
 
           co.setToolLocation(ToolVersion(major, minor, build),
-              ToolLocationInfo(ToolType(toolLocations.toolType), toPath(toolLocations.path), toPath(toolLocations.linuxBinaryArchive)));
+              ToolLocationInfo(ToolType(toolLocations.toolType), toPath(toolLocations.path)));
         }
 
         return co;
@@ -1423,7 +1359,6 @@ namespace detail {
           v.majorVer = toolLocationInfo.first.getMajor()?toolLocationInfo.first.getMajor().get():-1;
           v.minorVer = toolLocationInfo.first.getMinor()?toolLocationInfo.first.getMinor().get():-1;
           v.buildVer = toolLocationInfo.first.getBuild()?toolLocationInfo.first.getBuild().get():-1;
-          v.linuxBinaryArchive = toString(toolLocationInfo.second.linuxBinaryArchive);
           v.update();
         }
 
@@ -1434,14 +1369,6 @@ namespace detail {
         db_co.simpleName = t_co.getSimpleName();
 
         db_co.maxLocalJobs = t_co.getMaxLocalJobs();
-
-        db_co.maxSLURMJobs = t_co.getMaxSLURMJobs();
-        db_co.slurmHost = t_co.getSLURMHost();
-        db_co.slurmUserName = t_co.getSLURMUserName();
-
-        db_co.slurmMaxTime = t_co.getSLURMMaxTime();
-        db_co.slurmPartition = t_co.getSLURMPartition();
-        db_co.slurmAccount = t_co.getSLURMAccount();
 
         db_co.update();
       }
@@ -1495,10 +1422,8 @@ namespace detail {
       m_processingQueue(false),
       m_workPending(false), m_paused(t_paused), m_continue(true),
       m_localProcessCreator(new LocalProcessCreator()),
-      //m_remoteProcessCreator(new SLURMManager()),
       m_temporaryDB(t_temporaryDB),
       m_lastRunning(0),
-      m_lastRunningRemotely(0),
       m_lastRunningLocally(0),
       m_lastStatistics(QDateTime::currentDateTime())
   {
@@ -1522,26 +1447,12 @@ namespace detail {
     m_model.setHorizontalHeaderLabels(WorkflowItem::columnHeaders());
 
     std::vector<Job> loadedjobs = m_dbholder->loadJobs();
-    const std::map<openstudio::UUID, std::pair<int, int> > remotejobs = m_dbholder->loadRemoteJobs();
 
 
-    LOG(Info, "Queueing Jobs");
+    LOG(Info, "Queuing Jobs");
     m_dbholder->setLoading(true);
 
     enqueue(loadedjobs, false, m_dbfile.parent_path());
-    //for (auto & job : loadedjobs)
-    //{
-      //std::map<openstudio::UUID, std::pair<int, int> >::const_iterator itr2 = remotejobs.find(job.uuid());
-      //if (itr2 != remotejobs.end())
-      //{
-      //  try {
-      //    m_remoteProcessCreator->activate(); // make sure we have an active connection
-      //    job.start(m_remoteProcessCreator, itr2->second.first, itr2->second.second);
-      //  } catch (const std::exception &e) {
-      //    QMessageBox::information(0, "Error loading remote job", toQString(std::string("Error: ") + e.what() + " could not restore remote job: " + job.description()));
-      //  }
-      //}
-    //}
 
     m_dbholder->setLoading(false);
 
@@ -1597,16 +1508,6 @@ namespace detail {
       boost::filesystem::remove(m_dbfile);
     }
 
-  }
-
-  void RunManager_Impl::remoteProcessStarted(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
-  {
-    m_dbholder->setRemoteProcessId(t_uuid, t_remoteId, t_remoteTaskId);
-  }
-
-  void RunManager_Impl::remoteProcessFinished(const openstudio::UUID &t_uuid, int t_remoteId, int t_remoteTaskId)
-  {
-    m_dbholder->clearRemoteProcessId(t_uuid, t_remoteId, t_remoteTaskId);
   }
 
   void RunManager_Impl::registerMetaTypes()
@@ -2190,10 +2091,6 @@ namespace detail {
             SLOT(treeStateChanged(const openstudio::UUID &)), Qt::QueuedConnection);
       }
 
-      job.connect(SIGNAL(remoteProcessStarted(const openstudio::UUID &, int, int)), this,
-          SLOT(remoteProcessStarted(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
-      job.connect(SIGNAL(remoteProcessFinished(const openstudio::UUID &, int, int)), this,
-          SLOT(remoteProcessFinished(const openstudio::UUID &, int, int)), Qt::QueuedConnection);
       job.connect(SIGNAL(finishedExt(const openstudio::UUID &, const openstudio::runmanager::JobErrors &, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), this,
           SLOT(jobFinished(const openstudio::UUID &, const openstudio::runmanager::JobErrors &, const openstudio::DateTime &, const std::vector<openstudio::runmanager::FileInfo> &)), Qt::QueuedConnection);
     }
@@ -2545,18 +2442,6 @@ namespace detail {
   {
     QMutexLocker lock(&m_mutex);
     m_dbholder->setConfigOptions(co);
-
-//    if (!m_SLURMPassword.empty())
-//    {
-//      m_remoteProcessCreator->setConfiguration(
-//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-//    } else {
-//      m_remoteProcessCreator->setConfiguration(
-//       SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-//    }
-
   }
 
   void RunManager_Impl::showConfigGui(QWidget *parent)
@@ -2611,42 +2496,9 @@ namespace detail {
 
   void RunManager_Impl::processQueue()
   {
-
-    if (m_activate_mutex.tryLock())
-    {
-      // we are the only ones trying to test the slurmmanager for activation
-      QMutexLocker lock(&m_mutex);
-      const ConfigOptions config = getConfigOptions();
-      const int maxremotejobs = config.getSLURMHost().empty()?0:config.getMaxSLURMJobs();
-      bool paused = m_paused;
-
-      if (maxremotejobs > 0 && !paused)
-      {
-        std::deque<runmanager::Job> jobs(m_queue);
-        lock.unlock();
-
-        bool remoterunnable = false;
-
-        for (const auto & job : jobs)
-        {
-          if (job.remoteRunnable())
-          {
-            remoterunnable = true;
-            break;
-          }
-        }
-
-//        if (remoterunnable)
-//        {
-//          try {
-//            m_remoteProcessCreator->activate(); // make sure we have an active connection
-//          } catch (...) {
-//          }
-//        }
-      }
-
-      m_activate_mutex.unlock();
-    }
+    QMutexLocker lock(&m_mutex);
+    const ConfigOptions config = getConfigOptions();
+    bool paused = m_paused;
 
     m_waitCondition.wakeAll();
   }
@@ -2654,7 +2506,6 @@ namespace detail {
   std::map<std::string, double> RunManager_Impl::generateStatistics(const std::deque<runmanager::Job> &t_jobs)
   {
     int locallyrunningjobs = 0;
-    int remotelyrunningjobs = 0;
     int runningjobs = 0;
     int runningworkflows = 0;
     int secondsjobsrunning = 0;
@@ -2681,13 +2532,7 @@ namespace detail {
 
       if (job.running())
       {
-        if (job.runningRemotely())
-        {
-          ++remotelyrunningjobs;
-        } else {
-          ++locallyrunningjobs;
-        }
-
+        ++locallyrunningjobs;
         ++runningjobs;
       } else {
         boost::optional<openstudio::DateTime> start = job.startTime();
@@ -2725,7 +2570,6 @@ namespace detail {
     stats["Failed Jobs"] = failedjobs;
     stats["Successful Jobs"] = successfuljobs;
     stats["Locally Running Jobs"] = locallyrunningjobs;
-    stats["Remotely Running Jobs"] = remotelyrunningjobs;
 
     return stats;
   }
@@ -2735,22 +2579,6 @@ namespace detail {
     QMutexLocker lock(&m_mutex);
     return m_statistics;
   }
-
-//  void RunManager_Impl::setSLURMPassword(const std::string &t_pass)
-//  {
-//    m_SLURMPassword = t_pass;
-//    ConfigOptions co = m_dbholder->getConfigOptions();
-//    if (!m_SLURMPassword.empty())
-//    {
-//      m_remoteProcessCreator->setConfiguration(
-//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName(), m_SLURMPassword),
-//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-//    } else {
-//      m_remoteProcessCreator->setConfiguration(
-//        SSHCredentials(co.getSLURMHost(), co.getSLURMUserName()),
-//        SLURMConfigOptions(co.getSLURMMaxTime(), co.getSLURMPartition(), co.getSLURMAccount()));
-//    }
-//  }
 
   std::string RunManager_Impl::persistWorkflow(const Workflow &t_wf)
   {
@@ -2929,11 +2757,7 @@ namespace detail {
 
 
         int running = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::running, std::placeholders::_1));
-        int runningRemotely
-          = std::count_if(queue.begin(), queue.end(), std::bind(&openstudio::runmanager::Job::runningRemotely, std::placeholders::_1));
-        int runningLocally = running - runningRemotely;
-
-        //LOG(Info, boost::posix_time::microsec_clock::local_time() << " kicking off new jobs runningremotely: " << runningRemotely << " runningLocally " << runningLocally);
+        int runningLocally = running;
 
         auto itr = queue.begin();
         auto end = queue.end();
@@ -2941,27 +2765,18 @@ namespace detail {
 
         ConfigOptions config = getConfigOptions();
 
-        const int maxremotejobs = config.getSLURMHost().empty()?0:config.getMaxSLURMJobs();
         const int maxlocaljobs = config.getMaxLocalJobs();
 
         // Make sure we have as many running as we should have
-        while ((runningLocally < maxlocaljobs || runningRemotely < maxremotejobs) && itr != end)
+        while ((runningLocally < maxlocaljobs) && itr != end)
         {
           boost::optional<Job> parent = itr->parent();
 
           if (itr->runnable())
           {
-//            if (runningRemotely < maxremotejobs && m_remoteProcessCreator->hasConnection() && itr->remoteRunnable())
-//            {
-//              LOG(Info, "Starting job remotely: " << toString(itr->uuid()) << " " << itr->description() );
-//              itr->start(m_remoteProcessCreator);
-//              ++runningRemotely;
-//            } else if (runningLocally < maxlocaljobs) {
-            if (runningLocally < maxlocaljobs) {
-              LOG(Info, "Starting job locally: " << toString(itr->uuid()) << " " << itr->description() );
-              itr->start(m_localProcessCreator);
-              ++runningLocally;
-            }
+            LOG(Info, "Starting job locally: " << toString(itr->uuid()) << " " << itr->description() );
+            itr->start(m_localProcessCreator);
+            ++runningLocally;
           }
 
           ++itr;
@@ -2969,7 +2784,6 @@ namespace detail {
 
 
         if ((running != m_lastRunning
-             || runningRemotely != m_lastRunningRemotely
              || runningLocally != m_lastRunningLocally)
             && m_lastStatistics.addSecs(1) < QDateTime::currentDateTime())
         {
@@ -2982,7 +2796,6 @@ namespace detail {
           }
 
           m_lastRunning = running;
-          m_lastRunningRemotely = runningRemotely;
           m_lastRunningLocally = runningLocally;
           m_lastStatistics = QDateTime::currentDateTime();
 
@@ -2993,9 +2806,6 @@ namespace detail {
 
 
         m_processingQueue = false;
-
-        
-        //LOG(Info, boost::posix_time::microsec_clock::local_time() << " done kicking off new jobs runningremotely: " << runningRemotely << " runningLocally " << runningLocally);
 
       } else {
         std::deque<openstudio::runmanager::Job> queue(m_queue);
