@@ -934,10 +934,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
   // OACtrl
   QDomElement airSystemOACtrlElement = airSystemElement.firstChildElement("OACtrl");
+  boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem;
 
   if( ! airSystemOACtrlElement.isNull() )
   {
-    boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem();
+    oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem();
     if( ! oaSystem )
     {
       model::ControllerOutdoorAir oaController(model);
@@ -1114,9 +1115,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       {
         if( boost::optional<model::ModelObject> mo = translateFan(fanElement,doc,model) )
         {
-          boost::optional<model::HVACComponent> fan = mo->optionalCast<model::HVACComponent>();
-          OS_ASSERT(fan);
-          fan->addToNode(supplyInletNode);
+          if( oaSystem )
+          {
+            if( boost::optional<model::Node> outboardReliefNode = oaSystem->outboardReliefNode() )
+            {
+              boost::optional<model::HVACComponent> fan = mo->optionalCast<model::HVACComponent>();
+              OS_ASSERT(fan);
+              fan->addToNode(outboardReliefNode.get());
+            }
+          } 
         }
       }
     }
