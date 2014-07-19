@@ -484,6 +484,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     return result;
   }
 
+  // Type
+  QDomElement typeElement = airSystemElement.firstChildElement("Type");
+  if( typeElement.text().compare("Exhaust",Qt::CaseInsensitive) == 0 )
+  {
+    return boost::none;
+  }
+
   // Name
   QDomElement nameElement = airSystemElement.firstChildElement("Name");
 
@@ -5783,7 +5790,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
   std::string name = element.firstChildElement("Name").text().toStdString();
 
   // Type
-  std::string type = element.firstChildElement("Type").text().toStdString();
+  QDomElement typeElement = element.firstChildElement("Type");
+  if( typeElement.text().compare("Exhaust",Qt::CaseInsensitive) == 0 )
+  {
+    return boost::none;
+  }
+  std::string type = typeElement.text().toStdString();
 
   // Availability Schedule
   QDomElement scheduleElement = element.firstChildElement("AvailSchRef");
