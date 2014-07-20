@@ -276,19 +276,10 @@ namespace radiance {
         } else {
           // yes 3-phase
           daylightsimopt << "--z";
-
-          // copy required bsdf files into place
-          openstudio::path bsdfoutpath = radDir/ openstudio::toPath("bsdf");
-
-          // TODO: find all the bsdfs associated with the model and copy them all over now
-
-          boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/clear_100.xml"), bsdfoutpath / openstudio::toPath("clear_100.xml"), boost::filesystem::copy_option::overwrite_if_exists);
-          boost::filesystem::copy_file(getSharedResourcesPath() / openstudio::toPath("radiance/Daylighting/shade_020.xml"), bsdfoutpath / openstudio::toPath("shade_020.xml"), boost::filesystem::copy_option::overwrite_if_exists);
-
-          /// \todo rpg777 do we need reference these files in the materials.rad file?
-          //
-          /// \todo rgp777 also, we only want to group windows if they share the same shadinggroup
         }
+
+        // moved bsdf stuff to window processing block - RPG
+
       }else{
         LOG(Error, "Cannot open file '" << toString(daylightsimoptpath) << "' for writing");
       }
@@ -1108,6 +1099,20 @@ namespace radiance {
                 ++vertex)
             {
               m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
+            }
+
+
+            // copy required bsdf files into place
+            openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
+
+            if (rMaterial == "glass"){
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 0) + ".xml"), bsdfoutpath / \
+                openstudio::toPath("cl_Tn" + formatString(tVis, 1) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 0) + "_blinds.xml"), bsdfoutpath / \
+                openstudio::toPath("cl_Tn" + formatString(tVis, 1) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+            } else if (rMaterial == "trans"){
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 0) + ".xml"), bsdfoutpath / \
+                openstudio::toPath("df_Tn" + formatString(tVis, 1) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
             }
 
           } else if (subSurfaceUpCase == "DOOR") {
