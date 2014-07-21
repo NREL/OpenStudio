@@ -337,7 +337,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   if(APPLE)
     set(_NAME "${LOWER_NAME}.bundle")
-    add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${RUNTIME_OUTPUT_DIRECTORY}/${_NAME}")
+    add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
   elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
     set(_NAME "${LOWER_NAME}.so")
   else()
