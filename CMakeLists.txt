@@ -75,7 +75,7 @@ option(BUILD_PACKAGE "Build package" OFF)
 
 # Build test runner targets.
 # This is a convenience for Visual Studio users
-option(ENABLE_TEST_RUNNER_TARGETS "Create test runner targets" OFF)
+option(ENABLE_TEST_RUNNER_TARGETS "Create test runenr targets" OFF)
 
 
 # Build with OpenSSL support
@@ -115,8 +115,6 @@ elseif(WIN32)
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 endif()
 
-
-
 if(MSVC)
   # Visual Studio compiler check
   # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
@@ -131,6 +129,26 @@ if(MSVC)
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+endif()
+
+# Apple Sanity Check
+if(APPLE)
+  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
+  endif()
+
+  if(NOT CMAKE_OSX_SYSROOT)
+    message(FATAL_ERROR "OSX Sysroot must be set")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+    set(OSX_SDK "10.8")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
+    set(OSX_SDK "10.9")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
+  else()
+    message(FATAL_ERROR "OSX Sysroot must use the 10.8 or 10.9 SDK")
+  endif()
+
 endif()
 
 # EnergyPlus
@@ -255,26 +273,6 @@ else()
   option(BUILD_QT "Build Qt" ON)
 endif()
 
-# Apple Sanity Check
-if(APPLE)
-  if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  endif()
-
-  if(NOT CMAKE_OSX_SYSROOT)
-    message(FATAL_ERROR "OSX Sysroot must be set")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
-  	set(OSX_SDK "10.8")
-  	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-  	set(OSX_SDK "10.9")
-  	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  else()
-    message(FATAL_ERROR "OSX Sysroot must use the 10.8 or 10.9 SDK")
-  endif()
-
-endif()
-
 include(ExternalProject)
 include(ProcessorCount)
 
@@ -285,28 +283,28 @@ if(CPUCOUNT EQUAL 0)
 endif()
   
 if(UNIX)
-	if(CPUCOUNT EQUAL 1)
-		set(BOOST_CPUCOUNT "1")
-		set(QT_CPUCOUNT "1")
-	elseif(CPUCOUNT EQUAL 2)
-		set(BOOST_CPUCOUNT "1")
-		set(QT_CPUCOUNT "1")  
-	elseif(CPUCOUNT EQUAL 4)
-		set(BOOST_CPUCOUNT "1")
-		set(QT_CPUCOUNT "3")  
-	elseif(CPUCOUNT EQUAL 8)
-		set(BOOST_CPUCOUNT "2")
-		set(QT_CPUCOUNT "6")
-	elseif(CPUCOUNT EQUAL 12)
-		set(BOOST_CPUCOUNT "3")
-		set(QT_CPUCOUNT "9")    
-	elseif(CPUCOUNT EQUAL 16)
-		set(BOOST_CPUCOUNT "4")
-		set(QT_CPUCOUNT "12")    
-	else()
-		set(BOOST_CPUCOUNT "1")
-		set(QT_CPUCOUNT "1")    
-	endif()
+  if(CPUCOUNT EQUAL 1)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 2)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  elseif(CPUCOUNT EQUAL 4)
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "3")
+  elseif(CPUCOUNT EQUAL 8)
+    set(BOOST_CPUCOUNT "2")
+    set(QT_CPUCOUNT "6")
+  elseif(CPUCOUNT EQUAL 12)
+    set(BOOST_CPUCOUNT "3")
+    set(QT_CPUCOUNT "9")
+  elseif(CPUCOUNT EQUAL 16)
+    set(BOOST_CPUCOUNT "4")
+    set(QT_CPUCOUNT "12")
+  else()
+    set(BOOST_CPUCOUNT "1")
+    set(QT_CPUCOUNT "1")
+  endif()
 endif()
 
 mark_as_advanced(
@@ -393,8 +391,12 @@ if(WIN32 AND MSVC AND CMAKE_CL_64)
 endif()
 
 if(APPLE)
-	# default to build Ruby for compatibility with SketchUp
-	option(BUILD_RUBY "Build Ruby" ON)
+  if (OSX_SDK STREQUAL "10.8") 
+    # Ruby 2.0 is not in 10.8 SDK
+    option(BUILD_RUBY "Build Ruby" ON)
+  else()
+    option(BUILD_RUBY "Build Ruby" OFF)
+  endif()
 elseif(UNIX)
   if(RUBY_FOUND)
     option(BUILD_RUBY "Build Ruby" OFF)
@@ -456,22 +458,36 @@ endif()
 
 if(BUILD_RUBY AND UNIX)
   if(APPLE)
-    # OSX can work with a static ruby library
-    ExternalProject_Add(Ruby
-      URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p247.tar.gz
-      URL_MD5 c351450a0bed670e0f5ca07da3458a5b
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --without-tcl --without-tk --disable-install-doc --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
-      INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
-      )
-    set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
-    set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a)
+    if (OSX_SDK STREQUAL "10.8") 
+      # Unpackage build of Ruby 2.0 made on Mac 10.8
+      ExternalProject_Add(Ruby
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481-shared.zip
+        URL_MD5 af634ed75a961e69c03c6458a2e8c110
+        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *"
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND ""
+        INSTALL_COMMAND ""
+      )      
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib)
+    else()
+      # build shared libraries for compatibility with SketchUp
+      ExternalProject_Add(Ruby
+        URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
+        URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
+        CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install --with-arch=i386,x86_64 CFLAGS=\"-fPIC\" LDFLAGS=\"\""
+        BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
+        INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
+        )
+      set(RUBY_EXECUTABLE ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby)
+      set(RUBY_LIBRARY ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby.2.0.0.dylib)
+    endif()
   else()
-    # but linux cannot, it has a double free when unloading a ruby module
+    # have to build shared libraries on linux otherwise has a double free when unloading a ruby module
     ExternalProject_Add(Ruby
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481.tar.gz
       URL_MD5 3913e0ad6cc572b7358e4c6a8c4b2551
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
+      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && sh -c "./configure --enable-shared --without-tcl --without-tk --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install CFLAGS=\"-fPIC\" "
       BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE)
       INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby && $(MAKE) install
     )

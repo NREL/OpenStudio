@@ -208,14 +208,9 @@ if(UNIX)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
   
   if(APPLE)
-    if(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
-      #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libstdc++")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-    else()
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libstdc++")
-    endif()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libstdc++")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
   endif()
 
   # effective c++
@@ -290,8 +285,14 @@ mark_as_advanced(
 
 # Ruby
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
-find_package(Ruby REQUIRED)
 
+if(APPLE)
+  # set RUBYLIB environment variable so find_package can find the right Ruby libraries
+  set(ENV{RUBYLIB} "${RUBY_EXECUTABLE}/../lib/ruby/2.0.0/universal-darwin12.5.0/;${RUBY_EXECUTABLE}/../lib/ruby/2.0.0/" )
+  message("YO YO $ENV{RUBYLIB}")
+endif()
+
+find_package(Ruby REQUIRED)
 
 set(RUBY_MODULE_DIR "Ruby")
 
