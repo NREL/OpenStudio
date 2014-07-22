@@ -672,7 +672,7 @@ if(BUILD_QT)
     ExternalProject_Add(Qt
       URL http://developer.nrel.gov/downloads/buildings/openstudio/src/qt-everywhere-opensource-src-5.3.1.tar.gz
       URL_MD5 a355749e4f200a6392ecad151d1d0cdc
-      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
+      CONFIGURE_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && ./configure -v ${APPLE_SDK_COMMAND} -platform macx-clang-32-64 -release -opensource -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install"
       PATCH_COMMAND "${CMAKE_COMMAND}" -E copy_directory ${CMAKE_SOURCE_DIR}/dependencies/qt/macx-clang-32-64/ ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/qtbase/mkspecs/macx-clang-32-64/
       BUILD_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j${QT_CPUCOUNT}"
       INSTALL_COMMAND /bin/sh -c "cd ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt/ && make -j1 install"
