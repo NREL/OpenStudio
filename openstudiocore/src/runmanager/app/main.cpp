@@ -31,7 +31,7 @@
 
 void showMessage(const std::string &s)
 {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   int argc = 0;
   char **argv = 0;
   QApplication qApplication(argc, argv);

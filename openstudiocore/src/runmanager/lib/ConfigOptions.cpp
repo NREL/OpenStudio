@@ -530,7 +530,7 @@ namespace runmanager {
       
 
     std::vector<openstudio::path> searchdirs;
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
     searchdirs.push_back(toPath("C:\\Program Files\\"));
     searchdirs.push_back(toPath("C:\\Program Files (x86)\\"));
 
@@ -593,7 +593,7 @@ namespace runmanager {
       
 
     std::vector<openstudio::path> searchdirs;
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
     searchdirs.push_back(toPath("C:\\"));
 #elif defined(Q_OS_MAC)
     searchdirs.push_back(toPath("/Applications"));
@@ -859,7 +859,7 @@ namespace runmanager {
 
     std::vector<openstudio::path> search;
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     if (openstudio::applicationIsRunningFromBuildDirectory())
     {
       openstudio::path p = openstudio::getApplicationRunDirectory().parent_path().parent_path().parent_path().parent_path().parent_path();

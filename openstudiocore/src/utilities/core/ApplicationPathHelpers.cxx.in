@@ -27,7 +27,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 #include <Windows.h>
 #else
 #include <dlfcn.h>
@@ -129,7 +129,7 @@ namespace openstudio {
 
 
   openstudio::path getApplicationRunDirectory() {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
       TCHAR path[2048];
       int size = GetModuleFileName(GetModuleHandle("openstudio_utilities.dll"), path, sizeof(path)-1);
       
@@ -312,7 +312,7 @@ namespace openstudio {
 
   bool applicationIsRunningFromBuildDirectory()
   {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
     openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationRunDirectory())));
 #else
@@ -380,7 +380,7 @@ openstudio::path getOpenStudioRubyScriptsPath() {
 }
 
 openstudio::path getOpenStudioEmbeddedRubyPath() {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   if (applicationIsRunningFromBuildDirectory())
   {
     //Ruby 2.0 x64

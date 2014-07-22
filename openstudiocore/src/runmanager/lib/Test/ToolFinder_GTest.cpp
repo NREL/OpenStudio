@@ -35,7 +35,7 @@ TEST_F(RunManagerTestFixture, ToolFinder)
   std::vector<openstudio::path> search;
 
  
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   search.push_back(openstudio::toPath("C:\\"));
 #else
   search.push_back(openstudio::toPath("/"));

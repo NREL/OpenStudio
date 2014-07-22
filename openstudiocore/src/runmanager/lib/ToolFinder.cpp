@@ -140,7 +140,7 @@ namespace runmanager {
       const std::pair<ToolVersion, ToolLocationInfo> &t_tool)
   {
     openstudio::path runbase;
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     if (openstudio::applicationIsRunningFromBuildDirectory())
     {
       runbase = openstudio::getApplicationRunDirectory().parent_path().parent_path().parent_path().parent_path().parent_path();
@@ -258,7 +258,7 @@ namespace runmanager {
   std::vector<std::pair<ToolVersion, ToolLocationInfo> > ToolFinder::findTools(bool t_showProgressDialog) const
   {
     std::vector<std::string> names;
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     names.push_back("ies2rad.exe");
     names.push_back("ruby.exe");
     names.push_back("energyplus.exe");
@@ -278,7 +278,7 @@ namespace runmanager {
 
     // DLM: have to sort before calling unique, unique only works on consecutive elements
     searchPaths.erase(std::unique(searchPaths.begin(), searchPaths.end()), searchPaths.end()); // Erase duplicate elements
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     // For Windows, maintain drive order while searching the deepest paths first
     std::vector<openstudio::path> newSearchPaths, temp;
     char drive = 'Z';
