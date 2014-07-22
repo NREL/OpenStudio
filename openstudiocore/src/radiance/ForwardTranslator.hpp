@@ -154,9 +154,9 @@ namespace radiance {
 
   };
 
-  std::string formatString(double t_d, unsigned t_prec = 15);
+  RADIANCE_API std::string formatString(double t_d, unsigned t_prec = 15);
 
-  std::string cleanName(const std::string& name);
+  RADIANCE_API std::string cleanName(const std::string& name);
 
 } // radiance
 } // openstudio

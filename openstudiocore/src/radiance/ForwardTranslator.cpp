@@ -95,16 +95,17 @@ namespace radiance {
   std::string formatString(double t_d, unsigned t_prec)
   {
     std::stringstream ss;
-    ss << std::setprecision(t_prec) << std::showpoint << t_d;
+    ss << std::setprecision(t_prec) << std::showpoint << std::fixed << t_d;
     std::string s = ss.str();
 
+    /*
     // truncate 0's from the end
     int i = s.size() - 1;
     while (i > 0 && s[i] == '0')
     {
       --i;
     }
-
+ 
     if (i > 0)
     {
       s.erase(i + 1);
@@ -114,6 +115,7 @@ namespace radiance {
         s.push_back('0');
       }
     }
+    */
 
     return s;
   }
@@ -1029,6 +1031,10 @@ namespace radiance {
               // simplified thx to Axel...
               tn = tVis * 1.0895;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
+              if (tVis >= 0.92) {
+                LOG(Warn, "glazing material definition in " + space_name + "; Tvis =" + formatString(tVis, 4) + " is very high. Suspect.");
+              }
+
             }
 
             // make materials for single phase (AKA two-phase, depends on whom you talk to)
@@ -1077,21 +1083,26 @@ namespace radiance {
               //double nTs = 1.0; // transmitted specularity
             }
 
+            std::string winId = "_azi-" + formatString(azi, 4);
+            if (subSurfaceUpCase == "SKYLIGHT"){
+              winId = "_skylight";
+            }
+
             m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis) + " (tn = "+ formatString(tn) + ")\n";
             // write material
             m_radMaterials.insert("void "+rMaterial+" glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
             m_radMaterialsDC.insert("void light glaz_light_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
             // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
             if (shadingControl){
-              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
-            }else{
-              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+//            }else{
+//             m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
             }
             // polygon header
             m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
             // write the polygon
-            m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_"+space_name + "_azi-" + formatString(azi, 4) + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
+            m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_"+space_name + winId + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
             for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
@@ -1106,13 +1117,37 @@ namespace radiance {
             openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
 
             if (rMaterial == "glass"){
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 0) + ".xml"), bsdfoutpath / \
-                openstudio::toPath("cl_Tn" + formatString(tVis, 1) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 0) + "_blinds.xml"), bsdfoutpath / \
-                openstudio::toPath("cl_Tn" + formatString(tVis, 1) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+
+              openstudio::path sourcePath = openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml");
+              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
+              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
+              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+
+
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+                openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), bsdfoutpath / \
+                openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
+              
+              // add job to vmx problem set
+              m_radDCmats.insert("glaz_" + rMaterial + "_" + space_name + winId + "_tn-" + formatString(tn, 4) + ",cl_Tn" + \
+                formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+
             } else if (rMaterial == "trans"){
-              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 0) + ".xml"), bsdfoutpath / \
-                openstudio::toPath("df_Tn" + formatString(tVis, 1) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+
+              openstudio::path sourcePath = openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 2) + ".xml");
+              std::cout << "tVis = " << openstudio::toString(tVis) << std::endl;
+              std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
+              std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
+
+              boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/df_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
+                openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
+
+              // add job to vmx problem set
+              m_radDCmats.insert("glaz_" + rMaterial + "_" + space_name + winId + "_tn-" + formatString(tn, 4) + ",df_Tn" + \
+                formatString(tVis, 2) + ".xml\n");
+
             }
 
           } else if (subSurfaceUpCase == "DOOR") {
