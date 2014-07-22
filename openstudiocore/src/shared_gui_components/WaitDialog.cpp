@@ -52,10 +52,7 @@ QSize WaitDialog::sizeHint() const
 
 void WaitDialog::createWidgets()
 {
-  QWidget * widget = 0;
-  QBoxLayout * layout = 0;
   QLabel * label = 0;
-  bool isConnected = false;
 
   upperLayout()->addStretch();
 
