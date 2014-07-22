@@ -287,9 +287,14 @@ mark_as_advanced(
 find_program(RUBY_EXECUTABLE NAMES ruby PATHS $ENV{CMAKE_RUBY_PATH} NO_SYSTEM_ENVIRONMENT_PATH)
 
 if(APPLE)
-  # set RUBYLIB environment variable so find_package can find the right Ruby libraries
-  set(ENV{RUBYLIB} "${RUBY_EXECUTABLE}/../lib/ruby/2.0.0/universal-darwin12.5.0/;${RUBY_EXECUTABLE}/../lib/ruby/2.0.0/" )
-  message("YO YO $ENV{RUBYLIB}")
+  if(CMAKE_OSX_SYSROOT MATCHES ".*10\\.8.*")
+    # set RUBYLIB environment variable so find_package can find the right Ruby libraries
+    get_filename_component(RUBY_EXECUTABLE_DIR ${RUBY_EXECUTABLE} PATH)
+    set(ENV{RUBYLIB} "${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/universal-darwin12.5.0/:${RUBY_EXECUTABLE_DIR}/../lib/ruby/2.0.0/" )
+    set(RUBY_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/" CACHE PATH "The Ruby include dir" FORCE)
+    set(RUBY_CONFIG_INCLUDE_DIR "${RUBY_EXECUTABLE_DIR}/../include/ruby-2.0.0/universal-darwin12.5.0/" CACHE PATH "The Ruby config include dir" FORCE)
+    set(RUBY_LIBRARY "${RUBY_EXECUTABLE_DIR}/../lib/libruby.2.0.0.dylib" CACHE PATH "The Ruby library" FORCE)
+  endif()
 endif()
 
 find_package(Ruby REQUIRED)
