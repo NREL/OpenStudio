@@ -3214,7 +3214,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   // Exhaust Fan(s)
 
-  QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowRtSim");
+  QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowSim");
   QDomElement exhFanNameElement = thermalZoneElement.firstChildElement("ExhFanName");
 
   value = exhFlowRtSimElement.text().toDouble(&ok);
