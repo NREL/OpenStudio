@@ -788,14 +788,14 @@ namespace radiance {
 
           // write material
           m_radMaterials.insert("void plastic refl_"
-              + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n"
-              + formatString(interiorVisibleReflectance) + " "
-              + formatString(interiorVisibleReflectance) + " "
-              + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+              + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n"
+              + formatString(interiorVisibleReflectance, 3) + " "
+              + formatString(interiorVisibleReflectance, 3) + " "
+              + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
 
-          std::string shadingsurface = "refl_" + formatString(interiorVisibleReflectance) + " polygon " + shadingSurface_name + "\n";
+          std::string shadingsurface = "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n";
           shadingsurface += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (Point3dVector::const_iterator vertex = polygon.begin();
@@ -865,8 +865,8 @@ namespace radiance {
 
           // write material
           m_radMaterials.insert("void plastic refl_" + formatString(exteriorVisibleReflectance) + "\n0\n0\n5\n"
-              + formatString(interiorVisibleReflectance) + " " + formatString(exteriorVisibleReflectance) + " "
-              + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+              + formatString(interiorVisibleReflectance, 3) + " " + formatString(exteriorVisibleReflectance) + " "
+              + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
 
@@ -939,19 +939,19 @@ namespace radiance {
           interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
         }
 
-        m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
+        m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
 
         // write material to library array
         /// \todo deal with exterior surfaces
-        m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance)
-            + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance)
-            + " " + formatString(interiorVisibleReflectance)
-            + " " + formatString(interiorVisibleReflectance) + " 0 0\n");
+        m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3)
+            + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3)
+            + " " + formatString(interiorVisibleReflectance, 3)
+            + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n");
 
         // write surface polygon
         openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(surface);
 
-        m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance)
+        m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3)
           + " polygon " + surface_name + "\n0\n0\n" + formatString(polygon.size()*3) +"\n";
 
         for (const auto & vertex : polygon)
@@ -988,7 +988,6 @@ namespace radiance {
           boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
 
           // find window group
-          // double azi = surface.azimuth() * (180 / PI());
           double azi = surface.azimuth();
           
           WindowGroup windowGroup = getWindowGroup(azi, space, *construction, shadingControl, polygon);
@@ -1016,7 +1015,7 @@ namespace radiance {
             // set transmittance...
             double visibleTransmittance = subSurface.visibleTransmittance().get();
 
-            // convert transmittance (Tn) to transmissivity (tn) for Radiance material
+            // convert transmittance(Tn) to transmissivity(tn) for Radiance material
             // tn = (sqrt(.8402528435+.0072522239*Tn*Tn)-.9166530661)/.0036261119/Tn
             // or: tn = 1.0895 * Tn (Thanks, Axel Jacobs! (http://www.jaloxa.eu/resources/radiance/documentation/docs/radiance_cookbook.pdf, p. 21))
             double tVis = visibleTransmittance;
@@ -1026,15 +1025,11 @@ namespace radiance {
               tn = 0.0;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
             } else {
-              // double tn_x = 0.0072522239 * tVis * tVis;
-              // double tn_y = sqrt(tn_x + 0.8402528435) - 0.9166530661;
-              // simplified thx to Axel...
               tn = tVis * 1.0895;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
               if (tVis >= 0.92) {
                 LOG(Warn, "glazing material definition in " + space_name + "; Tvis =" + formatString(tVis, 4) + " is very high. Suspect.");
               }
-
             }
 
             // make materials for single phase (AKA two-phase, depends on whom you talk to)
@@ -1090,13 +1085,11 @@ namespace radiance {
 
             m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis) + " (tn = "+ formatString(tn) + ")\n";
             // write material
-            m_radMaterials.insert("void "+rMaterial+" glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+" "+matString+"");
-            m_radMaterialsDC.insert("void light glaz_light_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+"\n0\n0\n3\n1 1 1\n");
+            m_radMaterials.insert("void " + rMaterial + " glaz_" + rMaterial+"_" + space_name + winId + "_tn-" + formatString(tn, 4) + " " + matString +"");
+            m_radMaterialsDC.insert("void light glaz_light_" + space_name + winId +"_tn-" + formatString(tn, 4) + "\n0\n0\n3\n1 1 1\n");
             // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
             if (shadingControl){
-              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
-//            }else{
-//             m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name+"_azi-"+formatString(azi, 4)+"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
+              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name + winId +"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
             }
             // polygon header
             m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
@@ -1111,7 +1104,6 @@ namespace radiance {
             {
               m_radWindowGroups[windowGroup_name] += "" + formatString(vertex->x()) + " " + formatString(vertex->y()) + " " + formatString(vertex->z()) + "\n";
             }
-
 
             // copy required bsdf files into place
             openstudio::path bsdfoutpath = t_radDir/ openstudio::toPath("bsdf");
@@ -1159,12 +1151,12 @@ namespace radiance {
             double interiorVisibleReflectance = 1.0 - interiorVisibleAbsorptance;
             double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
             //polygon header
-            m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
+            m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
             m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
             // write material
-            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+            m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
             // write polygon
-            m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance) + " polygon " + subSurface_name + "\n";
+            m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + subSurface_name + "\n";
             m_radSpaces[space_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
             for (const auto & vertex : polygon)
@@ -1205,13 +1197,13 @@ namespace radiance {
           }
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
-          m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
+          m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
           // get / write surface polygon
           //
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(shadingSurface);
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance) + " polygon " + shadingSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + shadingSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
 
           for (const auto & vertex : polygon)
           {
@@ -1245,14 +1237,14 @@ namespace radiance {
           double exteriorVisibleReflectance = 1.0 - exteriorVisibleAbsorptance;
 
           // write material
-          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " " + formatString(interiorVisibleReflectance) + " 0 0\n\n");
+          m_radMaterials.insert("void plastic refl_" + formatString(interiorVisibleReflectance, 3) + "\n0\n0\n5\n" + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " " + formatString(interiorVisibleReflectance, 3) + " 0 0\n\n");
           // polygon header
-          m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance) + "\n";
+          m_radSpaces[space_name] += "#--interiorVisibleReflectance = " + formatString(interiorVisibleReflectance, 3) + "\n";
           m_radSpaces[space_name] += "#--exteriorVisibleReflectance = " + formatString(exteriorVisibleReflectance) + "\n";
           // get / write surface polygon
 
           openstudio::Point3dVector polygon = openstudio::radiance::ForwardTranslator::getPolygon(interiorPartitionSurface);
-          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance) + " polygon " + interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
+          m_radSpaces[space_name] += "refl_" + formatString(interiorVisibleReflectance, 3) + " polygon " + interiorPartitionSurface_name + "\n0\n0\n" + formatString(polygon.size()*3) + "\n";
           for (const auto & vertex : polygon)
           {
             m_radSpaces[space_name] += formatString(vertex.x()) + " " + formatString(vertex.y()) + " " + formatString(vertex.z()) + "\n\n";

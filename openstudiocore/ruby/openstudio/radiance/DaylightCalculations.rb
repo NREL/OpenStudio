@@ -189,6 +189,8 @@ if not result
   puts "failed to run ModelToRad"
   exit false
 end
+puts "ran modeltorad only."
+=begin
 
 # if no sqlPath given, glob under the modelPath to find it
 if sqlPath.empty?
@@ -250,3 +252,4 @@ FileUtils.cp_r files, 'out/files'
 
 weather = Dir.glob('in/files/*.epw')
 FileUtils.cp weather, 'out/files/'
+=end
