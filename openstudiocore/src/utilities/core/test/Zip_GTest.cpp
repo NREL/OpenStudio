@@ -28,7 +28,7 @@
 #include "../ZipFile.hpp"
 
 
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
 std::ostream& operator<<(std::ostream& t_o, const openstudio::path &t_path)
 {
   return t_o << openstudio::toString(t_path);

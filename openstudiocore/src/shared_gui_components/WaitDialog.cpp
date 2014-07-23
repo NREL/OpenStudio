@@ -52,10 +52,7 @@ QSize WaitDialog::sizeHint() const
 
 void WaitDialog::createWidgets()
 {
-  QWidget * widget = 0;
-  QBoxLayout * layout = 0;
   QLabel * label = 0;
-  bool isConnected = false;
 
   upperLayout()->addStretch();
 
@@ -85,7 +82,7 @@ void WaitDialog::createWidgets()
 
   #ifdef Q_OS_MAC
     setWindowFlags(Qt::FramelessWindowHint);
-  #elif defined(Q_OS_WIN32)
+  #elif defined(Q_OS_WIN)
     setWindowFlags(Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
   #endif
 

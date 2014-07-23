@@ -135,7 +135,7 @@ namespace runmanager {
 
   openstudio::path RunManager::generateTempPathName()
   {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     const char *tmpdbname = tmpnam(0);
     return openstudio::tempDir()/toPath(std::string(tmpdbname));
 #else

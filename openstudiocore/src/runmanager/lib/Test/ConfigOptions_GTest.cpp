@@ -82,12 +82,12 @@ TEST_F(RunManagerTestFixture, ConfigOptionsTest)
   ToolVersion e5(2,7,1);
   ToolVersion e6(2);
 
-  ToolLocationInfo p1 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e1"), openstudio::path());
-  ToolLocationInfo p2 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e2"), openstudio::path());
-  ToolLocationInfo p3 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e3"), openstudio::path());
-  ToolLocationInfo p4 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e4"), openstudio::path());
-  ToolLocationInfo p5 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e5"), openstudio::path());
-  ToolLocationInfo p6 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e6"), openstudio::path());
+  ToolLocationInfo p1 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e1"));
+  ToolLocationInfo p2 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e2"));
+  ToolLocationInfo p3 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e3"));
+  ToolLocationInfo p4 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e4"));
+  ToolLocationInfo p5 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e5"));
+  ToolLocationInfo p6 = ToolLocationInfo(ToolType("EnergyPlus"), toPath("e6"));
 
   co.setToolLocation(e6, p6);
   co.setToolLocation(e5, p5);
