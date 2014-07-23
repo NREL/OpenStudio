@@ -660,6 +660,14 @@ set(GTEST_INCLUDE_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest/inclu
 set(GTEST_LIB_DIR ${CMAKE_BINARY_DIR}/GoogleTest-prefix/src/GoogleTest-build)
 
 if(BUILD_QT)
+  set(Qt5Widgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Widgets)
+  set(Qt5Sql_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Sql)
+  set(Qt5Network_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Network)
+  set(Qt5Xml_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Xml)
+  set(Qt5WebKit_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKit)
+  set(Qt5WebKitWidgets_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5WebKitWidgets)
+  set(Qt5Concurrent_DIR ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/lib/cmake/Qt5Concurrent)
+
   if(APPLE)
     # We're going to explicitly use the SDK specified in the configuration by the user
     #set(APPLE_SDK_COMMAND "-sdk \"${CMAKE_OSX_SYSROOT}\"" )
