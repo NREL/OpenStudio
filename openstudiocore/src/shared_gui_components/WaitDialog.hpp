@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_WAITDIALOG_H
-#define OPENSTUDIO_WAITDIALOG_H
+#ifndef SHAREDGUICOMPONENTS_WAITDIALOG_HPP
+#define SHAREDGUICOMPONENTS_WAITDIALOG_HPP
 
 #include "OSDialog.hpp"
 
@@ -56,4 +56,4 @@ private:
 
 } // openstudio
 
-#endif // OPENSTUDIO_WAITDIALOG_H
+#endif // SHAREDGUICOMPONENTS_WAITDIALOG_HPP

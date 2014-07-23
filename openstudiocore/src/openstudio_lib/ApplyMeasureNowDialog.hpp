@@ -17,8 +17,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef OPENSTUDIO_APPLYMEASURENOWDIALOG_H
-#define OPENSTUDIO_APPLYMEASURENOWDIALOG_H
+#ifndef OPENSTUDIO_APPLYMEASURENOWDIALOG_HPP
+#define OPENSTUDIO_APPLYMEASURENOWDIALOG_HPP
 
 #include "../shared_gui_components/HeaderViews.hpp"
 #include "../shared_gui_components/OSDialog.hpp"
@@ -235,4 +235,4 @@ public slots:
 
 } // openstudio
 
-#endif // OPENSTUDIO_APPLYMEASURENOWDIALOG_H
+#endif // OPENSTUDIO_APPLYMEASURENOWDIALOG_HPP
