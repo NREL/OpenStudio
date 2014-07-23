@@ -398,18 +398,16 @@ QString OSGridController::cellStyle(int rowIndex, int columnIndex)
   }
 
   QString style;
-  style.append("QWidget#TableCell {");
-  style.append("  background-color: ");
-  style.append(cellColor);
-  style.append(";");
+  style.append("QPushButton#TableCell { border: none;");
+  style.append("                        background-color: " + cellColor + ";");
   if (rowIndex == 0){
-    style.append("  border-top: 1px solid black;");
+    style.append("                      border-top: 1px solid black;");
   }
   if (columnIndex == 0){
-    style.append("  border-left: 1px solid black;");
+    style.append("                      border-left: 1px solid black;");
   }
-  style.append("  border-right: 1px solid black;");
-  style.append("  border-bottom: 1px solid black;");
+  style.append("                        border-right: 1px solid black;");
+  style.append("                        border-bottom: 1px solid black;");
   style.append("}");
 
   return style;
@@ -493,16 +491,13 @@ QWidget * OSGridController::widgetAt(int row, int column)
   }
 
   auto wrapper = new QPushButton();
+  wrapper->setCheckable(true);
   auto size = m_cellBtnGrp->buttons().size();
   m_cellBtnGrp->addButton(wrapper, size);
-  // Only make first column checkable
-  if (size % m_currentFields.size() == 0){
-    wrapper->setCheckable(true);
-  }
 
   wrapper->setObjectName("TableCell");
   if(row == 0){
-    wrapper->setMinimumSize(QSize(140,50));
+    wrapper->setMinimumSize(QSize(140,60));
   } else {
     wrapper->setMinimumSize(QSize(140,34));
   }
@@ -599,10 +594,12 @@ std::vector<QWidget *> OSGridController::row(int rowIndex)
 
 void OSGridController::selectRow(int rowIndex, bool select)
 {
+  int columnIndex = 0;
   std::vector<QWidget *> row = this->row(rowIndex);
   for (auto widget : row){
     auto button = qobject_cast<QPushButton *>(widget);
     button->setChecked(select);
+    button->setStyleSheet(cellStyle(rowIndex, columnIndex++));
   }
 }
 
