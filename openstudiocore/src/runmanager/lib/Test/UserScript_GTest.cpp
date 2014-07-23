@@ -271,8 +271,7 @@ openstudio::runmanager::Job buildScriptMergingWorkflow(const openstudio::path &t
 
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
   wf.addParam(runmanager::JobParam("flatoutdir"));
@@ -452,8 +451,7 @@ TEST_F(RunManagerTestFixture, BCLMeasureRubyScript)
   wf.addJob(rubyjobbuilder.toWorkItem());
   openstudio::runmanager::Tools tools 
     = openstudio::runmanager::ConfigOptions::makeTools(energyPlusExePath().parent_path(), openstudio::path(), openstudio::path(), 
-        rubyExePath().parent_path(), openstudio::path(),
-        openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path(), openstudio::path());
+        rubyExePath().parent_path(), openstudio::path());
 
   wf.add(tools);
 
