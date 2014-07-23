@@ -20,7 +20,7 @@
 #ifndef OPENSTUDIO_WAITDIALOG_H
 #define OPENSTUDIO_WAITDIALOG_H
 
-#include <shared_gui_components/OSDialog.hpp>
+#include "OSDialog.hpp"
 
 namespace openstudio{
 

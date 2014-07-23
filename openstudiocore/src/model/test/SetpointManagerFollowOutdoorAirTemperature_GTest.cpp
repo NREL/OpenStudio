@@ -19,13 +19,13 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature.hpp>
-#include <model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp>
-#include <model/Model.hpp>
-#include <model/Node.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerFollowOutdoorAirTemperature.hpp"
+#include "../SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
+#include "../Model.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio::model;
 

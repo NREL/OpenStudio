@@ -22,7 +22,7 @@
 
 #include <QDialog>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 #include <vector>
 

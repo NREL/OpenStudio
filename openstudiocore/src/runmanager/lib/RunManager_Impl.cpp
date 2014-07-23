@@ -42,7 +42,6 @@
 #include "RubyJobUtils.hpp"
 #include "WorkItem.hpp"
 #include "JSONWorkflowOptions.hpp"
-#include "JobFactory.hpp"
 #include "../../ruleset/OSArgument.hpp"
 
 namespace openstudio {

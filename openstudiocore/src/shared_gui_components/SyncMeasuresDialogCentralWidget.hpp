@@ -22,7 +22,7 @@
 
 #include <QWidget>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 class QPushButton;
 

@@ -20,8 +20,8 @@
 #ifndef MODEL_SETPOINTMANAGEROUTDOORAIRPRETREAT_HPP
 #define MODEL_SETPOINTMANAGEROUTDOORAIRPRETREAT_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/SetpointManager.hpp>
+#include "ModelAPI.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 

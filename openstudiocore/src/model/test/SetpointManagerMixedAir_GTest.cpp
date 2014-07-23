@@ -18,16 +18,16 @@
  **********************************************************************/
 
 #include <gtest/gtest.h>
-#include <model/test/ModelFixture.hpp>
-#include <model/SetpointManagerMixedAir.hpp>
-#include <model/SetpointManagerMixedAir_Impl.hpp>
-#include <model/Node.hpp>
-#include <model/Node_Impl.hpp>
-#include <model/AirLoopHVAC.hpp>
-#include <model/PlantLoop.hpp>
-#include <model/Schedule.hpp>
-#include <model/FanVariableVolume.hpp>
-#include <model/CoilHeatingElectric.hpp>
+#include "ModelFixture.hpp"
+#include "../SetpointManagerMixedAir.hpp"
+#include "../SetpointManagerMixedAir_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Schedule.hpp"
+#include "../FanVariableVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

@@ -19,32 +19,32 @@
 
 #include "ApplyMeasureNowDialog.hpp"
 
-#include <shared_gui_components/BusyWidget.hpp>
-#include <shared_gui_components/EditController.hpp>
-#include <shared_gui_components/EditView.hpp>
-#include <shared_gui_components/LocalLibraryController.hpp>
-#include <shared_gui_components/LocalLibraryView.hpp>
-#include <shared_gui_components/MeasureManager.hpp>
-#include <shared_gui_components/OSViewSwitcher.hpp>
-#include <shared_gui_components/VariableList.hpp>
+#include "../shared_gui_components/BusyWidget.hpp"
+#include "../shared_gui_components/EditController.hpp"
+#include "../shared_gui_components/EditView.hpp"
+#include "../shared_gui_components/LocalLibraryController.hpp"
+#include "../shared_gui_components/LocalLibraryView.hpp"
+#include "../shared_gui_components/MeasureManager.hpp"
+#include "../shared_gui_components/OSViewSwitcher.hpp"
+#include "../shared_gui_components/VariableList.hpp"
 
-#include <openstudio_lib/MainRightColumnController.hpp>
-#include <openstudio_lib/OSAppBase.hpp>
-#include <openstudio_lib/OSDocument.hpp>
-#include <openstudio_lib/OSItem.hpp>
+#include "MainRightColumnController.hpp"
+#include "OSAppBase.hpp"
+#include "OSDocument.hpp"
+#include "OSItem.hpp"
 
-#include <model/Model.hpp>
-#include <model/Model_Impl.hpp>
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
 
-#include <utilities/core/ApplicationPathHelpers.hpp>
-#include <utilities/core/PathHelpers.hpp>
-#include <utilities/core/RubyException.hpp>
+#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/RubyException.hpp"
 
-#include <runmanager/lib/AdvancedStatus.hpp>
-#include <runmanager/lib/Job.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/RubyJobUtils.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../runmanager/lib/AdvancedStatus.hpp"
+#include "../runmanager/lib/Job.hpp"
+#include "../runmanager/lib/RunManager.hpp"
+#include "../runmanager/lib/RubyJobUtils.hpp"
+#include "../runmanager/lib/Workflow.hpp"
 
 #include <QBoxLayout>
 #include <QCloseEvent>

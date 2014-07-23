@@ -20,10 +20,10 @@
 #ifndef MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 #define MODEL_TABLEMULTIVARIABLELOOKUP_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/Curve.hpp>
+#include "ModelAPI.hpp"
+#include "Curve.hpp"
 
-#include <utilities/math/FloatCompare.hpp>
+#include "../utilities/math/FloatCompare.hpp"
 
 namespace openstudio {
 
