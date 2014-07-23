@@ -129,6 +129,7 @@ namespace radiance {
       std::map<std::string, openstudio::Handle> m_radMapHandles;
       std::map<std::string, std::string> m_radViewPoints;
       std::map<std::string, std::string> m_radWindowGroups; 
+      int m_windowGroupId;
 
       // get window group
       WindowGroup getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 

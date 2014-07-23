@@ -99,6 +99,7 @@ end
 #
 # utility functions
 #
+
 # print statement and execute as system call
 def exec_statement(s)
   if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
@@ -110,10 +111,8 @@ def exec_statement(s)
   return result
 end
 
-#
-# extract arguments
-#
 
+# extract arguments
 modelPath = ""
 if ARGV[0]
   if File::file?(ARGV[0])
@@ -138,7 +137,6 @@ if radiancePath.empty?
   Try 'DaylightCalculations.rb -h' for options."
   exit false
 end
-
 
 sqlPath = ""
 if ARGV[2]
@@ -190,7 +188,6 @@ if not result
   exit false
 end
 puts "ran modeltorad only."
-=begin
 
 # if no sqlPath given, glob under the modelPath to find it
 if sqlPath.empty?
@@ -252,4 +249,3 @@ FileUtils.cp_r files, 'out/files'
 
 weather = Dir.glob('in/files/*.epw')
 FileUtils.cp weather, 'out/files/'
-=end

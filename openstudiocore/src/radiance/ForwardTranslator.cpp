@@ -129,6 +129,7 @@ namespace radiance {
 
   // basic constructor
   ForwardTranslator::ForwardTranslator()
+    : m_windowGroupId(0)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.radiance\\.ForwardTranslator"));
@@ -413,7 +414,6 @@ namespace radiance {
     Point3dVector surfaceFaceVertices = alignFace.inverse()*surface.vertices();
 
     // subtract sub surface polygons from surface polygon
-    //jgs20100615 added
     QPolygonF outer;
     for (const Point3d& point : surfaceFaceVertices){
       if (std::abs(point.z()) > 0.001){
@@ -737,16 +737,25 @@ namespace radiance {
     m_radWindowGroups.clear(); 
   }
 
+
   WindowGroup ForwardTranslator::getWindowGroup(double azimuth, const model::Space& space, const model::ConstructionBase& construction, 
     const boost::optional<model::ShadingControl>& shadingControl, const openstudio::Point3dVector& polygon)
   {
     WindowGroup result(azimuth, space, construction, shadingControl);
+
+    std::stringstream ss;
+    ss << "WG" << m_windowGroupId;
+    std::string name = ss.str();
+
+    result.setName(name);
 
     std::vector<WindowGroup>::iterator it = std::find(m_windowGroups.begin(), m_windowGroups.end(), result);
     if (it != m_windowGroups.end()){
       it->addWindowPolygon(polygon);
       return *it;
     }
+
+    m_windowGroupId += 1;
 
     result.addWindowPolygon(polygon);
     m_windowGroups.push_back(result);
@@ -1007,10 +1016,10 @@ namespace radiance {
 
             if (m_radWindowGroups.find(windowGroup_name) == m_radWindowGroups.end())
             {
-              m_radWindowGroups[windowGroup_name] = "#WindowGroup = " + windowGroup_name + "\n";
+              m_radWindowGroups[windowGroup_name] = "# OpenStudio Window Group: " + windowGroup_name + "\n";
             }
 
-            LOG(Info, "found a "+subSurface.subSurfaceType()+", azimuth = "+formatString(azi)+ "("+subSurface_name+")");
+            LOG(Info, "found a "+subSurface.subSurfaceType()+", azimuth = "+formatString(azi, 3)+ "("+subSurface_name+")");
 
             // set transmittance...
             double visibleTransmittance = subSurface.visibleTransmittance().get();
@@ -1028,7 +1037,7 @@ namespace radiance {
               tn = tVis * 1.0895;
               LOG(Debug, "Tvis = " << tVis << " (tn = " << tn << ")");
               if (tVis >= 0.92) {
-                LOG(Warn, "glazing material definition in " + space_name + "; Tvis =" + formatString(tVis, 4) + " is very high. Suspect.");
+                LOG(Warn, "glazing material definition in " + space_name + "; Tvis =" + formatString(tVis, 3) + " is very high. Suspect.");
               }
             }
 
@@ -1065,37 +1074,34 @@ namespace radiance {
               double transA1 = cRGB; // monochromatic
 
               rMaterial = "trans";
-              matString = "0\n0\n7\n"+formatString(transA1, 4)+" "+formatString(transA2, 4)+" "+formatString(transA3, 4)+" "+formatString(transA4, 4)+" "+formatString(transA5, 4)+" "+formatString(transA6, 4)+" "+formatString(transA7, 4)+"\n";
+              matString = "0\n0\n7\n"+formatString(transA1, 3)+" "+formatString(transA2, 3)+" "+formatString(transA3, 3)+\
+                " "+formatString(transA4, 3)+" "+formatString(transA5, 3)+" "+formatString(transA6, 3)+" "+formatString(transA7, 2)+"\n";
               //double nTs = 0.0; // transmitted specularity
 
               if (tVis >= 0.6) {
-                LOG( Warn, "dubious glazing material definition in "+space_name+"; Tvis ="+formatString(tVis, 4)+", yet diffuse? Suspect.");  
+                LOG( Warn, "dubious glazing material definition in "+space_name+"; Tvis ="+formatString(tVis, 2)+", yet diffuse? Suspect.");  
               }
               
             } else {
 
-              matString = "0\n0\n3\n "+formatString(tn, 4)+" "+formatString(tn, 4)+" "+formatString(tn, 4)+"\n";
+              matString = "0\n0\n3\n"+formatString(tn, 3)+" "+formatString(tn, 3)+" "+formatString(tn, 3)+"\n";
               //double nTs = 1.0; // transmitted specularity
             }
 
-            std::string winId = "_azi-" + formatString(azi, 4);
+            std::string winId = "_azi-" + formatString(azi, 2);
             if (subSurfaceUpCase == "SKYLIGHT"){
               winId = "_skylight";
             }
 
-            m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis) + " (tn = "+ formatString(tn) + ")\n";
             // write material
-            m_radMaterials.insert("void " + rMaterial + " glaz_" + rMaterial+"_" + space_name + winId + "_tn-" + formatString(tn, 4) + " " + matString +"");
-            m_radMaterialsDC.insert("void light glaz_light_" + space_name + winId +"_tn-" + formatString(tn, 4) + "\n0\n0\n3\n1 1 1\n");
-            // if shading control substitute real bsdf names for glazing.xml,glazing_blind.xml
-            if (shadingControl){
-              m_radDCmats.insert("glaz_"+rMaterial+"_"+space_name + winId +"_tn-"+formatString(tn, 4)+ ".vmx,glazing.xml,glazing_blind.xml,glaz_" + space_name + winId + "_tn-" + formatString(tn, 4) + ".dmx,\n");
-            }
+            m_radMaterials.insert("void " + rMaterial + " " + windowGroup_name + "\n" + matString + "\n");
+            m_radMaterialsDC.insert("void light " + windowGroup_name + "\n0\n0\n3\n1 1 1\n");
+
             // polygon header
-            m_radWindowGroups[windowGroup_name] += "#--SubSurface = " + subSurface_name + "\n";
-            m_radWindowGroups[windowGroup_name] += "#---Tvis = " + formatString(tVis, 4) + " (tn = " + formatString(tn, 4) + ")\n";
+            m_radWindowGroups[windowGroup_name] += "\n# SubSurface = " + subSurface_name + "\n";
+            m_radWindowGroups[windowGroup_name] += "# Tvis = " + formatString(tVis, 2) + " (tn = " + formatString(tn, 2) + ")\n";
             // write the polygon
-            m_radWindowGroups[windowGroup_name] += "glaz_"+rMaterial+"_"+space_name + winId + "_tn-" + formatString(tn, 4) + " polygon " + subSurface_name + "\n";
+            m_radWindowGroups[windowGroup_name] += windowGroup_name + " polygon " + subSurface_name + "\n";
             m_radWindowGroups[windowGroup_name] += "0\n0\n" + formatString(polygon.size()*3) + "\n";
 
             for (Point3dVector::const_reverse_iterator vertex = polygon.rbegin();
@@ -1115,7 +1121,6 @@ namespace radiance {
               std::cout << "the source path is " << openstudio::toString(sourcePath) << ", exists = " << boost::filesystem::exists(sourcePath) << std::endl;
               std::cout << "the dest path is " << openstudio::toString(bsdfoutpath) << ", exists = " << boost::filesystem::exists(bsdfoutpath) << std::endl;
 
-
               boost::filesystem::copy_file(openstudio::toPath("C:/Users/rgugliel/test/cl_Tn" + formatString(tVis, 2) + ".xml"), bsdfoutpath / \
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
@@ -1123,8 +1128,14 @@ namespace radiance {
                 openstudio::toPath("cl_Tn" + formatString(tVis, 2) + "_blinds.xml"), boost::filesystem::copy_option::overwrite_if_exists);
               
               // add job to vmx problem set
-              m_radDCmats.insert("glaz_" + rMaterial + "_" + space_name + winId + "_tn-" + formatString(tn, 4) + ",cl_Tn" + \
+              m_radDCmats.insert(windowGroup_name + ",cl_Tn" + \
                 formatString(tVis, 2) + ".xml,cl_Tn" + formatString(tVis, 2) + "_blinds.xml\n");
+
+              WindowGroupControl control = windowGroup.windowGroupControl();
+              if (control.outwardNormal){
+                std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
+              }
+              
 
             } else if (rMaterial == "trans"){
 
@@ -1137,8 +1148,12 @@ namespace radiance {
                 openstudio::toPath("df_Tn" + formatString(tVis, 2) + ".xml"), boost::filesystem::copy_option::overwrite_if_exists);
 
               // add job to vmx problem set
-              m_radDCmats.insert("glaz_" + rMaterial + "_" + space_name + winId + "_tn-" + formatString(tn, 4) + ",df_Tn" + \
-                formatString(tVis, 2) + ".xml\n");
+              m_radDCmats.insert(windowGroup_name + ",df_Tn" + formatString(tVis, 2) + ".xml\n");
+
+              WindowGroupControl control = windowGroup.windowGroupControl();
+              if (control.outwardNormal){
+                std::cout << "outward normal:" + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
+              }
 
             }
 
@@ -1284,7 +1299,6 @@ namespace radiance {
         LOG(Debug, "Wrote " << space_name << ".sns");
       }
        
-      
       // get glare sensor
       std::vector<openstudio::model::GlareSensor> glareSensors = space.glareSensors();
       for (const auto & sensor : glareSensors)
@@ -1394,6 +1408,7 @@ namespace radiance {
       }
 
       // write radiance materials file
+      m_radMaterials.insert("# OpenStudio Materials File\n\n# default mats for daylight coefficients\nvoid plastic dc_black\n0\n0\n3\n0 0 0\nvoid light dc_light\n0\n0\n3\n1 1 1\n\n");
       openstudio::path materialsfilename = t_radDir / openstudio::toPath("materials/materials.rad");
       OFSTREAM materialsfile(materialsfilename);
       if (materialsfile.is_open()){
@@ -1407,6 +1422,7 @@ namespace radiance {
       }
 
       // write radiance DC vmx materials (lights) file
+      m_radMaterialsDC.insert("# OpenStudio Materials File\n# sets all windows as material=\"light\" for daylight coefficient calcs\n\n");
       openstudio::path materials_vmxfilename = t_radDir / openstudio::toPath("materials/materials_vmx.rad");
       OFSTREAM materials_vmxfile(materials_vmxfilename);
       if (materials_vmxfile.is_open()){
@@ -1420,7 +1436,8 @@ namespace radiance {
       }
 
       // write radiance vmx materials list
-      // DLM: format of this file is, approximately VMX, bsdf1, bsdf2, DMX
+      // format of this file is: window group, bsdf, bsdf
+      m_radDCmats.insert("# OpenStudio windowGroup->BSDF \"Mapping\" File\n# maps Window Groups to BSDF files\n# windowGroup,bsdf0.xml,bsdf1.xml(optional),etc...\n");
       openstudio::path materials_dcfilename = t_radDir / openstudio::toPath("bsdf/mapping.rad");
       OFSTREAM materials_dcfile(materials_dcfilename);
       if (materials_dcfile.is_open()){
@@ -1438,9 +1455,6 @@ namespace radiance {
       OFSTREAM modelfile(modelfilename);
       if (modelfile.is_open()){
         t_outfiles.push_back(modelfilename);
-
-        // materials not included in model.rad (suport for 3-phase method)
-        // modelfile << "!xform materials/materials.rad\n";
 
         for (const auto & filename : m_radSceneFiles)
         {

@@ -27,9 +27,16 @@
 #include <model/ShadingControl.hpp>
 
 #include <utilities/geometry/Point3d.hpp>
+#include <utilities/geometry/Vector3d.hpp>
 
 namespace openstudio{
 namespace radiance{
+
+  struct RADIANCE_API WindowGroupControl{
+      boost::optional<double> largestArea;
+      boost::optional<openstudio::Point3d> centroid;
+      boost::optional<openstudio::Vector3d> outwardNormal;
+  };
 
   /** A WindowGroup represents a group of windows which are simulated together in the single or three phase method.
   */ 
@@ -42,6 +49,8 @@ namespace radiance{
 
       std::string name() const;
 
+      void setName(const std::string& name);
+
       double azimuth() const;
 
       std::string azimuthString() const;
@@ -53,6 +62,8 @@ namespace radiance{
       boost::optional<model::ShadingControl> shadingControl() const;
 
       void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
+
+      WindowGroupControl windowGroupControl() const;
 
       std::string windowGroupPoints() const;
 
