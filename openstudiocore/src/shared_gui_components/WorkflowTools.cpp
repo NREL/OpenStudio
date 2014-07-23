@@ -66,7 +66,7 @@ void getRadiancePreRunWarningsAndErrors(std::vector<std::string> &t_warnings,
   }
 
   if(ruby_not_installed){
-    t_errors.push_back("Ruby is required but not found, install Ruby 1.8.7 and scan for tools.");
+    t_errors.push_back("Ruby is required but not found, locate Ruby in scan for tools.");
   }
   
   // TODO remove when fixed

@@ -92,30 +92,6 @@ namespace detail {
       virtual std::string description() const;
       virtual std::string detailedDescription() const;
 
-
-      /// \returns true if the set of ToolInfo has remote execution capabilities
-      virtual bool remoteRunnable() const
-      {
-        if (!runnable())
-        {
-          return false;
-        } else {
-          try {
-            for (size_t i = 0; i < m_toolNames.size(); ++i)
-            {
-              if (!getTool(m_toolNames[i]).remoteExecutable())
-              {
-                return false; // abort on the first not remote executable tool
-              }
-            }
-            return true; // all of the required tools are remote executable
-          } catch (const std::exception &) {
-            // we couldn't find the required tool
-            return false;
-          }
-        }
-      }
-
       /// Requests that the tool stop execution
       virtual void requestStop();
 
@@ -284,9 +260,6 @@ namespace detail {
       size_t m_currentToolIndex; ///< Index of the currently processing tool for this job
 
     private slots:
-      void remoteStarted(int t_remoteid, int t_remotetaskid);
-      void remoteFinished(int t_remoteid, int t_remotetaskid);
-
       /// Connected to m_process
       void processStarted();
 

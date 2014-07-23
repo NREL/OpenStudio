@@ -446,8 +446,8 @@ void LibrarySubGroupListController::reset()
 
 LibraryItem::LibraryItem(const BCLMeasure & bclMeasure, LocalLibrary::LibrarySource source, BaseApp *t_app):
   OSListItem(),
-  m_source(source),
   m_bclMeasure(bclMeasure),
+  m_source(source),
   m_app(t_app)
 {
   std::string componentVersion;

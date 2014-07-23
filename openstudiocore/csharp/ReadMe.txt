@@ -1,7 +1,5 @@
 * Getting Started
 
-The default installation directory is "C:\Program Files\OpenStudio .NET SDK".
-
 Open one of the demo Visual C# Project files from the Program Menu or from explorer by navigating to the installation folder and into the "test" subdirectory.
 
 Once the demo project is opened, you will need to delete the existing "OpenStudio" reference from the project and add your own.
@@ -12,4 +10,4 @@ Your project should now be able to compile.
 
 * Profiling
 
-If you would like to profile the OpenStudio SDK we reccomend NProf (http://code.google.com/p/nprof/).
+If you would like to profile the OpenStudio SDK we recommend NProf (http://code.google.com/p/nprof/).

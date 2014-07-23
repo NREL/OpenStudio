@@ -1,20 +1,39 @@
+/**********************************************************************
+*  Copyright (c) 2008-2014, Alliance for Sustainable Energy.
+*  All rights reserved.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Lesser General Public
+*  License as published by the Free Software Foundation; either
+*  version 2.1 of the License, or (at your option) any later version.
+*
+*  This library is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+*  Lesser General Public License for more details.
+*
+*  You should have received a copy of the GNU Lesser General Public
+*  License along with this library; if not, write to the Free Software
+*  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+**********************************************************************/
+
 #include <gtest/gtest.h>
 #include "RunManagerTestFixture.hpp"
 #include <runmanager/Test/ToolBin.hxx>
 #include <resources.hxx>
 
-#include <runmanager/lib/JobFactory.hpp>
-#include <runmanager/lib/ModelToRadJob.hpp>
-#include <runmanager/lib/RunManager.hpp>
-#include <runmanager/lib/Workflow.hpp>
+#include "../JobFactory.hpp"
+#include "../ModelToRadJob.hpp"
+#include "../RunManager.hpp"
+#include "../Workflow.hpp"
 
-#include <model/Model.hpp>
+#include "../../../model/Model.hpp"
 
-#include <utilities/idf/IdfFile.hpp>
-#include <utilities/idf/IdfObject.hpp>
-#include <utilities/data/EndUses.hpp>
-#include <utilities/data/Attribute.hpp>
-#include <utilities/sql/SqlFile.hpp>
+#include "../../../utilities/idf/IdfFile.hpp"
+#include "../../../utilities/idf/IdfObject.hpp"
+#include "../../../utilities/data/EndUses.hpp"
+#include "../../../utilities/data/Attribute.hpp"
+#include "../../../utilities/sql/SqlFile.hpp"
 
 #include <boost/filesystem/path.hpp>
 

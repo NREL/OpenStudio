@@ -48,8 +48,8 @@ namespace runmanager {
   /// Holds an AdvancedStatusEnum value along with an additional description
   ///
   /// Used to report detailed information about the status of an executing Job tree.
-  /// It is particularly of use during execution of remote jobs, when the individual steps
-  /// of setting up a job take longer.
+  /// This was particularly of use during execution of remote jobs, when the individual steps
+  /// of setting up a job took longer.
   class RUNMANAGER_API AdvancedStatus
   {
     public:

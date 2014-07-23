@@ -1,1 +1,0 @@
-bjam --build-dir=. --toolset=gcc --build-type=complete stage --stagedir=.

@@ -77,7 +77,7 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
       QCoreApplication::addLibraryPath(QString::fromStdString(toString(p)));
 #endif
 
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
       openstudio::path p = getApplicationRunDirectory().parent_path() / toPath("Ruby/openstudio");
       QCoreApplication::addLibraryPath(QString::fromStdString(toString(p)));
 #endif

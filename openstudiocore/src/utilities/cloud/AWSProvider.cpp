@@ -514,7 +514,7 @@ namespace openstudio{
 
       m_ruby = getOpenStudioAWSRubyPath();
       
-#if defined(Q_OS_WIN32)
+#if defined(Q_OS_WIN)
       m_ruby /= toPath("bin/ruby.exe");
 #else
       m_ruby /= toPath("bin/ruby");

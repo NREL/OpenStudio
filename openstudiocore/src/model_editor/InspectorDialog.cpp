@@ -298,7 +298,7 @@ void InspectorDialog::setModel(openstudio::model::Model& model, bool force)
 
   /// \todo For some reason, after InspectorDialog::setModel is called the keyboard focus
   ///       gets "lost" on MacOS After several hours of trial and error, I found that setting the focus
-  ///       programatically in this out-of-band call consistently resolves the problem.
+  ///       programmatically in this out-of-band call consistently resolves the problem.
   ///       The "todo" is to reevaluate with a later version of Qt.
   QTimer::singleShot(0, this, SLOT(setFocus()));
 }

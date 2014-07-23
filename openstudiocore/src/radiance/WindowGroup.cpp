@@ -17,10 +17,10 @@
 *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 **********************************************************************/
 
-#include <radiance/WindowGroup.hpp>
-#include <radiance/ForwardTranslator.hpp>
+#include "WindowGroup.hpp"
+#include "ForwardTranslator.hpp"
 
-#include <utilities/geometry/Geometry.hpp>
+#include "../utilities/geometry/Geometry.hpp"
 
 namespace openstudio{
 namespace radiance{

@@ -210,7 +210,7 @@ class MODEL_API SpaceType : public ResourceObject {
   boost::optional<double> spaceFloorAreaPerPerson() const;
 
   /** Sets the spaceFloorAreaPerPerson, using people()[0], if it exists, as a template for the 
-   *  remaining People and PeopleDefinition paramters. All other people() in this SpaceType will
+   *  remaining People and PeopleDefinition parameters. All other people() in this SpaceType will
    *  be removed. */
   bool setSpaceFloorAreaPerPerson(double spaceFloorAreaPerPerson);
 
@@ -236,7 +236,7 @@ class MODEL_API SpaceType : public ResourceObject {
   bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea);
 
   /** Sets the lightingPowerPerFloorArea, using templateLights as a template for the remaining
-   *  Lights and LightsDefinition paramters. All lights() and luminaires() in this SpaceType 
+   *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType 
    *  (except for templateLights, if applicable), will be removed. */
   bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, 
                                          const Lights& templateLights);
@@ -251,7 +251,7 @@ class MODEL_API SpaceType : public ResourceObject {
   bool setLightingPowerPerPerson(double lightingPowerPerPerson);
 
   /** Sets the lightingPowerPerPerson, using templateLights as a template for the remaining
-   *  Lights and LightsDefinition paramters. All lights() and luminaires() in this SpaceType 
+   *  Lights and LightsDefinition parameters. All lights() and luminaires() in this SpaceType 
    *  (except for templateLights, if applicable), will be removed. */
   bool setLightingPowerPerPerson(double lightingPowerPerPerson,const Lights& templateLights);
 

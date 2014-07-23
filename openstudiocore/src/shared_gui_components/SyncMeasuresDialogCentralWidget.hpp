@@ -17,12 +17,12 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  **********************************************************************/
 
-#ifndef SYNCMEASURESDIALOGCENTRALWIDGET_H
-#define SYNCMEASURESDIALOGCENTRALWIDGET_H
+#ifndef SHAREDGUICOMPONENTS_SYNCMEASURESDIALOGCENTRALWIDGET_HPP
+#define SHAREDGUICOMPONENTS_SYNCMEASURESDIALOGCENTRALWIDGET_HPP
 
 #include <QWidget>
 
-#include <utilities/bcl/BCLMeasure.hpp>
+#include "../utilities/bcl/BCLMeasure.hpp"
 
 class QPushButton;
 
@@ -84,4 +84,4 @@ private slots:
 
 } // namespace openstudio
 
-#endif // SYNCMEASURESDIALOGCENTRALWIDGET_H
+#endif // SHAREDGUICOMPONENTS_SYNCMEASURESDIALOGCENTRALWIDGET_HPP

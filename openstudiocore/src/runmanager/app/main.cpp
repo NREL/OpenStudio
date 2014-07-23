@@ -31,7 +31,7 @@
 
 void showMessage(const std::string &s)
 {
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
   int argc = 0;
   char **argv = 0;
   QApplication qApplication(argc, argv);
@@ -50,12 +50,7 @@ int doWorkflow(const openstudio::path &t_input, const openstudio::path &t_weathe
     const openstudio::path &t_energyplus, const openstudio::path &t_xmlpreproc, 
     const openstudio::path &t_radiance, const openstudio::path &t_ruby, 
     bool t_showui, 
-    const openstudio::path &t_outpath,     
-    const std::string &t_slurmhost,
-    const std::string &t_slurmuser,
-    const openstudio::path &t_remote_energyplus,
-    const openstudio::path &t_remote_xmlpreproc,
-    const openstudio::path &t_remote_radiance,
+    const openstudio::path &t_outpath,
     bool pause)
 {
   using namespace openstudio;
@@ -100,21 +95,6 @@ int doWorkflow(const openstudio::path &t_input, const openstudio::path &t_weathe
     showMessage("Provided ruby location is not a directory");
   }
 
-  if (!t_remote_energyplus.empty() && !boost::filesystem::exists(t_remote_energyplus))
-  {
-    showMessage("Provided remote energyplus file does not exist");
-  }
-
-  if (!t_remote_xmlpreproc.empty() && !boost::filesystem::exists(t_remote_xmlpreproc))
-  {
-    showMessage("Provided remote xml preprocessor file does not exist");
-  }
-
-  if (!t_remote_radiance.empty() && !boost::filesystem::exists(t_remote_radiance))
-  {
-    showMessage("Provided remote radiance file does not exist");
-  }
-
   if (t_outpath.empty())
   {
     showMessage("No outpath specified");
@@ -128,11 +108,6 @@ int doWorkflow(const openstudio::path &t_input, const openstudio::path &t_weathe
         t_xmlpreproc, 
         t_radiance, 
         t_ruby,
-        openstudio::path(),
-        t_remote_energyplus, 
-        t_remote_xmlpreproc, 
-        t_remote_radiance, 
-        openstudio::path(),
         openstudio::path());
 
 
@@ -156,15 +131,6 @@ int doWorkflow(const openstudio::path &t_input, const openstudio::path &t_weathe
     if (t_showui)
     {
       runmanager.showStatusDialog();
-    }
-
-    if (!t_slurmuser.empty() && !t_slurmhost.empty())
-    {
-      openstudio::runmanager::ConfigOptions co = runmanager.getConfigOptions();
-      co.setSLURMUserName(t_slurmuser);
-      co.setSLURMHost(t_slurmhost);
-      co.setMaxSLURMJobs(99);
-      runmanager.setConfigOptions(co);
     }
 
     openstudio::runmanager::Job j = workflow.create(t_outpath);
@@ -282,13 +248,8 @@ int main(int argc, char *argv[])
     ("xmlpreproc", po::value<std::string>(), "Path to directory containing the xml preprocessor binary")
     ("radiance", po::value<std::string>(), "Path to directory containing the radiance binaries")
     ("ruby", po::value<std::string>(), "Path to directory containing the ruby binaries")
-    ("remote_energyplus", po::value<std::string>(), "Path to package for remote execution of energyplus")
-    ("remote_xmlpreproc", po::value<std::string>(), "Path to package for remote execution of xml preprocessor")
-    ("remote_radiance", po::value<std::string>(), "Path to package for remote execution of radiance")
     ("outpath", po::value<std::string>(), "Path to send processing output to")
     ("scripts", po::value<std::string>(), "Path to search for scripts to inject into standard workflow")
-    ("slurmusername", po::value<std::string>(), "User name to use when making remote SLURM connections")
-    ("slurmhostname", po::value<std::string>(), "Host name to use when making remote SLURM connections")
     ("pause", "Pause after jobs are completed")
     ;
 
@@ -310,14 +271,9 @@ int main(int argc, char *argv[])
     openstudio::path xmlpreproc;
     openstudio::path radiance;
     openstudio::path ruby;
-    openstudio::path remote_energyplus;
-    openstudio::path remote_xmlpreproc;
-    openstudio::path remote_radiance;
     openstudio::path outpath;
 
     std::string workflow;
-    std::string slurmusername;
-    std::string slurmhostname;
 
     bool showui = false;
 
@@ -361,34 +317,9 @@ int main(int argc, char *argv[])
       ruby = toPath(vm["ruby"].as<std::string>());
     }
 
-    if (vm.count("remote_energyplus"))
-    {
-      remote_energyplus = toPath(vm["remote_energyplus"].as<std::string>());
-    }
-
-    if (vm.count("remote_xmlpreproc"))
-    {
-      remote_xmlpreproc = toPath(vm["remote_xmlpreproc"].as<std::string>());
-    }
-
-    if (vm.count("remote_radiance"))
-    {
-      remote_radiance = toPath(vm["remote_radiance"].as<std::string>());
-    }
-
     if (vm.count("workflow"))
     {
       workflow = vm["workflow"].as<std::string>();
-    }
-
-    if (vm.count("slurmusername"))
-    {
-      slurmusername = vm["slurmusername"].as<std::string>();
-    }
-
-    if (vm.count("slurmhostname"))
-    {
-      slurmhostname = vm["slurmhostname"].as<std::string>();
     }
 
     if (vm.count("outpath"))
@@ -399,8 +330,7 @@ int main(int argc, char *argv[])
     doWorkflow(input, weather, workflow, scripts,
         energyplus, xmlpreproc, radiance, ruby,
         showui, outpath,
-        slurmhostname, slurmusername,
-        remote_energyplus, remote_xmlpreproc, remote_radiance, vm.count("pause"));
+        vm.count("pause"));
 
   } else {
     return doUI(argc, argv);

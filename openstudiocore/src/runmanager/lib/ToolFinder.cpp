@@ -140,7 +140,7 @@ namespace runmanager {
       const std::pair<ToolVersion, ToolLocationInfo> &t_tool)
   {
     openstudio::path runbase;
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     if (openstudio::applicationIsRunningFromBuildDirectory())
     {
       runbase = openstudio::getApplicationRunDirectory().parent_path().parent_path().parent_path().parent_path().parent_path();
@@ -165,24 +165,11 @@ namespace runmanager {
         bool path2_is_aws = subPathMatch(t_path2, boost::regex(".*-aws-.*", boost::regex::perl));
 
 #ifdef Q_OS_MAC
-#ifdef __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__
-
-#if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ == 1090
         bool path1isruby20 = t_path1 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin");
         bool path2isruby20 = t_path2 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin");
 
         if (path1isruby20) return t_path1;
         if (path2isruby20) return t_path2;
-#else
-        bool path1isruby18 = t_path1 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin");
-        bool path2isruby18 = t_path2 == openstudio::toPath("/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin");
-
-        if (path1isruby18) return t_path1;
-        if (path2isruby18) return t_path2;
-#endif
-
-#endif
-
 #endif
 
         if (!t_path1.empty() && !t_path2.empty())
@@ -231,8 +218,7 @@ namespace runmanager {
     };
 
     LOG(Debug, "Merging Tool: " << t_tool.second.toolType.valueName() << " " << toString(t_tool.second.binaryDir)
-        << " " << toString(t_tool.second.linuxBinaryArchive) << " " <<
-        t_tool.first.toString());
+        << " " << t_tool.first.toString());
 
     for (auto & tool : t_tools)
     {
@@ -240,7 +226,6 @@ namespace runmanager {
           && tool.first == t_tool.first)
       {
         tool.second.binaryDir = ComparePaths::bestPath(tool.second.binaryDir, t_tool.second.binaryDir, runbase);
-        tool.second.linuxBinaryArchive = ComparePaths::bestPath(tool.second.linuxBinaryArchive, t_tool.second.linuxBinaryArchive, runbase);
 
         LOG(Debug, "Existing tool found with same type and version - merging data");
         return; // we found and updated the appropriate item
@@ -273,7 +258,7 @@ namespace runmanager {
   std::vector<std::pair<ToolVersion, ToolLocationInfo> > ToolFinder::findTools(bool t_showProgressDialog) const
   {
     std::vector<std::string> names;
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     names.push_back("ies2rad.exe");
     names.push_back("ruby.exe");
     names.push_back("energyplus.exe");
@@ -293,7 +278,7 @@ namespace runmanager {
 
     // DLM: have to sort before calling unique, unique only works on consecutive elements
     searchPaths.erase(std::unique(searchPaths.begin(), searchPaths.end()), searchPaths.end()); // Erase duplicate elements
-#ifdef Q_OS_WIN32
+#ifdef Q_OS_WIN
     // For Windows, maintain drive order while searching the deepest paths first
     std::vector<openstudio::path> newSearchPaths, temp;
     char drive = 'Z';
@@ -321,20 +306,18 @@ namespace runmanager {
 
       if (boost::iequals(toString(exe.stem()), "ies2rad"))
       {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Radiance, exe.parent_path(), openstudio::path())));
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Radiance, exe.parent_path())));
       } else if (boost::iequals(toString(exe.stem()), "ruby")) {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Ruby, exe.parent_path(), openstudio::path())));
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::Ruby, exe.parent_path())));
       } else if (boost::iequals(toString(exe.stem()), "energyplus")) {
         if (safeExists(exe.parent_path() / toPath("WeatherData"))
           || safeExists(exe.parent_path().parent_path() / toPath("WeatherData")))
         {
-          mergeTool(tools, std::make_pair(parseToolVersion(exe), ToolLocationInfo(ToolType::EnergyPlus, exe.parent_path(), openstudio::path())));
+          mergeTool(tools, std::make_pair(parseToolVersion(exe), ToolLocationInfo(ToolType::EnergyPlus, exe.parent_path())));
         }
-      } else if (boost::iequals(toString(exe.filename()), "_energyplus.tar.gz")) {
-        mergeTool(tools, std::make_pair(parseToolVersion(exe), ToolLocationInfo(ToolType::EnergyPlus, openstudio::path(), exe)));
       } else if (boost::iequals(toString(exe.stem()), "EPXMLPreproc2")
                  && subPathMatch(exe, boost::regex("preprocessor.*", boost::regex::perl|boost::regex::icase))) {
-        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::XMLPreprocessor, exe.parent_path(), openstudio::path())));
+        mergeTool(tools, std::make_pair(ToolVersion(), ToolLocationInfo(ToolType::XMLPreprocessor, exe.parent_path())));
       }
     }
 

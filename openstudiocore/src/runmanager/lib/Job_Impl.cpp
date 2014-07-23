@@ -215,19 +215,6 @@ namespace detail {
 
   }
 
-  void Job_Impl::setRemoteId(int t_remoteid, int t_remoteTaskId)
-  {
-    QWriteLocker l(&m_mutex);
-    m_remoteid = std::make_pair(t_remoteid, t_remoteTaskId);
-
-  }
-
-  boost::optional<std::pair<int, int> > Job_Impl::getRemoteId()
-  {
-    QReadLocker l(&m_mutex);
-    return m_remoteid;
-  }
-
   void Job_Impl::run()
   {
     //LOG(Info, boost::posix_time::microsec_clock::local_time() << " run thread starting: " << toString(m_id) << " " << QThread::currentThreadId());
@@ -499,18 +486,6 @@ namespace detail {
   {
     QReadLocker l(&m_mutex);
     return m_osLastEndTime;
-  }
-
-
-  bool Job_Impl::runningRemotely() const
-  {
-    QReadLocker l(&m_mutex);
-    if (m_processCreator)
-    {
-      return m_processCreator->isRemoteManager() && isRunning();
-    } else {
-      return false;
-    }
   }
 
   void Job_Impl::setProcessCreator(const std::shared_ptr<ProcessCreator> &t_pc)

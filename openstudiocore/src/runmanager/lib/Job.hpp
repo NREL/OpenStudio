@@ -96,13 +96,6 @@ namespace detail {
       /// \param[in] t_pc ProcessCreator to use if any process needs to be executed by the job
       void start(const std::shared_ptr<ProcessCreator> &t_pc);
 
-      /** Begin execution of the job, used for restarting a job that was left running on a remote 
-       *  server.
-       *  \param[in] t_pc process creator
-       *  \param[in] t_remoteid the id of the process which should already be running on a remote 
-       *  server */
-      void start(const std::shared_ptr<ProcessCreator> &t_pc, int t_remoteid, int t_remoteTaskNumber);
-
       /// Synchronously block until the Job has been finished. 
       /// \param[in] t_msecs Number of milliseconds to wait for
       /// if -1, wait indefinitely
@@ -110,9 +103,6 @@ namespace detail {
 
       /// Return true if the job is currently running.
       bool running() const;
-
-      /// Return true if the job is running remotely. running() will also return true in this state
-      bool runningRemotely() const;
 
       /// Return true if the job is out of date
       bool outOfDate() const;
@@ -185,9 +175,6 @@ namespace detail {
 
       /// \returns true if the job is runnable. 
       bool runnable() const;
-
-      /// \returns true if the job can be run remotely
-      bool remoteRunnable() const;
 
       /// \returns details status information about the Job
       AdvancedStatus status() const;

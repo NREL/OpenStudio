@@ -1,8 +1,6 @@
 #!/bin/bash
 
 ruby_install_dir="$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby"
-ruby_2=${MAC_RUBY_2}
-i386=${I386_FOUND}
 
 #---------- Create Symbolic Links to the Ruby bindings ----------
 ln -sf "$2/Applications/${CMAKE_PROJECT_NAME} ${OPENSTUDIO_VERSION}/Ruby/openstudio.rb" /Library/Ruby/Site/
@@ -17,36 +15,14 @@ chmod 755 "$config_file"
 chown $USER "$config_file"
 
 
-if $ruby_2 && $i386 ; then
-  #---------- Install plugin for SketchUp 14 ----------
-  # Check for the SketchUp 14 Application Support directory
-  SU14_support_dir="/Library/Application Support/SketchUp 2014"
-  mkdir -p "$SU14_support_dir/SketchUp/Plugins/OpenStudio"
-  # copy the plugin into the directory
-  cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio.rb"
-  cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-  cp "$config_file" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
-
-elif $i386 ; then
-  #---------- Install plugin for SketchUp 13 ----------
-  # Check for the SketchUp 13 Application Support directory
-  SU13_support_dir="/Library/Application Support/SketchUp 2013"
-  mkdir -p "$SU13_support_dir/SketchUp/Plugins/OpenStudio"
-  # copy the plugin into the directory
-  cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU13_support_dir/SketchUp/Plugins/OpenStudio.rb"
-  cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU13_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-  cp "$config_file" "$SU13_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
-
-  #---------- Install plugin for SketchUp 8 ----------
-  # Check for the SketchUp 8 Application Support directory
-  SU8_support_dir="/Library/Application Support/Google SketchUp 8"
-  mkdir -p "$SU8_support_dir/SketchUp/Plugins/OpenStudio"
-  # copy the plugin into the directory
-  cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU8_support_dir/SketchUp/Plugins/OpenStudio.rb"
-  cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU8_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
-  cp "$config_file" "$SU8_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
-
-fi
+#---------- Install plugin for SketchUp 2014 ----------
+# Check for the SketchUp 14 Application Support directory
+SU14_support_dir="/Library/Application Support/SketchUp 2014"
+mkdir -p "$SU14_support_dir/SketchUp/Plugins/OpenStudio"
+# copy the plugin into the directory
+cp "$ruby_install_dir/Plugins/OpenStudio.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio.rb"
+cp "$ruby_install_dir/Plugins/OpenStudio/Startup.rb" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/Startup.rb"
+cp "$config_file" "$SU14_support_dir/SketchUp/Plugins/OpenStudio/OpenStudio-config.rb"
 
 
 #---------- Installation Directory Icon ----------
