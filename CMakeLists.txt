@@ -463,7 +463,8 @@ if(BUILD_RUBY AND UNIX)
       ExternalProject_Add(Ruby
         URL http://developer.nrel.gov/downloads/buildings/openstudio/src/ruby-2.0.0-p481-shared.zip
         URL_MD5 af634ed75a961e69c03c6458a2e8c110
-        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *"
+        PATCH_COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/bin/ && sh -c "chmod +x *" 
+              COMMAND cd ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/ && sh -c "install_name_tool -id ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib	${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby/lib/libruby.2.0.0.dylib"
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
