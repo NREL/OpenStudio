@@ -337,9 +337,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   if(APPLE)
     set(_NAME "${LOWER_NAME}.bundle")
-    # the following script will change the bindings to load the version of libruby included with SketchUp, preventing loading two different copies of libruby
-    # when using the bindings from the command line using system ruby, this library will not exist.  this is ok because ruby has already loaded libruby
-    # it may be more clear to simply remove the line which loads libruby entirely (or change it to a path which never exists) in which case this library must be loaded into a process after libruby
+    # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
     add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
   elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
     set(_NAME "${LOWER_NAME}.so")
@@ -368,32 +366,35 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
 
       foreach(PREREQ IN LISTS PREREQUISITES)
-        gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
-        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-
-        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-
-        if(APPLE)
-          # skip updating references to libruby, we do not install this with the bindings
-          if(NOT PREREQ MATCHES ".*libruby.*")          
+      
+        #if(APPLE AND PREREQ MATCHES \".*libruby.*\")  
+        #  # skip updating references to libruby, we do not install this with the bindings
+        #else()   
+          gp_resolve_item(\"\" \${PREREQ} \"\" \"${LIBRARY_SEARCH_DIRECTORY}\" resolved_item_var)
+          execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+  
+          get_filename_component(PREREQNAME \${resolved_item_var} NAME)
+  
+          if(APPLE)
             execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
             foreach(PR IN LISTS PREREQUISITES)
               gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
               get_filename_component( PRNAME \${PRPATH} NAME)
               execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
             endforeach()
-          endif()
-        else()
-          if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
-            file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
           else()
-            set(TEXT \"\")
-          endif()
-          string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
-          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
-            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
-          endif()
-        endif()
+            if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
+              file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
+            else()
+              set(TEXT \"\")
+            endif()
+            string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
+            if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
+              file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
+            endif()
+          endif()        
+        #endif()
+
       endforeach()
     ")
   else()
